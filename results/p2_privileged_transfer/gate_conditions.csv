@@ -1,0 +1,8 @@
+condition,effect,quantity,operator,threshold,observed,passed
+D0_relative_improvement,D0_vs_MSPD,relative_improvement,>=,0.10000000000000001,0.043377888843796578,false
+D0_improved_domains,D0_vs_MSPD,improved_domain_count,>=,4,4,true
+D0_simultaneous_lower,D0_vs_MSPD,simultaneous_lower,>,0,-0.010214260255013421,false
+scalar_simultaneous_lower,scalar_teacher_vs_MSPD,simultaneous_lower,>,0,-0.015058066472511752,false
+global_shuffle_simultaneous_lower,global_shuffled_teacher_vs_MSPD,simultaneous_lower,>,0,-0.0018023221224141989,false
+stratified_shuffle_simultaneous_lower,stratified_shuffled_teacher_vs_MSPD,simultaneous_lower,>,0,-0.0002930051660692638,false
+random_teacher_simultaneous_lower,random_teacher_vs_MSPD,simultaneous_lower,>,0,-0.0038211704587619577,false

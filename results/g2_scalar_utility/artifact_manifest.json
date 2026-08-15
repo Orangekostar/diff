@@ -1,0 +1,135 @@
+{
+  "config": {
+    "path": "paper_v2/configs/p2_mechanical_utility.yaml",
+    "sha256": "7216cde498403fb1dc43c505e8ecf6ecf376402f525ccb6792685eb46f4054da"
+  },
+  "config_sha256": "7216cde498403fb1dc43c505e8ecf6ecf376402f525ccb6792685eb46f4054da",
+  "inputs": {
+    "cai_workbook": {
+      "path": "data/public/hasebe_cai/raw/8scdmfdcfb/v3/5_Compression after impact strength/Compression after impact strength_v0.2.xlsx",
+      "sha256": "0de44feca06294c33f2c6bc98ce6e9a8035476ff8fbef21d29f852e820cf4e2d"
+    },
+    "feature_cache": {
+      "path": "results/public_recoverability/feature_cache.npz",
+      "sha256": "6d581c77e0db18782406bd55dd2c0716d048c16c64c8df4423d5b331c84aeb52"
+    },
+    "feature_provenance": {
+      "path": "results/public_recoverability/feature_provenance.json",
+      "sha256": "1ed1ee1eedda144b0d86ac2c3c2043c9a9ef1257c942cbf631831ef1e7e80598"
+    },
+    "lvi_workbook": {
+      "path": "data/public/hasebe_cai/raw/8scdmfdcfb/v3/1_Low velocity impact testing condition/Low velocity impact testing condition and damage_v0.2.xlsx",
+      "sha256": "e6d98c968f57ac5748e104dc1da5e112114d25d77c03c7222ba3a0d93ac23cf1"
+    },
+    "p1_artifact_manifest": {
+      "path": "paper_v2/experiments/P1_real_internal/artifact_manifest.json",
+      "sha256": "1b7d048471baf36da594801384199dfa593bf3e8e9a9d223a63846d6afaa4b8f"
+    },
+    "p1_config": {
+      "path": "paper_v2/configs/p1_real_internal.yaml",
+      "sha256": "13d4da0fde84d4612d893e7bd08f71f23ff87d2939b87e44018dca322cafccaf"
+    },
+    "p1_source_code": {
+      "path": "src/cmc_bbdm/cpb_redesign/real_internal.py",
+      "sha256": "84d19c34fd04196dd929348bb7a213e22330a2e0af0cee81bc994ffb4926f98b"
+    },
+    "physical_descriptors": {
+      "path": "results/cpb_cfrp_revision/physical_descriptors.csv",
+      "sha256": "2f2c3b3a16cbe1b48364b76ad10999a91c01de000b81525ba56c8ec90399e078"
+    },
+    "provenance_observations": {
+      "path": "paper_v2/data/provenance/observations.csv",
+      "sha256": "1d5cfae1468d9375f62ee0d4bc03d0f19d3403150917d0820f34e6577be41e05"
+    },
+    "provenance_specimens": {
+      "path": "paper_v2/data/provenance/specimens.csv",
+      "sha256": "84617cb12012ac9acc1b756b59161738a2a0a1089bd3eb432b7d01a066e65f9f"
+    },
+    "size_workbook": {
+      "path": "data/public/hasebe_cai/raw/8scdmfdcfb/v3/2_Specimen size/Specimen size_v0.2.xlsx",
+      "sha256": "72c6dc7e1e8790883dba2b4b1e3ee1259fdfbad61d22d241a866d4621834fa65"
+    }
+  },
+  "outputs": {
+    "paper_v2/artifacts/P2_MECHANICAL_UTILITY.md": {
+      "bytes": 1313,
+      "sha256": "a75ca4f25fe141e0ab63dccba9ccf5fd717b260cd713f007edcb5e9eb081c5de"
+    },
+    "paper_v2/artifacts/P2_ORACLE_GAP.md": {
+      "bytes": 457,
+      "sha256": "337f0b772bc905183480522a305a4143d541c6965a57c54a91278d928c3d0140"
+    },
+    "paper_v2/artifacts/figures/P2_four_pathways_domain_mae.pdf": {
+      "bytes": 15564,
+      "sha256": "9a699cc34d2fb32d5b64349888a50dac450c88244f81a089aeeb281c0d8abf39"
+    },
+    "paper_v2/artifacts/tables/P2_adapter_provenance.csv": {
+      "bytes": 32774,
+      "sha256": "78c3ce84b05892310cd3997a7f52c1780ae30fa38b7e81ab769cbcbe2f041037"
+    },
+    "paper_v2/artifacts/tables/P2_bootstrap.csv": {
+      "bytes": 943,
+      "sha256": "748e3df3518da05a2b563bb4c6a756e3a2c88360827e4a1aadef9bdde0439c59"
+    },
+    "paper_v2/artifacts/tables/P2_domain_metrics.csv": {
+      "bytes": 7158,
+      "sha256": "26eb457da84623010c48e2251b1c25d9018d5a6686c44fb2f605654893a509b3"
+    },
+    "paper_v2/artifacts/tables/P2_oracle_gap.csv": {
+      "bytes": 211,
+      "sha256": "687f5ad197fc4684c21a6d4c33e4624dd1fcdda74e49d85b765565aeb5e516f3"
+    },
+    "paper_v2/artifacts/tables/P2_paired_contrasts.csv": {
+      "bytes": 5539,
+      "sha256": "cf9ae74d608af54f6d95b9168626df15e937bc244dd0b6c6dad699326a0fe544"
+    },
+    "paper_v2/artifacts/tables/P2_split_manifest.csv": {
+      "bytes": 565,
+      "sha256": "f977668f0577eb3b5963d24a7b3d9289ef2b6b23e0b37e2d6ca89fc05f793a10"
+    },
+    "paper_v2/experiments/P2_mechanical_utility/EXPERIMENT_REPORT.md": {
+      "bytes": 1712,
+      "sha256": "d277a62ba1c89db2b8b64acff34e67751789d7a6b020d9363289fc884d6a5ea8"
+    },
+    "paper_v2/experiments/P2_mechanical_utility/config_snapshot.yaml": {
+      "bytes": 2947,
+      "sha256": "7216cde498403fb1dc43c505e8ecf6ecf376402f525ccb6792685eb46f4054da"
+    },
+    "paper_v2/experiments/P2_mechanical_utility/domain_metrics.csv": {
+      "bytes": 7158,
+      "sha256": "26eb457da84623010c48e2251b1c25d9018d5a6686c44fb2f605654893a509b3"
+    },
+    "paper_v2/experiments/P2_mechanical_utility/metrics.json": {
+      "bytes": 21924,
+      "sha256": "c0032524bcd7a67266b05b845ef0706fa0980aca361f0c75c3fbc50ac9e1c293"
+    },
+    "paper_v2/experiments/P2_mechanical_utility/predictions.csv": {
+      "bytes": 526791,
+      "sha256": "5b0921ca02d99871c9a60a0dd8555ce45f0a10dd9348db3403351aaf0b355784"
+    }
+  },
+  "schema_version": 1,
+  "scope": "cpb_redesign_p2_mechanical_utility_outputs",
+  "source_code": {
+    "mechanical_utility": {
+      "path": "src/cmc_bbdm/cpb_redesign/mechanical_utility.py",
+      "sha256": "feb57997c4e9e824a50c9ea7dd8f1922b2fb68c4489e528a2e4d7429159e9e73"
+    },
+    "p1_artifact_manifest": {
+      "path": "paper_v2/experiments/P1_real_internal/artifact_manifest.json",
+      "sha256": "1b7d048471baf36da594801384199dfa593bf3e8e9a9d223a63846d6afaa4b8f"
+    },
+    "p1_config": {
+      "path": "paper_v2/configs/p1_real_internal.yaml",
+      "sha256": "13d4da0fde84d4612d893e7bd08f71f23ff87d2939b87e44018dca322cafccaf"
+    },
+    "p1_source_code": {
+      "path": "src/cmc_bbdm/cpb_redesign/real_internal.py",
+      "sha256": "84d19c34fd04196dd929348bb7a213e22330a2e0af0cee81bc994ffb4926f98b"
+    },
+    "runner": {
+      "path": "scripts/run_cpb_redesign_p2.py",
+      "sha256": "dca276f9b2987f321cf1405265a148e24a32acdb5a36fd764b18b97d67451864"
+    }
+  }
+}

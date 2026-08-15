@@ -1,0 +1,8 @@
+stage,question,reference_mae,candidate_mae,relative_improvement,improved_domains,simultaneous_lower,decision
+G1_area,surface_to_projected_damage_area,,,0.062135,3/7,-0.164873,FAIL
+G1_height,surface_to_damage_height,,,0.065989,6/7,-0.0522272,FAIL
+G1_width,surface_to_damage_width,,,0.070470,5/7,-0.13131,FAIL
+G2_measured_scalar,measured_scalar_incremental_CAI_utility,0.1881207811,0.1892044107,-0.005760,4/6,-0.005070,FAIL
+G2_predicted_scalar,strict_OOF_scalar_incremental_CAI_utility,0.1881207811,0.1855983291,0.013409,3/6,-0.013738,FAIL
+P1_full_field,measured_full_field_incremental_CAI_utility,0.1881207811,0.1284893565,0.316985,5/6,0.007218,PASS
+P2_MSPD,privileged_transfer_vs_equal_capacity_student,0.1483623192,0.1419266750,0.043378,4/6,-0.0102142603,FAIL

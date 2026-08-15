@@ -1,0 +1,1454 @@
+artifact_contract:
+  canonical_authentic:
+  - A_surface
+  - B_scalar
+  - B_morph
+  - B_frozen
+  - B_combined
+  - B_field_selected
+  - B_learned
+  - B_learned_zero_field
+  - I_morph
+  - I_frozen
+  - I_combined
+  - I_field_selected
+  - I_learned
+  checkpoint_unique_count: 90
+  confirmatory_effects:
+  - A_vs_field
+  - scalar_vs_field
+  - global_shuffle_vs_field
+  - stratified_shuffle_vs_field
+  confirmatory_metrics:
+  - specimen_mae
+  - domain_mae
+  - equal_domain_mae
+  - relative_improvement
+  - improved_domain_count
+  controls:
+  - global_shuffle
+  - stratified_shuffle
+  - global_shuffle_cnn
+  - stratified_shuffle_cnn
+  execution:
+    full:
+      caller_override_allowed: false
+      independent: false
+      test_only: false
+    smoke:
+      caller_override_allowed: false
+      independent: true
+      test_only: true
+  expected_aggregate_count: 17
+  expected_domain_count: 102
+  expected_methods:
+  - A_surface
+  - B_scalar
+  - B_morph
+  - B_frozen
+  - B_combined
+  - B_field_selected
+  - B_learned
+  - B_learned_zero_field
+  - I_morph
+  - I_frozen
+  - I_combined
+  - I_field_selected
+  - I_learned
+  - global_shuffle
+  - stratified_shuffle
+  - global_shuffle_cnn
+  - stratified_shuffle_cnn
+  model_files: 90
+  row_counts:
+    aggregate_metrics.csv: 17
+    bootstrap.csv: 4
+    checkpoint_index.csv: 90
+    data_manifest.csv: 38
+    domain_metrics.csv: 102
+    inner_predictions.csv: 270
+    inner_selection.csv: 180
+    predictions.csv: 8556
+    representation_provenance.csv: 78
+    shuffle_pairs.csv: 9936
+    split_manifest.csv: 1656
+    training_runs.csv: 90
+  source_hash_key_map:
+    images: manifest
+    responses: cai_workbook
+  source_hash_keys:
+  - images
+  - responses
+  source_hash_semantics:
+    images:
+      authority: paired_manifest_crop_authority
+      source_names:
+      - manifest
+    responses:
+      authority: p2_cai_workbook_authority
+      source_names:
+      - cai_workbook
+  training_unique_count: 90
+  unique_keys:
+    checkpoint_index.csv:
+    - checkpoint_path
+    predictions.csv:
+    - method
+    - specimen_id
+    - seed
+    training_runs.csv:
+    - outer_dataset_id
+    - method
+    - seed
+bootstrap:
+  bit_generator: PCG64
+  common_index_matrix: true
+  effect_keys:
+  - A_vs_field
+  - scalar_vs_field
+  - global_shuffle_vs_field
+  - stratified_shuffle_vs_field
+  family_size: 4
+  familywise_alpha: 0.05
+  inferential_unit: held_out_dataset
+  lower_quantile: 0.00625
+  quantile_method: linear
+  resamples: 100000
+  seed: 20260811
+  upper_quantile: 0.99375
+cohorts:
+  alternative_inventory:
+    domain_counts:
+    - - 74t7kcdgkr
+      - 46
+    - - cgtnjyggtm
+      - 50
+    - - w68dtmpfyf
+      - 43
+    - - xcmzfsbd9t
+      - 61
+    - - yfxyg8jm46
+      - 42
+    - - ykhs7s2dck
+      - 39
+    domains:
+    - 74t7kcdgkr
+    - cgtnjyggtm
+    - w68dtmpfyf
+    - xcmzfsbd9t
+    - yfxyg8jm46
+    - ykhs7s2dck
+    expected_n: 281
+    ids:
+    - c8-2
+    - c8-3
+    - c8-4
+    - c8-5
+    - c8-6
+    - c8-6t
+    - c8-7
+    - c8-8
+    - c8-8t
+    - c8-9
+    - c8-9t
+    - c8-10t
+    - c8-11
+    - c8-12
+    - c8-12t
+    - c8-13
+    - c8-14
+    - c8-15
+    - c8-16
+    - c8-17
+    - c8-18
+    - c8-19
+    - c8-20
+    - c8-21
+    - c8-22
+    - c8-23
+    - c8-24
+    - c8-25
+    - c8-26
+    - c8-27
+    - c8-28
+    - c8-29
+    - c8-30
+    - c8-32
+    - c8-33
+    - c8-34
+    - c8-35
+    - c8-36
+    - c8-37
+    - c8-38
+    - c8-39
+    - c8-40
+    - c8-41
+    - c8-42
+    - c8-43
+    - q24-1
+    - q24-2
+    - q24-3
+    - q24-4
+    - q24-5
+    - q24-6
+    - q24-7
+    - q24-8
+    - q24-9
+    - q24-10
+    - q24-11
+    - q24-12
+    - q24-13
+    - q24-14
+    - q24-15
+    - q24-16
+    - q24-18
+    - q24-19
+    - q24-20
+    - q24-21
+    - q24-22
+    - q24-23
+    - q24-24
+    - q24-25
+    - q24-26
+    - q24-27
+    - q24-28
+    - q24-29
+    - q24-30
+    - q24-31
+    - q24-32
+    - q24-33
+    - q24-34
+    - q24-35
+    - q24-36
+    - q24-37
+    - q24-38
+    - q24-39
+    - q24-40
+    - q24-41
+    - q24-42
+    - q24-43
+    - q24-44
+    - q24-45
+    - q24-46
+    - q24-47
+    - q24-48
+    - q24-49
+    - q24-50
+    - q16-1
+    - q16-2
+    - q16-3
+    - q16-4
+    - q16-5
+    - q16-6
+    - q16-7
+    - q16-8
+    - q16-9
+    - q16-10
+    - q16-11
+    - q16-12
+    - q16-13
+    - q16-14
+    - q16-15
+    - q16-16
+    - q16-17
+    - q16-18
+    - q16-19
+    - q16-20
+    - q16-21
+    - q16-22
+    - q16-23
+    - q16-24
+    - q16-25
+    - q16-26
+    - q16-27
+    - q16-28
+    - q16-29
+    - q16-30
+    - q16-31
+    - q16-32
+    - q16-33
+    - q16-34
+    - q16-35
+    - q16-36
+    - q16-37
+    - q16-38
+    - q16-39
+    - q16-40
+    - q16-41
+    - q16-42
+    - q16-43
+    - c24-2
+    - c24-3
+    - c24-5
+    - c24-6
+    - c24-6t
+    - c24-7
+    - c24-8
+    - c24-8t
+    - c24-9
+    - c24-9t
+    - c24-10
+    - c24-10t
+    - c24-11
+    - c24-11t
+    - c24-12
+    - c24-12t
+    - c24-13
+    - c24-14
+    - c24-15
+    - c24-16
+    - c24-17
+    - c24-18
+    - c24-20
+    - c24-21
+    - c24-24
+    - c24-25
+    - c24-26
+    - c24-27
+    - c24-28
+    - c24-29
+    - c24-30
+    - c24-31
+    - c24-32
+    - c24-33
+    - c24-34
+    - c24-35
+    - c24-36
+    - c24-37
+    - c24-39
+    - c24-40
+    - c24-41
+    - c24-42
+    - c24-43
+    - c24-44
+    - c24-45
+    - c24-46
+    - c24-47
+    - c24-48
+    - c24-49
+    - c24-50
+    - c24-51
+    - c24-52
+    - c24-53
+    - c24-54
+    - c24-55
+    - c24-56
+    - c24-57
+    - c24-58
+    - c24-59
+    - c16-1
+    - c16-2
+    - c16-3
+    - c16-4
+    - c16-5
+    - c16-6
+    - c16-7
+    - c16-8
+    - c16-9
+    - c16-10
+    - c16-11
+    - c16-12
+    - c16-13
+    - c16-14
+    - c16-15
+    - c16-16
+    - c16-17
+    - c16-18
+    - c16-19
+    - c16-20
+    - c16-21
+    - c16-22
+    - c16-23
+    - c16-24
+    - c16-25
+    - c16-26
+    - c16-27
+    - c16-28
+    - c16-29
+    - c16-30
+    - c16-32
+    - c16-33
+    - c16-34
+    - c16-35
+    - c16-36
+    - c16-37
+    - c16-38
+    - c16-39
+    - c16-40
+    - c16-41
+    - c16-42
+    - c16-43
+    - q8-1
+    - q8-2
+    - q8-3
+    - q8-4
+    - q8-5
+    - q8-6
+    - q8-7
+    - q8-8
+    - q8-9
+    - q8-10
+    - q8-11
+    - q8-12
+    - q8-13
+    - q8-14
+    - q8-15
+    - q8-16
+    - q8-18
+    - q8-19
+    - q8-20
+    - q8-21
+    - q8-22
+    - q8-23
+    - q8-24
+    - q8-27
+    - q8-28
+    - q8-29
+    - q8-30
+    - q8-31
+    - q8-32
+    - q8-33
+    - q8-34
+    - q8-35
+    - q8-36
+    - q8-37
+    - q8-38
+    - q8-39
+    - q8-40
+    - q8-41
+    - c24-1
+    - c24-4
+    - c8-11t
+    - q24-17
+    - q8-17
+    include_in_gate: false
+    include_in_modeling: false
+    include_in_selection: false
+    metric: inventory_only
+    response_name: cai_damaged_to_intact_strength_ratio
+    response_unit: '1'
+    role: inventory_only
+  primary:
+    domain_counts:
+    - - 74t7kcdgkr
+      - 45
+    - - cgtnjyggtm
+      - 49
+    - - w68dtmpfyf
+      - 43
+    - - xcmzfsbd9t
+      - 59
+    - - yfxyg8jm46
+      - 42
+    - - ykhs7s2dck
+      - 38
+    domains:
+    - 74t7kcdgkr
+    - cgtnjyggtm
+    - w68dtmpfyf
+    - xcmzfsbd9t
+    - yfxyg8jm46
+    - ykhs7s2dck
+    expected_n: 276
+    ids:
+    - c8-2
+    - c8-3
+    - c8-4
+    - c8-5
+    - c8-6
+    - c8-6t
+    - c8-7
+    - c8-8
+    - c8-8t
+    - c8-9
+    - c8-9t
+    - c8-10t
+    - c8-11
+    - c8-12
+    - c8-12t
+    - c8-13
+    - c8-14
+    - c8-15
+    - c8-16
+    - c8-17
+    - c8-18
+    - c8-19
+    - c8-20
+    - c8-21
+    - c8-22
+    - c8-23
+    - c8-24
+    - c8-25
+    - c8-26
+    - c8-27
+    - c8-28
+    - c8-29
+    - c8-30
+    - c8-32
+    - c8-33
+    - c8-34
+    - c8-35
+    - c8-36
+    - c8-37
+    - c8-38
+    - c8-39
+    - c8-40
+    - c8-41
+    - c8-42
+    - c8-43
+    - q24-1
+    - q24-2
+    - q24-3
+    - q24-4
+    - q24-5
+    - q24-6
+    - q24-7
+    - q24-8
+    - q24-9
+    - q24-10
+    - q24-11
+    - q24-12
+    - q24-13
+    - q24-14
+    - q24-15
+    - q24-16
+    - q24-18
+    - q24-19
+    - q24-20
+    - q24-21
+    - q24-22
+    - q24-23
+    - q24-24
+    - q24-25
+    - q24-26
+    - q24-27
+    - q24-28
+    - q24-29
+    - q24-30
+    - q24-31
+    - q24-32
+    - q24-33
+    - q24-34
+    - q24-35
+    - q24-36
+    - q24-37
+    - q24-38
+    - q24-39
+    - q24-40
+    - q24-41
+    - q24-42
+    - q24-43
+    - q24-44
+    - q24-45
+    - q24-46
+    - q24-47
+    - q24-48
+    - q24-49
+    - q24-50
+    - q16-1
+    - q16-2
+    - q16-3
+    - q16-4
+    - q16-5
+    - q16-6
+    - q16-7
+    - q16-8
+    - q16-9
+    - q16-10
+    - q16-11
+    - q16-12
+    - q16-13
+    - q16-14
+    - q16-15
+    - q16-16
+    - q16-17
+    - q16-18
+    - q16-19
+    - q16-20
+    - q16-21
+    - q16-22
+    - q16-23
+    - q16-24
+    - q16-25
+    - q16-26
+    - q16-27
+    - q16-28
+    - q16-29
+    - q16-30
+    - q16-31
+    - q16-32
+    - q16-33
+    - q16-34
+    - q16-35
+    - q16-36
+    - q16-37
+    - q16-38
+    - q16-39
+    - q16-40
+    - q16-41
+    - q16-42
+    - q16-43
+    - c24-2
+    - c24-3
+    - c24-5
+    - c24-6
+    - c24-6t
+    - c24-7
+    - c24-8
+    - c24-8t
+    - c24-9
+    - c24-9t
+    - c24-10
+    - c24-10t
+    - c24-11
+    - c24-11t
+    - c24-12
+    - c24-12t
+    - c24-13
+    - c24-14
+    - c24-15
+    - c24-16
+    - c24-17
+    - c24-18
+    - c24-20
+    - c24-21
+    - c24-24
+    - c24-25
+    - c24-26
+    - c24-27
+    - c24-28
+    - c24-29
+    - c24-30
+    - c24-31
+    - c24-32
+    - c24-33
+    - c24-34
+    - c24-35
+    - c24-36
+    - c24-37
+    - c24-39
+    - c24-40
+    - c24-41
+    - c24-42
+    - c24-43
+    - c24-44
+    - c24-45
+    - c24-46
+    - c24-47
+    - c24-48
+    - c24-49
+    - c24-50
+    - c24-51
+    - c24-52
+    - c24-53
+    - c24-54
+    - c24-55
+    - c24-56
+    - c24-57
+    - c24-58
+    - c24-59
+    - c16-1
+    - c16-2
+    - c16-3
+    - c16-4
+    - c16-5
+    - c16-6
+    - c16-7
+    - c16-8
+    - c16-9
+    - c16-10
+    - c16-11
+    - c16-12
+    - c16-13
+    - c16-14
+    - c16-15
+    - c16-16
+    - c16-17
+    - c16-18
+    - c16-19
+    - c16-20
+    - c16-21
+    - c16-22
+    - c16-23
+    - c16-24
+    - c16-25
+    - c16-26
+    - c16-27
+    - c16-28
+    - c16-29
+    - c16-30
+    - c16-32
+    - c16-33
+    - c16-34
+    - c16-35
+    - c16-36
+    - c16-37
+    - c16-38
+    - c16-39
+    - c16-40
+    - c16-41
+    - c16-42
+    - c16-43
+    - q8-1
+    - q8-2
+    - q8-3
+    - q8-4
+    - q8-5
+    - q8-6
+    - q8-7
+    - q8-8
+    - q8-9
+    - q8-10
+    - q8-11
+    - q8-12
+    - q8-13
+    - q8-14
+    - q8-15
+    - q8-16
+    - q8-18
+    - q8-19
+    - q8-20
+    - q8-21
+    - q8-22
+    - q8-23
+    - q8-24
+    - q8-27
+    - q8-28
+    - q8-29
+    - q8-30
+    - q8-31
+    - q8-32
+    - q8-33
+    - q8-34
+    - q8-35
+    - q8-36
+    - q8-37
+    - q8-38
+    - q8-39
+    - q8-40
+    - q8-41
+    include_in_gate: true
+    include_in_modeling: true
+    include_in_selection: true
+    metric: raw_equal_domain_mae
+    response_name: cai_damaged_to_intact_strength_ratio
+    response_unit: '1'
+    role: confirmatory
+feature_units:
+  morphology:
+  - - projected_damage_area
+    - mm^2
+  - - damage_height
+    - mm
+  - - damage_width
+    - mm
+  - - damage_eccentricity
+    - '1'
+  - - equivalent_damage_diameter
+    - mm
+  - - damage_radial_spread
+    - mm
+  - - maximum_feret_diameter
+    - mm
+  - - minimum_feret_diameter
+    - mm
+  - - major_axis_length
+    - mm
+  - - minor_axis_length
+    - mm
+  - - orientation_cos_2theta
+    - '1'
+  - - orientation_sin_2theta
+    - '1'
+  - - perimeter
+    - mm
+  - - convex_hull_area
+    - mm^2
+  - - solidity
+    - '1'
+  - - compactness
+    - '1'
+  - - aspect_ratio
+    - '1'
+  - - component_count
+    - '1'
+  - - largest_component_area_fraction
+    - '1'
+  - - boundary_complexity_ratio
+    - '1'
+  - - projected_area_fraction
+    - '1'
+  - - centroid_x_offset_mm
+    - mm
+  - - centroid_y_offset_mm
+    - mm
+  - - centroid_radial_distance_mm
+    - mm
+  - - mu20_mm2
+    - mm^2
+  - - mu02_mm2
+    - mm^2
+  - - mu11_mm2
+    - mm^2
+  - - annular_fraction_0
+    - '1'
+  - - annular_fraction_1
+    - '1'
+  - - annular_fraction_2
+    - '1'
+  - - annular_fraction_3
+    - '1'
+  - - angular_fraction_0
+    - '1'
+  - - angular_fraction_1
+    - '1'
+  - - angular_fraction_2
+    - '1'
+  - - angular_fraction_3
+    - '1'
+  - - angular_fraction_4
+    - '1'
+  - - angular_fraction_5
+    - '1'
+  - - angular_fraction_6
+    - '1'
+  - - angular_fraction_7
+    - '1'
+  - - central_fraction_15
+    - '1'
+  - - central_fraction_30
+    - '1'
+  - - central_fraction_45
+    - '1'
+  - - grid2_fraction_0
+    - '1'
+  - - grid2_fraction_1
+    - '1'
+  - - grid2_fraction_2
+    - '1'
+  - - grid2_fraction_3
+    - '1'
+  - - grid4_fraction_0
+    - '1'
+  - - grid4_fraction_1
+    - '1'
+  - - grid4_fraction_2
+    - '1'
+  - - grid4_fraction_3
+    - '1'
+  - - grid4_fraction_4
+    - '1'
+  - - grid4_fraction_5
+    - '1'
+  - - grid4_fraction_6
+    - '1'
+  - - grid4_fraction_7
+    - '1'
+  - - grid4_fraction_8
+    - '1'
+  - - grid4_fraction_9
+    - '1'
+  - - grid4_fraction_10
+    - '1'
+  - - grid4_fraction_11
+    - '1'
+  - - grid4_fraction_12
+    - '1'
+  - - grid4_fraction_13
+    - '1'
+  - - grid4_fraction_14
+    - '1'
+  - - grid4_fraction_15
+    - '1'
+  - - mask_nonempty
+    - '1'
+  - - orientation_defined
+    - '1'
+  scalar:
+  - - area_mm2
+    - mm^2
+  - - height_mm
+    - mm
+  - - width_mm
+    - mm
+frozen_encoder:
+  align_corners: false
+  antialias: true
+  architecture: torchvision_resnet18_imagenet1k_v1
+  downstream_alpha: 10.0
+  embedding_dim: 512
+  grayscale_rule: 0.299R+0.587G+0.114B
+  head: removed_classification_head
+  imagenet_mean:
+  - 0.485
+  - 0.456
+  - 0.406
+  imagenet_std:
+  - 0.229
+  - 0.224
+  - 0.225
+  pca_dimensions:
+  - 8
+  - 16
+  - 32
+  pca_tie_order:
+  - 8
+  - 16
+  - 32
+  pca_tie_tolerance: 1.0e-12
+  replicate_channels: 3
+  resize:
+  - 224
+  - 224
+  resize_interpolation: bilinear
+  rgb_source: RGB_0_255
+  scale: uint8_div_255_float32
+  torch_version: 2.12.1+cu130
+  torchvision_version: 0.27.1+cu130
+  trainable: false
+  weight_filename: resnet18-f37072fd.pth
+  weight_path: paper_v3/assets/resnet18-f37072fd.pth
+  weight_sha256: f37072fd47e89c5e827621c5baffa7500819f7896bbacec160b1a16c560e07ec
+gate:
+  ci_target: absolute_delta
+  conditions:
+  - effect: A_vs_field
+    name: field_ri_vs_A
+    operator: '>='
+    quantity: relative_improvement
+    threshold: 0.1
+  - effect: A_vs_field
+    name: field_improves_domains_vs_A
+    operator: '>='
+    quantity: improved_domain_count
+    threshold: 4.0
+  - effect: A_vs_field
+    name: field_ci_vs_A
+    operator: '>'
+    quantity: absolute_delta_lower_bound
+    threshold: 0.0
+  - effect: scalar_vs_field
+    name: field_ri_vs_scalar
+    operator: '>='
+    quantity: relative_improvement
+    threshold: 0.05
+  - effect: scalar_vs_field
+    name: field_ci_vs_scalar
+    operator: '>'
+    quantity: absolute_delta_lower_bound
+    threshold: 0.0
+  - effect: global_shuffle_vs_field
+    name: field_ci_vs_global_shuffle
+    operator: '>'
+    quantity: absolute_delta_lower_bound
+    threshold: 0.0
+  - effect: stratified_shuffle_vs_field
+    name: field_ci_vs_stratified_shuffle
+    operator: '>'
+    quantity: absolute_delta_lower_bound
+    threshold: 0.0
+  effect_direction: reference_minus_candidate
+  effects:
+  - A_vs_field
+  - scalar_vs_field
+  - global_shuffle_vs_field
+  - stratified_shuffle_vs_field
+  pass_rule: all_required
+  ri_is_point_threshold_only: true
+  screen:
+    confidence_interval: false
+    endpoints_in_family: false
+    improved_domain_threshold: 4
+    inferential: false
+    mappings:
+    - global_shuffle
+    - stratified_shuffle
+    name: shuffle_vs_A
+    none_rule: none
+    pass_rule: and
+    relative_improvement_threshold: 0.1
+    role: noninferential_confounding_screen
+learned_cnn:
+  activation: GELU
+  amsgrad: false
+  augmentation: null
+  batch_size: 32
+  betas:
+  - 0.9
+  - 0.999
+  capacity_control: identical_network_zero_field
+  conv_bias: false
+  conv_widths:
+  - 16
+  - 32
+  - 64
+  cudnn_benchmark: false
+  cudnn_deterministic: true
+  deterministic_algorithms: true
+  dropout: 0.1
+  early_stopping_min_delta: 0.0001
+  early_stopping_patience: 20
+  enters_g2b_gate: false
+  enters_primary_selection: false
+  epoch_selection_metric: inner_query_mae
+  gradient_clip_norm: 1.0
+  grayscale_rule: 0.299R+0.587G+0.114B
+  group_norm_affine: true
+  group_norm_eps: 1.0e-05
+  group_norm_groups: 4
+  head_conditioning: A_surface
+  head_hidden_width: 64
+  initialization: pytorch_version_bound_default
+  input_channels: 1
+  input_size:
+  - 128
+  - 128
+  kernel_size: 3
+  latent_dim: 32
+  learning_rate: 0.001
+  loss: SmoothL1
+  loss_beta: 1.0
+  loss_reduction: mean
+  max_epochs: 200
+  num_workers: 0
+  optimizer: AdamW
+  optimizer_eps: 1.0e-08
+  outer_epoch_rule: lower_median_inner_best_epoch
+  outer_epoch_rule_scope: per_outer_fold_per_seed_from_five_inner_best_epochs
+  outer_prediction_aggregation: arithmetic_mean_per_specimen
+  output_dim: 1
+  padding: 1
+  pooling: adaptive_average
+  role: secondary
+  scheduler: null
+  seeds:
+  - 20260811
+  - 20260812
+  - 20260813
+  stride: 2
+  tf32: false
+  value_range:
+  - 0.0
+  - 1.0
+  weight_decay: 0.0001
+morphology:
+  angular_direction: clockwise_from_positive_x
+  angular_sector_count: 8
+  annular_edges_normalized:
+  - 0.0
+  - 0.25
+  - 0.5
+  - 0.75
+  - 1.0
+  center_mm:
+  - 37.5
+  - 37.5
+  central_radii_fraction:
+  - 0.15
+  - 0.3
+  - 0.45
+  connectivity: 8
+  coordinate_frame: registered_scan_frame
+  empty_mask_semantics: zero_features_and_flags
+  extraction_rule: bg40_rb20_close08
+  field_height_mm: 75.0
+  field_width_mm: 75.0
+  grid_shapes:
+  - - 2
+    - 2
+  - - 4
+    - 4
+  model_fields:
+  - projected_damage_area
+  - damage_height
+  - damage_width
+  - damage_eccentricity
+  - equivalent_damage_diameter
+  - damage_radial_spread
+  - maximum_feret_diameter
+  - minimum_feret_diameter
+  - major_axis_length
+  - minor_axis_length
+  - orientation_cos_2theta
+  - orientation_sin_2theta
+  - perimeter
+  - convex_hull_area
+  - solidity
+  - compactness
+  - aspect_ratio
+  - component_count
+  - largest_component_area_fraction
+  - boundary_complexity_ratio
+  - projected_area_fraction
+  - centroid_x_offset_mm
+  - centroid_y_offset_mm
+  - centroid_radial_distance_mm
+  - mu20_mm2
+  - mu02_mm2
+  - mu11_mm2
+  - annular_fraction_0
+  - annular_fraction_1
+  - annular_fraction_2
+  - annular_fraction_3
+  - angular_fraction_0
+  - angular_fraction_1
+  - angular_fraction_2
+  - angular_fraction_3
+  - angular_fraction_4
+  - angular_fraction_5
+  - angular_fraction_6
+  - angular_fraction_7
+  - central_fraction_15
+  - central_fraction_30
+  - central_fraction_45
+  - grid2_fraction_0
+  - grid2_fraction_1
+  - grid2_fraction_2
+  - grid2_fraction_3
+  - grid4_fraction_0
+  - grid4_fraction_1
+  - grid4_fraction_2
+  - grid4_fraction_3
+  - grid4_fraction_4
+  - grid4_fraction_5
+  - grid4_fraction_6
+  - grid4_fraction_7
+  - grid4_fraction_8
+  - grid4_fraction_9
+  - grid4_fraction_10
+  - grid4_fraction_11
+  - grid4_fraction_12
+  - grid4_fraction_13
+  - grid4_fraction_14
+  - grid4_fraction_15
+  - mask_nonempty
+  - orientation_defined
+  orientation_semantics: zero_pair_and_undefined_flag
+  registry_digest: 42ccae16456f89215b24c8d8492a9456c6e8821bacdabc4bbd02745a9e6c7d02
+  skeleton_enabled: false
+  source_registry:
+  - projected_damage_area
+  - damage_height
+  - damage_width
+  - damage_eccentricity
+  - equivalent_damage_diameter
+  - damage_radial_spread
+  - maximum_feret_diameter
+  - minimum_feret_diameter
+  - major_axis_length
+  - minor_axis_length
+  - damage_orientation_degrees
+  - orientation_cos_2theta
+  - orientation_sin_2theta
+  - perimeter
+  - convex_hull_area
+  - solidity
+  - compactness
+  - aspect_ratio
+  - component_count
+  x_direction: right
+  y_direction: down
+output_dir: paper_v3/experiments/P1_full_field_oracle
+representations:
+  all_names:
+  - A_surface
+  - B_scalar
+  - B_morph
+  - B_frozen
+  - B_combined
+  - B_field_selected
+  - B_learned
+  - B_learned_zero_field
+  - I_morph
+  - I_frozen
+  - I_combined
+  - I_field_selected
+  - I_learned
+  baseline_A: A_surface
+  internal_only_candidates:
+  - I_morph
+  - I_frozen
+  - I_combined
+  internal_selected_name: I_field_selected
+  primary_candidates:
+  - B_morph
+  - B_frozen
+  - B_combined
+  scalar_control: B_scalar
+  secondary:
+  - B_learned
+  - B_learned_zero_field
+  - I_learned
+  selected_name: B_field_selected
+ridge:
+  alpha: 10.0
+  primary_candidates:
+  - B_morph
+  - B_frozen
+  - B_combined
+  selection_metric: unweighted_mean_inner_domain_raw_mae
+  tie_order:
+  - B_morph
+  - B_frozen
+  - B_combined
+  tie_tolerance: 1.0e-12
+runtime:
+  numpy_distribution: 2.5.0
+  numpy_module: 2.5.1
+  pil_module: 12.3.0
+  pillow_distribution: 12.2.0
+  python: 3.13.13
+  pyyaml_distribution: 6.0.3
+  pyyaml_module: 6.0.3
+  scikit_learn_distribution: 1.9.0
+  scikit_learn_module: 1.9.0
+  scipy_distribution: 1.18.0
+  scipy_module: 1.18.0
+  torch_build: 2.12.1+cu130
+  torch_distribution: 2.12.1
+  torch_module: 2.12.1+cu130
+  torchvision_build: 0.27.1+cu130
+  torchvision_distribution: 0.27.1
+  torchvision_module: 0.27.1+cu130
+schema_version: 1
+scope: cpb_v3_p1_full_field_oracle
+seed: 20260811
+shuffle:
+  energy_bin_edges_j:
+  - 0.0
+  - 4.0
+  - 6.0
+  - 9.0
+  - 12.0
+  energy_bin_final_interval: '[12,positive_infinity)'
+  energy_bin_interval: all_half_open
+  energy_bin_last_upper: positive_infinity
+  estimate: mae_first_then_seed_average
+  exact_layup_keys:
+  - laminate_type
+  - ply_count
+  exclude_self_pairs: true
+  mappings:
+  - global_shuffle
+  - stratified_shuffle
+  relaxation_order:
+  - dataset_exact_layup_energy_bin
+  - dataset_exact_layup
+  - dataset
+  - pool
+  seeds:
+  - 20260821
+  - 20260822
+  - 20260823
+  test_images_in_training: false
+sources:
+  cai_workbook:
+    name: cai_workbook
+    path: data/public/hasebe_cai/raw/8scdmfdcfb/v3/5_Compression after impact strength/Compression
+      after impact strength_v0.2.xlsx
+    sha256: 0de44feca06294c33f2c6bc98ce6e9a8035476ff8fbef21d29f852e820cf4e2d
+  feature_cache:
+    name: feature_cache
+    path: results/public_recoverability/feature_cache.npz
+    sha256: 6d581c77e0db18782406bd55dd2c0716d048c16c64c8df4423d5b331c84aeb52
+  feature_provenance:
+    name: feature_provenance
+    path: results/public_recoverability/feature_provenance.json
+    sha256: 1ed1ee1eedda144b0d86ac2c3c2043c9a9ef1257c942cbf631831ef1e7e80598
+  impact_condition_74t7kcdgkr:
+    name: impact_condition_74t7kcdgkr
+    path: data/public/hasebe/raw/74t7kcdgkr/v1/root/impact condition_c8.xlsx
+    sha256: c875c09c136ce8d97f2b1699a9247bbc513386eb0fc83c637c2901eaa8a296ea
+  impact_condition_cgtnjyggtm:
+    name: impact_condition_cgtnjyggtm
+    path: data/public/hasebe/raw/cgtnjyggtm/v1/root/impact condition_q24.xlsx
+    sha256: 8135151ff22244c2c94429c81eac259b6eb1fad952df30cdedb0d3a832a58388
+  impact_condition_w68dtmpfyf:
+    name: impact_condition_w68dtmpfyf
+    path: data/public/hasebe/raw/w68dtmpfyf/v1/root/impact condition_q16.xlsx
+    sha256: 4ddc326e707b91c7bde1abe2b7963f6f51fa39dc28a6bae0e34aa2db827c9853
+  impact_condition_xcmzfsbd9t:
+    name: impact_condition_xcmzfsbd9t
+    path: data/public/hasebe/raw/xcmzfsbd9t/v1/root/impact condition_c24.xlsx
+    sha256: 01693ddb4f616669f4404800c48a27f8597ebded7062db029c692526cb6e8487
+  impact_condition_yfxyg8jm46:
+    name: impact_condition_yfxyg8jm46
+    path: data/public/hasebe/raw/yfxyg8jm46/v1/root/impact condition_c16.xlsx
+    sha256: 8a10058c529bbb97314d982093d1d87353ea832c0e4ef5c3659f07327f0612f1
+  impact_condition_ykhs7s2dck:
+    name: impact_condition_ykhs7s2dck
+    path: data/public/hasebe/raw/ykhs7s2dck/v1/root/impact condition_q8.xlsx
+    sha256: 042104cd8c32461cd3e033a18d046d3da2688c89d89af0f476737129fafaba87
+  lvi_workbook:
+    name: lvi_workbook
+    path: data/public/hasebe_cai/raw/8scdmfdcfb/v3/1_Low velocity impact testing condition/Low
+      velocity impact testing condition and damage_v0.2.xlsx
+    sha256: e6d98c968f57ac5748e104dc1da5e112114d25d77c03c7222ba3a0d93ac23cf1
+  manifest:
+    name: manifest
+    path: data/public/hasebe/manifest/paired.csv
+    sha256: f81002981bf2f6aed84818b48da87cd57e6336f5f3da8d78df1a58d26dd8026f
+  p0_current_evidence:
+    name: p0_current_evidence
+    path: paper_v3/artifacts/V3_P0_CURRENT_EVIDENCE.md
+    sha256: e54701def58232cebaf4b58bb2d2e71115ccdc921caa6b881dea652836862df8
+  p0_g2b_feasibility:
+    name: p0_g2b_feasibility
+    path: paper_v3/artifacts/V3_P0_G2B_FEASIBILITY.md
+    sha256: 45431549995d90419e92c467dbc101637699482a40275a05c5c2c5c8d3896fc0
+  p0_raw_cscan_audit:
+    name: p0_raw_cscan_audit
+    path: paper_v3/artifacts/V3_P0_RAW_CSCAN_AUDIT.md
+    sha256: 33d43bf1e638ab8102d6fd6a159478de6bca69805335a852c0360f8171b6fdf5
+  p1_artifact_manifest:
+    name: p1_artifact_manifest
+    path: paper_v2/experiments/P1_real_internal/artifact_manifest.json
+    sha256: 1b7d048471baf36da594801384199dfa593bf3e8e9a9d223a63846d6afaa4b8f
+  p1_config:
+    name: p1_config
+    path: paper_v2/configs/p1_real_internal.yaml
+    sha256: 13d4da0fde84d4612d893e7bd08f71f23ff87d2939b87e44018dca322cafccaf
+  p1_source_code:
+    name: p1_source_code
+    path: src/cmc_bbdm/cpb_redesign/real_internal.py
+    sha256: 84d19c34fd04196dd929348bb7a213e22330a2e0af0cee81bc994ffb4926f98b
+  p2_config:
+    name: p2_config
+    path: paper_v2/configs/p2_mechanical_utility.yaml
+    sha256: 7216cde498403fb1dc43c505e8ecf6ecf376402f525ccb6792685eb46f4054da
+  p2_metrics:
+    name: p2_metrics
+    path: paper_v2/experiments/P2_mechanical_utility/metrics.json
+    sha256: c0032524bcd7a67266b05b845ef0706fa0980aca361f0c75c3fbc50ac9e1c293
+  p2_source_code:
+    name: p2_source_code
+    path: src/cmc_bbdm/cpb_redesign/mechanical_utility.py
+    sha256: feb57997c4e9e824a50c9ea7dd8f1922b2fb68c4489e528a2e4d7429159e9e73
+  physical_calibration:
+    name: physical_calibration
+    path: data/public/hasebe/physical_calibration.csv
+    sha256: 302bd258e44b74c41d725da5ac69aefe983702882a31ea6ac474ed4a8c41573f
+  physical_descriptor_authority:
+    name: physical_descriptor_authority
+    path: src/cmc_bbdm/cpb_physical_descriptors.py
+    sha256: 8fd1b8d47f5363437342043a3a60e48c574267fcb15b29f9cc02d7363d85beb0
+  physical_descriptors:
+    name: physical_descriptors
+    path: results/cpb_cfrp_revision/physical_descriptors.csv
+    sha256: 2f2c3b3a16cbe1b48364b76ad10999a91c01de000b81525ba56c8ec90399e078
+  physical_generation_code:
+    name: physical_generation_code
+    path: src/cmc_bbdm/cpb_revision_pipeline.py
+    sha256: f6c3ffefb5b2ad97c2167ca8b7a55be62bf3012647b69573203753b8a9331eff
+  physical_generation_config:
+    name: physical_generation_config
+    path: configs/cpb_cfrp_revision.yaml
+    sha256: 18e00ea0e1c7c97c51be0dbd56ae7e1f1cdb845988faba3a6bac5f1dfb39d982
+  physical_generation_script:
+    name: physical_generation_script
+    path: scripts/run_cpb_cfrp_revision.py
+    sha256: 5168f317ea63318f8896e4363a45660c441f12cb2de267ec0b14951357bf036a
+  physical_measurements:
+    name: physical_measurements
+    path: results/cpb_cfrp_revision/published_damage_measurements.csv
+    sha256: 715d198f6b5d5531b66221e665074262cc55fa306d20469a15af6d8ce945c177
+  physical_morphology_authority:
+    name: physical_morphology_authority
+    path: src/cmc_bbdm/cpb_cscan_morphology.py
+    sha256: c0b0aae0d4befd2861c9051b7116179261438cebd520f2f97dd28c8fcb61cb3a
+  physical_result_manifest:
+    name: physical_result_manifest
+    path: results/cpb_cfrp_revision/artifact_manifest.json
+    sha256: d283b5a91717ac7bb06685661bfc47d92e451fb3e87097db91ed8f41a776a220
+  physical_rule_calibration:
+    name: physical_rule_calibration
+    path: results/cpb_cfrp_revision/cscan_rule_calibration.csv
+    sha256: d3785adb4ad36ee9032679002df8c78955aac455a4570fa91759a528b7cc9bf7
+  profile_stat_authority:
+    name: profile_stat_authority
+    path: src/cmc_bbdm/recoverability_features.py
+    sha256: 36b8663a56f5e0421056744068e4f52d16a7456c27f018a8a5936f815856a235
+  provenance_observations:
+    name: provenance_observations
+    path: paper_v2/data/provenance/observations.csv
+    sha256: 1d5cfae1468d9375f62ee0d4bc03d0f19d3403150917d0820f34e6577be41e05
+  provenance_specimens:
+    name: provenance_specimens
+    path: paper_v2/data/provenance/specimens.csv
+    sha256: 84617cb12012ac9acc1b756b59161738a2a0a1089bd3eb432b7d01a066e65f9f
+  resnet_weights:
+    name: resnet_weights
+    path: paper_v3/assets/resnet18-f37072fd.pth
+    sha256: f37072fd47e89c5e827621c5baffa7500819f7896bbacec160b1a16c560e07ec
+  size_workbook:
+    name: size_workbook
+    path: data/public/hasebe_cai/raw/8scdmfdcfb/v3/2_Specimen size/Specimen size_v0.2.xlsx
+    sha256: 72c6dc7e1e8790883dba2b4b1e3ee1259fdfbad61d22d241a866d4621834fa65
+  v3_design_spec:
+    name: v3_design_spec
+    path: docs/superpowers/specs/2026-08-11-cpb-v3-privileged-nde-design.md
+    sha256: 030175d2e729ce532789b94180f5c3279ad06bb7093ada023d0ae8c7161a33ac
+  v3_plan:
+    name: v3_plan
+    path: docs/superpowers/plans/2026-08-11-cpb-v3-p1-full-field-oracle.md
+    sha256: b47caf44cb2c10bb7df06bb3c4da93bffdd7145c66caff082996ef49708e23ff
+  v3_prompt:
+    name: v3_prompt
+    path: docs/CPB_V3_PRIVILEGED_NDE_CODEX_PROMPT.md
+    sha256: 6b784772ee18f65b8d13e0f41d835e084760c496264dbe42d9a0c0c242719e11
+surface_contract:
+  metadata_authority: src/cmc_bbdm/cpb_redesign/mechanical_utility.py
+  metadata_authority_source: p2_source_code
+  metadata_count: 13
+  metadata_names:
+  - log1p_energy_per_thickness_j_per_mm
+  - ply_count_div_24
+  - laminate_cross_ply
+  - impactor_hemia
+  - impactor_hemib
+  - impactor_hemic
+  - impactor_coni60
+  - impactor_coni120
+  - impactor_flat
+  - log1p_total_energy_j
+  - specimen_height_mm
+  - specimen_width_mm
+  - specimen_thickness_mm
+  profile_authority: src/cmc_bbdm/recoverability_features.py
+  profile_authority_source: profile_stat_authority
+  profile_count: 21
+  profile_stat_names:
+  - minimum_delta
+  - maximum_delta
+  - quantile_01
+  - quantile_05
+  - quantile_25
+  - median_delta
+  - quantile_75
+  - quantile_95
+  - quantile_99
+  - mean_delta
+  - standard_deviation
+  - negative_volume_mean
+  - positive_volume_mean
+  - negative_fraction
+  - positive_fraction
+  - gradient_mean
+  - gradient_standard_deviation
+  - gradient_quantile_95
+  - dent_centroid_y
+  - dent_centroid_x
+  - dent_radial_extent
+v2_contract:
+  a_sources:
+  - feature_cache
+  - feature_provenance
+  - physical_descriptors
+  - provenance_specimens
+  - provenance_observations
+  - lvi_workbook
+  - size_workbook
+  loader: cmc_bbdm.cpb_redesign.mechanical_utility.load_p2_data
+  response_name: cai_damaged_to_intact_strength_ratio
+  response_source: cai_workbook
+  response_unit: '1'

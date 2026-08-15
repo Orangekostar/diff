@@ -1,0 +1,10 @@
+*.pt
+*.pth
+*.zip
+*.npy
+*.npz
+models/
+arrays/
+raw/
+__pycache__/
+.DS_Store

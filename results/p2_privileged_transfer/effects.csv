@@ -1,0 +1,6 @@
+effect,reference_method,mspd_method,estimate,relative_improvement,improved_domain_count
+D0_vs_MSPD,D0_equal_capacity,MSPD,0.0064356441918187943,0.043377888843796578,4
+scalar_teacher_vs_MSPD,scalar_teacher,MSPD,-0.0021283666467745467,-0.015224552223748647,4
+global_shuffled_teacher_vs_MSPD,global_shuffled_teacher,MSPD,-0.00073340469033068834,-0.0051943317735010331,2
+stratified_shuffled_teacher_vs_MSPD,stratified_shuffled_teacher,MSPD,0.00079795505469755718,0.0055908714159787149,5
+random_teacher_vs_MSPD,random_teacher,MSPD,-0.00023982714067561728,-0.0016926563350656571,4

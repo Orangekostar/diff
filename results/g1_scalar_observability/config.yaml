@@ -1,0 +1,40 @@
+schema_version: 1
+scope: cpb_redesign_p1_real_internal
+seed: 20260811
+output_dir: paper_v2/experiments/P1_real_internal
+artifacts_dir: paper_v2/artifacts
+inputs:
+  feature_cache:
+    path: results/public_recoverability/feature_cache.npz
+    sha256: 6d581c77e0db18782406bd55dd2c0716d048c16c64c8df4423d5b331c84aeb52
+  feature_provenance:
+    path: results/public_recoverability/feature_provenance.json
+    sha256: 1ed1ee1eedda144b0d86ac2c3c2043c9a9ef1257c942cbf631831ef1e7e80598
+  physical_descriptors:
+    path: results/cpb_cfrp_revision/physical_descriptors.csv
+    sha256: 2f2c3b3a16cbe1b48364b76ad10999a91c01de000b81525ba56c8ec90399e078
+  manifest:
+    path: data/public/hasebe/manifest/paired.csv
+    sha256: f81002981bf2f6aed84818b48da87cd57e6336f5f3da8d78df1a58d26dd8026f
+evaluation:
+  primary_targets: [projected_damage_area, damage_height, damage_width]
+  secondary_targets: [damage_eccentricity, equivalent_damage_diameter, damage_radial_spread]
+  baselines: [train_mean, metadata_only, profile_ridge, profile_extra_trees, frozen_rgb, combined]
+  primary_comparison_baseline: nested_selected_surface
+  ridge_alphas: [0.1, 1.0, 10.0]
+  extra_trees_estimators: 256
+  extra_trees_max_features: [0.5, 1.0]
+  extra_trees_min_samples_leaf: [1, 2, 4]
+  extra_trees_seeds: [20260811, 20260812, 20260813]
+  inner_folds: 6
+  inner_seed: 20260811
+  target_shuffle: true
+  surface_shuffle: true
+  secondary_holdouts: [leave_layup_out, leave_impactor_shape_out, registered_energy_band_holdout]
+bootstrap:
+  seed: 20260811
+  resamples: 100000
+  familywise_alpha: 0.05
+gate:
+  minimum_relative_improvement: 0.10
+  minimum_improved_domains: 5

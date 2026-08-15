@@ -1,0 +1,219 @@
+schema_version: 1
+scope: cpb_v3_p2_student_transfer
+seed: 20260813
+output_dir: paper_v3/experiments/P2_student_transfer
+
+sources:
+  v3_prompt:
+    path: docs/CPB_V3_PRIVILEGED_NDE_CODEX_PROMPT.md
+    sha256: 6b784772ee18f65b8d13e0f41d835e084760c496264dbe42d9a0c0c242719e11
+  p1_config:
+    path: paper_v3/configs/p1_full_field_oracle.yaml
+    sha256: 42b13f714a0ebd11d820e879808825ca5a7f326d01baacc4e088f67102ff2f12
+  p1_manifest:
+    path: paper_v3/experiments/P1_full_field_oracle/artifact_manifest.json
+    sha256: 6dc7f86060e91c1fab885685521b0c0e1a3a1290c4b4d2147c61dd1ee94e4f25
+  p1_run_summary:
+    path: paper_v3/experiments/P1_full_field_oracle/run_summary.json
+    sha256: ff7d859bc8e192c340f80bde574b110c0d5718185ec1f8ada6ee6569b4c041fe
+  p1_evidence_manifest:
+    path: paper_v3/artifacts/V3_P1_EVIDENCE_MANIFEST.json
+    sha256: 69f79a7d2ea92ea413bf96eab0fb755d5e12afaebb4b047ef6b8bb624cf61ff0
+  surface_provenance:
+    path: paper_v2/data/provenance/specimens.csv
+    sha256: 84617cb12012ac9acc1b756b59161738a2a0a1089bd3eb432b7d01a066e65f9f
+  p2_design:
+    path: docs/superpowers/specs/2026-08-13-cpb-v3-p2-student-transfer-design.md
+    sha256: d416f9eb50550602683a5d10c68ab84346b0aa5c424ff472155c080e1f355702
+  p2_plan:
+    path: docs/superpowers/plans/2026-08-13-cpb-v3-p2-student-transfer.md
+    sha256: 547211e8280f8da79afb41d765e348d392e6a35ae9cb2bc821bfa9d4df6ef020
+
+p1:
+  status: PASS
+  p2_authorized: true
+  selected_representation: B_frozen
+  package_digest: 8c13793c064d78cb17b2201b1856db490d12ec564db810fb1a3968cd3199d297
+  scientific_digest: 498c17a83c687d32eb504420ed5c8687be05f01f04506eec0d89a4887efabfd1
+  surface_equal_domain_mae: 0.1881207810617217
+  selected_field_equal_domain_mae: 0.1284893565234699
+
+cohort:
+  expected_n: 276
+  response: cai_damaged_to_intact_strength_ratio
+  response_unit: "1"
+  domains: [74t7kcdgkr, cgtnjyggtm, w68dtmpfyf, xcmzfsbd9t, yfxyg8jm46, ykhs7s2dck]
+  domain_counts:
+    74t7kcdgkr: 45
+    cgtnjyggtm: 49
+    w68dtmpfyf: 43
+    xcmzfsbd9t: 59
+    yfxyg8jm46: 42
+    ykhs7s2dck: 38
+  outer_folds: 6
+  inner_folds_per_outer: 5
+  inventory_n: 281
+  inventory_available_to_modeling: false
+
+surface:
+  metadata_count: 13
+  profile_count: 21
+  image_mode: RGB
+  input_size: [128, 128]
+  grayscale_rule: 0.299R+0.587G+0.114B
+  scale: uint8_div_255_float32
+  interpolation: bilinear
+  align_corners: false
+  antialias: true
+  augmentation: null
+  fold_local_scaling: true
+  image_max_bytes: 33554432
+  image_max_pixels: 16777216
+
+teacher:
+  representation: B_frozen
+  pca_dimensions: [8, 16, 32]
+  pca_selection_metric: unweighted_mean_inner_domain_raw_mae
+  pca_tie_tolerance: 1.0e-12
+  pca_tie_order: [8, 16, 32]
+  outer_pca_dimensions:
+    74t7kcdgkr: 16
+    cgtnjyggtm: 32
+    w68dtmpfyf: 8
+    xcmzfsbd9t: 32
+    yfxyg8jm46: 8
+    ykhs7s2dck: 8
+  ridge_alpha: 10.0
+  mechanics_latent_rule: elementwise_beta_times_z
+  teacher_prediction: deterministic_mean
+  outer_test_latent_available_to_student: false
+  inner_fit_scope: four_inner_fit_datasets
+  outer_refit_scope: five_outer_training_datasets
+
+student:
+  input_channels: 1
+  input_size: [128, 128]
+  conv_widths: [16, 32, 64]
+  kernel_size: 3
+  stride: 2
+  padding: 1
+  conv_bias: false
+  group_norm_groups: 4
+  group_norm_eps: 1.0e-5
+  activation: GELU
+  pooling: adaptive_average
+  latent_dim: 32
+  surface_feature_count: 34
+  head_hidden_width: 64
+  dropout: 0.10
+  output_dim: 1
+  loss: SmoothL1
+  loss_beta: 1.0
+  optimizer: AdamW
+  learning_rate: 1.0e-3
+  weight_decay: 1.0e-4
+  batch_size: 32
+  max_epochs: 200
+  early_stopping_patience: 20
+  early_stopping_min_delta: 1.0e-4
+  outer_epoch_rule: lower_median_inner_best_epoch
+  inner_seed_aggregation: seed_mean_per_specimen_before_query_mae
+  outer_epoch_scope: per_training_seed
+  seeds: [20260811, 20260812, 20260813]
+  deterministic_algorithms: true
+  num_workers: 0
+
+methods:
+  baseline: D0_equal_capacity
+  candidates: [D1_point, D2_relational, D3_predictive, D12_point_relational, D13_point_predictive, D23_relational_predictive]
+  tie_tolerance: 1.0e-12
+  tie_order: [D1_point, D2_relational, D3_predictive, D12_point_relational, D13_point_predictive, D23_relational_predictive]
+  selection_metric: unweighted_mean_inner_domain_raw_mae
+  loss_weights:
+    direct: 1.0
+    point: 0.25
+    relational: 0.25
+    predictive: 0.25
+  projection_head: linear_32_to_teacher_dimension
+  inactive_head_for_D0: true
+
+controls:
+  names: [scalar_teacher, global_shuffled_teacher, stratified_shuffled_teacher, random_teacher, full_latent_imitation, metadata_profile_only, dataset_id_only, random_split_D0]
+  shuffle_seeds: [20260821, 20260822, 20260823]
+  global_derangement: true
+  stratification_hierarchy: [dataset_exact_layup_energy_bin, dataset_exact_layup, dataset, pool]
+  random_teacher_distribution: gaussian_same_mean_covariance_spectrum
+  random_prediction_distribution: gaussian_same_mean_variance_independent_from_specimens
+  control_loss_policy: selected_MSPD_for_shuffle_and_random_D3_for_scalar
+  authentic_selection_before_controls: true
+  dataset_only_ridge_alpha: 10.0
+  random_split_method: stratified_kfold
+  random_split_folds: 6
+  random_split_seed: 20260813
+  random_split_stratification: dataset_id
+  random_split_shared_across_student_seeds: true
+  random_split_capacity_slots: [74t7kcdgkr, cgtnjyggtm, w68dtmpfyf, xcmzfsbd9t, yfxyg8jm46, ykhs7s2dck]
+  random_split_epoch_rule: lower_median_six_frozen_D0_outer_epochs_per_seed
+
+bootstrap:
+  effects: [D0_vs_MSPD, scalar_teacher_vs_MSPD, global_shuffled_teacher_vs_MSPD, stratified_shuffled_teacher_vs_MSPD, random_teacher_vs_MSPD]
+  seed: 20260813
+  resamples: 100000
+  bit_generator: PCG64
+  quantile_method: linear
+  inferential_unit: held_out_dataset
+  familywise_alpha: 0.05
+  family_size: 5
+  lower_quantile: 0.005
+  upper_quantile: 0.995
+  ordinary_quantiles: [0.025, 0.975]
+  common_index_matrix: true
+
+gate:
+  pass_rule: all_required
+  effect_direction: reference_minus_MSPD
+  conditions:
+    - {name: D0_relative_improvement, effect: D0_vs_MSPD, quantity: relative_improvement, operator: ">=", threshold: 0.10}
+    - {name: D0_improved_domains, effect: D0_vs_MSPD, quantity: improved_domain_count, operator: ">=", threshold: 4}
+    - {name: D0_simultaneous_lower, effect: D0_vs_MSPD, quantity: simultaneous_lower, operator: ">", threshold: 0.0}
+    - {name: scalar_simultaneous_lower, effect: scalar_teacher_vs_MSPD, quantity: simultaneous_lower, operator: ">", threshold: 0.0}
+    - {name: global_shuffle_simultaneous_lower, effect: global_shuffled_teacher_vs_MSPD, quantity: simultaneous_lower, operator: ">", threshold: 0.0}
+    - {name: stratified_shuffle_simultaneous_lower, effect: stratified_shuffled_teacher_vs_MSPD, quantity: simultaneous_lower, operator: ">", threshold: 0.0}
+    - {name: random_teacher_simultaneous_lower, effect: random_teacher_vs_MSPD, quantity: simultaneous_lower, operator: ">", threshold: 0.0}
+
+outputs:
+  outer_folds: 6
+  inner_folds_per_outer: 5
+  training_seeds: 3
+  primary_specimen_seed_rows: 828
+  prediction_aggregation: seed_mean_per_specimen_before_absolute_error
+  required_directories: [models, tables, arrays]
+  package_schema_version: 1
+  root_files: [config_snapshot.yaml, execution_provenance.json, metrics.json, run_summary.json, artifact_manifest.json]
+  table_row_counts:
+    split_manifest.csv: 11592
+    inner_predictions.csv: 37260
+    training_registry.csv: 144
+    teacher_target_index.csv: 144
+    control_mappings.csv: 8280
+    predictions.csv: 5796
+    diagnostics.csv: 1380
+    domain_metrics.csv: 36
+    effects.csv: 5
+    bootstrap_intervals.csv: 5
+    gate_conditions.csv: 7
+    checkpoint_index.csv: 144
+  checkpoint_count: 144
+  bootstrap_index_shape: [100000, 6]
+  bootstrap_draw_shape: [100000, 5]
+
+code_registry:
+  - src/cmc_bbdm/cpb_v3/p2_config.py
+  - src/cmc_bbdm/cpb_v3/p2_data.py
+  - src/cmc_bbdm/cpb_v3/p2_teacher.py
+  - src/cmc_bbdm/cpb_v3/p2_student.py
+  - src/cmc_bbdm/cpb_v3/p2_controls.py
+  - src/cmc_bbdm/cpb_v3/p2_evaluation.py
+  - src/cmc_bbdm/cpb_v3/p2_pipeline.py
+  - src/cmc_bbdm/cpb_v3/p2_artifacts.py
+  - scripts/run_cpb_v3_p2.py

@@ -1,0 +1,84 @@
+{
+  "config": {
+    "path": "paper_v2/configs/p1_real_internal.yaml",
+    "sha256": "13d4da0fde84d4612d893e7bd08f71f23ff87d2939b87e44018dca322cafccaf"
+  },
+  "inputs": {
+    "feature_cache": "6d581c77e0db18782406bd55dd2c0716d048c16c64c8df4423d5b331c84aeb52",
+    "feature_provenance": "1ed1ee1eedda144b0d86ac2c3c2043c9a9ef1257c942cbf631831ef1e7e80598",
+    "manifest": "f81002981bf2f6aed84818b48da87cd57e6336f5f3da8d78df1a58d26dd8026f",
+    "physical_descriptors": "2f2c3b3a16cbe1b48364b76ad10999a91c01de000b81525ba56c8ec90399e078"
+  },
+  "outputs": {
+    "paper_v2/artifacts/P1_REAL_INTERNAL_BASELINES.md": {
+      "bytes": 2561,
+      "sha256": "b16c4bfe596eab0d38f6b439a0a35c8b94c2511affc0c018a77374489246c27a"
+    },
+    "paper_v2/artifacts/figures/P1_nested_surface_effects.pdf": {
+      "bytes": 19312,
+      "sha256": "fe0fdfe2a00bf11a0ec07cccd6021f96fa6fc3b8dc9cc5516054f012bd3d6141"
+    },
+    "paper_v2/artifacts/tables/P1_comparisons.csv": {
+      "bytes": 67277,
+      "sha256": "d3e11540e7a68df8a574977194e13b3d1b57d03861b002b2f2a54f3ea843604b"
+    },
+    "paper_v2/artifacts/tables/P1_domain_metrics.csv": {
+      "bytes": 158570,
+      "sha256": "d46707a53b6154f9b3f26631ba6518100d0c7bced74e895df04165e33034396c"
+    },
+    "paper_v2/artifacts/tables/P1_g1.csv": {
+      "bytes": 415,
+      "sha256": "4125373bb37382750a8800090218477de34ac239b58e1cb51935b97abfbd4bf8"
+    },
+    "paper_v2/artifacts/tables/P1_shuffle_comparisons.csv": {
+      "bytes": 27548,
+      "sha256": "96fbb8e544aa29629a4f95ef31d3d9853a6af023bbe3cd6f2277b74fdb6f69f2"
+    },
+    "paper_v2/artifacts/tables/P1_summary_metrics.csv": {
+      "bytes": 24179,
+      "sha256": "b09194ab729aed67ecc829b65c519b9bf41e181365d6b4773398cd609a4744b9"
+    },
+    "paper_v2/experiments/P1_real_internal/P1_REAL_INTERNAL_REPORT.md": {
+      "bytes": 2561,
+      "sha256": "b16c4bfe596eab0d38f6b439a0a35c8b94c2511affc0c018a77374489246c27a"
+    },
+    "paper_v2/experiments/P1_real_internal/comparisons.csv": {
+      "bytes": 67277,
+      "sha256": "d3e11540e7a68df8a574977194e13b3d1b57d03861b002b2f2a54f3ea843604b"
+    },
+    "paper_v2/experiments/P1_real_internal/config.yaml": {
+      "bytes": 1635,
+      "sha256": "13d4da0fde84d4612d893e7bd08f71f23ff87d2939b87e44018dca322cafccaf"
+    },
+    "paper_v2/experiments/P1_real_internal/domain_metrics.csv": {
+      "bytes": 158570,
+      "sha256": "d46707a53b6154f9b3f26631ba6518100d0c7bced74e895df04165e33034396c"
+    },
+    "paper_v2/experiments/P1_real_internal/metrics.json": {
+      "bytes": 267180,
+      "sha256": "c762ca22193d63bfe508e0c167df30f848997d155f66a080a2a758e81ab20874"
+    },
+    "paper_v2/experiments/P1_real_internal/predictions.csv": {
+      "bytes": 7953821,
+      "sha256": "2d47878d5c9b181d1140b7815334505af0f37fbf81f11a9059c47356a4970dd8"
+    },
+    "paper_v2/experiments/P1_real_internal/split_manifest.csv": {
+      "bytes": 8415,
+      "sha256": "f5b2580558ff7a18d209800de58a9a22d18ff886689e354a6ad91fb135bd085a"
+    },
+    "paper_v2/experiments/P1_real_internal/summary_metrics.csv": {
+      "bytes": 24179,
+      "sha256": "b09194ab729aed67ecc829b65c519b9bf41e181365d6b4773398cd609a4744b9"
+    }
+  },
+  "runner": {
+    "path": "scripts/run_cpb_redesign_p1.py",
+    "sha256": "35152250301006228e79ad460beaf48d10a7722fb8cffd2e2dd9ca7479f77dea"
+  },
+  "schema_version": 1,
+  "scope": "cpb_redesign_p1_real_internal",
+  "source": {
+    "path": "src/cmc_bbdm/cpb_redesign/real_internal.py",
+    "sha256": "84d19c34fd04196dd929348bb7a213e22330a2e0af0cee81bc994ffb4926f98b"
+  }
+}
