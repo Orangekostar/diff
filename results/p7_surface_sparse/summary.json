@@ -1,0 +1,117 @@
+{
+  "authorities": {
+    "data_state_sha256": "ae5ea0090af268939700551a80684a29a9e42a5d712c45fa0dc5dd96d1e30308",
+    "embedding_sha256": {
+      "sparse_only_0.25": "7157dd426aa4d54521d225e165232fac8a89a060d733df125029f1cfe09e716e",
+      "sparse_only_0.5": "6730212eb0417260402fa10b498ee20f542e3dc07b5da7e5a0d65fad1133ae97"
+    },
+    "encoder_provenance": {
+      "architecture_sha256": "118174aa09d19fc2d298a6065dc6a20b54b70a2925068377db1759df046d8aef",
+      "batch_size": 32,
+      "device": "cuda",
+      "embedding_dimension": 512,
+      "encoder": "torchvision_resnet18",
+      "frozen": true,
+      "model_state_sha256": "cbf2e5609c31f76c589acd162bf0bd55e89d8d297c84d2c3c3334dcea0be8b50",
+      "runtime": {
+        "cuda_matmul_tf32": false,
+        "cudnn_benchmark": false,
+        "cudnn_deterministic": true,
+        "cudnn_tf32": false,
+        "deterministic_algorithms": true,
+        "float32_matmul_precision": "highest"
+      },
+      "torch_version": "2.12.1+cu130",
+      "torchvision_version": "0.27.1+cu130",
+      "transform_sha256": "4cb561ea8d1466a2c98b2b717843c19a3e7888ba6ffc715a503751226c41e3a7",
+      "weight_path": "paper_v3/assets/resnet18-f37072fd.pth",
+      "weights": "ResNet18_Weights.IMAGENET1K_V1",
+      "weights_bytes": 46830571,
+      "weights_filename": "resnet18-f37072fd.pth",
+      "weights_sha256": "f37072fd47e89c5e827621c5baffa7500819f7896bbacec160b1a16c560e07ec",
+      "weights_url": "https://download.pytorch.org/models/resnet18-f37072fd.pth"
+    },
+    "registered_inputs_state_sha256": "152b644fbaa4899876a11045228e8d2abd41b7b0eb4a748f2d1948daee9d1226"
+  },
+  "bootstrap": {
+    "indices_sha256": "7f29dc5d3b2daef8cbd78b2fec3e5440097c2f9e74c4ce80ccb5796119c65663",
+    "resamples": 100000,
+    "seed": 20260816
+  },
+  "config_sha256": "39417ff6e2498a8957d3277a051d3ae2eba1128e49532b1bd30f3b13ca9304c9",
+  "effects": {
+    "sparse_only_0.25_minus_surface_sparse_0.25": {
+      "bootstrap_draws_sha256": "036bd55d39141c493931076cf83a5cc742c738fc3d1f1a2a1bf19be41161c4ea",
+      "improved_domains": 1,
+      "ordinary_interval": [
+        -0.11412939427115887,
+        -0.004931851742475411
+      ],
+      "point_estimate": -0.044397791243861395,
+      "relative_improvement": -0.49267422301089797,
+      "simultaneous_interval": [
+        -0.11754443000628743,
+        -0.0035476020585893755
+      ]
+    },
+    "sparse_only_0.5_minus_surface_sparse_0.5": {
+      "bootstrap_draws_sha256": "9763e37c65de27d873ba88ebaeebe783b59d0689977597dbbf39e67ec548e121",
+      "improved_domains": 2,
+      "ordinary_interval": [
+        -0.10632945349145966,
+        -0.002023837650619037
+      ],
+      "point_estimate": -0.04097166492591235,
+      "relative_improvement": -0.4548533466627056,
+      "simultaneous_interval": [
+        -0.11014908498516811,
+        -0.0008755527391379527
+      ]
+    }
+  },
+  "evaluation_state_sha256": "606abe86c55001fc33e2fbf6df789362abe2316164a67bee056553d9e6aa0bd4",
+  "gate_conditions": {
+    "improved_domains_pass": false,
+    "p5_retention_pass": true,
+    "relative_improvement_pass": false,
+    "simultaneous_interval_pass": false
+  },
+  "gate_status": "NO_COMPLEMENTARITY",
+  "methods": {
+    "sparse_only_0.25": {
+      "equal_domain_mae": 0.09011592076510834
+    },
+    "sparse_only_0.5": {
+      "equal_domain_mae": 0.0900766482791094
+    },
+    "surface_full": {
+      "equal_domain_mae": 0.12848935652346993
+    },
+    "surface_only": {
+      "equal_domain_mae": 0.1881207810617217
+    },
+    "surface_sparse_0.25": {
+      "equal_domain_mae": 0.13451371200896975
+    },
+    "surface_sparse_0.5": {
+      "equal_domain_mae": 0.13104831320502175
+    }
+  },
+  "mode": "full",
+  "p5": {
+    "output_tree_sha256": "a2c54b7fdc53252767c7788365d254bbcdbe36571d2e553ce56f406dc039c80d",
+    "reference_retention": 0.8989734769519824,
+    "scientific_digest": "87b1da699b0ee59cf1723339a2150d673998b20004b6e990bb1a1a87d48f2257"
+  },
+  "reference_authority_state_sha256": "16343ce0369dd02f5b9b4e8d1ba7b19d423c532d9401680a71a0081195bbf000",
+  "row_counts": {
+    "inner_scores": 180,
+    "inner_selection": 12,
+    "predictions": 1656
+  },
+  "run_state_sha256": "eb24d3ac1ecef8774442f0367448206dd17de1afe4911b0d10adf5a88c26d1e5",
+  "schema_version": 1,
+  "scope": "cpb_spatial_p7_surface_sparse_fusion",
+  "specimen_count": 276,
+  "test_only": false
+}

@@ -1,0 +1,186 @@
+schema_version: 1
+scope: cpb_spatial_p6_diffusion_reconstruction
+seed: 20260818
+output_dir: results/cpb_spatial/p6_diffusion_reconstruction
+
+runtime:
+  python: "3.13.13"
+  numpy_module: "2.5.1"
+  numpy_distribution: "2.5.0"
+  scipy_module: "1.18.0"
+  scipy_distribution: "1.18.0"
+  scikit_learn_module: "1.9.0"
+  scikit_learn_distribution: "1.9.0"
+  pil_module: "12.3.0"
+  pillow_distribution: "12.2.0"
+  torch_module: "2.12.1+cu130"
+  torch_distribution: "2.12.1"
+  torchvision_module: "0.27.1+cu130"
+  torchvision_distribution: "0.27.1"
+  diffusers_module: "0.39.0"
+  diffusers_distribution: "0.39.0"
+  pyyaml_module: "6.0.3"
+  pyyaml_distribution: "6.0.3"
+  matplotlib_module: "3.11.1"
+  matplotlib_distribution: "3.11.1"
+
+sources:
+  prompt:
+    path: docs/CPB Positive Rebuild Prompt — Spatial C-scan Information, Diffusion Features and Sparse Internal Sensing.md
+    sha256: 3ba1c01e8096fc75e9034b8304e960904a2d1f02dca77693c1f4a6dc63ec18c4
+  design:
+    path: docs/superpowers/specs/2026-08-16-cpb-p6-diffusion-reconstruction-design.md
+    sha256: e446959acb728f11805293005392ae1d9a4a045e4764d27e45b405104c93147a
+  implementation_plan:
+    path: docs/superpowers/plans/2026-08-16-cpb-p6-diffusion-reconstruction.md
+    sha256: 501e3a878a40bff721976b8d04320d0e604853e58a695312bd40289b54143e57
+  base_v3_config:
+    path: paper_v3/configs/p1_full_field_oracle.yaml
+    sha256: 42b13f714a0ebd11d820e879808825ca5a7f326d01baacc4e088f67102ff2f12
+  p1_manifest:
+    path: paper_v3/experiments/P1_full_field_oracle/artifact_manifest.json
+    sha256: 6dc7f86060e91c1fab885685521b0c0e1a3a1290c4b4d2147c61dd1ee94e4f25
+  p1_predictions:
+    path: paper_v3/experiments/P1_full_field_oracle/predictions.csv
+    sha256: f2c62d0afc3eec1b280bbadb1ede6d56b1ebcdbb8f9caf0d528f5ce1e1a865a5
+  p1_inner_selection:
+    path: paper_v3/experiments/P1_full_field_oracle/inner_selection.csv
+    sha256: 26838f30c3af7a5088d38d94b4d82856af24d91e19e513637bcccbdfc55b3236
+  p5_config:
+    path: paper_v3/configs/p5_sampling_retention.yaml
+    sha256: 569be54ff258835e98347340e8ab706d726cb6a2fadacdc5590716c9129235a8
+  p5_manifest:
+    path: results/cpb_spatial/p5_sparse_scan/artifact_manifest.json
+    sha256: b3f6554c15b41d18264c4a8e12bcafabd6824c81db608e3e24099b225e45041e
+  p5_predictions:
+    path: results/cpb_spatial/p5_sparse_scan/predictions.csv
+    sha256: 651b30402f5c06f27b4bc157654971054838042f9a2502df35c20f4adb325b47
+  p5_sampling_validation:
+    path: results/cpb_spatial/p5_sparse_scan/sampling_validation.csv
+    sha256: a8df0745d227dde561638cf89b01cdad86a5c1c0a67cd98bcd4ea28b8addda50
+  p7_manifest:
+    path: results/cpb_spatial/p7_surface_sparse/artifact_manifest.json
+    sha256: bb88319469398aec581a4814b5deb09043eaa8b3e99fb66c7330eaed1661dd94
+  resnet_weights:
+    path: paper_v3/assets/resnet18-f37072fd.pth
+    sha256: f37072fd47e89c5e827621c5baffa7500819f7896bbacec160b1a16c560e07ec
+  runtime_requirements:
+    path: environment/requirements-runtime.txt
+    sha256: eaafdb192e578d506b1e53426b3654d8e8718b5ac5141e7b82719cd9616e9204
+  dockerfile:
+    path: environment/Dockerfile
+    sha256: 7c56be988ab71a80d23d5c1f7fc3839eb946759196dce8ff9a9fb0d8281a3b67
+
+authorization:
+  p3_gate_status: PASS
+  p5_gate_status: PASS
+  p5_scientific_digest: 87b1da699b0ee59cf1723339a2150d673998b20004b6e990bb1a1a87d48f2257
+  p5_output_tree_sha256: a2c54b7fdc53252767c7788365d254bbcdbe36571d2e553ce56f406dc039c80d
+  selected_density: 0.25
+  p5_retention: 0.8989734769519824
+  p5_sparse_full_gap: 0.006024355485499817
+  p5_gap_simultaneous_interval: [0.0017300689873626627, 0.010833148828451869]
+  p7_context_status: NO_COMPLEMENTARITY
+
+cohort:
+  specimen_count: 276
+  domain_order: [74t7kcdgkr, cgtnjyggtm, w68dtmpfyf, xcmzfsbd9t, yfxyg8jm46, ykhs7s2dck]
+  response: damaged_to_intact_cai_strength_ratio
+  response_unit: "1"
+  inferential_unit: held_out_dataset
+  smoke_specimens_per_domain: 9
+
+observation:
+  density: 0.25
+  source_grid: native_released_screenshot
+  coordinate_authority: cpb_sparse_scan.sampling_coordinates
+  learned_grid: 64
+  learned_grid_role: separately_resampled_computational_frame
+  measured_point_projection: exact_native_uint8_overwrite
+
+methods:
+  all: [surface, full, nearest, bilinear, bicubic, pchip, deterministic, diffusion]
+  reconstruction: [nearest, bilinear, bicubic, pchip, deterministic, diffusion]
+  confirmatory_comparators: [bilinear, pchip, deterministic]
+
+models:
+  grid_size: 64
+  architecture: diffusers.UNet2DModel
+  in_channels: 7
+  out_channels: 3
+  layers_per_block: 1
+  block_out_channels: [32, 64, 128]
+  norm_num_groups: 8
+  condition_channels: bilinear_rgb_plus_sampling_mask
+  diffusion_prediction_type: epsilon
+  diffusion_train_timesteps: 1000
+  diffusion_beta_schedule: squaredcos_cap_v2
+
+training:
+  device: cuda
+  batch_size: 32
+  deterministic_epochs: 80
+  diffusion_epochs: 120
+  smoke_epochs: 1
+  deterministic_learning_rate: 0.001
+  diffusion_learning_rate: 0.0002
+  weight_decay: 0.0001
+  deterministic_gradient_l1_weight: 0.2
+  checkpoint_selection: final_epoch_only
+  response_access: prohibited
+  heldout_domain_access: prohibited
+
+sampling:
+  posterior_draws: 8
+  smoke_posterior_draws: 1
+  ddim_steps: 25
+  ddim_eta: 1.0
+  high_uncertainty_std_threshold: 0.10
+
+evaluator:
+  authority: frozen_p1_full_field
+  p1_scientific_digest: 498c17a83c687d32eb504420ed5c8687be05f01f04506eec0d89a4887efabfd1
+  pca_dimensions_by_outer_domain:
+    74t7kcdgkr: 16
+    cgtnjyggtm: 32
+    w68dtmpfyf: 8
+    xcmzfsbd9t: 32
+    yfxyg8jm46: 8
+    ykhs7s2dck: 8
+  side_features: metadata13_plus_profile_stats21
+  ridge_alpha: 10.0
+  reproduction_tolerance: 1.0e-12
+  diffusion_feature_aggregation: mean_of_posterior_resnet_embeddings
+
+metrics:
+  image: [normalized_rgb_l1, ssim_11x11_gaussian, psnr_db]
+  measurement: [normalized_mae, maximum_absolute_error]
+  mechanical: [equal_domain_mae, information_retention]
+  uncertainty: [mean_std, p99_std, high_uncertainty_fraction, cai_prediction_std]
+
+statistics:
+  seed: 20260818
+  resamples: 100000
+  family_size: 3
+  ordinary_quantiles: [0.025, 0.975]
+  simultaneous_quantiles: [0.008333333333333333, 0.9916666666666667]
+  quantile_method: linear
+  effects: [bilinear_minus_diffusion, pchip_minus_diffusion, deterministic_minus_diffusion]
+
+gate:
+  minimum_retention: 0.80
+  minimum_improved_domains: 4
+  all_effect_points_strictly_positive: true
+  all_simultaneous_lowers_strictly_positive: true
+  measured_points_exact: true
+  maximum_l1_ratio: 1.10
+  statuses: [PASS, INCONCLUSIVE, NO_MECHANICAL_GAIN, TEST_ONLY]
+
+outputs:
+  result_leaf: p6_diffusion_reconstruction
+  replay_parent: results/cpb_spatial/replay
+  smoke_parent: results/cpb_spatial/smoke
+  tables: [training.csv, predictions.csv, reconstruction_metrics.csv, domain_metrics.csv, aggregate_metrics.csv, bootstrap.csv]
+  arrays: [uncertainty_source_data.npz]
+  checkpoints_per_full_run: 12
+  figure_files: [figures/p6_method_retention.pdf, figures/p6_domain_effects.pdf, figures/p6_reconstruction_uncertainty.pdf, figures/p6_figure_source_data.npz, figures/figure_manifest.json]

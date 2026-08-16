@@ -1,71 +1,99 @@
-# CFRP C-scan observability and privileged-transfer results
+# CFRP C-scan observability, spatial specificity, and sparse sensing results
 
 This repository is a compact, analysis-oriented export of the registered G1,
-G2, P1, and P2 experiments. It contains reports, configuration snapshots,
-machine-readable metrics, held-out-domain predictions, negative controls, and
-artifact manifests. It does not contain raw images, source DOCX files, model
-checkpoints, bootstrap arrays, or large intermediate training caches.
+G2, and P1-P7 experiments. It contains machine-readable metrics, held-out-domain
+predictions, reports, configuration snapshots, artifact manifests, and
+publication PDFs. It excludes raw images, source DOCX files, model checkpoints,
+posterior image arrays, and large feature caches.
 
 ## Decision sequence
 
-| Stage | Question | Decision |
+| Stage | Registered question | Decision |
 | --- | --- | --- |
-| G1 | Can surface observations predict three scalar C-scan descriptors across datasets? | FAIL |
+| G1 | Can surface observations predict scalar C-scan descriptors across datasets? | FAIL |
 | G2 | Do measured or strict-OOF predicted scalar descriptors improve CAI prediction? | FAIL |
-| P1 / G2b | Does the measured full C-scan field improve CAI prediction? | PASS |
-| P2 | Can a surface-only student recover the full-field advantage by privileged distillation? | FAIL |
+| P1 | Does the measured full C-scan field improve CAI prediction? | PASS |
+| P2 | Can a surface-only student recover that advantage by privileged distillation? | FAIL |
+| P3 | Does specimen-specific spatial organization carry incremental information? | PASS |
+| P4 | Do the registered dense spatial representations beat the frozen global baseline? | NO_GO |
+| P5 | Does a 25% sparse C-scan retain at least 80% of the full-field gain? | PASS |
+| P6 | Does diffusion reconstruction improve mechanical prediction over simple interpolation? | NO_MECHANICAL_GAIN |
+| P7 | Does adding surface information improve the sparse-scan predictor? | NO_COMPLEMENTARITY |
 
-The primary response for G2, P1, and P2 is the published damaged-to-intact CAI
+The primary response for G2 and P1-P7 is the published damaged-to-intact CAI
 strength ratio, unit `1`. Confirmatory inference uses held-out datasets, not
 individual specimens, as the inferential units.
 
+## Central result
+
+The evidence is asymmetric. Measured full-field information was mechanically
+useful (P1), and destroying specimen-specific spatial organization degraded
+prediction (P3). However, the registered surface student (P2), dense learned
+representations (P4), diffusion reconstruction (P6), and surface-plus-sparse
+fusion (P7) did not improve their registered comparators. A simple 25% sparse
+scan retained 89.90% of the full-field gain (P5), while classical interpolation
+outperformed the learned P6 reconstructions.
+
 ## Directory guide
 
-- `results/cross_stage/`: authoritative decision ledger and pre-V3 evidence.
-- `results/g1_scalar_observability/`: 292 specimens, seven datasets, physical
-  area/height/width targets.
-- `results/g2_scalar_utility/`: 276 specimens, six datasets, four matched CAI
-  pathways using surface, measured scalars, strict-OOF scalars, and deranged
-  scalars.
-- `results/p1_full_field_oracle/`: measured full-field representations,
-  handcrafted/frozen/learned alternatives, shuffle controls, and strict nested
-  leave-one-dataset-out results.
-- `results/p2_privileged_transfer/`: equal-capacity surface student, MSPD,
-  scalar teacher, shuffled teachers, random teacher, predictions, effects, and
-  gate conditions.
-- `analysis_tables/`: compact cross-stage and per-domain comparisons derived
-  directly from the exported result tables.
+- `results/cross_stage/`: the historical P2 decision snapshot and the current
+  P3-P7 extension ledger.
+- `results/g1_scalar_observability/` and `results/g2_scalar_utility/`: frozen
+  scalar experiments.
+- `results/p1_full_field_oracle/` and `results/p2_privileged_transfer/`: frozen
+  full-field oracle and student-transfer experiments.
+- `results/p3_spatial_specificity/`: original fields and spatial-destruction
+  controls.
+- `results/p4_dense_representation/`: global, DINOv2, DDPM, and residual-fusion
+  representations.
+- `results/p5_sparse_scan/`: three densities and interpolation sensitivities.
+- `results/p6_diffusion_reconstruction/`: six reconstruction methods, image
+  metrics, mechanical predictions, uncertainty summaries, and registered gates.
+- `results/p7_surface_sparse/`: sparse-only and surface-plus-sparse comparisons.
+- `analysis_tables/`: compact cross-stage tables and explicitly marked post-hoc
+  P6 uncertainty diagnostics.
 
 ## Start here
 
-1. Read `results/cross_stage/V3_FINAL_GATE_STATUS.md`.
-2. Read the four stage reports and their go/no-go files.
-3. Inspect `analysis_tables/domain_effect_alignment.csv` before interpreting
-   average improvements.
-4. Inspect `analysis_tables/p2_teacher_prediction_similarity.csv` to determine
-   whether the P2 gain is specific to the authentic teacher.
-5. Use the questions in `ANALYSIS_PROMPT.md` for an independent analysis.
+1. Read `results/cross_stage/V3_EXTENDED_GATE_STATUS.md`.
+2. Inspect `analysis_tables/extended_stage_gate_summary.csv`.
+3. Read each stage `REPORT.md` and `summary.json`.
+4. Use `ANALYSIS_PROMPT.md` for an independent failure analysis.
 
 ## Interpretation constraints
 
 - A failed gate is not converted into a positive result by a favorable point
   estimate.
-- G1 scalar failure does not prove that all internal information is absent from
-  the surface.
-- P1 establishes bounded predictive utility of a measured full-field
-  representation; it does not establish surface observability or causal
-  sufficiency.
-- P2 must outperform the equal-capacity student and teacher-mismatch controls
-  under the registered AND gate before any privileged-transfer claim is made.
-- Positive deltas in the derived domain table mean lower MAE for the candidate.
+- G1 scalar failure does not imply that spatial internal information is absent;
+  P1 and P3 directly show otherwise.
+- P3 establishes predictive spatial specificity, not a unique causal damage map.
+- P5 establishes retained predictive information at registered coordinates; it
+  does not establish successful full-field reconstruction.
+- P6 preserves every measured point exactly. Its failure concerns unmeasured
+  reconstruction and downstream mechanical utility.
+- P7 is evidence against complementarity under the frozen fusion estimator, not
+  proof that all surface measurements are physically irrelevant.
+- `analysis_tables/p6_posthoc_uncertainty_diagnostics.csv` is descriptive and
+  was not a registered endpoint.
 
-`CHECKSUMS.sha256` binds every exported non-Git file.
+## Reproducibility
 
-## Export note
+P3-P7 production and replay packages are byte-identical within each stage. P6
+production and replay both validate with:
 
-Two non-scientific `weight_path` strings in the P1 configuration and
-preprocessing manifest were changed from a machine-specific absolute path to
-`paper_v3/assets/resnet18-f37072fd.pth`. Numeric values, hashes of the frozen
-weights, predictions, metrics, splits, and decisions were not changed. The
-copied source artifact manifest therefore documents the original formal run,
-while `CHECKSUMS.sha256` documents the bytes in this privacy-sanitized export.
+- scientific digest `fc8431597eadc9f1dff9b956d16810b6821888eef0b24c3db4df8a0dff50d505`;
+- output-tree digest `433699f015914c166696d2c19feaf8fe452482ff61200d663afb76fae6f493e9`;
+- artifact-manifest SHA-256 `01bb169f5648d0809466e26a8482c7025bc3471de306a0cc2bf8c2f4b0e08e6e`.
+
+The copied full-package artifact manifests document the source runs, including
+files intentionally omitted from this compact repository. `CHECKSUMS.sha256`
+binds every exported non-Git file and is the authority for this export.
+
+## Privacy-sanitized export note
+
+Two P1 `weight_path` strings were previously changed from a machine-specific
+absolute path to `paper_v3/assets/resnet18-f37072fd.pth`. This extension also
+changes the non-scientific P5 `p3_package` path to
+`results/p3_spatial_specificity`. Numeric values, predictions, metrics, source
+hashes, and decisions are unchanged. The copied artifact manifests document the
+original full runs; `CHECKSUMS.sha256` documents the exported bytes.

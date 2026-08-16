@@ -1,0 +1,101 @@
+{
+  "authorities": {
+    "condition_embedding_sha256": {
+      "bicubic_0.125": "dced55382fcf71b1dd9fb348e830039e0b059d83d0f97763035f0d44dde2d992",
+      "bicubic_0.25": "424910f7dc9f6b0d687542526b95a644d48c8dddb73764c06a22ec82eb825c21",
+      "bicubic_0.5": "e2188166309acd9aa46920e74c5a2593db6bf5fb71b64f7f82a8374644252cb2",
+      "bilinear_0.125": "a9abd7edf1b49a8df74135d06cd8d41e619c77941cb26f21ecd34965428fd86c",
+      "bilinear_0.25": "77502ac6958c2e7bdc7baafcaceaf3cbd2b30e24a283ad6f2e0524b2cabaaf7b",
+      "bilinear_0.5": "01e8d0981c7e231dc523e7651d496f85ff125e21f9fbb8d3d474101348cb50f0",
+      "nearest_0.125": "63c67773212b4cf5d3017dc8130a70defbfd5fc71a36d7bede4093e6adb33ad1",
+      "nearest_0.25": "017b02f0c9b221fe5b69327c15a1d23364111db1dc076b22340b57c30ae3f78f",
+      "nearest_0.5": "e12f4030b1626ce84df6cf35d9be369c7a3fe954dc2125f84bf704af71dc6c1b"
+    },
+    "data_state_sha256": "ae5ea0090af268939700551a80684a29a9e42a5d712c45fa0dc5dd96d1e30308",
+    "encoder_provenance": {
+      "architecture_sha256": "118174aa09d19fc2d298a6065dc6a20b54b70a2925068377db1759df046d8aef",
+      "batch_size": 32,
+      "device": "cuda",
+      "embedding_dimension": 512,
+      "encoder": "torchvision_resnet18",
+      "frozen": true,
+      "model_state_sha256": "cbf2e5609c31f76c589acd162bf0bd55e89d8d297c84d2c3c3334dcea0be8b50",
+      "runtime": {
+        "cuda_matmul_tf32": false,
+        "cudnn_benchmark": false,
+        "cudnn_deterministic": true,
+        "cudnn_tf32": false,
+        "deterministic_algorithms": true,
+        "float32_matmul_precision": "highest"
+      },
+      "torch_version": "2.12.1+cu130",
+      "torchvision_version": "0.27.1+cu130",
+      "transform_sha256": "4cb561ea8d1466a2c98b2b717843c19a3e7888ba6ffc715a503751226c41e3a7",
+      "weight_path": "paper_v3/assets/resnet18-f37072fd.pth",
+      "weights": "ResNet18_Weights.IMAGENET1K_V1",
+      "weights_bytes": 46830571,
+      "weights_filename": "resnet18-f37072fd.pth",
+      "weights_sha256": "f37072fd47e89c5e827621c5baffa7500819f7896bbacec160b1a16c560e07ec",
+      "weights_url": "https://download.pytorch.org/models/resnet18-f37072fd.pth"
+    },
+    "registered_inputs_state_sha256": "152b644fbaa4899876a11045228e8d2abd41b7b0eb4a748f2d1948daee9d1226"
+  },
+  "bootstrap": {
+    "domains": [
+      "74t7kcdgkr",
+      "cgtnjyggtm",
+      "w68dtmpfyf",
+      "xcmzfsbd9t",
+      "yfxyg8jm46",
+      "ykhs7s2dck"
+    ],
+    "indices_sha256": "6a56483db6ab1da02809a83099231ef81b8c8f61cbdc0169bbc462c93bf9ae89",
+    "resamples": 100000,
+    "seed": 20260831
+  },
+  "config_sha256": "569be54ff258835e98347340e8ab706d726cb6a2fadacdc5590716c9129235a8",
+  "evaluation_state_sha256": "9717d44cf24c95b542e36044893d08bd0cfbf1757075fe6a7f1cf57a41adef2a",
+  "gate": {
+    "p6_authorized": true,
+    "p7_authorized": true,
+    "passing_densities": [
+      0.25,
+      0.5
+    ],
+    "selected_knee_density": 0.25,
+    "status": "PASS"
+  },
+  "mode": "full",
+  "references": {
+    "p1_manifest_sha256": "6dc7f86060e91c1fab885685521b0c0e1a3a1290c4b4d2147c61dd1ee94e4f25",
+    "p1_predictions_sha256": "f2c62d0afc3eec1b280bbadb1ede6d56b1ebcdbb8f9caf0d528f5ce1e1a865a5",
+    "p3_output_tree_sha256": "4c5c88b80ef7e8c88b88b74ce61db2c07465f844d04efb34958891b39a274373",
+    "p3_package": "results/p3_spatial_specificity",
+    "p3_predictions_sha256": "2e3c4ce427e4449f71342a07cc2dcdcd719861a16cb008c6d3dd26a602c974d8",
+    "p3_scientific_digest": "a31903f424523162fba4ccbfbc8b9f2dfbe4988d4156b1a8b24711b030107d4d"
+  },
+  "row_counts": {
+    "aggregate_metrics.csv": 10,
+    "bootstrap.csv": 6,
+    "domain_metrics.csv": 60,
+    "inner_scores.csv": 810,
+    "inner_selection.csv": 54,
+    "predictions.csv": 2760,
+    "retention.csv": 9,
+    "sampling_validation.csv": 2484
+  },
+  "run_state_sha256": "75911036e1339be5fc01fa8f8a601016dfb4d25f05e2b96bb748e69b4e3808e4",
+  "schema_version": 1,
+  "scientific_digest": "87b1da699b0ee59cf1723339a2150d673998b20004b6e990bb1a1a87d48f2257",
+  "scope": "cpb_sparse_scan_p5_retention",
+  "specimen_count": 276,
+  "surface_domain_mae": {
+    "74t7kcdgkr": 0.14026076733200757,
+    "cgtnjyggtm": 0.12215155937309541,
+    "w68dtmpfyf": 0.12411388685633379,
+    "xcmzfsbd9t": 0.10065290445265158,
+    "yfxyg8jm46": 0.16338072761187408,
+    "ykhs7s2dck": 0.47816484074436777
+  },
+  "test_only": false
+}

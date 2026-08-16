@@ -1,0 +1,71 @@
+schema_version: 1
+scope: cpb_spatial_p3_specificity
+output_dir: results/cpb_spatial/p3_spatial_specificity
+
+base_v3_config:
+  path: paper_v3/configs/p1_full_field_oracle.yaml
+  sha256: 42b13f714a0ebd11d820e879808825ca5a7f326d01baacc4e088f67102ff2f12
+
+sources:
+  prompt:
+    path: docs/CPB Positive Rebuild Prompt — Spatial C-scan Information, Diffusion Features and Sparse Internal Sensing.md
+    sha256: 3ba1c01e8096fc75e9034b8304e960904a2d1f02dca77693c1f4a6dc63ec18c4
+  design:
+    path: docs/superpowers/specs/2026-08-15-cpb-spatial-pivot-design.md
+    sha256: 0e63bd7a3518a9e16f987c5f55153985dd02f14b9b1ad62b149c09216c44aa0b
+  audit:
+    path: docs/CPB_SPATIAL_PIVOT_AUDIT.md
+    sha256: a2fd9f1a7fa38f26adbcdb11da7b17d1801e8a57cb868b43a3353628e0d2e9d1
+  gate:
+    path: docs/P3_SPATIAL_SPECIFICITY_GATE.md
+    sha256: 22b2b83fdce4d6c437ae90a749855e14fa0b77cf4f64794a2e46ed7505a52af2
+  implementation_plan:
+    path: docs/superpowers/plans/2026-08-15-cpb-spatial-pivot.md
+    sha256: 20c346260f68cf7aa6da2bdae9e14f323b3b6fab52476b3567bb70a2853fa3a0
+  p1_manifest:
+    path: paper_v3/experiments/P1_full_field_oracle/artifact_manifest.json
+    sha256: 6dc7f86060e91c1fab885685521b0c0e1a3a1290c4b4d2147c61dd1ee94e4f25
+  p1_metrics:
+    path: paper_v3/experiments/P1_full_field_oracle/metrics.json
+    sha256: 73bcf2112e62f756ff8055f49e89147c9f70f36ef5c5c276cdc76f666e8ab18b
+  p1_predictions:
+    path: paper_v3/experiments/P1_full_field_oracle/predictions.csv
+    sha256: f2c62d0afc3eec1b280bbadb1ede6d56b1ebcdbb8f9caf0d528f5ce1e1a865a5
+  p1_representation_provenance:
+    path: paper_v3/experiments/P1_full_field_oracle/representation_provenance.csv
+    sha256: 44a1c951522558ddde30ed35e7c76e05891bb62de9d0736d7fe2c8da4fbd794b
+
+methods:
+  all: [original, pixel_shuffle, patch_shuffle_8x8, canonical_compact, patch_shuffle_4x4]
+  confirmatory: [patch_shuffle_8x8, pixel_shuffle, canonical_compact]
+  primary_control: patch_shuffle_8x8
+  seeds: [20260831, 20260901, 20260902]
+  patch_primary: [8, 8]
+  patch_sensitivity: [4, 4]
+  canonical_center: geometric_field_center
+
+estimator:
+  representation: B_frozen
+  pca_dimensions: [8, 16, 32]
+  pca_tie_tolerance: 1.0e-12
+  ridge_alpha: 10.0
+  outer_folds: 6
+  inner_folds_per_outer: 5
+  device: cuda
+
+bootstrap:
+  seed: 20260831
+  resamples: 100000
+  family_size: 3
+  ordinary_quantiles: [0.025, 0.975]
+  simultaneous_quantiles: [0.008333333333333333, 0.9916666666666667]
+  quantile_method: linear
+  inferential_unit: held_out_dataset
+
+gate:
+  primary_effect: patch_shuffle_8x8_minus_original
+  relative_improvement: 0.10
+  improved_domains: 4
+  simultaneous_lower_strictly_positive: true
+  reproduction_tolerance: 1.0e-12
+  stop_after_fail: true

@@ -1,5 +1,9 @@
 # CPB V3 Final Gate Status
 
+> Historical snapshot: this file records the original P2-time stop decision.
+> P3-P7 were later run after explicit authorization. For the current status,
+> use `V3_EXTENDED_GATE_STATUS.md`.
+
 ## Decision
 
 The frozen decision tree was executed without changing cohorts, endpoints,

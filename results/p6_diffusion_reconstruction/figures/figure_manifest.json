@@ -1,0 +1,16 @@
+{
+  "outputs": {
+    "p6_domain_effects.pdf": "7821f84c196f3ee2ddb40b07f9ceec91597fe5dd46c86a6525dd66af69da957b",
+    "p6_figure_source_data.npz": "9296783b1d5f37dbfe9047362c39b35657cfdef3f008bd385495265da52afe92",
+    "p6_method_retention.pdf": "8c5f1d47801f5a98ad14c47b22b5d345ed75e1aa490c5ac5219473b9c9cb253b",
+    "p6_reconstruction_uncertainty.pdf": "d58e77fb236033a66638cd47f8135073cc0f6b719d7c3575c6d36f8b2b9ff0d2"
+  },
+  "schema_version": 1,
+  "scope": "cpb_spatial_p6_figures",
+  "sources": {
+    "aggregate_metrics.csv": "434f954cdc1c844b237a1f69a54bff8fc38319811c670eec5c3bc76fc5e3f0bc",
+    "bootstrap.csv": "042f9f4e60ce8e2eaf0707521ab9684649d21bdbeb819102bced61fe30d2cca1",
+    "domain_metrics.csv": "b977ff9a77bf7cb043e93d2217f2cfda9cb059c5fe8ca4e74aa22641a970bdd3",
+    "uncertainty_source_data.npz": "7328cc4afb1e9fcd6274a3e0b8bd5b085ac489f656df7b1b0329d1876e279355"
+  }
+}

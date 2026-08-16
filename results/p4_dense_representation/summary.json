@@ -1,0 +1,118 @@
+{
+  "bootstrap": {
+    "indices_sha256": "7f29dc5d3b2daef8cbd78b2fec3e5440097c2f9e74c4ce80ccb5796119c65663",
+    "resamples": 100000,
+    "seed": 20260816
+  },
+  "effects": {
+    "ddpm_destroyed_minus_spatial": {
+      "bootstrap_draws_sha256": "d2869b1518b91dcd7ec9a118755ed4c7665865dcdff3b537eca0af5007eebabc",
+      "improved_domains": 3,
+      "ordinary_interval": [
+        -0.010125064142019233,
+        0.012925040081071754
+      ],
+      "point_estimate": 0.0016618481345088397,
+      "relative_improvement": 0.00832619429395799,
+      "simultaneous_interval": [
+        -0.013802160031897444,
+        0.015621111126493956
+      ]
+    },
+    "dinov2_destroyed_minus_spatial": {
+      "bootstrap_draws_sha256": "ba5f1994094289a1a55fd3404b4368dd0f7178392ea220f3cc6b66060a7b22cb",
+      "improved_domains": 4,
+      "ordinary_interval": [
+        -0.002406406328889589,
+        0.029978591685153193
+      ],
+      "point_estimate": 0.011363260991225798,
+      "relative_improvement": 0.06866271882263408,
+      "simultaneous_interval": [
+        -0.003667093132033975,
+        0.036847978504129984
+      ]
+    },
+    "resdiff_destroyed_minus_spatial": {
+      "bootstrap_draws_sha256": "218b7ee8b860d1f09ca30b22269bfbdf1751c66ada1ddbfc71d777b7c3f3ad74",
+      "improved_domains": 1,
+      "ordinary_interval": [
+        -0.014280597672887509,
+        -0.0014892964166582738
+      ],
+      "point_estimate": -0.008083763330004599,
+      "relative_improvement": -0.05509767687191404,
+      "simultaneous_interval": [
+        -0.015831281987364217,
+        6.497953185828631e-05
+      ]
+    },
+    "resnet_minus_resdiff": {
+      "bootstrap_draws_sha256": "1bb12c3afdb77bcd7cdc91323b2a82e79e4c6d25574b079eaee40e3cd0383acb",
+      "improved_domains": 1,
+      "ordinary_interval": [
+        -0.04799614108144131,
+        -0.005668337987416718
+      ],
+      "point_estimate": -0.02631136093142419,
+      "relative_improvement": -0.20477463381660055,
+      "simultaneous_interval": [
+        -0.053189100527906374,
+        -0.0006757859421511492
+      ]
+    }
+  },
+  "evaluation_state_sha256": "50de9671a314f7e18a838bdff0b9979929650f9b965e0cb4260c20f6e9fa1ba6",
+  "feature_bundle_state_sha256": "1660e3de598a09a555545a5e230c3a5ef3d220ba7eb1d9202deecd0b394f8e51",
+  "gate_conditions": {
+    "fusion_spatial_simultaneous_lower_strictly_positive": false,
+    "improved_domains_at_least_4": false,
+    "primary_simultaneous_lower_strictly_positive": false,
+    "relative_improvement_at_least_8_percent": false
+  },
+  "gate_status": "NO_GO",
+  "methods": {
+    "ddpm_spatial": {
+      "equal_domain_mae": 0.19793091607888225,
+      "state_sha256": "6b4675c429d25c7fc5af0f919293c46e0da879082f61888bbe3a32c071cbed91"
+    },
+    "ddpm_spatial_destroyed": {
+      "equal_domain_mae": 0.19959276421339112,
+      "state_sha256": "d204957deaecf23c2d14c1a89cd33da53ec178720665057c3beff7d49dfeaad3"
+    },
+    "dinov2_global": {
+      "equal_domain_mae": 0.15166728508607785,
+      "state_sha256": "30944ff23d84ca1643e0323c048e8f7b0ef48746bb98d8bedd968469a2170a1d"
+    },
+    "dinov2_spatial": {
+      "equal_domain_mae": 0.15413063709601385,
+      "state_sha256": "de74736bfdacec89977193dac4d20d9db9270fdbb414476eb8ee4e99228ab5f6"
+    },
+    "dinov2_spatial_destroyed": {
+      "equal_domain_mae": 0.16549389808723966,
+      "state_sha256": "fe2805fadeb58f83430911a0ed42d4e913ab3399e4ba6c65276253e1ad3d17e7"
+    },
+    "resdiff_fusion": {
+      "equal_domain_mae": 0.15480071745489413,
+      "state_sha256": "a62a9085c3d39036c88c8c5417f04314e1b4f36f47caf9724961862d4fae00f8"
+    },
+    "resdiff_fusion_destroyed": {
+      "equal_domain_mae": 0.14671695412488953,
+      "state_sha256": "658c0872973d7d8011d804e2dd500fdebfa68c48ae12ba847dc1efcf68e0ff2f"
+    },
+    "resnet_global": {
+      "equal_domain_mae": 0.12848935652346993,
+      "state_sha256": "77acf35ea38ecdd638cab0650c1d47e8f98075422c69a9a5311ffc588f9d66d0"
+    }
+  },
+  "mode": "full",
+  "row_counts": {
+    "inner_scores": 630,
+    "inner_selection": 48,
+    "predictions": 2208
+  },
+  "schema_version": 1,
+  "scope": "cpb_spatial_p4_dense_representation",
+  "specimen_count": 276,
+  "test_only": false
+}

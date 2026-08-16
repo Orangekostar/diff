@@ -1,0 +1,13 @@
+stage,question,reference_method,reference_mae,candidate_method,candidate_mae,primary_effect,relative_improvement_or_retention,improved_domains,simultaneous_lower,status
+G1_area,surface_to_projected_damage_area,,,,,,0.062135,3/7,-0.164873,FAIL
+G1_height,surface_to_damage_height,,,,,,0.065989,6/7,-0.0522272,FAIL
+G1_width,surface_to_damage_width,,,,,,0.070470,5/7,-0.131310,FAIL
+G2_measured_scalar,measured_scalar_incremental_CAI_utility,surface,0.1881207811,measured_scalar,0.1892044107,-0.0010836296,-0.005760,4/6,-0.005070,FAIL
+G2_predicted_scalar,strict_OOF_scalar_incremental_CAI_utility,surface,0.1881207811,predicted_scalar,0.1855983291,0.0025224520,0.013409,3/6,-0.013738,FAIL
+P1_full_field,measured_full_field_incremental_CAI_utility,surface,0.1881207811,full_field,0.1284893565,0.0596314245,0.316985,5/6,0.007218,PASS
+P2_MSPD,privileged_transfer_vs_equal_capacity_student,D0,0.1483623192,MSPD,0.1419266750,0.0064356442,0.043378,4/6,-0.0102142603,FAIL
+P3_spatial_specificity,specimen_specific_spatial_organization,patch_shuffle_8x8,0.1839398265,original,0.1284893565,0.0554504700,0.301460,6/6,0.0090475767,PASS
+P4_dense_representation,dense_spatial_representation_vs_global_baseline,resnet_global,0.1284893565,resdiff_fusion,0.1548007175,-0.0263113609,-0.204775,1/6,-0.0531891005,NO_GO
+P5_sparse_retention,25_percent_sparse_scan_retention,full,0.1284893565,bilinear_0.25,0.1345137120,0.0060243555,0.898973,5/6,0.0017300690,PASS
+P6_diffusion_reconstruction,diffusion_vs_bilinear_reconstruction,bilinear,0.1298021627,diffusion,0.1422009259,-0.0123987632,-0.095520,1/6,-0.0381994874,NO_MECHANICAL_GAIN
+P7_surface_sparse,surface_complementarity_at_25_percent_sparse_scan,sparse_only_0.25,0.0901159208,surface_sparse_0.25,0.1345137120,-0.0443977912,-0.492674,1/6,-0.1175444300,NO_COMPLEMENTARITY

@@ -1,0 +1,60 @@
+{
+  "bootstrap_indices_sha256": "67363d859333e947df4cd8f1d018494629bb215f094e3b0ee5cdc7c397bb0f44",
+  "bootstrap_resamples": 100000,
+  "bootstrap_seed": 20260818,
+  "checkpoint_scientific_digests": [
+    "cfe7fa55babd4b853405dd41e6edd43750bdd99b98714ea74d8bfa2f5a5e8c66",
+    "3280ead62e459fff9b7654dad4c6b3046b8a3f80739eb36a64b4c351308bc2d2",
+    "e7c4a875205b031de36611012c84d41d56886c40187d4654e6aadbfbcf3b150c",
+    "20ab04bf42e0600172ca62f0179609de5ec96fb48261b17a0f3d8ea8613e7485",
+    "bec908f8cbfcffb6929748bf257d91b2e793890b1fe5e8043bfcf5ba82ee84e7",
+    "2187adc61e452eedfede34669b1f483c003f3d92f9b69d56d1d843e4de76b4dc",
+    "2377995c1fc5f454fae563e610de544c5e5708f9ab1c3e450dc62cf165ee661a",
+    "fbe9156046f7fc29833051a3320d51f5846895b1244b626dd5a0d294515ea2e6",
+    "1b33b315fd13c1b455793cc280507216122e998c4eb5be40b216fb6b1cbbd185",
+    "4d350bc19db5de6675bbb011aea478987f5e978b3e51cdb0deaa64e7e62d20a4",
+    "1a49b5b9ec7488695df9b02f7c57deadc6e748bdd0dc453fa038819368d28852",
+    "661e2759dc9ae79fbfadc91bbaaa337d554f9609c06cfe880dd2f975c2c1e19f"
+  ],
+  "evaluation_state_sha256": "a69ac117da27d3354f2d4f975dbc6d3178061df3d58f2398b73d62b0e79b4d2d",
+  "full_reproduction": {
+    "domains_match": true,
+    "maximum_prediction_error": 0.0,
+    "maximum_target_error": 0.0,
+    "passed": true,
+    "specimen_ids_match": true,
+    "tolerance": 1e-12
+  },
+  "gate": {
+    "all_effect_points_pass": false,
+    "all_improved_domains_pass": false,
+    "all_simultaneous_intervals_pass": false,
+    "finite_ranges_pass": true,
+    "l1_noninferiority_pass": false,
+    "measured_points_pass": true,
+    "retention_pass": false,
+    "status": "NO_MECHANICAL_GAIN"
+  },
+  "gate_status": "NO_MECHANICAL_GAIN",
+  "mode": "full",
+  "posterior_draws": 8,
+  "row_counts": {
+    "predictions": 2208,
+    "reconstruction_metrics": 1656,
+    "training": 12,
+    "uncertainty": 276
+  },
+  "run_state_sha256": "1de4e9f390845439e77c321cc8f8bb90fa1a4d4030d804e6d9513fac12e4864d",
+  "schema_version": 1,
+  "scope": "cpb_spatial_p6_diffusion_reconstruction",
+  "specimen_count": 276,
+  "surface_reproduction": {
+    "domains_match": true,
+    "maximum_prediction_error": 0.0,
+    "maximum_target_error": 0.0,
+    "passed": true,
+    "specimen_ids_match": true,
+    "tolerance": 1e-12
+  },
+  "test_only": false
+}

@@ -1,0 +1,147 @@
+{
+  "authorities": {
+    "evaluation_state_sha256": "606abe86c55001fc33e2fbf6df789362abe2316164a67bee056553d9e6aa0bd4",
+    "p5_output_tree_sha256": "a2c54b7fdc53252767c7788365d254bbcdbe36571d2e553ce56f406dc039c80d",
+    "p5_scientific_digest": "87b1da699b0ee59cf1723339a2150d673998b20004b6e990bb1a1a87d48f2257",
+    "reference_state_sha256": "16343ce0369dd02f5b9b4e8d1ba7b19d423c532d9401680a71a0081195bbf000",
+    "run_state_sha256": "eb24d3ac1ecef8774442f0367448206dd17de1afe4911b0d10adf5a88c26d1e5"
+  },
+  "config_sha256": "39417ff6e2498a8957d3277a051d3ae2eba1128e49532b1bd30f3b13ca9304c9",
+  "executed_code": {
+    "scripts/run_p7_surface_sparse.py": "e3b1e2a46664d0def4057a349a6b4fc7180d7bd5720f7fc2f65f454a4ac5424d",
+    "scripts/run_p7_surface_sparse.sh": "9258a82520395002a3ab9ee83ab19c2f8b944a70daf77b48defec18af3c05200",
+    "src/cmc_bbdm/cpb_surface_sparse/artifacts.py": "e6b4add28952808df3c0188f3fd9e11683476dd618001354f66bcb9b1a7bb4b7",
+    "src/cmc_bbdm/cpb_surface_sparse/config.py": "23847946fa3f726df53c1ed13322171301c390a900b71b8352855b3c5c0bbcf7",
+    "src/cmc_bbdm/cpb_surface_sparse/evaluation.py": "d21dfa08f5ae5827035471a6b25d7ca3ecc5c87c7fe98e5ffb98e6276baa2fd7",
+    "src/cmc_bbdm/cpb_surface_sparse/figures.py": "bd3b27ca30338ac4f0005497204408f9876b56ccd02b680b5bf78a13f2ea48c6",
+    "src/cmc_bbdm/cpb_surface_sparse/pipeline.py": "2a044152ce7fd834ad417ad89cbd10e49f0506ad299ee45afa343b7b057f1485"
+  },
+  "gate_status": "NO_COMPLEMENTARITY",
+  "mode": "full",
+  "output_tree_sha256": "384e96ac1f04630ee8eb367865b25811a50dd750f7f64541db54cfe789057769",
+  "outputs": {
+    "REPORT.md": {
+      "bytes": 522,
+      "sha256": "cc3f34f16b47f024ed3ea863fa6dde4c2c1f4833a68b51fb9fceddee660aa1a1"
+    },
+    "aggregate_metrics.csv": {
+      "bytes": 240,
+      "sha256": "3ef890c3afffda3bc93df5cb144b7faa5dc4b8b5ffdda930b60637093e166b16"
+    },
+    "bootstrap.csv": {
+      "bytes": 1863,
+      "sha256": "7ca164046a51888ed57c9ba09b9af3fe3d04c44b5131f726c78ed4e915ad06c0"
+    },
+    "config.yaml": {
+      "bytes": 5943,
+      "sha256": "39417ff6e2498a8957d3277a051d3ae2eba1128e49532b1bd30f3b13ca9304c9"
+    },
+    "domain_metrics.csv": {
+      "bytes": 1843,
+      "sha256": "d12196d1b45ed11a237a9e19d74b822299796556edc75b7279c7bd1f0989e76e"
+    },
+    "figures/figure_manifest.json": {
+      "bytes": 686,
+      "sha256": "d51e93152ab1795acea6d58fe6f3ea0ae64a4aa310c9f6a8f4c55db44dba590d"
+    },
+    "figures/p7_domain_complementarity.pdf": {
+      "bytes": 13365,
+      "sha256": "8a458e0fc12d9204297b74b7adc7340acdd31216461d8e74e01277fda91a89df"
+    },
+    "figures/p7_figure_source_data.npz": {
+      "bytes": 1193,
+      "sha256": "0f8cc75dca36679624ff78b395c2e2d4a8113019de383106e93359a9f98bc996"
+    },
+    "figures/p7_information_sets.pdf": {
+      "bytes": 17111,
+      "sha256": "0b503702fc77bb729a2e7f0b7311631228721860ad7412a1180f7089eda4e4cd"
+    },
+    "inner_scores.csv": {
+      "bytes": 59019,
+      "sha256": "6498d00eebe2859fba1a71235b24f001283fa393e648444ddaf9c1a917ba0455"
+    },
+    "inner_selection.csv": {
+      "bytes": 3438,
+      "sha256": "42b1b0b15d1142d98b3cca5329f4f0c946795096c45bb7144f9b608396290934"
+    },
+    "predictions.csv": {
+      "bytes": 412536,
+      "sha256": "5ad9a928740b45e0d76c07bba9eb0e7a57020ea7734a220496d1b241f8316455"
+    },
+    "summary.json": {
+      "bytes": 4330,
+      "sha256": "3b7f0e714a097dfa72f11fc8931ecefb8da352ccb148532157db17cbdd36f10b"
+    }
+  },
+  "schema_version": 1,
+  "scientific_digest": "2c5c7fc6ea953367af4b82146030a79821af29ea35cdcfff0ee40977a73deab6",
+  "scope": "cpb_spatial_p7_surface_sparse_fusion",
+  "sources": {
+    "base_v3_config": {
+      "path": "paper_v3/configs/p1_full_field_oracle.yaml",
+      "sha256": "42b13f714a0ebd11d820e879808825ca5a7f326d01baacc4e088f67102ff2f12"
+    },
+    "design": {
+      "path": "docs/superpowers/specs/2026-08-16-cpb-p7-surface-sparse-design.md",
+      "sha256": "dbfe29ac43d39e18103056889e64da7c0dd18fc6ef2644a8875d18ef49525a18"
+    },
+    "implementation_plan": {
+      "path": "docs/superpowers/plans/2026-08-16-cpb-p7-surface-sparse.md",
+      "sha256": "60024f54945804837cda925e0c686ee45ac519d49c401d64e401d20ea195ae66"
+    },
+    "p1_manifest": {
+      "path": "paper_v3/experiments/P1_full_field_oracle/artifact_manifest.json",
+      "sha256": "6dc7f86060e91c1fab885685521b0c0e1a3a1290c4b4d2147c61dd1ee94e4f25"
+    },
+    "p1_predictions": {
+      "path": "paper_v3/experiments/P1_full_field_oracle/predictions.csv",
+      "sha256": "f2c62d0afc3eec1b280bbadb1ede6d56b1ebcdbb8f9caf0d528f5ce1e1a865a5"
+    },
+    "p5_aggregate_metrics": {
+      "path": "results/cpb_spatial/p5_sparse_scan/aggregate_metrics.csv",
+      "sha256": "a991eea546db7962fc9f4a047e69983ab405d900fed0b9b3f0ce79404b598202"
+    },
+    "p5_bootstrap": {
+      "path": "results/cpb_spatial/p5_sparse_scan/bootstrap.csv",
+      "sha256": "6dac2a094b77e380445f67e48b3c93f813b6e8be7948672448ad593778f3ab57"
+    },
+    "p5_config": {
+      "path": "paper_v3/configs/p5_sampling_retention.yaml",
+      "sha256": "569be54ff258835e98347340e8ab706d726cb6a2fadacdc5590716c9129235a8"
+    },
+    "p5_domain_metrics": {
+      "path": "results/cpb_spatial/p5_sparse_scan/domain_metrics.csv",
+      "sha256": "f2127255b22eda254670c9f3abc5c05ac4226843424a30fbafa6445841b50b78"
+    },
+    "p5_manifest": {
+      "path": "results/cpb_spatial/p5_sparse_scan/artifact_manifest.json",
+      "sha256": "b3f6554c15b41d18264c4a8e12bcafabd6824c81db608e3e24099b225e45041e"
+    },
+    "p5_predictions": {
+      "path": "results/cpb_spatial/p5_sparse_scan/predictions.csv",
+      "sha256": "651b30402f5c06f27b4bc157654971054838042f9a2502df35c20f4adb325b47"
+    },
+    "p5_retention": {
+      "path": "results/cpb_spatial/p5_sparse_scan/retention.csv",
+      "sha256": "f6aead6cb054294018cdd2ac309140fc46fac02ac30574e8f4841ae8e9960bf6"
+    },
+    "p5_sampling_validation": {
+      "path": "results/cpb_spatial/p5_sparse_scan/sampling_validation.csv",
+      "sha256": "a8df0745d227dde561638cf89b01cdad86a5c1c0a67cd98bcd4ea28b8addda50"
+    },
+    "p5_summary": {
+      "path": "results/cpb_spatial/p5_sparse_scan/summary.json",
+      "sha256": "b57fd36e02bf0389441d07d561337a6daaf21784b98e86c8de2bafc594e29c74"
+    },
+    "prompt": {
+      "path": "docs/CPB Positive Rebuild Prompt \u2014 Spatial C-scan Information, Diffusion Features and Sparse Internal Sensing.md",
+      "sha256": "3ba1c01e8096fc75e9034b8304e960904a2d1f02dca77693c1f4a6dc63ec18c4"
+    },
+    "resnet_weights": {
+      "path": "paper_v3/assets/resnet18-f37072fd.pth",
+      "sha256": "f37072fd47e89c5e827621c5baffa7500819f7896bbacec160b1a16c560e07ec"
+    }
+  },
+  "specimen_count": 276,
+  "test_only": false
+}

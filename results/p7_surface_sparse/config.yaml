@@ -1,0 +1,165 @@
+schema_version: 1
+scope: cpb_spatial_p7_surface_sparse_fusion
+seed: 20260816
+output_dir: results/cpb_spatial/p7_surface_sparse
+
+runtime:
+  python: "3.13.13"
+  numpy_module: "2.5.1"
+  numpy_distribution: "2.5.0"
+  scipy_module: "1.18.0"
+  scipy_distribution: "1.18.0"
+  scikit_learn_module: "1.9.0"
+  scikit_learn_distribution: "1.9.0"
+  pil_module: "12.3.0"
+  pillow_distribution: "12.2.0"
+  torch_module: "2.12.1+cu130"
+  torch_distribution: "2.12.1"
+  torchvision_module: "0.27.1+cu130"
+  torchvision_distribution: "0.27.1"
+  pyyaml_module: "6.0.3"
+  pyyaml_distribution: "6.0.3"
+  matplotlib_module: "3.11.1"
+  matplotlib_distribution: "3.11.1"
+
+sources:
+  prompt:
+    path: docs/CPB Positive Rebuild Prompt — Spatial C-scan Information, Diffusion Features and Sparse Internal Sensing.md
+    sha256: 3ba1c01e8096fc75e9034b8304e960904a2d1f02dca77693c1f4a6dc63ec18c4
+  design:
+    path: docs/superpowers/specs/2026-08-16-cpb-p7-surface-sparse-design.md
+    sha256: dbfe29ac43d39e18103056889e64da7c0dd18fc6ef2644a8875d18ef49525a18
+  implementation_plan:
+    path: docs/superpowers/plans/2026-08-16-cpb-p7-surface-sparse.md
+    sha256: 60024f54945804837cda925e0c686ee45ac519d49c401d64e401d20ea195ae66
+  base_v3_config:
+    path: paper_v3/configs/p1_full_field_oracle.yaml
+    sha256: 42b13f714a0ebd11d820e879808825ca5a7f326d01baacc4e088f67102ff2f12
+  p5_config:
+    path: paper_v3/configs/p5_sampling_retention.yaml
+    sha256: 569be54ff258835e98347340e8ab706d726cb6a2fadacdc5590716c9129235a8
+  p5_manifest:
+    path: results/cpb_spatial/p5_sparse_scan/artifact_manifest.json
+    sha256: b3f6554c15b41d18264c4a8e12bcafabd6824c81db608e3e24099b225e45041e
+  p5_summary:
+    path: results/cpb_spatial/p5_sparse_scan/summary.json
+    sha256: b57fd36e02bf0389441d07d561337a6daaf21784b98e86c8de2bafc594e29c74
+  p5_predictions:
+    path: results/cpb_spatial/p5_sparse_scan/predictions.csv
+    sha256: 651b30402f5c06f27b4bc157654971054838042f9a2502df35c20f4adb325b47
+  p5_domain_metrics:
+    path: results/cpb_spatial/p5_sparse_scan/domain_metrics.csv
+    sha256: f2127255b22eda254670c9f3abc5c05ac4226843424a30fbafa6445841b50b78
+  p5_aggregate_metrics:
+    path: results/cpb_spatial/p5_sparse_scan/aggregate_metrics.csv
+    sha256: a991eea546db7962fc9f4a047e69983ab405d900fed0b9b3f0ce79404b598202
+  p5_bootstrap:
+    path: results/cpb_spatial/p5_sparse_scan/bootstrap.csv
+    sha256: 6dac2a094b77e380445f67e48b3c93f813b6e8be7948672448ad593778f3ab57
+  p5_retention:
+    path: results/cpb_spatial/p5_sparse_scan/retention.csv
+    sha256: f6aead6cb054294018cdd2ac309140fc46fac02ac30574e8f4841ae8e9960bf6
+  p5_sampling_validation:
+    path: results/cpb_spatial/p5_sparse_scan/sampling_validation.csv
+    sha256: a8df0745d227dde561638cf89b01cdad86a5c1c0a67cd98bcd4ea28b8addda50
+  p1_manifest:
+    path: paper_v3/experiments/P1_full_field_oracle/artifact_manifest.json
+    sha256: 6dc7f86060e91c1fab885685521b0c0e1a3a1290c4b4d2147c61dd1ee94e4f25
+  p1_predictions:
+    path: paper_v3/experiments/P1_full_field_oracle/predictions.csv
+    sha256: f2c62d0afc3eec1b280bbadb1ede6d56b1ebcdbb8f9caf0d528f5ce1e1a865a5
+  resnet_weights:
+    path: paper_v3/assets/resnet18-f37072fd.pth
+    sha256: f37072fd47e89c5e827621c5baffa7500819f7896bbacec160b1a16c560e07ec
+
+authorization:
+  p5_gate_status: PASS
+  p5_scientific_digest: 87b1da699b0ee59cf1723339a2150d673998b20004b6e990bb1a1a87d48f2257
+  p5_output_tree_sha256: a2c54b7fdc53252767c7788365d254bbcdbe36571d2e553ce56f406dc039c80d
+  p5_specimen_count: 276
+  selected_knee_density: 0.25
+  passing_densities: [0.25, 0.5]
+
+cohort:
+  specimen_count: 276
+  domain_order: [74t7kcdgkr, cgtnjyggtm, w68dtmpfyf, xcmzfsbd9t, yfxyg8jm46, ykhs7s2dck]
+  response: damaged_to_intact_cai_strength_ratio
+  response_unit: "1"
+  inferential_unit: held_out_dataset
+
+information_sets:
+  surface_only:
+    source: p5_surface_reference
+    features: metadata13_plus_profile_stats21
+  sparse_only:
+    densities: [0.25, 0.5]
+    interpolation: bilinear
+    features: fold_local_pca_sparse_resnet_embedding_only
+  surface_sparse:
+    densities: [0.25, 0.5]
+    source: p5_bilinear_reference
+    features: metadata13_plus_profile_stats21_plus_fold_local_pca_sparse_resnet_embedding
+  surface_full:
+    source: p5_full_reference
+    features: metadata13_plus_profile_stats21_plus_fold_local_pca_full_resnet_embedding
+
+methods:
+  all:
+    - surface_only
+    - sparse_only_0.25
+    - surface_sparse_0.25
+    - sparse_only_0.5
+    - surface_sparse_0.5
+    - surface_full
+  primary_sparse: sparse_only_0.25
+  primary_fusion: surface_sparse_0.25
+  sensitivity_sparse: sparse_only_0.5
+  sensitivity_fusion: surface_sparse_0.5
+
+estimator:
+  sparse_only_side_features: none
+  pca_dimensions: [8, 16, 32]
+  pca_tie_tolerance: 1.0e-12
+  ridge_alpha: 10.0
+  outer_folds: 6
+  inner_folds_per_outer: 5
+  smoke_specimens_per_domain: 9
+  device: cuda
+
+bootstrap:
+  seed: 20260816
+  resamples: 100000
+  family_size: 2
+  ordinary_quantiles: [0.025, 0.975]
+  simultaneous_quantiles: [0.0125, 0.9875]
+  quantile_method: linear
+  inferential_unit: held_out_dataset
+  effects:
+    - sparse_only_0.25_minus_surface_sparse_0.25
+    - sparse_only_0.5_minus_surface_sparse_0.5
+
+gate:
+  primary_effect: sparse_only_0.25_minus_surface_sparse_0.25
+  minimum_relative_improvement: 0.10
+  minimum_improved_domains: 4
+  primary_simultaneous_lower_strictly_positive: true
+  minimum_p5_full_gain_retention: 0.80
+  p5_reference_retention: 0.8989734769519824
+  statuses: [PASS, INCONCLUSIVE, NO_COMPLEMENTARITY, TEST_ONLY]
+
+outputs:
+  result_leaf: p7_surface_sparse
+  replay_parent: results/cpb_spatial/replay
+  smoke_parent: results/cpb_spatial/smoke
+  tables:
+    - inner_scores.csv
+    - inner_selection.csv
+    - predictions.csv
+    - domain_metrics.csv
+    - aggregate_metrics.csv
+    - bootstrap.csv
+  figure_files:
+    - figures/p7_information_sets.pdf
+    - figures/p7_domain_complementarity.pdf
+    - figures/p7_figure_source_data.npz
+    - figures/figure_manifest.json

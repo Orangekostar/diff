@@ -1,0 +1,92 @@
+schema_version: 1
+scope: cpb_sparse_scan_p5_retention
+
+sources:
+  prompt:
+    path: docs/CPB Positive Rebuild Prompt — Spatial C-scan Information, Diffusion Features and Sparse Internal Sensing.md
+    sha256: 3ba1c01e8096fc75e9034b8304e960904a2d1f02dca77693c1f4a6dc63ec18c4
+  design:
+    path: docs/superpowers/specs/2026-08-15-cpb-p5-sparse-scan-design.md
+    sha256: cd5a0fface2bb98d66441b23c1489f0a5c48586282309c1f6d956904bf4cecc4
+  gate:
+    path: docs/P5_SAMPLING_RETENTION_GATE.md
+    sha256: 7b5011372a10d0e091db0993e9aa6957fcb7fe6dfaa81aec0fd83e575796658f
+  implementation_plan:
+    path: docs/superpowers/plans/2026-08-15-cpb-p5-sparse-scan.md
+    sha256: 7f138d8cd65933d24980d93241804954f88d2b251bceb893ea27428f970fb5fd
+  base_v3_config:
+    path: paper_v3/configs/p1_full_field_oracle.yaml
+    sha256: 42b13f714a0ebd11d820e879808825ca5a7f326d01baacc4e088f67102ff2f12
+  p3_config:
+    path: paper_v3/configs/p3_spatial_specificity.yaml
+    sha256: 919b45c674424e084d3e13d4b503f7cfc6baae665f3bf8e2bb209bad701f5556
+  p3_manifest:
+    path: results/cpb_spatial/p3_spatial_specificity/artifact_manifest.json
+    sha256: bb4d764bdb4939cb8f25c9939382b2620adc6be0a5dcd5544bb28fcb5b0fbbc3
+  p3_summary:
+    path: results/cpb_spatial/p3_spatial_specificity/summary.json
+    sha256: 251452e782c42d0163d62b33454f1f156616a4ab31cd96d0d419e5e9b19e72f5
+  p3_predictions:
+    path: results/cpb_spatial/p3_spatial_specificity/predictions.csv
+    sha256: 2e3c4ce427e4449f71342a07cc2dcdcd719861a16cb008c6d3dd26a602c974d8
+  p1_manifest:
+    path: paper_v3/experiments/P1_full_field_oracle/artifact_manifest.json
+    sha256: 6dc7f86060e91c1fab885685521b0c0e1a3a1290c4b4d2147c61dd1ee94e4f25
+  p1_predictions:
+    path: paper_v3/experiments/P1_full_field_oracle/predictions.csv
+    sha256: f2c62d0afc3eec1b280bbadb1ede6d56b1ebcdbb8f9caf0d528f5ce1e1a865a5
+
+authorization:
+  p3_gate_status: PASS
+  p3_scientific_digest: a31903f424523162fba4ccbfbc8b9f2dfbe4988d4156b1a8b24711b030107d4d
+  p3_output_tree_sha256: 4c5c88b80ef7e8c88b88b74ce61db2c07465f844d04efb34958891b39a274373
+  p3_specimen_count: 276
+
+cohort:
+  specimen_count: 276
+  domain_order: [74t7kcdgkr, cgtnjyggtm, w68dtmpfyf, xcmzfsbd9t, yfxyg8jm46, ykhs7s2dck]
+  response: damaged_to_intact_cai_strength_ratio
+  response_unit: "1"
+  inferential_unit: held_out_dataset
+
+sampling:
+  densities: [1.0, 0.5, 0.25, 0.125]
+  interpolations: [nearest, bilinear, bicubic]
+  primary_interpolation: bilinear
+  rounding: ieee754_ties_to_even
+  endpoints_included: true
+  field_size_mm: [75.0, 75.0]
+  coordinate_role: released_screenshot_grid
+  measured_values_restored_exactly: true
+
+model:
+  representation: B_frozen
+  pca_dimensions: [8, 16, 32]
+  pca_tie_tolerance: 1.0e-12
+  ridge_alpha: 10.0
+  outer_folds: 6
+  inner_folds_per_outer: 5
+  device: cuda
+
+bootstrap:
+  seed: 20260831
+  resamples: 100000
+  primary_family: [surface_minus_bilinear_0.5, surface_minus_bilinear_0.25, surface_minus_bilinear_0.125]
+  gap_family: [bilinear_0.5_minus_full, bilinear_0.25_minus_full, bilinear_0.125_minus_full]
+  ordinary_quantiles: [0.025, 0.975]
+  simultaneous_quantiles: [0.008333333333333333, 0.9916666666666667]
+  quantile_method: linear
+
+gate:
+  density_order: [0.125, 0.25, 0.5]
+  minimum_retention: 0.80
+  minimum_improved_domains: 4
+  simultaneous_lower_strictly_positive: true
+  all_leave_one_domain_gains_strictly_positive: true
+  p6_gap_simultaneous_lower_strictly_positive: true
+  p6_minimum_full_better_domains: 4
+
+outputs:
+  formal: results/cpb_spatial/p5_sparse_scan
+  replay: results/cpb_spatial/replay/p5_sparse_scan
+  smoke: results/cpb_spatial/smoke/p5_sparse_scan

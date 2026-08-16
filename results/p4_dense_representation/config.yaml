@@ -1,0 +1,200 @@
+schema_version: 1
+scope: cpb_spatial_p4_dense_representation
+seed: 20260816
+output_dir: results/cpb_spatial/p4_dense_representation
+
+runtime:
+  python: "3.13.13"
+  numpy_module: "2.5.1"
+  numpy_distribution: "2.5.0"
+  scipy_module: "1.18.0"
+  scipy_distribution: "1.18.0"
+  scikit_learn_module: "1.9.0"
+  scikit_learn_distribution: "1.9.0"
+  pil_module: "12.3.0"
+  pillow_distribution: "12.2.0"
+  torch_module: "2.12.1+cu130"
+  torch_distribution: "2.12.1"
+  torchvision_module: "0.27.1+cu130"
+  torchvision_distribution: "0.27.1"
+  diffusers_module: "0.39.0"
+  diffusers_distribution: "0.39.0"
+  pyyaml_module: "6.0.3"
+  pyyaml_distribution: "6.0.3"
+  matplotlib_module: "3.11.1"
+  matplotlib_distribution: "3.11.1"
+
+sources:
+  prompt:
+    path: docs/CPB Positive Rebuild Prompt — Spatial C-scan Information, Diffusion Features and Sparse Internal Sensing.md
+    sha256: 3ba1c01e8096fc75e9034b8304e960904a2d1f02dca77693c1f4a6dc63ec18c4
+  design:
+    path: docs/superpowers/specs/2026-08-16-cpb-p4-dense-representation-design.md
+    sha256: ed702b83c873c2a66a54044ae5f92ea3ef708baacf08d806dffba3f640fbede3
+  implementation_plan:
+    path: docs/superpowers/plans/2026-08-16-cpb-p4-dense-representation.md
+    sha256: 9f6dd0ea034ed8a8d29e97ddf0cbe8e7fc3e2ca8fe334ea121757a9ffd45bbc8
+  base_v3_config:
+    path: paper_v3/configs/p1_full_field_oracle.yaml
+    sha256: 42b13f714a0ebd11d820e879808825ca5a7f326d01baacc4e088f67102ff2f12
+  p3_config:
+    path: paper_v3/configs/p3_spatial_specificity.yaml
+    sha256: 919b45c674424e084d3e13d4b503f7cfc6baae665f3bf8e2bb209bad701f5556
+  p3_manifest:
+    path: results/cpb_spatial/p3_spatial_specificity/artifact_manifest.json
+    sha256: bb4d764bdb4939cb8f25c9939382b2620adc6be0a5dcd5544bb28fcb5b0fbbc3
+  p3_summary:
+    path: results/cpb_spatial/p3_spatial_specificity/summary.json
+    sha256: 251452e782c42d0163d62b33454f1f156616a4ab31cd96d0d419e5e9b19e72f5
+  p1_manifest:
+    path: paper_v3/experiments/P1_full_field_oracle/artifact_manifest.json
+    sha256: 6dc7f86060e91c1fab885685521b0c0e1a3a1290c4b4d2147c61dd1ee94e4f25
+  p1_predictions:
+    path: paper_v3/experiments/P1_full_field_oracle/predictions.csv
+    sha256: f2c62d0afc3eec1b280bbadb1ede6d56b1ebcdbb8f9caf0d528f5ce1e1a865a5
+  p1_representation_provenance:
+    path: paper_v3/experiments/P1_full_field_oracle/representation_provenance.csv
+    sha256: 44a1c951522558ddde30ed35e7c76e05891bb62de9d0736d7fe2c8da4fbd794b
+  resnet_weights:
+    path: paper_v3/assets/resnet18-f37072fd.pth
+    sha256: f37072fd47e89c5e827621c5baffa7500819f7896bbacec160b1a16c560e07ec
+  dinov2_record:
+    path: third_party/UPSTREAM_DINOV2.json
+    sha256: bffd872c1140754e98e6dd15b6231ba1c5f138672dba690ffe59ca83d04cd602
+  dinov2_weights:
+    path: third_party/weights/dinov2_vits14_pretrain.pth
+    sha256: b938bf1bc15cd2ec0feacfe3a1bb553fe8ea9ca46a7e1d8d00217f29aef60cd9
+  ddpm_record:
+    path: third_party/UPSTREAM_DDPM_CIFAR10_32.json
+    sha256: f3d161041d62d69114820fec55a52bb1191cc60527424d8f488a1fb74d7beba6
+  ddpm_config:
+    path: third_party/ddpm_cifar10_32/config.json
+    sha256: 49579448cd5728fb83f14186de12464eee143d2f5dccb11b8e13744d712eae9d
+  ddpm_model:
+    path: third_party/ddpm_cifar10_32/diffusion_pytorch_model.safetensors
+    sha256: 1558dbe3fb093b0857d473e376b711eeda1b186c557be5e85b3a56300cd49f0f
+  ddpm_model_index:
+    path: third_party/ddpm_cifar10_32/model_index.json
+    sha256: f0fe13ac3b4ae424cc9bd6d3dadf02c0dc8621d4f793659faf0915427d575dd0
+  ddpm_scheduler:
+    path: third_party/ddpm_cifar10_32/scheduler_config.json
+    sha256: da5d9d26605d2aab854e8f2f2b26d3a407618de17b948bdb7d3846fb0561c7d3
+
+models:
+  resnet:
+    model: resnet18
+    input_size: [224, 224]
+    output_dimension: 512
+  dinov2:
+    model: dinov2_vits14
+    input_size: [224, 224]
+    token_grid: [16, 16]
+    token_dimension: 384
+    global_representation: cls_plus_mean_patch
+  ddpm:
+    model: google/ddpm-cifar10-32
+    revision: 267b167dc01f0e4e61923ea244e8b988f84deb80
+    input_size: [32, 32]
+    timestep: 500
+    noise_seeds: [20260816, 20260817, 20260818]
+    down_blocks: [0, 1]
+    token_grid: [16, 16]
+    token_dimension: 384
+    role: frozen_external_denoiser_activation_probe
+
+spatial_pooling:
+  radial_regions: 3
+  angular_sectors: 8
+  region_count: 24
+  region_order: radial_major_angular_major
+  radius_normalization: maximum_centroid_to_corner
+  angle_convention: atan2_y_minus_cy_x_minus_cx_half_open
+  empty_mask_centroid: geometric_field_center
+  empty_region: zero_vector
+  vector_normalization: l2
+  destruction_seed: 20260816
+  destruction: specimen_bound_pcg64_region_permutation
+
+methods:
+  all:
+    - resnet_global
+    - dinov2_global
+    - dinov2_spatial
+    - dinov2_spatial_destroyed
+    - ddpm_spatial
+    - ddpm_spatial_destroyed
+    - resdiff_fusion
+    - resdiff_fusion_destroyed
+  primary_baseline: resnet_global
+  primary_proposed: resdiff_fusion
+  spatial_pairs:
+    dinov2: [dinov2_spatial, dinov2_spatial_destroyed]
+    ddpm: [ddpm_spatial, ddpm_spatial_destroyed]
+    resdiff: [resdiff_fusion, resdiff_fusion_destroyed]
+
+estimator:
+  side_features: metadata13_plus_profile_stats21
+  pca_dimensions: [8, 16, 32]
+  pca_max_components: 32
+  pca_solver: sklearn_randomized_svd
+  pca_random_state: 20260816
+  pca_n_oversamples: 16
+  pca_n_iter: 4
+  pca_power_iteration_normalizer: QR
+  pca_tie_tolerance: 1.0e-12
+  ridge_alpha: 10.0
+  outer_folds: 6
+  inner_folds_per_outer: 5
+  smoke_specimens_per_domain: 9
+  device: cuda
+
+bootstrap:
+  seed: 20260816
+  resamples: 100000
+  family_size: 4
+  ordinary_quantiles: [0.025, 0.975]
+  simultaneous_quantiles: [0.00625, 0.99375]
+  quantile_method: linear
+  inferential_unit: held_out_dataset
+  effects:
+    - resnet_minus_resdiff
+    - dinov2_destroyed_minus_spatial
+    - ddpm_destroyed_minus_spatial
+    - resdiff_destroyed_minus_spatial
+
+gate:
+  primary_effect: resnet_minus_resdiff
+  minimum_relative_improvement: 0.08
+  minimum_improved_domains: 4
+  primary_simultaneous_lower_strictly_positive: true
+  spatial_effect: resdiff_destroyed_minus_spatial
+  spatial_simultaneous_lower_strictly_positive: true
+  representation_only_maximum_relative_degradation: 0.02
+  reproduction_tolerance: 1.0e-12
+  statuses: [PASS, REPRESENTATION_ONLY, NO_GO, TEST_ONLY]
+
+outputs:
+  result_leaf: p4_dense_representation
+  replay_parent: results/cpb_spatial/replay
+  smoke_parent: results/cpb_spatial/smoke
+  tables:
+    - inner_scores.csv
+    - inner_selection.csv
+    - predictions.csv
+    - domain_metrics.csv
+    - aggregate_metrics.csv
+    - bootstrap.csv
+  feature_files:
+    - feature_cache/resnet_global.npy
+    - feature_cache/dinov2_global.npy
+    - feature_cache/dinov2_spatial.npy
+    - feature_cache/dinov2_spatial_destroyed.npy
+    - feature_cache/ddpm_spatial.npy
+    - feature_cache/ddpm_spatial_destroyed.npy
+    - feature_cache/resdiff_fusion.npy
+    - feature_cache/resdiff_fusion_destroyed.npy
+  figure_files:
+    - figures/p4_method_performance.pdf
+    - figures/p4_spatial_sensitivity.pdf
+    - figures/p4_figure_source_data.npz
+    - figures/figure_manifest.json
