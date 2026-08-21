@@ -1,0 +1,17 @@
+# Pins for the declared image; they are not evidence of a suite run's loaded modules.
+# The image supplies torch==2.7.1 and torchvision==0.22.1 with CUDA 12.8.
+einops==0.8.1
+huggingface-hub==0.36.2
+matplotlib==3.11.1
+numpy==2.5.1
+omegaconf==2.3.0
+openpyxl==3.1.5
+Pillow==12.3.0
+polars==1.42.0
+pycocotools==2.0.10
+PyYAML==6.0.3
+requests==2.32.4
+scikit-fem==11.0.0
+scikit-learn==1.9.0
+scipy==1.18.0
+tqdm==4.67.1

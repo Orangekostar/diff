@@ -1,0 +1,325 @@
+schema_version: 1
+scope: cpb_d8_morphology_preserving_marginalization
+seed: 20260820
+output_dir: results/d8_search
+
+runtime:
+  python: 3.13.13
+  numpy_module: 2.5.1
+  numpy_distribution: 2.5.0
+  scipy_module: 1.18.0
+  scipy_distribution: 1.18.0
+  scikit_learn_module: 1.9.0
+  scikit_learn_distribution: 1.9.0
+  pil_module: 12.3.0
+  pillow_distribution: 12.2.0
+  torch_module: 2.12.1+cu130
+  torch_distribution: 2.12.1
+  torchvision_module: 0.27.1+cu130
+  torchvision_distribution: 0.27.1
+  diffusers_module: 0.39.0
+  diffusers_distribution: 0.39.0
+  optuna_module: 4.9.0
+  optuna_distribution: 4.9.0
+  pywavelets_module: 1.8.0
+  pywavelets_distribution: 1.8.0
+  pyyaml_module: 6.0.3
+  pyyaml_distribution: 6.0.3
+
+sources:
+  prompt:
+    path: docs/Codex Optimization Prompt — Result-Oriented Diffusion Marginalization for Cross-Domain CAI.md
+    sha256: 907ea4f8db578d7a19ec26e92ae105436544a468106bca370a1fb1ded5707e98
+  design:
+    path: docs/superpowers/specs/2026-08-17-d8-morphology-preserving-diffusion-marginalization-design.md
+    sha256: f7ed5f3b9acf1cc3f025d6061e90bd542067ccc060e398d8a27895daef4ef1bb
+  exploration_plan:
+    path: docs/D8_RESULT_ORIENTED_EXPLORATION_PLAN.md
+    sha256: c212730b8c205ced8110fd13cb0773aa8d1c4e5d561dab15597822d65e8b5e8a
+  implementation_plan:
+    path: docs/superpowers/plans/2026-08-17-d8-pilot-search.md
+    sha256: 264c381a90eef79b090944ed275c261b7b85654a04cee40ad6adf2c04bb37940
+  p1_config:
+    path: paper_v3/configs/p1_full_field_oracle.yaml
+    sha256: 42b13f714a0ebd11d820e879808825ca5a7f326d01baacc4e088f67102ff2f12
+  p1_manifest:
+    path: paper_v3/experiments/P1_full_field_oracle/artifact_manifest.json
+    sha256: 6dc7f86060e91c1fab885685521b0c0e1a3a1290c4b4d2147c61dd1ee94e4f25
+  p1_predictions:
+    path: paper_v3/experiments/P1_full_field_oracle/predictions.csv
+    sha256: f2c62d0afc3eec1b280bbadb1ede6d56b1ebcdbb8f9caf0d528f5ce1e1a865a5
+  p1_inner_selection:
+    path: paper_v3/experiments/P1_full_field_oracle/inner_selection.csv
+    sha256: 26838f30c3af7a5088d38d94b4d82856af24d91e19e513637bcccbdfc55b3236
+  p5_config:
+    path: paper_v3/configs/p5_sampling_retention.yaml
+    sha256: 569be54ff258835e98347340e8ab706d726cb6a2fadacdc5590716c9129235a8
+  p5_manifest:
+    path: results/cpb_spatial/p5_sparse_scan/artifact_manifest.json
+    sha256: b3f6554c15b41d18264c4a8e12bcafabd6824c81db608e3e24099b225e45041e
+  p6_config:
+    path: paper_v3/configs/p6_diffusion_reconstruction.yaml
+    sha256: b590d1920458f5e071a0b42ec337b70091f6ff1ca70e5d98d45ba8108cf17931
+  p6_manifest:
+    path: results/cpb_spatial/p6_diffusion_reconstruction/artifact_manifest.json
+    sha256: 01bb169f5648d0809466e26a8482c7025bc3471de306a0cc2bf8c2f4b0e08e6e
+  p6_uncertainty_source:
+    path: results/cpb_spatial/p6_diffusion_reconstruction/uncertainty_source_data.npz
+    sha256: 7328cc4afb1e9fcd6274a3e0b8bd5b085ac489f656df7b1b0329d1876e279355
+  resnet_weights:
+    path: paper_v3/assets/resnet18-f37072fd.pth
+    sha256: f37072fd47e89c5e827621c5baffa7500819f7896bbacec160b1a16c560e07ec
+  runtime_requirements:
+    path: environment/requirements-runtime.txt
+    sha256: eaafdb192e578d506b1e53426b3654d8e8718b5ac5141e7b82719cd9616e9204
+  d8_requirements:
+    path: environment/requirements-d8.txt
+    sha256: f0bc62fa305d00a4173c67cb4529129af1edc4e658629cc706d309fbc24f03a5
+  dockerfile:
+    path: environment/Dockerfile
+    sha256: 7c56be988ab71a80d23d5c1f7fc3839eb946759196dce8ff9a9fb0d8281a3b67
+  d8_package_init:
+    path: src/cmc_bbdm/cpb_diffusion_marginalization/__init__.py
+    sha256: 8b6784974dfded16cc82c2c8d962be42f537b968d14786751488f5ee063b5329
+  d8_config_code:
+    path: src/cmc_bbdm/cpb_diffusion_marginalization/config.py
+    sha256: c7b33f393d17ec5b83587ac9bc0c5f1e7c932a09d4311837b7ec0ad900936b1d
+  d8_authority_code:
+    path: src/cmc_bbdm/cpb_diffusion_marginalization/authority.py
+    sha256: 89600bc14b5700379d8c32a34e4a2fed403d9eb94a84aea3e56c6bc22b0f0c06
+  d8_baseline_code:
+    path: src/cmc_bbdm/cpb_diffusion_marginalization/baseline.py
+    sha256: 016dad4c137a3c83def9883f07f24dcc8bd77af6736ceee30708859c8f6e9744
+  d8_residuals_code:
+    path: src/cmc_bbdm/cpb_diffusion_marginalization/residuals.py
+    sha256: 140366e2d2370f36036f3d455db4046070c9de62efe9be3b1aeaceb83ef18d27
+  d8_decomposition_code:
+    path: src/cmc_bbdm/cpb_diffusion_marginalization/decomposition.py
+    sha256: 48e79260e1fff098dd57e007b8acf529b93d7214d53bc03e0b70368bcd1dcd9a
+  d8_variants_code:
+    path: src/cmc_bbdm/cpb_diffusion_marginalization/variants.py
+    sha256: ca5194841c2158fb11a93339df58941eb59b21e5dde52239f14dfdf00747583f
+  d8_features_code:
+    path: src/cmc_bbdm/cpb_diffusion_marginalization/features.py
+    sha256: 878e6503890a1f87088c82af65a165e242a17dd65b2a9fab1941d5224e9b8c06
+  d8_regression_code:
+    path: src/cmc_bbdm/cpb_diffusion_marginalization/regression.py
+    sha256: 4adce52e3e40c08efa77861a4279b135fa3697919d86638296e9c68a7aa499fc
+  d8_search_code:
+    path: src/cmc_bbdm/cpb_diffusion_marginalization/search.py
+    sha256: 24e72f1f0fe35e6e828a2eab45efab3d80bebfd876faf4dd37ca8edd92defb07
+  d8_tracking_code:
+    path: src/cmc_bbdm/cpb_diffusion_marginalization/tracking.py
+    sha256: e40a44aabea772df622dec2fa774a6f6cf7ccf174cfb6ac1b23b39bcefea36be
+  d8_selection_code:
+    path: src/cmc_bbdm/cpb_diffusion_marginalization/selection.py
+    sha256: 49ae92ab045e005740d0e8f7ab0598afb64eb4027e811b74b3a81d9190122ade
+  d8_pilot_code:
+    path: src/cmc_bbdm/cpb_diffusion_marginalization/pilot.py
+    sha256: 36fbad0c63572d91c716b3e42b1a09a08cd9f88fb9302f20aae18348801f777d
+  d8_artifacts_code:
+    path: src/cmc_bbdm/cpb_diffusion_marginalization/artifacts.py
+    sha256: c3e7551bd81c2728b0d360a7eefac6f276e7d7f185135391652196b5232d4eef
+  d8_cli_code:
+    path: scripts/run_d8_exploration.py
+    sha256: b4b14778ca2e8da9ed578625f7d7266d69e411e69fe63a11eaad217c1200ed5e
+  d8_cli_wrapper:
+    path: scripts/run_d8_exploration.sh
+    sha256: 1fd35f9056e7484ab3136ad720d8b43e11dadae817e48f6c9bbc36a81ce78a68
+
+cohort:
+  specimen_count: 276
+  domain_order:
+    - 74t7kcdgkr
+    - cgtnjyggtm
+    - w68dtmpfyf
+    - xcmzfsbd9t
+    - yfxyg8jm46
+    - ykhs7s2dck
+  response: damaged_to_intact_cai_strength_ratio
+  response_unit: "1"
+  inferential_unit: held_out_dataset
+  outer_protocol: leave_one_dataset_out
+  inner_protocol: leave_one_dataset_out_within_outer_training_domains
+  surface_features_allowed: false
+
+baseline:
+  name: I_frozen
+  equal_domain_mae: 0.08963580465761432
+  domain_mae:
+    74t7kcdgkr: 0.052003607090763716
+    cgtnjyggtm: 0.12486849958988917
+    w68dtmpfyf: 0.09660573834513045
+    xcmzfsbd9t: 0.07511512755876239
+    yfxyg8jm46: 0.12743074387350148
+    ykhs7s2dck: 0.06179111148763877
+  pca_dimensions_by_outer_domain:
+    74t7kcdgkr: 8
+    cgtnjyggtm: 32
+    w68dtmpfyf: 8
+    xcmzfsbd9t: 8
+    yfxyg8jm46: 8
+    ykhs7s2dck: 8
+  reproduction_tolerance: 1.0e-12
+  positive_mae: 0.085154
+  strong_mae: 0.082465
+  stretch_mae: 0.080
+
+posterior:
+  authority: P6_cross_fitted_diffusion_draws
+  p6_draws: 8
+  residual_definition: diffusion_draw_minus_measured_internal_field
+  mean_tolerance: 1.0e-6
+  variance_tolerance: 1.0e-6
+  dtype: float32
+  shape: [3, 64, 64]
+
+decomposition:
+  families: [gaussian, fourier, wavelet]
+  bands: [low, mid, mid+high, high]
+  gaussian_sigma_pixels:
+    minimum: 0.5
+    maximum: 8.0
+    distribution: log_uniform
+  fourier_cutoff_fraction:
+    minimum: 0.04
+    maximum: 0.50
+    distribution: uniform
+  fourier_transition_fraction:
+    minimum: 0.01
+    maximum: 0.10
+    distribution: uniform
+  wavelets: [haar, db2, db4, sym4]
+  wavelet_levels: [1, 2, 3]
+  alpha:
+    minimum: -0.5
+    maximum: 1.0
+    distribution: uniform
+
+morphology_gate:
+  area_relative_deviation: [0.025, 0.05, 0.075, 0.10]
+  width_relative_deviation: [0.025, 0.05, 0.075, 0.10]
+  height_relative_deviation: [0.025, 0.05, 0.075, 0.10]
+  centroid_shift_mm: [0.5, 1.0, 2.0]
+  low_frequency_correlation_minimum: [0.95, 0.97, 0.98, 0.99]
+  low_frequency_sigma_pixels: 2.0
+  radial_spearman_minimum: [0.90, 0.95, 0.98]
+  radial_profile_bins: 16
+  maximum_proposals: 32
+  minimum_overall_acceptance: 0.80
+  minimum_domain_acceptance: 0.60
+  fallback: raw_measured_internal_field
+
+controls:
+  registered: [B0, B1, B2, B3, B4, B5, B6, B7, B8]
+  B0: I_frozen_raw_field
+  B1: morphology_component_only
+  B2: matched_gaussian_noise
+  B3: phase_randomized_residual
+  B4: empirical_cross_fitted_residual
+  B5: diffusion_residual_augmentation
+  B6: diffusion_plus_consistency
+  B7: diffusion_plus_test_time_marginalization
+  B8: full_proposed_pipeline
+
+features:
+  encoder: frozen_resnet18_imagenet1k_v1
+  layers: [global, layer3, multi_layer]
+  marginalization_stage: [feature, prediction]
+  aggregation: [mean, median, trimmed, mean_variance]
+  prediction_aggregation: [mean, median, trimmed, morphology_weighted]
+  K_train: [1, 2, 4, 8]
+  K_test: [1, 2, 4, 8, 16]
+  morphology_weight_beta:
+    minimum: 0.1
+    maximum: 100.0
+    distribution: log_uniform
+  consistency: [none, prediction_variance, feature_variance, pairwise_ranking]
+  consistency_weight:
+    minimum: 0.0
+    maximum: 1.0
+    distribution: uniform
+  replicated_variant_specimen_weight: 1.0
+
+regressors:
+  registered:
+    - ridge
+    - elastic_net
+    - pls
+    - huber
+    - kernel_ridge
+    - svr
+    - hist_gradient_boosting
+    - shallow_mlp
+  pca_dimensions: [4, 8, 16, 32, 64]
+  standardize_within_inner_fit: true
+
+search:
+  forced_trials: 12
+  optuna_trials: 60
+  sampler: TPESampler
+  study_storage: sqlite
+  objective: mean_mae_plus_0.25_worst_plus_0.10_domain_sd
+  mean_weight: 1.0
+  worst_weight: 0.25
+  domain_sd_weight: 0.10
+  rerank_top: 12
+  finalist_top: 4
+  rerank_seeds: [20260820, 20260821, 20260822]
+  trial_failure_visibility: required
+
+ensemble:
+  enabled: true
+  weight_constraint: nonnegative_simplex
+  fit_rows: inner_oof_only
+  minimum_objective_gain: 0.0001
+  fallback: best_single_candidate
+
+escalation:
+  p6_candidate_minimum_inner_mae_improvement: 0.01
+  p6_candidate_minimum_inner_domains: 3
+  p6_candidate_minimum_outer_studies: 3
+  low_band_energy_fraction: 0.50
+  low_acceptance_threshold: 0.50
+  low_acceptance_alpha: 0.10
+  mismatch_minimum_outer_studies: 3
+  pilot_freeze_minimum_objective_gain: 0.0001
+  pilot_freeze_minimum_diffusion_weight: 0.05
+  pilot_freeze_minimum_outer_studies: 3
+  decision_priority:
+    - TRAIN_RESIDUAL_DIFFUSION
+    - FREEZE_PILOT_FOR_OUTER_EVALUATION
+    - CLOSE_DIFFUSION_SPECIFIC_ROUTE
+
+evaluation:
+  pilot_outer_evaluation_allowed: false
+  bootstrap_seed: 20260820
+  bootstrap_resamples: 100000
+  ordinary_quantiles: [0.025, 0.975]
+  simultaneous_quantiles: [0.008333333333333333, 0.9916666666666667]
+  primary_minimum_improved_domains: 4
+  strong_minimum_improved_domains: 5
+  diffusion_specific_minimum_domains_vs_best_nondiffusion: 4
+
+outputs:
+  search_dir: results/d8_search
+  final_dir: results/d8_final
+  required_search_files:
+    - trial_index.csv
+    - study.db
+    - residual_bank_manifest.json
+    - search_summary.csv
+    - selected_configs.json
+    - escalation_evidence.json
+    - pilot_report.md
+    - artifact_manifest.json
+    - CHECKSUMS.sha256
+  required_final_files:
+    - aggregate_metrics.csv
+    - domain_metrics.csv
+    - bootstrap.csv
+    - selected_configs.csv
+    - ablation.csv
+    - morphology_audit.csv
+    - search_summary.csv
+    - REPORT.md

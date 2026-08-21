@@ -1,0 +1,183 @@
+{
+  "config_sha256": "a040eb25a95b166ca674a1744b53088b7c1b5ec14c11a88fbada953846ff119b",
+  "escalation_status": "TRAIN_RESIDUAL_DIFFUSION",
+  "initial_trial_count": 432,
+  "outer_domains": [
+    "74t7kcdgkr",
+    "cgtnjyggtm",
+    "w68dtmpfyf",
+    "xcmzfsbd9t",
+    "yfxyg8jm46",
+    "ykhs7s2dck"
+  ],
+  "outer_evaluation_count": 0,
+  "output_tree_sha256": "685798b852590b37c2d3857b95e7de212ca32cc087cd306b99fa748d7946eb2d",
+  "outputs": {
+    "escalation_evidence.json": {
+      "bytes": 5200,
+      "sha256": "c55e017303297ac2d0f101ce8e517b7092c8d542109d3d65c6f812592a456ba4"
+    },
+    "pilot_report.md": {
+      "bytes": 84,
+      "sha256": "d2210d78af9fcf98ff8437cae4f67c88a5f5914487fbc051c04f7b03523f4748"
+    },
+    "residual_bank_manifest.json": {
+      "bytes": 274,
+      "sha256": "6d45afa259f07b30b662bdbd29ff61d4a1a76c5bf255b14b0b0f88d3410bf57a"
+    },
+    "search_summary.csv": {
+      "bytes": 1620,
+      "sha256": "fd059d23fb5a28c12057b323a30a8b09a5a2d6d35873e2249a7b0881cacb07ed"
+    },
+    "selected_configs.json": {
+      "bytes": 4692044,
+      "sha256": "258a6cbc9e41801498838fde60a3943475664e5e6395801580567610108aa1f0"
+    },
+    "study.db": {
+      "bytes": 2744320,
+      "sha256": "cba8e0a334770cbb38edc75f93b9d54fbe4073d94e44b5053d408d52d390d13c"
+    },
+    "trial_index.csv": {
+      "bytes": 507321,
+      "sha256": "dd0af97aa86438d51f48ce422541ff4d043c28de5346b7cf16f5cacb60be22a4"
+    }
+  },
+  "schema_version": 1,
+  "scientific_digest": "3478d97858236c1873c88d8fc3e910dbe659e05d2c4e472eac15825e999474ca",
+  "scope": "cpb_d8_pilot_search_package",
+  "source_authorities": {
+    "d8_artifacts_code": {
+      "path": "src/cmc_bbdm/cpb_diffusion_marginalization/artifacts.py",
+      "sha256": "c3e7551bd81c2728b0d360a7eefac6f276e7d7f185135391652196b5232d4eef"
+    },
+    "d8_authority_code": {
+      "path": "src/cmc_bbdm/cpb_diffusion_marginalization/authority.py",
+      "sha256": "89600bc14b5700379d8c32a34e4a2fed403d9eb94a84aea3e56c6bc22b0f0c06"
+    },
+    "d8_baseline_code": {
+      "path": "src/cmc_bbdm/cpb_diffusion_marginalization/baseline.py",
+      "sha256": "016dad4c137a3c83def9883f07f24dcc8bd77af6736ceee30708859c8f6e9744"
+    },
+    "d8_cli_code": {
+      "path": "scripts/run_d8_exploration.py",
+      "sha256": "b4b14778ca2e8da9ed578625f7d7266d69e411e69fe63a11eaad217c1200ed5e"
+    },
+    "d8_cli_wrapper": {
+      "path": "scripts/run_d8_exploration.sh",
+      "sha256": "1fd35f9056e7484ab3136ad720d8b43e11dadae817e48f6c9bbc36a81ce78a68"
+    },
+    "d8_config_code": {
+      "path": "src/cmc_bbdm/cpb_diffusion_marginalization/config.py",
+      "sha256": "c7b33f393d17ec5b83587ac9bc0c5f1e7c932a09d4311837b7ec0ad900936b1d"
+    },
+    "d8_decomposition_code": {
+      "path": "src/cmc_bbdm/cpb_diffusion_marginalization/decomposition.py",
+      "sha256": "48e79260e1fff098dd57e007b8acf529b93d7214d53bc03e0b70368bcd1dcd9a"
+    },
+    "d8_features_code": {
+      "path": "src/cmc_bbdm/cpb_diffusion_marginalization/features.py",
+      "sha256": "878e6503890a1f87088c82af65a165e242a17dd65b2a9fab1941d5224e9b8c06"
+    },
+    "d8_package_init": {
+      "path": "src/cmc_bbdm/cpb_diffusion_marginalization/__init__.py",
+      "sha256": "8b6784974dfded16cc82c2c8d962be42f537b968d14786751488f5ee063b5329"
+    },
+    "d8_pilot_code": {
+      "path": "src/cmc_bbdm/cpb_diffusion_marginalization/pilot.py",
+      "sha256": "36fbad0c63572d91c716b3e42b1a09a08cd9f88fb9302f20aae18348801f777d"
+    },
+    "d8_regression_code": {
+      "path": "src/cmc_bbdm/cpb_diffusion_marginalization/regression.py",
+      "sha256": "4adce52e3e40c08efa77861a4279b135fa3697919d86638296e9c68a7aa499fc"
+    },
+    "d8_requirements": {
+      "path": "environment/requirements-d8.txt",
+      "sha256": "f0bc62fa305d00a4173c67cb4529129af1edc4e658629cc706d309fbc24f03a5"
+    },
+    "d8_residuals_code": {
+      "path": "src/cmc_bbdm/cpb_diffusion_marginalization/residuals.py",
+      "sha256": "140366e2d2370f36036f3d455db4046070c9de62efe9be3b1aeaceb83ef18d27"
+    },
+    "d8_search_code": {
+      "path": "src/cmc_bbdm/cpb_diffusion_marginalization/search.py",
+      "sha256": "24e72f1f0fe35e6e828a2eab45efab3d80bebfd876faf4dd37ca8edd92defb07"
+    },
+    "d8_selection_code": {
+      "path": "src/cmc_bbdm/cpb_diffusion_marginalization/selection.py",
+      "sha256": "49ae92ab045e005740d0e8f7ab0598afb64eb4027e811b74b3a81d9190122ade"
+    },
+    "d8_tracking_code": {
+      "path": "src/cmc_bbdm/cpb_diffusion_marginalization/tracking.py",
+      "sha256": "e40a44aabea772df622dec2fa774a6f6cf7ccf174cfb6ac1b23b39bcefea36be"
+    },
+    "d8_variants_code": {
+      "path": "src/cmc_bbdm/cpb_diffusion_marginalization/variants.py",
+      "sha256": "ca5194841c2158fb11a93339df58941eb59b21e5dde52239f14dfdf00747583f"
+    },
+    "design": {
+      "path": "docs/superpowers/specs/2026-08-17-d8-morphology-preserving-diffusion-marginalization-design.md",
+      "sha256": "f7ed5f3b9acf1cc3f025d6061e90bd542067ccc060e398d8a27895daef4ef1bb"
+    },
+    "dockerfile": {
+      "path": "environment/Dockerfile",
+      "sha256": "7c56be988ab71a80d23d5c1f7fc3839eb946759196dce8ff9a9fb0d8281a3b67"
+    },
+    "exploration_plan": {
+      "path": "docs/D8_RESULT_ORIENTED_EXPLORATION_PLAN.md",
+      "sha256": "c212730b8c205ced8110fd13cb0773aa8d1c4e5d561dab15597822d65e8b5e8a"
+    },
+    "implementation_plan": {
+      "path": "docs/superpowers/plans/2026-08-17-d8-pilot-search.md",
+      "sha256": "264c381a90eef79b090944ed275c261b7b85654a04cee40ad6adf2c04bb37940"
+    },
+    "p1_config": {
+      "path": "paper_v3/configs/p1_full_field_oracle.yaml",
+      "sha256": "42b13f714a0ebd11d820e879808825ca5a7f326d01baacc4e088f67102ff2f12"
+    },
+    "p1_inner_selection": {
+      "path": "paper_v3/experiments/P1_full_field_oracle/inner_selection.csv",
+      "sha256": "26838f30c3af7a5088d38d94b4d82856af24d91e19e513637bcccbdfc55b3236"
+    },
+    "p1_manifest": {
+      "path": "paper_v3/experiments/P1_full_field_oracle/artifact_manifest.json",
+      "sha256": "6dc7f86060e91c1fab885685521b0c0e1a3a1290c4b4d2147c61dd1ee94e4f25"
+    },
+    "p1_predictions": {
+      "path": "paper_v3/experiments/P1_full_field_oracle/predictions.csv",
+      "sha256": "f2c62d0afc3eec1b280bbadb1ede6d56b1ebcdbb8f9caf0d528f5ce1e1a865a5"
+    },
+    "p5_config": {
+      "path": "paper_v3/configs/p5_sampling_retention.yaml",
+      "sha256": "569be54ff258835e98347340e8ab706d726cb6a2fadacdc5590716c9129235a8"
+    },
+    "p5_manifest": {
+      "path": "results/cpb_spatial/p5_sparse_scan/artifact_manifest.json",
+      "sha256": "b3f6554c15b41d18264c4a8e12bcafabd6824c81db608e3e24099b225e45041e"
+    },
+    "p6_config": {
+      "path": "paper_v3/configs/p6_diffusion_reconstruction.yaml",
+      "sha256": "b590d1920458f5e071a0b42ec337b70091f6ff1ca70e5d98d45ba8108cf17931"
+    },
+    "p6_manifest": {
+      "path": "results/cpb_spatial/p6_diffusion_reconstruction/artifact_manifest.json",
+      "sha256": "01bb169f5648d0809466e26a8482c7025bc3471de306a0cc2bf8c2f4b0e08e6e"
+    },
+    "p6_uncertainty_source": {
+      "path": "results/cpb_spatial/p6_diffusion_reconstruction/uncertainty_source_data.npz",
+      "sha256": "7328cc4afb1e9fcd6274a3e0b8bd5b085ac489f656df7b1b0329d1876e279355"
+    },
+    "prompt": {
+      "path": "docs/Codex Optimization Prompt \u2014 Result-Oriented Diffusion Marginalization for Cross-Domain CAI.md",
+      "sha256": "907ea4f8db578d7a19ec26e92ae105436544a468106bca370a1fb1ded5707e98"
+    },
+    "resnet_weights": {
+      "path": "paper_v3/assets/resnet18-f37072fd.pth",
+      "sha256": "f37072fd47e89c5e827621c5baffa7500819f7896bbacec160b1a16c560e07ec"
+    },
+    "runtime_requirements": {
+      "path": "environment/requirements-runtime.txt",
+      "sha256": "eaafdb192e578d506b1e53426b3654d8e8718b5ac5141e7b82719cd9616e9204"
+    }
+  },
+  "trial_count": 432
+}
