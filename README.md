@@ -3,9 +3,9 @@
 This repository is a compact, analysis-oriented export of the registered G1,
 G2, and P1-P7 experiments. It contains machine-readable metrics, held-out-domain
 predictions, reports, configuration snapshots, artifact manifests, and
-publication PDFs. It also includes the mechanics-consistent multi-view CAI
-regression implementation and its formal E1-E3 result packages. It excludes raw
-images, source DOCX files, model checkpoints, posterior image arrays, and large
+publication PDFs. It also includes the mechanics-consistent multi-view and MSSS
+implementations with their formal result packages. It excludes raw images,
+source DOCX files, model checkpoints, posterior image arrays, and unregistered
 feature caches.
 
 ## Decision sequence
@@ -24,6 +24,8 @@ feature caches.
 | E1 | Are FULL, 50%, and 25% mechanics-valid views predictively equivalent or complementary? | GO_BY_PREDICTIVE_EQUIVALENCE |
 | E2 | Does cooperative prediction agreement improve strict cross-domain CAI? | NO_GO |
 | E3 | Does static consistency-plus-complementarity fusion improve CAI? | NO_GO |
+| MSSS S1 | Is there a cross-axis mechanically sufficient and spatially specific scale? | NO_GO |
+| MSSS S2 | Does source-selected MSSS transfer across laminate structures? | NOT_RUN_NOT_AUTHORIZED |
 
 The primary response for G2 and P1-P7 is the published damaged-to-intact CAI
 strength ratio, unit `1`. Confirmatory inference uses held-out datasets, not
@@ -41,6 +43,13 @@ outperformed the learned P6 reconstructions. The E1 audit found highly similar
 predictions across mechanics-valid views, but E2 cooperative regression and all
 E3 fusion methods failed to improve the frozen FULL comparator. E4 dynamic
 gating and E5 transport were therefore not authorized.
+
+The formal MSSS scale-discovery study found positive spatial-specificity effects
+on all three axes, but no axis passed the complete sufficiency gate. Sampling
+lacked a confirmed over-coarse boundary; Gaussian was unstable and failed
+cross-fitted non-inferiority; wavelet also failed cross-fitted non-inferiority.
+S1 therefore issued `NO_GO`, and the pre-registered S2 transfer branch was not
+run.
 
 ## Directory guide
 
@@ -60,9 +69,13 @@ gating and E5 transport were therefore not authorized.
 - `results/p7_surface_sparse/`: sparse-only and surface-plus-sparse comparisons.
 - `results/multiview/`: checksum-bound E1 audit, E2 cooperative regression, and
   E3 complementarity results, including ratio and recovered-MPa metrics.
+- `results/msss/`: byte-identical formal and replay S1 packages with scale
+  curves, predictions, four publication figures, manifests, and checksums.
 - `src/cmc_bbdm/aei_multiview_regression/`: multi-view implementation; the
   matching CLI, configuration, and tests are under `scripts/`,
   `paper_v3/configs/`, and `tests/`.
+- `src/cmc_bbdm/msss/`: three-axis scale discovery, source-only selection,
+  conditional transfer, artifacts, and replay implementation.
 - `analysis_tables/`: compact cross-stage tables and explicitly marked post-hoc
   P6 uncertainty diagnostics.
 
@@ -74,6 +87,8 @@ gating and E5 transport were therefore not authorized.
 4. Use `ANALYSIS_PROMPT.md` for an independent failure analysis.
 5. Read `docs/AEI_MULTIVIEW_RESULT_REPORT.md` for the multi-view outcome and
    `docs/AEI_MULTIVIEW_CLAIM_EVIDENCE_MATRIX.md` for claim boundaries.
+6. Read `results/msss/s1_scale_discovery/REPORT.md` and
+   `docs/MSSS_CLAIM_EVIDENCE_RESULT.md` for the MSSS decision boundary.
 
 ## Interpretation constraints
 
@@ -92,6 +107,8 @@ gating and E5 transport were therefore not authorized.
   was not a registered endpoint.
 - The E1 oracle is non-deployable. E1 predictive equivalence does not override
   the E2/E3 no-go decisions or authorize unrun E4/E5 branches.
+- MSSS component-level spatial specificity does not override the complete S1
+  `NO_GO`, establish a transferable scale, or authorize S2.
 
 ## Reproducibility
 
@@ -111,6 +128,11 @@ The three `results/multiview/` stage packages independently include
 `CHECKSUMS.sha256` and `artifact_manifest.json`. Their formal decisions are E1
 `GO`, E2 `NO_GO`, and E3 `NO_GO`; all stored ratio metrics remained byte-identical
 when the recovered-MPa reporting columns were added.
+
+The formal and replay MSSS S1 packages are byte-identical and validate with:
+
+- scientific digest `6ac389b0a4e09487202f5a8a9273dfdf5b338ef40de705661c5877e3e9bd0152`;
+- output-tree digest `e41c42bdd8cb022b2d7d3c286685ae2530f2c302a236cf2e0a77d76ecf6a365b`.
 
 ## Privacy-sanitized export note
 

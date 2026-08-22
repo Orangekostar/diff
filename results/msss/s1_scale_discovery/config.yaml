@@ -1,0 +1,152 @@
+schema_version: 1
+scope: mechanically_sufficient_spatial_scale
+
+sources:
+  controlling_prompt:
+    path: ../Codex Prompt — Discovering and Validating a Transferable Mechanically Sufficient Spatial Scale for C-scan CAI Assessment.md
+    sha256: 18d5c790a69b69f585d0ed2131a598fcc9ed8169eb3428cdf02e239afd1bbf2d
+  existing_evidence:
+    path: docs/MSSS_EXISTING_EVIDENCE.md
+    sha256: 294ad5d136c7ef4cb0bebc7960bd0a20078b3614c52b0f3dc0158159dd45be98
+  s1_protocol:
+    path: docs/MSSS_S1_PROTOCOL.md
+    sha256: 4ed10bf2e3853d2c0a135dca380c20aabd0cb5878a2079f5a6101007e472ced0
+  s2_protocol:
+    path: docs/MSSS_S2_TRANSFER_PROTOCOL.md
+    sha256: 1ce71f579e4e170b26ba359491903ec357c041e789bc8c92c64de4e5f63a9f33
+  reference_audit:
+    path: docs/MSSS_REFERENCE_METHOD_AUDIT.md
+    sha256: e6d369c867d594fee3a3effdb6a44737d3c19568ca3a1bbf5a8dd7e0f5f6888a
+  claim_matrix:
+    path: docs/MSSS_CLAIM_EVIDENCE_MATRIX.md
+    sha256: cba01dc0d8fa4e09ca50d59b03d99470e93e25ba3b3fca0ccebdd3fd430f526f
+  design:
+    path: docs/superpowers/specs/2026-08-22-msss-design.md
+    sha256: c96b6e3f203d8dd96549956d951d963f70d744328a80bfebfd97c5772446171f
+  implementation_plan:
+    path: docs/superpowers/plans/2026-08-22-msss.md
+    sha256: ab424436adee0ea89abd556032729277720cb35e83b28d0ae2994a9374b9b291
+  p1_config:
+    path: paper_v3/configs/p1_full_field_oracle.yaml
+    sha256: 42b13f714a0ebd11d820e879808825ca5a7f326d01baacc4e088f67102ff2f12
+  p3_config:
+    path: paper_v3/configs/p3_spatial_specificity.yaml
+    sha256: 919b45c674424e084d3e13d4b503f7cfc6baae665f3bf8e2bb209bad701f5556
+  p3_summary:
+    path: results/cpb_spatial/p3_spatial_specificity/summary.json
+    sha256: 251452e782c42d0163d62b33454f1f156616a4ab31cd96d0d419e5e9b19e72f5
+  p5_config:
+    path: paper_v3/configs/p5_sampling_retention.yaml
+    sha256: 569be54ff258835e98347340e8ab706d726cb6a2fadacdc5590716c9129235a8
+  p5_summary:
+    path: results/cpb_spatial/p5_sparse_scan/summary.json
+    sha256: b57fd36e02bf0389441d07d561337a6daaf21784b98e86c8de2bafc594e29c74
+  paired_feature_summary:
+    path: results/aei_selective_invariance/a2_paired_features/summary.json
+    sha256: f06fc126334db0f66f018c44b4969462c22fc49c554b936b7a707e12b7c363f2
+  paired_feature_bank:
+    path: results/aei_selective_invariance/a2_paired_features/paired_features.npz
+    sha256: f2a69f0da75e20880202d7fc4a6a92f979978406ec21f9d83e4bc8db07fb72a8
+  multiview_e1_summary:
+    path: results/multiview/e1_audit/summary.json
+    sha256: 1c88a7a254d637796a5dc53163318881514fbd8aab52391d4af6d21426e44b64
+  multiview_e3_summary:
+    path: results/multiview/e3_complementarity/summary.json
+    sha256: 4d6e500848f0f05b52d0f273c4048ac2c03305a1dc82657bb35902a199290bbc
+  multiview_stress_aggregate:
+    path: results/multiview/e3_complementarity/stress_aggregate_metrics.csv
+    sha256: ebb3cd818cd4a5a0e1897684329ea5338bce9e4904d7e5588de9077bdebdbb3a
+  multiview_stress_groups:
+    path: results/multiview/e3_complementarity/stress_group_metrics.csv
+    sha256: 8e22f5e1eb9c9cb73c742e2df9ff3a58e9d34646652f3a120b45931b912ac24d
+  p6_summary:
+    path: results/cpb_spatial/p6_diffusion_reconstruction/summary.json
+    sha256: d9d20b71d49639a8f697b8be76553f8381496e9b02901cd7700eade6974c0874
+
+cohort:
+  specimen_count: 276
+  independent_unit: specimen
+  domain_order: [74t7kcdgkr, cgtnjyggtm, w68dtmpfyf, xcmzfsbd9t, yfxyg8jm46, ykhs7s2dck]
+  response: damaged_to_intact_cai_strength_ratio
+  response_unit: "1"
+  ply_counts: [8, 16, 24]
+  layup_families: [cross_ply, quasi_isotropic]
+
+axes:
+  sampling:
+    requested_densities: [1.0, 0.75, 0.625, 0.5, 0.375, 0.25, 0.1875, 0.125, 0.0625]
+    interpolation: bilinear
+    rounding: ieee754_ties_to_even
+    endpoints_included: true
+    measured_points_restored_exactly: true
+    field_size_mm: [75.0, 75.0]
+  gaussian:
+    sigma_px: [0.0, 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 6.0, 8.0]
+    boundary_mode: reflect
+    sigma_mm: unavailable
+  wavelet:
+    families: [db2, haar, db4]
+    primary_family: db2
+    levels: [0, 1, 2, 3]
+    primary_mode: low_only
+    sensitivity_mode: low_plus_boundary_details
+    boundary_mode: periodization
+  fourier:
+    enabled: false
+    normalized_cutoffs: [1.0, 0.75, 0.5, 0.35, 0.25, 0.15, 0.10]
+
+estimator:
+  encoder: torchvision_resnet18_imagenet1k_v1_frozen
+  embedding_dimension: 512
+  pca_dimensions: [8, 16, 32]
+  pca_tie_tolerance: 1.0e-12
+  features: metadata13_plus_pca
+  preprocessing: fold_local_mean_imputation_standard_scaling
+  regressor: ridge
+  ridge_alpha: 10.0
+  device: cuda
+
+selection:
+  relative_margins: [0.025, 0.05, 0.075]
+  primary_margin: 0.05
+  minimum_plateau_nonfull_candidates: 2
+  stability_minimum_outer_folds: 4
+  stability_window_steps: 1
+  specificity_minimum_positive_domains: 4
+  specificity_control: patch_shuffle_8x8
+  specificity_seeds: [20260831, 20260901, 20260902]
+  s1_go_minimum_axes: 2
+  s1_strong_go_axes: 3
+
+bootstrap:
+  seed: 20260822
+  resamples: 100000
+  bit_generator: PCG64
+  sampling_unit: specimen_stratified_within_group
+  synchronized: true
+  ordinary_quantiles: [0.025, 0.975]
+  three_axis_familywise_quantiles: [0.008333333333333333, 0.9916666666666667]
+
+transfer:
+  operational_axis: sampling
+  comparators: [FULL, FIXED_25, SOURCE_MSSS, OVER_COARSE]
+  six_domain_support_minimum_nonworse: 4
+  structured_go_minimum_nonworse: 3
+  strong_ply_positive_minimum: 2
+  strong_layup_positive_minimum: 1
+  impact_shift_enabled: false
+
+runtime:
+  numpy: 2.5.1
+  scipy: 1.18.0
+  pywavelets: 1.8.0
+  scikit_learn: 1.9.0
+  torch: 2.12.1+cu130
+  torchvision: 0.27.1+cu130
+
+outputs:
+  s1_formal: results/msss/s1_scale_discovery
+  s1_smoke: results/msss/smoke/s1_scale_discovery
+  s1_replay: results/msss/replay/s1_scale_discovery
+  s2_formal: results/msss/s2_transfer
+  s2_replay: results/msss/replay/s2_transfer

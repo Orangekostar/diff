@@ -1,0 +1,4 @@
+axis,passed,maximum_in_window,window_json,selected_counts_json
+sampling,true,5,"[""sampling:density=0.125"",""sampling:density=0.0625""]","[[""sampling:density=1"",0],[""sampling:density=0.75"",0],[""sampling:density=0.625"",0],[""sampling:density=0.5"",0],[""sampling:density=0.375"",0],[""sampling:density=0.25"",0],[""sampling:density=0.1875"",1],[""sampling:density=0.125"",0],[""sampling:density=0.0625"",5]]"
+gaussian,false,2,"[""gaussian:sigma=1"",""gaussian:sigma=1.5""]","[[""gaussian:sigma=0"",0],[""gaussian:sigma=0.5"",0],[""gaussian:sigma=1"",1],[""gaussian:sigma=1.5"",1],[""gaussian:sigma=2"",1],[""gaussian:sigma=3"",0],[""gaussian:sigma=4"",1],[""gaussian:sigma=6"",1],[""gaussian:sigma=8"",1]]"
+wavelet,true,5,"[""wavelet:db2:low_only:level=2"",""wavelet:db2:low_only:level=3""]","[[""wavelet:db2:low_only:level=0"",0],[""wavelet:db2:low_only:level=1"",1],[""wavelet:db2:low_only:level=2"",2],[""wavelet:db2:low_only:level=3"",3]]"
