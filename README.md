@@ -25,6 +25,7 @@ feature caches.
 | E2 | Does cooperative prediction agreement improve strict cross-domain CAI? | NO_GO |
 | E3 | Does static consistency-plus-complementarity fusion improve CAI? | NO_GO |
 | MSSS S1 | Is there a cross-axis mechanically sufficient and spatially specific scale? | NO_GO |
+| MSSS NO-GO diagnostic | Does the descriptive scale vary with laminate or damage size? | EXPLORATORY_SIGNAL_NOT_VALIDATED |
 | MSSS S2 | Does source-selected MSSS transfer across laminate structures? | NOT_RUN_NOT_AUTHORIZED |
 
 The primary response for G2 and P1-P7 is the published damaged-to-intact CAI
@@ -49,7 +50,10 @@ on all three axes, but no axis passed the complete sufficiency gate. Sampling
 lacked a confirmed over-coarse boundary; Gaussian was unstable and failed
 cross-fitted non-inferiority; wavelet also failed cross-fitted non-inferiority.
 S1 therefore issued `NO_GO`, and the pre-registered S2 transfer branch was not
-run.
+run. The required post-`NO_GO` diagnostic found 3/3-axis coarser directions for
+quasi-isotropic layup, higher damage area, and higher damage width, but not for
+ply count or damage height. These post-hoc signals do not validate coupling or
+change the S1/S2 gates.
 
 ## Directory guide
 
@@ -69,8 +73,8 @@ run.
 - `results/p7_surface_sparse/`: sparse-only and surface-plus-sparse comparisons.
 - `results/multiview/`: checksum-bound E1 audit, E2 cooperative regression, and
   E3 complementarity results, including ratio and recovered-MPa metrics.
-- `results/msss/`: byte-identical formal and replay S1 packages with scale
-  curves, predictions, four publication figures, manifests, and checksums.
+- `results/msss/`: byte-identical formal and replay S1 packages plus the
+  post-`NO_GO` coupling diagnostic, with manifests and checksums.
 - `src/cmc_bbdm/aei_multiview_regression/`: multi-view implementation; the
   matching CLI, configuration, and tests are under `scripts/`,
   `paper_v3/configs/`, and `tests/`.
@@ -88,7 +92,8 @@ run.
 5. Read `docs/AEI_MULTIVIEW_RESULT_REPORT.md` for the multi-view outcome and
    `docs/AEI_MULTIVIEW_CLAIM_EVIDENCE_MATRIX.md` for claim boundaries.
 6. Read `results/msss/s1_scale_discovery/REPORT.md` and
-   `docs/MSSS_CLAIM_EVIDENCE_RESULT.md` for the MSSS decision boundary.
+   `docs/MSSS_CLAIM_EVIDENCE_RESULT.md` for the MSSS decision boundary; use
+   `docs/MSSS_COMPLETION_AUDIT.md` for the requirement-by-requirement audit.
 
 ## Interpretation constraints
 
@@ -109,6 +114,8 @@ run.
   the E2/E3 no-go decisions or authorize unrun E4/E5 branches.
 - MSSS component-level spatial specificity does not override the complete S1
   `NO_GO`, establish a transferable scale, or authorize S2.
+- The post-`NO_GO` coupling signal is descriptive and reuses the inspected S1
+  cohort; it is not independent validation of Scale-Laminate Coupling.
 
 ## Reproducibility
 
@@ -133,6 +140,12 @@ The formal and replay MSSS S1 packages are byte-identical and validate with:
 
 - scientific digest `6ac389b0a4e09487202f5a8a9273dfdf5b338ef40de705661c5877e3e9bd0152`;
 - output-tree digest `e41c42bdd8cb022b2d7d3c286685ae2530f2c302a236cf2e0a77d76ecf6a365b`.
+
+The formal and replay post-`NO_GO` diagnostic packages are byte-identical and
+validate with:
+
+- scientific digest `e59dff40aa1d588c6654795c8130b22fa1be66950824d6224afc673418897203`;
+- output-tree digest `9a2c972055b364815cacfc0c31e4cf29f928645832f07918ddd4f8055ac03318`.
 
 ## Privacy-sanitized export note
 

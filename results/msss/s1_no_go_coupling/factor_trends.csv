@@ -1,0 +1,16 @@
+axis,factor,group_order_json,selected_condition_ids_json,coarse_ranks_json,direction,alignment_status,aligned_direction,aligned_axis_count
+sampling,ply_count,"[""8"",""16"",""24""]","[""sampling:density=0.0625"",""sampling:density=0.0625"",""sampling:density=0.0625""]","[8,8,8]",SAME,NO_CROSS_AXIS_ALIGNMENT,,1
+gaussian,ply_count,"[""8"",""16"",""24""]","[""gaussian:sigma=2"",""gaussian:sigma=8"",""gaussian:sigma=0.5""]","[4,8,1]",NON_MONOTONIC,NO_CROSS_AXIS_ALIGNMENT,,1
+wavelet,ply_count,"[""8"",""16"",""24""]","[""wavelet:db2:low_only:level=2"",""wavelet:db2:low_only:level=3"",""wavelet:db2:low_only:level=3""]","[2,3,3]",COARSER,NO_CROSS_AXIS_ALIGNMENT,,1
+sampling,layup_family,"[""cross_ply"",""quasi_isotropic""]","[""sampling:density=0.125"",""sampling:density=0.0625""]","[7,8]",COARSER,CROSS_AXIS_ALIGNED,COARSER,3
+gaussian,layup_family,"[""cross_ply"",""quasi_isotropic""]","[""gaussian:sigma=1.5"",""gaussian:sigma=6""]","[3,7]",COARSER,CROSS_AXIS_ALIGNED,COARSER,3
+wavelet,layup_family,"[""cross_ply"",""quasi_isotropic""]","[""wavelet:db2:low_only:level=2"",""wavelet:db2:low_only:level=3""]","[2,3]",COARSER,CROSS_AXIS_ALIGNED,COARSER,3
+sampling,damage_area,"[""low"",""middle"",""high""]","[""sampling:density=0.125"",""sampling:density=0.0625"",""sampling:density=0.0625""]","[7,8,8]",COARSER,CROSS_AXIS_ALIGNED,COARSER,3
+gaussian,damage_area,"[""low"",""middle"",""high""]","[""gaussian:sigma=1"",""gaussian:sigma=1.5"",""gaussian:sigma=4""]","[2,3,6]",COARSER,CROSS_AXIS_ALIGNED,COARSER,3
+wavelet,damage_area,"[""low"",""middle"",""high""]","[""wavelet:db2:low_only:level=1"",""wavelet:db2:low_only:level=2"",""wavelet:db2:low_only:level=3""]","[1,2,3]",COARSER,CROSS_AXIS_ALIGNED,COARSER,3
+sampling,damage_height,"[""low"",""middle"",""high""]","[""sampling:density=0.125"",""sampling:density=0.1875"",""sampling:density=0.0625""]","[7,6,8]",NON_MONOTONIC,NO_CROSS_AXIS_ALIGNMENT,,0
+gaussian,damage_height,"[""low"",""middle"",""high""]","[""gaussian:sigma=2"",""gaussian:sigma=1"",""gaussian:sigma=1.5""]","[4,2,3]",NON_MONOTONIC,NO_CROSS_AXIS_ALIGNMENT,,0
+wavelet,damage_height,"[""low"",""middle"",""high""]","[""wavelet:db2:low_only:level=2"",""wavelet:db2:low_only:level=1"",""wavelet:db2:low_only:level=3""]","[2,1,3]",NON_MONOTONIC,NO_CROSS_AXIS_ALIGNMENT,,0
+sampling,damage_width,"[""low"",""middle"",""high""]","[""sampling:density=0.1875"",""sampling:density=0.0625"",""sampling:density=0.0625""]","[6,8,8]",COARSER,CROSS_AXIS_ALIGNED,COARSER,3
+gaussian,damage_width,"[""low"",""middle"",""high""]","[""gaussian:sigma=1"",""gaussian:sigma=4"",""gaussian:sigma=4""]","[2,6,6]",COARSER,CROSS_AXIS_ALIGNED,COARSER,3
+wavelet,damage_width,"[""low"",""middle"",""high""]","[""wavelet:db2:low_only:level=1"",""wavelet:db2:low_only:level=3"",""wavelet:db2:low_only:level=3""]","[1,3,3]",COARSER,CROSS_AXIS_ALIGNED,COARSER,3

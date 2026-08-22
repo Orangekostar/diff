@@ -1,0 +1,40 @@
+schema_version: 1
+scope: msss_s1_no_go_coupling_diagnostic
+
+sources:
+  msss_config:
+    path: paper_v3/configs/msss.yaml
+    sha256: ea6716e85c5e1f8ad4e4094c7c8b236183cc81917e90faee71585dad4dfb013e
+  coupling_protocol:
+    path: docs/MSSS_NO_GO_COUPLING_PROTOCOL.md
+    sha256: c09bd2a59546497eec8f2bc7134a6fc50ca69f3efbada8be26ab7998fe381522
+  coupling_design:
+    path: docs/superpowers/specs/2026-08-22-msss-no-go-coupling-design.md
+    sha256: 83b8802677380fcd2f12e4177cf6deb0598ab5ad85140a1738913ff4b890556f
+  coupling_plan:
+    path: docs/superpowers/plans/2026-08-22-msss-no-go-coupling.md
+    sha256: f996c203429c0b05e05f5da9ec1ca103c9d8ad4d9c483764e01fdf1dae89e183
+
+parent:
+  path: results/msss/s1_scale_discovery
+  required_gate_status: NO_GO
+  required_test_only: false
+  scientific_digest: 6ac389b0a4e09487202f5a8a9273dfdf5b338ef40de705661c5877e3e9bd0152
+  output_tree_sha256: e41c42bdd8cb022b2d7d3c286685ae2530f2c302a236cf2e0a77d76ecf6a365b
+
+analysis:
+  axes: [sampling, gaussian, wavelet]
+  wavelet_primary_family: db2
+  wavelet_primary_mode: low_only
+  relative_margin: 0.05
+  groupings: [domain, ply_count, layup_family, damage_area, damage_height, damage_width]
+  damage_metrics: [damage_area, damage_height, damage_width]
+  damage_binning: stable_rank_balanced_tertiles_value_then_specimen_id
+  damage_bin_labels: [low, middle, high]
+  cross_axis_alignment_minimum: 2
+  validation_status: NOT_VALIDATED_POST_HOC
+  s2_status: NOT_RUN_NOT_AUTHORIZED
+
+outputs:
+  formal: results/msss/s1_no_go_coupling
+  replay: results/msss/replay/s1_no_go_coupling
