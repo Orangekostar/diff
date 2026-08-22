@@ -1,0 +1,6 @@
+scheme,heldout_group,pca_dimensions,cooperative_loss,cooperative_lambda,stacking_method,gmvr_weights
+leave_ply_count_out,8,"[8, 8, 8]",huber,0.0,huber,"[1.0, 0.0, 5.867805673729925e-17]"
+leave_ply_count_out,24,"[32, 32, 32]",huber,0.003,huber,"[2.7755575615628914e-17, 1.0, 1.7654979158925526e-18]"
+leave_ply_count_out,16,"[8, 8, 8]",mse,0.0,ridge,"[0.0, 4.816535150923183e-16, 0.9999999999999994]"
+leave_layup_family_out,cross_ply,"[32, 32, 32]",huber,1.0,huber,"[0.9999999999999979, 7.771561172376096e-16, 1.4076552000250106e-15]"
+leave_layup_family_out,quasi_isotropic,"[8, 8, 8]",mse,0.0,ridge,"[0.0, 0.9999999999999998, 1.2691458171044257e-16]"

@@ -1,0 +1,15 @@
+{
+  "best_equal_domain_mae": 0.09062720807964307,
+  "best_improved_domains": 2,
+  "best_method": "equal_fusion",
+  "best_single_view_mae": 0.08963580465761434,
+  "bootstrap_resamples": 100000,
+  "bootstrap_seed": 20260811,
+  "e4_status": "NO_GO",
+  "e5_status": "NO_GO",
+  "fusion_gain_vs_best_single": -0.0009914034220287332,
+  "fusion_gain_vs_full": -0.0009914034220287332,
+  "gate_status": "NO_GO",
+  "schema_version": 1,
+  "stage": "E3"
+}

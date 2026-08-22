@@ -1,10 +1,12 @@
-# CFRP C-scan observability, spatial specificity, and sparse sensing results
+# CFRP C-scan observability, spatial specificity, and multi-view CAI results
 
 This repository is a compact, analysis-oriented export of the registered G1,
 G2, and P1-P7 experiments. It contains machine-readable metrics, held-out-domain
 predictions, reports, configuration snapshots, artifact manifests, and
-publication PDFs. It excludes raw images, source DOCX files, model checkpoints,
-posterior image arrays, and large feature caches.
+publication PDFs. It also includes the mechanics-consistent multi-view CAI
+regression implementation and its formal E1-E3 result packages. It excludes raw
+images, source DOCX files, model checkpoints, posterior image arrays, and large
+feature caches.
 
 ## Decision sequence
 
@@ -19,6 +21,9 @@ posterior image arrays, and large feature caches.
 | P5 | Does a 25% sparse C-scan retain at least 80% of the full-field gain? | PASS |
 | P6 | Does diffusion reconstruction improve mechanical prediction over simple interpolation? | NO_MECHANICAL_GAIN |
 | P7 | Does adding surface information improve the sparse-scan predictor? | NO_COMPLEMENTARITY |
+| E1 | Are FULL, 50%, and 25% mechanics-valid views predictively equivalent or complementary? | GO_BY_PREDICTIVE_EQUIVALENCE |
+| E2 | Does cooperative prediction agreement improve strict cross-domain CAI? | NO_GO |
+| E3 | Does static consistency-plus-complementarity fusion improve CAI? | NO_GO |
 
 The primary response for G2 and P1-P7 is the published damaged-to-intact CAI
 strength ratio, unit `1`. Confirmatory inference uses held-out datasets, not
@@ -32,7 +37,10 @@ prediction (P3). However, the registered surface student (P2), dense learned
 representations (P4), diffusion reconstruction (P6), and surface-plus-sparse
 fusion (P7) did not improve their registered comparators. A simple 25% sparse
 scan retained 89.90% of the full-field gain (P5), while classical interpolation
-outperformed the learned P6 reconstructions.
+outperformed the learned P6 reconstructions. The E1 audit found highly similar
+predictions across mechanics-valid views, but E2 cooperative regression and all
+E3 fusion methods failed to improve the frozen FULL comparator. E4 dynamic
+gating and E5 transport were therefore not authorized.
 
 ## Directory guide
 
@@ -50,6 +58,11 @@ outperformed the learned P6 reconstructions.
 - `results/p6_diffusion_reconstruction/`: six reconstruction methods, image
   metrics, mechanical predictions, uncertainty summaries, and registered gates.
 - `results/p7_surface_sparse/`: sparse-only and surface-plus-sparse comparisons.
+- `results/multiview/`: checksum-bound E1 audit, E2 cooperative regression, and
+  E3 complementarity results, including ratio and recovered-MPa metrics.
+- `src/cmc_bbdm/aei_multiview_regression/`: multi-view implementation; the
+  matching CLI, configuration, and tests are under `scripts/`,
+  `paper_v3/configs/`, and `tests/`.
 - `analysis_tables/`: compact cross-stage tables and explicitly marked post-hoc
   P6 uncertainty diagnostics.
 
@@ -59,6 +72,8 @@ outperformed the learned P6 reconstructions.
 2. Inspect `analysis_tables/extended_stage_gate_summary.csv`.
 3. Read each stage `REPORT.md` and `summary.json`.
 4. Use `ANALYSIS_PROMPT.md` for an independent failure analysis.
+5. Read `docs/AEI_MULTIVIEW_RESULT_REPORT.md` for the multi-view outcome and
+   `docs/AEI_MULTIVIEW_CLAIM_EVIDENCE_MATRIX.md` for claim boundaries.
 
 ## Interpretation constraints
 
@@ -75,6 +90,8 @@ outperformed the learned P6 reconstructions.
   proof that all surface measurements are physically irrelevant.
 - `analysis_tables/p6_posthoc_uncertainty_diagnostics.csv` is descriptive and
   was not a registered endpoint.
+- The E1 oracle is non-deployable. E1 predictive equivalence does not override
+  the E2/E3 no-go decisions or authorize unrun E4/E5 branches.
 
 ## Reproducibility
 
@@ -86,8 +103,14 @@ production and replay both validate with:
 - artifact-manifest SHA-256 `01bb169f5648d0809466e26a8482c7025bc3471de306a0cc2bf8c2f4b0e08e6e`.
 
 The copied full-package artifact manifests document the source runs, including
-files intentionally omitted from this compact repository. `CHECKSUMS.sha256`
-binds every exported non-Git file and is the authority for this export.
+files intentionally omitted from this compact repository. The root
+`CHECKSUMS.sha256` remains the authority for the original P0-P7 compact export;
+new multi-view results use their stage-local checksum ledgers.
+
+The three `results/multiview/` stage packages independently include
+`CHECKSUMS.sha256` and `artifact_manifest.json`. Their formal decisions are E1
+`GO`, E2 `NO_GO`, and E3 `NO_GO`; all stored ratio metrics remained byte-identical
+when the recovered-MPa reporting columns were added.
 
 ## Privacy-sanitized export note
 

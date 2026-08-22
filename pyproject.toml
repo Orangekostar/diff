@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=75", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cmc-bbdm"
+version = "0.1.0"
+description = "Reproducible BBDM adapters for CMC surface-to-internal damage inference"
+requires-python = ">=3.10,<3.14"
+dependencies = [
+  "numpy>=1.26,<3",
+  "optuna>=4,<5",
+  "omegaconf>=2.3,<3",
+  "Pillow>=10,<13",
+  "polars>=1.42,<2",
+  "PyYAML>=6,<7",
+  "requests>=2.31,<3",
+  "scikit-fem>=11,<12",
+  "torch>=2.4,<3",
+  "torchvision>=0.19,<1",
+  "tqdm>=4.66,<5",
+  "einops>=0.8,<1",
+  "huggingface-hub>=0.36,<1",
+  "matplotlib>=3.8,<4",
+  "openpyxl>=3.1,<4",
+  "opencv-python-headless>=4.10,<5",
+  "pycocotools>=2.0.8,<3",
+  "scikit-learn>=1.5,<2",
+  "scipy>=1.13,<2",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=8,<10"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["slow: registered full-cohort or GPU-backed verification"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["cmc_bbdm"]

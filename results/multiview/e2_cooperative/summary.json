@@ -1,0 +1,41 @@
+{
+  "cooperative_equal_domain_mae": 0.09390536286205671,
+  "cooperative_improved_domains": 0,
+  "fusion_gain_fraction_vs_full": -0.04763228512033761,
+  "fusion_gain_vs_full": -0.0042695582044423724,
+  "gate_status": "NO_GO",
+  "schema_version": 1,
+  "selected_candidates": [
+    {
+      "lambda_consistency": 1.0,
+      "loss": "huber",
+      "outer_domain": "74t7kcdgkr"
+    },
+    {
+      "lambda_consistency": 0.0,
+      "loss": "mse",
+      "outer_domain": "cgtnjyggtm"
+    },
+    {
+      "lambda_consistency": 1.0,
+      "loss": "mse",
+      "outer_domain": "w68dtmpfyf"
+    },
+    {
+      "lambda_consistency": 1.0,
+      "loss": "mse",
+      "outer_domain": "xcmzfsbd9t"
+    },
+    {
+      "lambda_consistency": 0.0,
+      "loss": "huber",
+      "outer_domain": "yfxyg8jm46"
+    },
+    {
+      "lambda_consistency": 0.1,
+      "loss": "huber",
+      "outer_domain": "ykhs7s2dck"
+    }
+  ],
+  "stage": "E2"
+}

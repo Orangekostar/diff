@@ -1,0 +1,87 @@
+schema_version: 1
+scope: aei_mechanics_consistent_multiview_regression
+
+sources:
+  controlling_prompt:
+    path: ../Codex Prompt — New Positive Experiment_ Mechanics-Consistent Multi-View Regression for Cross-Domain CAI.md
+    sha256: 29cbbc3b143d58afbdc5c1553dc952557381b3a01a51338072f48c425a55c36b
+  design:
+    path: docs/superpowers/specs/2026-08-21-aei-multiview-regression-design.md
+    sha256: 5c8684152ee1e2b5fba252041b53aeb6d4118a5ac103ac2255c8476771bf9d4b
+  a0_summary:
+    path: results/aei_selective_invariance/a0_audit/summary.json
+    sha256: f6fb0603c9d4b076470175a0d3d2d71db270ef07063895ac37bec6922a3d2b2b
+  a2_summary:
+    path: results/aei_selective_invariance/a2_paired_features/summary.json
+    sha256: f06fc126334db0f66f018c44b4969462c22fc49c554b936b7a707e12b7c363f2
+  paired_feature_bank:
+    path: results/aei_selective_invariance/a2_paired_features/paired_features.npz
+    sha256: f2a69f0da75e20880202d7fc4a6a92f979978406ec21f9d83e4bc8db07fb72a8
+  a5_summary:
+    path: results/aei_selective_invariance/a5_factorization/summary.json
+    sha256: 359077bbe0459c8820a38b3ced9611cdde8371dd83bd4d08d8b4f7b73664cae8
+  p1_config:
+    path: paper_v3/configs/p1_full_field_oracle.yaml
+    sha256: 42b13f714a0ebd11d820e879808825ca5a7f326d01baacc4e088f67102ff2f12
+  p1_predictions:
+    path: paper_v3/experiments/P1_full_field_oracle/predictions.csv
+    sha256: f2c62d0afc3eec1b280bbadb1ede6d56b1ebcdbb8f9caf0d528f5ce1e1a865a5
+
+cohort:
+  independent_unit: specimen
+  specimen_count: 276
+  domain_order: [74t7kcdgkr, cgtnjyggtm, w68dtmpfyf, xcmzfsbd9t, yfxyg8jm46, ykhs7s2dck]
+
+response:
+  name: damaged_to_intact_cai_strength_ratio
+  unit: "1"
+  baseline_equal_domain_mae: 0.08963580465761432
+
+views: [FULL, BILINEAR_50, BILINEAR_25]
+stage_order: [E1, E2, E3, E4, E5]
+
+estimator:
+  pca_dimensions: [8, 16, 32]
+  ridge_alpha: 10.0
+  preprocessing: fold_local_mean_imputation_standard_scaling
+
+cooperative:
+  target_losses: [mse, huber]
+  huber_delta: 0.05
+  lambda_grid: [0.0, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1.0]
+
+complementarity:
+  lambda_grid: [0.0, 0.001, 0.01, 0.1, 1.0]
+  weights: nonnegative_simplex
+
+bootstrap:
+  seed: 20260811
+  resamples: 100000
+  bit_generator: PCG64
+  ordinary_quantiles: [0.025, 0.975]
+  familywise_quantiles: [0.00625, 0.99375]
+
+gates:
+  e1:
+    predictive_equivalence_min_pair_correlation: 0.95
+    predictive_equivalence_max_relative_view_mae: 1.10
+    complementarity_min_useful_views: 2
+    complementarity_max_pair_residual_correlation: 0.90
+    complementarity_min_oracle_improvement_fraction: 0.10
+  e2:
+    maximum_equal_domain_mae: 0.08963580465761432
+    minimum_improved_domains: 4
+  e3:
+    require_below_best_single: true
+    maximum_equal_domain_mae: 0.08963580465761432
+    minimum_improved_domains: 4
+  e4:
+    require_e3_complementarity: true
+  e5:
+    require_e1_nontrivial: true
+    require_confirmed_complementarity: true
+    minimum_remaining_oracle_gap_fraction: 0.05
+
+outputs:
+  root: results/multiview
+  stages: [e1_audit, e2_cooperative, e3_complementarity, e4_moe, e5_transport]

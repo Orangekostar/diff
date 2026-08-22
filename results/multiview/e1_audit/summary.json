@@ -1,0 +1,20 @@
+{
+  "baseline_equal_domain_mae": 0.08963580465761432,
+  "best_view_counts": {
+    "BILINEAR_25": 109,
+    "BILINEAR_50": 80,
+    "FULL": 87
+  },
+  "complementarity_signal": false,
+  "gate_status": "GO",
+  "independent_state_sha256": "f59e2984af7489ab2e78ddbb7f40b5eaa36df84d670534f1a3e706b57034eb7c",
+  "maximum_full_prediction_error": 4.440892098500626e-16,
+  "maximum_target_error": 0.0,
+  "oracle_improvement_vs_full": 0.08316892192594462,
+  "oracle_is_deployable": false,
+  "oracle_mae": 0.08218089141827598,
+  "predictive_equivalence": true,
+  "reproduction_tolerance": 1e-12,
+  "schema_version": 1,
+  "stage": "E1"
+}

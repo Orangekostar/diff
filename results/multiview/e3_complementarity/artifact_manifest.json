@@ -1,0 +1,54 @@
+{
+  "files": {
+    "REPORT.md": {
+      "sha256": "108f4175a31ef06726eff0119c56f1e96ea0292ab7562e4c666f2b1d116fccc6",
+      "size": 91
+    },
+    "aggregate_metrics.csv": {
+      "sha256": "f7f62ea5be6e82ce3ad5579239c7e35d057dbd1259bdb291f6fa4b970c05a92b",
+      "size": 1165
+    },
+    "bootstrap_effects.csv": {
+      "sha256": "ebc9f86e45b22845e519c9baba016d5b41519667bf27483883215da6deaa90b2",
+      "size": 754
+    },
+    "config.yaml": {
+      "sha256": "8b46986c23ccd87d5e79f2a6f94f034a90d10e91ec21d39c40a1a58e3b41a357",
+      "size": 3054
+    },
+    "domain_metrics.csv": {
+      "sha256": "9bacd4097c8a20e636bd035957f7a287eba42df3c37924baea36430a2e83fbe0",
+      "size": 2828
+    },
+    "fusion_selections.csv": {
+      "sha256": "4a0da05733e8c68c58e61d1e9519d04427d9e709add5a3a714056d4369535f18",
+      "size": 1862
+    },
+    "oof_predictions.csv": {
+      "sha256": "91488917daeb818cdab9acd545bb096bbcb53b91a7ca56dd01e554873091f625",
+      "size": 87246
+    },
+    "stress_aggregate_metrics.csv": {
+      "sha256": "ebb3cd818cd4a5a0e1897684329ea5338bce9e4904d7e5588de9077bdebdbb3a",
+      "size": 1254
+    },
+    "stress_group_metrics.csv": {
+      "sha256": "8e22f5e1eb9c9cb73c742e2df9ff3a58e9d34646652f3a120b45931b912ac24d",
+      "size": 2516
+    },
+    "stress_oof_predictions.csv": {
+      "sha256": "4afc2097ec90318adbd22059a2776e584b335f798a19720d2ac6aa18c1a97b85",
+      "size": 113121
+    },
+    "stress_selections.csv": {
+      "sha256": "486ce8178f650117b96804ee01317e5172219a08d089d501ab5193602d97236f",
+      "size": 650
+    },
+    "summary.json": {
+      "sha256": "4d6e500848f0f05b52d0f273c4048ac2c03305a1dc82657bb35902a199290bbc",
+      "size": 443
+    }
+  },
+  "schema_version": 1,
+  "stage": "E3"
+}
