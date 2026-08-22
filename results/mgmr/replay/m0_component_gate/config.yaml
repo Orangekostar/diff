@@ -1,0 +1,132 @@
+schema_version: 1
+scope: mgmr_m0_component_gate
+
+sources:
+  controlling_prompt:
+    path: ../Codex Prompt — MGMR_ Mechanics-Guided Multiscale Morphology Representation for Cross-Configuration CAI Assessment.md
+    sha256: 8ac00f73bb171a8c3b7c718f1c0790faba4504c16c9aed1ec114c145aed628c0
+  design:
+    path: docs/superpowers/specs/2026-08-22-mgmr-m0-design.md
+    sha256: b74d420c23994462ee93d59b2bfaf790d1c8ef2b4301a091068fe2771980e06c
+  implementation_plan:
+    path: docs/superpowers/plans/2026-08-22-mgmr-m0.md
+    sha256: 185cdacff7a6a867e0c4a914e9d7b96c32202f2f9e260089e67f4712aea04ebe
+  repository_audit:
+    path: docs/MGMR_REPOSITORY_AUDIT.md
+    sha256: 491f959aed46837ea1b04370915bccf1ab3e20c70e7e2b26d89ec8a4cedc23f5
+  reference_audit:
+    path: docs/MGMR_REFERENCE_METHOD_AUDIT.md
+    sha256: cafa88c090f67bf7bed135c25f825ae3419a30352543b94787a5faf09a567ee2
+  impact_center_audit:
+    path: docs/MGMR_IMPACT_CENTER_AUDIT.md
+    sha256: 747efe13c390de3317a8751a9bfcd8c6542c53f1d26e67bf76c8646babf36a5c
+  m0_protocol:
+    path: docs/MGMR_M0_PROTOCOL.md
+    sha256: f6e5e33549c1621140640a0b7c9e9b88abd2627d86118105ff2f6e77bbeac1f7
+  claim_matrix:
+    path: docs/MGMR_CLAIM_EVIDENCE_MATRIX.md
+    sha256: c6e7cde558b1b830d11cb924d6daa1315f7da75cd950b6d473cdcedb93da2b22
+  p1_config:
+    path: paper_v3/configs/p1_full_field_oracle.yaml
+    sha256: 42b13f714a0ebd11d820e879808825ca5a7f326d01baacc4e088f67102ff2f12
+  p1_predictions:
+    path: paper_v3/experiments/P1_full_field_oracle/predictions.csv
+    sha256: f2c62d0afc3eec1b280bbadb1ede6d56b1ebcdbb8f9caf0d528f5ce1e1a865a5
+  p1_aggregate:
+    path: paper_v3/experiments/P1_full_field_oracle/aggregate_metrics.csv
+    sha256: 09aa29195b211a9616d646ae95a27fa961306d5db476542f229e59212407285f
+  p3_config:
+    path: paper_v3/configs/p3_spatial_specificity.yaml
+    sha256: 919b45c674424e084d3e13d4b503f7cfc6baae665f3bf8e2bb209bad701f5556
+  p3_summary:
+    path: results/cpb_spatial/p3_spatial_specificity/summary.json
+    sha256: 251452e782c42d0163d62b33454f1f156616a4ab31cd96d0d419e5e9b19e72f5
+  p5_config:
+    path: paper_v3/configs/p5_sampling_retention.yaml
+    sha256: 569be54ff258835e98347340e8ab706d726cb6a2fadacdc5590716c9129235a8
+  p5_summary:
+    path: results/cpb_spatial/p5_sparse_scan/summary.json
+    sha256: b57fd36e02bf0389441d07d561337a6daaf21784b98e86c8de2bafc594e29c74
+  msss_config:
+    path: paper_v3/configs/msss.yaml
+    sha256: ea6716e85c5e1f8ad4e4094c7c8b236183cc81917e90faee71585dad4dfb013e
+  msss_summary:
+    path: results/msss/s1_scale_discovery/summary.json
+    sha256: 197578a0511422b9d9ca3dc1b0cdd423f29f258b61fd2e8837854bbefd4063a8
+  paired_feature_bank:
+    path: results/aei_selective_invariance/a2_paired_features/paired_features.npz
+    sha256: f2a69f0da75e20880202d7fc4a6a92f979978406ec21f9d83e4bc8db07fb72a8
+  paired_feature_summary:
+    path: results/aei_selective_invariance/a2_paired_features/summary.json
+    sha256: f06fc126334db0f66f018c44b4969462c22fc49c554b936b7a707e12b7c363f2
+  resnet_weights:
+    path: paper_v3/assets/resnet18-f37072fd.pth
+    sha256: f37072fd47e89c5e827621c5baffa7500819f7896bbacec160b1a16c560e07ec
+
+cohort:
+  specimen_count: 276
+  domain_order: [74t7kcdgkr, cgtnjyggtm, w68dtmpfyf, xcmzfsbd9t, yfxyg8jm46, ykhs7s2dck]
+  response: damaged_to_intact_cai_strength_ratio
+  response_unit: "1"
+  outer_split: leave_one_dataset_out
+  inner_split: leave_one_source_dataset_out
+
+representation:
+  coarse_density: 0.25
+  coarse_operator: p5_endpoint_preserving_bilinear_reconstruction
+  spatial_layer: layer3
+  spatial_shape: [256, 14, 14]
+  secondary_layer: layer2
+  secondary_shape: [128, 28, 28]
+  wavelet: db2
+  wavelet_sensitivity: haar
+  wavelet_mode: periodization
+  wavelet_level: 1
+  directional_order: [cH, cV, cD]
+
+estimator:
+  metadata_features: metadata13_once
+  pca_dimensions: [8, 16, 32]
+  pca_tie_tolerance: 1.0e-12
+  preprocessing: fold_local_mean_imputation_standard_scaling
+  regressor: ridge
+  ridge_alpha: 10.0
+  device: cuda
+  batch_size: 32
+
+residual:
+  target: strict_source_domain_oof_residual
+  metadata_in_residual_branch: false
+  correction_scale: 1.0
+
+specificity:
+  control: patch_shuffle_8x8
+  seeds: [20260831, 20260901, 20260902]
+  grid: [8, 8]
+
+bootstrap:
+  seed: 20260822
+  resamples: 100000
+  bit_generator: PCG64
+  unit: held_out_domain
+  quantiles: [0.025, 0.975]
+
+gate:
+  required: [A, B, D]
+  minimum_positive_domains: 4
+  baseline_mae: 0.08963580465761432
+  positive_mae: 0.08515
+  strong_mae: 0.08247
+  stop_on_no_go: true
+
+runtime:
+  numpy: 2.5.1
+  pywavelets: 1.8.0
+  scikit_learn: 1.9.0
+  torch: 2.12.1+cu130
+  torchvision: 0.27.1+cu130
+
+outputs:
+  feature_bank: results/mgmr/feature_bank
+  formal: results/mgmr/m0_component_gate
+  replay: results/mgmr/replay/m0_component_gate

@@ -3,8 +3,8 @@
 This repository is a compact, analysis-oriented export of the registered G1,
 G2, and P1-P7 experiments. It contains machine-readable metrics, held-out-domain
 predictions, reports, configuration snapshots, artifact manifests, and
-publication PDFs. It also includes the mechanics-consistent multi-view and MSSS
-implementations with their formal result packages. It excludes raw images,
+publication PDFs. It also includes the mechanics-consistent multi-view, MSSS,
+and MGMR M0 implementations with their formal result packages. It excludes raw images,
 source DOCX files, model checkpoints, posterior image arrays, and unregistered
 feature caches.
 
@@ -27,6 +27,7 @@ feature caches.
 | MSSS S1 | Is there a cross-axis mechanically sufficient and spatially specific scale? | NO_GO |
 | MSSS NO-GO diagnostic | Does the descriptive scale vary with laminate or damage size? | EXPLORATORY_SIGNAL_NOT_VALIDATED |
 | MSSS S2 | Does source-selected MSSS transfer across laminate structures? | NOT_RUN_NOT_AUTHORIZED |
+| MGMR M0 | Are coarse and directional morphology complementary under strict LODO? | NO_GO |
 
 The primary response for G2 and P1-P7 is the published damaged-to-intact CAI
 strength ratio, unit `1`. Confirmatory inference uses held-out datasets, not
@@ -55,6 +56,11 @@ quasi-isotropic layup, higher damage area, and higher damage width, but not for
 ply count or damage height. These post-hoc signals do not validate coupling or
 change the S1/S2 gates.
 
+The registered MGMR M0 study also issued `NO_GO`. Coarse plus directional B3
+was worse than both component baselines, while directional correction increased
+the coarse and FULL residual MAEs. Gates A-D all failed, so graph and
+laminate-aware M1 development was stopped.
+
 ## Directory guide
 
 - `results/cross_stage/`: the historical P2 decision snapshot and the current
@@ -75,11 +81,15 @@ change the S1/S2 gates.
   E3 complementarity results, including ratio and recovered-MPa metrics.
 - `results/msss/`: byte-identical formal and replay S1 packages plus the
   post-`NO_GO` coupling diagnostic, with manifests and checksums.
+- `results/mgmr/`: registered FULL/coarse/P3 feature banks and byte-identical
+  formal/replay M0 packages.
 - `src/cmc_bbdm/aei_multiview_regression/`: multi-view implementation; the
   matching CLI, configuration, and tests are under `scripts/`,
   `paper_v3/configs/`, and `tests/`.
 - `src/cmc_bbdm/msss/`: three-axis scale discovery, source-only selection,
   conditional transfer, artifacts, and replay implementation.
+- `src/cmc_bbdm/mgmr/`: spatial feature extraction, feature-domain DWT,
+  nested component evaluation, strict residual audit, gates, artifacts, and replay.
 - `analysis_tables/`: compact cross-stage tables and explicitly marked post-hoc
   P6 uncertainty diagnostics.
 
@@ -94,6 +104,8 @@ change the S1/S2 gates.
 6. Read `results/msss/s1_scale_discovery/REPORT.md` and
    `docs/MSSS_CLAIM_EVIDENCE_RESULT.md` for the MSSS decision boundary; use
    `docs/MSSS_COMPLETION_AUDIT.md` for the requirement-by-requirement audit.
+7. Read `results/mgmr/m0_component_gate/REPORT.md` and
+   `docs/MGMR_COMPLETION_AUDIT.md` for the MGMR M0 stop decision.
 
 ## Interpretation constraints
 
@@ -116,6 +128,8 @@ change the S1/S2 gates.
   `NO_GO`, establish a transferable scale, or authorize S2.
 - The post-`NO_GO` coupling signal is descriptive and reuses the inspected S1
   cohort; it is not independent validation of Scale-Laminate Coupling.
+- MGMR M0 reused six previously inspected domains. Its failed complementarity
+  and residual gates do not authorize M1 graph or laminate-aware claims.
 
 ## Reproducibility
 
@@ -147,6 +161,13 @@ validate with:
 - scientific digest `e59dff40aa1d588c6654795c8130b22fa1be66950824d6224afc673418897203`;
 - output-tree digest `9a2c972055b364815cacfc0c31e4cf29f928645832f07918ddd4f8055ac03318`.
 
+The formal and replay MGMR M0 packages are byte-identical and validate with:
+
+- scientific digest `5f03f58f57543f18c06dc29ae6c7f9abe4534ddcce37096ddaa1b66856283c54`;
+- output-tree digest `8294c4c108c74bd13d34c49078c1873da8b76037a5de8b9f720a2c1d2ff45aaf`;
+- primary feature manifest `f8961b9c8cee8a37fb5f54b4c3a62298999f3a11bfcd5d7e588671389ddc0d2e`;
+- P3 feature manifest `749d2acb5c9703eb7dea4f58ddac10316d93e8f41b4f7de7fcf64aefc0534b39`.
+
 ## Privacy-sanitized export note
 
 Two P1 `weight_path` strings were previously changed from a machine-specific
@@ -155,3 +176,8 @@ changes the non-scientific P5 `p3_package` path to
 `results/p3_spatial_specificity`. Numeric values, predictions, metrics, source
 hashes, and decisions are unchanged. The copied artifact manifests document the
 original full runs; `CHECKSUMS.sha256` documents the exported bytes.
+
+The MGMR implementation plan's machine-specific compact-repository target was
+also replaced with a generic phrase in this export. Its scientific protocol,
+configuration snapshot, predictions, metrics, manifests, and decisions are
+unchanged; stage-local checksum ledgers document the formal bytes.
