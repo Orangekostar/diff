@@ -1,0 +1,17 @@
+{
+  "authority_state_sha256": "3ef44b3379a4377758443d6fa6ef23d8aae2a83f32b5f1ce86a42b18398c5f3a",
+  "equal_domain_mae": 0.08963580465761434,
+  "maximum_prediction_delta": 4.440892098500626e-16,
+  "registered_mae": 0.08963580465761432,
+  "selected_pca_dimensions": [
+    8,
+    32,
+    8,
+    8,
+    8,
+    8
+  ],
+  "specimen_count": 276,
+  "status": "PASS",
+  "tolerance": 1e-12
+}

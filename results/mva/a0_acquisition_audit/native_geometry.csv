@@ -1,0 +1,4 @@
+native_height,native_width,specimen_count,field_mm,claim_scope
+338,340,17,75x75,normalized_raster_simulation
+338,352,19,75x75,normalized_raster_simulation
+674,675,240,75x75,normalized_raster_simulation

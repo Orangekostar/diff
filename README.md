@@ -4,9 +4,9 @@ This repository is a compact, analysis-oriented export of the registered G1,
 G2, and P1-P7 experiments. It contains machine-readable metrics, held-out-domain
 predictions, reports, configuration snapshots, artifact manifests, and
 publication PDFs. It also includes the mechanics-consistent multi-view, MSSS,
-and MGMR M0 implementations with their formal result packages. It excludes raw images,
-source DOCX files, model checkpoints, posterior image arrays, and unregistered
-feature caches.
+MGMR M0, and MVA A0-A3 implementations with their formal result packages. It
+excludes raw images, source DOCX files, model checkpoints, posterior image
+arrays, and unregistered feature caches.
 
 ## Decision sequence
 
@@ -28,6 +28,7 @@ feature caches.
 | MSSS NO-GO diagnostic | Does the descriptive scale vary with laminate or damage size? | EXPLORATORY_SIGNAL_NOT_VALIDATED |
 | MSSS S2 | Does source-selected MSSS transfer across laminate structures? | NOT_RUN_NOT_AUTHORIZED |
 | MGMR M0 | Are coarse and directional morphology complementary under strict LODO? | NO_GO |
+| MVA A0-A3 | Does a CAI oracle reveal useful task-driven acquisition headroom? | MVA_ORACLE_GO |
 
 The primary response for G2 and P1-P7 is the published damaged-to-intact CAI
 strength ratio, unit `1`. Confirmatory inference uses held-out datasets, not
@@ -61,6 +62,13 @@ was worse than both component baselines, while directional correction increased
 the coarse and FULL residual MAEs. Gates A-D all failed, so graph and
 laminate-aware M1 development was stopped.
 
+The preregistered MVA A0-A3 study issued `MVA_ORACLE_GO`. At 12.5% simulated
+measurement budget, the retrospective mechanical oracle reduced equal-domain
+CAI MAE by 35.43% versus uniform in 6/6 held-out domains. Its AUEBC was
+0.01062453, versus 0.01719904 for the reconstruction oracle and 0.01770459 for
+appearance-first acquisition. This establishes diagnostic oracle headroom only;
+it is not a deployable policy or evidence of physical inspection-time savings.
+
 ## Directory guide
 
 - `results/cross_stage/`: the historical P2 decision snapshot and the current
@@ -83,6 +91,9 @@ laminate-aware M1 development was stopped.
   post-`NO_GO` coupling diagnostic, with manifests and checksums.
 - `results/mgmr/`: registered FULL/coarse/P3 feature banks and byte-identical
   formal/replay M0 packages.
+- `results/mva/`: A0 acquisition audit, A1 nested simulator validation, and
+  byte-identical formal/replay A2 oracle-value packages with figures and raw
+  candidate/trajectory tables.
 - `src/cmc_bbdm/aei_multiview_regression/`: multi-view implementation; the
   matching CLI, configuration, and tests are under `scripts/`,
   `paper_v3/configs/`, and `tests/`.
@@ -90,6 +101,8 @@ laminate-aware M1 development was stopped.
   conditional transfer, artifacts, and replay implementation.
 - `src/cmc_bbdm/mgmr/`: spatial feature extraction, feature-domain DWT,
   nested component evaluation, strict residual audit, gates, artifacts, and replay.
+- `src/cmc_bbdm/mva/`: normalized-grid refinement, strict cross-fitting,
+  acquisition controls/oracles, budget metrics, gates, artifacts, figures, and replay.
 - `analysis_tables/`: compact cross-stage tables and explicitly marked post-hoc
   P6 uncertainty diagnostics.
 
@@ -106,6 +119,8 @@ laminate-aware M1 development was stopped.
    `docs/MSSS_COMPLETION_AUDIT.md` for the requirement-by-requirement audit.
 7. Read `results/mgmr/m0_component_gate/REPORT.md` and
    `docs/MGMR_COMPLETION_AUDIT.md` for the MGMR M0 stop decision.
+8. Read `results/mva/a2_oracle_value/REPORT.md` and
+   `docs/MVA_COMPLETION_AUDIT.md` for the MVA A0-A3 decision and claim boundary.
 
 ## Interpretation constraints
 
@@ -130,6 +145,9 @@ laminate-aware M1 development was stopped.
   cohort; it is not independent validation of Scale-Laminate Coupling.
 - MGMR M0 reused six previously inspected domains. Its failed complementarity
   and residual gates do not authorize M1 graph or laminate-aware claims.
+- The MVA mechanical oracle uses true CAI and unobserved candidate RGB values.
+  It is a retrospective normalized-raster upper bound, not a deployable
+  acquisition method; A4-A7 were not implemented or executed.
 
 ## Reproducibility
 
@@ -168,6 +186,12 @@ The formal and replay MGMR M0 packages are byte-identical and validate with:
 - primary feature manifest `f8961b9c8cee8a37fb5f54b4c3a62298999f3a11bfcd5d7e588671389ddc0d2e`;
 - P3 feature manifest `749d2acb5c9703eb7dea4f58ddac10316d93e8f41b4f7de7fcf64aefc0534b39`.
 
+The formal and replay MVA A2 packages are byte-identical and validate with:
+
+- output-tree digest `71d279dcd2dc1da9a09d08164669e9dc9432eea1da6476f5037fbad5aecc7595`;
+- artifact-manifest SHA-256 `a5499078463dccd3092bcedb795dd872e5196da85527201a291883aea5fe545c`;
+- synchronized-bootstrap index digest `732abea9fa90893d53c6a0620c020a2072cd97a2b7d8e48e16aa8feb10c5564c`.
+
 ## Privacy-sanitized export note
 
 Two P1 `weight_path` strings were previously changed from a machine-specific
@@ -181,3 +205,7 @@ The MGMR implementation plan's machine-specific compact-repository target was
 also replaced with a generic phrase in this export. Its scientific protocol,
 configuration snapshot, predictions, metrics, manifests, and decisions are
 unchanged; stage-local checksum ledgers document the formal bytes.
+
+The MVA implementation plan received the same path-only sanitization. Its
+frozen protocol, configuration, code, formal/replay results, and stage-local
+checksums are unchanged.

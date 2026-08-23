@@ -1,0 +1,95 @@
+schema_version: 1
+scope: mva_a0_a3_oracle_headroom
+seed: 20260823
+
+sources:
+  mgmr_config:
+    path: paper_v3/configs/mgmr_m0.yaml
+    sha256: 77fa63fe58a17d426346db50fbb5ca0eb26efb2e25c2454c990552c2983607ff
+  p1_predictions:
+    path: paper_v3/experiments/P1_full_field_oracle/predictions.csv
+    sha256: f2c62d0afc3eec1b280bbadb1ede6d56b1ebcdbb8f9caf0d528f5ce1e1a865a5
+  p5_config:
+    path: paper_v3/configs/p5_sampling_retention.yaml
+    sha256: 569be54ff258835e98347340e8ab706d726cb6a2fadacdc5590716c9129235a8
+  p5_sampling:
+    path: src/cmc_bbdm/cpb_sparse_scan/sampling.py
+    sha256: 39052e1342b387f30892cb408ce02aad8ee57ce8030090ec6d8c6ecffa993bed
+  paired_feature_bank:
+    path: results/aei_selective_invariance/a2_paired_features/paired_features.npz
+    sha256: f2a69f0da75e20880202d7fc4a6a92f979978406ec21f9d83e4bc8db07fb72a8
+  resnet_weights:
+    path: paper_v3/assets/resnet18-f37072fd.pth
+    sha256: f37072fd47e89c5e827621c5baffa7500819f7896bbacec160b1a16c560e07ec
+  protocol:
+    path: docs/MVA_A0_A3_PROTOCOL.md
+    sha256: 6b1e6f91329d80196ac67cef78c596da9ca2ad9cfc83700b500809e79ab77ec0
+
+cohort:
+  specimen_count: 276
+  domain_order: [74t7kcdgkr, cgtnjyggtm, w68dtmpfyf, xcmzfsbd9t, yfxyg8jm46, ykhs7s2dck]
+  response: damaged_to_intact_cai_strength_ratio
+  outer_split: leave_one_dataset_out
+  inner_split: leave_one_source_dataset_out
+
+acquisition:
+  cell_shape: [8, 8]
+  initial_budgets: [0.015625, 0.03125, 0.0625]
+  checkpoints: [0.03125, 0.0625, 0.09375, 0.125, 0.1875, 0.25, 0.5, 1.0]
+  auebc_range: [0.0625, 0.25]
+  p5_density: 0.25
+  primary_interpolation: bilinear
+  sensitivity_interpolations: [nearest, bicubic]
+  budget_unit: unique_native_raster_locations
+
+estimator:
+  metadata: metadata13
+  encoder: frozen_imagenet_resnet18_final_512d
+  pca_dimensions: [8, 16, 32]
+  preprocessing: fold_local_mean_imputation_standard_scaling
+  regressor: ridge
+  ridge_alpha: 10.0
+  pca_tie_tolerance: 1.0e-12
+  full_mae: 0.08963580465761432
+  baseline_tolerance: 1.0e-12
+  protocols: [P-A, P-B]
+  primary_protocol: P-B
+
+controls:
+  methods:
+    - uniform
+    - random
+    - appearance_oracle
+    - reconstruction_oracle
+    - mechanical_oracle
+  random_seed_start: 2026082300
+  random_seed_count: 100
+  random_bit_generator: PCG64
+  appearance_name: full_image_appearance_intensity
+  center_first: excluded_no_impact_center_authority
+
+bootstrap:
+  seed: 20260823
+  resamples: 100000
+  bit_generator: PCG64
+  unit: held_out_domain
+  quantiles: [0.025, 0.975]
+
+gate:
+  low_budget: 0.125
+  h1_relative_improvement: 0.05
+  minimum_improved_domains: 4
+  h2_bootstrap_lower_positive: true
+  h3_bootstrap_lower_positive: true
+  h4_relative_auebc: 0.10
+  h4_b5_saving: 0.25
+  all_required: true
+  statuses: [MVA_ORACLE_GO, MVA_ORACLE_NO_GO]
+  stop_after_decision: true
+
+outputs:
+  root: results/mva
+  a0: a0_acquisition_audit
+  a1: a1_simulator
+  a2: a2_oracle_value
+  replay: replay

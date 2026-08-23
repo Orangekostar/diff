@@ -1,0 +1,117 @@
+{
+  "anchors": {
+    "full": 1.0,
+    "uniform": 0.5
+  },
+  "auebc": {
+    "appearance_oracle": 0.017704585153060243,
+    "mechanical_oracle": 0.010624525770798778,
+    "random_median": 0.017618681081798558,
+    "reconstruction_oracle": 0.017199040856641055,
+    "uniform": 0.01736345802834
+  },
+  "b5": {
+    "appearance_oracle": 0.1875,
+    "mechanical_oracle": 0.0625,
+    "random_median": 0.1875,
+    "reconstruction_oracle": 0.09375,
+    "uniform": 0.1875
+  },
+  "bootstrap": {
+    "appearance_minus_mechanical": {
+      "domain_effects": [
+        0.004640463012451764,
+        0.010028848158129301,
+        0.006472493789166176,
+        0.004137486073402094,
+        0.01243331762013367,
+        0.004767747640285789
+      ],
+      "effect_id": "appearance_minus_mechanical_auebc",
+      "improved_domains": 6,
+      "indices_sha256": "732abea9fa90893d53c6a0620c020a2072cd97a2b7d8e48e16aa8feb10c5564c",
+      "lower": 0.004799356600193281,
+      "point_estimate": 0.007080059382261465,
+      "upper": 0.00974029297002471
+    },
+    "indices_sha256": "732abea9fa90893d53c6a0620c020a2072cd97a2b7d8e48e16aa8feb10c5564c",
+    "reconstruction_minus_mechanical": {
+      "domain_effects": [
+        0.0036353805521244153,
+        0.006860280023374823,
+        0.007921965401758827,
+        0.005684970064809593,
+        0.010935668163612414,
+        0.0044088263093736094
+      ],
+      "effect_id": "reconstruction_minus_mechanical_auebc",
+      "improved_domains": 6,
+      "indices_sha256": "732abea9fa90893d53c6a0620c020a2072cd97a2b7d8e48e16aa8feb10c5564c",
+      "lower": 0.004772277301863411,
+      "point_estimate": 0.00657451508584228,
+      "upper": 0.008631146585991279
+    }
+  },
+  "gate": {
+    "h1_improved_domains": 6,
+    "h1_pass": true,
+    "h1_relative_improvement": 0.3543163754443985,
+    "h2_pass": true,
+    "h3_pass": true,
+    "h4_auebc_pass": true,
+    "h4_b5_pass": true,
+    "h4_b5_saving": 0.6666666666666667,
+    "h4_pass": true,
+    "h4_relative_auebc_improvement": 0.3881100323761651,
+    "status": "MVA_ORACLE_GO"
+  },
+  "interpretation": {
+    "excluded_claims": [
+      "physical_scanner_pitch",
+      "inspection_time_reduction",
+      "online_adaptive_scanner"
+    ],
+    "oracle_role": "retrospective_upper_bound_not_deployable_policy",
+    "physical_scope": "normalized_raster_observation_simulation"
+  },
+  "oracle_value_rows": 1652664,
+  "random_seed_count": 100,
+  "report_checkpoints": [
+    0.03125,
+    0.0625,
+    0.09375,
+    0.125,
+    0.1875,
+    0.25
+  ],
+  "specimen_count": 276,
+  "stability": {
+    "bicubic_ridge10": {
+      "rbo_p0_9": 0.5378095701186152,
+      "spearman": 0.5452373818175154,
+      "top10_overlap": 0.5326086956521738,
+      "top1_agreement": 0.41304347826086957
+    },
+    "bilinear_ridge1": {
+      "rbo_p0_9": 0.8644675034772634,
+      "spearman": 0.9088490446263441,
+      "top10_overlap": 0.8680124223602489,
+      "top1_agreement": 0.7789855072463768
+    },
+    "bilinear_ridge100": {
+      "rbo_p0_9": 0.7527989582496515,
+      "spearman": 0.7096811521966403,
+      "top10_overlap": 0.756211180124224,
+      "top1_agreement": 0.6413043478260869
+    },
+    "nearest_ridge10": {
+      "rbo_p0_9": 0.4665137838627634,
+      "spearman": 0.38573331125690613,
+      "top10_overlap": 0.4632505175983437,
+      "top1_agreement": 0.33695652173913043
+    }
+  },
+  "state_rows": 172224,
+  "status": "MVA_ORACLE_GO",
+  "trajectory_rows": 1232679
+}
