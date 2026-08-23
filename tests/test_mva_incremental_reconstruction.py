@@ -107,6 +107,16 @@ def test_refinement_patch_cache_is_source_bound_and_byte_exact() -> None:
     )
 
     assert np.array_equal(first, second)
+    full = reconstruct_measurement_state(
+        image,
+        grid,
+        apply_action(grid, state, action),
+        interpolation="bilinear",
+        specimen_id="s",
+        dataset_id="d",
+    )
+    assert np.array_equal(first, full.image)
+    assert not first.flags.writeable
     assert len(cache.patches) == 1
     with pytest.raises(ValueError, match="source"):
         refine_reconstruction(

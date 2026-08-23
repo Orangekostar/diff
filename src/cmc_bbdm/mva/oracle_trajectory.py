@@ -13,6 +13,7 @@ from .acquisition_grid import AcquisitionGrid
 from .measurement_state import (
     MeasurementState,
     RefinementAction,
+    action_fits_checkpoint,
     apply_action,
     budget_record,
     fitting_actions,
@@ -36,6 +37,15 @@ class ControlTrajectory:
     seed: int | None
     actions: tuple[RefinementAction, ...]
     snapshots: tuple[TrajectorySnapshot, ...]
+
+
+_GLOBAL_MASK_METHODS = frozenset(
+    {
+        "global_appearance_mask",
+        "global_mechanical_mask",
+        "global_reconstruction_mask",
+    }
+)
 
 
 def _checkpoints(values: tuple[float, ...]) -> tuple[float, ...]:
@@ -102,4 +112,71 @@ def run_control_trajectory(
     )
 
 
-__all__ = ["ControlTrajectory", "TrajectorySnapshot", "run_control_trajectory"]
+@lru_cache(maxsize=1024)
+def run_static_mask_trajectory(
+    grid: AcquisitionGrid,
+    state: MeasurementState,
+    *,
+    cell_order: tuple[int, ...],
+    checkpoints: tuple[float, ...],
+    method: str,
+) -> ControlTrajectory:
+    """Apply a source-frozen cell order without inspecting target evidence."""
+
+    caps = _checkpoints(checkpoints)
+    if method not in _GLOBAL_MASK_METHODS:
+        raise MVAOracleError("method must name a registered global mask")
+    if (
+        type(state) is not MeasurementState
+        or state.grid_sha256 != grid.state_sha256
+        or state.levels != (0,) * 64
+    ):
+        raise MVAOracleError("static mask requires the grid's initial state")
+    if (
+        type(cell_order) is not tuple
+        or len(cell_order) != 64
+        or any(type(cell) is not int for cell in cell_order)
+        or set(cell_order) != set(range(64))
+    ):
+        raise MVAOracleError("cell order must be a permutation of range(64)")
+    current = state
+    position = 0
+    selected_actions: list[RefinementAction] = []
+    snapshots: list[TrajectorySnapshot] = []
+    for checkpoint in caps:
+        while position < len(cell_order):
+            action = RefinementAction(
+                cell_index=cell_order[position],
+                from_level=0,
+                to_level=1,
+            )
+            if not action_fits_checkpoint(grid, current, action, checkpoint):
+                break
+            current = apply_action(grid, current, action)
+            selected_actions.append(action)
+            position += 1
+        budget = budget_record(grid, current)
+        snapshots.append(
+            TrajectorySnapshot(
+                nominal_checkpoint=checkpoint,
+                state=current,
+                measured_count=budget.measured_count,
+                native_count=budget.native_count,
+                effective_budget=budget.effective_budget,
+                cumulative_actions=len(selected_actions),
+            )
+        )
+    return ControlTrajectory(
+        method=method,
+        seed=None,
+        actions=tuple(selected_actions),
+        snapshots=tuple(snapshots),
+    )
+
+
+__all__ = [
+    "ControlTrajectory",
+    "TrajectorySnapshot",
+    "run_control_trajectory",
+    "run_static_mask_trajectory",
+]

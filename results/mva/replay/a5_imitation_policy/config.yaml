@@ -1,0 +1,114 @@
+schema_version: 1
+scope: mva_a5_oracle_imitation_policy
+seed: 20260823
+
+sources:
+  a0_a3_config:
+    path: paper_v3/configs/mva_a0_a3.yaml
+    sha256: 65968cdb6d1e98f6e5371afc12bdf28d320749bde7ffdadcbec01e1b0a780284
+  a2_manifest:
+    path: results/mva/a2_oracle_value/artifact_manifest.json
+    sha256: a5499078463dccd3092bcedb795dd872e5196da85527201a291883aea5fe545c
+  a4_config:
+    path: paper_v3/configs/mva_a4_global_mask.yaml
+    sha256: 034bbbc174b200e578ef88bcf1d2ffb413481b5499f845e1e84b61d2fd179105
+  a4_manifest:
+    path: results/mva/a4_global_task_mask/artifact_manifest.json
+    sha256: bc2556041d5de9d42522830784ea328aed5a3857eec5e36d464f8237145a5ec5
+  a4_summary:
+    path: results/mva/a4_global_task_mask/summary.json
+    sha256: 3dd9f834346b77b9b509ecfb59d7df4085cfffefa09ee64753a88d4de06d5f08
+  a5_design:
+    path: docs/superpowers/specs/2026-08-23-mva-a5-imitation-policy-design.md
+    sha256: 4e8df7b2d28c37f39550cfa625304553b304cd340f16149e52e5b9a2d89fb374
+  a5_protocol:
+    path: docs/MVA_A5_PROTOCOL.md
+    sha256: d7fb7d4711e32e92c5e572cebac675ae71df7859f423b4836c61bb768e9ec80c
+
+authorization:
+  a4_global_status: MVA_A4_GLOBAL_NO_GO
+  a5_status: MVA_A5_AUTHORIZED
+  source: a4_summary
+  forbidden_stages: [A6_training, A7, reinforcement_learning, transformer, gnn]
+
+cohort:
+  specimen_count: 276
+  domain_order: [74t7kcdgkr, cgtnjyggtm, w68dtmpfyf, xcmzfsbd9t, yfxyg8jm46, ykhs7s2dck]
+  response: damaged_to_intact_cai_strength_ratio
+  outer_split: leave_one_dataset_out
+
+acquisition:
+  cell_shape: [8, 8]
+  initial_budget_authority: a1_source_selected_per_outer_domain
+  action_levels: [[0, 1], [1, 2]]
+  checkpoints: [0.03125, 0.0625, 0.09375, 0.125, 0.1875, 0.25]
+  auebc_range: [0.0625, 0.25]
+  interpolation: bilinear
+  budget_unit: unique_native_raster_locations
+
+teacher:
+  split: leave_outer_and_query_domain_out
+  predictor: P-A
+  value: absolute_cai_error_reduction
+  trajectory_batch_size: 8
+  pca_dimensions: [8, 16, 32]
+  ridge_alpha: 10.0
+  tie_tolerance: 1.0e-12
+  tie_break: [lower_cell_index, lower_to_level]
+  a2_values_for_training: forbidden
+
+policy:
+  state_dimension: 579
+  candidate_dimension: 8
+  state_fields: [embedding_512, levels_64, current_p_a_prediction, used_budget, remaining_budget]
+  candidate_fields: [normalized_row, normalized_column, current_level, added_fraction, measured_fraction, local_gradient, local_variance, nearest_measured_distance]
+  global_hidden: [64, 32]
+  candidate_hidden: [32, 16]
+  scorer_hidden: [32]
+  activation: relu
+  parameter_count: 41617
+  maximum_parameters: 50000
+
+training:
+  device: cpu
+  dtype: float64
+  threads: 1
+  epochs: 50
+  batch_states: 128
+  optimizer: adam
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  gradient_clip: 5.0
+  objective: teacher_vs_all_pairwise_logistic
+  weighting: equal_domain_equal_specimen_equal_state
+  early_stopping: forbidden
+
+evaluation:
+  primary_protocol: P-B
+  methods: [center_first, observed_gradient, observed_uncertainty, imitation_policy]
+  references: [uniform, random_median, global_mechanical_mask, mechanical_oracle]
+  metrics: [equal_domain_mae, auebc, B_2.5%, B_5%, B_7.5%, gap_closure]
+  random_seed_count: 100
+
+bootstrap:
+  seed: 20260823
+  resamples: 100000
+  bit_generator: PCG64
+  unit: held_out_domain
+  quantiles: [0.025, 0.975]
+  synchronized_across_effects: true
+
+gate:
+  required_comparisons: [global_mechanical_mask, uniform]
+  require_positive_point_effect: true
+  require_positive_bootstrap_lower: true
+  minimum_improved_domains: 4
+  minimum_gap_closure: 0.20
+  b5_required: false
+  a5_statuses: [MVA_A5_POLICY_GO, MVA_A5_POLICY_NO_GO]
+  a6_statuses: [MVA_A6_AUTHORIZED, MVA_A6_NOT_AUTHORIZED]
+
+outputs:
+  work: results/mva/.work/a5
+  formal: results/mva/a5_imitation_policy
+  replay: results/mva/replay/a5_imitation_policy

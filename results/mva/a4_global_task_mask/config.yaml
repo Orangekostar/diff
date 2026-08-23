@@ -1,0 +1,109 @@
+schema_version: 1
+scope: mva_a4_global_task_mask
+seed: 20260823
+
+sources:
+  a0_a3_config:
+    path: paper_v3/configs/mva_a0_a3.yaml
+    sha256: 65968cdb6d1e98f6e5371afc12bdf28d320749bde7ffdadcbec01e1b0a780284
+  a1_summary:
+    path: results/mva/a1_simulator/summary.json
+    sha256: f2c3dfcd5c640339094370858412e406b730c8334d1176d280408ce332083d65
+  a2_checksums:
+    path: results/mva/a2_oracle_value/CHECKSUMS.sha256
+    sha256: 4f7d7bed53bb84cb14c89ae2b8561da0b104911bce54120e9feab64c3b61bd9e
+  a2_manifest:
+    path: results/mva/a2_oracle_value/artifact_manifest.json
+    sha256: a5499078463dccd3092bcedb795dd872e5196da85527201a291883aea5fe545c
+  a2_summary:
+    path: results/mva/a2_oracle_value/summary.json
+    sha256: 8c8d13126d725191e63f4815ba6b95557c85eeedafdaa3f8b53c6d9f61406d7f
+  a4_design:
+    path: docs/superpowers/specs/2026-08-23-mva-a4-global-mask-design.md
+    sha256: 51f27cc2b75f04cf83eb973df86d27e6a633aa3a93a3f2bff85de4fcc23b379f
+  a4_protocol:
+    path: docs/MVA_A4_PROTOCOL.md
+    sha256: 4ed86e9577ef40a106f58830822cab7a31e70e594376c0d020ea979739afe533
+
+authorization:
+  a3_status: MVA_ORACLE_GO
+  source: a2_summary
+  stop_scope: a4_decisions_only
+  forbidden_stages: [A5_training, A6, A7]
+
+cohort:
+  specimen_count: 276
+  domain_order: [74t7kcdgkr, cgtnjyggtm, w68dtmpfyf, xcmzfsbd9t, yfxyg8jm46, ykhs7s2dck]
+  response: damaged_to_intact_cai_strength_ratio
+  outer_split: leave_one_dataset_out
+  source_label_split: leave_outer_and_query_domain_out
+
+acquisition:
+  cell_shape: [8, 8]
+  initial_budget_authority: a1_source_selected_per_outer_domain
+  candidate_from_level: 0
+  candidate_to_level: 1
+  checkpoints: [0.03125, 0.0625, 0.09375, 0.125, 0.1875, 0.25]
+  auebc_range: [0.0625, 0.25]
+  interpolation: bilinear
+  measured_values: restored_exactly
+  budget_unit: unique_native_raster_locations
+
+ranking:
+  methods:
+    - global_appearance_mask
+    - global_reconstruction_mask
+    - global_mechanical_mask
+  aggregation: equal_domain_mean_normalized_rank
+  specimen_rank_range: [0.0, 1.0]
+  value_order: descending
+  tie_break: lower_cell_index
+  diagnostic_scores: [mean_raw_value, mean_value_per_new_measurement]
+  target_information: forbidden
+
+estimator:
+  metadata: metadata13
+  encoder: frozen_imagenet_resnet18_final_512d
+  pca_dimensions: [8, 16, 32]
+  preprocessing: fold_local_mean_imputation_standard_scaling
+  regressor: ridge
+  ridge_alpha: 10.0
+  pca_tie_tolerance: 1.0e-12
+  label_protocol: strict_source_query_oof_P-A
+  primary_prediction_protocol: P-B
+  p_b_training_states: source_uniform_same_checkpoint
+  full_mae: 0.08963580465761432
+
+evaluation:
+  reference_methods: [uniform, random_median, mechanical_oracle]
+  prediction_metric: equal_domain_mae
+  budget_metrics: [auebc, B_2.5%, B_5%, B_7.5%]
+  image_metrics: [normalized_rgb_mse, ssim]
+  random_seed_count: 100
+  random_source: a2_state_metrics
+
+bootstrap:
+  seed: 20260823
+  resamples: 100000
+  bit_generator: PCG64
+  unit: held_out_domain
+  quantiles: [0.025, 0.975]
+  synchronized_across_effects: true
+
+gate:
+  required_a4_comparisons: [uniform, global_reconstruction_mask, global_appearance_mask]
+  require_positive_point_effect: true
+  require_positive_bootstrap_lower: true
+  minimum_improved_domains: 4
+  adaptive_gap_relative: 0.03
+  adaptive_reference: mechanical_oracle
+  a4_all_required: true
+  a4_statuses: [MVA_A4_GLOBAL_GO, MVA_A4_GLOBAL_NO_GO]
+  a5_all_required: true
+  a5_statuses: [MVA_A5_AUTHORIZED, MVA_A5_NOT_AUTHORIZED]
+  thresholds_frozen_before_results: true
+
+outputs:
+  work: results/mva/.work/a4
+  formal: results/mva/a4_global_task_mask
+  replay: results/mva/replay/a4_global_task_mask

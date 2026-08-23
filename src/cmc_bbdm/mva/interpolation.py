@@ -249,16 +249,27 @@ def refine_reconstruction(
 ) -> np.ndarray:
     """Increment one cell with byte-identical full-reconstruction semantics."""
 
-    source = _snapshot(image, grid.native_shape)
-    current = _snapshot(current_reconstruction, grid.native_shape)
     if interpolation not in INTERPOLATIONS:
         raise MVAInterpolationError("interpolation is not registered")
-    if patch_cache is not None and (
+    trusted_cache = patch_cache is not None
+    if trusted_cache and (
         type(patch_cache) is not RefinementPatchCache
         or patch_cache.image is not image
         or patch_cache.grid is not grid
     ):
         raise MVAInterpolationError("patch cache source or grid changed")
+    if trusted_cache:
+        source = image
+        current = current_reconstruction
+        if (
+            not isinstance(current, np.ndarray)
+            or current.dtype != np.uint8
+            or current.shape != (*grid.native_shape, 3)
+        ):
+            raise MVAInterpolationError("current reconstruction does not match the grid")
+    else:
+        source = _snapshot(image, grid.native_shape)
+        current = _snapshot(current_reconstruction, grid.native_shape)
     candidate_state = apply_action(grid, state, action)
     if current_mask is None:
         observed = measurement_mask(grid, state)
@@ -321,8 +332,11 @@ def refine_reconstruction(
         source_view = source[row_start:owned_row_stop, column_start:owned_column_stop]
         candidate_view[owned_observed] = source_view[owned_observed]
         candidate[np.ix_(rows, columns)] = source[np.ix_(rows, columns)]
-    payload = np.ascontiguousarray(candidate).tobytes(order="C")
-    output = np.frombuffer(payload, dtype=np.uint8).reshape(candidate.shape)
+    if trusted_cache:
+        output = np.ascontiguousarray(candidate)
+    else:
+        payload = np.ascontiguousarray(candidate).tobytes(order="C")
+        output = np.frombuffer(payload, dtype=np.uint8).reshape(candidate.shape)
     output.setflags(write=False)
     return output
 

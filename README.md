@@ -4,9 +4,10 @@ This repository is a compact, analysis-oriented export of the registered G1,
 G2, and P1-P7 experiments. It contains machine-readable metrics, held-out-domain
 predictions, reports, configuration snapshots, artifact manifests, and
 publication PDFs. It also includes the mechanics-consistent multi-view, MSSS,
-MGMR M0, and MVA A0-A3 implementations with their formal result packages. It
-excludes raw images, source DOCX files, model checkpoints, posterior image
-arrays, and unregistered feature caches.
+MGMR M0, and MVA A0-A5 implementations with their formal result packages. It
+excludes raw images, source DOCX files, posterior image arrays, and unregistered
+feature caches. The checksum-bound ResNet18 weights, paired feature bank, and
+six compact A5 policy packages required for validation and replay are included.
 
 ## Decision sequence
 
@@ -29,6 +30,9 @@ arrays, and unregistered feature caches.
 | MSSS S2 | Does source-selected MSSS transfer across laminate structures? | NOT_RUN_NOT_AUTHORIZED |
 | MGMR M0 | Are coarse and directional morphology complementary under strict LODO? | NO_GO |
 | MVA A0-A3 | Does a CAI oracle reveal useful task-driven acquisition headroom? | MVA_ORACLE_GO |
+| MVA A4 | Does a source-learned global task-aware mask improve acquisition? | MVA_A4_GLOBAL_NO_GO |
+| MVA A5 | Does a specimen-adaptive imitation policy beat global mechanical and uniform acquisition? | MVA_A5_POLICY_NO_GO |
+| MVA A6 | Is laminate-conditioned transfer authorized by A5? | MVA_A6_NOT_AUTHORIZED |
 
 The primary response for G2 and P1-P7 is the published damaged-to-intact CAI
 strength ratio, unit `1`. Confirmatory inference uses held-out datasets, not
@@ -69,6 +73,13 @@ CAI MAE by 35.43% versus uniform in 6/6 held-out domains. Its AUEBC was
 appearance-first acquisition. This establishes diagnostic oracle headroom only;
 it is not a deployable policy or evidence of physical inspection-time savings.
 
+A4 rejected the fixed global task-aware mask: its AUEBC was 0.01763889 versus
+0.01736346 for uniform, with a paired interval crossing zero. The remaining
+global-to-oracle gap nevertheless authorized A5. The fixed 41,617-parameter A5
+imitation policy reached AUEBC 0.01709223, but improved over both primary
+baselines in only 3/6 held-out domains and closed 7.793% of the oracle gap.
+A5 therefore issued `MVA_A5_POLICY_NO_GO`; A6/A7 were not run.
+
 ## Directory guide
 
 - `results/cross_stage/`: the historical P2 decision snapshot and the current
@@ -92,8 +103,8 @@ it is not a deployable policy or evidence of physical inspection-time savings.
 - `results/mgmr/`: registered FULL/coarse/P3 feature banks and byte-identical
   formal/replay M0 packages.
 - `results/mva/`: A0 acquisition audit, A1 nested simulator validation, and
-  byte-identical formal/replay A2 oracle-value packages with figures and raw
-  candidate/trajectory tables.
+  byte-identical formal/replay A2, A4, and A5 packages with raw evidence,
+  figures, manifests, and checksums.
 - `src/cmc_bbdm/aei_multiview_regression/`: multi-view implementation; the
   matching CLI, configuration, and tests are under `scripts/`,
   `paper_v3/configs/`, and `tests/`.
@@ -119,8 +130,10 @@ it is not a deployable policy or evidence of physical inspection-time savings.
    `docs/MSSS_COMPLETION_AUDIT.md` for the requirement-by-requirement audit.
 7. Read `results/mgmr/m0_component_gate/REPORT.md` and
    `docs/MGMR_COMPLETION_AUDIT.md` for the MGMR M0 stop decision.
-8. Read `results/mva/a2_oracle_value/REPORT.md` and
-   `docs/MVA_COMPLETION_AUDIT.md` for the MVA A0-A3 decision and claim boundary.
+8. Read `results/mva/a2_oracle_value/REPORT.md`,
+   `results/mva/a4_global_task_mask/REPORT.md`,
+   `results/mva/a5_imitation_policy/REPORT.md`, and
+   `docs/MVA_COMPLETION_AUDIT.md` for the complete MVA A0-A5 decision chain.
 
 ## Interpretation constraints
 
@@ -146,8 +159,9 @@ it is not a deployable policy or evidence of physical inspection-time savings.
 - MGMR M0 reused six previously inspected domains. Its failed complementarity
   and residual gates do not authorize M1 graph or laminate-aware claims.
 - The MVA mechanical oracle uses true CAI and unobserved candidate RGB values.
-  It is a retrospective normalized-raster upper bound, not a deployable
-  acquisition method; A4-A7 were not implemented or executed.
+  It is a retrospective normalized-raster upper bound. A4's fixed mask and
+  A5's observation-only policy were evaluated only in this simulator; neither
+  establishes physical scanner control. A6/A7 were not authorized or run.
 
 ## Reproducibility
 
@@ -191,6 +205,17 @@ The formal and replay MVA A2 packages are byte-identical and validate with:
 - output-tree digest `71d279dcd2dc1da9a09d08164669e9dc9432eea1da6476f5037fbad5aecc7595`;
 - artifact-manifest SHA-256 `a5499078463dccd3092bcedb795dd872e5196da85527201a291883aea5fe545c`;
 - synchronized-bootstrap index digest `732abea9fa90893d53c6a0620c020a2072cd97a2b7d8e48e16aa8feb10c5564c`.
+
+The formal and replay MVA A4 packages are byte-identical and validate with:
+
+- output-tree digest `2ed736568419ff549981430b202889d3f5b89e0971a8298ae9e125ddf9681e78`;
+- artifact-manifest SHA-256 `bc2556041d5de9d42522830784ea328aed5a3857eec5e36d464f8237145a5ec5`.
+
+The formal and replay MVA A5 packages are byte-identical and validate with:
+
+- aggregation-state digest `1dd6d85b7688be094f74fda614a7088ae49310b998a20baa7bb164b919802ac1`;
+- output-tree digest `3712e6ebe09517565204a15b034cd3eb03da1fe3737a9a56e62cb8548f9fcbe8`;
+- artifact-manifest SHA-256 `c59db1608d6f180587bb24b994bef2f1049b576e072cc4edbe0113f92407dd73`.
 
 ## Privacy-sanitized export note
 
