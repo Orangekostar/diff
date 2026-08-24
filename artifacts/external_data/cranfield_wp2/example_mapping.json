@@ -1,0 +1,21 @@
+{
+  "cell_column": 4,
+  "cell_row": 3,
+  "focal_law_count": 57,
+  "focal_law_index_inclusive": [
+    28,
+    35
+  ],
+  "frame_count": 150,
+  "frame_index_inclusive": [
+    56,
+    74
+  ],
+  "normalized_cell_index": 28,
+  "physical_mm_mapping": null,
+  "raw_example": "Wheel_ProbeV2_5MHz__C_Scan_Impact_Damages_On_Diffrent_Coupons/2018-05-09_1.6_Impact_Damage/WP2COMP1E_1.6_12J_T1.csv",
+  "waveform_bucket_indices": [
+    0,
+    503
+  ]
+}

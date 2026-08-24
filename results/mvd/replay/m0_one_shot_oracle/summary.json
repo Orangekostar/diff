@@ -1,0 +1,120 @@
+{
+  "action_cost_audit_state_sha256": "6f2dd6696ebb8e2910306848da49f4bbdee5174d53a3077c02255f385a10da1a",
+  "action_cost_summaries": [
+    {
+      "action_count": 17664,
+      "coefficient_of_variation": 0.2739529428315632,
+      "initial_budget": 0.015625,
+      "maximum": 1760,
+      "mean": 1559.6126585144928,
+      "minimum": 442,
+      "standard_deviation": 427.26047747740313,
+      "unique_costs": [
+        442,
+        448,
+        457,
+        464,
+        471,
+        476,
+        1680,
+        1693,
+        1706,
+        1717,
+        1728,
+        1736,
+        1748,
+        1760
+      ]
+    },
+    {
+      "action_count": 17664,
+      "coefficient_of_variation": 0.27603130726634445,
+      "initial_budget": 0.03125,
+      "maximum": 1728,
+      "mean": 1452.1255661231885,
+      "minimum": 403,
+      "standard_deviation": 400.8321183318642,
+      "unique_costs": [
+        403,
+        421,
+        425,
+        430,
+        434,
+        435,
+        442,
+        443,
+        448,
+        450,
+        452,
+        457,
+        458,
+        464,
+        1560,
+        1603,
+        1628,
+        1662,
+        1671,
+        1680,
+        1705,
+        1706,
+        1728
+      ]
+    }
+  ],
+  "aggregation_state_sha256": "cf68f686405a9da2f367270b398cad5385c3588280b015582f097bc766d02ec7",
+  "authority_state_sha256": "3ef44b3379a4377758443d6fa6ef23d8aae2a83f32b5f1ce86a42b18398c5f3a",
+  "candidate_bank_states": {
+    "0.015625": "2b17097a85fdb41b4413fecfa7f5b141b2e132cc479adb127fceb28c2c444fc4",
+    "0.03125": "e44d7b8e1ef1b1f715eeddc3ab9af485d1a993e0acfd792d86086a282b2fa0c0"
+  },
+  "gate": {
+    "go": true,
+    "headroom_pass": true,
+    "headroom_retention": 0.5682827636580298,
+    "one_shot_auebc": 0.013457944110677541,
+    "reconstruction_effect": {
+      "domain_effects": [
+        0.002491685614456037,
+        0.0030904778248146414,
+        0.005587825794736375,
+        0.0031395446029219808,
+        0.005185896835124711,
+        0.002882867008563262
+      ],
+      "effect_id": "one_shot_reconstruction_minus_one_shot_mechanical_oracle_auebc",
+      "improved_domains": 6,
+      "indices_sha256": "f105e8e2c5970cb8017d478f6b4ddea0f008489c92d6637b677a57f921d80cc2",
+      "lower": 0.002838032408647093,
+      "point_estimate": 0.0037297162801028347,
+      "upper": 0.004688388311493853
+    },
+    "reconstruction_pass": true,
+    "sequential_auebc": 0.010624525770798778,
+    "status": "MVD_ONE_SHOT_STRONG_GO",
+    "stronger_baseline": "one_shot_reconstruction",
+    "stronger_baseline_auebc": 0.017187660390780377,
+    "uniform_effect": {
+      "domain_effects": [
+        0.002903678763374431,
+        0.0033099348248012764,
+        0.00593930734553981,
+        0.0027339998711759135,
+        0.0059847491893432365,
+        0.0025614135117400724
+      ],
+      "effect_id": "uniform_minus_one_shot_mechanical_oracle_auebc",
+      "improved_domains": 6,
+      "indices_sha256": "f105e8e2c5970cb8017d478f6b4ddea0f008489c92d6637b677a57f921d80cc2",
+      "lower": 0.0028007400590012803,
+      "point_estimate": 0.003905513917662457,
+      "upper": 0.005017861416957538
+    },
+    "uniform_pass": true
+  },
+  "interaction": {
+    "role": "descriptive_non_gating",
+    "row_count": 27600,
+    "source_specimen_fold_count": 1380
+  },
+  "m1_authorized": true
+}

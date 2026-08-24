@@ -1,0 +1,29 @@
+{
+  "csv_block": {
+    "focal_laws": 57,
+    "frame_counts_observed": [
+      100,
+      150,
+      200
+    ],
+    "frame_header": "#Frame,<index>,of,<count>",
+    "spec_header": "#Spec,<Buckets|Amplitudes>,<504|836>,FL,57",
+    "tensor_axes": [
+      "frame_index",
+      "waveform_bucket",
+      "focal_law_index"
+    ],
+    "waveform_buckets_observed": [
+      504,
+      836
+    ]
+  },
+  "exact_measurement_fraction": "selected unique frame/focal-law pairs divided by frame_count*57",
+  "normalized_8x8_mapping": "partition frame and focal-law index axes with endpoint-preserving rounded linspace boundaries",
+  "physical_acquisition_record": "one frame/focal-law spatial index with the file-declared 504 or 836 amplitude samples",
+  "physical_coordinate_spacing_recoverable": false,
+  "scanner_time_claim_authorized": false,
+  "schema_version": 1,
+  "sparse_mask_definition": "subset of unique (frame_index, focal_law_index) locations retaining every waveform bucket",
+  "spatial_grid_recoverable": true
+}

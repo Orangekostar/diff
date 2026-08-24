@@ -1,0 +1,79 @@
+{
+  "advantage_capture_diagnostic": {
+    "advantage_capture": -0.017926723486982685,
+    "baseline_auebc": 0.017187660390780377,
+    "baseline_method": "one_shot_reconstruction",
+    "domain_rows": [
+      {
+        "baseline_auebc": 0.009747920845180693,
+        "baseline_method": "one_shot_reconstruction",
+        "baseline_minus_predicted": -0.0001340188851429603,
+        "oracle_advantage_capture": -0.05378643451863334,
+        "oracle_auebc": 0.007256235230724656,
+        "outer_domain": "74t7kcdgkr",
+        "predicted_auebc": 0.009881939730323653
+      },
+      {
+        "baseline_auebc": 0.02400209799790516,
+        "baseline_method": "one_shot_reconstruction",
+        "baseline_minus_predicted": 0.00042618944810771803,
+        "oracle_advantage_capture": 0.1379040628234502,
+        "oracle_auebc": 0.02091162017309052,
+        "outer_domain": "cgtnjyggtm",
+        "predicted_auebc": 0.023575908549797443
+      },
+      {
+        "baseline_auebc": 0.01796519807131671,
+        "baseline_method": "one_shot_reconstruction",
+        "baseline_minus_predicted": -0.001235677308077221,
+        "oracle_advantage_capture": -0.2211374071899674,
+        "oracle_auebc": 0.012377372276580336,
+        "outer_domain": "w68dtmpfyf",
+        "predicted_auebc": 0.019200875379393932
+      },
+      {
+        "baseline_auebc": 0.014839137315117667,
+        "baseline_method": "one_shot_reconstruction",
+        "baseline_minus_predicted": -0.00037301169007908017,
+        "oracle_advantage_capture": -0.11881076310618979,
+        "oracle_auebc": 0.011699592712195686,
+        "outer_domain": "xcmzfsbd9t",
+        "predicted_auebc": 0.015212149005196747
+      },
+      {
+        "baseline_auebc": 0.02414606771864786,
+        "baseline_method": "one_shot_reconstruction",
+        "baseline_minus_predicted": 0.0009313693956884347,
+        "oracle_advantage_capture": 0.17959659154423518,
+        "oracle_auebc": 0.01896017088352315,
+        "outer_domain": "yfxyg8jm46",
+        "predicted_auebc": 0.023214698322959425
+      },
+      {
+        "baseline_auebc": 0.012425540396514164,
+        "baseline_method": "one_shot_reconstruction",
+        "baseline_minus_predicted": -1.6020515126700247e-05,
+        "oracle_advantage_capture": -0.0055571467844728675,
+        "oracle_auebc": 0.009542673387950902,
+        "outer_domain": "ykhs7s2dck",
+        "predicted_auebc": 0.012441560911640864
+      }
+    ],
+    "improved_domains": 2,
+    "oracle_auebc": 0.013457944110677541,
+    "predicted_auebc": 0.01725452198321868
+  },
+  "aggregation_state_sha256": "c78b65528a067e7a719bae988f991dd691cb7cf09610ebad2a9461dbdad514b8",
+  "authority_state_sha256": "3ef44b3379a4377758443d6fa6ef23d8aae2a83f32b5f1ce86a42b18398c5f3a",
+  "gate": {
+    "go": false,
+    "ndcg_global_pass": false,
+    "regret_global_pass": false,
+    "regret_random_pass": false,
+    "spearman_pass": false,
+    "status": "MVD_OBSERVABILITY_NO_GO"
+  },
+  "m2_authorized": false,
+  "stop_reason": "M1 observability gate failed; capacity rescue and M2/M3 are forbidden",
+  "strong_go": false
+}

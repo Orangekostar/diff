@@ -1,0 +1,130 @@
+schema_version: 1
+scope: mvd_m0_m1_feasibility
+
+sources:
+  controlling_prompt:
+    path: docs/MVD_CONTROLLING_PROMPT.md
+    sha256: d3defa3c5d1237be66882c86e02cc190a8aae992ba4da241096c84e152487192
+  repository_audit:
+    path: docs/MVD_REPOSITORY_AUTHORITY_AUDIT.md
+    sha256: 00d4250d1f34e5cda9f43a67f0902852eaa21996e90671e4ab6b86d3cf4babfd
+  m0_protocol:
+    path: docs/MVD_M0_PROTOCOL.md
+    sha256: 651784aca1991c78f33c0cdce66c73006acc9f677acb54393235776c4748fd7e
+  m1_protocol:
+    path: docs/MVD_M1_OBSERVABILITY_PROTOCOL.md
+    sha256: d55df4e04cd6eec62cf0e359e6750b597891002a52bc576238c1d3b854eb0d0f
+  implementation_plan:
+    path: docs/superpowers/plans/2026-08-24-mvd-feasibility.md
+    sha256: 43cdaf958ccec884f34c47e5de1e5ef138ea140bc0a2420d3c789c60dfbc8930
+  mva_config:
+    path: paper_v3/configs/mva_a0_a3.yaml
+    sha256: 65968cdb6d1e98f6e5371afc12bdf28d320749bde7ffdadcbec01e1b0a780284
+  a4_config:
+    path: paper_v3/configs/mva_a4_global_mask.yaml
+    sha256: 034bbbc174b200e578ef88bcf1d2ffb413481b5499f845e1e84b61d2fd179105
+  a2_manifest:
+    path: results/mva/a2_oracle_value/artifact_manifest.json
+    sha256: a5499078463dccd3092bcedb795dd872e5196da85527201a291883aea5fe545c
+  a2_state_metrics:
+    path: results/mva/a2_oracle_value/state_metrics.parquet
+    sha256: 71c377c1060fdb0a3a79a064eb59c8bdf9d12c350c612466d6dc82d440e53598
+  a4_manifest:
+    path: results/mva/a4_global_task_mask/artifact_manifest.json
+    sha256: bc2556041d5de9d42522830784ea328aed5a3857eec5e36d464f8237145a5ec5
+  a4_summary:
+    path: results/mva/a4_global_task_mask/summary.json
+    sha256: 3dd9f834346b77b9b509ecfb59d7df4085cfffefa09ee64753a88d4de06d5f08
+  a4_state_metrics:
+    path: results/mva/a4_global_task_mask/state_metrics.parquet
+    sha256: 128ecbde49f08db1ae89ab512f7606b069e579211a0325a3a74f11ad04deb936
+  a4_source_values:
+    path: results/mva/a4_global_task_mask/source_values.parquet
+    sha256: 01fd107a1683e56562d0756bfa1a9b946e4df470d0db1510297a67b6c5259add
+  a4_fit_audits:
+    path: results/mva/a4_global_task_mask/fit_audits.csv
+    sha256: 49c84cd222747d632437da4e69e9a3e3efa4e1af3d65dde53961cd77c27902e8
+  a4_rankings:
+    path: results/mva/a4_global_task_mask/rankings.csv
+    sha256: 3abaa4a29c8addc19717866031912ec9adfe387a73be1db4f4c4bfade0ddf8a2
+  a5_manifest:
+    path: results/mva/a5_imitation_policy/artifact_manifest.json
+    sha256: c59db1608d6f180587bb24b994bef2f1049b576e072cc4edbe0113f92407dd73
+  resnet_weights:
+    path: paper_v3/assets/resnet18-f37072fd.pth
+    sha256: f37072fd47e89c5e827621c5baffa7500819f7896bbacec160b1a16c560e07ec
+  candidate_bank_0p015625:
+    path: artifacts/mvd_authority/a4_candidate_bank_0p015625.npz
+    sha256: 42882df095ac2935bf7cf0efec5d17c3fee257ddee4f4735fbb64d6931976b08
+  candidate_bank_0p03125:
+    path: artifacts/mvd_authority/a4_candidate_bank_0p03125.npz
+    sha256: cfeff617df9208bdfbd8434474f63134661f8fb6f7b59676bced5054ac0d2443
+  observed_features_0p015625:
+    path: artifacts/mvd_authority/observed_candidate_features_0p015625.npz
+    sha256: 234be30caba568d80f0a5c488858d2d2f2ea1c68d85326e920a3a96ac35081b7
+  observed_features_0p03125:
+    path: artifacts/mvd_authority/observed_candidate_features_0p03125.npz
+    sha256: 7bda69e4e0e2ec0fb8c9cbd2eefb81cd4e42c5b26da5e382fbf279d77e119883
+
+authority:
+  baseline_commit: d0e0ebfca1f1de6b04e9cb43a5065de3435aee5b
+  authority_state_sha256: 3ef44b3379a4377758443d6fa6ef23d8aae2a83f32b5f1ce86a42b18398c5f3a
+  candidate_bank_states:
+    "0.015625": 2b17097a85fdb41b4413fecfa7f5b141b2e132cc479adb127fceb28c2c444fc4
+    "0.03125": e44d7b8e1ef1b1f715eeddc3ab9af485d1a993e0acfd792d86086a282b2fa0c0
+  observed_feature_bank_states:
+    "0.015625": a91ade889bd87a941a58574d2d06278e908a961836686b984b9b6cf88c24580f
+    "0.03125": a0e9bc870b69b08041e1bbbae3900ebe2028c84fc5ad95b4a7f22857908e5cd5
+  specimen_count: 276
+  domain_order: [74t7kcdgkr, cgtnjyggtm, w68dtmpfyf, xcmzfsbd9t, yfxyg8jm46, ykhs7s2dck]
+  initial_budgets:
+    74t7kcdgkr: 0.03125
+    cgtnjyggtm: 0.015625
+    w68dtmpfyf: 0.015625
+    xcmzfsbd9t: 0.015625
+    yfxyg8jm46: 0.015625
+    ykhs7s2dck: 0.015625
+
+acquisition:
+  cell_shape: [8, 8]
+  checkpoints: [0.03125, 0.0625, 0.09375, 0.125, 0.1875, 0.25]
+  auebc_range: [0.0625, 0.25]
+  interpolation: bilinear
+  budget_unit: unique_native_raster_locations
+  selection: exact_cost_frozen_ranking_skip_nonfitting
+
+estimator:
+  full_mae: 0.08963580465761432
+  pca_dimensions: [8, 16, 32]
+  ridge_alpha: 10.0
+  primary_protocol: P-B
+
+m0:
+  methods: [uniform, random_median, one_shot_reconstruction, global_mechanical_mask, one_shot_mechanical_oracle, sequential_mechanical_oracle, FULL]
+  minimum_improved_domains: 4
+  minimum_headroom_retention: 0.20
+  strong_headroom_retention: 0.50
+  require_positive_bootstrap_lower: true
+  stop_on_no_go: true
+
+m1:
+  methods: [global_mechanical, candidate_only, global_candidate, a5_initial, observed_uncertainty, random_median]
+  ridge_alphas: [0.1, 1.0, 10.0, 100.0]
+  ranking_lambdas: [0.1, 0.5, 1.0]
+  epochs: 50
+  minimum_improved_domains: 4
+  strong_advantage_capture: 0.35
+  require_positive_bootstrap_lower: true
+  stop_before_m2: true
+
+bootstrap:
+  seed: 20260824
+  resamples: 100000
+  unit: held_out_domain
+  quantiles: [0.025, 0.975]
+
+outputs:
+  work: results/mvd/.work
+  m0: results/mvd/m0_one_shot_oracle
+  m1: results/mvd/m1_observability
+  replay: results/mvd/replay

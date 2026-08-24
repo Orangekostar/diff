@@ -1,0 +1,40 @@
+{
+  "datasets": {
+    "cranfield_wp2": {
+      "archive_sha256": "2e180fc3109f5510cba40ef083dea26972c37fb897e878ad30ebfac139b13565",
+      "doi": "10.5281/zenodo.4405277",
+      "method_performance_present": false,
+      "processed_scan_pair_n": 26,
+      "raw_file_n": 29,
+      "role": "RAW_ACQUISITION_REALIZABILITY_AUDIT_ONLY"
+    },
+    "imperial_interlock": {
+      "archive_sha256": "d15e7f405f7120663a151fb944b4b41fb1525f96f45cf5b00d1651400ff04292",
+      "doi": "10.5281/zenodo.1476887",
+      "exact_paired_cscan_cai_n": 10,
+      "groups": {
+        "baseline": 5,
+        "reinforced": 5
+      },
+      "license": "CC BY 4.0",
+      "role": "SEALED_SMALL_EXTERNAL_PILOT"
+    },
+    "imperial_rss": {
+      "archive_sha256": "957ea11e12b49fb59848b5a00ca4764eefd33c08efae26aa4e68481f21a11ced",
+      "doi": "10.17632/wg4dmwddjy.2",
+      "exact_paired_cscan_cai_n": 0,
+      "license": "CC BY 4.0",
+      "potential_filename_linked_n": 7,
+      "role": "SEALED_POTENTIAL_PAIR_PENDING_ROI_MAP"
+    },
+    "tudelft": {
+      "doi": "10.4121/21621381",
+      "exact_paired_cscan_cai_n": 3,
+      "license": "CC0",
+      "role": "MICRO_CASE_VALIDATION_ONLY"
+    }
+  },
+  "discipline": "download_unpack_hash_inspect_pair_count_document_only",
+  "method_performance_present": false,
+  "schema_version": 1
+}

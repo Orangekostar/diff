@@ -1,0 +1,79 @@
+{
+  "authority_state_sha256": "3ef44b3379a4377758443d6fa6ef23d8aae2a83f32b5f1ce86a42b18398c5f3a",
+  "files": {
+    "REPORT.md": {
+      "bytes": 961,
+      "sha256": "95f46bf1a0aec3fbf171f4629a7db7620c5b01fbbac23ad92e50e40ba85a0f81"
+    },
+    "action_cost_audit.csv": {
+      "bytes": 7525414,
+      "sha256": "842a3c8960f7a7bf2828934268a5012526aa15d8bc7f2915a95ee1e34c11e1cc"
+    },
+    "actions.parquet": {
+      "bytes": 606251,
+      "sha256": "a7c40acff28fb307de385423379451d4aaf4f0f936a54c74fee7d62c67fb631d"
+    },
+    "bootstrap.csv": {
+      "bytes": 719,
+      "sha256": "8b5c9575041972b4da7eeeae1927651f11098a0854df30a5fba417e5c9e1396d"
+    },
+    "budget_metrics.csv": {
+      "bytes": 622,
+      "sha256": "c932be1381bcaebae7c8d4644b615a04102e00a7c2863f98f2eb644d87b68f95"
+    },
+    "config.yaml": {
+      "bytes": 5359,
+      "sha256": "6603470451c94fae82a01bda0660e1bd1696156526584902ead68ea3e27b55fa"
+    },
+    "domain_metrics.csv": {
+      "bytes": 4927,
+      "sha256": "5238170bc45f904dbd43db4db50c7885b273ec5fe602866dc1298858fd652353"
+    },
+    "evaluator_reproduction.csv": {
+      "bytes": 9418,
+      "sha256": "6be282481a48fd1777649947d6ae832948d845e53c8b42271a38b2eb73dc6ec7"
+    },
+    "initial_values.parquet": {
+      "bytes": 396884,
+      "sha256": "f62246fa9a69da93960554a34ad0ebd0be75acd07988b2bc64a47e396a7c85a2"
+    },
+    "interaction_audit.csv": {
+      "bytes": 2234,
+      "sha256": "e2f0a02107a344577b66230d0c558961a9a0def46c3e02911386fd00a91c59ca"
+    },
+    "interaction_rows.parquet": {
+      "bytes": 1218774,
+      "sha256": "df63e8093744dbff74345c3baab25e447947d77929b1202469ab9756519cb4ce"
+    },
+    "one_shot_oracle_curve.csv": {
+      "bytes": 1531,
+      "sha256": "b6960daf53d13944e8193d8309e99f4ed2a198e7c67db0c8a5415ca503bd513b"
+    },
+    "rankings.parquet": {
+      "bytes": 567219,
+      "sha256": "7e56d686262121355f85044c74a0581717f08aceea63d1e72945dcf5e77b6ad0"
+    },
+    "reconstruction_curve.csv": {
+      "bytes": 1518,
+      "sha256": "f0036bd7aada4b50e2ec5f63bd5568c02b9ca664de782577dccb8864acd75020"
+    },
+    "sequential_oracle_curve.csv": {
+      "bytes": 1613,
+      "sha256": "06289771c46fb11acfcba33ea62844ff0ead162e0f78f95d73db999320cd55f6"
+    },
+    "state_metrics.parquet": {
+      "bytes": 177522,
+      "sha256": "72ab4a6b53b7a05e9b998285d7c0ddbcab1355c2f1a28bfa3d4c424307f54b8e"
+    },
+    "summary.json": {
+      "bytes": 3294,
+      "sha256": "a8abea8c6452855e7e975227948706f153ed72791dc441018865c1c616ccd57d"
+    },
+    "uniform_curve.csv": {
+      "bytes": 1333,
+      "sha256": "b1c3d83161b8d635dbe49a2f4fd4f3295537280a7617d4a0987c14a58bb83e94"
+    }
+  },
+  "package": "mvd_m0_one_shot_oracle",
+  "schema_version": 1
+}
