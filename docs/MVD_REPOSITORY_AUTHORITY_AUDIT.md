@@ -95,7 +95,7 @@ results, manifests, and replay evidence are published here.
 20. **New modules.** MVD code is isolated under `src/cmc_bbdm/mvd/`. This run
     implements authority bindings, initial-value data, exact action-cost audit,
     fixed one-shot oracle selection/evaluation, interaction audit,
-    observability data/models/metrics, artifacts, replay, and CLI. Formal MVD
+    observability data/models/metrics, artifacts, and replay. Formal MVD
     deployment, M2, and M3 remain absent and locked.
 
 ## Candidate-bank bindings

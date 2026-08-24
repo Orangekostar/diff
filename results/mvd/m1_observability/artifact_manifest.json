@@ -2,8 +2,8 @@
   "authority_state_sha256": "3ef44b3379a4377758443d6fa6ef23d8aae2a83f32b5f1ce86a42b18398c5f3a",
   "files": {
     "REPORT.md": {
-      "bytes": 907,
-      "sha256": "8393175f1d81aa269886eb4a40ae891aeffce3a6dc1233a9e0fa4e24876c4a13"
+      "bytes": 1547,
+      "sha256": "43890bc11b965d8e11b8cb17ba77913619526bd8b341d32cd0378f13275162d9"
     },
     "bootstrap.csv": {
       "bytes": 1240,
@@ -19,7 +19,7 @@
     },
     "config.yaml": {
       "bytes": 5359,
-      "sha256": "6603470451c94fae82a01bda0660e1bd1696156526584902ead68ea3e27b55fa"
+      "sha256": "01acc173b41a62b8cd1f23d903b5f7c8cd9fad7b8f4bc6362355f68c7b3ccbcf"
     },
     "domain_metrics.csv": {
       "bytes": 8205,
@@ -46,8 +46,8 @@
       "sha256": "a0bde640e9bac88edd7e471e228bfb25fa6d2db119c63d4e923a6b5f8ef258df"
     },
     "summary.json": {
-      "bytes": 3063,
-      "sha256": "3723ca57971810a969553301dc61537e657cea65b6a19b079a9ead5aa4eb10fb"
+      "bytes": 3559,
+      "sha256": "a13f69b8113c072cecb11c0d2d968ff7a7700f2cfef2ed2e827ae2b2b3e656cb"
     }
   },
   "package": "mvd_m1_observability",

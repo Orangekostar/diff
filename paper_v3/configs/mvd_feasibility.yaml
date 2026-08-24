@@ -7,7 +7,7 @@ sources:
     sha256: d3defa3c5d1237be66882c86e02cc190a8aae992ba4da241096c84e152487192
   repository_audit:
     path: docs/MVD_REPOSITORY_AUTHORITY_AUDIT.md
-    sha256: 00d4250d1f34e5cda9f43a67f0902852eaa21996e90671e4ab6b86d3cf4babfd
+    sha256: 934779fc65a7260cd27a5af2e9f92e9eb2c7c0d4e5a753a584cfbcfe3730070e
   m0_protocol:
     path: docs/MVD_M0_PROTOCOL.md
     sha256: 651784aca1991c78f33c0cdce66c73006acc9f677acb54393235776c4748fd7e

@@ -65,6 +65,18 @@
   },
   "aggregation_state_sha256": "c78b65528a067e7a719bae988f991dd691cb7cf09610ebad2a9461dbdad514b8",
   "authority_state_sha256": "3ef44b3379a4377758443d6fa6ef23d8aae2a83f32b5f1ce86a42b18398c5f3a",
+  "external_audit": {
+    "checksum_ledger_sha256": "b094e81b43ee69f700a148f3ad544936f69160790e9fe2a3d9a58b3a7632868d",
+    "cranfield_indexed_grid_recoverable": true,
+    "cranfield_physical_spacing_recoverable": false,
+    "cranfield_processed_pair_n": 26,
+    "cranfield_raw_file_n": 29,
+    "imperial_interlock_exact_paired_n": 10,
+    "imperial_rss_exact_paired_n": 0,
+    "imperial_rss_potential_n": 7,
+    "tudelft_exact_paired_n": 3,
+    "tudelft_role": "MICRO_CASE_VALIDATION_ONLY"
+  },
   "gate": {
     "go": false,
     "ndcg_global_pass": false,

@@ -42,8 +42,13 @@ def verify_checksums(directory: str | Path) -> None:
         ):
             raise ValueError("artifact checksum verification failed")
         observed.add(name)
-    if not observed:
-        raise ValueError("checksum roster is empty")
+    expected = {
+        path.relative_to(root).as_posix()
+        for path in root.rglob("*")
+        if path.is_file() and path.name != "CHECKSUMS.sha256"
+    }
+    if not observed or observed != expected:
+        raise ValueError("artifact checksum roster changed")
 
 
 def _file_map(path: Path) -> dict[str, str]:

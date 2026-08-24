@@ -311,6 +311,59 @@ def _advantage_capture(
     }
 
 
+def _external_report_evidence(root: Path) -> dict[str, object]:
+    artifact = root / "artifacts/external_data"
+    try:
+        manifest = json.loads(
+            (artifact / "EXTERNAL_DATA_MANIFEST.json").read_text(encoding="utf-8")
+        )
+        grid = json.loads(
+            (artifact / "cranfield_wp2/grid_schema.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        datasets = manifest["datasets"]
+        rss = datasets["imperial_rss"]
+        interlock = datasets["imperial_interlock"]
+        tudelft = datasets["tudelft"]
+        cranfield = datasets["cranfield_wp2"]
+        indexed_grid = grid["spatial_grid_recoverable"]
+        physical_spacing = grid["physical_coordinate_spacing_recoverable"]
+        if type(indexed_grid) is not bool or type(physical_spacing) is not bool:
+            raise TypeError("external grid flags must be boolean")
+        evidence = {
+            "checksum_ledger_sha256": _sha256(artifact / "CHECKSUMS.sha256"),
+            "imperial_rss_exact_paired_n": int(rss["exact_paired_cscan_cai_n"]),
+            "imperial_rss_potential_n": int(rss["potential_filename_linked_n"]),
+            "imperial_interlock_exact_paired_n": int(
+                interlock["exact_paired_cscan_cai_n"]
+            ),
+            "tudelft_exact_paired_n": int(tudelft["exact_paired_cscan_cai_n"]),
+            "tudelft_role": str(tudelft["role"]),
+            "cranfield_raw_file_n": int(cranfield["raw_file_n"]),
+            "cranfield_processed_pair_n": int(cranfield["processed_scan_pair_n"]),
+            "cranfield_indexed_grid_recoverable": indexed_grid,
+            "cranfield_physical_spacing_recoverable": physical_spacing,
+        }
+    except (KeyError, OSError, TypeError, ValueError, json.JSONDecodeError) as error:
+        raise ValueError("external audit evidence is incomplete") from error
+    if (
+        manifest.get("method_performance_present") is not False
+        or cranfield.get("method_performance_present") is not False
+        or evidence["imperial_rss_exact_paired_n"] < 0
+        or evidence["imperial_rss_potential_n"]
+        < evidence["imperial_rss_exact_paired_n"]
+        or evidence["imperial_interlock_exact_paired_n"] < 0
+        or evidence["tudelft_exact_paired_n"] < 0
+        or evidence["tudelft_role"] != "MICRO_CASE_VALIDATION_ONLY"
+        or evidence["cranfield_raw_file_n"] < evidence["cranfield_processed_pair_n"]
+        or evidence["cranfield_indexed_grid_recoverable"] is not True
+        or evidence["cranfield_physical_spacing_recoverable"] is not False
+    ):
+        raise ValueError("external audit evidence changed")
+    return evidence
+
+
 def publish_m1(
     config_path: str | Path,
     *,
@@ -353,6 +406,7 @@ def publish_m1(
     ).sort(["outer_domain", "specimen_id", "nominal_checkpoint"])
     m0, _m0_tables = _m0_aggregation(root, config)
     capture = _advantage_capture(cai_states, m0, domain_order=config.domain_order)
+    external = _external_report_evidence(root)
     predictions.write_parquet(output / "observability_predictions.parquet", compression="zstd")
     metrics.write_csv(output / "ranking_metrics.csv")
     regrets.write_csv(output / "regret_metrics.csv")
@@ -376,6 +430,7 @@ def publish_m1(
         "aggregation_state_sha256": aggregation.state_sha256,
         "authority_state_sha256": config.authority_state_sha256,
         "advantage_capture_diagnostic": capture,
+        "external_audit": external,
         "m2_authorized": False,
         "stop_reason": (
             "M1 observability gate failed; capacity rescue and M2/M3 are forbidden"
@@ -388,6 +443,7 @@ def publish_m1(
     primary = models["o2_global_candidate"]
     candidate = models["o1_candidate_mlp_huber"]
     global_row = models["global_mechanical"]
+    random_row = models["random_median"]
     uncertainty = models["observed_uncertainty"]
     effects = {value.effect_id: value for value in aggregation.bootstrap_effects}
     (output / "REPORT.md").write_text(
@@ -401,17 +457,32 @@ def publish_m1(
         f"with lower bound `{effects['o2_minus_global_ndcg10'].lower:.4f}` and "
         f"improves only `{effects['o2_minus_global_ndcg10'].improved_domains}/6` "
         "domains.\n\n"
-        f"Candidate-only MLP Spearman is `{candidate['spearman']:.4f}`, global "
-        f"is `{global_row['spearman']:.4f}`, and observed uncertainty is "
-        f"`{uncertainty['spearman']:.4f}`. Global-minus-O2 and random-minus-O2 "
-        "budget-regret effects do not have positive lower bounds. The evidence "
-        "therefore shows neither stable continuous value prediction nor reliable "
-        "top-set ranking from deployable coarse observations.\n\n"
+        "Candidate-only versus global-plus-candidate: candidate-only MLP "
+        f"Spearman is `{candidate['spearman']:.4f}`, while selected O2 is "
+        f"`{primary['spearman']:.4f}`; global is `{global_row['spearman']:.4f}` "
+        f"and observed uncertainty is `{uncertainty['spearman']:.4f}`. None "
+        "provides stable continuous value prediction or reliable top-set ranking. "
+        f"O2 Regret@1 is `{primary['regret_1']:.4f}` and its mean exact-budget "
+        f"set regret is `{primary['mean_budgeted_regret']:.4f}`, versus global "
+        f"`{global_row['mean_budgeted_regret']:.4f}` and random "
+        f"`{random_row['mean_budgeted_regret']:.4f}`. Global-minus-O2 and "
+        "random-minus-O2 regret effects do not have positive lower bounds.\n\n"
         f"The frozen non-selection CAI diagnostic captures "
         f"`{float(capture['advantage_capture']):.3f}` of the one-shot oracle "
         f"advantage and improves `{int(capture['improved_domains'])}/6` domains. "
         "This diagnostic cannot override the failed observability gate. No larger "
-        "network, Transformer, GNN, RL, diffusion, M2, or M3 was run.\n",
+        "network, Transformer, GNN, RL, diffusion, M2, or M3 was run.\n\n"
+        "External feasibility: Imperial RSS has "
+        f"`{external['imperial_rss_exact_paired_n']}` exact paired C-scan+CAI "
+        f"specimens (`{external['imperial_rss_potential_n']}` potential links "
+        "remain unresolved); Imperial Interlock has "
+        f"`{external['imperial_interlock_exact_paired_n']}` exact pairs and is a "
+        "small pilot. No audited dataset is sufficient by itself for formal "
+        "statistical external replication. TU Delft has "
+        f"`{external['tudelft_exact_paired_n']}` specimens and remains "
+        "case-level `MICRO_CASE_VALIDATION_ONLY`. Cranfield raw PA recovers a "
+        "discrete indexed spatial measurement grid and normalized 8x8 mapping, "
+        "but not authoritative physical spacing or scanner-time reduction.\n",
         encoding="utf-8",
     )
     _finalize(
