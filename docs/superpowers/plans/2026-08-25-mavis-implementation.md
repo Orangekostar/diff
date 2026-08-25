@@ -16,7 +16,8 @@
 |---|---|
 | `src/cmc_bbdm/mavis/contracts.py` | Immutable policy-visible, teacher-only, and evaluation-only data types. |
 | `src/cmc_bbdm/mavis/config.py` | Strict YAML schema, source bindings, development/final freeze hashes. |
-| `src/cmc_bbdm/mavis/authority.py` | Load the 276 upstream specimens and write/read a hash-bound MAVIS manifest. |
+| `src/cmc_bbdm/mavis/authority.py` | Load the 276 upstream specimens and issue typed policy/teacher/evaluation views. |
+| `src/cmc_bbdm/mavis/authority_artifacts.py` | Write and verify the manifest-only causal authority package. |
 | `src/cmc_bbdm/mavis/reveal.py` | Uniform scout and exact action-bound reveal with budget/duplicate guards. |
 | `src/cmc_bbdm/mavis/state_bank.py` | Strict-OOF source trajectories, state manifests, and state-action pairs. |
 | `src/cmc_bbdm/mavis/state_encoder.py` | Static, position-only, real, shuffled, and reconstruction MRIS encoders. |
@@ -56,6 +57,7 @@
 - Create: `src/cmc_bbdm/mavis/contracts.py`
 - Create: `src/cmc_bbdm/mavis/config.py`
 - Create: `src/cmc_bbdm/mavis/authority.py`
+- Create: `src/cmc_bbdm/mavis/authority_artifacts.py`
 - Create: `src/cmc_bbdm/mavis/reveal.py`
 - Create: `paper_v3/configs/mavis_development.yaml`
 - Create: `paper_v3/configs/mavis_final.yaml`
@@ -63,7 +65,7 @@
 - Create: `tests/test_mavis_reveal.py`
 - Create: `tests/test_mavis_exact_cost.py`
 
-- [ ] Write failing tests for a policy-visible API with no `full_scan` or `true_cai`, exact authoritative reveal, future-content invariance, duplicate rejection, budget rejection, and legacy MVA cost equality.
+- [x] Write failing tests for a policy-visible API with no `full_scan` or `true_cai`, exact authoritative reveal, future-content invariance, duplicate rejection, budget rejection, and legacy MVA cost equality.
 
 ```python
 context = authority.policy_context(specimen_id)
@@ -75,13 +77,13 @@ assert np.array_equal(next_state.values[-added:], full_scan[mask])
 assert next_state.acquired_count == budget_record(grid, legacy_state).measured_count
 ```
 
-- [ ] Run `pytest -q tests/test_mavis_authority.py tests/test_mavis_reveal.py tests/test_mavis_exact_cost.py` and verify collection fails because `cmc_bbdm.mavis` is absent.
-- [ ] Implement frozen dataclasses `PolicyContext`, `InspectionState`, `SourceTeacherView`, and `EvaluationView`; all numeric arrays are finite, copied, contiguous, read-only, and shape-checked.
-- [ ] Implement `load_mavis_authority`, `policy_context`, private privileged lookup, and `source_teacher_view`; load the registered MGMR authority and require exact 276 IDs, six domains, scan hashes, metadata13, profile_stats21, and authority state hash.
-- [ ] Implement `begin_inspection`, `reveal_uniform_scout`, and `reveal_action` by reusing `build_acquisition_grid`, `measurement_mask`, `apply_action`, and `budget_record`; reveal only newly added native positions and RGB values.
-- [ ] Add strict development/final YAML loaders. Bind the upstream MVA config SHA, authority SHA, domain order, 276 cohort, scout budgets `(0.015625, 0.03125, 0.0625, 0.125)`, checkpoint `0.25`, and seed roster.
-- [ ] Re-run the three focused tests, all existing MVA/MVD tests, Ruff, and `git diff --check`; expect PASS.
-- [ ] Write `artifacts/mavis_authority/manifest.json`, `arrays.npz`, `CHECKSUMS.sha256`, and `REPORT.md` through code, verify checksums, and commit `data: add MAVIS authority and causal reveal`.
+- [x] Run `pytest -q tests/test_mavis_authority.py tests/test_mavis_reveal.py tests/test_mavis_exact_cost.py` and verify collection fails because `cmc_bbdm.mavis` is absent.
+- [x] Implement frozen dataclasses `PolicyContext`, `InspectionState`, `SourceTeacherView`, and `EvaluationView`; all numeric arrays are finite, copied, contiguous, read-only, and shape-checked.
+- [x] Implement `load_mavis_authority`, `policy_context`, private privileged lookup, and `source_teacher_view`; load the registered MGMR authority and require exact 276 IDs, six domains, scan hashes, metadata13, profile_stats21, and authority state hash.
+- [x] Implement `reveal_uniform_scout` and `reveal_action` by reusing `build_acquisition_grid`, `measurement_mask`, `apply_action`, and `budget_record`; reveal only acquired native positions and RGB values.
+- [x] Add strict development/final YAML loaders. Bind the upstream MGMR config SHA, authority SHA, domain order, 276 cohort, scout budgets `(0.015625, 0.03125, 0.0625)`, checkpoint roster, and seed. The unsupported 12.5% scout is excluded because the registered grid accepts only three scout budgets.
+- [x] Re-run the MAVIS authority/reveal tests, focused MVD tests, historical MVA regression, Ruff, and `git diff --check`; expect PASS.
+- [x] Write `artifacts/mavis_authority/artifact_manifest.json`, `scan_manifest.csv`, `CHECKSUMS.sha256`, and `REPORT.md` through code and verify checksums. The manifest binds upstream scan hashes without duplicating the 340MB privileged payload.
 
 ## Task 3: Strict-OOF sequential state bank
 

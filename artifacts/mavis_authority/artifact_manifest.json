@@ -1,0 +1,25 @@
+{
+  "authority_state_sha256": "f28abdaa76a4ccc5c8a6422ff1f86a242d400ce4fd15bb5ef1834b5840f01b82",
+  "config_sha256": "f1d1a867984433bffa123c7b0697a352ef20fdf012e5e1199932d209e652837d",
+  "domain_order": [
+    "74t7kcdgkr",
+    "cgtnjyggtm",
+    "w68dtmpfyf",
+    "xcmzfsbd9t",
+    "yfxyg8jm46",
+    "ykhs7s2dck"
+  ],
+  "files": {
+    "REPORT.md": {
+      "bytes": 386,
+      "sha256": "ba1016be40e936d9b0b98e691e95225e214c32b2c15da94d4b0daf90602369c2"
+    },
+    "scan_manifest.csv": {
+      "bytes": 62917,
+      "sha256": "3b795fab0c5e5c35365df6ea4ac9aefa9dba6782da95008acac39c9e22440486"
+    }
+  },
+  "schema_version": 1,
+  "source_authority_sha256": "ae03bf35f5b32665007e7f928ee4e2ed098083a4d0982c73100307886acee394",
+  "specimen_count": 276
+}
