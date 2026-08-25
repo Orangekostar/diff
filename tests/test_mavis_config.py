@@ -48,6 +48,18 @@ def test_mavis_config_freezes_causal_protocol_and_recommended_defaults() -> None
     assert config.mris_hidden_size == 64
     assert config.mris_dimension == 64
     assert config.learning_rate == 0.001
+    assert config.shuffle_seed == 20260821
+    assert config.p2_max_epochs == 80
+    assert config.p2_patience == 10
+    assert config.p2_batch_size == 256
+    assert config.p3_max_epochs == 40
+    assert config.p3_patience == 5
+    assert config.p3_batch_size == 64
+    assert config.recall_k == 5
+    assert config.bootstrap_replicates == 5000
+    assert config.confidence_metric == "normalized_top_two_objective_margin"
+    assert config.confidence_thresholds == tuple(index / 10 for index in range(11))
+    assert config.fallback_baselines == ("uniform", "reconstruction_driven")
     assert config.on_policy_rounds == 3
     assert config.outer_split == "leave_one_dataset_out"
     assert config.inner_split == "leave_one_source_dataset_out"
@@ -67,6 +79,9 @@ def test_mavis_config_freezes_causal_protocol_and_recommended_defaults() -> None
         "mvd_m0_actions",
         "candidate_bank_0p015625",
         "candidate_bank_0p03125",
+        "a4_fixed_trajectories",
+        "a5_target_trajectories",
+        "mvd_m1_predictions",
     }
 
 

@@ -1,0 +1,1 @@
+CAI mean absolute error versus mean exact acquired native-raster fraction for static, positions-only, real measured, shuffled-content, and strict-OOF reconstruction states. Errors are averaged within each physical specimen and then equally across six held-out domains. Source: aggregate_metrics.csv; retrospective normalized-raster evaluation.

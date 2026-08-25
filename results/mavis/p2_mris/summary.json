@@ -1,0 +1,54 @@
+{
+  "bootstrap": {
+    "positions_only": {
+      "ci95_lower": -0.02639835308842461,
+      "ci95_upper": -0.009174758787341017,
+      "fraction_control_worse_than_real": 0.0002,
+      "mean_control_minus_real_auebc": -0.017801876615692224
+    },
+    "reconstruction": {
+      "ci95_lower": -0.04655946046802833,
+      "ci95_upper": -0.02811104035435619,
+      "fraction_control_worse_than_real": 0.0,
+      "mean_control_minus_real_auebc": -0.03728838292600401
+    },
+    "shuffled": {
+      "ci95_lower": -0.0026525085976680752,
+      "ci95_upper": 0.011155969668411293,
+      "fraction_control_worse_than_real": 0.8818,
+      "mean_control_minus_real_auebc": 0.004100978594263849
+    },
+    "static": {
+      "ci95_lower": 0.004075379942611691,
+      "ci95_upper": 0.02063618423120308,
+      "fraction_control_worse_than_real": 0.999,
+      "mean_control_minus_real_auebc": 0.012172433654558137
+    }
+  },
+  "claim_tier_assigned": false,
+  "config_sha256": "d35faaf7f1c2e86785acf6ee821db6cf783d9a38565e1e75ec9a282e266e729c",
+  "control_minus_real_auebc": {
+    "positions_only": -0.01782883542434792,
+    "reconstruction": -0.03736133017387293,
+    "shuffled": 0.004081627987189113,
+    "static": 0.012232558209541416
+  },
+  "feature_bank_input_state_sha256": "0a87a47c33bb4d2ff2378da1a9346686c24a4d181ebd1edfa9cd7991b4687306",
+  "feature_bank_target_state_sha256": "0a79950427ce5ebe30a33ee14520eea8a110a60dd5e4e3bec1d149d5a9ca7680",
+  "git_sha": "bbd97d0c07457a2cfa8a680e396dd93867db0b50",
+  "git_worktree_dirty_at_run": true,
+  "p1_state_bank_state_sha256": "1cfc565b7c45ab558b4ae795c342b227f177c0a626c8064ece02368bb948cf18",
+  "p2_state_sha256": "d3dba6ec3621575c0eb20f58c9d041fb00050d11c23a0426b3da764bfcd09768",
+  "prediction_count": 41400,
+  "real_domain_balanced_auebc": 0.1250432019430529,
+  "runtime_code_state_sha256": "e0e04bdfb6d0dd5f4ae3e97d0e1d1291138230e9d3d56ca853698ad6f1441c00",
+  "schema_version": 1,
+  "specimen_count": 276,
+  "stage": "P2_MRIS_INFORMATIVENESS",
+  "state_count": 8280,
+  "statistical_units": [
+    "physical_specimen",
+    "held_out_domain"
+  ],
+  "status": "COMPLETE"
+}

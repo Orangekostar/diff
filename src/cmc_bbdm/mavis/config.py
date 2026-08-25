@@ -50,7 +50,19 @@ class MAVISConfig:
     mris_dimension: int
     learning_rate: float
     loss_weights: MappingProxyType
+    shuffle_seed: int
+    p2_max_epochs: int
+    p2_patience: int
+    p2_batch_size: int
+    p3_max_epochs: int
+    p3_patience: int
+    p3_batch_size: int
+    recall_k: int
+    bootstrap_replicates: int
     on_policy_rounds: int
+    confidence_metric: str
+    confidence_thresholds: tuple[float, ...]
+    fallback_baselines: tuple[str, ...]
     selection_criterion: tuple[str, ...]
     final_configuration_frozen: bool
     development_package_sha256: str | None
@@ -78,7 +90,9 @@ _TOP_LEVEL = {
     "acquisition",
     "teacher",
     "model",
+    "execution",
     "aggregation",
+    "safety",
     "selection",
     "finalization",
     "outputs",
@@ -150,6 +164,9 @@ def _source_bindings(value: object, root: Path) -> MappingProxyType:
             "mvd_m0_actions",
             "candidate_bank_0p015625",
             "candidate_bank_0p03125",
+            "a4_fixed_trajectories",
+            "a5_target_trajectories",
+            "mvd_m1_predictions",
         },
     )
     result: dict[str, SourceBinding] = {}
@@ -325,12 +342,69 @@ def load_mavis_config(path: str | Path, *, project_root: str | Path) -> MAVISCon
     if hidden != 64 or dimension != 64 or learning_rate != 0.001:
         raise MAVISConfigError("recommended MRIS defaults changed")
 
+    execution = _mapping(
+        config["execution"],
+        "execution",
+        {
+            "shuffle_seed",
+            "p2_max_epochs",
+            "p2_patience",
+            "p2_batch_size",
+            "p3_max_epochs",
+            "p3_patience",
+            "p3_batch_size",
+            "recall_k",
+            "bootstrap_replicates",
+        },
+    )
+    shuffle_seed = _positive_int(execution["shuffle_seed"], "shuffle seed")
+    p2_max_epochs = _positive_int(execution["p2_max_epochs"], "P2 max epochs")
+    p2_patience = _positive_int(execution["p2_patience"], "P2 patience")
+    p2_batch_size = _positive_int(execution["p2_batch_size"], "P2 batch size")
+    p3_max_epochs = _positive_int(execution["p3_max_epochs"], "P3 max epochs")
+    p3_patience = _positive_int(execution["p3_patience"], "P3 patience")
+    p3_batch_size = _positive_int(execution["p3_batch_size"], "P3 batch size")
+    recall_k = _positive_int(execution["recall_k"], "recall K")
+    bootstrap_replicates = _positive_int(
+        execution["bootstrap_replicates"], "bootstrap replicates"
+    )
+    if (
+        shuffle_seed != 20260821
+        or p2_max_epochs != 80
+        or p2_patience != 10
+        or p2_batch_size != 256
+        or p3_max_epochs != 40
+        or p3_patience != 5
+        or p3_batch_size != 64
+        or recall_k != 5
+        or bootstrap_replicates != 5000
+    ):
+        raise MAVISConfigError("recommended execution defaults changed")
+
     aggregation = _mapping(
         config["aggregation"], "aggregation", {"source_only", "rounds"}
     )
     rounds = _positive_int(aggregation["rounds"], "on-policy rounds")
     if aggregation["source_only"] is not True or rounds != 3:
         raise MAVISConfigError("on-policy aggregation contract changed")
+    safety = _mapping(
+        config["safety"],
+        "safety",
+        {"confidence_metric", "thresholds", "fallback_baselines"},
+    )
+    confidence_metric = safety["confidence_metric"]
+    confidence_thresholds = _tuple_float(
+        safety["thresholds"], "confidence thresholds"
+    )
+    fallback_baselines = _tuple_text(
+        safety["fallback_baselines"], "fallback baselines"
+    )
+    if (
+        confidence_metric != "normalized_top_two_objective_margin"
+        or confidence_thresholds != tuple(index / 10 for index in range(11))
+        or fallback_baselines != ("uniform", "reconstruction_driven")
+    ):
+        raise MAVISConfigError("safe-policy contract changed")
     selection = _mapping(
         config["selection"], "selection", {"criterion", "target_data_forbidden"}
     )
@@ -386,7 +460,19 @@ def load_mavis_config(path: str | Path, *, project_root: str | Path) -> MAVISCon
         mris_dimension=dimension,
         learning_rate=learning_rate,
         loss_weights=loss_weights,
+        shuffle_seed=shuffle_seed,
+        p2_max_epochs=p2_max_epochs,
+        p2_patience=p2_patience,
+        p2_batch_size=p2_batch_size,
+        p3_max_epochs=p3_max_epochs,
+        p3_patience=p3_patience,
+        p3_batch_size=p3_batch_size,
+        recall_k=recall_k,
+        bootstrap_replicates=bootstrap_replicates,
         on_policy_rounds=rounds,
+        confidence_metric=confidence_metric,
+        confidence_thresholds=confidence_thresholds,
+        fallback_baselines=fallback_baselines,
         selection_criterion=criterion,
         final_configuration_frozen=frozen,
         development_package_sha256=development_sha,

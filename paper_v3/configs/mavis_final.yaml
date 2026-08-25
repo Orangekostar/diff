@@ -32,6 +32,15 @@ sources:
   candidate_bank_0p03125:
     path: artifacts/mvd_authority/a4_candidate_bank_0p03125.npz
     sha256: cfeff617df9208bdfbd8434474f63134661f8fb6f7b59676bced5054ac0d2443
+  a4_fixed_trajectories:
+    path: results/mva/a4_global_task_mask/fixed_trajectories.parquet
+    sha256: 12293c89c8c066d7db1febc4f1e7e573744b3522a832968f91e209090028e257
+  a5_target_trajectories:
+    path: results/mva/a5_imitation_policy/target_trajectories.parquet
+    sha256: 58f9b72723a5973383e1c5b16dae0f662b4b560392348345e2a07c827e80e3b8
+  mvd_m1_predictions:
+    path: results/mvd/m1_observability/observability_predictions.parquet
+    sha256: 3164e5e6e6a293cdd1376fd4d58438c74d23e791a1c1378deff14c254d9903b3
 
 cohort:
   specimen_count: 276
@@ -75,9 +84,25 @@ model:
     list: 1.0
     value: 0.25
 
+execution:
+  shuffle_seed: 20260821
+  p2_max_epochs: 80
+  p2_patience: 10
+  p2_batch_size: 256
+  p3_max_epochs: 40
+  p3_patience: 5
+  p3_batch_size: 64
+  recall_k: 5
+  bootstrap_replicates: 5000
+
 aggregation:
   source_only: true
   rounds: 3
+
+safety:
+  confidence_metric: normalized_top_two_objective_margin
+  thresholds: [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+  fallback_baselines: [uniform, reconstruction_driven]
 
 selection:
   criterion: [source_cai_auebc, source_improved_domains, worst_source_domain_auebc, model_simplicity]
