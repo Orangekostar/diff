@@ -1,0 +1,31 @@
+file_group,name,shape,dtype,physical_meaning,source,pre_action_observable,post_action_reveal,privileged,true_cai_dependent,full_scan_dependent
+candidate_bank,schema_version,1,int64,artifact schema version,serializer,yes,no,no,no,no
+candidate_bank,initial_budget,1,float64,registered scout budget fraction,config,yes,no,no,no,no
+candidate_bank,specimen_ids,276,string,physical specimen identifier,registered cohort,yes,no,no,no,no
+candidate_bank,dataset_ids,276,string,held-out domain identifier,registered cohort,split_only,no,no,no,no
+candidate_bank,image_sha256,276,string,source PNG byte hash,CscanRecord,authority_only,no,yes,no,yes
+candidate_bank,decoded_image_sha256,276,string,decoded RGB array hash,CscanRecord,authority_only,no,yes,no,yes
+candidate_bank,authority_state_sha256,1,string,upstream authority state hash,MGMR authority,authority_only,no,no,no,no
+candidate_bank,native_shapes,"276,2",int64,native RGB raster height and width,CscanRecord,yes,no,no,no,no
+candidate_bank,initial_measured_counts,276,int64,unique native pixels acquired by scout,measurement_state,yes,no,no,no,no
+candidate_bank,native_counts,276,int64,total native raster locations,CscanRecord,yes,no,no,no,no
+candidate_bank,cell_indices,64,int64,8x8 candidate cell indices,acquisition_grid,yes,no,no,no,no
+candidate_bank,from_levels,64,int64,candidate starting refinement levels,measurement_state,yes,no,no,no,no
+candidate_bank,to_levels,64,int64,candidate ending refinement levels,measurement_state,yes,no,no,no,no
+candidate_bank,initial_embeddings,"276,512",float64,encoder output after registered scout,reconstructed sparse real C-scan,post_scout,no,no,no,yes
+candidate_bank,embeddings,"276,64,512",float64,encoder output after each counterfactual candidate,full-scan refinement simulator,no,no,yes,no,yes
+candidate_bank,reconstruction_values,"276,64",float64,one-step reconstruction utility,full-scan reference,no,no,yes,no,yes
+candidate_bank,appearance_values,"276,64",float64,one-step embedding appearance change,counterfactual embedding,no,no,yes,no,yes
+candidate_bank,added_measurements,"276,64",int64,exact unique native pixels added,measurement_state,yes,no,no,no,no
+candidate_bank,grid_state_sha256,276,string,per-specimen acquisition-grid hash,acquisition_grid,yes,no,no,no,no
+candidate_bank,initial_output_sha256,276,string,initial reconstruction output hash,reconstruction simulator,authority_only,no,yes,no,yes
+candidate_bank,candidate_output_sha256,"276,64",string,candidate reconstruction output hash,reconstruction simulator,no,no,yes,no,yes
+candidate_bank,state_sha256,1,string,candidate-bank content hash,serializer,authority_only,no,no,no,no
+observed_features,initial_budget,1,float64,registered scout budget fraction,config,yes,no,no,no,no
+observed_features,specimen_ids,276,string,physical specimen identifier,registered cohort,yes,no,no,no,no
+observed_features,dataset_ids,276,string,held-out domain identifier,registered cohort,split_only,no,no,no,no
+observed_features,grid_state_sha256,276,string,per-specimen acquisition-grid hash,acquisition_grid,yes,no,no,no,no
+observed_features,candidate_bank_state_sha256,1,string,bound candidate-bank hash,candidate bank,authority_only,no,no,no,no
+observed_features,candidate_features,"276,64,8",float64,deployable state and candidate descriptors,initial observed reconstruction and geometry,yes,no,no,no,no
+observed_features,candidate_costs,"276,64",int64,exact unique native pixels added,measurement_state,yes,no,no,no,no
+observed_features,state_sha256,1,string,observed-feature-bank content hash,serializer,authority_only,no,no,no,no
