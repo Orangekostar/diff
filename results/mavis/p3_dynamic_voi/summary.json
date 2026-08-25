@@ -1,0 +1,49 @@
+{
+  "action_score_count": 1725772,
+  "artifact": "mavis_p3_dynamic_voi",
+  "bootstrap": {
+    "positions_only": {
+      "mean_control_minus_real_regret": 0.0002898202333152284,
+      "mean_real_minus_control_utility": 0.0002898202333152285,
+      "regret_ci95_lower": -5.760991055989384e-05,
+      "regret_ci95_upper": 0.000650133545960103,
+      "utility_ci95_lower": -5.760991055989333e-05,
+      "utility_ci95_upper": 0.0006501335459601028
+    },
+    "shuffled": {
+      "mean_control_minus_real_regret": -0.00018358324056058466,
+      "mean_real_minus_control_utility": -0.00018358324056058455,
+      "regret_ci95_lower": -0.0003528969190408817,
+      "regret_ci95_upper": -1.840961942537839e-05,
+      "utility_ci95_lower": -0.0003528969190408822,
+      "utility_ci95_upper": -1.8409619425378258e-05
+    },
+    "static": {
+      "mean_control_minus_real_regret": -4.147546846682625e-05,
+      "mean_real_minus_control_utility": -4.147546846682616e-05,
+      "regret_ci95_lower": -0.00018547507969794933,
+      "regret_ci95_upper": 9.476532025214271e-05,
+      "utility_ci95_lower": -0.00018547507969794887,
+      "utility_ci95_upper": 9.47653202521431e-05
+    }
+  },
+  "claim_tier_assigned": false,
+  "config_sha256": "d35faaf7f1c2e86785acf6ee821db6cf783d9a38565e1e75ec9a282e266e729c",
+  "decision_state_count": 6900,
+  "git_sha": "d9e41aaeafa7e43649931a7c9232f0d9ce74299b",
+  "git_worktree_dirty": true,
+  "input_state_count": 8280,
+  "p1_state_sha256": "1cfc565b7c45ab558b4ae795c342b227f177c0a626c8064ece02368bb948cf18",
+  "p2_state_sha256": "d3dba6ec3621575c0eb20f58c9d041fb00050d11c23a0426b3da764bfcd09768",
+  "p3_state_sha256": "a16465bebc28f70a7662327bffd6f0a7efa2044daf91ff077e1e890620626f85",
+  "runtime_code_state_sha256": "cf4b3e70991513eba1be1eedf9d779eb2d8d4d8441493009c2899d86bd0fb3da",
+  "schema_version": 1,
+  "state_count": 6900,
+  "statistical_units": [
+    "physical_specimen",
+    "held_out_domain"
+  ],
+  "status": "COMPLETE",
+  "target_data_used_for_selection": false,
+  "terminal_state_count": 1380
+}
