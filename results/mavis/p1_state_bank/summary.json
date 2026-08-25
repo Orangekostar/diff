@@ -1,0 +1,69 @@
+{
+  "authority_state_sha256": "f28abdaa76a4ccc5c8a6422ff1f86a242d400ce4fd15bb5ef1834b5840f01b82",
+  "checkpoint_count": 6,
+  "config_sha256": "53f49f2609b3569292629d40d347256caffba6f1a5a6bb3d54e6c8de20923b9a",
+  "domain_count": 6,
+  "git_sha": "0e372e6e8e6a7f2741667377e1608bb1da1669cc",
+  "git_worktree_dirty_at_run": true,
+  "measurement_payload_part_count": 35,
+  "per_domain": [
+    {
+      "domain_id": "74t7kcdgkr",
+      "specimen_count": 45,
+      "state_action_pair_count": 353160,
+      "state_count": 1350
+    },
+    {
+      "domain_id": "cgtnjyggtm",
+      "specimen_count": 49,
+      "state_action_pair_count": 382585,
+      "state_count": 1470
+    },
+    {
+      "domain_id": "w68dtmpfyf",
+      "specimen_count": 43,
+      "state_action_pair_count": 335790,
+      "state_count": 1290
+    },
+    {
+      "domain_id": "xcmzfsbd9t",
+      "specimen_count": 59,
+      "state_action_pair_count": 460300,
+      "state_count": 1770
+    },
+    {
+      "domain_id": "yfxyg8jm46",
+      "specimen_count": 42,
+      "state_action_pair_count": 328140,
+      "state_count": 1260
+    },
+    {
+      "domain_id": "ykhs7s2dck",
+      "specimen_count": 38,
+      "state_action_pair_count": 297240,
+      "state_count": 1140
+    }
+  ],
+  "runtime_code_state_sha256": "12f98d6ede31232ef40b8f48f10282a472a64fdd3b59111061f273c2fd7c95ee",
+  "schema_version": 1,
+  "specimen_count": 276,
+  "stage": "P1_STRICT_OOF_STATE_BANK",
+  "state_action_pair_count": 2157215,
+  "state_action_pair_part_count": 30,
+  "state_bank_state_sha256": "1cfc565b7c45ab558b4ae795c342b227f177c0a626c8064ece02368bb948cf18",
+  "state_count": 8280,
+  "statistical_units": [
+    "physical_specimen",
+    "held_out_domain"
+  ],
+  "status": "COMPLETE",
+  "teacher_fit_count": 30,
+  "terminal_state_count": 1380,
+  "trajectory_methods": [
+    "random",
+    "uniform",
+    "reconstruction_driven",
+    "one_shot_mechanical_oracle",
+    "sequential_mechanical_oracle"
+  ]
+}

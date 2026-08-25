@@ -1,0 +1,91 @@
+schema_version: 1
+scope: mavis_closed_loop
+mode: development
+seed: 20260825
+master_prompt_sha256: 20884c57889aa1cffdc1756e5e6f331fb8a963895f8174695671a4d47b588838
+
+sources:
+  mgmr_config:
+    path: paper_v3/configs/mgmr_m0.yaml
+    sha256: 77fa63fe58a17d426346db50fbb5ca0eb26efb2e25c2454c990552c2983607ff
+  p0_repo_code_map:
+    path: artifacts/mavis/P0_REPO_CODE_MAP.md
+    sha256: 9ba270a60e6255ea918d94ea5b192e3b534af8d874b162571e77534ddfb770c4
+  p0_data_flow:
+    path: artifacts/mavis/P0_DATA_FLOW.md
+    sha256: 2541fe40d4c0b9ddf19209e11107c9d96b062113c12557a9cb04f7f1ff55d990
+  p0_authority_schema:
+    path: artifacts/mavis/P0_MVD_AUTHORITY_SCHEMA.md
+    sha256: ccc3070e0d16c45e45691810e932f7ed0dfe490dbfdb3d38be002f84d99ef413
+  design_spec:
+    path: docs/superpowers/specs/2026-08-25-mavis-design.md
+    sha256: a6b74e591e6c539e5cb526744d5643b7e028e76687d7c305394db5d1cfd1c8ff
+  a2_oracle_trajectories:
+    path: results/mva/a2_oracle_value/oracle_trajectories.parquet
+    sha256: 4906d188b8a369d0e233d7cf79d98b694342eaf9923d7ec702d611a525123d16
+  mvd_m0_actions:
+    path: results/mvd/m0_one_shot_oracle/actions.parquet
+    sha256: a7c40acff28fb307de385423379451d4aaf4f0f936a54c74fee7d62c67fb631d
+  candidate_bank_0p015625:
+    path: artifacts/mvd_authority/a4_candidate_bank_0p015625.npz
+    sha256: 42882df095ac2935bf7cf0efec5d17c3fee257ddee4f4735fbb64d6931976b08
+  candidate_bank_0p03125:
+    path: artifacts/mvd_authority/a4_candidate_bank_0p03125.npz
+    sha256: cfeff617df9208bdfbd8434474f63134661f8fb6f7b59676bced5054ac0d2443
+
+cohort:
+  specimen_count: 276
+  domain_order: [74t7kcdgkr, cgtnjyggtm, w68dtmpfyf, xcmzfsbd9t, yfxyg8jm46, ykhs7s2dck]
+  context_features: [metadata13, profile_stats21]
+  outer_split: leave_one_dataset_out
+  inner_split: leave_one_source_dataset_out
+
+authority:
+  source_authority_sha256: ae03bf35f5b32665007e7f928ee4e2ed098083a4d0982c73100307886acee394
+
+acquisition:
+  initial_budgets: [0.015625, 0.03125, 0.0625]
+  checkpoints: [0.03125, 0.0625, 0.09375, 0.125, 0.1875, 0.25]
+  budget_unit: unique_native_raster_locations
+  scout_policy: uniform_geometry_neutral
+  cell_shape: [8, 8]
+  initial_budget_by_domain:
+    74t7kcdgkr: 0.03125
+    cgtnjyggtm: 0.015625
+    w68dtmpfyf: 0.015625
+    xcmzfsbd9t: 0.015625
+    yfxyg8jm46: 0.015625
+    ykhs7s2dck: 0.015625
+  trajectory_random_seed: 2026082300
+
+teacher:
+  interpolation: bilinear
+  pca_dimensions: [8, 16, 32]
+  ridge_alpha: 10.0
+  tie_tolerance: 1.0e-12
+
+model:
+  state_encoder: deepsets
+  mris_hidden_size: 64
+  mris_dimension: 64
+  learning_rate: 0.001
+  loss_weights:
+    cai: 1.0
+    pair: 1.0
+    list: 1.0
+    value: 0.25
+
+aggregation:
+  source_only: true
+  rounds: 3
+
+selection:
+  criterion: [source_cai_auebc, source_improved_domains, worst_source_domain_auebc, model_simplicity]
+  target_data_forbidden: true
+
+finalization:
+  configuration_frozen: false
+  development_package_sha256: null
+
+outputs:
+  root: results/mavis

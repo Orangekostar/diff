@@ -20,6 +20,18 @@ sources:
   design_spec:
     path: docs/superpowers/specs/2026-08-25-mavis-design.md
     sha256: a6b74e591e6c539e5cb526744d5643b7e028e76687d7c305394db5d1cfd1c8ff
+  a2_oracle_trajectories:
+    path: results/mva/a2_oracle_value/oracle_trajectories.parquet
+    sha256: 4906d188b8a369d0e233d7cf79d98b694342eaf9923d7ec702d611a525123d16
+  mvd_m0_actions:
+    path: results/mvd/m0_one_shot_oracle/actions.parquet
+    sha256: a7c40acff28fb307de385423379451d4aaf4f0f936a54c74fee7d62c67fb631d
+  candidate_bank_0p015625:
+    path: artifacts/mvd_authority/a4_candidate_bank_0p015625.npz
+    sha256: 42882df095ac2935bf7cf0efec5d17c3fee257ddee4f4735fbb64d6931976b08
+  candidate_bank_0p03125:
+    path: artifacts/mvd_authority/a4_candidate_bank_0p03125.npz
+    sha256: cfeff617df9208bdfbd8434474f63134661f8fb6f7b59676bced5054ac0d2443
 
 cohort:
   specimen_count: 276
@@ -37,6 +49,20 @@ acquisition:
   budget_unit: unique_native_raster_locations
   scout_policy: uniform_geometry_neutral
   cell_shape: [8, 8]
+  initial_budget_by_domain:
+    74t7kcdgkr: 0.03125
+    cgtnjyggtm: 0.015625
+    w68dtmpfyf: 0.015625
+    xcmzfsbd9t: 0.015625
+    yfxyg8jm46: 0.015625
+    ykhs7s2dck: 0.015625
+  trajectory_random_seed: 2026082300
+
+teacher:
+  interpolation: bilinear
+  pca_dimensions: [8, 16, 32]
+  ridge_alpha: 10.0
+  tie_tolerance: 1.0e-12
 
 model:
   state_encoder: deepsets

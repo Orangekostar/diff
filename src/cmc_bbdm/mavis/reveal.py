@@ -100,6 +100,56 @@ def reveal_uniform_scout(
         raise MAVISRevealError("uniform scout cannot be revealed") from error
 
 
+def reveal_action_history(
+    authority: MAVISAuthority,
+    context: PolicyContext,
+    *,
+    initial_budget: float,
+    checkpoint: float,
+    actions: tuple[RefinementAction, ...],
+) -> InspectionState:
+    if (
+        type(authority) is not MAVISAuthority
+        or type(context) is not PolicyContext
+        or authority.policy_context(context.specimen_id) != context
+        or type(actions) is not tuple
+        or any(type(action) is not RefinementAction for action in actions)
+    ):
+        raise MAVISRevealError("issued action history is invalid")
+    cap = _checkpoint(checkpoint)
+    try:
+        grid = build_acquisition_grid(
+            *context.native_shape,
+            initial_budget=initial_budget,
+        )
+        state = initial_state(grid)
+        acquired = measurement_mask(grid, state)
+        for action in actions:
+            refined = apply_action(grid, state, action)
+            cell = grid.cells[action.cell_index]
+            rows = np.asarray(cell.rows[action.to_level], dtype=np.int64)
+            columns = np.asarray(cell.columns[action.to_level], dtype=np.int64)
+            added = int(np.count_nonzero(~acquired[np.ix_(rows, columns)]))
+            if added <= 0:
+                raise MAVISRevealError("action history adds no new measurement")
+            acquired[np.ix_(rows, columns)] = True
+            state = refined
+        if float(np.count_nonzero(acquired) / acquired.size) > cap + 1.0e-15:
+            raise MAVISRevealError("action history exceeds the exact acquisition budget")
+        return _materialize(
+            authority,
+            context,
+            initial_budget=float(initial_budget),
+            checkpoint=cap,
+            levels=state.levels,
+            action_history=actions,
+        )
+    except (MAVISAuthorityError, MeasurementStateError, ValueError) as error:
+        if isinstance(error, MAVISRevealError):
+            raise
+        raise MAVISRevealError("action history cannot be revealed") from error
+
+
 def reveal_action(
     authority: MAVISAuthority,
     state: InspectionState,
@@ -150,4 +200,9 @@ def reveal_action(
     return revealed
 
 
-__all__ = ["MAVISRevealError", "reveal_action", "reveal_uniform_scout"]
+__all__ = [
+    "MAVISRevealError",
+    "reveal_action",
+    "reveal_action_history",
+    "reveal_uniform_scout",
+]

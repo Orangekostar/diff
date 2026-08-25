@@ -9,3 +9,4 @@ raw/
 __pycache__/
 .DS_Store
 .worktrees/
+results/mavis/.work/

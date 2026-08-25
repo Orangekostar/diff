@@ -1,0 +1,2002 @@
+{
+  "workers": [
+    {
+      "authority_state_sha256": "f28abdaa76a4ccc5c8a6422ff1f86a242d400ce4fd15bb5ef1834b5840f01b82",
+      "config_sha256": "53f49f2609b3569292629d40d347256caffba6f1a5a6bb3d54e6c8de20923b9a",
+      "device": "cuda:0",
+      "domain_id": "74t7kcdgkr",
+      "schema_version": 1,
+      "specimen_count": 45,
+      "specimens": [
+        {
+          "action_file": "74t7kcdgkr__c8-2.parquet",
+          "action_sha256": "ffac2893caa85ac1af8487fc5af28c9ea3732387f567379c885c51196a16fcd2",
+          "specimen_id": "c8-2",
+          "state_file": "74t7kcdgkr__c8-2.parquet",
+          "state_sha256": "7ba39f17319b7554377ad290b47930b4be12219bb7e536d7da2acac313dec81f"
+        },
+        {
+          "action_file": "74t7kcdgkr__c8-3.parquet",
+          "action_sha256": "4d923d76edddfaff7bb02107fb584e7ecc118b49ef62749238edd1250fca307b",
+          "specimen_id": "c8-3",
+          "state_file": "74t7kcdgkr__c8-3.parquet",
+          "state_sha256": "ccf76387a2183a8034c0b474aec8cab5a1fc43772f2053ef462ec0fc7422c4d4"
+        },
+        {
+          "action_file": "74t7kcdgkr__c8-4.parquet",
+          "action_sha256": "2ad665a12b67bb312b69b88bbf3c3a93e5a4b08e0f94a9ede3f6180710d5d15b",
+          "specimen_id": "c8-4",
+          "state_file": "74t7kcdgkr__c8-4.parquet",
+          "state_sha256": "293affc2198262588a98b8802de08c5fc9ff58de6a0082d81296e4b371626d44"
+        },
+        {
+          "action_file": "74t7kcdgkr__c8-5.parquet",
+          "action_sha256": "124bf6fef24ac9742f9f663731a23cd73af57ce64983178f8f671c7790447959",
+          "specimen_id": "c8-5",
+          "state_file": "74t7kcdgkr__c8-5.parquet",
+          "state_sha256": "a9dc5da6d16e279c36671fbbb8bb1fd83a5da7ab8f763931723dbbc9903ed00d"
+        },
+        {
+          "action_file": "74t7kcdgkr__c8-6.parquet",
+          "action_sha256": "dc8694e97a80d982a335403407774a69c9001866c4e88a0b0cb07f788431305a",
+          "specimen_id": "c8-6",
+          "state_file": "74t7kcdgkr__c8-6.parquet",
+          "state_sha256": "b9acd27f590cee30ee82f8a5b277c0dc2acc675142edd0b296ad222137e1213d"
+        },
+        {
+          "action_file": "74t7kcdgkr__c8-6t.parquet",
+          "action_sha256": "396c811a3200ae1cb013dfb705e923120055f61d70435a900e5e0ae36c5d0bbd",
+          "specimen_id": "c8-6t",
+          "state_file": "74t7kcdgkr__c8-6t.parquet",
+          "state_sha256": "d4bf0a4b1e1c07152f4a56a09a0f330dbae4edfa78e693fd15ef491b00a640b3"
+        },
+        {
+          "action_file": "74t7kcdgkr__c8-7.parquet",
+          "action_sha256": "4f0ee375557fc085f99f2d4babd19457ca6b061d038bb9c6c5fb0215ea550e5b",
+          "specimen_id": "c8-7",
+          "state_file": "74t7kcdgkr__c8-7.parquet",
+          "state_sha256": "3407a3d0de0dbf623016effe7be57a8069d3f29a710b63b230b396a014faffff"
+        },
+        {
+          "action_file": "74t7kcdgkr__c8-8.parquet",
+          "action_sha256": "546e15d98d9b51c6da3f5911bf70af26c47b8ecb2e86f25c8ca5e49ada4fd2b9",
+          "specimen_id": "c8-8",
+          "state_file": "74t7kcdgkr__c8-8.parquet",
+          "state_sha256": "1d12b20e8ba01b04274dcf35b6c635ee93ee6b9ea5c2fcad43ebd74b67653f29"
+        },
+        {
+          "action_file": "74t7kcdgkr__c8-8t.parquet",
+          "action_sha256": "dc17cabe07e227dba2b5cfe6abc0a6b9483274779450f8e059388be47e2e7756",
+          "specimen_id": "c8-8t",
+          "state_file": "74t7kcdgkr__c8-8t.parquet",
+          "state_sha256": "bb4da31a6b70126bdd115a00784f67e37d90a44539d80c472ecaf9f8f2816af0"
+        },
+        {
+          "action_file": "74t7kcdgkr__c8-9.parquet",
+          "action_sha256": "3b96395b44610e3b7aa6cec195b9302a3c1981dea68ff29e8f533782309859d4",
+          "specimen_id": "c8-9",
+          "state_file": "74t7kcdgkr__c8-9.parquet",
+          "state_sha256": "ad3f54d22351f2550f7effdc400930c2a577054d361e0ddc1faca3db888c0eeb"
+        },
+        {
+          "action_file": "74t7kcdgkr__c8-9t.parquet",
+          "action_sha256": "a28f4642c7cbe9763981442b0cc2e819ecea8d0862ed1e560345ff8dc6beb63d",
+          "specimen_id": "c8-9t",
+          "state_file": "74t7kcdgkr__c8-9t.parquet",
+          "state_sha256": "a719237c0f9bc68e38e869bab4f4598bd7fd9abf11338759b55e1461788a2d33"
+        },
+        {
+          "action_file": "74t7kcdgkr__c8-10t.parquet",
+          "action_sha256": "d23c5d8c711502d3f547907461b313eeff8c12cd5337abd2088ae252ec512fb6",
+          "specimen_id": "c8-10t",
+          "state_file": "74t7kcdgkr__c8-10t.parquet",
+          "state_sha256": "d8d557268d9fc5752ed9e5f4aee6b77e714181544a7ad583ca7f067b8000cfe4"
+        },
+        {
+          "action_file": "74t7kcdgkr__c8-11.parquet",
+          "action_sha256": "3ccbc129064c5550341bbf3dfe6465b2e6948f6f76f4e3cfeaf43a3b9aa5f463",
+          "specimen_id": "c8-11",
+          "state_file": "74t7kcdgkr__c8-11.parquet",
+          "state_sha256": "4a9dc11939702e0bd1c8af002a5b1e8bd87293d2986d3dbad207b6a0a3088db3"
+        },
+        {
+          "action_file": "74t7kcdgkr__c8-12.parquet",
+          "action_sha256": "c4e14a378f8f852664f59bb3e16b92725d9cdc34950f6f5f1ff540ed815e6935",
+          "specimen_id": "c8-12",
+          "state_file": "74t7kcdgkr__c8-12.parquet",
+          "state_sha256": "76bd638411547af0704379aad60fb4e26f90fe262f4d13ba79784b0b6d930626"
+        },
+        {
+          "action_file": "74t7kcdgkr__c8-12t.parquet",
+          "action_sha256": "0f06afe16f4b011a6dd114f1f5d5cc80ca65ca0ba4400a0680af07e6ab4f9811",
+          "specimen_id": "c8-12t",
+          "state_file": "74t7kcdgkr__c8-12t.parquet",
+          "state_sha256": "99943878fd4c3c090802976df16e77a19f713cb91f735fa9cca6c71e67779de9"
+        },
+        {
+          "action_file": "74t7kcdgkr__c8-13.parquet",
+          "action_sha256": "abd7897321535cdee9e0c27a0549e37985f7c990fd1718ec097c5a2472bc6b17",
+          "specimen_id": "c8-13",
+          "state_file": "74t7kcdgkr__c8-13.parquet",
+          "state_sha256": "7e925c33acd5a2a7254836c701435757a2781e6c2c6b53f353f196d4b50b6e7c"
+        },
+        {
+          "action_file": "74t7kcdgkr__c8-14.parquet",
+          "action_sha256": "bf023c5866e50abdbb7b5e2061d624cdf17dfdcc808e288fbf388310c04eac29",
+          "specimen_id": "c8-14",
+          "state_file": "74t7kcdgkr__c8-14.parquet",
+          "state_sha256": "636e21d82430a02a1b25ca1ca4dc77edfd0543de53bcc79b259abdb1cbd830b4"
+        },
+        {
+          "action_file": "74t7kcdgkr__c8-15.parquet",
+          "action_sha256": "d85ba2c6e9d4a03fb00070febeaeea58c96271dff7869200480669e9e2e4acf6",
+          "specimen_id": "c8-15",
+          "state_file": "74t7kcdgkr__c8-15.parquet",
+          "state_sha256": "4809130f6c7987af106c74ede21f2e07f62bfb75a25d5eef0e4444cfd9c25003"
+        },
+        {
+          "action_file": "74t7kcdgkr__c8-16.parquet",
+          "action_sha256": "911edc487e37e5dbed37efd8990358d08a5b58b6fdfbbc560ec719fbd9c9d169",
+          "specimen_id": "c8-16",
+          "state_file": "74t7kcdgkr__c8-16.parquet",
+          "state_sha256": "8dc9d1605c0ce62172948d9a2934f3bb698d29893ebaae4b4996a87c55022540"
+        },
+        {
+          "action_file": "74t7kcdgkr__c8-17.parquet",
+          "action_sha256": "131cd832823bf31ec9ce5587af4121bbb1f875f3885442b96f99caa7d10141ca",
+          "specimen_id": "c8-17",
+          "state_file": "74t7kcdgkr__c8-17.parquet",
+          "state_sha256": "0a0d69ab2f26b211cb6df86bb00027c80ad0b616857f314d13067506d07b1911"
+        },
+        {
+          "action_file": "74t7kcdgkr__c8-18.parquet",
+          "action_sha256": "7e3170007ca631a9102393f12117ec4fa2ad10deb83c65e615d471fac522f97c",
+          "specimen_id": "c8-18",
+          "state_file": "74t7kcdgkr__c8-18.parquet",
+          "state_sha256": "5bba88b86f88e7be381ce29c15424b72419b9c677fb911d357f0c57083dcdcf8"
+        },
+        {
+          "action_file": "74t7kcdgkr__c8-19.parquet",
+          "action_sha256": "877a653d2350ebd2f4f630c04e7a6a25753d3ebd8b755eaa03c9fc42dab068e1",
+          "specimen_id": "c8-19",
+          "state_file": "74t7kcdgkr__c8-19.parquet",
+          "state_sha256": "36b3aac2d3085b2c9a8675a590694d3f2a93e73e56d8f2f1e0032ce1b6ab7c12"
+        },
+        {
+          "action_file": "74t7kcdgkr__c8-20.parquet",
+          "action_sha256": "954952641fd12f95e739e68f1e4eb1c070b132d14b5981d62acaa37e5dfa8bd7",
+          "specimen_id": "c8-20",
+          "state_file": "74t7kcdgkr__c8-20.parquet",
+          "state_sha256": "805b9f670d5064fc56f3a99cfbd5f32741452aa8f8be15a7db793963217951a4"
+        },
+        {
+          "action_file": "74t7kcdgkr__c8-21.parquet",
+          "action_sha256": "229eaa3687710f31bdb91b9c02aaaa1e52717d432ed730ce62db3e809547659e",
+          "specimen_id": "c8-21",
+          "state_file": "74t7kcdgkr__c8-21.parquet",
+          "state_sha256": "7c0ac1d696921a1a74001cb9d5df488021fe24f93f100f8ee2357338e42d248d"
+        },
+        {
+          "action_file": "74t7kcdgkr__c8-22.parquet",
+          "action_sha256": "64c61b642b0837f2437287cc96652c5b5c5e77e6649eb3e60ffda0c99a4d1bf2",
+          "specimen_id": "c8-22",
+          "state_file": "74t7kcdgkr__c8-22.parquet",
+          "state_sha256": "fb25c34094581ddb2ef67e1c7a1fea7966d5eaab8665d0180c8a3e705a9c44b8"
+        },
+        {
+          "action_file": "74t7kcdgkr__c8-23.parquet",
+          "action_sha256": "34db3fc01c19d94f1669d9a59d535272b2b9305b39ffdcff92ad287c2eb3ba29",
+          "specimen_id": "c8-23",
+          "state_file": "74t7kcdgkr__c8-23.parquet",
+          "state_sha256": "129cfffa1b95babfab0455d2da1dcea69847ac7b23ad853f4b605e217366fff0"
+        },
+        {
+          "action_file": "74t7kcdgkr__c8-24.parquet",
+          "action_sha256": "8633701d05af1f5e2c4b02148aec1cb56e4c0ded4f7567c5d2cdf4be91fc7b82",
+          "specimen_id": "c8-24",
+          "state_file": "74t7kcdgkr__c8-24.parquet",
+          "state_sha256": "1ee43c2d770a5482255f3078692efb2a88a6239bd186289cac8aac3dc0af1e9e"
+        },
+        {
+          "action_file": "74t7kcdgkr__c8-25.parquet",
+          "action_sha256": "b733e46b0468217909d708dc6b566c502b54e3a4f8fe81957e2291d3c7637e8b",
+          "specimen_id": "c8-25",
+          "state_file": "74t7kcdgkr__c8-25.parquet",
+          "state_sha256": "96867ddefa8adf45240b8aaae44ede002774918f65f60a162e122d4e2b6ee1f8"
+        },
+        {
+          "action_file": "74t7kcdgkr__c8-26.parquet",
+          "action_sha256": "330e112c295764dfc4edeccf1843ceef30a588d60469cf399914399b8486cf8b",
+          "specimen_id": "c8-26",
+          "state_file": "74t7kcdgkr__c8-26.parquet",
+          "state_sha256": "0801af47cd2f1694c471f0fddfc0b3438f61c49f7dce867be5d7ce1fcc757b67"
+        },
+        {
+          "action_file": "74t7kcdgkr__c8-27.parquet",
+          "action_sha256": "e8234164337fe2444d915d02508dbd89ca1f99d93e391965df86ccc7e69360c1",
+          "specimen_id": "c8-27",
+          "state_file": "74t7kcdgkr__c8-27.parquet",
+          "state_sha256": "2419c7e486e61ca83848546563bf9bb89270d681341a2538476e5243f8847b5a"
+        },
+        {
+          "action_file": "74t7kcdgkr__c8-28.parquet",
+          "action_sha256": "14199441e60b95fc7ecf1b0fe4af7852afabc9385bdca35207777bd1a47bb593",
+          "specimen_id": "c8-28",
+          "state_file": "74t7kcdgkr__c8-28.parquet",
+          "state_sha256": "b4382c5a21ffebe1caab16968882cfe8b888205a0d6d7001d6f505f1efcc8ed2"
+        },
+        {
+          "action_file": "74t7kcdgkr__c8-29.parquet",
+          "action_sha256": "4533ac49e002010cfbe04a6ce47a558a3a150681ad1b20828a85693de52cc583",
+          "specimen_id": "c8-29",
+          "state_file": "74t7kcdgkr__c8-29.parquet",
+          "state_sha256": "03cb33c6bd4920701078a245071b7a950d72d0a650051e317a7597148e262b80"
+        },
+        {
+          "action_file": "74t7kcdgkr__c8-30.parquet",
+          "action_sha256": "bdaf709ad3aa8c2ec1d6455a1297d2ee74a1ce95705d554f0086c423419f4024",
+          "specimen_id": "c8-30",
+          "state_file": "74t7kcdgkr__c8-30.parquet",
+          "state_sha256": "3c2d7c6c1cd9f9295e5f6429176c564e8e24202c280b3ca809fc8f58849ebcef"
+        },
+        {
+          "action_file": "74t7kcdgkr__c8-32.parquet",
+          "action_sha256": "2f30fc09a7d5d65c9d3aaa79d523e56f922cbbe0c64afcfffe6d29ab49cc82e4",
+          "specimen_id": "c8-32",
+          "state_file": "74t7kcdgkr__c8-32.parquet",
+          "state_sha256": "37e3733416afc7e817e168f77be74070199adc405263aff28b6719898006060c"
+        },
+        {
+          "action_file": "74t7kcdgkr__c8-33.parquet",
+          "action_sha256": "3600f2189602d3827c62d99a8c34bff244f362754f1b0f9337412344af66f83f",
+          "specimen_id": "c8-33",
+          "state_file": "74t7kcdgkr__c8-33.parquet",
+          "state_sha256": "941ec171f96fc26be6bd265fd684ebfa91c65f1aca138ae88753fe964ac301ca"
+        },
+        {
+          "action_file": "74t7kcdgkr__c8-34.parquet",
+          "action_sha256": "33e8175539e705cbabc69ea63e10c43417ae95a33bb34ad3a4dccec729ca98c8",
+          "specimen_id": "c8-34",
+          "state_file": "74t7kcdgkr__c8-34.parquet",
+          "state_sha256": "7bf74c7ccbed9654abb06c3285507112912fb8518d105fb6f706bf3b53917130"
+        },
+        {
+          "action_file": "74t7kcdgkr__c8-35.parquet",
+          "action_sha256": "5e8e3326b4a1b070175e06999305eb197b44724e703595a1bfc2c7b2d1c22a65",
+          "specimen_id": "c8-35",
+          "state_file": "74t7kcdgkr__c8-35.parquet",
+          "state_sha256": "b2e299c96efbd7dfe41b20e3f257abfb186611ca2d514267b02abdcc7db9b52e"
+        },
+        {
+          "action_file": "74t7kcdgkr__c8-36.parquet",
+          "action_sha256": "3263229a9583fc2dab410a8c788f264da947220fc5fdefb6716aa75e6a4ddd98",
+          "specimen_id": "c8-36",
+          "state_file": "74t7kcdgkr__c8-36.parquet",
+          "state_sha256": "1947f9393260665960585f79b332ee7585c82a265e27b0e916360dad47748b27"
+        },
+        {
+          "action_file": "74t7kcdgkr__c8-37.parquet",
+          "action_sha256": "63516a23eff09a69bc14a388066c7049a334f146bebb68544ac344971b9cc748",
+          "specimen_id": "c8-37",
+          "state_file": "74t7kcdgkr__c8-37.parquet",
+          "state_sha256": "cae28443c78f6e63f57d40b73bb6c587dece63587ddc0381c3a17d355f32ac8b"
+        },
+        {
+          "action_file": "74t7kcdgkr__c8-38.parquet",
+          "action_sha256": "9299791fa02a1ff40f742ab0af500d4e1334c0da4b949c838cab1c9c979d41e0",
+          "specimen_id": "c8-38",
+          "state_file": "74t7kcdgkr__c8-38.parquet",
+          "state_sha256": "59cf161174bdf2e5719b7e9b1293767fd007b54550bdcabfc99926dcf9d55259"
+        },
+        {
+          "action_file": "74t7kcdgkr__c8-39.parquet",
+          "action_sha256": "cb8f492a1b6d5a905c72a85319431e2ccfdf527314cb4f0f0a2cc5223f2fae08",
+          "specimen_id": "c8-39",
+          "state_file": "74t7kcdgkr__c8-39.parquet",
+          "state_sha256": "da8aa28e42f94bd318f1f011d02c054787bd852a85bccb7f088f14ba96038cbd"
+        },
+        {
+          "action_file": "74t7kcdgkr__c8-40.parquet",
+          "action_sha256": "333db82123a0ad7fd9d247bbe9fd43f7ed62c8992d58bbc45a81b755f451c725",
+          "specimen_id": "c8-40",
+          "state_file": "74t7kcdgkr__c8-40.parquet",
+          "state_sha256": "277934cd3302ba4d89c89e32fddd26b2f80c4279e9a1462bac8777f5c165f0a0"
+        },
+        {
+          "action_file": "74t7kcdgkr__c8-41.parquet",
+          "action_sha256": "02188178a7c20023f4b57c209020e12514af999b1a765e9fcaafe5db3df87a9f",
+          "specimen_id": "c8-41",
+          "state_file": "74t7kcdgkr__c8-41.parquet",
+          "state_sha256": "89f753772fd5fb3477fa9924834ce27f9365c2911334f03b0360738b80e49025"
+        },
+        {
+          "action_file": "74t7kcdgkr__c8-42.parquet",
+          "action_sha256": "3b0da221ba354ddda2a45a18ef355624174774fcfa2a4bb8fe1dd71289951a28",
+          "specimen_id": "c8-42",
+          "state_file": "74t7kcdgkr__c8-42.parquet",
+          "state_sha256": "7bbae5c82a84de45630411a67936226948ed9c6dc162d911d82a7dc1e917e589"
+        },
+        {
+          "action_file": "74t7kcdgkr__c8-43.parquet",
+          "action_sha256": "06147a708aa73e69cbde64ff83d9570ab8ac729ae0ddabb007766e386db397a7",
+          "specimen_id": "c8-43",
+          "state_file": "74t7kcdgkr__c8-43.parquet",
+          "state_sha256": "343ab2966871be282036d38d096376c104cbb9947780c8e463f5c621d7768dbc"
+        }
+      ],
+      "teacher_registry_state_sha256": "e1af4e1e8461a4399253d2d4108592aa27335bef2f5e1f550d34c2fb6f998801"
+    },
+    {
+      "authority_state_sha256": "f28abdaa76a4ccc5c8a6422ff1f86a242d400ce4fd15bb5ef1834b5840f01b82",
+      "config_sha256": "53f49f2609b3569292629d40d347256caffba6f1a5a6bb3d54e6c8de20923b9a",
+      "device": "cuda:0",
+      "domain_id": "cgtnjyggtm",
+      "schema_version": 1,
+      "specimen_count": 49,
+      "specimens": [
+        {
+          "action_file": "cgtnjyggtm__q24-1.parquet",
+          "action_sha256": "e903373ae12d3425bf4155c4a858870a7d01b7516f7aa81e02a8fc6191c9dbff",
+          "specimen_id": "q24-1",
+          "state_file": "cgtnjyggtm__q24-1.parquet",
+          "state_sha256": "ee6d2e605830128e8056159e011c43b6b16adb87fea3477c5b1e79bbeb988b96"
+        },
+        {
+          "action_file": "cgtnjyggtm__q24-2.parquet",
+          "action_sha256": "5c8d4d548999db7c0803c5b988a0795e0be5b154c9d5a56892b8ab35d98c7239",
+          "specimen_id": "q24-2",
+          "state_file": "cgtnjyggtm__q24-2.parquet",
+          "state_sha256": "a68d9a970a78b010917ab9195c6e30b976cd4cfcbe84a28a4842d92150d7ba1f"
+        },
+        {
+          "action_file": "cgtnjyggtm__q24-3.parquet",
+          "action_sha256": "3b466103ccc78c09a56710ae2c628c88ac739208361ce9f671f9b5e7cf3771c4",
+          "specimen_id": "q24-3",
+          "state_file": "cgtnjyggtm__q24-3.parquet",
+          "state_sha256": "66021f2d609a35544de2e1e4d992084dabc3e78edc3f873b23b55d76031534c1"
+        },
+        {
+          "action_file": "cgtnjyggtm__q24-4.parquet",
+          "action_sha256": "db323a3655f75889144d909ddfc49dff038ad720220a85208f309cab6e8b7684",
+          "specimen_id": "q24-4",
+          "state_file": "cgtnjyggtm__q24-4.parquet",
+          "state_sha256": "b23a6ff7d4257eef32f80344fafc87dbe17b982c44ac6906a6ed07f0fe3d5acd"
+        },
+        {
+          "action_file": "cgtnjyggtm__q24-5.parquet",
+          "action_sha256": "c51ca95e40d8e6ec68d70d94af52b7395b7c08d6a0f7ff36cd93650603c77308",
+          "specimen_id": "q24-5",
+          "state_file": "cgtnjyggtm__q24-5.parquet",
+          "state_sha256": "71d36406584ea8987ed61bf097591730fe4dc9fb095bf28c6cbcca8b51dd61c2"
+        },
+        {
+          "action_file": "cgtnjyggtm__q24-6.parquet",
+          "action_sha256": "939782c7f2c07103c95e465a7f0bd8981b6e1070a75328399f95cfc0ed25979e",
+          "specimen_id": "q24-6",
+          "state_file": "cgtnjyggtm__q24-6.parquet",
+          "state_sha256": "d439fd36bb7abf5b77e2d5ce1d06a5d7519425bc6010934be83d09871f1197f4"
+        },
+        {
+          "action_file": "cgtnjyggtm__q24-7.parquet",
+          "action_sha256": "039f46e409210b922c8ecc4b890a904b6f2b99844269fff8196bfe345edf1d7d",
+          "specimen_id": "q24-7",
+          "state_file": "cgtnjyggtm__q24-7.parquet",
+          "state_sha256": "bcb0f313a78bdab7544fe95f22acd2805cb17bbd4dd79f73a6d47dac8b1b1afb"
+        },
+        {
+          "action_file": "cgtnjyggtm__q24-8.parquet",
+          "action_sha256": "c1f4df4dff3bea8e15b43c088c9727ec827c2cc036afaeddae349ed82e76ee54",
+          "specimen_id": "q24-8",
+          "state_file": "cgtnjyggtm__q24-8.parquet",
+          "state_sha256": "0e8110fe13fb2544c63427cf164f2598dcd9a4265196445b77a9de48f325f609"
+        },
+        {
+          "action_file": "cgtnjyggtm__q24-9.parquet",
+          "action_sha256": "038268cec7004b1da8a956b1bcf3e1d26ddb3b2b6bfd228853d27b62b4870e69",
+          "specimen_id": "q24-9",
+          "state_file": "cgtnjyggtm__q24-9.parquet",
+          "state_sha256": "e594a29e0a310fb4641c7434dc6232b5ca5b8a44050ffb79dfd1213c0c0a05fe"
+        },
+        {
+          "action_file": "cgtnjyggtm__q24-10.parquet",
+          "action_sha256": "797429305c00257de8126b21175629699df63e1ddfd06d2133b3b5157ac2fb2a",
+          "specimen_id": "q24-10",
+          "state_file": "cgtnjyggtm__q24-10.parquet",
+          "state_sha256": "7ca7900bc167a9ababf52f44794aa261ca516c1aad4af8647babf49155c22070"
+        },
+        {
+          "action_file": "cgtnjyggtm__q24-11.parquet",
+          "action_sha256": "b1ce1f41b9a2ed296352caf4e171526f26595a2bc7a70f138d8f58139f7d557d",
+          "specimen_id": "q24-11",
+          "state_file": "cgtnjyggtm__q24-11.parquet",
+          "state_sha256": "de2df99771d3bb125a22526186e0adc5372635b9611e4046999f6ba046ae0c05"
+        },
+        {
+          "action_file": "cgtnjyggtm__q24-12.parquet",
+          "action_sha256": "97cdf20652a999555cf304f98e874f86b0b2a8294f5f09a6bb59cfd670156b58",
+          "specimen_id": "q24-12",
+          "state_file": "cgtnjyggtm__q24-12.parquet",
+          "state_sha256": "9410cbbf0f39071771a6ebfff6c3f9112c34cc90cc9d043f3e4004fb83aecbfe"
+        },
+        {
+          "action_file": "cgtnjyggtm__q24-13.parquet",
+          "action_sha256": "8b682ab8cafabda1084f833583ffe8a7791c45256bc0234d210629c03c9ce16a",
+          "specimen_id": "q24-13",
+          "state_file": "cgtnjyggtm__q24-13.parquet",
+          "state_sha256": "ebefc5ace757fc6b84519a48bd3a6bc64b154e245480b4a2fbaf5885815f75bb"
+        },
+        {
+          "action_file": "cgtnjyggtm__q24-14.parquet",
+          "action_sha256": "82cdf257f638f91c11f11f5eb84ec5588d175cd0758a3f9a9b92888a75f903c1",
+          "specimen_id": "q24-14",
+          "state_file": "cgtnjyggtm__q24-14.parquet",
+          "state_sha256": "244824745187448ad0aa6aac0f1e294eac0708be5f9fab124f30ca23eb1c555b"
+        },
+        {
+          "action_file": "cgtnjyggtm__q24-15.parquet",
+          "action_sha256": "1d546298f8cfcae7b1ee66b03b7b0525fba3eb6fcb80bec941d004642f772e3b",
+          "specimen_id": "q24-15",
+          "state_file": "cgtnjyggtm__q24-15.parquet",
+          "state_sha256": "f24e53832e93470d910c69fd4051568d3055ac0c2bbe3f9c45e88f0105d22fb1"
+        },
+        {
+          "action_file": "cgtnjyggtm__q24-16.parquet",
+          "action_sha256": "9e6d977c5b721f969158f08febbdf9ff1c9786eab8b74287bf73d2df2006ef67",
+          "specimen_id": "q24-16",
+          "state_file": "cgtnjyggtm__q24-16.parquet",
+          "state_sha256": "6ca8972b92d63774e18a2c630f0487c26d62ce4c9cf7d3bec40376e6ec61b131"
+        },
+        {
+          "action_file": "cgtnjyggtm__q24-18.parquet",
+          "action_sha256": "7a319a1f8e5c50134822977ef344f5784e1fecc4a2b29f75a150bb57619c8f58",
+          "specimen_id": "q24-18",
+          "state_file": "cgtnjyggtm__q24-18.parquet",
+          "state_sha256": "8899fb27b37d7ad9871f376a66e48d27aff73c86f60b4ca9c7d77eb9394c60f5"
+        },
+        {
+          "action_file": "cgtnjyggtm__q24-19.parquet",
+          "action_sha256": "21cd08c6436fb4096d1b537f9ed682c48fcdfd4b0d9813dd0747e6f3e25a854f",
+          "specimen_id": "q24-19",
+          "state_file": "cgtnjyggtm__q24-19.parquet",
+          "state_sha256": "b19203079ba8c00667f279ffe37ab6b53322e0e70d4f034dbc2fd196e56c7f48"
+        },
+        {
+          "action_file": "cgtnjyggtm__q24-20.parquet",
+          "action_sha256": "0607d647530306492d961e81c6345a1c09e322789744b54e68e5696ab4722ce8",
+          "specimen_id": "q24-20",
+          "state_file": "cgtnjyggtm__q24-20.parquet",
+          "state_sha256": "1dfec0c5555a441f3b152c71c71ee168d75e7595eb0c0b14c7f4449c8839c93d"
+        },
+        {
+          "action_file": "cgtnjyggtm__q24-21.parquet",
+          "action_sha256": "4ea11879f4e7c0f3b3a5c81d147cbd81a08fff695eff044c438124586a53f1ec",
+          "specimen_id": "q24-21",
+          "state_file": "cgtnjyggtm__q24-21.parquet",
+          "state_sha256": "f18376bcf6ddc500b21df5f2debdac3d63b5d0a10d88a2f69d3ce809e1d2ed5f"
+        },
+        {
+          "action_file": "cgtnjyggtm__q24-22.parquet",
+          "action_sha256": "c9fb17a9ee459d4acbbdba28d365e0add30cf937c26daa73c1c445170d23fb37",
+          "specimen_id": "q24-22",
+          "state_file": "cgtnjyggtm__q24-22.parquet",
+          "state_sha256": "dae4478c05e038e97005aa9b632b4902f62abc7c52eeb866d696211867251932"
+        },
+        {
+          "action_file": "cgtnjyggtm__q24-23.parquet",
+          "action_sha256": "3a91af31217bd08245a7769dd4abc6d362f36db0951fd7fb632c743bd3da9d20",
+          "specimen_id": "q24-23",
+          "state_file": "cgtnjyggtm__q24-23.parquet",
+          "state_sha256": "8076d7be21b1305adf348619627ab634f206fe67270762c47f8d2f8f72c75639"
+        },
+        {
+          "action_file": "cgtnjyggtm__q24-24.parquet",
+          "action_sha256": "0bc25ed11141b6dcfbea7431278c0ad6fed84661af2d8daff0308a2527035358",
+          "specimen_id": "q24-24",
+          "state_file": "cgtnjyggtm__q24-24.parquet",
+          "state_sha256": "ee96705785e76d4b7ecaa46846eb9f40be3274ab655181668b7f471bc3ddfb45"
+        },
+        {
+          "action_file": "cgtnjyggtm__q24-25.parquet",
+          "action_sha256": "abdfaa997de0ff6b3145dcd52cb209188fc9dbde67aa70098eac4281f0fe611d",
+          "specimen_id": "q24-25",
+          "state_file": "cgtnjyggtm__q24-25.parquet",
+          "state_sha256": "3d2fe050fa8607e7bfcbe2c65fb73eb5c34f3f13051b961e36f307c51c2d77bf"
+        },
+        {
+          "action_file": "cgtnjyggtm__q24-26.parquet",
+          "action_sha256": "12b295271cdbeb504666ff28399860d6213482e4076bc3c234da280b70976c9e",
+          "specimen_id": "q24-26",
+          "state_file": "cgtnjyggtm__q24-26.parquet",
+          "state_sha256": "4128fbe29409c52b2c9a65801f374d5c355b296056459b6f43843c24f274c0a0"
+        },
+        {
+          "action_file": "cgtnjyggtm__q24-27.parquet",
+          "action_sha256": "f19a207ed0a60f9da40363cb3db817d749647749402a3dd4553124c89688db1e",
+          "specimen_id": "q24-27",
+          "state_file": "cgtnjyggtm__q24-27.parquet",
+          "state_sha256": "186bc9f210a5cf08abbb1a039b3f94467ca91408d6a0a0e2b03fda7dfda97882"
+        },
+        {
+          "action_file": "cgtnjyggtm__q24-28.parquet",
+          "action_sha256": "f5bfd5e809a6eb02e06a083101485eb8d93854370039fb89d1dc5d8fae483ea6",
+          "specimen_id": "q24-28",
+          "state_file": "cgtnjyggtm__q24-28.parquet",
+          "state_sha256": "5971b18ab7d0b20747a8d832082b3fb55ae3fc37c5c25bdc38eed963c997220a"
+        },
+        {
+          "action_file": "cgtnjyggtm__q24-29.parquet",
+          "action_sha256": "66987e55cc5b8930ed26cb78cef67c67b1eca5bb18eb31a05e50901a62a2fbde",
+          "specimen_id": "q24-29",
+          "state_file": "cgtnjyggtm__q24-29.parquet",
+          "state_sha256": "76300078874e3551514941d62138e6bc788dfdd531387e997edcbc8fe05c72ef"
+        },
+        {
+          "action_file": "cgtnjyggtm__q24-30.parquet",
+          "action_sha256": "5a6fce787fd3e1cc6bcda0f144d79728120912c2bebf5a527f782d7fd781030b",
+          "specimen_id": "q24-30",
+          "state_file": "cgtnjyggtm__q24-30.parquet",
+          "state_sha256": "c81a6fc179b41391cf6abf24c4b4b4911f3fa2f7068d069ded4cf0b5854a8ae6"
+        },
+        {
+          "action_file": "cgtnjyggtm__q24-31.parquet",
+          "action_sha256": "4e8b0b3c91a61782bfe66db6ce9063258c68d6ccdbaa7b87d1d704ddb8656160",
+          "specimen_id": "q24-31",
+          "state_file": "cgtnjyggtm__q24-31.parquet",
+          "state_sha256": "7799c5b8cdfd769c9a328c31f934db53f864a5e846b107543e76425d7f6d3ddd"
+        },
+        {
+          "action_file": "cgtnjyggtm__q24-32.parquet",
+          "action_sha256": "a50e6ac9415fe21f73e46b1429835625ff091502adf1819605d54bdb7218f241",
+          "specimen_id": "q24-32",
+          "state_file": "cgtnjyggtm__q24-32.parquet",
+          "state_sha256": "d7c59e1742143587102dd5273e2b3dc4519a365610bab7124fb5f8c19c2f69a4"
+        },
+        {
+          "action_file": "cgtnjyggtm__q24-33.parquet",
+          "action_sha256": "8285bde704ed67c742344d929029d7b7150bbd6865e2c56d81e81b0cc64ac73e",
+          "specimen_id": "q24-33",
+          "state_file": "cgtnjyggtm__q24-33.parquet",
+          "state_sha256": "a3abd6058982a9b8a23c30a0937e4acb2a082bba84abcc8df9ff3793441b9311"
+        },
+        {
+          "action_file": "cgtnjyggtm__q24-34.parquet",
+          "action_sha256": "19abd0fd382e8100afae0e9c3189c4e2d2c24fc1c7b2d5c4c85e9b3f17035d2c",
+          "specimen_id": "q24-34",
+          "state_file": "cgtnjyggtm__q24-34.parquet",
+          "state_sha256": "74d4cb54499289895475795c566dc821430982cc93456355ba254dc8409c5ad0"
+        },
+        {
+          "action_file": "cgtnjyggtm__q24-35.parquet",
+          "action_sha256": "19188fa9ac7aff9d87b7b2f5fc76038ec09aef97f57c8c6209b0091ee1bb3272",
+          "specimen_id": "q24-35",
+          "state_file": "cgtnjyggtm__q24-35.parquet",
+          "state_sha256": "6f5c32292a5171f067633c17ca7a7ed210d358ef19eb030ae434224e73635491"
+        },
+        {
+          "action_file": "cgtnjyggtm__q24-36.parquet",
+          "action_sha256": "008a3b9bba9f85a8ee2833c46d14709c188e35d038227a5fd8963e4548a6f9ac",
+          "specimen_id": "q24-36",
+          "state_file": "cgtnjyggtm__q24-36.parquet",
+          "state_sha256": "bb342e32cb6142cd66947abf7f6df69556f10ba9c6a1a3d5c5cbeb25b0a3f9f1"
+        },
+        {
+          "action_file": "cgtnjyggtm__q24-37.parquet",
+          "action_sha256": "360d55ea6e837f1f7ab3006c0571d4b2a9ff5a77a683fc8ca3021b28387a864f",
+          "specimen_id": "q24-37",
+          "state_file": "cgtnjyggtm__q24-37.parquet",
+          "state_sha256": "66e403b3fbdbc734706cb4fbab45335e2b82ce9803cb4352f0d85f3b715c077f"
+        },
+        {
+          "action_file": "cgtnjyggtm__q24-38.parquet",
+          "action_sha256": "6017c740d76d634f9ca255f865c7b5426639dd89c9135300ea5e14ff673b27f4",
+          "specimen_id": "q24-38",
+          "state_file": "cgtnjyggtm__q24-38.parquet",
+          "state_sha256": "c106cf8dc2d61706171c46a84cf520c25f781555036b660cc14322560619cd73"
+        },
+        {
+          "action_file": "cgtnjyggtm__q24-39.parquet",
+          "action_sha256": "b495a6a2bb6ed4cae9af3eb07d82fde2e59408816c87c2c767807efbe0f12d34",
+          "specimen_id": "q24-39",
+          "state_file": "cgtnjyggtm__q24-39.parquet",
+          "state_sha256": "72b80c3d330c0e1de5e328be8fceb07487eb3ded35846c5370d533aac37c493f"
+        },
+        {
+          "action_file": "cgtnjyggtm__q24-40.parquet",
+          "action_sha256": "492f547633dc713f7f43cd17eb404d5ee47d1e8933e6c79bfb941dbbf3cab4b4",
+          "specimen_id": "q24-40",
+          "state_file": "cgtnjyggtm__q24-40.parquet",
+          "state_sha256": "0d0dd0359182be0eee02e57bf107df7ae24444ee70936c22db05c93c43f68213"
+        },
+        {
+          "action_file": "cgtnjyggtm__q24-41.parquet",
+          "action_sha256": "6b011e678c3de848e4a056bc04469d2ec6572657e696b037aca0637d08dc281f",
+          "specimen_id": "q24-41",
+          "state_file": "cgtnjyggtm__q24-41.parquet",
+          "state_sha256": "a13a557f75ac7f67a94e01003f1e4590d71a4a74e6d39d6097bf17b6e15df54b"
+        },
+        {
+          "action_file": "cgtnjyggtm__q24-42.parquet",
+          "action_sha256": "af508dd63ef1d09f560ff35dafa097271b89d2fec197254bb998bf625f96ae0a",
+          "specimen_id": "q24-42",
+          "state_file": "cgtnjyggtm__q24-42.parquet",
+          "state_sha256": "637c28c50a34a90e417e068b8a97ab676c6ff256939339950ea4666260c79d43"
+        },
+        {
+          "action_file": "cgtnjyggtm__q24-43.parquet",
+          "action_sha256": "2f612abf2e1d6b36aec1312fe319e2719ceeab8ebbbb091abcfcb1c8bddfa21f",
+          "specimen_id": "q24-43",
+          "state_file": "cgtnjyggtm__q24-43.parquet",
+          "state_sha256": "38a6475f92a91e673cd62bfc023a7de9214a832ef1c4d810c42f12725ac097f9"
+        },
+        {
+          "action_file": "cgtnjyggtm__q24-44.parquet",
+          "action_sha256": "dd2a93bffa09d7e98da212e8106b24b7823321db884020f853f0533f0281cfcf",
+          "specimen_id": "q24-44",
+          "state_file": "cgtnjyggtm__q24-44.parquet",
+          "state_sha256": "14af237cf9e792bafcab82bf34ba9152ad9f2de5b55f2af72ff22d8c390ff84a"
+        },
+        {
+          "action_file": "cgtnjyggtm__q24-45.parquet",
+          "action_sha256": "a28a499503142be24a4ac70e4f483ec77f3ef2e7c8c9b9aa78267ab074c2e45e",
+          "specimen_id": "q24-45",
+          "state_file": "cgtnjyggtm__q24-45.parquet",
+          "state_sha256": "0afae8cf11eeda710e2ae65d5638bf93cd1a26a3d0433d5e817d70ea22ba63c2"
+        },
+        {
+          "action_file": "cgtnjyggtm__q24-46.parquet",
+          "action_sha256": "5ee4e6fa10c98d22b511a3aff47ba5eeb67d05722b065b90edbf19ce1882f1cf",
+          "specimen_id": "q24-46",
+          "state_file": "cgtnjyggtm__q24-46.parquet",
+          "state_sha256": "483dd420fca606cc2e76f71296c39759d0d82564b05e7d36ae9c2dff0e35a804"
+        },
+        {
+          "action_file": "cgtnjyggtm__q24-47.parquet",
+          "action_sha256": "fca54b7ea5771e12bc639aede5e46e89dcba27fba9041dc3e18e705cd8700379",
+          "specimen_id": "q24-47",
+          "state_file": "cgtnjyggtm__q24-47.parquet",
+          "state_sha256": "803d607b25ecd4be4a1c4ebb38e7f5e0a114fa36f616b90a92e1b1ab8fab9d6f"
+        },
+        {
+          "action_file": "cgtnjyggtm__q24-48.parquet",
+          "action_sha256": "68ab504573ffa56c03320432fc461bd63462d6f59e71917d768288ac10e1f9db",
+          "specimen_id": "q24-48",
+          "state_file": "cgtnjyggtm__q24-48.parquet",
+          "state_sha256": "20367df44ee6c7379baf316e4034db8ef0cbccd2e1c9a1230b87cd74e1184ff8"
+        },
+        {
+          "action_file": "cgtnjyggtm__q24-49.parquet",
+          "action_sha256": "a5a1e56f8fd75b6195543e08e3dd6996c2895b986ea70a7a5962f3db4dab21ba",
+          "specimen_id": "q24-49",
+          "state_file": "cgtnjyggtm__q24-49.parquet",
+          "state_sha256": "3d3c127d6d89983c517bcc2a48f8b6af4f06ab5be5f74a8ffbe1e94ab7bf9db4"
+        },
+        {
+          "action_file": "cgtnjyggtm__q24-50.parquet",
+          "action_sha256": "aefc21332e6ba3a97f21725bd94c6b5094f64416d7c335c8f849b2dc66ef806d",
+          "specimen_id": "q24-50",
+          "state_file": "cgtnjyggtm__q24-50.parquet",
+          "state_sha256": "0d5d6fa6077b21d3baa33598174cb6a60cd520761fe71c3325a8255172f7cacb"
+        }
+      ],
+      "teacher_registry_state_sha256": "e1af4e1e8461a4399253d2d4108592aa27335bef2f5e1f550d34c2fb6f998801"
+    },
+    {
+      "authority_state_sha256": "f28abdaa76a4ccc5c8a6422ff1f86a242d400ce4fd15bb5ef1834b5840f01b82",
+      "config_sha256": "53f49f2609b3569292629d40d347256caffba6f1a5a6bb3d54e6c8de20923b9a",
+      "device": "cuda:2",
+      "domain_id": "w68dtmpfyf",
+      "schema_version": 1,
+      "specimen_count": 43,
+      "specimens": [
+        {
+          "action_file": "w68dtmpfyf__q16-1.parquet",
+          "action_sha256": "de0f50588bd39d7c3e20787dcf34162493c7c4e6dca26494dab76445fab17d49",
+          "specimen_id": "q16-1",
+          "state_file": "w68dtmpfyf__q16-1.parquet",
+          "state_sha256": "62fcaaa795987b29084d49a2acc590e573cbdc214aa924fd086e48f993ee5941"
+        },
+        {
+          "action_file": "w68dtmpfyf__q16-2.parquet",
+          "action_sha256": "1a3a226f3fa9a5a235b6c604f4b5c942c65de5f55cbaa5ba2048d918ab4cbb5b",
+          "specimen_id": "q16-2",
+          "state_file": "w68dtmpfyf__q16-2.parquet",
+          "state_sha256": "4787a5b8948ed86ef55cdaa1bd588a60efcec976cdcd1ff3d7adac86c8c7722b"
+        },
+        {
+          "action_file": "w68dtmpfyf__q16-3.parquet",
+          "action_sha256": "403df6982acc612429cbeda73d957d08a42edc2534a4717f259d6b2d7731e7a7",
+          "specimen_id": "q16-3",
+          "state_file": "w68dtmpfyf__q16-3.parquet",
+          "state_sha256": "fc6e0ae69db9e2020e30b8150ace3ab986456a0467df956affd9a146152ca788"
+        },
+        {
+          "action_file": "w68dtmpfyf__q16-4.parquet",
+          "action_sha256": "c7e3c3705529a52c6c5e1c2731df62e5ec449aa708697e8571e5b0c4864d189f",
+          "specimen_id": "q16-4",
+          "state_file": "w68dtmpfyf__q16-4.parquet",
+          "state_sha256": "174a13f5dc7d10f0ff25e6f6320c52d57c5d6390999aad1fde33bafadc529535"
+        },
+        {
+          "action_file": "w68dtmpfyf__q16-5.parquet",
+          "action_sha256": "15d1c74c5a88a7e04bdc553c4ceed56c370d4386e406d58bf5fd8d9ee2aebcdf",
+          "specimen_id": "q16-5",
+          "state_file": "w68dtmpfyf__q16-5.parquet",
+          "state_sha256": "e712b85e0cb0c300dda01fe9213152a81cde11f45327c0eb94ca917127569739"
+        },
+        {
+          "action_file": "w68dtmpfyf__q16-6.parquet",
+          "action_sha256": "2b632df540856ee6b6a8cc1c78c75d45257db8f372251c9ba1e7c5d81f9faee2",
+          "specimen_id": "q16-6",
+          "state_file": "w68dtmpfyf__q16-6.parquet",
+          "state_sha256": "8a3057a7d62968d6390481495f0045ba89cfab03b50784ecb21f2162867eb1c3"
+        },
+        {
+          "action_file": "w68dtmpfyf__q16-7.parquet",
+          "action_sha256": "881cf6c7ffd1149cf279ee755b845f7fbfc6e6ef195dfe52a49891327d804e5c",
+          "specimen_id": "q16-7",
+          "state_file": "w68dtmpfyf__q16-7.parquet",
+          "state_sha256": "cf70201e5d26b02bf3d86afd6dce8723698e9ab41cb6612b300162b9515e7ad4"
+        },
+        {
+          "action_file": "w68dtmpfyf__q16-8.parquet",
+          "action_sha256": "da27411ca94feecdd3f2f52e20cf258e03a9a1aa233e77c62abe35f3e4b33a56",
+          "specimen_id": "q16-8",
+          "state_file": "w68dtmpfyf__q16-8.parquet",
+          "state_sha256": "81eec26fb15cbc57f2008af3adfdcef889b900469ecd35b83be9acacb4054379"
+        },
+        {
+          "action_file": "w68dtmpfyf__q16-9.parquet",
+          "action_sha256": "41763e3eddbd78d512cd491a9bc061da3cfa0e32adfbc69513e071177d9374ef",
+          "specimen_id": "q16-9",
+          "state_file": "w68dtmpfyf__q16-9.parquet",
+          "state_sha256": "7e423c785bf67f8c96a3d54f412c9c8a30a84f54faf1b978527e0320eaef50ed"
+        },
+        {
+          "action_file": "w68dtmpfyf__q16-10.parquet",
+          "action_sha256": "a3e5244d6d0ed0504434dd385712f3efdb6e377439e3b4cae66bd0be49a0dcd5",
+          "specimen_id": "q16-10",
+          "state_file": "w68dtmpfyf__q16-10.parquet",
+          "state_sha256": "d02bf25ea50761af54a640a10ba55a28e909b4c957840ee68ca1dc07c278ea6d"
+        },
+        {
+          "action_file": "w68dtmpfyf__q16-11.parquet",
+          "action_sha256": "c3096d29d54cec0eb716d4ac3ac124855e324de21592fb28a4fec0f544c2a243",
+          "specimen_id": "q16-11",
+          "state_file": "w68dtmpfyf__q16-11.parquet",
+          "state_sha256": "f3285a6e695e99360c8e3b156e46f10e51d2474ae2f8b2fe1306c1a76129f711"
+        },
+        {
+          "action_file": "w68dtmpfyf__q16-12.parquet",
+          "action_sha256": "ec3e71833a317d6450d143e6d9232a9e7f1511237eddb06b9171e0d5a95ac773",
+          "specimen_id": "q16-12",
+          "state_file": "w68dtmpfyf__q16-12.parquet",
+          "state_sha256": "96e5ba047a371a2a24f718d078384efaf15a3fc494ad1e5a21d3b1a64e4354c2"
+        },
+        {
+          "action_file": "w68dtmpfyf__q16-13.parquet",
+          "action_sha256": "04bf7addee66625c384e8cdc74d5fc730b7d556181412aebbbf7235aa8638785",
+          "specimen_id": "q16-13",
+          "state_file": "w68dtmpfyf__q16-13.parquet",
+          "state_sha256": "10c7647a2ade03cf52d3240279069ec77a9eb695253767fc2ab8e01f05783a0f"
+        },
+        {
+          "action_file": "w68dtmpfyf__q16-14.parquet",
+          "action_sha256": "d2bf716aaeabc54831b1c179f6ef98e22a72a9de55c9f8cfb520d6239259c3dd",
+          "specimen_id": "q16-14",
+          "state_file": "w68dtmpfyf__q16-14.parquet",
+          "state_sha256": "2bea14b0d178b4286976848c9adc2101bc0d28061db7d9900776112175068f6b"
+        },
+        {
+          "action_file": "w68dtmpfyf__q16-15.parquet",
+          "action_sha256": "194d46c1d681e3f152c9ade8ca16944216680a1870a92449fa57c1a203d08996",
+          "specimen_id": "q16-15",
+          "state_file": "w68dtmpfyf__q16-15.parquet",
+          "state_sha256": "38d9b8a5ded8b697161457c8471f39eec619507d2000fa3b2be167dbd6119c25"
+        },
+        {
+          "action_file": "w68dtmpfyf__q16-16.parquet",
+          "action_sha256": "faaa753e215fbbf7986a69d029c26f1d7f12ed578157e87ac69648cee9fcb82f",
+          "specimen_id": "q16-16",
+          "state_file": "w68dtmpfyf__q16-16.parquet",
+          "state_sha256": "216bdc3f4dd3e9c711433b21bdae6597586d189ddedb6fad9080e4ee4311e5aa"
+        },
+        {
+          "action_file": "w68dtmpfyf__q16-17.parquet",
+          "action_sha256": "6ee8a400bdc81e0a90dd0f060e71c8fb6582a3babb700ab2d6d503a1f6c5b394",
+          "specimen_id": "q16-17",
+          "state_file": "w68dtmpfyf__q16-17.parquet",
+          "state_sha256": "fac68eb81def69d2fdd126ce643c932c6ee8c34680d49760a6e4e13834e38add"
+        },
+        {
+          "action_file": "w68dtmpfyf__q16-18.parquet",
+          "action_sha256": "2c8f2a008f29b6e1fece089cf17c22f7847d5b36a5cc774d91804b6e7cba9c75",
+          "specimen_id": "q16-18",
+          "state_file": "w68dtmpfyf__q16-18.parquet",
+          "state_sha256": "a7ab8ddd5b181e4851051db9a62f84742b0e8c5882d380300c0aaaf9b65c24d9"
+        },
+        {
+          "action_file": "w68dtmpfyf__q16-19.parquet",
+          "action_sha256": "a8e6486184d7076f431becd35ad2631facd107fec34ab3c22f3457776dfc00de",
+          "specimen_id": "q16-19",
+          "state_file": "w68dtmpfyf__q16-19.parquet",
+          "state_sha256": "2e4be345121f76eff052de2c51979447aac8df700d5fd9c33e99b59990878345"
+        },
+        {
+          "action_file": "w68dtmpfyf__q16-20.parquet",
+          "action_sha256": "89ef4a24613ff9ff616cb651696ee4510b1f53a5af1663c81ee839a19d759493",
+          "specimen_id": "q16-20",
+          "state_file": "w68dtmpfyf__q16-20.parquet",
+          "state_sha256": "405ca8f602a279d2a880c61766365f12555824f2c4ea18119bdb2683c0ea8337"
+        },
+        {
+          "action_file": "w68dtmpfyf__q16-21.parquet",
+          "action_sha256": "10792743d67dea83e2773831338140659d9846c9a5232ec212ad13c7887efa43",
+          "specimen_id": "q16-21",
+          "state_file": "w68dtmpfyf__q16-21.parquet",
+          "state_sha256": "143478205a3088c909a8227810b8b3996c15e1c668420890b854645870cd97cc"
+        },
+        {
+          "action_file": "w68dtmpfyf__q16-22.parquet",
+          "action_sha256": "c1fdbbb373acc13584c36cbfcb5b1ac8de72512665d4e9942d5e738d7919672d",
+          "specimen_id": "q16-22",
+          "state_file": "w68dtmpfyf__q16-22.parquet",
+          "state_sha256": "8e733730d47f52e2929eacc2b12551d36ef636c13737870463bd682740199eff"
+        },
+        {
+          "action_file": "w68dtmpfyf__q16-23.parquet",
+          "action_sha256": "92bc4f80733c8b3afd2cb5db61c8f7b5cdf1c35d1b659db7df713a33b09cf218",
+          "specimen_id": "q16-23",
+          "state_file": "w68dtmpfyf__q16-23.parquet",
+          "state_sha256": "2de2570273271c1675edc698f71b5e801da498db4174857a18b8fb542f1dadaa"
+        },
+        {
+          "action_file": "w68dtmpfyf__q16-24.parquet",
+          "action_sha256": "84fb35632d4e9a977fcad12dc70b045ae447eeb0e65eb4e9148341d58e674338",
+          "specimen_id": "q16-24",
+          "state_file": "w68dtmpfyf__q16-24.parquet",
+          "state_sha256": "c0ac8868ca477a3fd523653ab9799ca71bfab9ebf6aff62cfe8aa80232a8bb8e"
+        },
+        {
+          "action_file": "w68dtmpfyf__q16-25.parquet",
+          "action_sha256": "709ac41d261926e3708af8e37823cf2b5ea3e983e39b0e238d73e36232f3a526",
+          "specimen_id": "q16-25",
+          "state_file": "w68dtmpfyf__q16-25.parquet",
+          "state_sha256": "afc0ac5ab9da996c8314a3826be4d110ec2f3cd147181ef13bc31d634f159833"
+        },
+        {
+          "action_file": "w68dtmpfyf__q16-26.parquet",
+          "action_sha256": "d2abbd0fdbdd0a466aeb64a362b4845672cb14cd2c78719e65efe4de903a5e64",
+          "specimen_id": "q16-26",
+          "state_file": "w68dtmpfyf__q16-26.parquet",
+          "state_sha256": "fe26fd4bec70f4931da362c1d55b77b48343f9abdf201425bd1bdd9b11836ea4"
+        },
+        {
+          "action_file": "w68dtmpfyf__q16-27.parquet",
+          "action_sha256": "f8154960b971a84378efabae86160e05a6d03fcf5724811ef1a072bdb0cd2395",
+          "specimen_id": "q16-27",
+          "state_file": "w68dtmpfyf__q16-27.parquet",
+          "state_sha256": "0001e876cfc0bdb1905521eca60b7e260092cafa80ad3a1f0e095078bc2ed935"
+        },
+        {
+          "action_file": "w68dtmpfyf__q16-28.parquet",
+          "action_sha256": "d2346769eccb0049d1716f5f1edfde52c2fbf163b3fb6056114a90126305f6fe",
+          "specimen_id": "q16-28",
+          "state_file": "w68dtmpfyf__q16-28.parquet",
+          "state_sha256": "a7076c738d908ba1c2345e20e1840de20f5485bda2515ebcc680ae1f536a1e47"
+        },
+        {
+          "action_file": "w68dtmpfyf__q16-29.parquet",
+          "action_sha256": "e16ee0eb4b3ed6ea472b2d931f4b5bcb6499a2c3570b2670f8e41e1ad6603b85",
+          "specimen_id": "q16-29",
+          "state_file": "w68dtmpfyf__q16-29.parquet",
+          "state_sha256": "844dc9d09013d4c94a9a6a9dba33662d0a0f643dfd1036f209366f6e6a7caf8c"
+        },
+        {
+          "action_file": "w68dtmpfyf__q16-30.parquet",
+          "action_sha256": "25575f538dfdb8c820fe821930df479a1acdd729d481c8a77159c9c27f633392",
+          "specimen_id": "q16-30",
+          "state_file": "w68dtmpfyf__q16-30.parquet",
+          "state_sha256": "8fd96f299afef3a7c5e66094794e64402613e62f5ea97f938fd090e6b642d746"
+        },
+        {
+          "action_file": "w68dtmpfyf__q16-31.parquet",
+          "action_sha256": "8a4c4283a35d23998b5ff5dace1bd447082cdcf9bec764fd448db117d04e863a",
+          "specimen_id": "q16-31",
+          "state_file": "w68dtmpfyf__q16-31.parquet",
+          "state_sha256": "74485ce992fd0735c9166d63ac0180c3ec3ac15931cee0c3a3122d3441082a2d"
+        },
+        {
+          "action_file": "w68dtmpfyf__q16-32.parquet",
+          "action_sha256": "d645573a0ab075af0decf689d78fff2dff765aec58b9557fd4b7507910f45a19",
+          "specimen_id": "q16-32",
+          "state_file": "w68dtmpfyf__q16-32.parquet",
+          "state_sha256": "c2a17d2872fe71ffb01c706acd87b7d7e993ada0ce09c6929a54ac34ac45a457"
+        },
+        {
+          "action_file": "w68dtmpfyf__q16-33.parquet",
+          "action_sha256": "5a080978eb525753cce5deb63844288744955bf2d69348b3eb75e56b9716ef80",
+          "specimen_id": "q16-33",
+          "state_file": "w68dtmpfyf__q16-33.parquet",
+          "state_sha256": "f77cd685e75444cc21c10826dd58139c579233ff793778121bd3add03a3834ed"
+        },
+        {
+          "action_file": "w68dtmpfyf__q16-34.parquet",
+          "action_sha256": "c2efe082f596cd582e040e2948085e639bb363b4b80f73916efbe2d9164053ea",
+          "specimen_id": "q16-34",
+          "state_file": "w68dtmpfyf__q16-34.parquet",
+          "state_sha256": "16ded487750e086fbd0a2a5f2fc5879a1cdd4dcd886a3322fbf1925b9b367c2d"
+        },
+        {
+          "action_file": "w68dtmpfyf__q16-35.parquet",
+          "action_sha256": "c6e778d456e222bafda877d569ca2689450680b53134b01253aa5115a54cb75d",
+          "specimen_id": "q16-35",
+          "state_file": "w68dtmpfyf__q16-35.parquet",
+          "state_sha256": "d59187469bf486cecc3b350d58be30db444777bc1f58858aac0d7051d2d79ba9"
+        },
+        {
+          "action_file": "w68dtmpfyf__q16-36.parquet",
+          "action_sha256": "91cbaf7c09bc4808a4c3dd23857e4e725ce7f8022278f16e301fb02608404e52",
+          "specimen_id": "q16-36",
+          "state_file": "w68dtmpfyf__q16-36.parquet",
+          "state_sha256": "22a7fb20c408e7f7e08509a79b38e6ade69279c6c0e6eff3325c205ee7c21291"
+        },
+        {
+          "action_file": "w68dtmpfyf__q16-37.parquet",
+          "action_sha256": "2720d5206d8f765b226e848f6fb54e8922bdcaab12014449f57fe84563242259",
+          "specimen_id": "q16-37",
+          "state_file": "w68dtmpfyf__q16-37.parquet",
+          "state_sha256": "cf0e7e61394bf6af9218d7093b4ce17563964f0f20d0177b5ceea5d12a970cbb"
+        },
+        {
+          "action_file": "w68dtmpfyf__q16-38.parquet",
+          "action_sha256": "2a8f09b4da3df74e11c46410297ab28a962b34756a7b77e02e3ab035618123d4",
+          "specimen_id": "q16-38",
+          "state_file": "w68dtmpfyf__q16-38.parquet",
+          "state_sha256": "94a9122edd0fc2a885470d5fdc41f4417dd1a1e3f0c65f83ed66519b299ab482"
+        },
+        {
+          "action_file": "w68dtmpfyf__q16-39.parquet",
+          "action_sha256": "97374822fa5e6900a2d975dd2ed95047e11c7e3937be2f5eee579f1f5bff3b32",
+          "specimen_id": "q16-39",
+          "state_file": "w68dtmpfyf__q16-39.parquet",
+          "state_sha256": "3a4ea8da5e7b7469ba92fb625866425ab6a53f23f0d605e44859a40f3bfa05f7"
+        },
+        {
+          "action_file": "w68dtmpfyf__q16-40.parquet",
+          "action_sha256": "09e1940818a470e833a92ca7f98156141c4b11727729f8a67e502c8369d12d7a",
+          "specimen_id": "q16-40",
+          "state_file": "w68dtmpfyf__q16-40.parquet",
+          "state_sha256": "15d0c9fb1d7af3e29430461c09937deb33b7623de2c557b4406910ace4381bc4"
+        },
+        {
+          "action_file": "w68dtmpfyf__q16-41.parquet",
+          "action_sha256": "7f1fd84aec26181c1623663417a93d8ad06f6c4d463ab04bb1348b4460735c73",
+          "specimen_id": "q16-41",
+          "state_file": "w68dtmpfyf__q16-41.parquet",
+          "state_sha256": "0a923e805984aa0af547775829b5fad029c5ee4ad7d55fe04e3a0182c71c0e17"
+        },
+        {
+          "action_file": "w68dtmpfyf__q16-42.parquet",
+          "action_sha256": "52b1e5ce74fcd42d32aa384caf3fcc40b267245fd09cd8da8bf366bc0b5a46c5",
+          "specimen_id": "q16-42",
+          "state_file": "w68dtmpfyf__q16-42.parquet",
+          "state_sha256": "01525aa64d83121aca2237c6b46e612730887d6299360c4d93226b9fc01b789f"
+        },
+        {
+          "action_file": "w68dtmpfyf__q16-43.parquet",
+          "action_sha256": "4365c3774e45cd1bea29d4a8afb87db507207feece22288dc87e48f8f10c7cb6",
+          "specimen_id": "q16-43",
+          "state_file": "w68dtmpfyf__q16-43.parquet",
+          "state_sha256": "907827bd00c488052ce0d8d5b2947181e21306a102463a77796bc34ee7b5874e"
+        }
+      ],
+      "teacher_registry_state_sha256": "e1af4e1e8461a4399253d2d4108592aa27335bef2f5e1f550d34c2fb6f998801"
+    },
+    {
+      "authority_state_sha256": "f28abdaa76a4ccc5c8a6422ff1f86a242d400ce4fd15bb5ef1834b5840f01b82",
+      "config_sha256": "53f49f2609b3569292629d40d347256caffba6f1a5a6bb3d54e6c8de20923b9a",
+      "device": "cuda:1",
+      "domain_id": "xcmzfsbd9t",
+      "schema_version": 1,
+      "specimen_count": 59,
+      "specimens": [
+        {
+          "action_file": "xcmzfsbd9t__c24-2.parquet",
+          "action_sha256": "cd978cce475a10d0999ff7ef8e140cd2f52a3978c38cba72c74f5d42d4da2f34",
+          "specimen_id": "c24-2",
+          "state_file": "xcmzfsbd9t__c24-2.parquet",
+          "state_sha256": "6a3e6f23d571971282d278551bf815f760888e545a330f407ed0a9ebc56d190a"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-3.parquet",
+          "action_sha256": "2de922c35f98067af39facb1995c1b2e08f09b13c7aded16d198a6c38cdc10c3",
+          "specimen_id": "c24-3",
+          "state_file": "xcmzfsbd9t__c24-3.parquet",
+          "state_sha256": "c4c5bd6caf045b078589ad97f32abe7e7907fffc48bbaa1cb96efb848e974eb7"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-5.parquet",
+          "action_sha256": "31135fb819a2b70aff9af3e116af1314166841fc1beef8c4f3f006cbaa3a833a",
+          "specimen_id": "c24-5",
+          "state_file": "xcmzfsbd9t__c24-5.parquet",
+          "state_sha256": "ecf50039fbff4252892c0b1abef8b08aff99ceaac8595cb8caa41cc0692a24db"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-6.parquet",
+          "action_sha256": "d957f89b34755b60b20324b8ca112cb44d7e370beae808e4105b0937074792c0",
+          "specimen_id": "c24-6",
+          "state_file": "xcmzfsbd9t__c24-6.parquet",
+          "state_sha256": "a56fdf9245e7fc15d20886d18b9df4308479648015e07d11217111a6a443d716"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-6t.parquet",
+          "action_sha256": "05efa6a9d890859460ba81900eed244e10313adb7f5af67401e6ee3825467464",
+          "specimen_id": "c24-6t",
+          "state_file": "xcmzfsbd9t__c24-6t.parquet",
+          "state_sha256": "72d457e19906e99d1aefcb83425f4acc351507f3112c8345e3d84a9592712b2d"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-7.parquet",
+          "action_sha256": "9caa4d88a15f76d2f1675a02f3c0e43ff16aa3fbec6df7f87325f55f37aec3bc",
+          "specimen_id": "c24-7",
+          "state_file": "xcmzfsbd9t__c24-7.parquet",
+          "state_sha256": "4fe247ad1f575aaa84cbb0e461ce283b97993facfa93abaa84ebc61d5961cc5c"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-8.parquet",
+          "action_sha256": "8bba44df329424d226b85d6e40e8d3623c96557f743120a41ebc662d060c4f0b",
+          "specimen_id": "c24-8",
+          "state_file": "xcmzfsbd9t__c24-8.parquet",
+          "state_sha256": "22783f16daf9b41682710340ff59ca507a04ecd7df5a1c8d39360d97bd5c34b9"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-8t.parquet",
+          "action_sha256": "feafc34a02f1a041e97f92d5cf7054b865958fb753c0664e363c5119895a48b4",
+          "specimen_id": "c24-8t",
+          "state_file": "xcmzfsbd9t__c24-8t.parquet",
+          "state_sha256": "9dfe2b5ac1f42278143e7419601f8cafba6abbdbce03227f55977e6073568772"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-9.parquet",
+          "action_sha256": "165a894768a3586eede60fb9c9a00343467736bf4f7da3e2b06ccb7cdede8f6f",
+          "specimen_id": "c24-9",
+          "state_file": "xcmzfsbd9t__c24-9.parquet",
+          "state_sha256": "7882fca056454882895eb371f60bc0e7bdaf13bf145f0e455062d5145e373229"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-9t.parquet",
+          "action_sha256": "67d4b86a41183a697c7e9b50c78f64821cda4ad4a650a91a49e9dbe998f30db5",
+          "specimen_id": "c24-9t",
+          "state_file": "xcmzfsbd9t__c24-9t.parquet",
+          "state_sha256": "6ba0ccda3df0fa68763b8d088bb7ffec395c83c6f415d4fb416095c312ab0c3f"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-10.parquet",
+          "action_sha256": "d40ffb4ec06c33f134514cc27855490d313acc8d3dafb305b8e0623afb94cb0a",
+          "specimen_id": "c24-10",
+          "state_file": "xcmzfsbd9t__c24-10.parquet",
+          "state_sha256": "005491678485cf97b473284661aac15619181c5fd14e4f3802821fdddbd2bc47"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-10t.parquet",
+          "action_sha256": "ae8d3da9766ee88dbe95c743a19d9e0fb1359d088363ba1ff83d42939707b915",
+          "specimen_id": "c24-10t",
+          "state_file": "xcmzfsbd9t__c24-10t.parquet",
+          "state_sha256": "54c0b2cf191e51e9426ba6b4e5c7a140932ddc2b81d147b8c23733c5d3d18e5d"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-11.parquet",
+          "action_sha256": "0e3dcc61742bfcc04752a40fb6f337d635dec9c345be64f853c255f8e05a71b4",
+          "specimen_id": "c24-11",
+          "state_file": "xcmzfsbd9t__c24-11.parquet",
+          "state_sha256": "7dc82b84ab6cea73409a55a0414427d81a3fc42638450284f5e02cf4ef501da6"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-11t.parquet",
+          "action_sha256": "fe5e02e16e83843949088630133957910b48631a8edc8a683d941308dac66cab",
+          "specimen_id": "c24-11t",
+          "state_file": "xcmzfsbd9t__c24-11t.parquet",
+          "state_sha256": "fdf56cb358990ad6450a0f7432860bf3bc332100b974c1d85bf50fb32b71a1d5"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-12.parquet",
+          "action_sha256": "1d79aeeedcd013633a9fe36ff4f130b776b4ae6f7532cecc4b19702aaa578210",
+          "specimen_id": "c24-12",
+          "state_file": "xcmzfsbd9t__c24-12.parquet",
+          "state_sha256": "26ab139bc6d39ea64c1b55d249130214d28e6fc662dd07b1dd89458c7b3a4c4e"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-12t.parquet",
+          "action_sha256": "f37c161003206af3876379e0aeb8b2df386850504caf763f7aa73de0ec8762ee",
+          "specimen_id": "c24-12t",
+          "state_file": "xcmzfsbd9t__c24-12t.parquet",
+          "state_sha256": "eb069ed18ac394179f3bca766d507275a6c49d7c1a27b21ab8f307c91a542992"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-13.parquet",
+          "action_sha256": "d168e563b1bfc18f6dedf74a560f305a7aa397f8cf7eb76cda8c1cf4ce42fcc2",
+          "specimen_id": "c24-13",
+          "state_file": "xcmzfsbd9t__c24-13.parquet",
+          "state_sha256": "6352b5705621b7b91b3b7f13edcb4eacbb30f8b11f41a577dd013169e9836f55"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-14.parquet",
+          "action_sha256": "8d19d9ef7aca607eaac250632b611543e5fbd93ca0d82b2e52ab9a2cd42ae9ec",
+          "specimen_id": "c24-14",
+          "state_file": "xcmzfsbd9t__c24-14.parquet",
+          "state_sha256": "e5806f04586b214bb6e6baf89b376e52be52e4d37eec39d052a6d9f983360b08"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-15.parquet",
+          "action_sha256": "fc3fbf12d14a44e9f95a19fb8adf16fa8b94686398672c42e22ba0d136519e05",
+          "specimen_id": "c24-15",
+          "state_file": "xcmzfsbd9t__c24-15.parquet",
+          "state_sha256": "1fa69aa689e455f759d1ac0b6bf5f64a106663a1154c3a0e0a43a5be28a03879"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-16.parquet",
+          "action_sha256": "c2dd17fab285c8be26b1d21c0914bc60781ba7dfaa8206e2f1ab5d8701fa277d",
+          "specimen_id": "c24-16",
+          "state_file": "xcmzfsbd9t__c24-16.parquet",
+          "state_sha256": "cf94a53e18797ce0126e0a4c1a605b497d6db1683674d4ecd6fe60fb584f2a00"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-17.parquet",
+          "action_sha256": "48e0fd08991951bba54940982f92ec50fcb5fdc136d7b918b6232774d0e0f9fc",
+          "specimen_id": "c24-17",
+          "state_file": "xcmzfsbd9t__c24-17.parquet",
+          "state_sha256": "db5556d052855a0299b89c8bce6cdbe967d7f8808a05fbbc426c433c0f278561"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-18.parquet",
+          "action_sha256": "1e7bbc3d1776b848fe2aa64eedd0f2272a07285eeb4751d11bb4cdad1c716d84",
+          "specimen_id": "c24-18",
+          "state_file": "xcmzfsbd9t__c24-18.parquet",
+          "state_sha256": "81a2d589cf3db6338e427b99b7f99de946722185f3f5796c43d064b9f3d4d6d0"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-20.parquet",
+          "action_sha256": "5ddd82397fa7497af7d467f8460ef43e28cb3064a8a4e205017232a6e2914899",
+          "specimen_id": "c24-20",
+          "state_file": "xcmzfsbd9t__c24-20.parquet",
+          "state_sha256": "7520ae28656e105aa60d5ba09c0b85bb1c7e0e18d65ebebfe5ccf0eb2e21c69a"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-21.parquet",
+          "action_sha256": "08ef80f24122e4196a4ee40a8ab40b98b409e7c455250b2ca44d6d4df227a529",
+          "specimen_id": "c24-21",
+          "state_file": "xcmzfsbd9t__c24-21.parquet",
+          "state_sha256": "1c2d8ee952c2c9a320591bbd26720a4bcbb7a51001d3b23e70577333b5e663ff"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-24.parquet",
+          "action_sha256": "f4e1e27abcd2fd0f4759259e5b5337cf8018cb5f0ae878ceb1a09e11643e2913",
+          "specimen_id": "c24-24",
+          "state_file": "xcmzfsbd9t__c24-24.parquet",
+          "state_sha256": "cdcc393b2817d7c8046f4655148bc158b7f150bbc85e63e369ddcf1ee05ec5cc"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-25.parquet",
+          "action_sha256": "b0e38dddac7149680de7540a92948bc522e6841bb33f40687cb55da267ba905b",
+          "specimen_id": "c24-25",
+          "state_file": "xcmzfsbd9t__c24-25.parquet",
+          "state_sha256": "9665e873e74ac77d5ac9cc14d6d2c146ab0d1af2b4e47848fce7e50d7d77ed51"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-26.parquet",
+          "action_sha256": "dbe209a925a472ae15af61a34b258659467b21ad5235d0a59ab9e9f9649b30bf",
+          "specimen_id": "c24-26",
+          "state_file": "xcmzfsbd9t__c24-26.parquet",
+          "state_sha256": "925259acc4e050756b6d9b31caf104344d9e508c7547b2d797578781cb599b3a"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-27.parquet",
+          "action_sha256": "ee1eef7fb5cc15a6b37d012b8e82b7e6ab30941a27312eec5620943262d5701d",
+          "specimen_id": "c24-27",
+          "state_file": "xcmzfsbd9t__c24-27.parquet",
+          "state_sha256": "6599fbd80caf08a4a67c9e1f97440b331f4cdf3a5e444efab3c2a3cc13860540"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-28.parquet",
+          "action_sha256": "20d8da13cc6a506410a98364c79418a50a0e482ef2a9573277084ebd872a4438",
+          "specimen_id": "c24-28",
+          "state_file": "xcmzfsbd9t__c24-28.parquet",
+          "state_sha256": "ecdda71c0ba075be8cb9815d708351d977bbae2c0ee662955f34ec1fc14e1fad"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-29.parquet",
+          "action_sha256": "7f5bca6f480b6de94665faa920e7cf3c386bd83f8f2e85a59277ef1d94599e13",
+          "specimen_id": "c24-29",
+          "state_file": "xcmzfsbd9t__c24-29.parquet",
+          "state_sha256": "51774df3e94c8d317f86a07b02c5484b845e66aaefaa74760c53bf7d0c7eef1e"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-30.parquet",
+          "action_sha256": "10a5e994a469a6a902caae482a59e398333ce60e4289fc1e2b18ed647ec3cf95",
+          "specimen_id": "c24-30",
+          "state_file": "xcmzfsbd9t__c24-30.parquet",
+          "state_sha256": "c0f7a3d094dab8c856c59be0f08e9ee1dae2dc3c4c2c6e0584b429173adba6c4"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-31.parquet",
+          "action_sha256": "60642aea8cdfa8fdfc552ccc7f579ff454c21b35dbb0c2f11db26be0662f6c9c",
+          "specimen_id": "c24-31",
+          "state_file": "xcmzfsbd9t__c24-31.parquet",
+          "state_sha256": "2aec328656a80207577d7765c8265fff96bf2efc40c593b591a3dba67c8c907b"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-32.parquet",
+          "action_sha256": "bb3549853218c0b4053741c4ff6d89cda1d43ba451798a48d341d886ce7eedde",
+          "specimen_id": "c24-32",
+          "state_file": "xcmzfsbd9t__c24-32.parquet",
+          "state_sha256": "1b0b30e0576a1e1b7d18ed0a983e348f7bc3dab2ff7d75a38fe1e9bb4eb605d5"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-33.parquet",
+          "action_sha256": "084aeb760b22bc319015e7c807f79ff5ab4b3b3c133b500b25dab4feb6da31b6",
+          "specimen_id": "c24-33",
+          "state_file": "xcmzfsbd9t__c24-33.parquet",
+          "state_sha256": "5bca16bb9c3006304cb768519032699ddd1f4125fb20443cebecf86eab81076e"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-34.parquet",
+          "action_sha256": "227b19946516c63ceae2b8c4201df69cba6b106365445ef61468868534dea9dc",
+          "specimen_id": "c24-34",
+          "state_file": "xcmzfsbd9t__c24-34.parquet",
+          "state_sha256": "afdbcd194a9783116f79c0fcd7588de297432e33099f6b1f7b702afe621181b8"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-35.parquet",
+          "action_sha256": "0ed15d64d7d13d11f5bc92bf765e4d0e8df05414cf11495b22a12a4231324d47",
+          "specimen_id": "c24-35",
+          "state_file": "xcmzfsbd9t__c24-35.parquet",
+          "state_sha256": "0dec7d9ad6a2285b2a3e37070d2fc97bf69700d495002562f641e3f40d0a2596"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-36.parquet",
+          "action_sha256": "48e918e7889169f1b410093890a699050c667fef69e80968c6a72abb685cbcd0",
+          "specimen_id": "c24-36",
+          "state_file": "xcmzfsbd9t__c24-36.parquet",
+          "state_sha256": "d57968380702b4e053c6382f88e6cfd05c96f76e0105b9508a2d01bddf8d4b02"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-37.parquet",
+          "action_sha256": "5310f287b531cfdacd9fe309a59b1fb8ebce9a0c7609c9d4c7109b24a215f7f8",
+          "specimen_id": "c24-37",
+          "state_file": "xcmzfsbd9t__c24-37.parquet",
+          "state_sha256": "ab259d229c632985af256c3945e69a45a262718d3a4dbb09c73706d5dc1fb193"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-39.parquet",
+          "action_sha256": "f99d9d3c66c00ae8421af7b994f1dc58c01247fafe3787ca9663bfdbfa0d6542",
+          "specimen_id": "c24-39",
+          "state_file": "xcmzfsbd9t__c24-39.parquet",
+          "state_sha256": "1716c00485445b43eeed0fe68285d57b2ba541e70271544d9b77ae8584753745"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-40.parquet",
+          "action_sha256": "940e1c6947443513dc3d3c60c01cedf518648063d05c1a0b1f550e46be4988ad",
+          "specimen_id": "c24-40",
+          "state_file": "xcmzfsbd9t__c24-40.parquet",
+          "state_sha256": "70c923f4784995cf9ebe1d57c4fc017779738a7d21bbfe139f425383d2661c9d"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-41.parquet",
+          "action_sha256": "6c2d8901da6d201f4d2053c282047ba5ab01e711c7ef038cd0c83c0911b93249",
+          "specimen_id": "c24-41",
+          "state_file": "xcmzfsbd9t__c24-41.parquet",
+          "state_sha256": "cc3c7baad7de15ecfd246905d604ac93e7886c7cb8dad2c102c76ba8941fc62c"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-42.parquet",
+          "action_sha256": "4a0512d5bd9c7c67936041d60fef6614d950e6f2302f5532ccb32d464d1d2dfa",
+          "specimen_id": "c24-42",
+          "state_file": "xcmzfsbd9t__c24-42.parquet",
+          "state_sha256": "9a817dd04308c89909693c0a44b210f50c0719d8bcb6c0fbca7df0cf137f3453"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-43.parquet",
+          "action_sha256": "a434f9d870c114a2a33e82af168701ac4d4b62fe9197493b67edee2a22c93418",
+          "specimen_id": "c24-43",
+          "state_file": "xcmzfsbd9t__c24-43.parquet",
+          "state_sha256": "9ccc2578db9051a8576630c6d0500ba860b695ad5e41ebacd508f721b82fb955"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-44.parquet",
+          "action_sha256": "d1ec2a9b63fecaff30d45c8ceb54b9762f6591e2adc15109723a43cdd92c6d7c",
+          "specimen_id": "c24-44",
+          "state_file": "xcmzfsbd9t__c24-44.parquet",
+          "state_sha256": "2d14c84425086120ea1285d265b5ad28d9b11de60407cc80cd216b6c8919d697"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-45.parquet",
+          "action_sha256": "a42f9d56c5255a0156178318f2a2870b7c734d552d6480576650147d79b0eb2d",
+          "specimen_id": "c24-45",
+          "state_file": "xcmzfsbd9t__c24-45.parquet",
+          "state_sha256": "df02d57bc2c854a2288aeef290624e74ab479bd44dc83b31274049ac8c13923a"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-46.parquet",
+          "action_sha256": "5992a538a4cb70762dcc931b6fffb9c3488b5f2f5da5c67db119b0500e6bd6da",
+          "specimen_id": "c24-46",
+          "state_file": "xcmzfsbd9t__c24-46.parquet",
+          "state_sha256": "ed293b0ef04babe5b59231f51c2320443b43d7d0e2d42829995321d46db518e0"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-47.parquet",
+          "action_sha256": "0b5ac2af588469f7a10523f22ac90b58165c171e2c7d27fdf9239104ceb31f0a",
+          "specimen_id": "c24-47",
+          "state_file": "xcmzfsbd9t__c24-47.parquet",
+          "state_sha256": "bfa68d5b96e1c45d7228992c400c8d8ce7f5a84a2109d7f89fe5fc2e3e9e3762"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-48.parquet",
+          "action_sha256": "4e99a3cab391aa190c4b7921c598ab04f8f57b7ff352d193aa873326edb31c18",
+          "specimen_id": "c24-48",
+          "state_file": "xcmzfsbd9t__c24-48.parquet",
+          "state_sha256": "21777ab179ef50f87dbc07b53887c646845212bc0a337010d5da6eb86d93d3e4"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-49.parquet",
+          "action_sha256": "dbea44de1fc7e7cad649ad125cdab15f4f9a090032c5ffbe3f33d71844feff0f",
+          "specimen_id": "c24-49",
+          "state_file": "xcmzfsbd9t__c24-49.parquet",
+          "state_sha256": "adf961292973876c9cbbeb556f7a366df66fcb6b5e0a8300f16fe9e2980fc401"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-50.parquet",
+          "action_sha256": "8b0d96882634bdc56eb2dd0ef981cf29e1b4b5947d50810f8857de8b80326f95",
+          "specimen_id": "c24-50",
+          "state_file": "xcmzfsbd9t__c24-50.parquet",
+          "state_sha256": "5c71ccd0ebd493cf399b8c7742d435ab57278852b27d08299acadd5fadba4f85"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-51.parquet",
+          "action_sha256": "8da463f802bd445746ddbdc00cc2f87a6b24b4d8b1d409ba63c4734909f7e246",
+          "specimen_id": "c24-51",
+          "state_file": "xcmzfsbd9t__c24-51.parquet",
+          "state_sha256": "c926b232f6ef2ddded86a8f7296d65e6dddc7889aac744bfd0b679430bf242ab"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-52.parquet",
+          "action_sha256": "a933e1b46ddb2c0c88c7ffef2a4fef355fb918f3c39d52486f910f29e63f7af5",
+          "specimen_id": "c24-52",
+          "state_file": "xcmzfsbd9t__c24-52.parquet",
+          "state_sha256": "2388bca0f00088326c9d7af75b5b44d7e31a4e0948feb43773dd8940a31dfcb6"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-53.parquet",
+          "action_sha256": "5f76849167712065f3c607a05bb1bfd84a7c6631001672af4b28c0b91d783d7b",
+          "specimen_id": "c24-53",
+          "state_file": "xcmzfsbd9t__c24-53.parquet",
+          "state_sha256": "7506c3a4e93edd128081249b7bc3a046ab73656367f7a47eb3a7b26e9530eccf"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-54.parquet",
+          "action_sha256": "208ca9729e58115a620caf283370d198d772ce863cf76c3ba45ff2e7f0a6e8a2",
+          "specimen_id": "c24-54",
+          "state_file": "xcmzfsbd9t__c24-54.parquet",
+          "state_sha256": "a72a48462b723e91c197a684b69f658ef844c3dc74f23fedcb57e3c31093d5d8"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-55.parquet",
+          "action_sha256": "f7a7c5abc4de58f488540d1ce38ff675aa22f4d80ec91e5a2795ca68140945c6",
+          "specimen_id": "c24-55",
+          "state_file": "xcmzfsbd9t__c24-55.parquet",
+          "state_sha256": "feb65f9948dc3ad4d7a80d4b57c01007f4ed6db0e43b6f85159aa73f5311e655"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-56.parquet",
+          "action_sha256": "abca616ff55225a4a4052555a595711df143d09e44fe3125832c4466509394dc",
+          "specimen_id": "c24-56",
+          "state_file": "xcmzfsbd9t__c24-56.parquet",
+          "state_sha256": "61e42d894c007e50c28e1d3a428ef1b2b9c014df8a9b59ccb3d525b6e52b6feb"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-57.parquet",
+          "action_sha256": "6905fe5f35cdb1954eaf7430c5bc756630e39512c6bcf68c5f5f690adf6065ea",
+          "specimen_id": "c24-57",
+          "state_file": "xcmzfsbd9t__c24-57.parquet",
+          "state_sha256": "4108becb84622ba2ca4bb470829e37ab6f158be31403768e4ceb589de80540fc"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-58.parquet",
+          "action_sha256": "5fa7907429069e75f3041f518972c8f15f950f38d9217e398cc4add78aee0d4e",
+          "specimen_id": "c24-58",
+          "state_file": "xcmzfsbd9t__c24-58.parquet",
+          "state_sha256": "ea89a96d2cee1b8f4d2dd51d53cdba415076f89ae7446a06ada6dc1bf62ed666"
+        },
+        {
+          "action_file": "xcmzfsbd9t__c24-59.parquet",
+          "action_sha256": "f404f5ae395333c0883ec01792570da35fbbb0cfded145be345139a542a5ccfe",
+          "specimen_id": "c24-59",
+          "state_file": "xcmzfsbd9t__c24-59.parquet",
+          "state_sha256": "047079ef58431baad39e89fc0906c7830783dd0e01df37399e53a6b858ec630f"
+        }
+      ],
+      "teacher_registry_state_sha256": "e1af4e1e8461a4399253d2d4108592aa27335bef2f5e1f550d34c2fb6f998801"
+    },
+    {
+      "authority_state_sha256": "f28abdaa76a4ccc5c8a6422ff1f86a242d400ce4fd15bb5ef1834b5840f01b82",
+      "config_sha256": "53f49f2609b3569292629d40d347256caffba6f1a5a6bb3d54e6c8de20923b9a",
+      "device": "cuda:2",
+      "domain_id": "yfxyg8jm46",
+      "schema_version": 1,
+      "specimen_count": 42,
+      "specimens": [
+        {
+          "action_file": "yfxyg8jm46__c16-1.parquet",
+          "action_sha256": "5d408a145627e1f96fad6904fcd1c70aef7d3d459ecc1ae24917accf403d651d",
+          "specimen_id": "c16-1",
+          "state_file": "yfxyg8jm46__c16-1.parquet",
+          "state_sha256": "dc0e0cfc627cc3efc4bf71b9482902892c803787bb5570f056aa68446f2144d5"
+        },
+        {
+          "action_file": "yfxyg8jm46__c16-2.parquet",
+          "action_sha256": "fe8095081b8cfac731ca9a3b3408c0f9430d605da5cafafe30cdc94accbae774",
+          "specimen_id": "c16-2",
+          "state_file": "yfxyg8jm46__c16-2.parquet",
+          "state_sha256": "4ac9a12cd5605f499f314f36245bd3edf342163bb820bff100efae429b3de5f6"
+        },
+        {
+          "action_file": "yfxyg8jm46__c16-3.parquet",
+          "action_sha256": "2cf649ef97e478372da9ebe1e7c796d457382452cedd0d0946f0272016e5e3af",
+          "specimen_id": "c16-3",
+          "state_file": "yfxyg8jm46__c16-3.parquet",
+          "state_sha256": "8d1df66ae45af1645ee62058fc99fdf0c1efe5ea7572ac3bcd00cd4490e4362c"
+        },
+        {
+          "action_file": "yfxyg8jm46__c16-4.parquet",
+          "action_sha256": "fa8fbd36a31dba3fa4d2b665832aabd9568b4a643ada6dfbcadbfc7d0dd93a95",
+          "specimen_id": "c16-4",
+          "state_file": "yfxyg8jm46__c16-4.parquet",
+          "state_sha256": "9d8fbf8f6eae36e10575d91e0035a198ec64c0d2ae7212ca0857b585eb415c5c"
+        },
+        {
+          "action_file": "yfxyg8jm46__c16-5.parquet",
+          "action_sha256": "63f9fc1ed325afeeaa10323bb01a8e13dfad81b7b5642048864e96f3647e7a58",
+          "specimen_id": "c16-5",
+          "state_file": "yfxyg8jm46__c16-5.parquet",
+          "state_sha256": "e5a3c09e56e4e00f4812633289441cdf32492365925152f31565cc1b8945b7c3"
+        },
+        {
+          "action_file": "yfxyg8jm46__c16-6.parquet",
+          "action_sha256": "b3728d9cd463fa41f1828b0f7cdcdbf9f5cae7d7044dcf593eb0e7c964be0c17",
+          "specimen_id": "c16-6",
+          "state_file": "yfxyg8jm46__c16-6.parquet",
+          "state_sha256": "080fb360ff2c9b6ac121ff4a3695856893d5e26cd9777872da3b9612db389f6d"
+        },
+        {
+          "action_file": "yfxyg8jm46__c16-7.parquet",
+          "action_sha256": "514ae4a99bd2386adfc11263b2a592ed9f9e38a6973daaeb91e7e2019b6b2764",
+          "specimen_id": "c16-7",
+          "state_file": "yfxyg8jm46__c16-7.parquet",
+          "state_sha256": "834b4d4c02e51f1c39dd70b3728e3e06f9ac52224d02fe1ce050089c90d0d9e1"
+        },
+        {
+          "action_file": "yfxyg8jm46__c16-8.parquet",
+          "action_sha256": "bb12735d4d03740af47dfd57a26527050de29975c27b034167507abf0ab03f4d",
+          "specimen_id": "c16-8",
+          "state_file": "yfxyg8jm46__c16-8.parquet",
+          "state_sha256": "d726960ce197ff374b3a1ae2d1f3130913b07fef396965d195b6ce4ffb2aaaa7"
+        },
+        {
+          "action_file": "yfxyg8jm46__c16-9.parquet",
+          "action_sha256": "5f65dc1ead2fbbfb35441f5f2f468a47bb0fe8219dac4caf4e4f78104eb299e9",
+          "specimen_id": "c16-9",
+          "state_file": "yfxyg8jm46__c16-9.parquet",
+          "state_sha256": "98a7c2ab9a8b9d07ea41d0927d2bc21f914f1577fa078a8f997316f888ca42c8"
+        },
+        {
+          "action_file": "yfxyg8jm46__c16-10.parquet",
+          "action_sha256": "c2e056861817e0e19dd8d7a72aefeb439cf6da21ddc74757c6afd9c6b2c51a34",
+          "specimen_id": "c16-10",
+          "state_file": "yfxyg8jm46__c16-10.parquet",
+          "state_sha256": "25fcc57457429897809c8e02b0d5476747c3a1882914b1ab2bc28b5e479ea335"
+        },
+        {
+          "action_file": "yfxyg8jm46__c16-11.parquet",
+          "action_sha256": "9f743bb6f40d15f6bc6f09f8b14b18ce2b9b196b3eb46fd579bf1fdef77ded30",
+          "specimen_id": "c16-11",
+          "state_file": "yfxyg8jm46__c16-11.parquet",
+          "state_sha256": "512313de078e9f784c95f043552fdfdaf02e2edb4c699a3719337bb81eb7131b"
+        },
+        {
+          "action_file": "yfxyg8jm46__c16-12.parquet",
+          "action_sha256": "e2c5e06d303e9092e1f2b8eba5d147898132b5b004d4be8f9a7def33a0157204",
+          "specimen_id": "c16-12",
+          "state_file": "yfxyg8jm46__c16-12.parquet",
+          "state_sha256": "2ec5e7533b9cca654f115367bd27d41a8f975aa9d2d92e6bd8215dfd14d1ee4d"
+        },
+        {
+          "action_file": "yfxyg8jm46__c16-13.parquet",
+          "action_sha256": "be29e7666b91ace9d5a0786c13ce320627e4e0c6d686302424f79e53ff66ac2e",
+          "specimen_id": "c16-13",
+          "state_file": "yfxyg8jm46__c16-13.parquet",
+          "state_sha256": "ea8ea392642d7314816b528c92602b87807b5556703682a242bad0c184f087fc"
+        },
+        {
+          "action_file": "yfxyg8jm46__c16-14.parquet",
+          "action_sha256": "c218c50768448b56b7d14b6b9b86b68d9340f42c056b771fabf0cefbdc81d6b3",
+          "specimen_id": "c16-14",
+          "state_file": "yfxyg8jm46__c16-14.parquet",
+          "state_sha256": "35b5fe311e553d7bf5b13c8c4b514b0bc88731a867a3fa766eb3cd1e770659bf"
+        },
+        {
+          "action_file": "yfxyg8jm46__c16-15.parquet",
+          "action_sha256": "d9864a43d62c8c2a869cd80b4ff77510a296bbab3335682406dc3a4bd5fc33e7",
+          "specimen_id": "c16-15",
+          "state_file": "yfxyg8jm46__c16-15.parquet",
+          "state_sha256": "b1eb3e22bf734196b3abf46056796148ccacef0fcddfe0ba6c973a2dc7380bca"
+        },
+        {
+          "action_file": "yfxyg8jm46__c16-16.parquet",
+          "action_sha256": "c058dde6bc90421c4e63cc3aaec18fba4546fa0a82a919678cf138533219b291",
+          "specimen_id": "c16-16",
+          "state_file": "yfxyg8jm46__c16-16.parquet",
+          "state_sha256": "362c5b17ccfa0859fc0aecc4a441ce817deee2824affac0fd1616f98e4e256e0"
+        },
+        {
+          "action_file": "yfxyg8jm46__c16-17.parquet",
+          "action_sha256": "19485d0171ee08715beef02366954536929f62edeec640ed8bb632806c5c247c",
+          "specimen_id": "c16-17",
+          "state_file": "yfxyg8jm46__c16-17.parquet",
+          "state_sha256": "443f28c1b4b484b2c74ccb37c872717e91ba41ce3e4f97f6853fdc86343ce57e"
+        },
+        {
+          "action_file": "yfxyg8jm46__c16-18.parquet",
+          "action_sha256": "49902073f62d9282b573c4b52a33134060b83e7a68d63dd9987281ca8370dbf1",
+          "specimen_id": "c16-18",
+          "state_file": "yfxyg8jm46__c16-18.parquet",
+          "state_sha256": "9047fffb58f0ecea32fa2e7c8442b9c5f877639723c4459c7c3c8d68f28f28c6"
+        },
+        {
+          "action_file": "yfxyg8jm46__c16-19.parquet",
+          "action_sha256": "edc17373c2e5d536e4aa3f2178410ce2468bf95b1129d0b596d7c4eed231acbf",
+          "specimen_id": "c16-19",
+          "state_file": "yfxyg8jm46__c16-19.parquet",
+          "state_sha256": "ad2e0afb523bbead950222b739c2f25fcc55999ecf0a05e74d840d1b75469a9f"
+        },
+        {
+          "action_file": "yfxyg8jm46__c16-20.parquet",
+          "action_sha256": "58eecb4c8dd33a16543d58d3fb521a1973861f17383f7669d7936b2aeaeca370",
+          "specimen_id": "c16-20",
+          "state_file": "yfxyg8jm46__c16-20.parquet",
+          "state_sha256": "625b2ae7a36a58cc64c19d3ea6014d47dadf095f14cfb14ae9f9e4886cef642a"
+        },
+        {
+          "action_file": "yfxyg8jm46__c16-21.parquet",
+          "action_sha256": "42bd1b25e2e329a5d864f73fc7ed9d0e65b0c2e5862f70e1ec438b4c35792be6",
+          "specimen_id": "c16-21",
+          "state_file": "yfxyg8jm46__c16-21.parquet",
+          "state_sha256": "87e3696fb7866bb897c2276f51e69e031ea35e4ced6352a60588a3d86cf6aa27"
+        },
+        {
+          "action_file": "yfxyg8jm46__c16-22.parquet",
+          "action_sha256": "766cbd330fd8bb33c58341052db8d89bb9903db1f799b4bcf0298e2d746eee50",
+          "specimen_id": "c16-22",
+          "state_file": "yfxyg8jm46__c16-22.parquet",
+          "state_sha256": "9537c4127c048de99b066cee0720ee4718d0488e7682f3ae0fae6e45ac222d27"
+        },
+        {
+          "action_file": "yfxyg8jm46__c16-23.parquet",
+          "action_sha256": "eaabec53322d13c2be494d6ed6afc5e9b78f4faa9716545b46f6c09304539013",
+          "specimen_id": "c16-23",
+          "state_file": "yfxyg8jm46__c16-23.parquet",
+          "state_sha256": "e3b39c4955fe396989b50bb5d1cfa37f3f51659a8433be45ce577d7e930006ba"
+        },
+        {
+          "action_file": "yfxyg8jm46__c16-24.parquet",
+          "action_sha256": "cd790cb2f862070e86b0abebaf08c8272b882c57d91bc165824de6b25d700f7d",
+          "specimen_id": "c16-24",
+          "state_file": "yfxyg8jm46__c16-24.parquet",
+          "state_sha256": "28c67fedd5c8fdff7d62370748c72a732551e0d85bced395f4f6126debc37427"
+        },
+        {
+          "action_file": "yfxyg8jm46__c16-25.parquet",
+          "action_sha256": "c09dc3840dcb298324db778dcbe0624cee6752492b0c34540e291508562402ad",
+          "specimen_id": "c16-25",
+          "state_file": "yfxyg8jm46__c16-25.parquet",
+          "state_sha256": "33b691925d5b00c547f38e3b352b9373fc262c14c98dc212cceda05d599112b3"
+        },
+        {
+          "action_file": "yfxyg8jm46__c16-26.parquet",
+          "action_sha256": "ed2194dd44ff15100c1cf5e312061e4af8c5abbea93f50da50e27aeebe30b142",
+          "specimen_id": "c16-26",
+          "state_file": "yfxyg8jm46__c16-26.parquet",
+          "state_sha256": "74d47fb703b3b75af49b738f483854f1bf52510cde978f991909c6f23172d45c"
+        },
+        {
+          "action_file": "yfxyg8jm46__c16-27.parquet",
+          "action_sha256": "49d7ee958e38fdf88430a1bff3b4f8c5144e914e7693abb38dd711e82dbecc43",
+          "specimen_id": "c16-27",
+          "state_file": "yfxyg8jm46__c16-27.parquet",
+          "state_sha256": "9c7d9c55df060563f56ee6276e379721fe30a3ac83519419f266240bff92d576"
+        },
+        {
+          "action_file": "yfxyg8jm46__c16-28.parquet",
+          "action_sha256": "b94c71b18bd229009b4ae7ab477196dd8753f555c550972eb5898491ed3f0234",
+          "specimen_id": "c16-28",
+          "state_file": "yfxyg8jm46__c16-28.parquet",
+          "state_sha256": "50d677fca0a0eb2fb7785475eca0927cd8247e7563267613b9951eb4d79aa0fd"
+        },
+        {
+          "action_file": "yfxyg8jm46__c16-29.parquet",
+          "action_sha256": "d8208a2e71d977e475def526cf6243a018a3ef2c903cf0069a39773af5f6bc32",
+          "specimen_id": "c16-29",
+          "state_file": "yfxyg8jm46__c16-29.parquet",
+          "state_sha256": "d714d988a0ebb077fa43cdc1bf23d280ee9c5366a68d3017bc75c57125f1e603"
+        },
+        {
+          "action_file": "yfxyg8jm46__c16-30.parquet",
+          "action_sha256": "2e39ffb1625a5cc6ad1ade2aa76ca8c88648381a9e9a929bd51083f0199ccea8",
+          "specimen_id": "c16-30",
+          "state_file": "yfxyg8jm46__c16-30.parquet",
+          "state_sha256": "83f0f740075c596bd2cb4b2457b8abb723c60cf43345e4cd99f90c4d896e7435"
+        },
+        {
+          "action_file": "yfxyg8jm46__c16-32.parquet",
+          "action_sha256": "f3e4104f529358b6c2f9b559a458af16bf4ba100132de1d6c9ff7b14195843a2",
+          "specimen_id": "c16-32",
+          "state_file": "yfxyg8jm46__c16-32.parquet",
+          "state_sha256": "a32268d0f0499a8a76d377b7ebded09942cf1b64e41a04fa45503ed001674405"
+        },
+        {
+          "action_file": "yfxyg8jm46__c16-33.parquet",
+          "action_sha256": "afde9ba9bfe7bfa95eb1483f115a07c0c45bdb13941cf800b2f3f1c18c36eff2",
+          "specimen_id": "c16-33",
+          "state_file": "yfxyg8jm46__c16-33.parquet",
+          "state_sha256": "99cbe0ac6f0a3cb8d80d001eec53b0f91b64331814843e79b3a3e56f01d72e91"
+        },
+        {
+          "action_file": "yfxyg8jm46__c16-34.parquet",
+          "action_sha256": "21e988d441e09705d3d0b96f781c0eeb76dcaab3a6f4bc05a75a7c00b3234def",
+          "specimen_id": "c16-34",
+          "state_file": "yfxyg8jm46__c16-34.parquet",
+          "state_sha256": "c53d5dda56846ad91f7a814934c0ea48878e8c7685dd198f9606a86523c96b24"
+        },
+        {
+          "action_file": "yfxyg8jm46__c16-35.parquet",
+          "action_sha256": "6aa73ddc75a217d89aa1787c547e5d30c0692192f7ae21a6ea63e6ce5bf7ccdf",
+          "specimen_id": "c16-35",
+          "state_file": "yfxyg8jm46__c16-35.parquet",
+          "state_sha256": "10a83a63c4c5bf671f47659bc742eca076b3ab73138351da993131abd55c1a33"
+        },
+        {
+          "action_file": "yfxyg8jm46__c16-36.parquet",
+          "action_sha256": "dfbe34216249f9a8ee2261bdbbb6bdba97ef0bc81f3e3f074a120d1af0c2da63",
+          "specimen_id": "c16-36",
+          "state_file": "yfxyg8jm46__c16-36.parquet",
+          "state_sha256": "88ca88386d50c443c65d15e1754e106d4c34b2cb7c16738c6e37e4f1611e5cf4"
+        },
+        {
+          "action_file": "yfxyg8jm46__c16-37.parquet",
+          "action_sha256": "3cf1e74aadecd80e08bbe9416b9cf30e76235226181940e8f849b641c04e75f8",
+          "specimen_id": "c16-37",
+          "state_file": "yfxyg8jm46__c16-37.parquet",
+          "state_sha256": "b7122a8b8bac2e1bd347884d22008224b71fe4e9e0093c611e8cc63fc644becf"
+        },
+        {
+          "action_file": "yfxyg8jm46__c16-38.parquet",
+          "action_sha256": "795e9b80444efbbaae85a8b470f9bca3b5b26a008128b02815b1a24677b47615",
+          "specimen_id": "c16-38",
+          "state_file": "yfxyg8jm46__c16-38.parquet",
+          "state_sha256": "a2633e064aaf745376cc3e350c684ce6be3591c172b0d5fe82b0bca593d4b973"
+        },
+        {
+          "action_file": "yfxyg8jm46__c16-39.parquet",
+          "action_sha256": "fc7d5bc2ca8b9eddd6cfa472ed5c285d158f78b70d70088fbf73fb16948a74b5",
+          "specimen_id": "c16-39",
+          "state_file": "yfxyg8jm46__c16-39.parquet",
+          "state_sha256": "63bf396e1c38acd630cc2bf15cf27ec9cb1ce0c7861157591616035e64b63bdb"
+        },
+        {
+          "action_file": "yfxyg8jm46__c16-40.parquet",
+          "action_sha256": "2b4f2e91577dacfe833830601f8f9994958bdf40b0505b1b4cd5e49c3e55f673",
+          "specimen_id": "c16-40",
+          "state_file": "yfxyg8jm46__c16-40.parquet",
+          "state_sha256": "2cde0d19bcc44a7cd5fd233768e61164f665557cd0afcf1469991049c63777ea"
+        },
+        {
+          "action_file": "yfxyg8jm46__c16-41.parquet",
+          "action_sha256": "d8560e2e81fa89e64074ca406c08e4aa0d1a1ba7c26d0e5d49aab5e47d86fd0f",
+          "specimen_id": "c16-41",
+          "state_file": "yfxyg8jm46__c16-41.parquet",
+          "state_sha256": "84b55035029663a6ae16805a03fee0191bf462af1055371a98f3746397463e1e"
+        },
+        {
+          "action_file": "yfxyg8jm46__c16-42.parquet",
+          "action_sha256": "b32748cd2306b093676313bc803ca5b93ac5560143f825dce94b3a7a8c9954e1",
+          "specimen_id": "c16-42",
+          "state_file": "yfxyg8jm46__c16-42.parquet",
+          "state_sha256": "a5ae069aaee74b0c8ca59cd0908030b48585b4b20adc9c1b668e7076766617be"
+        },
+        {
+          "action_file": "yfxyg8jm46__c16-43.parquet",
+          "action_sha256": "822b6e68fbf22526db27dd79565a97dcb0d4b9af0e17b096cb505e7de20bd5ae",
+          "specimen_id": "c16-43",
+          "state_file": "yfxyg8jm46__c16-43.parquet",
+          "state_sha256": "f0863c64a1273e23992057692013f73e38eb03d44322bf471cceaafc050d65ea"
+        }
+      ],
+      "teacher_registry_state_sha256": "e1af4e1e8461a4399253d2d4108592aa27335bef2f5e1f550d34c2fb6f998801"
+    },
+    {
+      "authority_state_sha256": "f28abdaa76a4ccc5c8a6422ff1f86a242d400ce4fd15bb5ef1834b5840f01b82",
+      "config_sha256": "53f49f2609b3569292629d40d347256caffba6f1a5a6bb3d54e6c8de20923b9a",
+      "device": "cuda:1",
+      "domain_id": "ykhs7s2dck",
+      "schema_version": 1,
+      "specimen_count": 38,
+      "specimens": [
+        {
+          "action_file": "ykhs7s2dck__q8-1.parquet",
+          "action_sha256": "0e3244b65fd656cded626e9425731ada7a4d7573160212926c07f3032a590f31",
+          "specimen_id": "q8-1",
+          "state_file": "ykhs7s2dck__q8-1.parquet",
+          "state_sha256": "626e204c02cc69f926b63e1843ac7becfe111cb15dcccd16a1cbdcc102606a22"
+        },
+        {
+          "action_file": "ykhs7s2dck__q8-2.parquet",
+          "action_sha256": "f0fce3d7d4027f61b9a30276d5ea62cd9aa97f972f44e9cd469409d060f0f38f",
+          "specimen_id": "q8-2",
+          "state_file": "ykhs7s2dck__q8-2.parquet",
+          "state_sha256": "a5928df9edce4a632873ffea36931879feeff6c62b7ab080f3aed275fe90883b"
+        },
+        {
+          "action_file": "ykhs7s2dck__q8-3.parquet",
+          "action_sha256": "d1bbdd02b51c2249d851f50bd870b681fa95fbd5473eef961bfae9245b6a40f7",
+          "specimen_id": "q8-3",
+          "state_file": "ykhs7s2dck__q8-3.parquet",
+          "state_sha256": "cbcacdce0378351d72fe6cb95e328a034f4cacf0c2a364ef14d115d6be6c69a7"
+        },
+        {
+          "action_file": "ykhs7s2dck__q8-4.parquet",
+          "action_sha256": "c8184e97c52b259e646fc0802e70491118ffda5b44b947eea48df308ee1828e5",
+          "specimen_id": "q8-4",
+          "state_file": "ykhs7s2dck__q8-4.parquet",
+          "state_sha256": "dc12b22302721aa72218dcd14821404df99ab49b528faa2b500a8ef3f308068f"
+        },
+        {
+          "action_file": "ykhs7s2dck__q8-5.parquet",
+          "action_sha256": "4d8d663da4573cd46584969dfda3cd00f437ab4c9fd958393eee90eff30ef2a8",
+          "specimen_id": "q8-5",
+          "state_file": "ykhs7s2dck__q8-5.parquet",
+          "state_sha256": "087266055042ae8d04800f83d7a333451c03a4462e2eda70b0080c2374da9dd3"
+        },
+        {
+          "action_file": "ykhs7s2dck__q8-6.parquet",
+          "action_sha256": "500787f1a3be625ad04126cd6c3a949a5573b04cc2f1599b0635f79383e567d2",
+          "specimen_id": "q8-6",
+          "state_file": "ykhs7s2dck__q8-6.parquet",
+          "state_sha256": "a6303ca383ebe4794b155241dad03e90a33b2e51f8723dd67e6b63433461685b"
+        },
+        {
+          "action_file": "ykhs7s2dck__q8-7.parquet",
+          "action_sha256": "b67f88768cc33a5e1d2b2151cc01be78b306c00b22aa56c697bf17d5609c6581",
+          "specimen_id": "q8-7",
+          "state_file": "ykhs7s2dck__q8-7.parquet",
+          "state_sha256": "3455d037d98398078948452e8f148bf1b6a1a9a1c7b8ada784d4dcbc4d0dc7bb"
+        },
+        {
+          "action_file": "ykhs7s2dck__q8-8.parquet",
+          "action_sha256": "5736518696d69320b85b6ca30a358cdd411a618e024b0fcdb0ab337d960c4008",
+          "specimen_id": "q8-8",
+          "state_file": "ykhs7s2dck__q8-8.parquet",
+          "state_sha256": "8f063e42333e99b840e4b5eda36727f597deb5a298982fee9f4a00c62d4cb4e6"
+        },
+        {
+          "action_file": "ykhs7s2dck__q8-9.parquet",
+          "action_sha256": "2fdd7837d7dc181aef383c02b0bf8e88ab9137379cfc19963959df0696dc804c",
+          "specimen_id": "q8-9",
+          "state_file": "ykhs7s2dck__q8-9.parquet",
+          "state_sha256": "1d8cd56ac4e0cceff891d4dd3a43f60683026d64c3ffefe1c8773d64fbef7ed7"
+        },
+        {
+          "action_file": "ykhs7s2dck__q8-10.parquet",
+          "action_sha256": "7b7943097c3bcbef4f81f070915f70d7d862f3e7d7a702323b2ae0044796295d",
+          "specimen_id": "q8-10",
+          "state_file": "ykhs7s2dck__q8-10.parquet",
+          "state_sha256": "b0e36c3cd4fa89bdab38db9ffa73643e3f1060db5256ff61f291c2b08af637f6"
+        },
+        {
+          "action_file": "ykhs7s2dck__q8-11.parquet",
+          "action_sha256": "670b44d442feb92169136da6f94dc0e64ad64d678984f2917aabb327150564b8",
+          "specimen_id": "q8-11",
+          "state_file": "ykhs7s2dck__q8-11.parquet",
+          "state_sha256": "af86dcd840bd0bc04ad90af0e9c75939d3df3bf2d118a10baa79fe989da94eef"
+        },
+        {
+          "action_file": "ykhs7s2dck__q8-12.parquet",
+          "action_sha256": "4d34a918edcdcc73b23cae5642da3b802ed93eceec4171ec3d5c2049d7e8118f",
+          "specimen_id": "q8-12",
+          "state_file": "ykhs7s2dck__q8-12.parquet",
+          "state_sha256": "d2f05e77c7a7c2a663b85d376ffadf200af2e49612be0ea466b0a1c4590d6c77"
+        },
+        {
+          "action_file": "ykhs7s2dck__q8-13.parquet",
+          "action_sha256": "e23e44b26819c6591cda1c6f0fa5c1450fc73015566fac45eea8e6cf89e42b06",
+          "specimen_id": "q8-13",
+          "state_file": "ykhs7s2dck__q8-13.parquet",
+          "state_sha256": "b0c7d4b289c357448300fa4232799dcbdbc6571fa2e05a2811e9e7c6f22630f7"
+        },
+        {
+          "action_file": "ykhs7s2dck__q8-14.parquet",
+          "action_sha256": "ba45e0d5e44560ce93e872f8f8521131b20562d35bf201294cde52553d3d0346",
+          "specimen_id": "q8-14",
+          "state_file": "ykhs7s2dck__q8-14.parquet",
+          "state_sha256": "95f6aa0ef1bd9d97f93b1ec25bf8c578cdfde047a5fcc6e915cfb04a83a9c0a1"
+        },
+        {
+          "action_file": "ykhs7s2dck__q8-15.parquet",
+          "action_sha256": "e9fe9d62d4fc8abd87e6414a181e04c5322519a40f57361dcb1ea07616bb2490",
+          "specimen_id": "q8-15",
+          "state_file": "ykhs7s2dck__q8-15.parquet",
+          "state_sha256": "3a2b8c4b893a2eec4aae052fe0294f80b35b8dec058a6768d44d0a2f6091912b"
+        },
+        {
+          "action_file": "ykhs7s2dck__q8-16.parquet",
+          "action_sha256": "5639aa917c3e5400d42b2be37e295f91149f14860ee896dd140a70eabcdde877",
+          "specimen_id": "q8-16",
+          "state_file": "ykhs7s2dck__q8-16.parquet",
+          "state_sha256": "39e887e99a44b1296b74141a576e9945cf12a3016068e82e0899efad991ddd51"
+        },
+        {
+          "action_file": "ykhs7s2dck__q8-18.parquet",
+          "action_sha256": "9617be032dbfdba44c26ceb3f59b1675818aa513dcae9277474d5d014e98eeb6",
+          "specimen_id": "q8-18",
+          "state_file": "ykhs7s2dck__q8-18.parquet",
+          "state_sha256": "21abb0168664bac4960dfbce04a18cf191383c55d049a6e49d13bd6266a3d27d"
+        },
+        {
+          "action_file": "ykhs7s2dck__q8-19.parquet",
+          "action_sha256": "da3dca6f4c9ffe0e4a0c0d89db5c4e8b04c418cc1f2695842391025340692e61",
+          "specimen_id": "q8-19",
+          "state_file": "ykhs7s2dck__q8-19.parquet",
+          "state_sha256": "7f789d78d70442c795293fe6c916bc567b55d017ed0dd593e13412eedb34eea9"
+        },
+        {
+          "action_file": "ykhs7s2dck__q8-20.parquet",
+          "action_sha256": "57b856a421f70b8230a17abaa2a6bbb78d45512a8b42ca5eb66a67d56f124560",
+          "specimen_id": "q8-20",
+          "state_file": "ykhs7s2dck__q8-20.parquet",
+          "state_sha256": "5ac30ed4e15fa7d29f96d1174a4e331b874e0ae81a68b5ad25e25199d40e7198"
+        },
+        {
+          "action_file": "ykhs7s2dck__q8-21.parquet",
+          "action_sha256": "1d9a6a613aa3f9e17de2e6bd4e150a58e0aa8668b31802f54cb6e640801421f4",
+          "specimen_id": "q8-21",
+          "state_file": "ykhs7s2dck__q8-21.parquet",
+          "state_sha256": "027d9381bb4d99c86c7a065e69d01f21f1e763b043e9a2b905d6fe23401f5b5f"
+        },
+        {
+          "action_file": "ykhs7s2dck__q8-22.parquet",
+          "action_sha256": "3694069c66c14f1f461fb7ea4804a06411d097a1341c93a6f5cc0db58970c11e",
+          "specimen_id": "q8-22",
+          "state_file": "ykhs7s2dck__q8-22.parquet",
+          "state_sha256": "e7fbac891609963924e783f656fa90733f4178757bedf49c2735fb8b3132e41d"
+        },
+        {
+          "action_file": "ykhs7s2dck__q8-23.parquet",
+          "action_sha256": "f39896ba774b66f5ac8e56d7e3232ba41cfaa293af9f343167e29e648a1493d2",
+          "specimen_id": "q8-23",
+          "state_file": "ykhs7s2dck__q8-23.parquet",
+          "state_sha256": "f58ef8d52b86dbb0444b708886fa4cc5fbd394968da6fc4015f0cfb31080d243"
+        },
+        {
+          "action_file": "ykhs7s2dck__q8-24.parquet",
+          "action_sha256": "f8c5cbdd23357c0360f93540131008ab6a2890888a9bffb6711c5b5e3447659f",
+          "specimen_id": "q8-24",
+          "state_file": "ykhs7s2dck__q8-24.parquet",
+          "state_sha256": "335be4f5b52b919c5f14a505de04dc6714d82c16d0e13437e88ceb62288409e2"
+        },
+        {
+          "action_file": "ykhs7s2dck__q8-27.parquet",
+          "action_sha256": "7ad1221b61601776e0eca6272ae1a92bbf2d98e401058a87c81652bd1dc0bb60",
+          "specimen_id": "q8-27",
+          "state_file": "ykhs7s2dck__q8-27.parquet",
+          "state_sha256": "5547fe2594b4507def556948264f086989368c30044193ab7cc8d1112d7006ba"
+        },
+        {
+          "action_file": "ykhs7s2dck__q8-28.parquet",
+          "action_sha256": "9e6714db44b0d0b48c4e845a943d4984a09c46dfd087cc79b1a6b415eb23dfe3",
+          "specimen_id": "q8-28",
+          "state_file": "ykhs7s2dck__q8-28.parquet",
+          "state_sha256": "bfb047b3366d551cedcb8589d3cdd011b140709dbe3dfdecc5c06aaf9baf80de"
+        },
+        {
+          "action_file": "ykhs7s2dck__q8-29.parquet",
+          "action_sha256": "ad057b032026f4773ad770340ad79589292222b0367db847c7c59221386bd767",
+          "specimen_id": "q8-29",
+          "state_file": "ykhs7s2dck__q8-29.parquet",
+          "state_sha256": "e855f872cb3130f3135033f5879f562683b877290ae8c05d6cfcbd3b04c1c2d6"
+        },
+        {
+          "action_file": "ykhs7s2dck__q8-30.parquet",
+          "action_sha256": "461ca758780a0fb982fa70c59ce65c198d096862a199d559d8cec0156aecce73",
+          "specimen_id": "q8-30",
+          "state_file": "ykhs7s2dck__q8-30.parquet",
+          "state_sha256": "1646d73552edd3cdbf975e300c0d084bd45bac6c2d6fa8d8d6957874c324545c"
+        },
+        {
+          "action_file": "ykhs7s2dck__q8-31.parquet",
+          "action_sha256": "3e518312dc34b194d83127569e5b9f4088dbdf4b9438962f9816788deb2f5875",
+          "specimen_id": "q8-31",
+          "state_file": "ykhs7s2dck__q8-31.parquet",
+          "state_sha256": "6f962aef35564f6ceb9f2eb9bd87eb958cb916fd3a4fcdf595e33cd42488171b"
+        },
+        {
+          "action_file": "ykhs7s2dck__q8-32.parquet",
+          "action_sha256": "5c1e975155643b5ef0266bce5f041cbf6bd345025ce93b882764e94a32c78bcf",
+          "specimen_id": "q8-32",
+          "state_file": "ykhs7s2dck__q8-32.parquet",
+          "state_sha256": "827acc364053378f51466c4410d5f0f72e1f779e9040264b4242533438dede59"
+        },
+        {
+          "action_file": "ykhs7s2dck__q8-33.parquet",
+          "action_sha256": "3e9ad6738704b0322bf653de845220b3ed03a3d26530881908409f8f2a7755b1",
+          "specimen_id": "q8-33",
+          "state_file": "ykhs7s2dck__q8-33.parquet",
+          "state_sha256": "97f6f3ed773c54b138ee412cc5039b0add8dbeb707f71b324ca1cbf0d1dd7313"
+        },
+        {
+          "action_file": "ykhs7s2dck__q8-34.parquet",
+          "action_sha256": "876232f715127aa0e92b8b61ca180d1ea6c552ca5636fdcbd80472d329b0cbcb",
+          "specimen_id": "q8-34",
+          "state_file": "ykhs7s2dck__q8-34.parquet",
+          "state_sha256": "b31fc031c229b3cd6a436ff38ca7446b8e81ac8d29c86ed0a9f83544012b922c"
+        },
+        {
+          "action_file": "ykhs7s2dck__q8-35.parquet",
+          "action_sha256": "2a31a8a0c3167c88221a9fe2724c86c9edf83e4ecdaeb216c9234013f9b740d9",
+          "specimen_id": "q8-35",
+          "state_file": "ykhs7s2dck__q8-35.parquet",
+          "state_sha256": "ad559a98ec420dccb5053fb5b0af35071afa1d5d1bc54fcdda9b2381f0b9925f"
+        },
+        {
+          "action_file": "ykhs7s2dck__q8-36.parquet",
+          "action_sha256": "eaf2d077238e1a9d7c268520150c880b7be9afdfb290a7929fec918f357b34ee",
+          "specimen_id": "q8-36",
+          "state_file": "ykhs7s2dck__q8-36.parquet",
+          "state_sha256": "f743292edf13ecd542a85ec0ce332690283648cc21280f56307832cea3bf4e95"
+        },
+        {
+          "action_file": "ykhs7s2dck__q8-37.parquet",
+          "action_sha256": "1915677f4f9fb107b84f7de444c5b5f8340985254a682e051485046329812eaa",
+          "specimen_id": "q8-37",
+          "state_file": "ykhs7s2dck__q8-37.parquet",
+          "state_sha256": "0190597f4848900a387d8f0838b553c673837036ac5bdfc73c9ae2a21695372a"
+        },
+        {
+          "action_file": "ykhs7s2dck__q8-38.parquet",
+          "action_sha256": "08ef4da4f25e1e46d4a00bd9bc2ce43e3568c4a8a3468af19ea006ffeb0e5135",
+          "specimen_id": "q8-38",
+          "state_file": "ykhs7s2dck__q8-38.parquet",
+          "state_sha256": "6bd86e308061b9337fb01d94aba2404c41877be30463a8f2a0c26de5edab6058"
+        },
+        {
+          "action_file": "ykhs7s2dck__q8-39.parquet",
+          "action_sha256": "015b6e36413c645ae57bbe77d563794ce89699abfcdc1540e11c548b89753fdd",
+          "specimen_id": "q8-39",
+          "state_file": "ykhs7s2dck__q8-39.parquet",
+          "state_sha256": "f21efd424f513aff53941cd97b0287f6540eb88af5a85a88a157062799489c16"
+        },
+        {
+          "action_file": "ykhs7s2dck__q8-40.parquet",
+          "action_sha256": "1eba5d351497323625d79e355ee9dbcb119c4fb4392ca595b39b9259887c73ba",
+          "specimen_id": "q8-40",
+          "state_file": "ykhs7s2dck__q8-40.parquet",
+          "state_sha256": "00d66eb68e701eb9c01b5ad25b87353953ff647565d5a964f7f15d48271d3cd7"
+        },
+        {
+          "action_file": "ykhs7s2dck__q8-41.parquet",
+          "action_sha256": "547d45b4042a90756ea2d3bce7de645ed61b588ca3efe5c4cc5dd4fa27c6ca82",
+          "specimen_id": "q8-41",
+          "state_file": "ykhs7s2dck__q8-41.parquet",
+          "state_sha256": "e5b6815b8e55b8e49db70feecfd12d414869e9958cced434fc369af76f1e4676"
+        }
+      ],
+      "teacher_registry_state_sha256": "e1af4e1e8461a4399253d2d4108592aa27335bef2f5e1f550d34c2fb6f998801"
+    }
+  ]
+}

@@ -217,11 +217,12 @@ class InspectionState:
             label="measurement values",
             finite=False,
         )
+        linear_positions = positions[:, 0] * shape[1] + positions[:, 1]
         if (
             np.any(positions < 0)
             or np.any(positions[:, 0] >= shape[0])
             or np.any(positions[:, 1] >= shape[1])
-            or len({tuple(row) for row in positions.tolist()}) != len(positions)
+            or np.any(np.diff(linear_positions) <= 0)
             or self.exact_acquired_count / native_count > checkpoint + 1.0e-15
         ):
             raise MAVISContractError("acquired positions or budget are invalid")

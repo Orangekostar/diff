@@ -8,6 +8,7 @@ from cmc_bbdm.mavis.authority import MAVISAuthority
 from cmc_bbdm.mavis.reveal import (
     MAVISRevealError,
     reveal_action,
+    reveal_action_history,
     reveal_uniform_scout,
 )
 from cmc_bbdm.mva.acquisition_grid import build_acquisition_grid
@@ -105,3 +106,40 @@ def test_mavis_budget_never_exceeded() -> None:
     with pytest.raises(MAVISRevealError, match="budget"):
         reveal_action(authority, state, first_action)
     assert state.exact_acquired_count == current
+
+
+def test_mavis_action_history_reveal_matches_sequential_reveal_exactly() -> None:
+    authority = synthetic_authority()
+    context = authority.policy_context("sample-001")
+    actions = (
+        RefinementAction(cell_index=0, from_level=0, to_level=1),
+        RefinementAction(cell_index=1, from_level=0, to_level=1),
+        RefinementAction(cell_index=0, from_level=1, to_level=2),
+    )
+    sequential = reveal_uniform_scout(
+        authority,
+        context,
+        initial_budget=0.015625,
+        checkpoint=0.25,
+    )
+    for action in actions:
+        sequential = reveal_action(authority, sequential, action)
+
+    batched = reveal_action_history(
+        authority,
+        context,
+        initial_budget=0.015625,
+        checkpoint=0.25,
+        actions=actions,
+    )
+
+    assert batched == sequential
+    assert batched.action_history == actions
+    np.testing.assert_array_equal(
+        batched.acquired_positions,
+        sequential.acquired_positions,
+    )
+    np.testing.assert_array_equal(
+        batched.measurement_values,
+        sequential.measurement_values,
+    )

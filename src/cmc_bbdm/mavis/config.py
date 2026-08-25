@@ -40,6 +40,12 @@ class MAVISConfig:
     checkpoints: tuple[float, ...]
     budget_unit: str
     scout_policy: str
+    initial_budget_by_domain: MappingProxyType
+    trajectory_random_seed: int
+    teacher_interpolation: str
+    teacher_pca_dimensions: tuple[int, ...]
+    teacher_ridge_alpha: float
+    teacher_tie_tolerance: float
     mris_hidden_size: int
     mris_dimension: int
     learning_rate: float
@@ -70,6 +76,7 @@ _TOP_LEVEL = {
     "cohort",
     "authority",
     "acquisition",
+    "teacher",
     "model",
     "aggregation",
     "selection",
@@ -139,6 +146,10 @@ def _source_bindings(value: object, root: Path) -> MappingProxyType:
             "p0_data_flow",
             "p0_authority_schema",
             "design_spec",
+            "a2_oracle_trajectories",
+            "mvd_m0_actions",
+            "candidate_bank_0p015625",
+            "candidate_bank_0p03125",
         },
     )
     result: dict[str, SourceBinding] = {}
@@ -226,18 +237,68 @@ def load_mavis_config(path: str | Path, *, project_root: str | Path) -> MAVISCon
             "budget_unit",
             "scout_policy",
             "cell_shape",
+            "initial_budget_by_domain",
+            "trajectory_random_seed",
         },
     )
     initial_budgets = _tuple_float(acquisition["initial_budgets"], "initial budgets")
     checkpoints = _tuple_float(acquisition["checkpoints"], "checkpoints")
+    expected_initial_budget_by_domain = {
+        "74t7kcdgkr": 0.03125,
+        "cgtnjyggtm": 0.015625,
+        "w68dtmpfyf": 0.015625,
+        "xcmzfsbd9t": 0.015625,
+        "yfxyg8jm46": 0.015625,
+        "ykhs7s2dck": 0.015625,
+    }
+    budget_by_domain_raw = _mapping(
+        acquisition["initial_budget_by_domain"],
+        "initial budget by domain",
+        set(expected_initial_budget_by_domain),
+    )
+    initial_budget_by_domain = MappingProxyType(
+        {
+            domain: _float(budget_by_domain_raw[domain], "initial budget by domain")
+            for domain in expected_initial_budget_by_domain
+        }
+    )
+    trajectory_random_seed = _positive_int(
+        acquisition["trajectory_random_seed"], "trajectory random seed"
+    )
     if (
         initial_budgets != INITIAL_BUDGETS
         or checkpoints != (0.03125, 0.0625, 0.09375, 0.125, 0.1875, 0.25)
         or acquisition["budget_unit"] != "unique_native_raster_locations"
         or acquisition["scout_policy"] != "uniform_geometry_neutral"
         or acquisition["cell_shape"] != [8, 8]
+        or dict(initial_budget_by_domain) != expected_initial_budget_by_domain
+        or trajectory_random_seed != 2026082300
     ):
         raise MAVISConfigError("acquisition contract changed")
+
+    teacher = _mapping(
+        config["teacher"],
+        "teacher",
+        {"interpolation", "pca_dimensions", "ridge_alpha", "tie_tolerance"},
+    )
+    dimensions_raw = teacher["pca_dimensions"]
+    if (
+        type(dimensions_raw) is not list
+        or any(type(value) is not int or value <= 0 for value in dimensions_raw)
+    ):
+        raise MAVISConfigError("teacher PCA dimensions are invalid")
+    teacher_pca_dimensions = tuple(dimensions_raw)
+    teacher_ridge_alpha = _float(teacher["ridge_alpha"], "teacher Ridge alpha")
+    teacher_tie_tolerance = _float(
+        teacher["tie_tolerance"], "teacher tie tolerance"
+    )
+    if (
+        teacher["interpolation"] != "bilinear"
+        or teacher_pca_dimensions != (8, 16, 32)
+        or teacher_ridge_alpha != 10.0
+        or teacher_tie_tolerance != 1.0e-12
+    ):
+        raise MAVISConfigError("teacher protocol changed")
 
     model = _mapping(
         config["model"],
@@ -315,6 +376,12 @@ def load_mavis_config(path: str | Path, *, project_root: str | Path) -> MAVISCon
         checkpoints=checkpoints,
         budget_unit=acquisition["budget_unit"],
         scout_policy=acquisition["scout_policy"],
+        initial_budget_by_domain=initial_budget_by_domain,
+        trajectory_random_seed=trajectory_random_seed,
+        teacher_interpolation=teacher["interpolation"],
+        teacher_pca_dimensions=teacher_pca_dimensions,
+        teacher_ridge_alpha=teacher_ridge_alpha,
+        teacher_tie_tolerance=teacher_tie_tolerance,
         mris_hidden_size=hidden,
         mris_dimension=dimension,
         learning_rate=learning_rate,

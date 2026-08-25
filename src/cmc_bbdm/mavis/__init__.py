@@ -6,7 +6,12 @@ from .authority_artifacts import (
     write_mavis_authority_package,
 )
 from .contracts import EvaluationView, InspectionState, PolicyContext, SourceTeacherView
-from .reveal import MAVISRevealError, reveal_action, reveal_uniform_scout
+from .reveal import (
+    MAVISRevealError,
+    reveal_action,
+    reveal_action_history,
+    reveal_uniform_scout,
+)
 
 __all__ = [
     "EvaluationView",
@@ -17,6 +22,7 @@ __all__ = [
     "PolicyContext",
     "SourceTeacherView",
     "reveal_action",
+    "reveal_action_history",
     "reveal_uniform_scout",
     "verify_mavis_authority_package",
     "write_mavis_authority_package",
