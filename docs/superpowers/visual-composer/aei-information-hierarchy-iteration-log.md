@@ -30,3 +30,15 @@
   caption.
 - PNG visual inspection found no remaining cross-panel overlap after the final
   label-spacing pass; font and manuscript-width checks remain separately gated.
+
+## Iteration 3: main tables
+
+- Generated the protocol table from the hash-bound 276-specimen roster and the
+  canonical protocol boundary.
+- Generated 13 evidence-summary rows from the canonical paper metrics only.
+- Preserved learned task-specificity failure, representation controls, shuffled
+  content, adverse feedback, and final non-superiority in the main table.
+- Replaced repeated layer/question cells in the LaTeX view with grouped rows;
+  the machine-readable CSV retains complete fields on every row.
+- Compiled and rendered a standalone two-page harness with no overfull or
+  underfull boxes; manuscript-class integration remains a later gate.

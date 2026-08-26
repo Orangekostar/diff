@@ -1,0 +1,13 @@
+item,value,source_artifact,source_hash
+Physical cohort,276 CAI-complete physical specimens,artifacts/mavis_authority/artifact_manifest.json,742865b49ac2e5e55256dd69ddd9a16e4c39fc7f48149f8b24f514b9625c640c
+Held-out domains,6 experimental domains,artifacts/mavis_authority/artifact_manifest.json,742865b49ac2e5e55256dd69ddd9a16e4c39fc7f48149f8b24f514b9625c640c
+Domain specimen counts,74t7kcdgkr: 45; cgtnjyggtm: 49; w68dtmpfyf: 43; xcmzfsbd9t: 59; yfxyg8jm46: 42; ykhs7s2dck: 38,artifacts/mavis_authority/scan_manifest.csv,3b795fab0c5e5c35365df6ea4ac9aefa9dba6782da95008acac39c9e22440486
+Available modalities,specimen metadata; surface observables; ultrasonic RGB C-scan internal field; CAI-ratio outcome,artifacts/aei_information_hierarchy/PAPER_CANONICAL_METRICS.csv,2881a26048923993a46fec420dfff03a0e14222983de0c75b5b24bd93ab4254e
+Validation protocol,strict nested leave-one-domain-out (LODO); outer-domain outcomes excluded from training and selection,artifacts/aei_information_hierarchy/PAPER_CANONICAL_METRICS.csv,2881a26048923993a46fec420dfff03a0e14222983de0c75b5b24bd93ab4254e
+Registered checkpoints,"3.125%, 6.25%, 9.375%, 12.5%, 18.75%, 25%",results/mavis_science_closure/p10_mris_causal/contrasts.csv,809c03866789067335baef37c6cb668e35a8eae7b4bdc49748d6b125b66a18c5
+Acquisition cost,exact unique newly observed native-raster locations divided by native count; no scanner-time equivalence,artifacts/aei_information_hierarchy/PAPER_CANONICAL_METRICS.csv,2881a26048923993a46fec420dfff03a0e14222983de0c75b5b24bd93ab4254e
+Teacher/oracle information,"future outcomes, unmeasured fields, or counterfactual utilities; retrospective and non-deployable",artifacts/aei_information_hierarchy/PAPER_CANONICAL_METRICS.csv,2881a26048923993a46fec420dfff03a0e14222983de0c75b5b24bd93ab4254e
+Deployable information,"specimen metadata, acquired positions, measured content, legal actions, and current exact cost",artifacts/aei_information_hierarchy/PAPER_CANONICAL_METRICS.csv,2881a26048923993a46fec420dfff03a0e14222983de0c75b5b24bd93ab4254e
+Statistical units,physical specimen first; held-out domain second; six domains receive equal weight,artifacts/aei_information_hierarchy/PAPER_CANONICAL_METRICS.csv,2881a26048923993a46fec420dfff03a0e14222983de0c75b5b24bd93ab4254e
+Bootstrap aggregation,specimens resampled within domain with synchronized contrasts; domain means then equally weighted,artifacts/aei_information_hierarchy/PAPER_CANONICAL_METRICS.csv,2881a26048923993a46fec420dfff03a0e14222983de0c75b5b24bd93ab4254e
+Computational rows,"state-action and checkpoint rows are repeated computational records, not independent statistical samples",artifacts/aei_information_hierarchy/PAPER_CANONICAL_METRICS.csv,2881a26048923993a46fec420dfff03a0e14222983de0c75b5b24bd93ab4254e

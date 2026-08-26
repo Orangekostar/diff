@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import csv
 import importlib.util
 from hashlib import sha256
 from pathlib import Path
@@ -89,7 +90,10 @@ def test_aei_paper_task_specificity_uses_frozen_reconstruction_metric(
 def test_aei_paper_task_specificity_oracle_rows_marked_non_deployable(
     metrics: dict[str, object],
 ) -> None:
-    rows = [metrics["U4_ORACLE_CAI_SPECIFICITY"], metrics["U4_ORACLE_IMAGE_SPECIFICITY"]]
+    rows = [
+        metrics["U4_ORACLE_CAI_SPECIFICITY"],
+        metrics["U4_ORACLE_IMAGE_SPECIFICITY"],
+    ]
     assert all(row.deployable_status == "retrospective_non_deployable" for row in rows)
     assert metrics["U4_LEARNED_SPECIFICITY_BOUNDARY"].status == "ADVERSE_CONTROL"
 
@@ -201,7 +205,9 @@ def test_aei_paper_p7_preserves_non_superiority(
     assert row.status == "BOUNDARY_SUPPORTED"
 
 
-def test_aei_paper_source_hashes_bind_existing_files(metrics: dict[str, object]) -> None:
+def test_aei_paper_source_hashes_bind_existing_files(
+    metrics: dict[str, object],
+) -> None:
     for row in metrics.values():
         source = ROOT / row.source_artifact
         assert source.is_file()
@@ -228,3 +234,16 @@ def test_aei_paper_authority_files_regenerate_deterministically(tmp_path: Path) 
     assert {path.name for path in second.iterdir()} == expected
     for name in expected:
         assert (first / name).read_bytes() == (second / name).read_bytes()
+
+
+def test_aei_paper_source_hashes_bind_domain_roster(tmp_path: Path) -> None:
+    output = tmp_path / "authority"
+    aei_paper_evidence.write_paper_authority(ROOT, output)
+    with (output / "PAPER_SOURCE_HASHES.csv").open(
+        encoding="utf-8", newline=""
+    ) as stream:
+        sources = {row["source_artifact"] for row in csv.DictReader(stream)}
+    assert {
+        "artifacts/mavis_authority/artifact_manifest.json",
+        "artifacts/mavis_authority/scan_manifest.csv",
+    } <= sources

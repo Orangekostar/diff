@@ -43,6 +43,8 @@ class PaperMetric:
 _COHORT = "276 physical specimens; 6 held-out experimental domains"
 _P7_TREE = "931dc86c26caf1c7246709c4706a7cd0428e3a1533b6ff1ad3c2ad8f9517d1e4"
 _SOURCE_PATHS = (
+    "artifacts/mavis_authority/artifact_manifest.json",
+    "artifacts/mavis_authority/scan_manifest.csv",
     "results/p1_full_field_oracle/metrics.json",
     "results/p1_full_field_oracle/domain_metrics.csv",
     "results/p5_sparse_scan/retention.csv",
