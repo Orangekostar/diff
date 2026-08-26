@@ -1,0 +1,18 @@
+schema_version: 1
+stage: P12_RVP_ATTRIBUTION
+audit_base_git_sha: 716de19c4fe6f742eddf40a95f8cc3ed45192217
+domain_order: [74t7kcdgkr, cgtnjyggtm, w68dtmpfyf, xcmzfsbd9t, yfxyg8jm46, ykhs7s2dck]
+mavis_config: paper_v3/configs/mavis_development.yaml
+mavis_config_sha256: d35faaf7f1c2e86785acf6ee821db6cf783d9a38565e1e75ec9a282e266e729c
+p4_predictions: results/mavis/p4_closed_loop/closed_loop_predictions.parquet
+p4_predictions_sha256: 01b22fbb3cbb2cfc114d959862f481194b5e55ab88e66fc24b17eb7ec971287e
+p2_checkpoint_root: results/mavis/p2_mris/checkpoints
+p2_checkpoint_tree_sha256: e977b0b34bc7dca0ea95cb2af74a504107b5965c99a7e5489c9333c27b848649
+p3_checkpoint_root: results/mavis/p3_dynamic_voi/checkpoints
+p3_checkpoint_tree_sha256: 6374ade7e250cccd6499c347da4fc631a07f6a48e0f50947f5c0ce67ead05d4b
+p7_package: results/mavis/p7_final_frozen_eval
+p7_tree_state_sha256: 931dc86c26caf1c7246709c4706a7cd0428e3a1533b6ff1ad3c2ad8f9517d1e4
+learned_beam_width: 2
+true_set_portfolio: [one_shot_mechanical_oracle, sequential_mechanical_oracle]
+bootstrap_replicates: 5000
+seed: 2026082604
