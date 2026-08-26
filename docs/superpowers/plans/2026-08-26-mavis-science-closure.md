@@ -38,13 +38,13 @@ PyTorch, scikit-learn, SciPy, Pytest, and Ruff.
 - Create `paper_v3/configs/mavis_science_closure.yaml`
 - Create `results/mavis_science_closure/p9_value_evolution/*`
 
-- [ ] Write RED tests for frozen input hashes, state/action identity, strict-OOF
+- [x] Write RED tests for frozen input hashes, state/action identity, strict-OOF
   provenance, conditional value changes, equal action-cost controls, and
   deterministic bootstrap.
-- [ ] Implement rank stability, top-K overlap, best-action turnover, value shift,
+- [x] Implement rank stability, top-K overlap, best-action turnover, value shift,
   and dynamic-vs-static opportunity from P1/P3 rows.
-- [ ] Write the required Parquet/CSV/report/summary package and verify hashes.
-- [ ] Commit `analysis: add conditional value evolution`.
+- [x] Write the required Parquet/CSV/report/summary package and verify hashes.
+- [x] Commit `analysis: add conditional value evolution`.
 
 ## Task 3: P10 MRIS causal closure
 

@@ -1,0 +1,108 @@
+{
+  "audit_base_git_sha": "716de19c4fe6f742eddf40a95f8cc3ed45192217",
+  "bootstrap_replicates": 5000,
+  "bootstrap_row_count": 160,
+  "checkpoint_count": 4,
+  "config_sha256": "2d40f95557a3de5003072f1e87b6e1d03ce976680f49ef6be49a4d4b64c318ab",
+  "decision_state_count": 6900,
+  "domain_count": 6,
+  "domain_metric_row_count": 120,
+  "modes": [
+    "real",
+    "positions_only",
+    "shuffled",
+    "static"
+  ],
+  "p1_state_manifest_sha256": "42d24f0a4e0ee2dfc54eee48a2b8a2f452901cbf98361d2ba76e8a6a628ccfe5",
+  "p3_action_scores_sha256": "0a7275d91267204f4c352c64e7db11c6484cd1afefe20390350103d32c0def94",
+  "p7_modified": false,
+  "p7_tree_state_sha256": "931dc86c26caf1c7246709c4706a7cd0428e3a1533b6ff1ad3c2ad8f9517d1e4",
+  "p9_state_sha256": "7f32f31c06ad8ce6b5bb615539e6339fd97e5ddb90e1679d3f1c385ab4bc65bf",
+  "pair_metric_row_count": 27600,
+  "primary_conclusion": "True conditional action value evolves materially under causal measurement histories, but the frozen real-state scorer does not reliably convert that opportunity into higher teacher utility.",
+  "real_by_checkpoint": [
+    {
+      "best_action_turnover": 0.07589744048103189,
+      "current_checkpoint": 0.0625,
+      "dynamic_vs_initial_opportunity": -4.377717957684874e-06,
+      "mean_absolute_value_shift": 0.0016523340405520343,
+      "rank_spearman": 0.9944586793367733,
+      "top_k_jaccard": 0.9042948115617966
+    },
+    {
+      "best_action_turnover": 0.13613237926795768,
+      "current_checkpoint": 0.09375,
+      "dynamic_vs_initial_opportunity": -2.4027044452587643e-05,
+      "mean_absolute_value_shift": 0.0028214016133557077,
+      "rank_spearman": 0.9865786264879396,
+      "top_k_jaccard": 0.8730881329243613
+    },
+    {
+      "best_action_turnover": 0.17053506610342137,
+      "current_checkpoint": 0.125,
+      "dynamic_vs_initial_opportunity": 1.288784740462036e-05,
+      "mean_absolute_value_shift": 0.003940125675593281,
+      "rank_spearman": 0.9732668019401741,
+      "top_k_jaccard": 0.8227043308273454
+    },
+    {
+      "best_action_turnover": 0.2834304195899651,
+      "current_checkpoint": 0.1875,
+      "dynamic_vs_initial_opportunity": -2.6371513449356554e-05,
+      "mean_absolute_value_shift": 0.005759292219388316,
+      "rank_spearman": 0.9371165817185295,
+      "top_k_jaccard": 0.7421182752540765
+    }
+  ],
+  "real_scorer_dynamic_opportunity_supported": false,
+  "runtime_code_state_sha256": "ff32cb032f1204abfa1ecfd4de34b22c229e254ed72144a70733d538117ae671",
+  "schema": 1,
+  "schema_version": 1,
+  "seed": 20250826,
+  "specimen_count": 276,
+  "specimen_metric_row_count": 5520,
+  "stage": "P9_CONDITIONAL_VALUE_EVOLUTION",
+  "statistical_units": [
+    "physical_specimen",
+    "held_out_domain"
+  ],
+  "status": "COMPLETE",
+  "teacher_by_checkpoint": [
+    {
+      "best_action_turnover": 0.6094342958020086,
+      "current_checkpoint": 0.0625,
+      "dynamic_vs_initial_opportunity": 0.0051961317288545675,
+      "mean_absolute_value_shift": 0.0019768718935287816,
+      "rank_spearman": 0.5965429205684818,
+      "top_k_jaccard": 0.3993784319395411
+    },
+    {
+      "best_action_turnover": 0.6697887652918609,
+      "current_checkpoint": 0.09375,
+      "dynamic_vs_initial_opportunity": 0.00580567895518045,
+      "mean_absolute_value_shift": 0.0022591024445011974,
+      "rank_spearman": 0.49650604066001125,
+      "top_k_jaccard": 0.3283885082165597
+    },
+    {
+      "best_action_turnover": 0.6943607526615402,
+      "current_checkpoint": 0.125,
+      "dynamic_vs_initial_opportunity": 0.0059918621555857116,
+      "mean_absolute_value_shift": 0.0024838116308265384,
+      "rank_spearman": 0.4511782846530034,
+      "top_k_jaccard": 0.3074403870321866
+    },
+    {
+      "best_action_turnover": 0.7037382293631609,
+      "current_checkpoint": 0.1875,
+      "dynamic_vs_initial_opportunity": 0.005308664773700671,
+      "mean_absolute_value_shift": 0.002710159569334456,
+      "rank_spearman": 0.4053439769310774,
+      "top_k_jaccard": 0.30720882736705496
+    }
+  ],
+  "teacher_dynamic_opportunity_supported": true,
+  "top_k": 5,
+  "trajectory_count": 1380,
+  "value_evolution_row_count": 1223005
+}
