@@ -1,0 +1,106 @@
+{
+  "bootstrap": {
+    "global_mechanical": {
+      "ci95_lower": -4.42951108650044e-05,
+      "ci95_upper": 3.9717758878287385e-07,
+      "mean_control_minus_mavis_full_cai_auebc": -2.18603291082285e-05,
+      "median_improved_domain_count": 3.0
+    },
+    "mavis_no_feedback": {
+      "ci95_lower": -1.94057208591662e-05,
+      "ci95_upper": -1.0711831942418618e-05,
+      "mean_control_minus_mavis_full_cai_auebc": -1.4977276792500282e-05,
+      "median_improved_domain_count": 2.0
+    },
+    "mavis_positions_only": {
+      "ci95_lower": -6.258673293446665e-05,
+      "ci95_upper": -2.6573319810955633e-05,
+      "mean_control_minus_mavis_full_cai_auebc": -4.43778437194939e-05,
+      "median_improved_domain_count": 1.0
+    },
+    "mavis_raw_value": {
+      "ci95_lower": -7.670689818183233e-05,
+      "ci95_upper": -3.561182118500577e-05,
+      "mean_control_minus_mavis_full_cai_auebc": -5.6273061865151065e-05,
+      "median_improved_domain_count": 2.0
+    },
+    "mavis_shuffled_content": {
+      "ci95_lower": -3.687620633021246e-05,
+      "ci95_upper": 1.9314316833607857e-06,
+      "mean_control_minus_mavis_full_cai_auebc": -1.7817837736045456e-05,
+      "median_improved_domain_count": 3.0
+    },
+    "mavis_value_per_cost": {
+      "ci95_lower": -5.5141011011110805e-05,
+      "ci95_upper": -1.0017718684861354e-05,
+      "mean_control_minus_mavis_full_cai_auebc": -3.2677041512150826e-05,
+      "median_improved_domain_count": 3.0
+    },
+    "mva_a5": {
+      "ci95_lower": -9.994847481162655e-05,
+      "ci95_upper": -4.553772145146758e-05,
+      "mean_control_minus_mavis_full_cai_auebc": -7.272543101206188e-05,
+      "median_improved_domain_count": 2.0
+    },
+    "mvd_m1_o2": {
+      "ci95_lower": -0.00010565781744029458,
+      "ci95_upper": -5.495958552806481e-05,
+      "mean_control_minus_mavis_full_cai_auebc": -8.027868350096945e-05,
+      "median_improved_domain_count": 2.0
+    },
+    "one_shot_mechanical_oracle": {
+      "ci95_lower": -5.0464722268592614e-05,
+      "ci95_upper": -2.0007192045470282e-06,
+      "mean_control_minus_mavis_full_cai_auebc": -2.607929408761074e-05,
+      "median_improved_domain_count": 3.0
+    },
+    "random": {
+      "ci95_lower": -6.907711355523525e-05,
+      "ci95_upper": -1.2148391714894614e-05,
+      "mean_control_minus_mavis_full_cai_auebc": -4.068068246785008e-05,
+      "median_improved_domain_count": 2.0
+    },
+    "reconstruction_driven": {
+      "ci95_lower": -4.248532101528096e-05,
+      "ci95_upper": 1.9933567423078363e-05,
+      "mean_control_minus_mavis_full_cai_auebc": -1.0914414985350863e-05,
+      "median_improved_domain_count": 2.0
+    },
+    "sequential_mechanical_oracle": {
+      "ci95_lower": -8.136713698370495e-05,
+      "ci95_upper": -1.8990978986033298e-05,
+      "mean_control_minus_mavis_full_cai_auebc": -5.026472894709355e-05,
+      "median_improved_domain_count": 1.0
+    },
+    "uniform": {
+      "ci95_lower": -4.715566771048244e-05,
+      "ci95_upper": 1.3880489929658789e-05,
+      "mean_control_minus_mavis_full_cai_auebc": -1.6394783912203304e-05,
+      "median_improved_domain_count": 2.0
+    }
+  },
+  "claim_tier_assigned": false,
+  "config_sha256": "d35faaf7f1c2e86785acf6ee821db6cf783d9a38565e1e75ec9a282e266e729c",
+  "git_sha": "2f5d4585554b117c5cf90c7c2b4a08f1c2b2b3ac",
+  "git_worktree_dirty_at_run": true,
+  "mavis_full_domain_balanced_cai_auebc": 0.1250722401900199,
+  "method_count": 14,
+  "p1_state_sha256": "1cfc565b7c45ab558b4ae795c342b227f177c0a626c8064ece02368bb948cf18",
+  "p2_state_sha256": "d3dba6ec3621575c0eb20f58c9d041fb00050d11c23a0426b3da764bfcd09768",
+  "p3_state_sha256": "a16465bebc28f70a7662327bffd6f0a7efa2044daf91ff077e1e890620626f85",
+  "p4_state_sha256": "97325b81a4b3fe443ae9c099401b1f47a26bb12752e9af1a335faee7d08ef356",
+  "prediction_count": 23184,
+  "runtime_code_state_sha256": "cb6d657a39318d0253585b55399716ea58e0c32dfb501cf2d99b3eadd816c437",
+  "schema_version": 1,
+  "specimen_count": 276,
+  "stage": "P4_CLOSED_LOOP_SCOUT_AND_FOCUS",
+  "statistical_units": [
+    "physical_specimen",
+    "held_out_domain"
+  ],
+  "status": "COMPLETE",
+  "strongest_observed_deployable_baseline": "mvd_m1_o2",
+  "strongest_observed_deployable_baseline_cai_auebc": 0.12499204011570479,
+  "target_data_used_for_model_selection": false,
+  "trajectory_row_count": 159140
+}

@@ -7,9 +7,18 @@ import numpy as np
 from cmc_bbdm.mavis.authority import MAVISAuthority
 
 
-def synthetic_inputs(*, true_cai: float = 0.4) -> dict[str, object]:
+def synthetic_inputs(
+    *,
+    true_cai: float = 0.4,
+    native_shape: tuple[int, int] = (41, 43),
+) -> dict[str, object]:
     generator = np.random.Generator(np.random.PCG64(20260825))
-    image = generator.integers(0, 256, size=(41, 43, 3), dtype=np.uint8)
+    image = generator.integers(
+        0,
+        256,
+        size=(*native_shape, 3),
+        dtype=np.uint8,
+    )
     return {
         "specimen_ids": ("sample-001",),
         "dataset_ids": ("domain-a",),
@@ -20,8 +29,14 @@ def synthetic_inputs(*, true_cai: float = 0.4) -> dict[str, object]:
     }
 
 
-def synthetic_authority(*, true_cai: float = 0.4) -> MAVISAuthority:
-    return MAVISAuthority.from_arrays(**synthetic_inputs(true_cai=true_cai))
+def synthetic_authority(
+    *,
+    true_cai: float = 0.4,
+    native_shape: tuple[int, int] = (41, 43),
+) -> MAVISAuthority:
+    return MAVISAuthority.from_arrays(
+        **synthetic_inputs(true_cai=true_cai, native_shape=native_shape)
+    )
 
 
 def array_sha256(value: np.ndarray) -> str:

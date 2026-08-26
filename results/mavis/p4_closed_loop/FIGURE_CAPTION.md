@@ -1,0 +1,1 @@
+Domain-balanced CAI mean absolute error and normalized C-scan reconstruction mean squared error versus mean exact acquired native-raster fraction. The comparison separates mechanics-driven sensing from reconstruction-driven sensing and includes feedback and measurement-content controls. Source: figures/source_data.csv; retrospective normalized-raster evaluation.
