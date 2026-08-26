@@ -10,6 +10,7 @@ Base commit: `c2eab6eac79dd3fbb9ecb0d19f98923e515e762b`
 | 3 | `c069221` | canonical paper metrics, claim map, and source-hash authority | deterministic regeneration; 21 paper-evidence tests; Ruff; `git diff --check` | no |
 | 4 | `6f4ff0c` | four traceable paper figures, captions, source CSVs, vector/raster exports, and visual QA | 10 figure tests; embedded PDF fonts; editable SVG text; checksum verification | no |
 | 5 | `d808a5f` | protocol and information-hierarchy evidence tables with source and caption files | 11 table tests; standalone LaTeX compile and visual QA; checksum verification | no |
+| 6 | `9da2fbe` | fixed six-section outline, evidence-bounded claim sentence bank, and paper package contract | 43 paper evidence/figure/table tests; claim-ID closure; Ruff; `git diff --check` | no |
 
 Each subsequent paper commit will be appended after its SHA exists. The final
 entry must bind the pushed remote branch and verified artifact paths.
