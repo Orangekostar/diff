@@ -1,0 +1,40 @@
+schema_version: 1
+stage: P15_VALUE_STABILITY
+audit_base_git_sha: 716de19c4fe6f742eddf40a95f8cc3ed45192217
+domain_order: [74t7kcdgkr, cgtnjyggtm, w68dtmpfyf, xcmzfsbd9t, yfxyg8jm46, ykhs7s2dck]
+mva_config: paper_v3/configs/mva_a0_a3.yaml
+mva_config_sha256: 65968cdb6d1e98f6e5371afc12bdf28d320749bde7ffdadcbec01e1b0a780284
+oracle_values: results/mva/a2_oracle_value/oracle_values.parquet
+oracle_values_sha256: 6b289f2f6f74ac75dde47ea7cbfefcda1c49f025e74227bfb34ef269182ff963
+ridge_sensitivity: results/mva/a2_oracle_value/stability_diagnostics.csv
+ridge_sensitivity_sha256: ad57e9873384a1564993280a9b3365859fbe22b4048ecaaa115e547cce63b7d4
+candidate_banks:
+  0.015625:
+    path: artifacts/mvd_authority/a4_candidate_bank_0p015625.npz
+    file_sha256: 42882df095ac2935bf7cf0efec5d17c3fee257ddee4f4735fbb64d6931976b08
+    state_sha256: 2b17097a85fdb41b4413fecfa7f5b141b2e132cc479adb127fceb28c2c444fc4
+  0.03125:
+    path: artifacts/mvd_authority/a4_candidate_bank_0p03125.npz
+    file_sha256: cfeff617df9208bdfbd8434474f63134661f8fb6f7b59676bced5054ac0d2443
+    state_sha256: e44d7b8e1ef1b1f715eeddc3ab9af485d1a993e0acfd792d86086a282b2fa0c0
+selected_initial_budget:
+  74t7kcdgkr: 0.03125
+  cgtnjyggtm: 0.015625
+  w68dtmpfyf: 0.015625
+  xcmzfsbd9t: 0.015625
+  yfxyg8jm46: 0.015625
+  ykhs7s2dck: 0.015625
+pca_dimensions: [8, 16, 32]
+learners:
+  ridge: {alpha: 10.0}
+  huber: {alpha: 0.1, epsilon: 1.35, max_iter: 5000, tolerance: 1.0e-10}
+  shallow_mlp: {hidden_layer_size: 16, alpha: 0.01, solver: lbfgs, max_iter: 5000, seed: 20260826}
+top_fraction: 0.1
+stability_thresholds:
+  mean_spearman: 0.7
+  mean_topk_jaccard: 0.5
+  best_action_agreement: 0.5
+bootstrap_replicates: 5000
+seed: 2026082607
+p7_package: results/mavis/p7_final_frozen_eval
+p7_tree_state_sha256: 931dc86c26caf1c7246709c4706a7cd0428e3a1533b6ff1ad3c2ad8f9517d1e4
