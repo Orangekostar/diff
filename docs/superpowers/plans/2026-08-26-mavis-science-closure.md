@@ -69,11 +69,11 @@ PyTorch, scikit-learn, SciPy, Pytest, and Ruff.
 - Modify `tests/test_mavis_science_closure.py`
 - Create `results/mavis_science_closure/p11_dynamic_valuation/*`
 
-- [ ] Test candidate-only, MVD O2, static M1, positions, shuffled, and dynamic
+- [x] Test candidate-only, MVD O2, static M1, positions, shuffled, and dynamic
   scorer alignment on the same legal action rows.
-- [ ] Compute regret, one-step utility, rank metrics, domain effects, cost strata,
+- [x] Compute regret, one-step utility, rank metrics, domain effects, cost strata,
   and paired bootstrap.
-- [ ] Commit `analysis: close dynamic valuation comparisons`.
+- [x] Commit `analysis: close dynamic valuation comparisons`.
 
 ## Task 5: P12 representation-value-planning attribution
 

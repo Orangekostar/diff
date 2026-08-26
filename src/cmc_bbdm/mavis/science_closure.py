@@ -7,6 +7,7 @@ from dataclasses import dataclass
 
 import numpy as np
 import polars as pl
+from scipy.stats import rankdata
 
 
 class ValueEvolutionError(ValueError):
@@ -1374,14 +1375,753 @@ def evaluate_mris_causal_closure(
     )
 
 
+class DynamicValuationClosureError(ValueError):
+    """Raised when frozen dynamic and static action scores cannot be aligned."""
+
+
+_DYNAMIC_VALUATION_SCORERS = (
+    "dynamic_real",
+    "dynamic_positions_only",
+    "dynamic_shuffled",
+    "static_m1_o2",
+    "candidate_only_static",
+)
+_DYNAMIC_VALUATION_CONTROLS = (
+    "static_m1_o2",
+    "dynamic_positions_only",
+    "dynamic_shuffled",
+    "candidate_only_static",
+)
+_DYNAMIC_STATE_COLUMNS = {
+    "domain_id",
+    "specimen_id",
+    "trajectory_id",
+    "method",
+    "state_id",
+    "nominal_checkpoint",
+    "exact_acquired_cost",
+    "native_count",
+    "effective_budget",
+}
+_DYNAMIC_SCORE_COLUMNS = {
+    "outer_domain",
+    "domain_id",
+    "specimen_id",
+    "state_id",
+    "mode",
+    "candidate_index",
+    "cell_index",
+    "from_level",
+    "to_level",
+    "exact_added_cost",
+    "predicted_score",
+    "teacher_value",
+    "current_prediction",
+    "candidate_prediction",
+    "evaluation_true_cai",
+    "teacher_fold_count",
+    "dynamic_model_state_sha256",
+}
+_MVD_SCORE_COLUMNS = {
+    "outer_domain",
+    "specimen_id",
+    "dataset_id",
+    "method",
+    "cell_index",
+    "predicted_value",
+    "teacher_value",
+    "candidate_cost",
+}
+_VALUATION_METRICS = (
+    "next_action_regret",
+    "one_step_cai_utility",
+    "spearman",
+    "ndcg",
+    "recall_at_k",
+)
+
+
+@dataclass(frozen=True, slots=True)
+class DynamicValuationClosureTables:
+    per_state: pl.DataFrame
+    per_specimen: pl.DataFrame
+    regret_by_cost: pl.DataFrame
+    one_step_utility: pl.DataFrame
+    domain_metrics: pl.DataFrame
+    bootstrap: pl.DataFrame
+
+
+def _dynamic_roster(value: Sequence[str], label: str) -> tuple[str, ...]:
+    if (
+        type(value) not in {tuple, list}
+        or not value
+        or any(type(item) is not str or not item for item in value)
+        or len(set(value)) != len(value)
+    ):
+        raise DynamicValuationClosureError(f"{label} is invalid")
+    return tuple(value)
+
+
+def _validate_dynamic_action_roster(
+    action_scores: pl.DataFrame,
+    *,
+    dynamic_modes: tuple[str, ...],
+    domain_order: tuple[str, ...],
+) -> pl.DataFrame:
+    if (
+        type(action_scores) is not pl.DataFrame
+        or action_scores.is_empty()
+        or not _DYNAMIC_SCORE_COLUMNS <= set(action_scores.columns)
+    ):
+        raise DynamicValuationClosureError("dynamic action-score schema is invalid")
+    selected = action_scores.filter(pl.col("mode").is_in(dynamic_modes)).select(
+        sorted(_DYNAMIC_SCORE_COLUMNS)
+    )
+    if (
+        set(selected.get_column("mode").unique()) != set(dynamic_modes)
+        or set(selected.get_column("outer_domain").unique()) != set(domain_order)
+        or selected.filter(pl.col("outer_domain") != pl.col("domain_id")).height
+    ):
+        raise DynamicValuationClosureError("dynamic action-score roster is invalid")
+    action_key = ["state_id", "candidate_index"]
+    shared = (
+        "outer_domain",
+        "domain_id",
+        "specimen_id",
+        "cell_index",
+        "from_level",
+        "to_level",
+        "exact_added_cost",
+        "teacher_value",
+        "current_prediction",
+        "candidate_prediction",
+        "evaluation_true_cai",
+        "teacher_fold_count",
+    )
+    roster = selected.group_by(action_key).agg(
+        pl.len().alias("row_count"),
+        pl.col("mode").n_unique().alias("mode_count"),
+        *[pl.col(column).n_unique().alias(f"{column}_count") for column in shared],
+    )
+    if roster.filter(
+        pl.any_horizontal(
+            pl.col("row_count") != len(dynamic_modes),
+            pl.col("mode_count") != len(dynamic_modes),
+            *[pl.col(f"{column}_count") != 1 for column in shared],
+        )
+    ).height:
+        raise DynamicValuationClosureError("dynamic scorer action roster changed")
+    numeric = selected.select(
+        "candidate_index",
+        "cell_index",
+        "from_level",
+        "to_level",
+        "exact_added_cost",
+        "predicted_score",
+        "teacher_value",
+        "current_prediction",
+        "candidate_prediction",
+        "evaluation_true_cai",
+        "teacher_fold_count",
+    ).to_numpy()
+    if (
+        not np.all(np.isfinite(numeric))
+        or selected.filter(
+            (pl.col("exact_added_cost") <= 0)
+            | (pl.col("teacher_fold_count") != len(domain_order) - 1)
+        ).height
+    ):
+        raise DynamicValuationClosureError("dynamic action-score values are invalid")
+    return selected
+
+
+def build_dynamic_valuation_alignment(
+    states: pl.DataFrame,
+    action_scores: pl.DataFrame,
+    mvd_scores: pl.DataFrame,
+    *,
+    domain_order: tuple[str, ...],
+    dynamic_modes: tuple[str, ...],
+    mvd_o2_method: str,
+    candidate_only_method: str,
+) -> pl.DataFrame:
+    """Project frozen dynamic and specimen-cell static scores onto legal actions."""
+
+    domains = _dynamic_roster(domain_order, "dynamic valuation domain order")
+    modes = _dynamic_roster(dynamic_modes, "dynamic valuation mode roster")
+    if set(modes) != {"real", "positions_only", "shuffled"}:
+        raise DynamicValuationClosureError("dynamic valuation modes changed")
+    if (
+        type(states) is not pl.DataFrame
+        or states.is_empty()
+        or not _DYNAMIC_STATE_COLUMNS <= set(states.columns)
+    ):
+        raise DynamicValuationClosureError("dynamic state schema is invalid")
+    state_table = states.select(sorted(_DYNAMIC_STATE_COLUMNS))
+    if (
+        state_table.get_column("state_id").n_unique() != state_table.height
+        or set(state_table.get_column("domain_id").unique()) != set(domains)
+        or not np.all(
+            np.isfinite(
+                state_table.select(
+                    "nominal_checkpoint",
+                    "exact_acquired_cost",
+                    "native_count",
+                    "effective_budget",
+                ).to_numpy()
+            )
+        )
+        or state_table.filter(
+            (pl.col("exact_acquired_cost") <= 0)
+            | (pl.col("native_count") <= 0)
+            | (
+                (
+                    pl.col("effective_budget")
+                    - pl.col("exact_acquired_cost") / pl.col("native_count")
+                ).abs()
+                > 1.0e-15
+            )
+        ).height
+    ):
+        raise DynamicValuationClosureError("dynamic state roster is invalid")
+    dynamic = _validate_dynamic_action_roster(
+        action_scores,
+        dynamic_modes=modes,
+        domain_order=domains,
+    )
+    canonical = dynamic.filter(pl.col("mode") == "real").drop(
+        "mode", "predicted_score", "dynamic_model_state_sha256"
+    )
+    state_metadata = state_table.select(
+        "state_id",
+        "trajectory_id",
+        pl.col("method").alias("trajectory_method"),
+        "nominal_checkpoint",
+        "exact_acquired_cost",
+        "native_count",
+        "effective_budget",
+    )
+    base = canonical.join(
+        state_metadata,
+        on="state_id",
+        how="inner",
+        validate="m:1",
+    )
+    if (
+        base.height != canonical.height
+        or base.filter(
+            (pl.col("outer_domain") != pl.col("domain_id"))
+            | (pl.col("specimen_id").is_null())
+        ).height
+    ):
+        raise DynamicValuationClosureError("dynamic state/action join changed")
+    if (
+        type(mvd_scores) is not pl.DataFrame
+        or mvd_scores.is_empty()
+        or not _MVD_SCORE_COLUMNS <= set(mvd_scores.columns)
+        or type(mvd_o2_method) is not str
+        or not mvd_o2_method
+        or type(candidate_only_method) is not str
+        or not candidate_only_method
+        or mvd_o2_method == candidate_only_method
+    ):
+        raise DynamicValuationClosureError("MVD static score schema is invalid")
+    methods = (mvd_o2_method, candidate_only_method)
+    static_scores = mvd_scores.filter(pl.col("method").is_in(methods)).select(
+        sorted(_MVD_SCORE_COLUMNS)
+    )
+    if (
+        set(static_scores.get_column("method").unique()) != set(methods)
+        or set(static_scores.get_column("outer_domain").unique()) != set(domains)
+        or static_scores.filter(
+            (pl.col("outer_domain") != pl.col("dataset_id"))
+            | (pl.col("candidate_cost") <= 0)
+        ).height
+        or static_scores.select(
+            pl.struct("outer_domain", "specimen_id", "method", "cell_index").n_unique()
+        ).item()
+        != static_scores.height
+        or not np.all(
+            np.isfinite(
+                static_scores.select(
+                    "cell_index", "predicted_value", "teacher_value", "candidate_cost"
+                ).to_numpy()
+            )
+        )
+    ):
+        raise DynamicValuationClosureError("MVD static score roster is invalid")
+
+    common_columns = base.columns
+    output_columns = [
+        *common_columns,
+        "scorer",
+        "predicted_score",
+        "source_stage",
+        "score_semantics",
+        "source_candidate_cost",
+        "source_model_state_sha256",
+        "state_conditioned",
+        "static_extension_to_current_state",
+    ]
+    parts: list[pl.DataFrame] = []
+    dynamic_names = {
+        "real": "dynamic_real",
+        "positions_only": "dynamic_positions_only",
+        "shuffled": "dynamic_shuffled",
+    }
+    for mode in modes:
+        scores = dynamic.filter(pl.col("mode") == mode).select(
+            "state_id",
+            "candidate_index",
+            "predicted_score",
+            pl.col("dynamic_model_state_sha256").alias(
+                "source_model_state_sha256"
+            ),
+        )
+        part = base.join(
+            scores,
+            on=["state_id", "candidate_index"],
+            how="inner",
+            validate="1:1",
+        ).with_columns(
+            pl.lit(dynamic_names[mode]).alias("scorer"),
+            pl.lit("mavis_p3_dynamic_voi").alias("source_stage"),
+            pl.lit("state_conditioned_current_legal_action").alias(
+                "score_semantics"
+            ),
+            pl.lit(None, dtype=pl.Int64).alias("source_candidate_cost"),
+            pl.lit(True).alias("state_conditioned"),
+            pl.lit(False).alias("static_extension_to_current_state"),
+        )
+        if part.height != base.height:
+            raise DynamicValuationClosureError("dynamic score join is incomplete")
+        parts.append(part.select(output_columns))
+    static_names = {
+        mvd_o2_method: "static_m1_o2",
+        candidate_only_method: "candidate_only_static",
+    }
+    for method in methods:
+        scores = static_scores.filter(pl.col("method") == method).select(
+            "outer_domain",
+            "specimen_id",
+            "cell_index",
+            pl.col("predicted_value").alias("predicted_score"),
+            pl.col("candidate_cost").alias("source_candidate_cost"),
+        )
+        part = base.join(
+            scores,
+            on=["outer_domain", "specimen_id", "cell_index"],
+            how="inner",
+            validate="m:1",
+        ).with_columns(
+            pl.lit(static_names[method]).alias("scorer"),
+            pl.lit("mvd_m1_observability").alias("source_stage"),
+            pl.lit("static_specimen_cell_score_on_current_legal_action").alias(
+                "score_semantics"
+            ),
+            pl.lit(None, dtype=pl.String).alias("source_model_state_sha256"),
+            pl.lit(False).alias("state_conditioned"),
+            pl.lit(True).alias("static_extension_to_current_state"),
+        )
+        if part.height != base.height:
+            raise DynamicValuationClosureError("MVD static score join is incomplete")
+        parts.append(part.select(output_columns))
+    aligned = pl.concat(parts, how="vertical_relaxed").sort(
+        ["outer_domain", "specimen_id", "state_id", "scorer", "candidate_index"]
+    )
+    expected_rows = base.height * len(_DYNAMIC_VALUATION_SCORERS)
+    if (
+        aligned.height != expected_rows
+        or set(aligned.get_column("scorer").unique())
+        != set(_DYNAMIC_VALUATION_SCORERS)
+        or aligned.select(
+            pl.struct("state_id", "candidate_index", "scorer").n_unique()
+        ).item()
+        != aligned.height
+    ):
+        raise DynamicValuationClosureError("aligned valuation roster is incomplete")
+    return aligned
+
+
+def _valuation_spearman(scores: np.ndarray, teacher: np.ndarray) -> float:
+    score_ranks = rankdata(scores, method="average")
+    teacher_ranks = rankdata(teacher, method="average")
+    score_centered = score_ranks - np.mean(score_ranks)
+    teacher_centered = teacher_ranks - np.mean(teacher_ranks)
+    denominator = float(
+        np.linalg.norm(score_centered) * np.linalg.norm(teacher_centered)
+    )
+    if denominator == 0.0:
+        return 1.0 if np.array_equal(score_ranks, teacher_ranks) else 0.0
+    return float(np.dot(score_centered, teacher_centered) / denominator)
+
+
+def _valuation_ndcg(scores: np.ndarray, teacher: np.ndarray) -> float:
+    gains = teacher - np.min(teacher)
+    if float(np.max(gains)) == 0.0:
+        return 1.0
+    discounts = 1.0 / np.log2(np.arange(2, gains.size + 2, dtype=np.float64))
+    predicted_order = np.argsort(-scores, kind="stable")
+    ideal_order = np.argsort(-teacher, kind="stable")
+    observed = float(np.sum(gains[predicted_order] * discounts))
+    ideal = float(np.sum(gains[ideal_order] * discounts))
+    if ideal <= 0.0:
+        raise DynamicValuationClosureError("dynamic valuation ideal DCG is invalid")
+    return observed / ideal
+
+
+def _dynamic_per_state(aligned: pl.DataFrame, *, recall_k: int) -> pl.DataFrame:
+    if (
+        type(aligned) is not pl.DataFrame
+        or aligned.is_empty()
+        or type(recall_k) is not int
+        or isinstance(recall_k, bool)
+        or recall_k <= 0
+    ):
+        raise DynamicValuationClosureError("dynamic valuation metric request is invalid")
+    required = {
+        "outer_domain",
+        "domain_id",
+        "specimen_id",
+        "trajectory_id",
+        "trajectory_method",
+        "state_id",
+        "nominal_checkpoint",
+        "exact_acquired_cost",
+        "effective_budget",
+        "scorer",
+        "candidate_index",
+        "cell_index",
+        "from_level",
+        "to_level",
+        "exact_added_cost",
+        "predicted_score",
+        "teacher_value",
+    }
+    if not required <= set(aligned.columns):
+        raise DynamicValuationClosureError("aligned valuation schema is invalid")
+    rows: list[dict[str, object]] = []
+    for _, group in aligned.group_by(
+        "outer_domain", "specimen_id", "state_id", "scorer", maintain_order=True
+    ):
+        ordered = group.sort("candidate_index")
+        scores = ordered.get_column("predicted_score").to_numpy()
+        teacher = ordered.get_column("teacher_value").to_numpy()
+        if (
+            scores.size == 0
+            or scores.shape != teacher.shape
+            or not np.all(np.isfinite(scores))
+            or not np.all(np.isfinite(teacher))
+        ):
+            raise DynamicValuationClosureError("valuation score group is invalid")
+        selected = int(np.argmax(scores))
+        oracle = int(np.argmax(teacher))
+        regret = float(teacher[oracle] - teacher[selected])
+        if regret < -1.0e-12:
+            raise DynamicValuationClosureError("next-action regret is invalid")
+        count = min(recall_k, scores.size)
+        predicted_top = set(np.argsort(-scores, kind="stable")[:count].tolist())
+        teacher_top = set(np.argsort(-teacher, kind="stable")[:count].tolist())
+        selected_row = ordered.row(selected, named=True)
+        rows.append(
+            {
+                "outer_domain": selected_row["outer_domain"],
+                "domain_id": selected_row["domain_id"],
+                "specimen_id": selected_row["specimen_id"],
+                "trajectory_id": selected_row["trajectory_id"],
+                "trajectory_method": selected_row["trajectory_method"],
+                "state_id": selected_row["state_id"],
+                "nominal_checkpoint": selected_row["nominal_checkpoint"],
+                "exact_acquired_cost": selected_row["exact_acquired_cost"],
+                "effective_budget": selected_row["effective_budget"],
+                "scorer": selected_row["scorer"],
+                "candidate_count": scores.size,
+                "selected_candidate_index": selected_row["candidate_index"],
+                "selected_cell_index": selected_row["cell_index"],
+                "selected_from_level": selected_row["from_level"],
+                "selected_to_level": selected_row["to_level"],
+                "selected_exact_added_cost": selected_row["exact_added_cost"],
+                "oracle_candidate_index": ordered.item(oracle, "candidate_index"),
+                "next_action_regret": max(regret, 0.0),
+                "one_step_cai_utility": float(teacher[selected]),
+                "spearman": _valuation_spearman(scores, teacher),
+                "ndcg": _valuation_ndcg(scores, teacher),
+                "recall_at_k": len(predicted_top & teacher_top) / count,
+                "recall_k": count,
+            }
+        )
+    return pl.DataFrame(rows, infer_schema_length=None).sort(
+        ["outer_domain", "specimen_id", "state_id", "scorer"]
+    )
+
+
+def _aggregate_dynamic_valuation(
+    per_state: pl.DataFrame,
+) -> tuple[pl.DataFrame, pl.DataFrame, pl.DataFrame, pl.DataFrame]:
+    per_specimen = (
+        per_state.group_by(
+            "outer_domain", "specimen_id", "scorer", "nominal_checkpoint"
+        )
+        .agg(
+            pl.len().alias("state_count"),
+            pl.col("trajectory_id").n_unique().alias("trajectory_count"),
+            pl.col("exact_acquired_cost")
+            .mean()
+            .alias("mean_exact_acquired_cost"),
+            pl.col("effective_budget").mean().alias("mean_effective_budget"),
+            *[pl.col(metric).mean().alias(metric) for metric in _VALUATION_METRICS],
+        )
+        .sort(["outer_domain", "specimen_id", "scorer", "nominal_checkpoint"])
+    )
+    domain_metrics = (
+        per_specimen.group_by("outer_domain", "scorer", "nominal_checkpoint")
+        .agg(
+            pl.col("specimen_id").n_unique().alias("specimen_count"),
+            pl.col("state_count").sum(),
+            pl.col("mean_exact_acquired_cost").mean(),
+            pl.col("mean_effective_budget").mean(),
+            *[pl.col(metric).mean().alias(metric) for metric in _VALUATION_METRICS],
+        )
+        .sort(["outer_domain", "scorer", "nominal_checkpoint"])
+    )
+    shared = (
+        domain_metrics.group_by("scorer", "nominal_checkpoint")
+        .agg(
+            pl.col("outer_domain").n_unique().alias("domain_count"),
+            pl.col("specimen_count").sum(),
+            pl.col("mean_exact_acquired_cost").mean(),
+            pl.col("mean_effective_budget").mean(),
+            pl.col("next_action_regret").mean(),
+            pl.col("next_action_regret").max().alias("worst_domain_regret"),
+            pl.col("one_step_cai_utility").mean(),
+            pl.col("one_step_cai_utility").min().alias("worst_domain_utility"),
+            pl.col("spearman").mean(),
+            pl.col("ndcg").mean(),
+            pl.col("recall_at_k").mean(),
+        )
+        .sort(["scorer", "nominal_checkpoint"])
+    )
+    regret = shared.select(
+        "scorer",
+        "nominal_checkpoint",
+        "domain_count",
+        "specimen_count",
+        "mean_exact_acquired_cost",
+        "mean_effective_budget",
+        pl.col("next_action_regret").alias("equal_domain_regret"),
+        "worst_domain_regret",
+        "spearman",
+        "ndcg",
+        "recall_at_k",
+    )
+    utility = shared.select(
+        "scorer",
+        "nominal_checkpoint",
+        "domain_count",
+        "specimen_count",
+        "mean_exact_acquired_cost",
+        "mean_effective_budget",
+        pl.col("one_step_cai_utility").alias("equal_domain_one_step_utility"),
+        "worst_domain_utility",
+    )
+    return per_specimen, domain_metrics, regret, utility
+
+
+def _dynamic_valuation_bootstrap(
+    per_specimen: pl.DataFrame,
+    *,
+    domain_order: tuple[str, ...],
+    replicates: int,
+    seed: int,
+) -> pl.DataFrame:
+    if (
+        type(replicates) is not int
+        or isinstance(replicates, bool)
+        or replicates < 2
+        or type(seed) is not int
+        or isinstance(seed, bool)
+    ):
+        raise DynamicValuationClosureError("dynamic valuation bootstrap is invalid")
+    checkpoints = sorted(
+        per_specimen.get_column("nominal_checkpoint").unique().to_list()
+    )
+    generator = np.random.Generator(np.random.PCG64(seed))
+    sampled: dict[tuple[str, str, float, str], np.ndarray] = {}
+    observed: dict[tuple[str, str, float, str], float] = {}
+    for domain in domain_order:
+        table = per_specimen.filter(pl.col("outer_domain") == domain)
+        specimens = sorted(table.get_column("specimen_id").unique().to_list())
+        if not specimens:
+            raise DynamicValuationClosureError("valuation bootstrap domain is empty")
+        indices = generator.integers(
+            0, len(specimens), size=(replicates, len(specimens))
+        )
+        for scorer in _DYNAMIC_VALUATION_SCORERS:
+            for checkpoint in checkpoints:
+                values_table = table.filter(
+                    (pl.col("scorer") == scorer)
+                    & (pl.col("nominal_checkpoint") == checkpoint)
+                ).sort("specimen_id")
+                if values_table.get_column("specimen_id").to_list() != specimens:
+                    raise DynamicValuationClosureError(
+                        "valuation bootstrap pairing changed"
+                    )
+                for metric in ("next_action_regret", "one_step_cai_utility"):
+                    values = values_table.get_column(metric).to_numpy()
+                    key = (domain, scorer, checkpoint, metric)
+                    observed[key] = float(np.mean(values))
+                    sampled[key] = np.mean(values[indices], axis=1)
+    rows: list[dict[str, object]] = []
+    metric_specs = (
+        (
+            "next_action_regret",
+            "real_minus_control_regret",
+            "regret_advantage_change_from_initial",
+            "negative_favors_dynamic_real",
+        ),
+        (
+            "one_step_cai_utility",
+            "real_minus_control_utility",
+            "utility_advantage_change_from_initial",
+            "positive_favors_dynamic_real",
+        ),
+    )
+    for checkpoint in checkpoints:
+        for control in _DYNAMIC_VALUATION_CONTROLS:
+            for source_metric, contrast_metric, change_metric, direction in metric_specs:
+                domain_values = []
+                domain_initial_values = []
+                domain_estimates = []
+                domain_initial_estimates = []
+                for domain in domain_order:
+                    current = (
+                        sampled[(domain, "dynamic_real", checkpoint, source_metric)]
+                        - sampled[(domain, control, checkpoint, source_metric)]
+                    )
+                    initial = (
+                        sampled[
+                            (domain, "dynamic_real", checkpoints[0], source_metric)
+                        ]
+                        - sampled[(domain, control, checkpoints[0], source_metric)]
+                    )
+                    estimate = (
+                        observed[(domain, "dynamic_real", checkpoint, source_metric)]
+                        - observed[(domain, control, checkpoint, source_metric)]
+                    )
+                    initial_estimate = (
+                        observed[
+                            (domain, "dynamic_real", checkpoints[0], source_metric)
+                        ]
+                        - observed[(domain, control, checkpoints[0], source_metric)]
+                    )
+                    domain_values.append(current)
+                    domain_initial_values.append(initial)
+                    domain_estimates.append(estimate)
+                    domain_initial_estimates.append(initial_estimate)
+                    for metric_name, values, point in (
+                        (contrast_metric, current, estimate),
+                        (change_metric, current - initial, estimate - initial_estimate),
+                    ):
+                        rows.append(
+                            {
+                                "scope": "domain",
+                                "outer_domain": domain,
+                                "nominal_checkpoint": checkpoint,
+                                "metric": metric_name,
+                                "control_scorer": control,
+                                "direction": direction,
+                                **_bootstrap_summary(
+                                    values,
+                                    estimate=point,
+                                    replicates=replicates,
+                                    seed=seed,
+                                ),
+                                "fraction_below_zero": float(
+                                    np.mean(values < 0.0)
+                                ),
+                            }
+                        )
+                equal = np.mean(np.stack(domain_values), axis=0)
+                equal_initial = np.mean(np.stack(domain_initial_values), axis=0)
+                estimate = float(np.mean(domain_estimates))
+                initial_estimate = float(np.mean(domain_initial_estimates))
+                for metric_name, values, point in (
+                    (contrast_metric, equal, estimate),
+                    (change_metric, equal - equal_initial, estimate - initial_estimate),
+                ):
+                    rows.append(
+                        {
+                            "scope": "equal_domain",
+                            "outer_domain": "__equal_domain__",
+                            "nominal_checkpoint": checkpoint,
+                            "metric": metric_name,
+                            "control_scorer": control,
+                            "direction": direction,
+                            **_bootstrap_summary(
+                                values,
+                                estimate=point,
+                                replicates=replicates,
+                                seed=seed,
+                            ),
+                            "fraction_below_zero": float(np.mean(values < 0.0)),
+                        }
+                    )
+    return pl.DataFrame(rows).sort(
+        [
+            "metric",
+            "control_scorer",
+            "nominal_checkpoint",
+            "scope",
+            "outer_domain",
+        ]
+    )
+
+
+def evaluate_dynamic_valuation_closure(
+    aligned: pl.DataFrame,
+    *,
+    domain_order: tuple[str, ...],
+    recall_k: int,
+    bootstrap_replicates: int,
+    seed: int,
+) -> DynamicValuationClosureTables:
+    """Evaluate aligned current-state action scorers at frozen cost levels."""
+
+    domains = _dynamic_roster(domain_order, "dynamic valuation domain order")
+    if set(aligned.get_column("outer_domain").unique()) != set(domains):
+        raise DynamicValuationClosureError("aligned valuation domains changed")
+    per_state = _dynamic_per_state(aligned, recall_k=recall_k)
+    per_specimen, domain_metrics, regret, utility = _aggregate_dynamic_valuation(
+        per_state
+    )
+    bootstrap = _dynamic_valuation_bootstrap(
+        per_specimen,
+        domain_order=domains,
+        replicates=bootstrap_replicates,
+        seed=seed,
+    )
+    return DynamicValuationClosureTables(
+        per_state=per_state,
+        per_specimen=per_specimen,
+        regret_by_cost=regret,
+        one_step_utility=utility,
+        domain_metrics=domain_metrics,
+        bootstrap=bootstrap,
+    )
+
+
 __all__ = [
+    "DynamicValuationClosureError",
+    "DynamicValuationClosureTables",
     "MRISCausalClosureError",
     "MRISCausalClosureTables",
     "ValueEvolutionError",
     "ValueEvolutionMetricTables",
     "aggregate_value_evolution",
     "bootstrap_value_evolution",
+    "build_dynamic_valuation_alignment",
     "build_value_evolution",
+    "evaluate_dynamic_valuation_closure",
     "evaluate_mris_causal_closure",
     "evaluate_value_evolution",
 ]

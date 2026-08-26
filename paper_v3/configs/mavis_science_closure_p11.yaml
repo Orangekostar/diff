@@ -1,0 +1,36 @@
+schema_version: 1
+stage: P11_DYNAMIC_VALUATION
+audit_base_git_sha: 716de19c4fe6f742eddf40a95f8cc3ed45192217
+domain_order:
+  - 74t7kcdgkr
+  - cgtnjyggtm
+  - w68dtmpfyf
+  - xcmzfsbd9t
+  - yfxyg8jm46
+  - ykhs7s2dck
+p1_state_manifest: results/mavis/p1_state_bank/state_manifest.parquet
+p1_state_manifest_sha256: 42d24f0a4e0ee2dfc54eee48a2b8a2f452901cbf98361d2ba76e8a6a628ccfe5
+p1_artifact_manifest: results/mavis/p1_state_bank/artifact_manifest.json
+p1_artifact_manifest_sha256: f6f4d3f1afccc6f245c3e610c7fab23fb3c154b54f1d0eb10684bae1c61af136
+p1_state_sha256: 1cfc565b7c45ab558b4ae795c342b227f177c0a626c8064ece02368bb948cf18
+p3_action_scores: results/mavis/p3_dynamic_voi/action_scores.parquet
+p3_action_scores_sha256: 0a7275d91267204f4c352c64e7db11c6484cd1afefe20390350103d32c0def94
+p3_artifact_manifest: results/mavis/p3_dynamic_voi/artifact_manifest.json
+p3_artifact_manifest_sha256: 123c1caa64ecec69be25086457a02c3b247fee8ca703f09a66a800cb9456c022
+p3_state_sha256: a16465bebc28f70a7662327bffd6f0a7efa2044daf91ff077e1e890620626f85
+mvd_action_scores: results/mvd/m1_observability/observability_predictions.parquet
+mvd_action_scores_sha256: 3164e5e6e6a293cdd1376fd4d58438c74d23e791a1c1378deff14c254d9903b3
+mvd_artifact_manifest: results/mvd/m1_observability/artifact_manifest.json
+mvd_artifact_manifest_sha256: 5d2ea42e00516f1459404e4ceb3efc5a5d2db337c3bde5d43894fd5f41dec326
+mvd_authority_state_sha256: 3ef44b3379a4377758443d6fa6ef23d8aae2a83f32b5f1ce86a42b18398c5f3a
+dynamic_modes:
+  - real
+  - positions_only
+  - shuffled
+mvd_o2_method: o2_global_candidate
+candidate_only_method: o1_candidate_mlp_huber
+recall_k: 5
+p7_package: results/mavis/p7_final_frozen_eval
+p7_tree_state_sha256: 931dc86c26caf1c7246709c4706a7cd0428e3a1533b6ff1ad3c2ad8f9517d1e4
+bootstrap_replicates: 5000
+seed: 20250826

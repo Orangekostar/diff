@@ -1,0 +1,45 @@
+{
+  "config_sha256": "b7017ba218e6d594ae7f0c9af45da89ac1857bfd7275ce1d0d7d659632c1367a",
+  "files": [
+    {
+      "bytes": 1508,
+      "path": "REPORT.md",
+      "sha256": "76ed9492a852ff4f28a6a0609c0ba63931bb3dd9210c6a5fc15dd7420e0a2d7b"
+    },
+    {
+      "bytes": 11408067,
+      "path": "action_predictions.parquet",
+      "sha256": "35e80507f371ba45b4f0079b65d96874478e8326f4164dd486d78922df3d009a"
+    },
+    {
+      "bytes": 121269,
+      "path": "bootstrap.csv",
+      "sha256": "dd67a606c3b4031a4517bacc864c89c15ce651d2832ccbc1f8f866614e44bbc5"
+    },
+    {
+      "bytes": 27832,
+      "path": "domain_metrics.csv",
+      "sha256": "b807e2c582c1d8acc815bb47006ad3af824ece317d08112c8d76f0431c379769"
+    },
+    {
+      "bytes": 3019,
+      "path": "one_step_utility.csv",
+      "sha256": "e4c166ae92bbb1bc313c63f9ff3b8c35c52947f6c148d1b34ad2d51ae4577a8c"
+    },
+    {
+      "bytes": 4417,
+      "path": "regret_by_cost.csv",
+      "sha256": "2e4eb8880bad75204d4422f40fbc990d55cbed39f389081b3b7bfc6cd0b57e15"
+    },
+    {
+      "bytes": 2969,
+      "path": "summary.json",
+      "sha256": "75b590bc853ac23fe5bc394de3c4a08b66566553f0b2e23a67268420261da558"
+    }
+  ],
+  "p11_state_sha256": "ad5eae89c2f0fb0ffefa52acb436827b76a76afcdad86d9053dc9bd735a0e915",
+  "p7_tree_state_sha256": "931dc86c26caf1c7246709c4706a7cd0428e3a1533b6ff1ad3c2ad8f9517d1e4",
+  "schema_version": 1,
+  "stage": "P11_DYNAMIC_VALUATION",
+  "status": "COMPLETE"
+}

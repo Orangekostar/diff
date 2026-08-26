@@ -790,3 +790,341 @@ def test_p10_mris_causal_package_rejects_checksum_changes(tmp_path: Path) -> Non
 
     with pytest.raises(module.ScienceClosureArtifactError, match="checksum"):
         module.verify_p10_mris_causal_package(output)
+
+
+_DYNAMIC_MODES = ("real", "positions_only", "shuffled")
+
+
+def _dynamic_states() -> pl.DataFrame:
+    rows = []
+    for domain in ("d0", "d1"):
+        for specimen_index in range(2):
+            specimen_id = f"{domain}-s{specimen_index}"
+            for checkpoint_index, checkpoint in enumerate((0.1, 0.2)):
+                rows.append(
+                    {
+                        "domain_id": domain,
+                        "specimen_id": specimen_id,
+                        "trajectory_id": f"{specimen_id}-uniform",
+                        "method": "uniform",
+                        "state_id": f"{specimen_id}-c{checkpoint_index}",
+                        "nominal_checkpoint": checkpoint,
+                        "exact_acquired_cost": 10 * (checkpoint_index + 1),
+                        "native_count": 100,
+                        "effective_budget": checkpoint,
+                    }
+                )
+    return pl.DataFrame(rows)
+
+
+def _dynamic_action_scores() -> pl.DataFrame:
+    score_map = {
+        "real": ((3.0, 2.0, 1.0), (1.0, 3.0, 2.0)),
+        "positions_only": ((2.0, 3.0, 1.0), (2.0, 3.0, 1.0)),
+        "shuffled": ((1.0, 2.0, 3.0), (3.0, 1.0, 2.0)),
+    }
+    rows = []
+    for state in _dynamic_states().iter_rows(named=True):
+        checkpoint_index = 0 if state["nominal_checkpoint"] == 0.1 else 1
+        for mode in _DYNAMIC_MODES:
+            for candidate_index in range(3):
+                teacher = 3.0 - candidate_index
+                rows.append(
+                    {
+                        "outer_domain": state["domain_id"],
+                        "domain_id": state["domain_id"],
+                        "specimen_id": state["specimen_id"],
+                        "state_id": state["state_id"],
+                        "mode": mode,
+                        "candidate_index": candidate_index,
+                        "cell_index": candidate_index,
+                        "from_level": checkpoint_index,
+                        "to_level": checkpoint_index + 1,
+                        "exact_added_cost": 5 + candidate_index,
+                        "predicted_score": score_map[mode][checkpoint_index][
+                            candidate_index
+                        ],
+                        "teacher_value": teacher,
+                        "current_prediction": 0.5,
+                        "candidate_prediction": 0.5 + teacher * 0.01,
+                        "evaluation_true_cai": 0.7,
+                        "teacher_fold_count": 1,
+                        "dynamic_model_state_sha256": mode[0] * 64,
+                    }
+                )
+    return pl.DataFrame(rows)
+
+
+def _mvd_action_scores() -> pl.DataFrame:
+    rows = []
+    for domain in ("d0", "d1"):
+        for specimen_index in range(2):
+            specimen_id = f"{domain}-s{specimen_index}"
+            for method, scores in (
+                ("o2_global_candidate", (3.0, 2.0, 1.0)),
+                ("o1_candidate_mlp_huber", (1.0, 3.0, 2.0)),
+            ):
+                for cell_index, score in enumerate(scores):
+                    rows.append(
+                        {
+                            "outer_domain": domain,
+                            "specimen_id": specimen_id,
+                            "dataset_id": domain,
+                            "method": method,
+                            "cell_index": cell_index,
+                            "predicted_value": score + specimen_index * 0.01,
+                            "teacher_value": 0.0,
+                            "candidate_cost": 99 + cell_index,
+                        }
+                    )
+    return pl.DataFrame(rows)
+
+
+def test_dynamic_valuation_aligns_all_scorers_on_same_legal_actions() -> None:
+    module = _analysis_module()
+    assert hasattr(module, "build_dynamic_valuation_alignment")
+
+    aligned = module.build_dynamic_valuation_alignment(
+        _dynamic_states(),
+        _dynamic_action_scores(),
+        _mvd_action_scores(),
+        domain_order=("d0", "d1"),
+        dynamic_modes=_DYNAMIC_MODES,
+        mvd_o2_method="o2_global_candidate",
+        candidate_only_method="o1_candidate_mlp_huber",
+    )
+
+    assert set(aligned.get_column("scorer").unique()) == {
+        "dynamic_real",
+        "dynamic_positions_only",
+        "dynamic_shuffled",
+        "static_m1_o2",
+        "candidate_only_static",
+    }
+    rosters = aligned.group_by("scorer").agg(
+        pl.struct(
+            "state_id",
+            "candidate_index",
+            "cell_index",
+            "from_level",
+            "to_level",
+            "exact_added_cost",
+        )
+        .sort()
+        .alias("roster")
+    )
+    assert rosters.get_column("roster").n_unique() == 1
+    static = aligned.filter(pl.col("scorer") == "static_m1_o2")
+    assert (
+        static.group_by("specimen_id", "cell_index")
+        .agg(pl.col("predicted_score").n_unique().alias("n"))
+        .get_column("n")
+        .unique()
+        .to_list()
+        == [1]
+    )
+    assert static.get_column("exact_added_cost").max() == 7
+    assert static.get_column("source_candidate_cost").min() == 99
+    assert static.get_column("static_extension_to_current_state").all()
+
+
+def test_dynamic_valuation_rejects_misaligned_dynamic_action_costs() -> None:
+    module = _analysis_module()
+    changed = _dynamic_action_scores().with_columns(
+        pl.when(
+            (pl.col("mode") == "positions_only")
+            & (pl.col("state_id") == "d0-s0-c0")
+            & (pl.col("candidate_index") == 0)
+        )
+        .then(100)
+        .otherwise(pl.col("exact_added_cost"))
+        .alias("exact_added_cost")
+    )
+
+    with pytest.raises(module.DynamicValuationClosureError, match="action roster"):
+        module.build_dynamic_valuation_alignment(
+            _dynamic_states(),
+            changed,
+            _mvd_action_scores(),
+            domain_order=("d0", "d1"),
+            dynamic_modes=_DYNAMIC_MODES,
+            mvd_o2_method="o2_global_candidate",
+            candidate_only_method="o1_candidate_mlp_huber",
+        )
+
+
+def test_dynamic_valuation_metrics_are_cost_stratified_and_paired() -> None:
+    module = _analysis_module()
+    aligned = module.build_dynamic_valuation_alignment(
+        _dynamic_states(),
+        _dynamic_action_scores(),
+        _mvd_action_scores(),
+        domain_order=("d0", "d1"),
+        dynamic_modes=_DYNAMIC_MODES,
+        mvd_o2_method="o2_global_candidate",
+        candidate_only_method="o1_candidate_mlp_huber",
+    )
+
+    first = module.evaluate_dynamic_valuation_closure(
+        aligned,
+        domain_order=("d0", "d1"),
+        recall_k=2,
+        bootstrap_replicates=50,
+        seed=23,
+    )
+    second = module.evaluate_dynamic_valuation_closure(
+        aligned,
+        domain_order=("d0", "d1"),
+        recall_k=2,
+        bootstrap_replicates=50,
+        seed=23,
+    )
+
+    assert first.bootstrap.equals(second.bootstrap)
+    real = first.per_state.filter(
+        (pl.col("scorer") == "dynamic_real")
+        & (pl.col("nominal_checkpoint") == 0.2)
+    )
+    assert real.get_column("next_action_regret").unique().to_list() == [1.0]
+    assert real.get_column("one_step_cai_utility").unique().to_list() == [2.0]
+    assert first.regret_by_cost.get_column("nominal_checkpoint").n_unique() == 2
+    contrast = first.bootstrap.filter(
+        (pl.col("scope") == "equal_domain")
+        & (pl.col("nominal_checkpoint") == 0.2)
+        & (pl.col("metric") == "real_minus_control_regret")
+        & (pl.col("control_scorer") == "static_m1_o2")
+    ).row(0, named=True)
+    assert contrast["estimate"] == pytest.approx(1.0)
+    assert contrast["bootstrap_replicates"] == 50
+
+
+def _p11_package_inputs(root: Path) -> Path:
+    inputs = root / "inputs"
+    inputs.mkdir()
+    states = inputs / "p1_states.parquet"
+    actions = inputs / "p3_actions.parquet"
+    mvd = inputs / "mvd_scores.parquet"
+    _dynamic_states().write_parquet(states)
+    _dynamic_action_scores().write_parquet(actions)
+    _mvd_action_scores().write_parquet(mvd)
+    p1_state = "1" * 64
+    p3_state = "3" * 64
+    mvd_authority = "4" * 64
+    manifests = {
+        "p1_manifest.json": {
+            "artifact": "mavis_p1_state_bank",
+            "state_bank_state_sha256": p1_state,
+            "files": {"state_manifest.parquet": {"sha256": _sha256(states)}},
+        },
+        "p3_manifest.json": {
+            "artifact": "mavis_p3_dynamic_voi",
+            "p3_state_sha256": p3_state,
+            "files": {"action_scores.parquet": {"sha256": _sha256(actions)}},
+        },
+        "mvd_manifest.json": {
+            "package": "mvd_m1_observability",
+            "authority_state_sha256": mvd_authority,
+            "files": {
+                "observability_predictions.parquet": {"sha256": _sha256(mvd)}
+            },
+        },
+    }
+    for name, payload in manifests.items():
+        (inputs / name).write_text(
+            json.dumps(payload, sort_keys=True) + "\n", encoding="ascii"
+        )
+    p7 = inputs / "p7"
+    p7.mkdir()
+    (p7 / "frozen.txt").write_text("frozen\n", encoding="ascii")
+    config = {
+        "schema_version": 1,
+        "stage": "P11_DYNAMIC_VALUATION",
+        "audit_base_git_sha": "7" * 40,
+        "domain_order": ["d0", "d1"],
+        "p1_state_manifest": "inputs/p1_states.parquet",
+        "p1_state_manifest_sha256": _sha256(states),
+        "p1_artifact_manifest": "inputs/p1_manifest.json",
+        "p1_artifact_manifest_sha256": _sha256(inputs / "p1_manifest.json"),
+        "p1_state_sha256": p1_state,
+        "p3_action_scores": "inputs/p3_actions.parquet",
+        "p3_action_scores_sha256": _sha256(actions),
+        "p3_artifact_manifest": "inputs/p3_manifest.json",
+        "p3_artifact_manifest_sha256": _sha256(inputs / "p3_manifest.json"),
+        "p3_state_sha256": p3_state,
+        "mvd_action_scores": "inputs/mvd_scores.parquet",
+        "mvd_action_scores_sha256": _sha256(mvd),
+        "mvd_artifact_manifest": "inputs/mvd_manifest.json",
+        "mvd_artifact_manifest_sha256": _sha256(inputs / "mvd_manifest.json"),
+        "mvd_authority_state_sha256": mvd_authority,
+        "dynamic_modes": list(_DYNAMIC_MODES),
+        "mvd_o2_method": "o2_global_candidate",
+        "candidate_only_method": "o1_candidate_mlp_huber",
+        "recall_k": 2,
+        "p7_package": "inputs/p7",
+        "p7_tree_state_sha256": _tree_state(p7),
+        "bootstrap_replicates": 50,
+        "seed": 23,
+    }
+    config_path = root / "p11_dynamic_valuation.yaml"
+    config_path.write_text(yaml.safe_dump(config, sort_keys=True), encoding="ascii")
+    return config_path
+
+
+def test_p11_dynamic_valuation_package_is_hash_bound_and_deterministic(
+    tmp_path: Path,
+) -> None:
+    module = _artifacts_module()
+    assert hasattr(module, "run_p11_dynamic_valuation")
+    assert hasattr(module, "verify_p11_dynamic_valuation_package")
+    config = _p11_package_inputs(tmp_path)
+    p7 = tmp_path / "inputs/p7"
+    before = _tree_state(p7)
+
+    first = module.run_p11_dynamic_valuation(
+        config,
+        project_root=tmp_path,
+        output_root="results/p11_first",
+    )
+    second = module.run_p11_dynamic_valuation(
+        config,
+        project_root=tmp_path,
+        output_root="results/p11_second",
+    )
+    manifest = module.verify_p11_dynamic_valuation_package(first)
+
+    expected = {
+        "action_predictions.parquet",
+        "regret_by_cost.csv",
+        "one_step_utility.csv",
+        "domain_metrics.csv",
+        "bootstrap.csv",
+        "REPORT.md",
+        "summary.json",
+        "artifact_manifest.json",
+        "CHECKSUMS.sha256",
+    }
+    assert {item.name for item in first.iterdir()} == expected
+    assert manifest["stage"] == "P11_DYNAMIC_VALUATION"
+    assert manifest["status"] == "COMPLETE"
+    assert _tree_state(p7) == before
+    for name in expected:
+        assert (first / name).read_bytes() == (second / name).read_bytes()
+    summary = json.loads((first / "summary.json").read_text(encoding="utf-8"))
+    assert summary["aligned_action_prediction_count"] == 120
+    assert summary["p7_modified"] is False
+    assert summary["target_data_used_for_selection"] is False
+
+
+def test_p11_dynamic_valuation_package_rejects_checksum_changes(
+    tmp_path: Path,
+) -> None:
+    module = _artifacts_module()
+    output = module.run_p11_dynamic_valuation(
+        _p11_package_inputs(tmp_path),
+        project_root=tmp_path,
+        output_root="results/p11",
+    )
+    (output / "regret_by_cost.csv").write_text("changed\n", encoding="ascii")
+
+    with pytest.raises(module.ScienceClosureArtifactError, match="checksum"):
+        module.verify_p11_dynamic_valuation_package(output)
