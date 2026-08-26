@@ -103,11 +103,12 @@ def test_mavis_config_rejects_unknown_keys_and_source_hash_drift(
         load_mavis_config(drift, project_root=ROOT)
 
 
-def test_mavis_final_config_is_explicitly_locked_pending_source_selection() -> None:
+def test_mavis_final_config_is_frozen_to_source_selected_development_package() -> None:
     config = load_mavis_config(FINAL, project_root=ROOT)
 
     assert config.mode == "final"
-    assert config.final_configuration_frozen is False
-    assert config.development_package_sha256 is None
-    with pytest.raises(MAVISConfigError, match="not frozen"):
-        config.require_finalized()
+    assert config.final_configuration_frozen is True
+    assert config.development_package_sha256 == (
+        "89c96fdf6d9da3301569dad301477e86b75ef8a0107ad5795c977d4608e6a6fe"
+    )
+    config.require_finalized()

@@ -109,8 +109,8 @@ selection:
   target_data_forbidden: true
 
 finalization:
-  configuration_frozen: false
-  development_package_sha256: null
+  configuration_frozen: true
+  development_package_sha256: 89c96fdf6d9da3301569dad301477e86b75ef8a0107ad5795c977d4608e6a6fe
 
 outputs:
   root: results/mavis
