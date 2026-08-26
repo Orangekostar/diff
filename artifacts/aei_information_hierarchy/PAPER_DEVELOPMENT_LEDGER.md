@@ -14,6 +14,9 @@ Base commit: `c2eab6eac79dd3fbb9ecb0d19f98923e515e762b`
 | 7 | `c2c98e9` | related research, hierarchy framework, and multi-domain case/protocol draft | 51 paper tests; isolated journal-class compile; 15-entry citation closure; Ruff; `git diff --check` | no |
 | 8 | `b158398` | Section 5 results and discussion drafted from canonical metrics; readable multipage hierarchy table integration | 57 paper tests; 23-page isolated compile with zero warnings/overfull boxes; table render QA; Ruff | no |
 | 9 | `c55fd78` | fixed title, evidence-bounded abstract, Introduction, Conclusions, and final integrated layout | 60 paper tests; 26-page isolated compile with zero warnings/overfull boxes; full figure/table render QA; Ruff | no |
+| 10 | `41c4a1b5a19e52a76dc97c746736795358a9bf14` | deterministic submission package, supplement, full review, and pre-submission audit; delivery branch `aei-information-hierarchy`, integrated target `main` | 70 paper tests; MAVIS 225; MVD 29; authority MVA 126; Ruff; PDF/source-package hash and remote-path verification | no |
 
-Each subsequent paper commit will be appended after its SHA exists. The final
-entry must bind the pushed remote branch and verified artifact paths.
+Remote delivery verification covers the manuscript and supplement PDFs,
+deterministic ZIP, flat source manifest, pre-submission audit, and the existing
+M0/M1 GO/NO-GO and core-metrics artifacts under
+`artifacts/mavis_science_closure/`.
