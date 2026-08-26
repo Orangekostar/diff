@@ -1,0 +1,33 @@
+{
+  "artifact": "mavis_p6_safety",
+  "config_sha256": "d35faaf7f1c2e86785acf6ee821db6cf783d9a38565e1e75ec9a282e266e729c",
+  "files": {
+    "REPORT.md": {
+      "bytes": 458,
+      "sha256": "b3c97587920b22a9aa50d7323545e7ac6ebd2bf0e0eac067035f107047dd51b4"
+    },
+    "calibration_predictions.parquet": {
+      "bytes": 1314121,
+      "sha256": "538a79f2499a93a0cbf24164f71c601a24f2e655fc4342b7b917b7e16d0b239d"
+    },
+    "selections.csv": {
+      "bytes": 753,
+      "sha256": "2ee7c995b529108e35ed16b2391ffb852e58b665d37e5e60192c49791b10b5fe"
+    },
+    "source_metrics.csv": {
+      "bytes": 151472,
+      "sha256": "c629ce6406c6e855314dbe7e8898a696bfdbed0f9f7e4fd26a09d8b254c59418"
+    },
+    "summary.json": {
+      "bytes": 902,
+      "sha256": "3727f06cbb2a689898a57cb6aba85f4243847e370b52e456c6a1aa1cd3efdb75"
+    },
+    "threshold_audit.csv": {
+      "bytes": 5708,
+      "sha256": "f8aba1c5ef20bf140491d9f944d2001fbab310e2b9605128a10256c06bc29304"
+    }
+  },
+  "p6_state_sha256": "78424f120583228ca11d8c9c0edaefb1342a60d0ac6d51f61665b4819b34233f",
+  "runtime_code_state_sha256": "748682aa78b9d8da0e88b6931d3b72866f20b43c4e1327156bca54ac981c22d4",
+  "schema_version": 1
+}
