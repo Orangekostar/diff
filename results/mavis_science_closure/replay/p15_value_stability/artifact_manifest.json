@@ -1,0 +1,66 @@
+{
+  "artifacts": [
+    {
+      "bytes": 983,
+      "path": "REPORT.md",
+      "sha256": "affba39384d5f96421c7461097109bb59dba6888ab81f4b28693a83919b7f60c"
+    },
+    {
+      "bytes": 6869660,
+      "path": "bootstrap.csv",
+      "sha256": "8995a27b878f7dbae3b3184b3087576dd739ab2e7107a74ba806a57beda5a2fb"
+    },
+    {
+      "bytes": 1172,
+      "path": "model_metrics.csv",
+      "sha256": "f1521d38eec8ec08764a2560e2aea215c74756894e8fe03aff430c04f3d96e31"
+    },
+    {
+      "bytes": 220771,
+      "path": "oracle_utility.csv",
+      "sha256": "cbd1440c64ded4529d1b2e55015ed51ebe9a8d09c211eddb78b9306c074a51b1"
+    },
+    {
+      "bytes": 112261,
+      "path": "rank_agreement.csv",
+      "sha256": "ca1d0a212eb397d278eeeffe567ffe9c047c0b5f42d318bc79af85ecabc0a02a"
+    },
+    {
+      "bytes": 55467,
+      "path": "region_stability.csv",
+      "sha256": "f0ab8768d505d75874bf06ad86abedc6f5be63803d197e2684d1d1cdbeaf6d5c"
+    },
+    {
+      "bytes": 123634,
+      "path": "ridge_sensitivity.csv",
+      "sha256": "dcc9a2699ba618727da576b3e897cdcfa53477566d2cef48dd5a568b6c0cd984"
+    },
+    {
+      "bytes": 6792,
+      "path": "strict_oof_audit.csv",
+      "sha256": "8ccc4439beb1eaac1696ea642951a3e36857c5d41394b157cb6e8e1525bf47ea"
+    },
+    {
+      "bytes": 6249,
+      "path": "summary.json",
+      "sha256": "55d697ad2aa78e7e0ddd9b471d4cbdc58db0c22a39aa36879a903858804ffb45"
+    },
+    {
+      "bytes": 1193425,
+      "path": "value_maps.parquet",
+      "sha256": "f2c222ad076709559d0bc2c056cd690fcff013ac4d45def830e7e7c5fa0a065f"
+    }
+  ],
+  "audit_base_git_sha": "716de19c4fe6f742eddf40a95f8cc3ed45192217",
+  "config_sha256": "1d8136b512c9e50b2b30d58251d8f484206421528cb1b6cba0c3d4225c7bbe28",
+  "schema_version": 1,
+  "source_sha256": {
+    "candidate_bank_0.015625": "42882df095ac2935bf7cf0efec5d17c3fee257ddee4f4735fbb64d6931976b08",
+    "candidate_bank_0.03125": "cfeff617df9208bdfbd8434474f63134661f8fb6f7b59676bced5054ac0d2443",
+    "mva_config": "65968cdb6d1e98f6e5371afc12bdf28d320749bde7ffdadcbec01e1b0a780284",
+    "oracle_values": "6b289f2f6f74ac75dde47ea7cbfefcda1c49f025e74227bfb34ef269182ff963",
+    "p7_tree_state": "931dc86c26caf1c7246709c4706a7cd0428e3a1533b6ff1ad3c2ad8f9517d1e4",
+    "ridge_sensitivity": "ad57e9873384a1564993280a9b3365859fbe22b4048ecaaa115e547cce63b7d4"
+  },
+  "stage": "P15_VALUE_STABILITY"
+}

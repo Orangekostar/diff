@@ -1,0 +1,20 @@
+{
+  "artifacts": [
+    "REPORT.md",
+    "artifact_manifest.json",
+    "bootstrap.csv",
+    "enumerated_sets.parquet",
+    "per_domain.csv",
+    "set_results.parquet",
+    "summary.json"
+  ],
+  "code_state_sha256": "619efb848c8c493772734267cc0267873012f8e1af75e2e987735cd6edb1d9eb",
+  "config_sha256": "aacd01ec1c8b4999b2c401f4f93b6996856935a0f85e5fb8e0b33c2e0ddd4b9f",
+  "inputs": {
+    "p2_checkpoint_tree_sha256": "e977b0b34bc7dca0ea95cb2af74a504107b5965c99a7e5489c9333c27b848649",
+    "p3_checkpoint_tree_sha256": "6374ade7e250cccd6499c347da4fc631a07f6a48e0f50947f5c0ce67ead05d4b",
+    "p7_tree_state_sha256": "931dc86c26caf1c7246709c4706a7cd0428e3a1533b6ff1ad3c2ad8f9517d1e4"
+  },
+  "schema_version": 1,
+  "stage": "P13_SET_PLANNING"
+}

@@ -1,0 +1,46 @@
+{
+  "actual_content_beyond_geometry_supported": false,
+  "audit_base_git_sha": "716de19c4fe6f742eddf40a95f8cc3ed45192217",
+  "bootstrap_replicates": 5000,
+  "bootstrap_row_count": 252,
+  "checkpoint_count": 6,
+  "claim_tier_changed": false,
+  "config_sha256": "dc65ea986ebe786e7a19ebd3d175bdb43f4d46a3c533d002c714f0f7ac60b04b",
+  "contrast_row_count": 24,
+  "curve_row_count": 31,
+  "domain_count": 6,
+  "domain_metric_row_count": 36,
+  "endpoint_checkpoint": 0.25,
+  "endpoint_full_field_utility_recovery_fraction": 0.2655209065826384,
+  "endpoint_real_change_ci95": [
+    -0.0011840686864012153,
+    -0.00025047239942650626
+  ],
+  "endpoint_real_change_from_initial_mae": -0.0007309962326374116,
+  "endpoint_recovery_ci95": [
+    0.10566862361302957,
+    0.41032085829808473
+  ],
+  "full_field_method": "I_field_selected",
+  "full_field_predictions_sha256": "f2c62d0afc3eec1b280bbadb1ede6d56b1ebcdbb8f9caf0d528f5ce1e1a865a5",
+  "p10_state_sha256": "c9d312a813eb4ed0b8e216ce873360b7551fc58523fadc6c90081f28e5a56503",
+  "p2_state_predictions_sha256": "b93a605b35f999ec6bdaa4baa4ed55678b45b0fc362932c8587db7bc3d546be0",
+  "p2_state_sha256": "d3dba6ec3621575c0eb20f58c9d041fb00050d11c23a0426b3da764bfcd09768",
+  "p7_modified": false,
+  "p7_tree_state_sha256": "931dc86c26caf1c7246709c4706a7cd0428e3a1533b6ff1ad3c2ad8f9517d1e4",
+  "per_specimen_row_count": 8556,
+  "real_error_decreases_with_ut": true,
+  "runtime_code_state_sha256": "e9733fbe979773ab9c45e2d21d8f70ca7f53d8aefc767b911d114252b68a254e",
+  "schema": 1,
+  "schema_version": 1,
+  "seed": 20250826,
+  "sign_convention": "real_minus_control; negative_favors_real",
+  "source_prediction_row_count": 41400,
+  "specimen_count": 276,
+  "stage": "P10_MRIS_CAUSAL",
+  "statistical_units": [
+    "physical_specimen",
+    "held_out_domain"
+  ],
+  "status": "COMPLETE"
+}

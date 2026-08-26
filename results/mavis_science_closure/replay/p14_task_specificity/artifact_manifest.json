@@ -1,0 +1,30 @@
+{
+  "artifacts": [
+    "FIGURE_CAPTION.md",
+    "REPORT.md",
+    "VISUAL_CONTRACT.md",
+    "artifact_manifest.json",
+    "bootstrap.csv",
+    "per_budget.csv",
+    "per_domain.csv",
+    "per_specimen.csv",
+    "source_data.csv",
+    "spatial_comparison.csv",
+    "summary.json",
+    "task_matrix.csv",
+    "task_specificity.pdf",
+    "task_specificity.png",
+    "task_specificity.svg"
+  ],
+  "code_state_sha256": "3f143d7a129a44817d7e6a3612b61e5ad4ccccf55e896373342845edfb3810f7",
+  "config_sha256": "003141fed508c6791b3120aeccb0a09116c9a7aff6051a70d51216d48f334fd8",
+  "inputs": {
+    "a2_state_metrics_sha256": "71c377c1060fdb0a3a79a064eb59c8bdf9d12c350c612466d6dc82d440e53598",
+    "a2_trajectories_sha256": "4906d188b8a369d0e233d7cf79d98b694342eaf9923d7ec702d611a525123d16",
+    "a4_state_metrics_sha256": "128ecbde49f08db1ae89ab512f7606b069e579211a0325a3a74f11ad04deb936",
+    "a4_trajectories_sha256": "12293c89c8c066d7db1febc4f1e7e573744b3522a832968f91e209090028e257",
+    "p7_tree_state_sha256": "931dc86c26caf1c7246709c4706a7cd0428e3a1533b6ff1ad3c2ad8f9517d1e4"
+  },
+  "schema_version": 1,
+  "stage": "P14_TASK_SPECIFICITY"
+}

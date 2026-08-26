@@ -1,0 +1,16 @@
+stage,metric,direction,estimate,ci95_lower,ci95_upper,domains_improved,status,source
+M0,one_shot_mechanical_oracle_auebc,lower_is_better,0.013457944110677541,,,,DIAGNOSTIC,results/mvd/m0_one_shot_oracle/summary.json
+M0,uniform_auebc,lower_is_better,0.01736345802834,,,,REFERENCE,results/mvd/m0_one_shot_oracle/REPORT.md
+M0,reconstruction_auebc,lower_is_better,0.017187660390780377,,,,REFERENCE,results/mvd/m0_one_shot_oracle/summary.json
+M0,sequential_mechanical_oracle_auebc,lower_is_better,0.010624525770798778,,,,REFERENCE,results/mvd/m0_one_shot_oracle/summary.json
+M0,uniform_minus_one_shot_oracle_auebc,higher_favors_oracle,0.003905513917662457,0.0028007400590012803,0.005017861416957538,6/6,PASS,results/mvd/m0_one_shot_oracle/summary.json
+M0,reconstruction_minus_one_shot_oracle_auebc,higher_favors_oracle,0.0037297162801028347,0.002838032408647093,0.004688388311493853,6/6,PASS,results/mvd/m0_one_shot_oracle/summary.json
+M0,headroom_retention,higher_is_better,0.5682827636580298,,,,PASS,results/mvd/m0_one_shot_oracle/summary.json
+M1,o2_spearman,higher_is_better,-0.01958620493212195,-0.05906029453672887,0.01947782215198501,3/6,FAIL,results/mvd/m1_observability/bootstrap.csv
+M1,o2_minus_global_ndcg10,higher_favors_o2,0.021022560940367734,-0.024019908812981088,0.07191776588726291,3/6,FAIL,results/mvd/m1_observability/bootstrap.csv
+M1,o2_regret_at_1,lower_is_better,0.019990008178281334,,,,FAIL,results/mvd/m1_observability/model_metrics.csv
+M1,o2_exact_budget_set_regret,lower_is_better,0.08170537365108692,,,,FAIL,results/mvd/m1_observability/model_metrics.csv
+M1,global_exact_budget_set_regret,lower_is_better,0.0799269236861353,,,,REFERENCE,results/mvd/m1_observability/model_metrics.csv
+M1,random_exact_budget_set_regret,lower_is_better,0.07978306976762,,,,REFERENCE,results/mvd/m1_observability/model_metrics.csv
+M1,predicted_cai_auebc,lower_is_better,0.01725452198321868,,,,FAIL,results/mvd/m1_observability/summary.json
+M1,oracle_advantage_capture,higher_is_better,-0.017926723486982685,,,2/6,FAIL,results/mvd/m1_observability/summary.json

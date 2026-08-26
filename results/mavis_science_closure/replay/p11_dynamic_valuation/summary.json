@@ -1,0 +1,64 @@
+{
+  "aligned_action_prediction_count": 2157215,
+  "audit_base_git_sha": "716de19c4fe6f742eddf40a95f8cc3ed45192217",
+  "bootstrap_replicates": 5000,
+  "bootstrap_row_count": 560,
+  "checkpoint_count": 5,
+  "claim_tier_changed": false,
+  "config_sha256": "b7017ba218e6d594ae7f0c9af45da89ac1857bfd7275ce1d0d7d659632c1367a",
+  "decision_state_count": 6900,
+  "domain_count": 6,
+  "domain_metric_count": 150,
+  "dynamic_real_advantage_growth_over_static_supported": false,
+  "dynamic_real_beats_all_controls": false,
+  "dynamic_real_endpoint_advantage_over_static_supported": true,
+  "dynamic_shuffled_outperforms_real": true,
+  "endpoint_checkpoint": 0.1875,
+  "endpoint_real_minus_shuffled_regret": 0.00023277699588920581,
+  "endpoint_real_minus_shuffled_regret_ci95": [
+    6.0597162113144695e-05,
+    0.00041796334359589233
+  ],
+  "endpoint_real_minus_static_regret": -0.0012601005460586463,
+  "endpoint_real_minus_static_regret_ci95": [
+    -0.002123390344158352,
+    -0.00044424662241962417
+  ],
+  "mvd_action_scores_sha256": "3164e5e6e6a293cdd1376fd4d58438c74d23e791a1c1378deff14c254d9903b3",
+  "mvd_authority_state_sha256": "3ef44b3379a4377758443d6fa6ef23d8aae2a83f32b5f1ce86a42b18398c5f3a",
+  "p11_state_sha256": "ad5eae89c2f0fb0ffefa52acb436827b76a76afcdad86d9053dc9bd735a0e915",
+  "p1_state_manifest_sha256": "42d24f0a4e0ee2dfc54eee48a2b8a2f452901cbf98361d2ba76e8a6a628ccfe5",
+  "p1_state_sha256": "1cfc565b7c45ab558b4ae795c342b227f177c0a626c8064ece02368bb948cf18",
+  "p3_action_scores_sha256": "0a7275d91267204f4c352c64e7db11c6484cd1afefe20390350103d32c0def94",
+  "p3_state_sha256": "a16465bebc28f70a7662327bffd6f0a7efa2044daf91ff077e1e890620626f85",
+  "p7_modified": false,
+  "p7_tree_state_sha256": "931dc86c26caf1c7246709c4706a7cd0428e3a1533b6ff1ad3c2ad8f9517d1e4",
+  "per_state_metric_count": 34500,
+  "primary_conclusion": "At the final decision checkpoint, dynamic real-state valuation has lower regret than frozen static M1/O2, but growth of that advantage from the initial checkpoint is uncertain and shuffled-content valuation remains better; the gain is not attributable to accumulated specimen-specific measured content.",
+  "real_vs_static_advantage_change": -0.00123839560903695,
+  "real_vs_static_advantage_change_ci95": [
+    -0.003105866402404415,
+    0.0007026489594585978
+  ],
+  "recall_k": 5,
+  "runtime_code_state_sha256": "88540c4fa519795dac5a2845ac46ba1cefbefec49f62ab2af06412877569e79d",
+  "schema": 1,
+  "schema_version": 1,
+  "scorers": [
+    "candidate_only_static",
+    "dynamic_positions_only",
+    "dynamic_real",
+    "dynamic_shuffled",
+    "static_m1_o2"
+  ],
+  "seed": 20250826,
+  "specimen_count": 276,
+  "stage": "P11_DYNAMIC_VALUATION",
+  "static_mvd_semantics": "frozen specimen-cell score projected onto current legal actions; current exact costs and P3 teacher values retained",
+  "statistical_units": [
+    "physical_specimen",
+    "held_out_domain"
+  ],
+  "status": "COMPLETE",
+  "target_data_used_for_selection": false
+}

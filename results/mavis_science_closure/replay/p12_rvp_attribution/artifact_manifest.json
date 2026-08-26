@@ -1,0 +1,22 @@
+{
+  "artifacts": [
+    "REPORT.md",
+    "artifact_manifest.json",
+    "bootstrap.csv",
+    "per_budget.csv",
+    "per_domain.csv",
+    "per_specimen.csv",
+    "substitution_matrix.csv",
+    "summary.json"
+  ],
+  "code_state_sha256": "44b40729f56bfc1093586beea3758da011168a0359cd3a05833dd5994ab4c7cf",
+  "config_sha256": "6c271da60538c5f229f25d97b29fb63c7985daba543e8a810e8f882bd1b992b5",
+  "inputs": {
+    "p2_checkpoint_tree_sha256": "e977b0b34bc7dca0ea95cb2af74a504107b5965c99a7e5489c9333c27b848649",
+    "p3_checkpoint_tree_sha256": "6374ade7e250cccd6499c347da4fc631a07f6a48e0f50947f5c0ce67ead05d4b",
+    "p4_predictions_sha256": "01b22fbb3cbb2cfc114d959862f481194b5e55ab88e66fc24b17eb7ec971287e",
+    "p7_tree_state_sha256": "931dc86c26caf1c7246709c4706a7cd0428e3a1533b6ff1ad3c2ad8f9517d1e4"
+  },
+  "schema_version": 1,
+  "stage": "P12_RVP_ATTRIBUTION"
+}

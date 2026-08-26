@@ -1,0 +1,94 @@
+{
+  "aggregate": {
+    "beam_width_2": {
+      "final_error": 0.12534661218628787,
+      "joint_utility": 2.364299586579575e-05,
+      "planning_regret": 0.000117686665345607
+    },
+    "beam_width_4": {
+      "final_error": 0.12534161996563808,
+      "joint_utility": 2.8635216515607915e-05,
+      "planning_regret": 0.00011269444469579484
+    },
+    "current_greedy": {
+      "final_error": 0.12534957967605231,
+      "joint_utility": 2.067550610136404e-05,
+      "planning_regret": 0.00012065415511003872
+    },
+    "exact_learned_lookahead_reachable_pool": {
+      "final_error": 0.12534399179297176,
+      "joint_utility": 2.6263389181916124e-05,
+      "planning_regret": 0.00011506627202948664
+    },
+    "retrospective_joint_near_oracle_reachable_pool": {
+      "final_error": 0.12522892552094228,
+      "joint_utility": 0.00014132966121140276,
+      "planning_regret": 0.0
+    },
+    "two_step_lookahead": {
+      "final_error": 0.12534399179297176,
+      "joint_utility": 2.6263389181916124e-05,
+      "planning_regret": 0.00011506627202948664
+    }
+  },
+  "audit_base_git_sha": "716de19c4fe6f742eddf40a95f8cc3ed45192217",
+  "base_shortlist_width": 8,
+  "beam_widths": [
+    2,
+    4
+  ],
+  "config_sha256": "aacd01ec1c8b4999b2c401f4f93b6996856935a0f85e5fb8e0b33c2e0ddd4b9f",
+  "diagnostic_checkpoint": 0.0625,
+  "domain_order": [
+    "74t7kcdgkr",
+    "cgtnjyggtm",
+    "w68dtmpfyf",
+    "xcmzfsbd9t",
+    "yfxyg8jm46",
+    "ykhs7s2dck"
+  ],
+  "enumerated_set_count": 15796,
+  "lookahead_width": 8,
+  "method_order": [
+    "current_greedy",
+    "beam_width_2",
+    "beam_width_4",
+    "two_step_lookahead",
+    "exact_learned_lookahead_reachable_pool",
+    "retrospective_joint_near_oracle_reachable_pool"
+  ],
+  "oracle_deployable": false,
+  "p7_tree_state_sha256": "931dc86c26caf1c7246709c4706a7cd0428e3a1533b6ff1ad3c2ad8f9517d1e4",
+  "planning_regret_intervals": {
+    "beam_width_2": [
+      0.00010066660290281857,
+      0.0001356146064724638
+    ],
+    "beam_width_4": [
+      9.484632026816116e-05,
+      0.0001308301144209733
+    ],
+    "current_greedy": [
+      0.00010330836663465408,
+      0.00013862026880825305
+    ],
+    "exact_learned_lookahead_reachable_pool": [
+      9.638796393321947e-05,
+      0.00013430357642544763
+    ],
+    "two_step_lookahead": [
+      9.748734841703974e-05,
+      0.00013347090214151924
+    ]
+  },
+  "policy_checkpoint_state_sha256": "ae3305bce181d30e10250e314329098682f5eeb806c699f3075f4df41a06cdd8",
+  "primary_conclusion": "The bounded set-planning gap is supported because the paired current-greedy regret interval is strictly positive.",
+  "reachable_pool_width_range": [
+    8,
+    12
+  ],
+  "schema_version": 1,
+  "set_size": 2,
+  "specimen_count": 276,
+  "stage": "P13_SET_PLANNING"
+}

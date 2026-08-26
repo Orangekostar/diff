@@ -1,0 +1,50 @@
+{
+  "config_sha256": "2d40f95557a3de5003072f1e87b6e1d03ce976680f49ef6be49a4d4b64c318ab",
+  "files": [
+    {
+      "bytes": 1543,
+      "path": "REPORT.md",
+      "sha256": "d911c2b18337f85b997e76dad08657d809ce2ceb8920c3c037f8930ff3b8c6df"
+    },
+    {
+      "bytes": 3782,
+      "path": "aggregate_metrics.csv",
+      "sha256": "9875e59edb08ecfb52bc3d740955d388f510c0955b8aebc5f6b61c94bc0e28fd"
+    },
+    {
+      "bytes": 31757,
+      "path": "bootstrap.csv",
+      "sha256": "a82daa7e45bf5f50c9172a889f80343e44722eb2c87bb90fbb979ff9b598f17d"
+    },
+    {
+      "bytes": 21474,
+      "path": "domain_metrics.csv",
+      "sha256": "86c91d75c88c76e0fc431db9bf08d51f5722d0650e0680c2c21d9ba30b7d21e1"
+    },
+    {
+      "bytes": 788328,
+      "path": "pair_metrics.parquet",
+      "sha256": "01feb0fe894f38526cb8ed20a161f2f3a88a73268d483411d21c565606df6926"
+    },
+    {
+      "bytes": 125309,
+      "path": "per_specimen_metrics.parquet",
+      "sha256": "eb7eee396aa6cba76db7594454a64a5c3963afa0d09be6bf5b2f31bdf8d5af45"
+    },
+    {
+      "bytes": 4123,
+      "path": "summary.json",
+      "sha256": "7949e0828d3a2ceafa91ef211f828329ed54a7e01b2bdf11e8ab33ed7d601e28"
+    },
+    {
+      "bytes": 10295095,
+      "path": "value_evolution.parquet",
+      "sha256": "321840dd7f8b527e23ee18068e749f8fde88499b4aa2427edc7650d12ec2bc68"
+    }
+  ],
+  "p7_tree_state_sha256": "931dc86c26caf1c7246709c4706a7cd0428e3a1533b6ff1ad3c2ad8f9517d1e4",
+  "p9_state_sha256": "7f32f31c06ad8ce6b5bb615539e6339fd97e5ddb90e1679d3f1c385ab4bc65bf",
+  "schema_version": 1,
+  "stage": "P9_CONDITIONAL_VALUE_EVOLUTION",
+  "status": "COMPLETE"
+}

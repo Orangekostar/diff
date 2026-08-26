@@ -1,0 +1,212 @@
+{
+  "audit_base_git_sha": "716de19c4fe6f742eddf40a95f8cc3ed45192217",
+  "bootstrap_intervals": {
+    "oracle_utility/huber/mechanical_headroom_over_reconstruction": {
+      "interval": [
+        0.012403334615472,
+        0.016478023045946
+      ],
+      "point": 0.014417157838276
+    },
+    "oracle_utility/huber/mechanical_oracle_improvement": {
+      "interval": [
+        0.020464608257911,
+        0.024102777322607
+      ],
+      "point": 0.022271740038991
+    },
+    "oracle_utility/ridge/mechanical_headroom_over_reconstruction": {
+      "interval": [
+        0.012873618171412,
+        0.016847641832144
+      ],
+      "point": 0.014813808288758
+    },
+    "oracle_utility/ridge/mechanical_oracle_improvement": {
+      "interval": [
+        0.018310319298211,
+        0.021429051353445
+      ],
+      "point": 0.019833620251972
+    },
+    "oracle_utility/shallow_mlp/mechanical_headroom_over_reconstruction": {
+      "interval": [
+        0.031443706742355,
+        0.040716345687478
+      ],
+      "point": 0.036042445166371
+    },
+    "oracle_utility/shallow_mlp/mechanical_oracle_improvement": {
+      "interval": [
+        0.036643528133816,
+        0.045303565407122
+      ],
+      "point": 0.04083623016212
+    },
+    "rank_agreement/huber__shallow_mlp/best_action_agreement": {
+      "interval": [
+        0.167215567401714,
+        0.262562038331089
+      ],
+      "point": 0.213308247782836
+    },
+    "rank_agreement/huber__shallow_mlp/normalized_topk_centroid_distance": {
+      "interval": [
+        0.116400027120527,
+        0.13306739296856
+      ],
+      "point": 0.124647281574941
+    },
+    "rank_agreement/huber__shallow_mlp/spearman": {
+      "interval": [
+        0.067416310330679,
+        0.162098573376484
+      ],
+      "point": 0.114165538683454
+    },
+    "rank_agreement/huber__shallow_mlp/topk_jaccard": {
+      "interval": [
+        0.196611858688026,
+        0.239651801379971
+      ],
+      "point": 0.217414024583153
+    },
+    "rank_agreement/ridge__huber/best_action_agreement": {
+      "interval": [
+        0.621649480750886,
+        0.727048764238273
+      ],
+      "point": 0.67498834491049
+    },
+    "rank_agreement/ridge__huber/normalized_topk_centroid_distance": {
+      "interval": [
+        0.050314546750946,
+        0.065311077248699
+      ],
+      "point": 0.057526479752727
+    },
+    "rank_agreement/ridge__huber/spearman": {
+      "interval": [
+        0.698824549463738,
+        0.821066562553445
+      ],
+      "point": 0.761895526307673
+    },
+    "rank_agreement/ridge__huber/topk_jaccard": {
+      "interval": [
+        0.649940415416429,
+        0.718782215999878
+      ],
+      "point": 0.685361389821799
+    },
+    "rank_agreement/ridge__shallow_mlp/best_action_agreement": {
+      "interval": [
+        0.182083816632822,
+        0.28281041534096
+      ],
+      "point": 0.232645072680073
+    },
+    "rank_agreement/ridge__shallow_mlp/normalized_topk_centroid_distance": {
+      "interval": [
+        0.119407455027278,
+        0.137535387150906
+      ],
+      "point": 0.128189793247667
+    },
+    "rank_agreement/ridge__shallow_mlp/spearman": {
+      "interval": [
+        0.069045944785476,
+        0.163790348860722
+      ],
+      "point": 0.116218028111857
+    },
+    "rank_agreement/ridge__shallow_mlp/topk_jaccard": {
+      "interval": [
+        0.191676288920423,
+        0.235385732483861
+      ],
+      "point": 0.213252902913861
+    }
+  },
+  "config_sha256": "1d8136b512c9e50b2b30d58251d8f484206421528cb1b6cba0c3d4225c7bbe28",
+  "domain_order": [
+    "74t7kcdgkr",
+    "cgtnjyggtm",
+    "w68dtmpfyf",
+    "xcmzfsbd9t",
+    "yfxyg8jm46",
+    "ykhs7s2dck"
+  ],
+  "learner_robust_structure_supported": false,
+  "learner_summary": [
+    {
+      "full_state_oof_mae": 0.089635804657614,
+      "headroom_interval": [
+        0.012873618171412,
+        0.016847641832144
+      ],
+      "learner": "ridge",
+      "mechanical_headroom_over_reconstruction": 0.014813808288758,
+      "mechanical_oracle_improvement": 0.019833620251972
+    },
+    {
+      "full_state_oof_mae": 0.08618440344387,
+      "headroom_interval": [
+        0.012403334615472,
+        0.016478023045946
+      ],
+      "learner": "huber",
+      "mechanical_headroom_over_reconstruction": 0.014417157838276,
+      "mechanical_oracle_improvement": 0.022271740038991
+    },
+    {
+      "full_state_oof_mae": 0.150673758869946,
+      "headroom_interval": [
+        0.031443706742355,
+        0.040716345687478
+      ],
+      "learner": "shallow_mlp",
+      "mechanical_headroom_over_reconstruction": 0.036042445166371,
+      "mechanical_oracle_improvement": 0.04083623016212
+    }
+  ],
+  "learners": [
+    "ridge",
+    "huber",
+    "shallow_mlp"
+  ],
+  "maximum_formal_ridge_value_delta": 0.0,
+  "maximum_ridge_bank_recompute_delta": 1.4926588653985107e-07,
+  "p7_tree_state_sha256": "931dc86c26caf1c7246709c4706a7cd0428e3a1533b6ff1ad3c2ad8f9517d1e4",
+  "pair_summary": [
+    {
+      "best_action_agreement": 0.67498834491049,
+      "mean_normalized_topk_centroid_distance": 0.057526479752727,
+      "mean_spearman": 0.761895526307673,
+      "mean_topk_jaccard": 0.685361389821799,
+      "mean_topk_overlap": 0.763533264928194,
+      "pair": "ridge__huber"
+    },
+    {
+      "best_action_agreement": 0.232645072680073,
+      "mean_normalized_topk_centroid_distance": 0.128189793247667,
+      "mean_spearman": 0.116218028111857,
+      "mean_topk_jaccard": 0.213252902913861,
+      "mean_topk_overlap": 0.315248399914927,
+      "pair": "ridge__shallow_mlp"
+    },
+    {
+      "best_action_agreement": 0.213308247782836,
+      "mean_normalized_topk_centroid_distance": 0.124647281574941,
+      "mean_spearman": 0.114165538683454,
+      "mean_topk_jaccard": 0.217414024583153,
+      "mean_topk_overlap": 0.319854756607254,
+      "pair": "huber__shallow_mlp"
+    }
+  ],
+  "primary_conclusion": "Ridge and Huber retain similar value structure (mean Spearman 0.762), but the less accurate shallow MLP (OOF MAE 0.151) does not reproduce it (Ridge-MLP Spearman 0.116). Across the predeclared family, the defensible term is downstream-predictor-conditioned task value.",
+  "required_term": "downstream-predictor-conditioned task value",
+  "schema_version": 1,
+  "specimen_count": 276,
+  "stage": "P15_VALUE_STABILITY"
+}

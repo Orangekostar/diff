@@ -1128,3 +1128,78 @@ def test_p11_dynamic_valuation_package_rejects_checksum_changes(
 
     with pytest.raises(module.ScienceClosureArtifactError, match="checksum"):
         module.verify_p11_dynamic_valuation_package(output)
+
+
+_FORMAL_REPLAY_PACKAGES = (
+    "p9_value_evolution",
+    "p10_mris_causal",
+    "p11_dynamic_valuation",
+    "p12_rvp_attribution",
+    "p13_set_planning",
+    "p14_task_specificity",
+    "p15_value_stability",
+    "p16_feedback_mechanism",
+)
+
+
+def _repository_root() -> Path:
+    return Path(__file__).resolve().parents[1]
+
+
+def _verify_checksum_ledger(package: Path) -> None:
+    rows = (package / "CHECKSUMS.sha256").read_text(encoding="ascii").splitlines()
+    checksums = {
+        path: digest
+        for row in rows
+        for digest, path in [row.split("  ", maxsplit=1)]
+    }
+    assert checksums
+    assert set(checksums) == {
+        item.name for item in package.iterdir() if item.name != "CHECKSUMS.sha256"
+    }
+    assert all(_sha256(package / path) == digest for path, digest in checksums.items())
+
+
+def test_science_closure_replay_is_byte_identical() -> None:
+    result_root = _repository_root() / "results/mavis_science_closure"
+
+    for name in _FORMAL_REPLAY_PACKAGES:
+        formal = result_root / name
+        replay = result_root / "replay" / name
+        formal_files = {item.name for item in formal.iterdir()}
+        assert formal_files == {item.name for item in replay.iterdir()}
+        assert all(_sha256(formal / item) == _sha256(replay / item) for item in formal_files)
+
+
+def test_formal_science_closure_manifest_hashes_match() -> None:
+    result_root = _repository_root() / "results/mavis_science_closure"
+
+    for name in _FORMAL_REPLAY_PACKAGES:
+        _verify_checksum_ledger(result_root / name)
+        _verify_checksum_ledger(result_root / "replay" / name)
+
+
+def test_science_closure_preserves_frozen_p7_tree_state() -> None:
+    root = _repository_root()
+    expected = "931dc86c26caf1c7246709c4706a7cd0428e3a1533b6ff1ad3c2ad8f9517d1e4"
+    result_root = root / "results/mavis_science_closure"
+
+    assert _tree_state(root / "results/mavis/p7_final_frozen_eval") == expected
+    for name in _FORMAL_REPLAY_PACKAGES:
+        summary = json.loads((result_root / name / "summary.json").read_text())
+        assert summary["p7_tree_state_sha256"] == expected
+
+
+def test_science_closure_completion_artifacts_exist() -> None:
+    artifact_root = _repository_root() / "artifacts/mavis_science_closure"
+    expected = {
+        "COMPLETION_AUDIT.md",
+        "CORE_METRICS.csv",
+        "GO_NOGO.md",
+        "M0_GO_NOGO.md",
+        "M0_M1_CORE_METRICS.csv",
+        "M1_GO_NOGO.md",
+        "MANUSCRIPT_CLAIM_MAP.md",
+    }
+
+    assert expected <= {item.name for item in artifact_root.iterdir()}
