@@ -1,0 +1,26 @@
+schema_version: 1
+stage: P16_FEEDBACK_MECHANISM
+audit_base_git_sha: 716de19c4fe6f742eddf40a95f8cc3ed45192217
+domain_order: [74t7kcdgkr, cgtnjyggtm, w68dtmpfyf, xcmzfsbd9t, yfxyg8jm46, ykhs7s2dck]
+checkpoints: [0.0625, 0.09375, 0.125, 0.1875]
+feedback_method: mavis_full
+no_feedback_method: mavis_no_feedback
+feedback_sign: no_feedback_error_minus_feedback_error
+value_sources: [real, teacher]
+stratifiers: [best_action_turnover, mean_absolute_value_shift]
+strata: [low, middle, high]
+quantile_probabilities: [0.3333333333333333, 0.6666666666666666]
+per_specimen_auebc: results/mavis/p4_closed_loop/per_specimen_auebc.csv
+per_specimen_auebc_sha256: 6949fc1b054ae214697950b87b10a3647d9b291fea306876af425b38e1ccaf0f
+per_specimen_curves: results/mavis/p4_closed_loop/per_specimen_curves.csv
+per_specimen_curves_sha256: 1506aa2e319cfde0fb82997f2d46e181f3a8da9ef1510ac9f3654b90ead1a415
+p4_summary: results/mavis/p4_closed_loop/summary.json
+p4_summary_sha256: 8bdc6a37ab244405e490111cbae1aa04d3299a436dbd3a9cbc5d4490e16d5138
+p9_specimen_metrics: results/mavis_science_closure/p9_value_evolution/per_specimen_metrics.parquet
+p9_specimen_metrics_sha256: eb7eee396aa6cba76db7594454a64a5c3963afa0d09be6bf5b2f31bdf8d5af45
+p9_summary: results/mavis_science_closure/p9_value_evolution/summary.json
+p9_summary_sha256: 7949e0828d3a2ceafa91ef211f828329ed54a7e01b2bdf11e8ab33ed7d601e28
+bootstrap_replicates: 5000
+seed: 2026082608
+p7_package: results/mavis/p7_final_frozen_eval
+p7_tree_state_sha256: 931dc86c26caf1c7246709c4706a7cd0428e3a1533b6ff1ad3c2ad8f9517d1e4

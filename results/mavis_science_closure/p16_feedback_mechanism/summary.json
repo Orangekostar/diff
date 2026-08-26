@@ -1,0 +1,374 @@
+{
+  "audit_base_git_sha": "716de19c4fe6f742eddf40a95f8cc3ed45192217",
+  "bootstrap_intervals": {
+    "conditional_value_strata/specimen_auebc/real/best_action_turnover/none/high_minus_low_feedback_benefit": {
+      "bootstrap_mean": -7.282353455e-06,
+      "interval": [
+        -1.6923328704e-05,
+        2.381027649e-06
+      ]
+    },
+    "conditional_value_strata/specimen_auebc/real/best_action_turnover/none/high_stratum_feedback_benefit": {
+      "bootstrap_mean": -2.1468084021e-05,
+      "interval": [
+        -2.9065255544e-05,
+        -1.3662832801e-05
+      ]
+    },
+    "conditional_value_strata/specimen_auebc/real/mean_absolute_value_shift/none/high_minus_low_feedback_benefit": {
+      "bootstrap_mean": -8.153742148e-06,
+      "interval": [
+        -1.6775454597e-05,
+        9.13565697e-07
+      ]
+    },
+    "conditional_value_strata/specimen_auebc/real/mean_absolute_value_shift/none/high_stratum_feedback_benefit": {
+      "bootstrap_mean": -2.2333778633e-05,
+      "interval": [
+        -2.8222174513e-05,
+        -1.5953003184e-05
+      ]
+    },
+    "conditional_value_strata/specimen_auebc/teacher/best_action_turnover/none/high_minus_low_feedback_benefit": {
+      "bootstrap_mean": 7.768903161e-06,
+      "interval": [
+        -2.158167533e-06,
+        1.7310247772e-05
+      ]
+    },
+    "conditional_value_strata/specimen_auebc/teacher/best_action_turnover/none/high_stratum_feedback_benefit": {
+      "bootstrap_mean": -1.2937743243e-05,
+      "interval": [
+        -1.9556411496e-05,
+        -6.686705289e-06
+      ]
+    },
+    "conditional_value_strata/specimen_auebc/teacher/mean_absolute_value_shift/none/high_minus_low_feedback_benefit": {
+      "bootstrap_mean": 1.7049591576e-05,
+      "interval": [
+        7.004390491e-06,
+        2.6382019339e-05
+      ]
+    },
+    "conditional_value_strata/specimen_auebc/teacher/mean_absolute_value_shift/none/high_stratum_feedback_benefit": {
+      "bootstrap_mean": -6.778527629e-06,
+      "interval": [
+        -1.3349912392e-05,
+        1.8270151e-08
+      ]
+    },
+    "conditional_value_strata/state_checkpoint/real/best_action_turnover/0.0625/high_minus_low_feedback_benefit": {
+      "bootstrap_mean": 1.859033861e-06,
+      "interval": [
+        -1.1190162167e-05,
+        1.5408402552e-05
+      ]
+    },
+    "conditional_value_strata/state_checkpoint/real/best_action_turnover/0.0625/high_stratum_feedback_benefit": {
+      "bootstrap_mean": -1.8980305374e-05,
+      "interval": [
+        -2.9477266695e-05,
+        -8.494978446e-06
+      ]
+    },
+    "conditional_value_strata/state_checkpoint/real/best_action_turnover/0.09375/high_minus_low_feedback_benefit": {
+      "bootstrap_mean": -9.95431141e-06,
+      "interval": [
+        -2.4351195041e-05,
+        5.222784342e-06
+      ]
+    },
+    "conditional_value_strata/state_checkpoint/real/best_action_turnover/0.09375/high_stratum_feedback_benefit": {
+      "bootstrap_mean": -3.6081230601e-05,
+      "interval": [
+        -4.8360951734e-05,
+        -2.3052521875e-05
+      ]
+    },
+    "conditional_value_strata/state_checkpoint/real/best_action_turnover/0.125/high_minus_low_feedback_benefit": {
+      "bootstrap_mean": -2.8938160984e-05,
+      "interval": [
+        -4.795029957e-05,
+        -9.895624128e-06
+      ]
+    },
+    "conditional_value_strata/state_checkpoint/real/best_action_turnover/0.125/high_stratum_feedback_benefit": {
+      "bootstrap_mean": -5.1302537774e-05,
+      "interval": [
+        -6.7235497334e-05,
+        -3.4992924895e-05
+      ]
+    },
+    "conditional_value_strata/state_checkpoint/real/best_action_turnover/0.1875/high_minus_low_feedback_benefit": {
+      "bootstrap_mean": 1.3993699486e-05,
+      "interval": [
+        -2.841759556e-06,
+        3.0827254694e-05
+      ]
+    },
+    "conditional_value_strata/state_checkpoint/real/best_action_turnover/0.1875/high_stratum_feedback_benefit": {
+      "bootstrap_mean": 9.26792819e-07,
+      "interval": [
+        -1.0540207306e-05,
+        1.307705207e-05
+      ]
+    },
+    "conditional_value_strata/state_checkpoint/real/mean_absolute_value_shift/0.0625/high_minus_low_feedback_benefit": {
+      "bootstrap_mean": 3.861191728e-06,
+      "interval": [
+        -7.597171268e-06,
+        1.5631007901e-05
+      ]
+    },
+    "conditional_value_strata/state_checkpoint/real/mean_absolute_value_shift/0.0625/high_stratum_feedback_benefit": {
+      "bootstrap_mean": -1.5173507913e-05,
+      "interval": [
+        -2.0718678372e-05,
+        -9.651369368e-06
+      ]
+    },
+    "conditional_value_strata/state_checkpoint/real/mean_absolute_value_shift/0.09375/high_minus_low_feedback_benefit": {
+      "bootstrap_mean": -1.8847780792e-05,
+      "interval": [
+        -3.2576561777e-05,
+        -4.900506869e-06
+      ]
+    },
+    "conditional_value_strata/state_checkpoint/real/mean_absolute_value_shift/0.09375/high_stratum_feedback_benefit": {
+      "bootstrap_mean": -3.9904047566e-05,
+      "interval": [
+        -5.0278727903e-05,
+        -2.8920514551e-05
+      ]
+    },
+    "conditional_value_strata/state_checkpoint/real/mean_absolute_value_shift/0.125/high_minus_low_feedback_benefit": {
+      "bootstrap_mean": -2.2812346376e-05,
+      "interval": [
+        -3.8803811261e-05,
+        -6.152386146e-06
+      ]
+    },
+    "conditional_value_strata/state_checkpoint/real/mean_absolute_value_shift/0.125/high_stratum_feedback_benefit": {
+      "bootstrap_mean": -5.0848166748e-05,
+      "interval": [
+        -6.3212000746e-05,
+        -3.7724808998e-05
+      ]
+    },
+    "conditional_value_strata/state_checkpoint/real/mean_absolute_value_shift/0.1875/high_minus_low_feedback_benefit": {
+      "bootstrap_mean": -1.2873551852e-05,
+      "interval": [
+        -2.7647232759e-05,
+        1.84845442e-06
+      ]
+    },
+    "conditional_value_strata/state_checkpoint/real/mean_absolute_value_shift/0.1875/high_stratum_feedback_benefit": {
+      "bootstrap_mean": -1.9204490956e-05,
+      "interval": [
+        -2.96715902e-05,
+        -8.000903371e-06
+      ]
+    },
+    "conditional_value_strata/state_checkpoint/teacher/best_action_turnover/0.0625/high_minus_low_feedback_benefit": {
+      "bootstrap_mean": -2.422749322e-05,
+      "interval": [
+        -3.9961223053e-05,
+        -8.668400289e-06
+      ]
+    },
+    "conditional_value_strata/state_checkpoint/teacher/best_action_turnover/0.0625/high_stratum_feedback_benefit": {
+      "bootstrap_mean": -2.7682594741e-05,
+      "interval": [
+        -4.0749443377e-05,
+        -1.4768398225e-05
+      ]
+    },
+    "conditional_value_strata/state_checkpoint/teacher/best_action_turnover/0.09375/high_minus_low_feedback_benefit": {
+      "bootstrap_mean": 1.5784967416e-05,
+      "interval": [
+        2.186415517e-06,
+        2.9554087221e-05
+      ]
+    },
+    "conditional_value_strata/state_checkpoint/teacher/best_action_turnover/0.09375/high_stratum_feedback_benefit": {
+      "bootstrap_mean": -1.6786185088e-05,
+      "interval": [
+        -2.5750824387e-05,
+        -7.959804871e-06
+      ]
+    },
+    "conditional_value_strata/state_checkpoint/teacher/best_action_turnover/0.125/high_minus_low_feedback_benefit": {
+      "bootstrap_mean": 1.1564597945e-05,
+      "interval": [
+        -7.996635808e-06,
+        3.0239877439e-05
+      ]
+    },
+    "conditional_value_strata/state_checkpoint/teacher/best_action_turnover/0.125/high_stratum_feedback_benefit": {
+      "bootstrap_mean": -2.5413746702e-05,
+      "interval": [
+        -3.9782615089e-05,
+        -1.2458213608e-05
+      ]
+    },
+    "conditional_value_strata/state_checkpoint/teacher/best_action_turnover/0.1875/high_minus_low_feedback_benefit": {
+      "bootstrap_mean": 1.1244377619e-05,
+      "interval": [
+        -3.995126716e-06,
+        2.693856364e-05
+      ]
+    },
+    "conditional_value_strata/state_checkpoint/teacher/best_action_turnover/0.1875/high_stratum_feedback_benefit": {
+      "bootstrap_mean": -3.585189688e-06,
+      "interval": [
+        -1.450690496e-05,
+        8.365481948e-06
+      ]
+    },
+    "conditional_value_strata/state_checkpoint/teacher/mean_absolute_value_shift/0.0625/high_minus_low_feedback_benefit": {
+      "bootstrap_mean": -1.3221397276e-05,
+      "interval": [
+        -2.8838639793e-05,
+        1.542041264e-06
+      ]
+    },
+    "conditional_value_strata/state_checkpoint/teacher/mean_absolute_value_shift/0.0625/high_stratum_feedback_benefit": {
+      "bootstrap_mean": -2.635508285e-05,
+      "interval": [
+        -3.9549947632e-05,
+        -1.406833651e-05
+      ]
+    },
+    "conditional_value_strata/state_checkpoint/teacher/mean_absolute_value_shift/0.09375/high_minus_low_feedback_benefit": {
+      "bootstrap_mean": 1.3864325738e-05,
+      "interval": [
+        -3.069758129e-06,
+        2.9719472492e-05
+      ]
+    },
+    "conditional_value_strata/state_checkpoint/teacher/mean_absolute_value_shift/0.09375/high_stratum_feedback_benefit": {
+      "bootstrap_mean": -2.3307005192e-05,
+      "interval": [
+        -3.6105152845e-05,
+        -1.174095399e-05
+      ]
+    },
+    "conditional_value_strata/state_checkpoint/teacher/mean_absolute_value_shift/0.125/high_minus_low_feedback_benefit": {
+      "bootstrap_mean": 3.0002750001e-05,
+      "interval": [
+        1.1953373896e-05,
+        4.814996326e-05
+      ]
+    },
+    "conditional_value_strata/state_checkpoint/teacher/mean_absolute_value_shift/0.125/high_stratum_feedback_benefit": {
+      "bootstrap_mean": -1.9343807321e-05,
+      "interval": [
+        -2.9792659314e-05,
+        -8.990655177e-06
+      ]
+    },
+    "conditional_value_strata/state_checkpoint/teacher/mean_absolute_value_shift/0.1875/high_minus_low_feedback_benefit": {
+      "bootstrap_mean": 2.9037684052e-05,
+      "interval": [
+        1.2869606698e-05,
+        4.5485264744e-05
+      ]
+    },
+    "conditional_value_strata/state_checkpoint/teacher/mean_absolute_value_shift/0.1875/high_stratum_feedback_benefit": {
+      "bootstrap_mean": 5.777553848e-06,
+      "interval": [
+        -6.679139114e-06,
+        1.8772336015e-05
+      ]
+    },
+    "overall_feedback/auebc/none/none/none/feedback_benefit": {
+      "bootstrap_mean": -1.4969836684e-05,
+      "interval": [
+        -1.9435185744e-05,
+        -1.0636813205e-05
+      ]
+    },
+    "overall_feedback/checkpoint/none/none/0.03125/feedback_benefit": {
+      "bootstrap_mean": -3.475295768e-06,
+      "interval": [
+        -6.005668056e-06,
+        -1.158616513e-06
+      ]
+    },
+    "overall_feedback/checkpoint/none/none/0.0625/feedback_benefit": {
+      "bootstrap_mean": -1.8033392759e-05,
+      "interval": [
+        -2.457420869e-05,
+        -1.1880924157e-05
+      ]
+    },
+    "overall_feedback/checkpoint/none/none/0.09375/feedback_benefit": {
+      "bootstrap_mean": -2.7013252556e-05,
+      "interval": [
+        -3.3997825328e-05,
+        -2.040369191e-05
+      ]
+    },
+    "overall_feedback/checkpoint/none/none/0.125/feedback_benefit": {
+      "bootstrap_mean": -3.2418213062e-05,
+      "interval": [
+        -4.0631435861e-05,
+        -2.4472695812e-05
+      ]
+    },
+    "overall_feedback/checkpoint/none/none/0.1875/feedback_benefit": {
+      "bootstrap_mean": -8.396749065e-06,
+      "interval": [
+        -1.5135412421e-05,
+        -1.613244833e-06
+      ]
+    },
+    "overall_feedback/checkpoint/none/none/0.25/feedback_benefit": {
+      "bootstrap_mean": 4.97821141e-07,
+      "interval": [
+        -8.680467465e-06,
+        9.977974775e-06
+      ]
+    }
+  },
+  "causal_claim_allowed": false,
+  "config_sha256": "5c83ad859c8fa7d03b3b8bcf4f6b671bff3c2909571aafd2b315becb13dd8562",
+  "domain_order": [
+    "74t7kcdgkr",
+    "cgtnjyggtm",
+    "w68dtmpfyf",
+    "xcmzfsbd9t",
+    "yfxyg8jm46",
+    "ykhs7s2dck"
+  ],
+  "feedback_overall_supported": false,
+  "feedback_sign": "no_feedback_error_minus_feedback_error",
+  "feedback_value_change_mechanism_supported": false,
+  "overall_feedback_auebc_benefit": -1.4962761715e-05,
+  "overall_feedback_auebc_interval": [
+    -1.9435185744e-05,
+    -1.0636813205e-05
+  ],
+  "p7_tree_state_sha256": "931dc86c26caf1c7246709c4706a7cd0428e3a1533b6ff1ad3c2ad8f9517d1e4",
+  "primary_conclusion": "Frozen feedback does not show reliable benefit concentrated in specimens with larger real conditional-value changes; the diagnostic does not support feedback as the operative mechanism.",
+  "quantile_protocol": "outcome-blind stable within-held-domain equal-count tertiles with specimen_id tie break",
+  "real_specimen_high_minus_low": {
+    "best_action_turnover": {
+      "bootstrap_mean": -7.282353455e-06,
+      "interval": [
+        -1.6923328704e-05,
+        2.381027649e-06
+      ]
+    },
+    "mean_absolute_value_shift": {
+      "bootstrap_mean": -8.153742148e-06,
+      "interval": [
+        -1.6775454597e-05,
+        9.13565697e-07
+      ]
+    }
+  },
+  "schema_version": 1,
+  "specimen_count": 276,
+  "stage": "P16_FEEDBACK_MECHANISM"
+}

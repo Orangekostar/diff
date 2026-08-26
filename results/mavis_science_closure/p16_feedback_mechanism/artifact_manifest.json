@@ -1,0 +1,76 @@
+{
+  "artifacts": [
+    {
+      "bytes": 866,
+      "path": "REPORT.md",
+      "sha256": "e45b62f06ad9a591d4e3993306437067fb42184ed9b7c94504d9514484bd962d"
+    },
+    {
+      "bytes": 2354,
+      "path": "association_summary.csv",
+      "sha256": "bad586f9d4b2fbaebdd4d9d4505a90aef7e6f320fa9638621267811d57d579de"
+    },
+    {
+      "bytes": 29009081,
+      "path": "bootstrap.csv",
+      "sha256": "ea61816f5ee2012c00517936a029383e1e78214850a4f63f6ee2b6338846b651"
+    },
+    {
+      "bytes": 10184,
+      "path": "domain_associations.csv",
+      "sha256": "9a685f97d8ef234974970e6f9a24b30549ec12d85fa948fbeb4eebfb5400bf9c"
+    },
+    {
+      "bytes": 3132,
+      "path": "domain_effects.csv",
+      "sha256": "9be5de7d1c97715ec7ce6fa588821f6029ce42d890348e4f8c06dbfb4d0824d4"
+    },
+    {
+      "bytes": 214554,
+      "path": "feedback_effects.csv",
+      "sha256": "18b07b55f0cc6b89124987be703daca956feaf8cbddb05b5ad3ce3e3a82ee3e7"
+    },
+    {
+      "bytes": 19229,
+      "path": "quantile_thresholds.csv",
+      "sha256": "b053b07344c9940417574457a9db7667327b45026754ad4dbf53c58bf4466dc4"
+    },
+    {
+      "bytes": 19915,
+      "path": "specimen_auebc_effects.csv",
+      "sha256": "d2c7bdf0fd64f21e551bfb43444169885f3765571efe305734ce3598f726a022"
+    },
+    {
+      "bytes": 108850,
+      "path": "specimen_diagnostics.csv",
+      "sha256": "c7dc213ed386e4103d2716efda2ed19da11f08faccb6036336af803931c00a43"
+    },
+    {
+      "bytes": 31449,
+      "path": "state_diagnostics.parquet",
+      "sha256": "0c3eea8f54081de4956bf95581b629d0aa4668bbb0991c033d837e9553949fe6"
+    },
+    {
+      "bytes": 38232,
+      "path": "stratum_effects.csv",
+      "sha256": "dd939425c611c1bd9b8f43dd7e9cdb2c23a09c083e94c17e70440852717e0485"
+    },
+    {
+      "bytes": 12789,
+      "path": "summary.json",
+      "sha256": "4b93de1520450f24d41449192b97761908d3d1efa4dbf0e5c02d20f3d390a07e"
+    }
+  ],
+  "audit_base_git_sha": "716de19c4fe6f742eddf40a95f8cc3ed45192217",
+  "config_sha256": "5c83ad859c8fa7d03b3b8bcf4f6b671bff3c2909571aafd2b315becb13dd8562",
+  "schema_version": 1,
+  "source_sha256": {
+    "p4_summary": "8bdc6a37ab244405e490111cbae1aa04d3299a436dbd3a9cbc5d4490e16d5138",
+    "p7_tree_state": "931dc86c26caf1c7246709c4706a7cd0428e3a1533b6ff1ad3c2ad8f9517d1e4",
+    "p9_specimen_metrics": "eb7eee396aa6cba76db7594454a64a5c3963afa0d09be6bf5b2f31bdf8d5af45",
+    "p9_summary": "7949e0828d3a2ceafa91ef211f828329ed54a7e01b2bdf11e8ab33ed7d601e28",
+    "per_specimen_auebc": "6949fc1b054ae214697950b87b10a3647d9b291fea306876af425b38e1ccaf0f",
+    "per_specimen_curves": "1506aa2e319cfde0fb82997f2d46e181f3a8da9ef1510ac9f3654b90ead1a415"
+  },
+  "stage": "P16_FEEDBACK_MECHANISM"
+}
