@@ -1,0 +1,10 @@
+{
+  "byte_identical": true,
+  "file_count": 31,
+  "formal_package": "results/mavis/p7_final_frozen_eval",
+  "replay_package": "results/mavis/replay/p7_final_frozen_eval",
+  "schema_version": 1,
+  "status": "COMPLETE",
+  "total_bytes": 7891077,
+  "tree_state_sha256": "931dc86c26caf1c7246709c4706a7cd0428e3a1533b6ff1ad3c2ad8f9517d1e4"
+}

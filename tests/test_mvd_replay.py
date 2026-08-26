@@ -11,7 +11,7 @@ from cmc_bbdm.mvd.replay import verify_checksums
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def test_mvd_formal_and_replay_packages_verify() -> None:
+def test_mavis_old_m0_m1_artifacts_unchanged() -> None:
     replay = ROOT / "results/mvd/replay"
     summary = json.loads((replay / "summary.json").read_text())
     assert summary["replay_verified"] is True

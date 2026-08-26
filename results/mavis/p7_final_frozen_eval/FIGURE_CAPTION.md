@@ -1,0 +1,1 @@
+Frozen equal-domain CAI error curves at exact native-raster cost and paired held-out-domain CAI AUEBC effects. Positive bars favor aggregated MAVIS or the source-selected safe system. D1-D6 follow the domain order in config.yaml. Source: figures/aggregate_curves.csv and figures/domain_effects.csv; retrospective normalized-raster evaluation.

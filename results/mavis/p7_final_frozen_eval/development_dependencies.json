@@ -1,0 +1,12 @@
+{
+  "development_config_sha256": "d35faaf7f1c2e86785acf6ee821db6cf783d9a38565e1e75ec9a282e266e729c",
+  "development_package_sha256": "89c96fdf6d9da3301569dad301477e86b75ef8a0107ad5795c977d4608e6a6fe",
+  "final_config_sha256": "e99b47e161663fdaefe28719d16321a010f95b4ad8cf8f506a6e18d1d7f57b9d",
+  "schema_version": 1,
+  "stage_states": {
+    "p1_state_sha256": "1cfc565b7c45ab558b4ae795c342b227f177c0a626c8064ece02368bb948cf18",
+    "p4_state_sha256": "97325b81a4b3fe443ae9c099401b1f47a26bb12752e9af1a335faee7d08ef356",
+    "p5_state_sha256": "1fb711dcf1fc360c5db628b757c8384ae9adc02fa9d43ae10a07007df80cab0e",
+    "p6_state_sha256": "78424f120583228ca11d8c9c0edaefb1342a60d0ac6d51f61665b4819b34233f"
+  }
+}

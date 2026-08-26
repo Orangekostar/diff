@@ -1,0 +1,11 @@
+experiment,status,artifact
+E1,FROZEN,artifacts/mavis/P0_FROZEN_EVIDENCE_LEDGER.md
+E2,COMPLETE,results/mavis/p2_mris
+E3,COMPLETE,results/mavis/p3_dynamic_voi
+E4,COMPLETE,results/mavis/p7_final_frozen_eval
+E5,COMPLETE,results/mavis/p4_closed_loop/figures
+E6,COMPLETE,results/mavis/p7_final_frozen_eval
+E7,COMPLETE,results/mavis/p7_final_frozen_eval
+E8,COMPLETE,results/mavis/p7_final_frozen_eval
+E9,COMPLETE,results/mavis/p7_final_frozen_eval
+E10,AUDIT_ONLY,results/mavis/p7_final_frozen_eval/external_data_audit.json

@@ -1,0 +1,12 @@
+threshold,coverage,fallback_frequency,domain_balanced_cai_auebc,source_selected_fallback_cai_auebc,worst_domain_cai_auebc,improved_domain_count,domain_count,statistical_unit
+0.0,1.0,0.0,0.12505318220938968,0.1250485268973149,0.15140573423506754,2,6,equal_domain_with_paired_physical_specimens
+0.1,0.0,1.0,0.1250485268973149,0.1250485268973149,0.1513937460872824,0,6,equal_domain_with_paired_physical_specimens
+0.2,0.0,1.0,0.1250485268973149,0.1250485268973149,0.1513937460872824,0,6,equal_domain_with_paired_physical_specimens
+0.3,0.0,1.0,0.1250485268973149,0.1250485268973149,0.1513937460872824,0,6,equal_domain_with_paired_physical_specimens
+0.4,0.0,1.0,0.1250485268973149,0.1250485268973149,0.1513937460872824,0,6,equal_domain_with_paired_physical_specimens
+0.5,0.0,1.0,0.1250485268973149,0.1250485268973149,0.1513937460872824,0,6,equal_domain_with_paired_physical_specimens
+0.6,0.0,1.0,0.1250485268973149,0.1250485268973149,0.1513937460872824,0,6,equal_domain_with_paired_physical_specimens
+0.7,0.0,1.0,0.1250485268973149,0.1250485268973149,0.1513937460872824,0,6,equal_domain_with_paired_physical_specimens
+0.8,0.0,1.0,0.1250485268973149,0.1250485268973149,0.1513937460872824,0,6,equal_domain_with_paired_physical_specimens
+0.9,0.0,1.0,0.1250485268973149,0.1250485268973149,0.1513937460872824,0,6,equal_domain_with_paired_physical_specimens
+1.0,0.0,1.0,0.1250485268973149,0.1250485268973149,0.1513937460872824,0,6,equal_domain_with_paired_physical_specimens

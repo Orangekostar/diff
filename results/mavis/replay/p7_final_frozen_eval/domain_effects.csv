@@ -1,0 +1,13 @@
+outer_domain,contrast,control_method,reference_method,control_minus_reference_cai_auebc,improved
+74t7kcdgkr,baseline_minus_mavis,mvd_m1_o2,mavis_full,-3.3640952050856265e-6,false
+cgtnjyggtm,baseline_minus_mavis,mvd_m1_o2,mavis_full,0.00004169914590917978,true
+w68dtmpfyf,baseline_minus_mavis,mvd_m1_o2,mavis_full,0.00009781542566274226,true
+xcmzfsbd9t,baseline_minus_mavis,mvd_m1_o2,mavis_full,-0.0001274045405797869,false
+yfxyg8jm46,baseline_minus_mavis,mvd_m1_o2,mavis_full,-0.00010345317921511832,false
+ykhs7s2dck,baseline_minus_mavis,mvd_m1_o2,mavis_full,-0.00027214531868124947,false
+74t7kcdgkr,fallback_minus_safe,source_selected_fallback,mavis_safe,0.0,false
+cgtnjyggtm,fallback_minus_safe,source_selected_fallback,mavis_safe,0.0,false
+w68dtmpfyf,fallback_minus_safe,source_selected_fallback,mavis_safe,0.0,false
+xcmzfsbd9t,fallback_minus_safe,source_selected_fallback,mavis_safe,0.0,false
+yfxyg8jm46,fallback_minus_safe,source_selected_fallback,mavis_safe,-1.748594119499458e-6,false
+ykhs7s2dck,fallback_minus_safe,source_selected_fallback,mavis_safe,0.0,false
