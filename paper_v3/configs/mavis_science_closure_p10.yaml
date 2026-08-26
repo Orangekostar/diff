@@ -1,0 +1,24 @@
+schema_version: 1
+stage: P10_MRIS_CAUSAL
+audit_base_git_sha: 716de19c4fe6f742eddf40a95f8cc3ed45192217
+domain_order:
+  - 74t7kcdgkr
+  - cgtnjyggtm
+  - w68dtmpfyf
+  - xcmzfsbd9t
+  - yfxyg8jm46
+  - ykhs7s2dck
+p2_state_predictions: results/mavis/p2_mris/state_predictions.parquet
+p2_state_predictions_sha256: b93a605b35f999ec6bdaa4baa4ed55678b45b0fc362932c8587db7bc3d546be0
+p2_artifact_manifest: results/mavis/p2_mris/artifact_manifest.json
+p2_artifact_manifest_sha256: acc4db107c8c870eafd8035a744f03785b3f6f167dc50192d276b7ee014feb5c
+p2_state_sha256: d3dba6ec3621575c0eb20f58c9d041fb00050d11c23a0426b3da764bfcd09768
+full_field_predictions: paper_v3/experiments/P1_full_field_oracle/predictions.csv
+full_field_predictions_sha256: f2c62d0afc3eec1b280bbadb1ede6d56b1ebcdbb8f9caf0d528f5ce1e1a865a5
+full_field_artifact_manifest: paper_v3/experiments/P1_full_field_oracle/artifact_manifest.json
+full_field_artifact_manifest_sha256: 6dc7f86060e91c1fab885685521b0c0e1a3a1290c4b4d2147c61dd1ee94e4f25
+full_field_method: I_field_selected
+p7_package: results/mavis/p7_final_frozen_eval
+p7_tree_state_sha256: 931dc86c26caf1c7246709c4706a7cd0428e3a1533b6ff1ad3c2ad8f9517d1e4
+bootstrap_replicates: 5000
+seed: 20250826

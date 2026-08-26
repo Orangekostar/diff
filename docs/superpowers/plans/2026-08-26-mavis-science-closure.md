@@ -55,11 +55,11 @@ PyTorch, scikit-learn, SciPy, Pytest, and Ruff.
 - Modify `tests/test_mavis_science_closure.py`
 - Create `results/mavis_science_closure/p10_mris_causal/*`
 
-- [ ] Test reuse of frozen P2 predictions, identical cohort/cost/action rosters,
+- [x] Test reuse of frozen P2 predictions, identical cohort/cost/action rosters,
   and no use of future target measurements.
-- [ ] Produce state-cost curves, per-specimen predictions, domain contrasts,
+- [x] Produce state-cost curves, per-specimen predictions, domain contrasts,
   bootstrap, and information-accumulation summaries.
-- [ ] Commit `analysis: close MRIS causal informativeness`.
+- [x] Commit `analysis: close MRIS causal informativeness`.
 
 ## Task 4: P11 dynamic valuation closure
 

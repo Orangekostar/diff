@@ -103,6 +103,10 @@ def _execution_module():
     return importlib.import_module("cmc_bbdm.mavis.science_closure_execution")
 
 
+def _artifacts_module():
+    return importlib.import_module("cmc_bbdm.mavis.science_closure_artifacts")
+
+
 def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
@@ -461,3 +465,328 @@ def test_science_closure_manifest_hashes_match(tmp_path: Path) -> None:
 
     with pytest.raises(module.ScienceClosureExecutionError, match="checksum"):
         module.verify_p9_value_evolution_package(output)
+
+
+_MRIS_MODES = (
+    "real",
+    "positions_only",
+    "shuffled",
+    "static",
+    "reconstruction",
+)
+
+
+def _mris_predictions() -> pl.DataFrame:
+    rows: list[dict[str, object]] = []
+    errors = {
+        "d0": {
+            "real": (4.0, 2.0),
+            "positions_only": (3.0, 3.0),
+            "shuffled": (4.5, 4.5),
+            "static": (5.0, 5.0),
+            "reconstruction": (1.5, 1.5),
+        },
+        "d1": {
+            "real": (8.0, 6.0),
+            "positions_only": (5.0, 5.0),
+            "shuffled": (7.0, 7.0),
+            "static": (10.0, 10.0),
+            "reconstruction": (4.0, 4.0),
+        },
+    }
+    for domain_index, domain in enumerate(("d0", "d1")):
+        for specimen_index in range(2):
+            specimen_id = f"{domain}-s{specimen_index}"
+            for trajectory_index in range(2):
+                for checkpoint_index, checkpoint in enumerate((0.1, 0.2)):
+                    state_id = (
+                        f"{specimen_id}-t{trajectory_index}-c{checkpoint_index}"
+                    )
+                    for mode in _MRIS_MODES:
+                        prediction = (
+                            errors[domain][mode][checkpoint_index]
+                            + specimen_index * 0.2
+                            + trajectory_index * 0.02
+                        )
+                        rows.append(
+                            {
+                                "outer_domain": domain,
+                                "state_id": state_id,
+                                "specimen_id": specimen_id,
+                                "trajectory_id": f"{specimen_id}-t{trajectory_index}",
+                                "method": "uniform",
+                                "seed": trajectory_index,
+                                "nominal_checkpoint": checkpoint,
+                                "exact_acquired_cost": 10 * (checkpoint_index + 1),
+                                "native_count": 100,
+                                "effective_budget": checkpoint,
+                                "mode": mode,
+                                "target": 0.0,
+                                "prediction": prediction,
+                                "absolute_error": prediction,
+                                "model_state_sha256": mode[0] * 64,
+                            }
+                        )
+    return pl.DataFrame(rows)
+
+
+def _full_field_predictions() -> pl.DataFrame:
+    rows = []
+    for domain, base in (("d0", 1.0), ("d1", 3.0)):
+        for specimen_index in range(2):
+            prediction = base + specimen_index * 0.2
+            rows.append(
+                {
+                    "method": "I_field_selected",
+                    "specimen_id": f"{domain}-s{specimen_index}",
+                    "dataset_id": domain,
+                    "target": 0.0,
+                    "prediction": prediction,
+                    "seed": 0,
+                }
+            )
+    return pl.DataFrame(rows)
+
+
+def test_mris_closure_reuses_frozen_state_predictions_when_available() -> None:
+    module = _analysis_module()
+    assert hasattr(module, "evaluate_mris_causal_closure")
+    frozen = _mris_predictions()
+
+    tables = module.evaluate_mris_causal_closure(
+        frozen,
+        _full_field_predictions(),
+        domain_order=("d0", "d1"),
+        full_field_method="I_field_selected",
+        bootstrap_replicates=50,
+        seed=17,
+    )
+
+    observed = tables.per_specimen_predictions.filter(
+        (pl.col("outer_domain") == "d0")
+        & (pl.col("specimen_id") == "d0-s0")
+        & (pl.col("mode") == "real")
+        & (pl.col("nominal_checkpoint") == 0.2)
+    ).row(0, named=True)
+    expected = frozen.filter(
+        (pl.col("outer_domain") == "d0")
+        & (pl.col("specimen_id") == "d0-s0")
+        & (pl.col("mode") == "real")
+        & (pl.col("nominal_checkpoint") == 0.2)
+    )
+    assert observed["mean_prediction"] == pytest.approx(
+        expected.get_column("prediction").mean()
+    )
+    assert observed["mae"] == pytest.approx(
+        expected.get_column("absolute_error").mean()
+    )
+    assert observed["source"] == "frozen_p2_state_predictions"
+    assert tables.source_prediction_row_count == frozen.height
+
+
+def test_mris_closure_requires_identical_state_cost_rosters() -> None:
+    module = _analysis_module()
+    changed = _mris_predictions().with_columns(
+        pl.when(
+            (pl.col("mode") == "positions_only")
+            & (pl.col("state_id") == "d0-s0-t0-c0")
+        )
+        .then(11)
+        .otherwise(pl.col("exact_acquired_cost"))
+        .alias("exact_acquired_cost")
+    )
+
+    with pytest.raises(module.MRISCausalClosureError, match="same state/cost"):
+        module.evaluate_mris_causal_closure(
+            changed,
+            _full_field_predictions(),
+            domain_order=("d0", "d1"),
+            full_field_method="I_field_selected",
+            bootstrap_replicates=20,
+            seed=17,
+        )
+
+
+def test_mris_closure_uses_lower_is_better_contrasts_and_equal_domains() -> None:
+    module = _analysis_module()
+    tables = module.evaluate_mris_causal_closure(
+        _mris_predictions(),
+        _full_field_predictions(),
+        domain_order=("d0", "d1"),
+        full_field_method="I_field_selected",
+        bootstrap_replicates=50,
+        seed=17,
+    )
+
+    contrast = tables.contrasts.filter(
+        (pl.col("nominal_checkpoint") == 0.2)
+        & (pl.col("control_mode") == "positions_only")
+    ).row(0, named=True)
+    assert contrast["equal_domain_real_minus_control_mae"] == pytest.approx(0.0)
+    assert contrast["improved_domain_count"] == 1
+    assert contrast["worst_domain_effect"] == pytest.approx(1.0)
+    d0 = tables.domain_metrics.filter(
+        (pl.col("outer_domain") == "d0")
+        & (pl.col("nominal_checkpoint") == 0.2)
+    ).row(0, named=True)
+    assert d0["real_minus_positions_only_mae"] == pytest.approx(-1.0)
+    assert d0["full_field_utility_recovery_fraction"] == pytest.approx(
+        (5.11 - 2.11) / (5.11 - 1.1)
+    )
+
+
+def test_mris_closure_bootstrap_is_paired_and_deterministic() -> None:
+    module = _analysis_module()
+    first = module.evaluate_mris_causal_closure(
+        _mris_predictions(),
+        _full_field_predictions(),
+        domain_order=("d0", "d1"),
+        full_field_method="I_field_selected",
+        bootstrap_replicates=50,
+        seed=19,
+    ).bootstrap
+    second = module.evaluate_mris_causal_closure(
+        _mris_predictions(),
+        _full_field_predictions(),
+        domain_order=("d0", "d1"),
+        full_field_method="I_field_selected",
+        bootstrap_replicates=50,
+        seed=19,
+    ).bootstrap
+
+    assert first.equals(second)
+    row = first.filter(
+        (pl.col("scope") == "equal_domain")
+        & (pl.col("metric") == "real_minus_control_mae")
+        & (pl.col("control_mode") == "positions_only")
+        & (pl.col("nominal_checkpoint") == 0.2)
+    ).row(0, named=True)
+    assert row["estimate"] == pytest.approx(0.0)
+    assert row["bootstrap_replicates"] == 50
+
+
+def _p10_package_inputs(root: Path) -> Path:
+    inputs = root / "inputs"
+    inputs.mkdir()
+    p2_predictions = inputs / "p2_state_predictions.parquet"
+    full_field_predictions = inputs / "full_field_predictions.csv"
+    _mris_predictions().write_parquet(p2_predictions)
+    _full_field_predictions().write_csv(full_field_predictions)
+    p2_state = "2" * 64
+    p2_manifest = inputs / "p2_artifact_manifest.json"
+    p2_manifest.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "artifact": "mavis_p2_mris",
+                "p2_state_sha256": p2_state,
+                "files": {
+                    "state_predictions.parquet": {
+                        "sha256": _sha256(p2_predictions)
+                    }
+                },
+            },
+            sort_keys=True,
+        )
+        + "\n",
+        encoding="ascii",
+    )
+    full_field_manifest = inputs / "full_field_artifact_manifest.json"
+    full_field_manifest.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "scope": "cpb_v3_p1_full_field_oracle",
+                "files": {
+                    "predictions.csv": {"sha256": _sha256(full_field_predictions)}
+                },
+            },
+            sort_keys=True,
+        )
+        + "\n",
+        encoding="ascii",
+    )
+    p7 = inputs / "p7"
+    p7.mkdir()
+    (p7 / "frozen.txt").write_text("frozen\n", encoding="ascii")
+    config = {
+        "schema_version": 1,
+        "stage": "P10_MRIS_CAUSAL",
+        "audit_base_git_sha": "7" * 40,
+        "domain_order": ["d0", "d1"],
+        "p2_state_predictions": "inputs/p2_state_predictions.parquet",
+        "p2_state_predictions_sha256": _sha256(p2_predictions),
+        "p2_artifact_manifest": "inputs/p2_artifact_manifest.json",
+        "p2_artifact_manifest_sha256": _sha256(p2_manifest),
+        "p2_state_sha256": p2_state,
+        "full_field_predictions": "inputs/full_field_predictions.csv",
+        "full_field_predictions_sha256": _sha256(full_field_predictions),
+        "full_field_artifact_manifest": "inputs/full_field_artifact_manifest.json",
+        "full_field_artifact_manifest_sha256": _sha256(full_field_manifest),
+        "full_field_method": "I_field_selected",
+        "p7_package": "inputs/p7",
+        "p7_tree_state_sha256": _tree_state(p7),
+        "bootstrap_replicates": 50,
+        "seed": 19,
+    }
+    config_path = root / "p10_mris_causal.yaml"
+    config_path.write_text(yaml.safe_dump(config, sort_keys=True), encoding="ascii")
+    return config_path
+
+
+def test_p10_mris_causal_package_is_hash_bound_and_deterministic(
+    tmp_path: Path,
+) -> None:
+    module = _artifacts_module()
+    assert hasattr(module, "run_p10_mris_causal")
+    assert hasattr(module, "verify_p10_mris_causal_package")
+    config = _p10_package_inputs(tmp_path)
+    p7 = tmp_path / "inputs/p7"
+    p7_before = _tree_state(p7)
+
+    first = module.run_p10_mris_causal(
+        config,
+        project_root=tmp_path,
+        output_root="results/p10_first",
+    )
+    second = module.run_p10_mris_causal(
+        config,
+        project_root=tmp_path,
+        output_root="results/p10_second",
+    )
+    manifest = module.verify_p10_mris_causal_package(first)
+
+    expected = {
+        "state_cost_curve.csv",
+        "per_specimen_predictions.parquet",
+        "domain_metrics.csv",
+        "contrasts.csv",
+        "bootstrap.csv",
+        "REPORT.md",
+        "summary.json",
+        "artifact_manifest.json",
+        "CHECKSUMS.sha256",
+    }
+    assert {item.name for item in first.iterdir()} == expected
+    assert manifest["stage"] == "P10_MRIS_CAUSAL"
+    assert manifest["status"] == "COMPLETE"
+    assert _tree_state(p7) == p7_before
+    for name in expected:
+        assert (first / name).read_bytes() == (second / name).read_bytes()
+    summary = json.loads((first / "summary.json").read_text(encoding="utf-8"))
+    assert summary["source_prediction_row_count"] == _mris_predictions().height
+    assert summary["p7_modified"] is False
+    assert summary["actual_content_beyond_geometry_supported"] is False
+
+
+def test_p10_mris_causal_package_rejects_checksum_changes(tmp_path: Path) -> None:
+    module = _artifacts_module()
+    output = module.run_p10_mris_causal(
+        _p10_package_inputs(tmp_path),
+        project_root=tmp_path,
+        output_root="results/p10",
+    )
+    (output / "contrasts.csv").write_text("changed\n", encoding="ascii")
+
+    with pytest.raises(module.ScienceClosureArtifactError, match="checksum"):
+        module.verify_p10_mris_causal_package(output)

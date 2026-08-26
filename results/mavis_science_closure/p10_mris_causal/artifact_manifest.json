@@ -1,0 +1,45 @@
+{
+  "config_sha256": "dc65ea986ebe786e7a19ebd3d175bdb43f4d46a3c533d002c714f0f7ac60b04b",
+  "files": [
+    {
+      "bytes": 1537,
+      "path": "REPORT.md",
+      "sha256": "01f2ee5a5abe66c4eaa5789ae23fd674fe150c6492ffafde016a934d7fbd3b64"
+    },
+    {
+      "bytes": 49862,
+      "path": "bootstrap.csv",
+      "sha256": "d8d84bd71051a130f5ebfc2db2642c09fffdb7e65ce00b43dc7c86c8c420070f"
+    },
+    {
+      "bytes": 5337,
+      "path": "contrasts.csv",
+      "sha256": "809c03866789067335baef37c6cb668e35a8eae7b4bdc49748d6b125b66a18c5"
+    },
+    {
+      "bytes": 11210,
+      "path": "domain_metrics.csv",
+      "sha256": "669545debf7cb292f97d59c9cf002a6b7be3e5be5a741996f3896a5fd0f9bb31"
+    },
+    {
+      "bytes": 134528,
+      "path": "per_specimen_predictions.parquet",
+      "sha256": "9e28142f0e82ca17e67ab7a8a1e637f41654f7e0d25a57ac42942773ee893f5f"
+    },
+    {
+      "bytes": 3252,
+      "path": "state_cost_curve.csv",
+      "sha256": "d4cb08bb151944f4e078789911138c07111930b4eb7338df6266348962869dff"
+    },
+    {
+      "bytes": 1819,
+      "path": "summary.json",
+      "sha256": "d161da85af81698e626093e35e8a21347abc23f123987a3c33cb1200acc7bbb4"
+    }
+  ],
+  "p10_state_sha256": "c9d312a813eb4ed0b8e216ce873360b7551fc58523fadc6c90081f28e5a56503",
+  "p7_tree_state_sha256": "931dc86c26caf1c7246709c4706a7cd0428e3a1533b6ff1ad3c2ad8f9517d1e4",
+  "schema_version": 1,
+  "stage": "P10_MRIS_CAUSAL",
+  "status": "COMPLETE"
+}

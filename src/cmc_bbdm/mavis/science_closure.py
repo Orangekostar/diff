@@ -737,11 +737,651 @@ def bootstrap_value_evolution(
     )
 
 
+class MRISCausalClosureError(ValueError):
+    """Raised when frozen MRIS predictions cannot support a causal closure."""
+
+
+_MRIS_MODES = (
+    "real",
+    "positions_only",
+    "shuffled",
+    "static",
+    "reconstruction",
+)
+_MRIS_CONTROL_MODES = ("static", "positions_only", "shuffled", "reconstruction")
+_MRIS_PREDICTION_COLUMNS = {
+    "outer_domain",
+    "state_id",
+    "specimen_id",
+    "trajectory_id",
+    "method",
+    "seed",
+    "nominal_checkpoint",
+    "exact_acquired_cost",
+    "native_count",
+    "effective_budget",
+    "mode",
+    "target",
+    "prediction",
+    "absolute_error",
+    "model_state_sha256",
+}
+_FULL_FIELD_COLUMNS = {
+    "method",
+    "specimen_id",
+    "dataset_id",
+    "target",
+    "prediction",
+    "seed",
+}
+
+
+@dataclass(frozen=True, slots=True)
+class MRISCausalClosureTables:
+    source_prediction_row_count: int
+    per_specimen_predictions: pl.DataFrame
+    state_cost_curve: pl.DataFrame
+    domain_metrics: pl.DataFrame
+    contrasts: pl.DataFrame
+    bootstrap: pl.DataFrame
+
+
+def _mris_domain_order(value: Sequence[str]) -> tuple[str, ...]:
+    if (
+        type(value) not in {tuple, list}
+        or len(value) < 2
+        or any(type(item) is not str or not item for item in value)
+        or len(set(value)) != len(value)
+    ):
+        raise MRISCausalClosureError("MRIS domain order is invalid")
+    return tuple(value)
+
+
+def _validate_mris_causal_inputs(
+    predictions: pl.DataFrame,
+    full_field_predictions: pl.DataFrame,
+    *,
+    domain_order: tuple[str, ...],
+    full_field_method: str,
+) -> tuple[pl.DataFrame, pl.DataFrame]:
+    domains = _mris_domain_order(domain_order)
+    if (
+        type(predictions) is not pl.DataFrame
+        or predictions.is_empty()
+        or not _MRIS_PREDICTION_COLUMNS <= set(predictions.columns)
+    ):
+        raise MRISCausalClosureError("frozen P2 prediction schema is invalid")
+    frozen = predictions.select(sorted(_MRIS_PREDICTION_COLUMNS))
+    if (
+        set(frozen.get_column("outer_domain").unique()) != set(domains)
+        or set(frozen.get_column("mode").unique()) != set(_MRIS_MODES)
+        or frozen.select(pl.struct("state_id", "mode").n_unique()).item()
+        != frozen.height
+    ):
+        raise MRISCausalClosureError("frozen P2 prediction roster is invalid")
+    shared = (
+        "outer_domain",
+        "specimen_id",
+        "trajectory_id",
+        "method",
+        "seed",
+        "nominal_checkpoint",
+        "exact_acquired_cost",
+        "native_count",
+        "effective_budget",
+        "target",
+    )
+    state_roster = frozen.group_by("state_id").agg(
+        pl.len().alias("row_count"),
+        pl.col("mode").n_unique().alias("mode_count"),
+        *[pl.col(column).n_unique().alias(f"{column}_count") for column in shared],
+    )
+    roster_counts = ["row_count", "mode_count"]
+    shared_counts = [f"{column}_count" for column in shared]
+    if state_roster.filter(
+        pl.any_horizontal(
+            *[pl.col(column) != len(_MRIS_MODES) for column in roster_counts],
+            *[pl.col(column) != 1 for column in shared_counts],
+        )
+    ).height:
+        raise MRISCausalClosureError(
+            "MRIS controls do not share the same state/cost roster"
+        )
+    numeric = frozen.select(
+        "nominal_checkpoint",
+        "exact_acquired_cost",
+        "native_count",
+        "effective_budget",
+        "target",
+        "prediction",
+        "absolute_error",
+    ).to_numpy()
+    if not np.all(np.isfinite(numeric)):
+        raise MRISCausalClosureError("frozen P2 predictions are non-finite")
+    if frozen.filter(
+        (pl.col("exact_acquired_cost") <= 0)
+        | (pl.col("native_count") <= 0)
+        | (
+            (
+                pl.col("effective_budget")
+                - pl.col("exact_acquired_cost") / pl.col("native_count")
+            ).abs()
+            > 1.0e-15
+        )
+        | (
+            (
+                pl.col("absolute_error")
+                - (pl.col("target") - pl.col("prediction")).abs()
+            ).abs()
+            > 1.0e-15
+        )
+    ).height:
+        raise MRISCausalClosureError("frozen P2 prediction values are invalid")
+    if (
+        type(full_field_predictions) is not pl.DataFrame
+        or not _FULL_FIELD_COLUMNS <= set(full_field_predictions.columns)
+        or type(full_field_method) is not str
+        or not full_field_method
+    ):
+        raise MRISCausalClosureError("full-field reference schema is invalid")
+    full_field = full_field_predictions.filter(
+        pl.col("method") == full_field_method
+    ).select(sorted(_FULL_FIELD_COLUMNS))
+    specimen_context = (
+        frozen.select("outer_domain", "specimen_id", "native_count", "target")
+        .unique()
+        .sort(["outer_domain", "specimen_id"])
+    )
+    if (
+        full_field.height != specimen_context.height
+        or full_field.select(pl.struct("dataset_id", "specimen_id").n_unique()).item()
+        != full_field.height
+        or set(full_field.get_column("dataset_id").unique()) != set(domains)
+        or not np.all(
+            np.isfinite(full_field.select("target", "prediction").to_numpy())
+        )
+    ):
+        raise MRISCausalClosureError("full-field reference roster is invalid")
+    joined = full_field.join(
+        specimen_context,
+        left_on=["dataset_id", "specimen_id"],
+        right_on=["outer_domain", "specimen_id"],
+        how="inner",
+        suffix="_p2",
+    )
+    if (
+        joined.height != specimen_context.height
+        or joined.filter((pl.col("target") - pl.col("target_p2")).abs() > 1.0e-12).height
+    ):
+        raise MRISCausalClosureError("full-field and P2 specimen targets disagree")
+    return frozen, joined
+
+
+def _mris_per_specimen(
+    predictions: pl.DataFrame,
+    full_field: pl.DataFrame,
+) -> pl.DataFrame:
+    per_specimen = (
+        predictions.group_by(
+            "outer_domain", "specimen_id", "mode", "nominal_checkpoint"
+        )
+        .agg(
+            pl.col("exact_acquired_cost").mean().alias("mean_exact_acquired_cost"),
+            pl.col("effective_budget").mean().alias("mean_effective_budget"),
+            pl.col("target").first(),
+            pl.col("prediction").mean().alias("mean_prediction"),
+            pl.col("absolute_error").mean().alias("mae"),
+            pl.col("trajectory_id").n_unique().alias("trajectory_count"),
+            pl.len().alias("state_count"),
+            pl.lit("frozen_p2_state_predictions").alias("source"),
+        )
+        .sort(["outer_domain", "specimen_id", "mode", "nominal_checkpoint"])
+    )
+    full_rows = full_field.select(
+        pl.col("dataset_id").alias("outer_domain"),
+        "specimen_id",
+        pl.lit("full_field").alias("mode"),
+        pl.lit(1.0).alias("nominal_checkpoint"),
+        pl.col("native_count").cast(pl.Float64).alias("mean_exact_acquired_cost"),
+        pl.lit(1.0).alias("mean_effective_budget"),
+        pl.col("target").alias("target"),
+        pl.col("prediction").alias("mean_prediction"),
+        (pl.col("target") - pl.col("prediction")).abs().alias("mae"),
+        pl.lit(1).alias("trajectory_count"),
+        pl.lit(1).alias("state_count"),
+        pl.lit("frozen_full_field_predictions").alias("source"),
+    )
+    return pl.concat([per_specimen, full_rows], how="vertical_relaxed").sort(
+        ["outer_domain", "specimen_id", "mode", "nominal_checkpoint"]
+    )
+
+
+def _mris_curve_tables(
+    per_specimen: pl.DataFrame,
+    *,
+    domain_order: tuple[str, ...],
+) -> tuple[pl.DataFrame, pl.DataFrame]:
+    per_domain_curve = (
+        per_specimen.group_by("outer_domain", "mode", "nominal_checkpoint")
+        .agg(
+            pl.col("specimen_id").n_unique().alias("specimen_count"),
+            pl.col("mean_exact_acquired_cost")
+            .mean()
+            .alias("mean_exact_acquired_cost"),
+            pl.col("mean_effective_budget").mean().alias("mean_effective_budget"),
+            pl.col("mae").mean().alias("mae"),
+        )
+        .sort(["outer_domain", "mode", "nominal_checkpoint"])
+    )
+    state_cost_curve = (
+        per_domain_curve.group_by("mode", "nominal_checkpoint")
+        .agg(
+            pl.col("outer_domain").n_unique().alias("domain_count"),
+            pl.col("specimen_count").sum().alias("specimen_count"),
+            pl.col("mean_exact_acquired_cost")
+            .mean()
+            .alias("mean_exact_acquired_cost"),
+            pl.col("mean_effective_budget").mean().alias("mean_effective_budget"),
+            pl.col("mae").mean().alias("equal_domain_mae"),
+            pl.col("mae").max().alias("worst_domain_mae"),
+        )
+        .sort(["mode", "nominal_checkpoint"])
+    )
+    if state_cost_curve.get_column("domain_count").unique().to_list() != [
+        len(domain_order)
+    ]:
+        raise MRISCausalClosureError("MRIS equal-domain curve is incomplete")
+    checkpoints = sorted(
+        per_domain_curve.filter(pl.col("mode") == "real")
+        .get_column("nominal_checkpoint")
+        .unique()
+        .to_list()
+    )
+    rows: list[dict[str, object]] = []
+    for domain in domain_order:
+        domain_table = per_domain_curve.filter(pl.col("outer_domain") == domain)
+        full_field_mae = float(
+            domain_table.filter(pl.col("mode") == "full_field").item(0, "mae")
+        )
+        initial_real_mae = float(
+            domain_table.filter(
+                (pl.col("mode") == "real")
+                & (pl.col("nominal_checkpoint") == checkpoints[0])
+            ).item(0, "mae")
+        )
+        for checkpoint in checkpoints:
+            selected = domain_table.filter(
+                pl.col("nominal_checkpoint") == checkpoint
+            )
+            metrics = {
+                mode: float(selected.filter(pl.col("mode") == mode).item(0, "mae"))
+                for mode in _MRIS_MODES
+            }
+            real_row = selected.filter(pl.col("mode") == "real").row(
+                0, named=True
+            )
+            denominator = metrics["static"] - full_field_mae
+            if abs(denominator) <= 1.0e-15:
+                raise MRISCausalClosureError(
+                    "full-field utility recovery denominator is zero"
+                )
+            rows.append(
+                {
+                    "outer_domain": domain,
+                    "nominal_checkpoint": checkpoint,
+                    "specimen_count": real_row["specimen_count"],
+                    "mean_exact_acquired_cost": real_row[
+                        "mean_exact_acquired_cost"
+                    ],
+                    "mean_effective_budget": real_row["mean_effective_budget"],
+                    **{f"{mode}_mae": value for mode, value in metrics.items()},
+                    "full_field_mae": full_field_mae,
+                    **{
+                        f"real_minus_{control}_mae": metrics["real"]
+                        - metrics[control]
+                        for control in _MRIS_CONTROL_MODES
+                    },
+                    "real_change_from_initial_mae": metrics["real"]
+                    - initial_real_mae,
+                    "full_field_utility_recovery_fraction": (
+                        metrics["static"] - metrics["real"]
+                    )
+                    / denominator,
+                }
+            )
+    return state_cost_curve, pl.DataFrame(rows).sort(
+        ["outer_domain", "nominal_checkpoint"]
+    )
+
+
+def _mris_primary_contrasts(domain_metrics: pl.DataFrame) -> pl.DataFrame:
+    rows: list[dict[str, object]] = []
+    for checkpoint in sorted(
+        domain_metrics.get_column("nominal_checkpoint").unique().to_list()
+    ):
+        selected = domain_metrics.filter(
+            pl.col("nominal_checkpoint") == checkpoint
+        )
+        for control in _MRIS_CONTROL_MODES:
+            effect_column = f"real_minus_{control}_mae"
+            effects = selected.get_column(effect_column).to_numpy()
+            rows.append(
+                {
+                    "nominal_checkpoint": checkpoint,
+                    "mean_exact_acquired_cost": float(
+                        selected.get_column("mean_exact_acquired_cost").mean()
+                    ),
+                    "mean_effective_budget": float(
+                        selected.get_column("mean_effective_budget").mean()
+                    ),
+                    "control_mode": control,
+                    "real_equal_domain_mae": float(
+                        selected.get_column("real_mae").mean()
+                    ),
+                    "control_equal_domain_mae": float(
+                        selected.get_column(f"{control}_mae").mean()
+                    ),
+                    "equal_domain_real_minus_control_mae": float(
+                        np.mean(effects)
+                    ),
+                    "improved_domain_count": int(np.sum(effects < 0.0)),
+                    "domain_count": selected.height,
+                    "worst_domain_effect": float(np.max(effects)),
+                    "sign_convention": "negative_favors_real",
+                }
+            )
+    return pl.DataFrame(rows).sort(["control_mode", "nominal_checkpoint"])
+
+
+def _mris_bootstrap(
+    per_specimen: pl.DataFrame,
+    domain_metrics: pl.DataFrame,
+    contrasts: pl.DataFrame,
+    *,
+    domain_order: tuple[str, ...],
+    replicates: int,
+    seed: int,
+) -> pl.DataFrame:
+    if (
+        type(replicates) is not int
+        or isinstance(replicates, bool)
+        or replicates < 2
+        or type(seed) is not int
+        or isinstance(seed, bool)
+    ):
+        raise MRISCausalClosureError("MRIS bootstrap request is invalid")
+    checkpoints = sorted(
+        domain_metrics.get_column("nominal_checkpoint").unique().to_list()
+    )
+    generator = np.random.Generator(np.random.PCG64(seed))
+    domain_samples: dict[str, np.ndarray] = {}
+    observed: dict[tuple[str, str, float], float] = {}
+    sampled: dict[tuple[str, str, float], np.ndarray] = {}
+    for domain in domain_order:
+        table = per_specimen.filter(pl.col("outer_domain") == domain)
+        specimens = sorted(
+            table.filter(pl.col("mode") == "real")
+            .get_column("specimen_id")
+            .unique()
+            .to_list()
+        )
+        if not specimens:
+            raise MRISCausalClosureError("MRIS bootstrap domain is empty")
+        domain_samples[domain] = generator.integers(
+            0, len(specimens), size=(replicates, len(specimens))
+        )
+        for mode in (*_MRIS_MODES, "full_field"):
+            mode_checkpoints = checkpoints if mode != "full_field" else [1.0]
+            for checkpoint in mode_checkpoints:
+                values_table = table.filter(
+                    (pl.col("mode") == mode)
+                    & (pl.col("nominal_checkpoint") == checkpoint)
+                ).sort("specimen_id")
+                if values_table.get_column("specimen_id").to_list() != specimens:
+                    raise MRISCausalClosureError(
+                        "MRIS bootstrap specimen pairing changed"
+                    )
+                values = values_table.get_column("mae").to_numpy()
+                key = (domain, mode, checkpoint)
+                observed[key] = float(np.mean(values))
+                sampled[key] = np.mean(values[domain_samples[domain]], axis=1)
+
+    rows: list[dict[str, object]] = []
+
+    def append_row(
+        *,
+        scope: str,
+        domain: str,
+        checkpoint: float,
+        metric: str,
+        control: str,
+        values: np.ndarray,
+        estimate: float,
+        direction: str,
+    ) -> None:
+        summary = _bootstrap_summary(
+            values,
+            estimate=estimate,
+            replicates=replicates,
+            seed=seed,
+        )
+        rows.append(
+            {
+                "scope": scope,
+                "outer_domain": domain,
+                "nominal_checkpoint": checkpoint,
+                "metric": metric,
+                "control_mode": control,
+                "direction": direction,
+                **summary,
+                "fraction_below_zero": float(np.mean(values < 0.0)),
+            }
+        )
+
+    for checkpoint in checkpoints:
+        for control in _MRIS_CONTROL_MODES:
+            equal_values = []
+            for domain in domain_order:
+                values = (
+                    sampled[(domain, "real", checkpoint)]
+                    - sampled[(domain, control, checkpoint)]
+                )
+                estimate = (
+                    observed[(domain, "real", checkpoint)]
+                    - observed[(domain, control, checkpoint)]
+                )
+                equal_values.append(values)
+                append_row(
+                    scope="domain",
+                    domain=domain,
+                    checkpoint=checkpoint,
+                    metric="real_minus_control_mae",
+                    control=control,
+                    values=values,
+                    estimate=estimate,
+                    direction="negative_favors_real",
+                )
+            aggregate_values = np.mean(np.stack(equal_values), axis=0)
+            aggregate_estimate = float(
+                contrasts.filter(
+                    (pl.col("nominal_checkpoint") == checkpoint)
+                    & (pl.col("control_mode") == control)
+                ).item(0, "equal_domain_real_minus_control_mae")
+            )
+            append_row(
+                scope="equal_domain",
+                domain="__equal_domain__",
+                checkpoint=checkpoint,
+                metric="real_minus_control_mae",
+                control=control,
+                values=aggregate_values,
+                estimate=aggregate_estimate,
+                direction="negative_favors_real",
+            )
+
+        change_values = []
+        recovery_numerators = []
+        recovery_denominators = []
+        for domain in domain_order:
+            current_real = sampled[(domain, "real", checkpoint)]
+            initial_real = sampled[(domain, "real", checkpoints[0])]
+            changes = current_real - initial_real
+            change_values.append(changes)
+            domain_row = domain_metrics.filter(
+                (pl.col("outer_domain") == domain)
+                & (pl.col("nominal_checkpoint") == checkpoint)
+            ).row(0, named=True)
+            append_row(
+                scope="domain",
+                domain=domain,
+                checkpoint=checkpoint,
+                metric="real_change_from_initial_mae",
+                control="initial_real",
+                values=changes,
+                estimate=float(domain_row["real_change_from_initial_mae"]),
+                direction="negative_is_error_reduction",
+            )
+            static = sampled[(domain, "static", checkpoint)]
+            full_field = sampled[(domain, "full_field", 1.0)]
+            numerator = static - current_real
+            denominator = static - full_field
+            if np.any(np.abs(denominator) <= 1.0e-15):
+                raise MRISCausalClosureError(
+                    "bootstrap utility recovery denominator is zero"
+                )
+            recovery_numerators.append(numerator)
+            recovery_denominators.append(denominator)
+            recovery = numerator / denominator
+            append_row(
+                scope="domain",
+                domain=domain,
+                checkpoint=checkpoint,
+                metric="full_field_utility_recovery_fraction",
+                control="full_field",
+                values=recovery,
+                estimate=float(
+                    domain_row["full_field_utility_recovery_fraction"]
+                ),
+                direction="higher_is_more_utility_recovered",
+            )
+        equal_changes = np.mean(np.stack(change_values), axis=0)
+        append_row(
+            scope="equal_domain",
+            domain="__equal_domain__",
+            checkpoint=checkpoint,
+            metric="real_change_from_initial_mae",
+            control="initial_real",
+            values=equal_changes,
+            estimate=float(
+                domain_metrics.filter(
+                    pl.col("nominal_checkpoint") == checkpoint
+                ).get_column("real_change_from_initial_mae").mean()
+            ),
+            direction="negative_is_error_reduction",
+        )
+        equal_numerator = np.mean(np.stack(recovery_numerators), axis=0)
+        equal_denominator = np.mean(np.stack(recovery_denominators), axis=0)
+        if np.any(np.abs(equal_denominator) <= 1.0e-15):
+            raise MRISCausalClosureError(
+                "equal-domain utility recovery denominator is zero"
+            )
+        equal_recovery = equal_numerator / equal_denominator
+        selected = domain_metrics.filter(
+            pl.col("nominal_checkpoint") == checkpoint
+        )
+        recovery_estimate = float(
+            (selected.get_column("static_mae").mean()
+             - selected.get_column("real_mae").mean())
+            / (selected.get_column("static_mae").mean()
+               - selected.get_column("full_field_mae").mean())
+        )
+        append_row(
+            scope="equal_domain",
+            domain="__equal_domain__",
+            checkpoint=checkpoint,
+            metric="full_field_utility_recovery_fraction",
+            control="full_field",
+            values=equal_recovery,
+            estimate=recovery_estimate,
+            direction="higher_is_more_utility_recovered",
+        )
+    return pl.DataFrame(rows).sort(
+        [
+            "metric",
+            "control_mode",
+            "nominal_checkpoint",
+            "scope",
+            "outer_domain",
+        ]
+    )
+
+
+def evaluate_mris_causal_closure(
+    predictions: pl.DataFrame,
+    full_field_predictions: pl.DataFrame,
+    *,
+    domain_order: tuple[str, ...],
+    full_field_method: str,
+    bootstrap_replicates: int,
+    seed: int,
+) -> MRISCausalClosureTables:
+    """Close MRIS causal contrasts from frozen predictions without retraining."""
+
+    domains = _mris_domain_order(domain_order)
+    frozen, full_field = _validate_mris_causal_inputs(
+        predictions,
+        full_field_predictions,
+        domain_order=domains,
+        full_field_method=full_field_method,
+    )
+    per_specimen = _mris_per_specimen(frozen, full_field)
+    state_cost_curve, domain_metrics = _mris_curve_tables(
+        per_specimen,
+        domain_order=domains,
+    )
+    contrasts = _mris_primary_contrasts(domain_metrics)
+    bootstrap = _mris_bootstrap(
+        per_specimen,
+        domain_metrics,
+        contrasts,
+        domain_order=domains,
+        replicates=bootstrap_replicates,
+        seed=seed,
+    )
+    confidence = bootstrap.filter(
+        (pl.col("scope") == "equal_domain")
+        & (pl.col("metric") == "real_minus_control_mae")
+    ).select(
+        "nominal_checkpoint",
+        "control_mode",
+        "ci95_lower",
+        "ci95_upper",
+        "fraction_below_zero",
+    )
+    contrasts = contrasts.join(
+        confidence,
+        on=["nominal_checkpoint", "control_mode"],
+        how="left",
+        validate="1:1",
+    ).sort(["control_mode", "nominal_checkpoint"])
+    return MRISCausalClosureTables(
+        source_prediction_row_count=frozen.height,
+        per_specimen_predictions=per_specimen,
+        state_cost_curve=state_cost_curve,
+        domain_metrics=domain_metrics,
+        contrasts=contrasts,
+        bootstrap=bootstrap,
+    )
+
+
 __all__ = [
+    "MRISCausalClosureError",
+    "MRISCausalClosureTables",
     "ValueEvolutionError",
     "ValueEvolutionMetricTables",
     "aggregate_value_evolution",
     "bootstrap_value_evolution",
     "build_value_evolution",
+    "evaluate_mris_causal_closure",
     "evaluate_value_evolution",
 ]
