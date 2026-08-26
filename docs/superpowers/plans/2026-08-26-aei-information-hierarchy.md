@@ -45,13 +45,13 @@ validates the manuscript, and produces a deterministic checksummed package.
 - Create `artifacts/aei_information_hierarchy/PAPER_CLAIM_MAP.md`
 - Create `artifacts/aei_information_hierarchy/PAPER_SOURCE_HASHES.csv`
 
-- [ ] Write failing tests for exact required source files, SHA-256 binding,
+- [x] Write failing tests for exact required source files, SHA-256 binding,
   unique claim IDs, contrast directions, interval ordering, six-domain counts,
   B/I method semantics, P5 dual contrasts, and oracle/deployable labels.
-- [ ] Implement strict readers and canonical rows for all RQ1-RQ3 claims.
-- [ ] Recompute only registered deterministic aggregations from frozen rows and
+- [x] Implement strict readers and canonical rows for all RQ1-RQ3 claims.
+- [x] Recompute only registered deterministic aggregations from frozen rows and
   reject any mismatch with serialized authority beyond tolerance.
-- [ ] Commit the semantic reconciliation and canonical authority in separate
+- [x] Commit the semantic reconciliation and canonical authority in separate
   evidence commits.
 
 ## Task 3: Figure data and rendering with RED tests
