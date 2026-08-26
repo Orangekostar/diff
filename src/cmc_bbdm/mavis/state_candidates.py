@@ -18,7 +18,6 @@ from cmc_bbdm.mva.interpolation import (
 )
 from cmc_bbdm.mva.measurement_state import (
     RefinementAction,
-    candidate_budget_record,
     fitting_actions,
     measurement_mask,
 )
@@ -230,9 +229,12 @@ def build_source_candidate_batch_from_view(
     costs: list[int] = []
     candidate_hashes: list[str] = []
     for action in actions:
-        record = candidate_budget_record(grid, measurement_state, action)
-        cost = record.measured_count - state.exact_acquired_count
-        if cost <= 0 or record.effective_budget > action_cap + 1.0e-15:
+        cell = grid.cells[action.cell_index]
+        rows = np.asarray(cell.rows[action.to_level], dtype=np.int64)
+        columns = np.asarray(cell.columns[action.to_level], dtype=np.int64)
+        cost = int(np.count_nonzero(~current_mask[np.ix_(rows, columns)]))
+        effective_budget = (state.exact_acquired_count + cost) / state.native_count
+        if cost <= 0 or effective_budget > action_cap + 1.0e-15:
             raise MAVISStateCandidateError("candidate exact cost is invalid")
         image = refine_reconstruction(
             teacher.full_scan,
