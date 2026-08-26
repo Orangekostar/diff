@@ -1,0 +1,76 @@
+{
+  "audit_base_git_sha": "716de19c4fe6f742eddf40a95f8cc3ed45192217",
+  "checkpoints": [
+    0.03125,
+    0.0625,
+    0.09375,
+    0.125,
+    0.1875,
+    0.25
+  ],
+  "config_sha256": "003141fed508c6791b3120aeccb0a09116c9a7aff6051a70d51216d48f334fd8",
+  "contrasts": {
+    "learned_mechanics_minus_reconstruction_image": {
+      "interval": [
+        0.000280597097499,
+        0.000330740337532
+      ],
+      "point": 0.000304411131074
+    },
+    "learned_reconstruction_minus_mechanics_cai": {
+      "interval": [
+        -0.006954862760668,
+        -0.001904177112446
+      ],
+      "point": -0.004438260934316
+    },
+    "oracle_mechanics_minus_reconstruction_image": {
+      "interval": [
+        0.000500623349499,
+        0.000606291994363
+      ],
+      "point": 0.000550254888632
+    },
+    "oracle_reconstruction_minus_mechanics_cai": {
+      "interval": [
+        0.045273264544767,
+        0.052045350460869
+      ],
+      "point": 0.048622843139314
+    }
+  },
+  "domain_order": [
+    "74t7kcdgkr",
+    "cgtnjyggtm",
+    "w68dtmpfyf",
+    "xcmzfsbd9t",
+    "yfxyg8jm46",
+    "ykhs7s2dck"
+  ],
+  "learned_cross_objective_supported": false,
+  "method_order": [
+    "reconstruction_oracle",
+    "mechanical_oracle",
+    "global_reconstruction_mask",
+    "global_mechanical_mask"
+  ],
+  "oracle_cross_objective_supported": true,
+  "p7_tree_state_sha256": "931dc86c26caf1c7246709c4706a7cd0428e3a1533b6ff1ad3c2ad8f9517d1e4",
+  "primary_conclusion": "Oracle acquisitions show task specificity: the mechanical oracle improves CAI while the reconstruction oracle improves reconstruction. The source-trained global mechanics mask does not reproduce this separation and is worse on both aggregate objectives than the global reconstruction mask.",
+  "reconstruction_metric": "normalized_rgb_mse",
+  "schema_version": 1,
+  "spatial_mean": [
+    {
+      "comparison": "learned",
+      "exact_action_jaccard": 0.363349209505408,
+      "normalized_symmetric_cell_distance": 0.087454279628044
+    },
+    {
+      "comparison": "oracle",
+      "exact_action_jaccard": 0.146143220958442,
+      "normalized_symmetric_cell_distance": 0.115471029934606
+    }
+  ],
+  "specimen_count": 276,
+  "stage": "P14_TASK_SPECIFICITY"
+}

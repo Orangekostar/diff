@@ -1,0 +1,5 @@
+method,domain_count,domain_balanced_cai_auebc,worst_domain_cai_auebc,domain_balanced_reconstruction_auebc,worst_domain_reconstruction_auebc,label,acquisition_objective,policy_class
+global_mechanical_mask,6,0.096902557661931,0.169651007012691,0.001104959046336,0.001721114864107,Learned mechanics mask,mechanics,source_trained_global
+global_reconstruction_mask,6,0.092472578804986,0.152117475113886,0.000800596215471,0.001171458437599,Learned reconstruction mask,reconstruction,source_trained_global
+mechanical_oracle,6,0.04381339476241,0.094776982536609,0.001210313332511,0.001892024608698,Mechanical oracle,mechanics,oracle
+reconstruction_oracle,6,0.092366984955365,0.155439785703912,0.000660345871522,0.000862542338811,Reconstruction oracle,reconstruction,oracle
