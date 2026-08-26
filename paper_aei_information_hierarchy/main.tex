@@ -26,9 +26,111 @@
 
 \begin{document}
 
-% Front matter and Section 1 are drafted after the numerical results freeze.
+\begin{frontmatter}
+
+\title{From Useful to Actionable Information: A Task-Relevant Information Hierarchy for Ultrasonic Inspection of Impacted Composites}
+
+\author{Author information withheld for review}
+\address{Author affiliation withheld for review}
+
+\begin{abstract}
+Ultrasonic inspection produces spatially rich internal observations, but
+predictive usefulness alone does not determine which measurements should be
+acquired. We introduce a task-relevant information hierarchy that distinguishes
+useful, observable, and actionable information. Usefulness asks whether an
+observation improves a downstream task; observability asks whether its
+conditional value can be estimated from the legally available inspection
+state; and actionability asks whether estimated value improves a bounded sensing
+decision. The hierarchy is evaluated on 276 specimens from six experimental
+domains using strict nested leave-one-domain-out validation and exact
+native-raster acquisition cost. A selected spatial ultrasonic field reduced
+equal-domain compression-after-impact prediction error by 0.06072 (32.1\%)
+relative to its matched scalar representation, while a registered sparse
+condition retained 89.9\% of the full-field gain. Retrospective oracle designs
+also differed between mechanical and reconstruction objectives. These useful
+signals did not transfer automatically to acquisition. The retrospective
+teacher's best action changed for 70.4\% of specimens as measurements
+accumulated, yet static value ranking was unsupported, measured-content controls
+were adverse, and shuffled content remained stronger than real content for the
+tested dynamic scorer. Feedback was adverse, and the frozen learned policy did
+not outperform the strongest deployable baseline. The results establish a
+practical evidence hierarchy for separating information opportunity from
+observable measurement value and end-to-end sensing benefit.
+\end{abstract}
+
+\begin{keyword}
+adaptive ultrasonic inspection \sep compression after impact \sep
+value of information \sep task-driven sensing \sep domain generalization
+\end{keyword}
+
+\end{frontmatter}
+
 \section{Introduction}
 \label{sec:introduction}
+
+Ultrasonic inspection produces spatially rich internal observations of impacted
+composites, but an engineering decision rarely needs every observable detail.
+The practical question is which measurements reduce uncertainty about a
+specified performance quantity enough to justify their acquisition. For
+carbon-fiber-reinforced polymer (CFRP) structures, this distinction is important
+because low-velocity impact may leave limited surface evidence while producing
+distributed internal damage that affects compression-after-impact (CAI)
+performance. Surface-to-damage and surface-to-CAI prediction studies show that
+accessible geometry carries useful information
+\cite{hasebe2022internal,hasebe2025compression}, whereas image-resolved C-scan
+studies show that internal morphology provides a richer representation
+\cite{bull2018image,mack2026cscan}. Neither result alone determines where a
+future inspection should measure.
+
+Sparse reconstruction and adaptive sensing offer possible reductions in digital
+measurement count. Existing work has demonstrated sparse ultrasonic
+reconstruction \cite{nguyen2025sparse}, adaptive path planning for defect
+localization \cite{ji2026adaptive}, and autonomous task-directed inspection
+\cite{fuentes2020autonomous}. More generally, task-driven experimental design
+selects measurements according to downstream features rather than generic image
+fidelity \cite{blumberg2024experimental}. These developments motivate adaptive
+acquisition, but they leave a crucial evidential gap: a measurement can contain
+task-relevant information without its value being inferable from the partial
+state available before acquisition, and an estimated value can still fail to
+improve a cost-constrained policy.
+
+This paper formalizes that gap as a three-layer task-relevant information
+hierarchy.
+\emph{Useful} information improves a specified downstream predictor under a
+held-out-domain protocol. \emph{Observable} information has conditional value
+that can be recovered from the legal inspection state without future outcomes
+or unrevealed measurements. \emph{Actionable} information changes a bounded
+acquisition decision enough to improve end-to-end utility. The layers are
+deliberately non-equivalent: useful does not imply observable, and observable
+does not imply actionable. This framing adapts value-of-information reasoning
+\cite{memarzadeh2016value,cantero2020optimal} to sequential ultrasonic
+measurement while keeping the downstream predictor, acquisition state, action
+set, and cost definition explicit.
+
+We examine three research questions. RQ1 asks whether spatial and sparse
+ultrasonic representations contain CAI-relevant information beyond matched
+lower-dimensional observations. RQ2 asks whether conditional measurement value
+is observable from legal partial-inspection states across unseen experimental
+domains. RQ3 asks whether the resulting valuation and bounded planning improve
+cost-constrained acquisition relative to deployable references. The empirical
+case study uses 276 paired specimens from six CFRP experimental domains, strict
+nested leave-one-domain-out evaluation, specimen-first inference, and exact
+native-raster location cost. Retrospective teachers and oracles are used only to
+measure opportunity or diagnose a component; they are never presented as
+deployable policies.
+
+The contribution is fourfold. First, the hierarchy supplies a precise vocabulary
+and operational test for separating task usefulness, conditional observability,
+and decision actionability. Second, matched scalar, surface, sparse-field,
+full-field, and cross-objective oracle contrasts quantify where useful
+information exists and where its interpretation must remain bounded. Third,
+static, dynamic, position-only, reconstruction, and shuffled-content controls
+test whether partial-state valuation is attributable to measured specimen
+content. Fourth, retrospective component substitutions, bounded set planning,
+feedback, and a frozen end-to-end comparison show how diagnostic headroom can
+coexist with a negative deployment-facing result. The outcome is not a claim of
+a superior acquisition model; it is an evidence-centered framework for deciding
+which information claims the current data and validation protocol support.
 
 \section{Related Research and Problem Formulation}
 \label{sec:related-formulation}
@@ -770,15 +872,18 @@ baseline across held-out domains.
 \subsection{Integrated engineering-informatics interpretation}
 \label{sec:integrated-interpretation}
 
+Table~\ref{tab:hierarchy-evidence} assembles the evidence without treating the
+three layers as a single model-development sequence.
+
+\clearpage
 \input{tables/table2_hierarchy_evidence.tex}
 
-Table~\ref{tab:hierarchy-evidence} assembles the evidence without treating the
-three layers as a single model-development sequence. RQ1 establishes a real
-target for acquisition: spatial C-scan information improves CAI assessment,
-much of its registered gain survives a sparse digital protocol, and
-retrospective optimal designs change when utility changes from CAI error to
-image error. The predictor-sensitivity analysis sharpens the construct: task
-value belongs to a predictor, state, and objective, not to a coordinate alone.
+RQ1 establishes a real target for acquisition: spatial C-scan information
+improves CAI assessment, much of its registered gain survives a sparse digital
+protocol, and retrospective optimal designs change when utility changes from
+CAI error to image error. The predictor-sensitivity analysis sharpens the
+construct: task value belongs to a predictor, state, and objective, not to a
+coordinate alone.
 
 RQ2 shows why that useful target is not automatically observable. The teacher
 ranking changes after measurements, so a static population map is incomplete.
@@ -809,9 +914,37 @@ fixed implementations. Their non-superiority does not prove that task-driven
 adaptive ultrasound is impossible; it shows which evidential conditions remain
 unmet before such a claim is warranted.
 
-% Section 6, the abstract, and the final title are drafted after Section 5.
 \section{Conclusions}
 \label{sec:conclusions}
+
+This study distinguished the existence of task-relevant ultrasonic information
+from the ability to observe and use its value during acquisition. For RQ1,
+Useful information was established: the registered spatial field improved
+held-out-domain CAI prediction over matched scalar and surface references, the
+sparse condition retained most but not all of the full-field gain, and
+retrospective optimal designs depended on the downstream objective and
+predictor. These findings identify a legitimate acquisition target without
+equating sparse digital coverage with scanner time or treating an oracle as a
+policy.
+
+For RQ2, observability was only partial. Conditional teacher values changed
+substantially as measurements accumulated, and dynamic scoring narrowly reduced
+regret relative to static scoring. However, static ranking was unsupported,
+measured content was worse than matched positions and reconstruction controls,
+and shuffled content remained the stronger dynamic control. The tested state
+representation therefore did not establish transferable specimen-specific
+content value.
+
+For RQ3, Actionable improvement was not established. Retrospective substitutions
+and bounded near-oracle planning exposed valuation and set-selection headroom,
+but feedback was adverse and the frozen learned policy did not outperform the
+strongest deployable baseline. The combined result is the hierarchy's central
+engineering-informatics conclusion: useful information may define what would be
+worth measuring in retrospect while remaining unobservable from a legal partial
+state and ineffective in an end-to-end acquisition policy. Progress should
+therefore be judged by matched information controls and frozen cross-domain
+policy outcomes, not by oracle opportunity or component-level improvements
+alone.
 
 \bibliographystyle{elsarticle-num}
 \bibliography{references}

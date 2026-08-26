@@ -18,6 +18,10 @@ SECTIONS = [
     "Experimental Results and Discussion",
     "Conclusions",
 ]
+TITLE = (
+    "From Useful to Actionable Information: A Task-Relevant Information "
+    "Hierarchy for Ultrasonic Inspection of Impacted Composites"
+)
 
 
 def _text(path: Path) -> str:
@@ -33,6 +37,54 @@ def test_aei_paper_outline_matches_fixed_section_contract() -> None:
     outline = _text(PAPER / "MANUSCRIPT_OUTLINE.md")
     headings = re.findall(r"^## [1-6]\. (.+)$", outline, flags=re.MULTILINE)
     assert headings == SECTIONS
+
+
+def test_aei_paper_frontmatter_uses_fixed_title_and_review_safe_author() -> None:
+    manuscript = _text(MAIN)
+    assert f"\\title{{{TITLE}}}" in manuscript
+    assert "\\begin{frontmatter}" in manuscript
+    assert "\\end{frontmatter}" in manuscript
+    assert "Author information withheld for review" in manuscript
+
+
+def test_aei_paper_abstract_states_hierarchy_evidence_and_boundary() -> None:
+    manuscript = _text(MAIN)
+    abstract = re.search(
+        r"\\begin\{abstract\}(.*?)\\end\{abstract\}",
+        manuscript,
+        flags=re.DOTALL,
+    )
+    assert abstract is not None
+    text = re.sub(r"\s+", " ", abstract.group(1))
+    assert 150 <= len(text.split()) <= 250
+    assert all(
+        phrase in text
+        for phrase in (
+            "useful, observable, and actionable",
+            "276 specimens",
+            "six experimental domains",
+            "32.1\\%",
+            "89.9\\%",
+            "70.4\\%",
+            "did not outperform the strongest deployable baseline",
+        )
+    )
+
+
+def test_aei_paper_introduction_and_conclusion_close_all_rqs() -> None:
+    manuscript = _text(MAIN)
+    introduction = manuscript.split("\\section{Introduction}", 1)[1].split(
+        "\\section{Related Research and Problem Formulation}", 1
+    )[0]
+    conclusion = manuscript.split("\\section{Conclusions}", 1)[1].split(
+        "\\bibliographystyle", 1
+    )[0]
+    assert introduction.lstrip().startswith("\\label{sec:introduction}")
+    assert "Ultrasonic inspection produces spatially rich internal observations" in introduction
+    assert all(f"RQ{index}" in introduction for index in (1, 2, 3))
+    assert all(f"RQ{index}" in conclusion for index in (1, 2, 3))
+    assert "Useful information was established" in conclusion
+    assert "Actionable improvement was not established" in conclusion
 
 
 def test_aei_paper_citation_keys_are_defined() -> None:

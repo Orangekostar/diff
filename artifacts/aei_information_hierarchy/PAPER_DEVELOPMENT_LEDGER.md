@@ -12,6 +12,7 @@ Base commit: `c2eab6eac79dd3fbb9ecb0d19f98923e515e762b`
 | 5 | `d808a5f` | protocol and information-hierarchy evidence tables with source and caption files | 11 table tests; standalone LaTeX compile and visual QA; checksum verification | no |
 | 6 | `9da2fbe` | fixed six-section outline, evidence-bounded claim sentence bank, and paper package contract | 43 paper evidence/figure/table tests; claim-ID closure; Ruff; `git diff --check` | no |
 | 7 | `c2c98e9` | related research, hierarchy framework, and multi-domain case/protocol draft | 51 paper tests; isolated journal-class compile; 15-entry citation closure; Ruff; `git diff --check` | no |
+| 8 | `b158398` | Section 5 results and discussion drafted from canonical metrics; readable multipage hierarchy table integration | 57 paper tests; 23-page isolated compile with zero warnings/overfull boxes; table render QA; Ruff | no |
 
 Each subsequent paper commit will be appended after its SHA exists. The final
 entry must bind the pushed remote branch and verified artifact paths.
