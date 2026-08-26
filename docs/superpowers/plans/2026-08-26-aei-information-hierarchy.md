@@ -25,22 +25,21 @@ validates the manuscript, and produces a deterministic checksummed package.
 - Create `docs/literature-search-20260826-aei-paper1/*`
 - Create `artifacts/aei_information_hierarchy/PAPER_DEVELOPMENT_LEDGER.md`
 
-- [ ] Record exact base, inventory, baseline tests, immutable namespaces, and
+- [x] Record exact base, inventory, baseline tests, immutable namespaces, and
   missing manuscript source.
-- [ ] Reconcile B/I full-field semantics, P5 interval semantics, and P10's
+- [x] Reconcile B/I full-field semantics, P5 interval semantics, and P10's
   separate I-field endpoint.
-- [ ] Record official AEI scope and at least ten recent research-paper structure
+- [x] Record official AEI scope and at least ten recent research-paper structure
   checks without inferring inaccessible headings.
-- [ ] Run `git diff --check`, Ruff, and the paper-audit tests once added.
-- [ ] Commit `audit: map AEI paper evidence and manuscript starting state`.
+- [x] Run `git diff --check`, Ruff, and the paper-audit tests once added.
+- [x] Commit `audit: map AEI paper evidence and manuscript starting state`.
 
 ## Task 2: Canonical authority with RED tests
 
 **Files:**
 
-- Create `src/cmc_bbdm/aei_information_hierarchy/__init__.py`
-- Create `src/cmc_bbdm/aei_information_hierarchy/authority.py`
-- Create `tests/test_aei_information_hierarchy_authority.py`
+- Create `src/cmc_bbdm/mavis/aei_paper_evidence.py`
+- Create `tests/test_mavis_aei_paper_evidence.py`
 - Create `artifacts/aei_information_hierarchy/EVIDENCE_AUTHORITY_RECONCILIATION.md`
 - Create `artifacts/aei_information_hierarchy/PAPER_CANONICAL_METRICS.csv`
 - Create `artifacts/aei_information_hierarchy/PAPER_CLAIM_MAP.md`
@@ -59,8 +58,8 @@ validates the manuscript, and produces a deterministic checksummed package.
 
 **Files:**
 
-- Create `src/cmc_bbdm/aei_information_hierarchy/figures.py`
-- Create `tests/test_aei_information_hierarchy_figures.py`
+- Create `src/cmc_bbdm/mavis/aei_paper_figures.py`
+- Create `tests/test_mavis_aei_paper_figures.py`
 - Create `results/aei_information_hierarchy/figures/*`
 - Create `paper_aei_information_hierarchy/figures/*`
 - Create `docs/superpowers/visual-composer/aei-information-hierarchy-*`
@@ -78,8 +77,8 @@ validates the manuscript, and produces a deterministic checksummed package.
 
 **Files:**
 
-- Create `src/cmc_bbdm/aei_information_hierarchy/tables.py`
-- Create `tests/test_aei_information_hierarchy_tables.py`
+- Create `src/cmc_bbdm/mavis/aei_paper_tables.py`
+- Create `tests/test_mavis_aei_paper_tables.py`
 - Create `results/aei_information_hierarchy/tables/*`
 - Create `paper_aei_information_hierarchy/tables/*`
 
@@ -97,7 +96,7 @@ validates the manuscript, and produces a deterministic checksummed package.
 - Create `paper_aei_information_hierarchy/README.md`
 - Create `paper_aei_information_hierarchy/MANUSCRIPT_OUTLINE.md`
 - Create `paper_aei_information_hierarchy/CLAIM_SENTENCE_BANK.md`
-- Create `tests/test_aei_information_hierarchy_manuscript.py`
+- Create `tests/test_mavis_aei_paper_manuscript.py`
 
 - [ ] Write failing tests for exact section names/order, claim-to-source links,
   forbidden claims, and internal-label exclusion.
@@ -148,9 +147,9 @@ validates the manuscript, and produces a deterministic checksummed package.
 
 - Create `paper_aei_information_hierarchy/supplementary/main.tex`
 - Create `paper_aei_information_hierarchy/supplementary/README.md`
-- Create `src/cmc_bbdm/aei_information_hierarchy/validation.py`
-- Create `src/cmc_bbdm/aei_information_hierarchy/package.py`
-- Create `tests/test_aei_information_hierarchy_validation.py`
+- Create `src/cmc_bbdm/mavis/aei_paper_validation.py`
+- Create `src/cmc_bbdm/mavis/aei_paper_package.py`
+- Create `tests/test_mavis_aei_paper_validation.py`
 - Create `results/aei_information_hierarchy/CHECKSUMS.sha256`
 - Create `results/aei_information_hierarchy/artifact_manifest.json`
 

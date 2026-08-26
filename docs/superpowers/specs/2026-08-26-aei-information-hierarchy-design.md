@@ -41,15 +41,15 @@ data, figures, tables, and provenance reports.
 
 ## Implementation architecture
 
-Add a private package under `src/cmc_bbdm/aei_information_hierarchy/`:
+Add paper-only modules under the existing `src/cmc_bbdm/mavis/` namespace:
 
-- `authority.py`: strict schema, source hashes, canonical metric rows, and
+- `aei_paper_evidence.py`: strict schema, source hashes, canonical metric rows, and
   contrast semantics;
-- `figures.py`: deterministic four-figure rendering from paper source tables;
-- `tables.py`: deterministic protocol and evidence-hierarchy tables;
-- `validation.py`: numeric provenance lint, six-section lint, forbidden-claim
+- `aei_paper_figures.py`: deterministic four-figure rendering from paper source tables;
+- `aei_paper_tables.py`: deterministic protocol and evidence-hierarchy tables;
+- `aei_paper_validation.py`: numeric provenance lint, six-section lint, forbidden-claim
   lint, figure/table contract checks, and frozen-tree verification;
-- `package.py`: one command to rebuild the derived paper package and checksums.
+- `aei_paper_package.py`: one command to rebuild the derived paper package and checksums.
 
 The package does not expose a new public research API. All source paths are
 repository-relative and every generated payload records its input hashes.
