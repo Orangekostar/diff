@@ -87,6 +87,17 @@ def test_aei_paper_introduction_and_conclusion_close_all_rqs() -> None:
     assert "Actionable improvement was not established" in conclusion
 
 
+def test_aei_paper_includes_submission_declarations_without_a_seventh_section() -> None:
+    manuscript = _text(MAIN)
+    assert "\\section*{Data and code availability}" in manuscript
+    assert "anonymized reproducibility package" in manuscript
+    assert (
+        "\\section*{Declaration of generative AI and AI-assisted technologies "
+        "in the writing process}" in manuscript
+    )
+    assert "OpenAI Codex" in manuscript
+
+
 def test_aei_paper_citation_keys_are_defined() -> None:
     manuscript = _text(MAIN)
     cited = {

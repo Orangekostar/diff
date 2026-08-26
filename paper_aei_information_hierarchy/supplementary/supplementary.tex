@@ -1,0 +1,90 @@
+\documentclass[11pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\setlength{\emergencystretch}{3em}
+
+\title{Supplementary Material: From Useful to Actionable Information}
+\author{Author information withheld for review}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Purpose and statistical units}
+
+This supplement exposes the audit-heavy records behind the main manuscript.
+It does not introduce a second method, new training, or additional performance
+claims. Physical specimens are the first statistical unit and the six held-out
+experimental domains are the second. Repeated state, checkpoint, action, and
+learner-pair rows are computational records rather than independent samples.
+All oracle, teacher, and component-substitution records are retrospective and
+non-deployable unless a file explicitly marks a row as deployable.
+
+\section{Machine-readable evidence index}
+
+\begin{longtable}{@{}p{0.15\textwidth}p{0.78\textwidth}@{}}
+\toprule
+Files & Content \\
+\midrule
+\endfirsthead
+\toprule
+Files & Content \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+S01--S02 & Full domain-by-domain scalar/spatial and static-observability metrics. \\
+S03--S04 & Full checkpoint and domain records for strict-OOF conditional-value evolution. \\
+S05--S07 & Complete real, position-only, shuffled, static, reconstruction, and full-field control records. \\
+S08--S09 & Dynamic-valuation regret, Spearman, NDCG, recall, utility, and domain records. \\
+S10--S11 & Valuation/planning component substitutions and their domain-level effects. \\
+S12 & Current greedy, beam, lookahead, and retrospective reachable-pool planning records by domain. \\
+S13--S14 & Learner fits and all specimen-level learner-pair rank, top-$k$, best-action, and spatial metrics. \\
+S15--S16 & Feedback-effect strata and association diagnostics for tested mechanism variables. \\
+S17 & Paper source paths and SHA-256 provenance authority. \\
+S18 & External-dataset feasibility audit; no external method-performance evaluation is present. \\
+\end{longtable}
+
+\section{Usefulness evidence details}
+
+S01 provides all domain-level full-field candidate metrics, including the
+matched metadata-plus-surface B-family path and the distinct independent
+metadata-only I-family estimator. The registered confirmatory claim uses the
+B-family scalar-to-spatial contrast. S12--S14 preserve the full planning and
+learner-sensitivity records used to show that measurement value is conditioned
+on the downstream predictor and decision set rather than being an intrinsic
+property of a location.
+
+\section{Observability controls}
+
+S02 contains the full static-observability comparison. S03--S04 contain every
+tested checkpoint transition and value source for the conditional teacher.
+S05--S07 expose all state-matched content controls, including the unfavorable
+position-only and reconstruction comparisons. S08--S09 retain the secondary
+rank metrics and the shuffled-content adverse control. These records do not
+support a general claim that specimen-specific measurement content is
+observable from the tested legal state.
+
+\section{Actionability and feedback diagnostics}
+
+S10--S11 expose the full component-substitution matrix and domain effects. S12
+contains the bounded two-action reachable-pool diagnostics; the retrospective
+near-oracle is not a deployable policy and does not establish arbitrary-horizon
+planning regret. S15--S16 retain the full feedback strata and association
+analyses. They do not support conditional-value evolution as the operative
+mechanism for improved feedback, and the main endpoint remains adverse.
+
+\section{Provenance and external-data boundary}
+
+S17 binds the paper-specific canonical authority to the immutable source
+artifacts. `SUPPLEMENTARY\_DATA\_MANIFEST.csv' independently binds each copied
+supplement file to its source digest. S18 is an audit of external dataset
+feasibility only. It contains no external replication, scanner-time validation,
+or industrial deployment result.
+
+\end{document}

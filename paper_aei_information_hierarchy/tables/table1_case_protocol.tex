@@ -1,0 +1,24 @@
+\begin{table*}[t]
+\centering
+\caption{Multi-domain CFRP case study and evaluation protocol.}
+\label{tab:case-protocol}
+\small
+\begin{tabularx}{\textwidth}{@{}p{0.22\textwidth}X@{}}
+\toprule
+Item & Protocol value \\
+\midrule
+Physical cohort & 276 CAI-complete physical specimens \\
+Held-out domains & 6 experimental domains \\
+Domain specimen counts & 74t7kcdgkr: 45; cgtnjyggtm: 49; w68dtmpfyf: 43; xcmzfsbd9t: 59; yfxyg8jm46: 42; ykhs7s2dck: 38 \\
+Available modalities & specimen metadata; surface observables; ultrasonic RGB C-scan internal field; CAI-ratio outcome \\
+Validation protocol & strict nested leave-one-domain-out (LODO); outer-domain outcomes excluded from training and selection \\
+Registered checkpoints & 3.125\%, 6.25\%, 9.375\%, 12.5\%, 18.75\%, 25\% \\
+Acquisition cost & exact unique newly observed native-raster locations divided by native count; no scanner-time equivalence \\
+Teacher/oracle information & future outcomes, unmeasured fields, or counterfactual utilities; retrospective and non-deployable \\
+Deployable information & specimen metadata, acquired positions, measured content, legal actions, and current exact cost \\
+Statistical units & physical specimen first; held-out domain second; six domains receive equal weight \\
+Bootstrap aggregation & specimens resampled within domain with synchronized contrasts; domain means then equally weighted \\
+Computational rows & state-action and checkpoint rows are repeated computational records, not independent statistical samples \\
+\bottomrule
+\end{tabularx}
+\end{table*}

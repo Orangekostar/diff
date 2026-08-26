@@ -1,0 +1,6 @@
+# Preserve byte-identical third-party and generated evidence files while
+# excluding their upstream line endings from Git whitespace diagnostics.
+paper_aei_information_hierarchy/elsarticle.cls -whitespace
+paper_aei_information_hierarchy/elsarticle-num.bst -whitespace
+paper_aei_information_hierarchy/supplementary/data/*.csv -whitespace
+results/aei_information_hierarchy/deterministic_package/** -whitespace
