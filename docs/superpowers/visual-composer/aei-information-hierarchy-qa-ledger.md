@@ -11,7 +11,8 @@
 | Manuscript-width recheck | Figures 1-4 | Section 3/5 | Medium | Inspect figures after LaTeX placement | primary agent | open |
 | Dense hierarchy table repeated group labels | Table 2 | Section 5 | Medium | Show layer/question once per group and add inter-group spacing | primary agent | closed |
 | Standalone table compile and render | Tables 1-2 | Section 4/5 | High | Compile a two-page booktabs/tabularx harness and inspect both pages | primary agent | closed |
-| Integrated manuscript table recheck | Tables 1-2 | Section 4/5 | Medium | Compile and inspect with the journal manuscript class | primary agent | open |
+| Integrated manuscript table recheck | Tables 1-2 | Section 4/5 | Medium | Compile and inspect with the journal manuscript class | primary agent | closed |
+| Table 2 exceeded one manuscript page | Table 2 | Section 5 | High | Preserve all rows/columns in a readable multipage longtable with repeated headers | primary agent | closed |
 
 Checks to close: clipping, overlap, font embedding, editable SVG text, 300 dpi
 PNG metadata, grayscale distinction, exact numbers/directions, caption presence,
@@ -22,6 +23,6 @@ Closed checks: 10 figure tests passed; all four PDFs report embedded/subsetted
 Unicode TrueType fonts; all four SVGs contain editable text nodes; the checksum
 manifest binds 20 figure deliverables.
 
-Table checks: 11 table tests passed; the standalone two-page LaTeX harness
-reported no overfull or underfull boxes; both pages were inspected at 150 dpi;
-the checksum manifest binds six table deliverables.
+Table checks: 12 table tests passed; standalone and integrated LaTeX builds
+reported no overfull boxes or float-size warnings; both longtable pages were
+inspected at 130 dpi; the checksum manifest binds six table deliverables.

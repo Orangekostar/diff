@@ -141,6 +141,17 @@ def test_aei_paper_table2_latex_groups_repeated_layer_questions(
     assert latex.count("\\addlinespace") == 2
 
 
+def test_aei_paper_table2_uses_readable_multipage_longtable(tmp_path: Path) -> None:
+    latex = aei_paper_tables.build_paper_tables(ROOT, tmp_path)["table2"].tex.read_text(
+        encoding="utf-8"
+    )
+    assert "\\begin{longtable}" in latex
+    assert "\\endfirsthead" in latex
+    assert "\\endhead" in latex
+    assert "Continued on next page" in latex
+    assert "\\begin{table" not in latex
+
+
 def test_aei_paper_tables_regenerate_deterministically(tmp_path: Path) -> None:
     first = aei_paper_tables.build_paper_tables(ROOT, tmp_path / "first")
     second = aei_paper_tables.build_paper_tables(ROOT, tmp_path / "second")

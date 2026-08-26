@@ -355,7 +355,7 @@ def _table2_rows(root: Path) -> list[dict[str, str]]:
             question=observable_question,
             comparison="conditional teacher values from initial to final tested checkpoint",
             effect=f"turnover {_fmt(_float(o2_turnover, 'estimate'))}; rank {_fmt(_float(o2_rank, 'estimate'))}; top-5 {_fmt(_float(o2_topk, 'estimate'))}",
-            ci95="descriptive checkpoint evolution",
+            ci95="not estimated",
             domains="276 specimens; 6 domains",
             evidence_type="strict-OOF retrospective teacher",
             conclusion="True conditional measurement value evolves with acquisition state.",
@@ -371,7 +371,7 @@ def _table2_rows(root: Path) -> list[dict[str, str]]:
             layer="Observable",
             question=observable_question,
             comparison="measured content vs matched positions and reconstruction controls",
-            effect=f"real-minus-position MAE {_fmt(_float(o3_positions, 'estimate'))}; real-minus-reconstruction {_fmt(_float(o3_reconstruction, 'estimate'))}",
+            effect=f"real minus position MAE {_fmt(_float(o3_positions, 'estimate'))}; real minus reconstruction {_fmt(_float(o3_reconstruction, 'estimate'))}",
             ci95=f"{_ci(o3_positions)}; {_ci(o3_reconstruction)}",
             domains="1/6 favors measured content for each control",
             evidence_type="matched representation adverse controls",
@@ -502,20 +502,29 @@ def _table2_latex(rows: list[dict[str, str]]) -> str:
         body_lines.append(" & ".join(_latex(value) for value in values) + r" \\")
         previous_layer = row["layer"]
     body = "\n".join(body_lines)
-    return f"""\\begin{{table*}}[t]
-\\centering
-\\caption{{Evidence summary for the task-relevant information hierarchy. Positive and negative directions are stated in the comparison text.}}
-\\label{{tab:hierarchy-evidence}}
+    return f"""\\begingroup
 \\scriptsize
 \\setlength{{\\tabcolsep}}{{2.5pt}}
-\\begin{{tabularx}}{{\\textwidth}}{{@{{}}>{{\\raggedright\\arraybackslash}}p{{0.078\\textwidth}}>{{\\raggedright\\arraybackslash}}p{{0.095\\textwidth}}>{{\\raggedright\\arraybackslash}}p{{0.145\\textwidth}}>{{\\raggedright\\arraybackslash}}p{{0.11\\textwidth}}>{{\\raggedright\\arraybackslash}}p{{0.105\\textwidth}}>{{\\raggedright\\arraybackslash}}p{{0.07\\textwidth}}>{{\\raggedright\\arraybackslash}}p{{0.095\\textwidth}}>{{\\raggedright\\arraybackslash}}X@{{}}}}
+\\begin{{longtable}}{{@{{}}>{{\\RaggedRight\\arraybackslash}}p{{0.105\\textwidth}}>{{\\RaggedRight\\arraybackslash}}p{{0.085\\textwidth}}>{{\\RaggedRight\\arraybackslash}}p{{0.158\\textwidth}}>{{\\RaggedRight\\arraybackslash}}p{{0.12\\textwidth}}>{{\\RaggedRight\\arraybackslash}}p{{0.10\\textwidth}}>{{\\RaggedRight\\arraybackslash}}p{{0.082\\textwidth}}>{{\\RaggedRight\\arraybackslash}}p{{0.12\\textwidth}}>{{\\RaggedRight\\arraybackslash}}p{{0.137\\textwidth}}@{{}}}}
+\\caption{{Evidence summary for the task-relevant information hierarchy. Positive and negative directions are stated in the comparison text.}}
+\\label{{tab:hierarchy-evidence}}\\\\
 \\toprule
 Layer & Question & Key comparison & Effect & 95\\% CI & Domains & Evidence type & Conclusion \\\\
 \\midrule
-{body}
+\\endfirsthead
+\\multicolumn{{8}}{{@{{}}l}}{{\\tablename~\\thetable{{}} (continued)}} \\\\
+\\toprule
+Layer & Question & Key comparison & Effect & 95\\% CI & Domains & Evidence type & Conclusion \\\\
+\\midrule
+\\endhead
+\\midrule
+\\multicolumn{{8}}{{r@{{}}}}{{Continued on next page}} \\\\
+\\endfoot
 \\bottomrule
-\\end{{tabularx}}
-\\end{{table*}}
+\\endlastfoot
+{body}
+\\end{{longtable}}
+\\endgroup
 """
 
 

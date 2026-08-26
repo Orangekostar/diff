@@ -4,6 +4,8 @@ import csv
 import re
 from pathlib import Path
 
+from cmc_bbdm.mavis import aei_paper_evidence
+
 ROOT = Path(__file__).resolve().parents[1]
 PAPER = ROOT / "paper_aei_information_hierarchy"
 MAIN = PAPER / "main.tex"
@@ -119,3 +121,69 @@ def test_aei_paper_keeps_oracles_and_cost_semantics_bounded() -> None:
     assert re.search(
         r"repeated\s+computational records, not independent samples", manuscript
     )
+
+
+def test_aei_paper_uses_exactly_four_main_figures_and_two_main_tables() -> None:
+    manuscript = _text(MAIN)
+    figures = re.findall(r"\\includegraphics\[[^]]*\]\{([^}]+)\}", manuscript)
+    tables = re.findall(r"\\input\{(tables/[^}]+)\}", manuscript)
+    assert figures == [
+        "figure1_information_hierarchy.pdf",
+        "figure2_usefulness.pdf",
+        "figure3_observability.pdf",
+        "figure4_actionability.pdf",
+    ]
+    assert tables == [
+        "tables/table1_case_protocol.tex",
+        "tables/table2_hierarchy_evidence.tex",
+    ]
+
+
+def test_aei_paper_results_map_every_canonical_claim() -> None:
+    manuscript = _text(MAIN)
+    mapped = set(re.findall(r"\b[UOA][1-5]_[A-Z0-9_]+\b", manuscript))
+    canonical = {
+        row.claim_id for row in aei_paper_evidence.build_canonical_metrics(ROOT)
+    }
+    assert mapped == canonical
+
+
+def test_aei_paper_keeps_central_adverse_controls_in_results() -> None:
+    manuscript = _text(MAIN)
+    required = (
+        r"cross-objective support indicator of 0",
+        r"Real minus positions was 0\.01740",
+        r"real minus\s+reconstruction was 0\.03419",
+        r"Dynamic real minus dynamic shuffled-content regret",
+        r"feedback benefit was \$-1\.496\\times10\^\{-5\}\$",
+        r"does not support superiority of the learned policy",
+    )
+    assert all(re.search(pattern, manuscript) for pattern in required)
+
+
+def test_aei_paper_answers_each_research_question_directly() -> None:
+    manuscript = _text(MAIN)
+    assert manuscript.count("\\paragraph{Answer to RQ1.}") == 1
+    assert manuscript.count("\\paragraph{Answer to RQ2.}") == 1
+    assert manuscript.count("\\paragraph{Answer to RQ3.}") == 1
+
+
+def test_aei_paper_headline_result_numbers_match_canonical_metrics() -> None:
+    rows = {
+        row.claim_id: row for row in aei_paper_evidence.build_canonical_metrics(ROOT)
+    }
+    manuscript = _text(MAIN)
+    expected = (
+        f"{rows['U1_MATCHED_FIELD'].estimate:.5f}",
+        f"{100 * rows['U1_MATCHED_FIELD'].relative_effect:.1f}\\%",
+        f"{rows['U2_SPARSE_FULL_GAP'].estimate:.5f}",
+        f"{100 * rows['U2_SPARSE_RETENTION'].estimate:.1f}\\%",
+        f"{rows['O1_STATIC_SPEARMAN'].estimate:.4f}",
+        f"{100 * rows['O2_TEACHER_TURNOVER'].estimate:.1f}\\%",
+        f"{rows['O3_REAL_MINUS_POSITIONS'].estimate:.5f}",
+        f"{rows['O3_REAL_MINUS_RECONSTRUCTION'].estimate:.5f}",
+        f"{rows['O4_DYNAMIC_MINUS_STATIC'].estimate:.6f}",
+        f"{rows['A4_BASELINE_MINUS_MAVIS'].candidate_value:.6f}",
+        f"{rows['A4_BASELINE_MINUS_MAVIS'].reference_value:.6f}",
+    )
+    assert all(number in manuscript for number in expected)

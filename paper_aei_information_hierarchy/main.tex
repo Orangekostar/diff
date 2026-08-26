@@ -7,6 +7,8 @@
 \usepackage{graphicx}
 \usepackage{microtype}
 \usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{ragged2e}
 \usepackage{array}
 \usepackage{xcolor}
 \usepackage{hyperref}
@@ -368,7 +370,7 @@ internal scan. The matched spatial candidate uses the same registered predictor
 family but retains the selected full C-scan field representation. A separate
 internal-only field estimator is reported only as a sensitivity path; it is not
 substituted for the matched confirmatory comparison. The sparse retrospective
-condition reveals a registered 25% sampling pattern on a normalized raster and
+condition reveals a registered 25\% sampling pattern on a normalized raster and
 uses bilinear interpolation before applying the frozen field pathway.
 
 For sequential acquisition, each native raster is divided into an $8\times8$
@@ -425,9 +427,9 @@ decision gap lies; they do not specify an implementable inspector.
 \subsection{Exact acquisition cost, metrics, and statistical inference}
 \label{sec:metrics}
 
-The registered checkpoints are 3.125%, 6.25%, 9.375%, 12.5%, 18.75%, and 25%
-of the native raster. Initial scouts are 1.5625% except in the one domain whose
-native geometry requires a 3.125% scout. At every transition, cost is the number
+The registered checkpoints are 3.125\%, 6.25\%, 9.375\%, 12.5\%, 18.75\%, and 25\%
+of the native raster. Initial scouts are 1.5625\% except in the one domain whose
+native geometry requires a 3.125\% scout. At every transition, cost is the number
 of unique newly revealed native-raster coordinates. Effective budget is that
 count divided by the specimen's native pixel count. Previously observed
 coordinates have zero added cost, and an action that would exceed the current
@@ -469,9 +471,343 @@ and a planning diagnostic cannot support improved acquisition unless the
 frozen end-to-end policy also improves. Section~\ref{sec:results-discussion}
 reports the three answers in this order.
 
-% Section 5 is drafted only from the canonical metric authority.
 \section{Experimental Results and Discussion}
 \label{sec:results-discussion}
+
+\subsection{RQ1: Task usefulness of spatial and sparse ultrasonic information}
+\label{sec:results-useful}
+
+\subsubsection{Registered scalar-to-spatial information contrast}
+\label{sec:results-full-field}
+
+% Evidence: U1_MATCHED_FIELD; U1_SURFACE_FIELD;
+% U1_INDEPENDENT_FIELD_SENSITIVITY.
+The registered matched comparison supported a task-usefulness gain from spatial
+internal morphology. Equal-domain CAI-ratio MAE was 0.18920 for the scalar
+reference and 0.12849 for the selected spatial field, a reduction of 0.06072
+(32.1\%; familywise 95\% CI 0.00664--0.15364). The field reduced error in five of
+six held-out domains. Relative to the metadata-and-surface reference, whose MAE
+was 0.18812, the same selected field reduced MAE by 0.05963 (31.7\%; familywise
+95\% CI 0.00722--0.14842), again improving five domains. Thus the result is not
+an artifact of selecting an unusually weak scalar summary: both registered
+references lead to the same bounded conclusion that the spatial internal field
+contains CAI-relevant information absent from the lower-dimensional inputs.
+
+A distinct internal-only field estimator produced a lower point MAE of 0.08964.
+It is retained as a sensitivity estimate, not substituted for the matched
+confirmatory path. The registered effect is therefore the 0.06072 reduction,
+not a cross-family difference constructed from the lowest available point
+estimate. Figure~\ref{fig:usefulness}a shows the matched comparison.
+
+\subsubsection{Sparse retention and retrospective oracle headroom}
+\label{sec:results-sparse-headroom}
+
+% Evidence: U2_SPARSE_RETENTION; U2_SPARSE_GAIN; U2_SPARSE_FULL_GAP;
+% U3_UNIFORM_ORACLE; U3_RECONSTRUCTION_ORACLE; U3_HEADROOM_RETENTION.
+The selected 25\% bilinear sparse condition had MAE 0.13451. Relative to the
+surface reference, its reduction was 0.05361 (95\% CI 0.00561--0.13544), with
+lower error in five of six domains. This condition retained 89.9\% of the
+registered full-field gain. Retention was substantial but incomplete: sparse
+MAE remained 0.00602 above the selected full field (95\% CI
+0.00173--0.01083), and the sparse condition was worse in every held-out domain.
+The appropriate engineering conclusion is therefore that a registered sparse
+digital measurement retains most of the full-field task information, not that
+the sparse and full fields are equivalent or that physical scan time falls by
+the same percentage (Fig.~\ref{fig:usefulness}b).
+
+Retrospective oracle comparisons showed that the useful information was
+spatially heterogeneous. One-shot mechanical-oracle CAI AUEBC was 0.013458,
+compared with 0.017363 for uniform acquisition and 0.017188 for the one-shot
+reconstruction oracle. The corresponding improvements were 0.00391 (95\% CI
+0.00280--0.00502) and 0.00373 (95\% CI 0.00284--0.00469), respectively, and both
+contrasts favored the mechanical oracle in all six domains. The one-shot oracle
+retained 56.8\% of the registered sequential-oracle headroom. These values
+establish retrospective specimen-specific opportunity, but the oracle uses
+unavailable counterfactual outcomes and is not a policy.
+
+\subsubsection{Mechanics versus reconstruction task specificity}
+\label{sec:results-task-specificity}
+
+% Evidence: U4_ORACLE_CAI_SPECIFICITY; U4_ORACLE_IMAGE_SPECIFICITY;
+% U4_LEARNED_SPECIFICITY_BOUNDARY.
+Under the common exact-cost trajectory contract, oracle acquisition depended on
+the objective. The mechanics-optimal oracle improved CAI AUEBC relative to the
+reconstruction oracle by 0.04862 (95\% CI 0.04527--0.05205). In the opposite
+direction, the reconstruction-optimal oracle improved normalized RGB image MSE
+by $5.503\times10^{-4}$ (95\% CI
+$5.006\times10^{-4}$--$6.063\times10^{-4}$). The cross-objective contrasts
+therefore support task specificity at the retrospective oracle level
+(Fig.~\ref{fig:usefulness}c).
+
+The learned adverse control did not inherit this separation. Source-trained
+global mechanics and reconstruction masks produced a predeclared
+cross-objective support indicator of 0. The oracle result consequently shows
+that the objective changes the optimal design, but does not show that a learned
+global mechanics mask captures or deploys that distinction.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{figure2_usefulness.pdf}
+  \caption{Usefulness evidence and boundaries. (a) The registered matched
+  B-family spatial field reduces equal-domain CAI-ratio MAE relative to its
+  scalar counterpart. (b) The selected sparse condition retains 89.9\% of the
+  registered full-field gain but remains worse than the full field. (c) Oracle
+  acquisitions separate CAI and reconstruction objectives, whereas learned
+  global masks do not reproduce that separation. Oracle and sparse-design rows
+  are retrospective and do not establish scanner-time savings or deployability.}
+  \label{fig:usefulness}
+\end{figure}
+
+\subsubsection{Predictor-conditioned task value}
+\label{sec:results-predictor-conditioned}
+
+% Evidence: U5_RIDGE_HUBER_SPEARMAN; U5_RIDGE_HUBER_BEST_ACTION;
+% U5_RIDGE_HUBER_TOPK; U5_RIDGE_MLP_SPEARMAN;
+% U5_RIDGE_MLP_BEST_ACTION; U5_RIDGE_MLP_TOPK.
+Action-value maps were partly stable across related predictors and unstable
+across a larger learner change. Ridge and Huber strict-OOF values had Spearman
+agreement 0.762 (95\% CI 0.699--0.821), best-action agreement 0.675 (95\% CI
+0.622--0.727), and top-$k$ Jaccard agreement 0.685 (95\% CI 0.650--0.719). Ridge
+and shallow-MLP values instead had rank agreement 0.116 (95\% CI 0.069--0.164),
+best-action agreement 0.233 (95\% CI 0.182--0.283), and top-$k$ agreement 0.213
+(95\% CI 0.192--0.235). The location ranking is therefore not a universal map of
+mechanical importance; it is conditional on the downstream predictor used to
+define improvement.
+
+\paragraph{Answer to RQ1.}
+Yes. Spatial internal information improved held-out-domain CAI prediction, a
+registered sparse condition retained most but not all of that gain, and
+retrospective oracle designs differed between CAI and reconstruction tasks.
+However, learned global masks did not reproduce the oracle separation, and the
+value map changed with the downstream predictor. Task usefulness is therefore
+supported, but remains objective- and predictor-conditioned.
+
+\subsection{RQ2: Conditional observability during partial inspection}
+\label{sec:results-observable}
+
+\subsubsection{Static observability}
+\label{sec:results-static-observability}
+
+% Evidence: O1_STATIC_SPEARMAN; O1_STATIC_SET_REGRET;
+% O1_GLOBAL_SET_REGRET; O1_RANDOM_SET_REGRET.
+The registered static scorer did not rank strict-OOF action values across
+held-out domains. Its equal-domain Spearman correlation was $-0.0196$ (95\% CI
+$-0.0591$--0.0195), with a favorable direction in three of six domains
+(Fig.~\ref{fig:observability}a). Exact-budget set regret was 0.08171 for the
+static scorer, compared with 0.07993 for the global mechanical score and
+0.07978 for the random median. Increasing static scorer complexity was not
+authorized by these results: the registered representation had not first
+established a transferable specimen-specific target.
+
+The confidence interval spans zero, so this result does not prove that value is
+information-theoretically unobservable. It shows that the tested pre-acquisition
+information and scorer did not recover the strict-OOF target under whole-domain
+holdout.
+
+\subsubsection{Conditional value evolution}
+\label{sec:results-value-evolution}
+
+% Evidence: O2_TEACHER_TURNOVER; O2_TEACHER_RANK; O2_TEACHER_TOPK;
+% O2_TEACHER_OPPORTUNITY.
+The retrospective teacher target itself changed as information accumulated.
+Between the initial state and the 18.75\% checkpoint, the best action changed for
+70.4\% of specimens. Spearman agreement with initial action values fell to
+0.405, and top-five Jaccard overlap was 0.307. The descriptive dynamic-versus-
+initial opportunity at that checkpoint was 0.00531. These specimen-first
+diagnostics cover all 276 specimens across the six held-out domains and show
+that a single initial ranking omits material value evolution
+(Fig.~\ref{fig:observability}b).
+
+This is a property of the strict-OOF retrospective teacher, not evidence that
+the frozen real-state scorer observes the change. It motivates conditional
+scoring while making its validation harder: both the state representation and
+the scorer must track a moving, predictor-conditioned target.
+
+\subsubsection{Real-content, position, and reconstruction controls}
+\label{sec:results-content-controls}
+
+% Evidence: O3_REAL_CHANGE; O3_FULL_FIELD_RECOVERY;
+% O3_REAL_MINUS_POSITIONS; O3_REAL_MINUS_RECONSTRUCTION.
+Measured partial content did change the CAI prediction relative to the initial
+state. At 25\%, real-state MAE changed by $-0.000731$ (95\% CI
+$-0.001184$ to $-0.000250$), and the endpoint diagnostic recovered 26.6\% (95\%
+CI 10.6\%--41.0\%) of the static-to-independent-full-field error ratio. The latter
+denominator is the separate internal-only full-field sensitivity estimator,
+not the matched spatial estimator used for the RQ1 confirmatory result.
+
+The matched controls reverse the favorable interpretation. Real-content MAE
+was 0.12463, compared with 0.10722 for positions only and 0.09043 for the
+reconstruction control. Real minus positions was 0.01740 (95\% CI
+0.00890--0.02582), and real minus reconstruction was 0.03419 (95\% CI
+0.02450--0.04384). Measured content was favorable in only one of six domains
+for each contrast (Fig.~\ref{fig:observability}c). Thus real measurements add
+signal relative to an initial state, but the registered state representation
+does not establish specimen-specific content value beyond the acquisition
+geometry and reconstruction controls. The controls do not prove that geometry
+is universally sufficient; they delimit what this implementation identifies.
+
+\subsubsection{Narrow dynamic-valuation gain and shuffled adverse control}
+\label{sec:results-dynamic-controls}
+
+% Evidence: O4_DYNAMIC_MINUS_STATIC; O4_DYNAMIC_MINUS_SHUFFLED.
+At the 18.75\% endpoint, the dynamic real-state scorer reduced one-step value
+regret relative to the static scorer by 0.00126: dynamic minus static was
+$-0.001260$ (95\% CI $-0.002123$ to $-0.000444$), favorable in five of six
+domains. This is the narrow positive observability result. It does not survive
+the content control. Dynamic real minus dynamic shuffled-content regret was
+$2.328\times10^{-4}$ (95\% CI
+$6.060\times10^{-5}$--$4.180\times10^{-4}$), favorable for real content in only
+one domain. Shuffled content therefore remained better than the real-content
+scorer under the registered contrast.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{figure3_observability.pdf}
+  \caption{Observability evidence and adverse controls. (a) Strict-OOF static
+  value ranking is unsupported and its exact-budget regret is comparable with
+  global and random references. (b) Retrospective conditional values change
+  with acquisition state. (c) Measured-content prediction is worse than
+  matched-position and reconstruction controls; although conditional scoring
+  narrowly improves on the static scorer, shuffled content remains better.
+  Intervals are synchronized specimen-bootstrap intervals where shown.}
+  \label{fig:observability}
+\end{figure}
+
+\paragraph{Answer to RQ2.}
+Only partially. Strict-OOF conditional value evolved substantially and dynamic
+scoring narrowly improved on its static counterpart. Static ranking was
+unsupported, however, the real-content representation did not outperform
+matched position or reconstruction controls, and shuffled content remained the
+stronger dynamic control. Robust specimen-specific content-value observability
+is therefore not established by the current implementation.
+
+\subsection{RQ3: From valuation to cost-constrained sensing decisions}
+\label{sec:results-actionable}
+
+\subsubsection{Valuation and planning attribution}
+\label{sec:results-attribution}
+
+% Evidence: A1_VALUATION_SUBSTITUTION; A1_LEARNED_PLANNING_SUBSTITUTION;
+% A1_TRUE_VALUE_PLANNING_SUBSTITUTION.
+Retrospective substitutions separated valuation from bounded planning effects
+(Fig.~\ref{fig:actionability}a). Replacing learned valuation with privileged
+retrospective values improved CAI AUEBC by $4.979\times10^{-5}$ (95\% CI
+$1.845\times10^{-5}$--$8.105\times10^{-5}$). A bounded learned-planning
+substitution improved AUEBC by $3.164\times10^{-6}$ (95\% CI
+$1.411\times10^{-7}$--$6.250\times10^{-6}$), whereas stronger planning with true
+values improved it by $1.117\times10^{-4}$ (95\% CI
+$9.898\times10^{-5}$--$1.248\times10^{-4}$).
+
+These contrasts show that valuation and planning can contribute distinct
+shortfalls. They do not prove that either retrospective substitution is
+deployable. A separate representation-bottleneck row was not interpreted
+because the matched observability controls in Section~\ref{sec:results-content-controls}
+did not establish content-specific state value.
+
+\subsubsection{Set-level planning gap}
+\label{sec:results-planning}
+
+% Evidence: A2_GREEDY_PLANNING_REGRET; A2_BEAM4_PLANNING_REGRET.
+Within the predeclared two-action reachable pool, current greedy selection had
+regret $1.207\times10^{-4}$ relative to a retrospective joint near-oracle set
+(95\% CI $1.033\times10^{-4}$--$1.386\times10^{-4}$). Beam search with width four
+reduced the point regret to $1.127\times10^{-4}$, but its interval remained
+positive (95\% CI $9.485\times10^{-5}$--$1.308\times10^{-4}$). The diagnostic
+therefore supports a bounded set-planning gap (Fig.~\ref{fig:actionability}b).
+It neither makes the joint near-oracle deployable nor establishes
+arbitrary-horizon planning regret.
+
+\subsubsection{Feedback stress test}
+\label{sec:results-feedback}
+
+% Evidence: A3_FEEDBACK_BENEFIT.
+Re-scoring after each reveal did not improve the frozen policy. With the
+registered sign convention of no-feedback error minus feedback error, the CAI
+AUEBC feedback benefit was $-1.496\times10^{-5}$ (95\% CI
+$-1.944\times10^{-5}$ to $-1.064\times10^{-5}$), and feedback improved two of
+six held-out domains (Fig.~\ref{fig:actionability}c). Negative values favor the
+no-feedback control, so feedback was adverse under this frozen implementation.
+Stratified diagnostics did not support larger conditional-value changes as the
+operative feedback mechanism. The result is implementation-bounded and does
+not imply that feedback is generally harmful.
+
+\subsubsection{Frozen cross-domain acquisition boundary}
+\label{sec:results-final-boundary}
+
+% Evidence: A4_BASELINE_MINUS_MAVIS.
+The frozen learned policy had equal-domain CAI AUEBC 0.125053, compared with
+0.124992 for the strongest deployable baseline. Baseline minus learned-policy
+AUEBC was $-6.114\times10^{-5}$ (95\% CI
+$-8.461\times10^{-5}$ to $-3.777\times10^{-5}$), and the learned policy improved
+two of six held-out domains. Because lower AUEBC is preferred, this contrast
+does not support superiority of the learned policy.
+
+The final boundary is stronger than an isolated null result. Retrospective
+measurement value and planning opportunity both exist, yet the current
+representation and scoring controls do not attribute that value to acquired
+specimen content, feedback is adverse, and end-to-end acquisition remains below
+the strongest deployable reference. Increasing model or planner complexity
+would not by itself resolve those evidential gaps.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{figure4_actionability.pdf}
+  \caption{Actionability evidence and final boundary. (a) Retrospective
+  component substitutions expose valuation and bounded planning gaps. (b) A
+  positive two-action reachable-pool planning gap remains; the near-oracle is
+  non-deployable. (c) Feedback is adverse and the frozen learned policy does
+  not outperform the strongest deployable baseline. Effects use specimen-first,
+  equal-domain aggregation and synchronized intervals where available.}
+  \label{fig:actionability}
+\end{figure}
+
+\paragraph{Answer to RQ3.}
+No under the current learned implementation. Retrospective substitutions and a
+bounded near-oracle expose valuation and set-planning headroom, but feedback is
+adverse and the frozen policy does not outperform the strongest deployable
+baseline across held-out domains.
+
+\subsection{Integrated engineering-informatics interpretation}
+\label{sec:integrated-interpretation}
+
+\input{tables/table2_hierarchy_evidence.tex}
+
+Table~\ref{tab:hierarchy-evidence} assembles the evidence without treating the
+three layers as a single model-development sequence. RQ1 establishes a real
+target for acquisition: spatial C-scan information improves CAI assessment,
+much of its registered gain survives a sparse digital protocol, and
+retrospective optimal designs change when utility changes from CAI error to
+image error. The predictor-sensitivity analysis sharpens the construct: task
+value belongs to a predictor, state, and objective, not to a coordinate alone.
+
+RQ2 shows why that useful target is not automatically observable. The teacher
+ranking changes after measurements, so a static population map is incomplete.
+Yet state dependence alone is not sufficient evidence. The registered
+real-content representation loses to matched positions and reconstruction
+controls, and its narrow advantage over static scoring is contradicted by the
+shuffled-content control. In engineering-informatics terms, a model can respond
+to the structure of an inspection history without demonstrating that it has
+captured the specimen-specific content needed to value the next measurement.
+
+RQ3 then separates observability from decision consequence. Privileged
+substitutions identify opportunities in valuation and bounded set planning, but
+neither is a deployable policy. The adverse feedback test and final AUEBC
+comparison show that those retrospective opportunities do not become a better
+frozen acquisition trajectory. The evidence therefore supports the hierarchy's
+central non-equivalence: Useful does not imply Observable, and partial
+Observable evidence does not imply Actionable improvement.
+
+Four limitations bound this interpretation. First, the empirical evidence
+covers six related CFRP experimental domains from a paired public data program;
+external empirical generalization to other inspection systems, materials, or
+damage mechanisms is not established. Second, cost is exact native-raster
+location count, not travel time or industrial inspection cost. Third, the
+utility definition is specific to the chosen CAI predictors and cannot be read
+as causal attribution of failure mechanisms to selected image regions. Fourth,
+the action hierarchy, state representation, scorer, and bounded planners are
+fixed implementations. Their non-superiority does not prove that task-driven
+adaptive ultrasound is impossible; it shows which evidential conditions remain
+unmet before such a claim is warranted.
 
 % Section 6, the abstract, and the final title are drafted after Section 5.
 \section{Conclusions}
