@@ -15,8 +15,9 @@ Base commit: `c2eab6eac79dd3fbb9ecb0d19f98923e515e762b`
 | 8 | `b158398` | Section 5 results and discussion drafted from canonical metrics; readable multipage hierarchy table integration | 57 paper tests; 23-page isolated compile with zero warnings/overfull boxes; table render QA; Ruff | no |
 | 9 | `c55fd78` | fixed title, evidence-bounded abstract, Introduction, Conclusions, and final integrated layout | 60 paper tests; 26-page isolated compile with zero warnings/overfull boxes; full figure/table render QA; Ruff | no |
 | 10 | `41c4a1b5a19e52a76dc97c746736795358a9bf14` | deterministic submission package, supplement, full review, and pre-submission audit; delivery branch `aei-information-hierarchy`, integrated target `main` | 70 paper tests; MAVIS 225; MVD 29; authority MVA 126; Ruff; PDF/source-package hash and remote-path verification | no |
+| 11 | `3461ab5661240bf189a55909f2e321f28c80f42d` | Nature-style review fixes: normalized AUEBC definition, evidence chronology, closest-work matrix, predictor boundary, transfer conditions, and external-data no-go | 93 paper tests; MAVIS 248; MVD 29; authority MVA 126; Ruff; semantic validation; clean PDF/flat builds; deterministic replay; remote payload-tree verification | no |
 
-Remote delivery verification covers the manuscript and supplement PDFs,
-deterministic ZIP, flat source manifest, pre-submission audit, and the existing
-M0/M1 GO/NO-GO and core-metrics artifacts under
+Remote delivery verification covers the revised manuscript and supplement PDFs,
+deterministic ZIP, flat source manifest, review-fix audits and core CSVs, and the
+existing M0/M1 GO/NO-GO and core-metrics artifacts under
 `artifacts/mavis_science_closure/`.
