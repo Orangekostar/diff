@@ -19,19 +19,19 @@ def test_aei_paper_table_module_exists() -> None:
     assert importlib.util.find_spec("cmc_bbdm.mavis.aei_paper_tables") is not None
 
 
-def test_aei_paper_builds_exactly_two_main_tables(tmp_path: Path) -> None:
+def test_aei_paper_builds_exactly_three_main_tables(tmp_path: Path) -> None:
     artifacts = aei_paper_tables.build_paper_tables(ROOT, tmp_path)
-    assert set(artifacts) == {"table1", "table2"}
+    assert set(artifacts) == {"table1", "table2", "table3"}
     for artifact in artifacts.values():
         assert artifact.csv.is_file() and artifact.csv.stat().st_size > 500
         assert artifact.tex.is_file() and artifact.tex.stat().st_size > 500
         assert artifact.caption.is_file() and artifact.caption.stat().st_size > 100
 
 
-def test_aei_paper_table1_preserves_case_study_and_protocol_contract(
+def test_aei_paper_table2_preserves_case_study_and_protocol_contract(
     tmp_path: Path,
 ) -> None:
-    table = aei_paper_tables.build_paper_tables(ROOT, tmp_path)["table1"]
+    table = aei_paper_tables.build_paper_tables(ROOT, tmp_path)["table2"]
     rows = _rows(table.csv)
     assert set(rows[0]) == {"item", "value", "source_artifact", "source_hash"}
     values = {row["item"]: row["value"] for row in rows}
@@ -47,16 +47,16 @@ def test_aei_paper_table1_preserves_case_study_and_protocol_contract(
     assert "not independent" in values["Computational rows"]
 
 
-def test_aei_paper_table1_provenance_hashes_are_valid(tmp_path: Path) -> None:
-    table = aei_paper_tables.build_paper_tables(ROOT, tmp_path)["table1"]
+def test_aei_paper_table2_provenance_hashes_are_valid(tmp_path: Path) -> None:
+    table = aei_paper_tables.build_paper_tables(ROOT, tmp_path)["table2"]
     for row in _rows(table.csv):
         source = ROOT / row["source_artifact"]
         assert source.is_file()
         assert row["source_hash"] == hashlib.sha256(source.read_bytes()).hexdigest()
 
 
-def test_aei_paper_table2_has_fixed_hierarchy_columns_and_rows(tmp_path: Path) -> None:
-    table = aei_paper_tables.build_paper_tables(ROOT, tmp_path)["table2"]
+def test_aei_paper_table3_has_fixed_hierarchy_columns_and_rows(tmp_path: Path) -> None:
+    table = aei_paper_tables.build_paper_tables(ROOT, tmp_path)["table3"]
     rows = _rows(table.csv)
     required = {
         "layer",
@@ -76,8 +76,8 @@ def test_aei_paper_table2_has_fixed_hierarchy_columns_and_rows(tmp_path: Path) -
     assert [row["layer"] for row in rows].count("Actionable") == 4
 
 
-def test_aei_paper_table2_preserves_required_claim_groups(tmp_path: Path) -> None:
-    table = aei_paper_tables.build_paper_tables(ROOT, tmp_path)["table2"]
+def test_aei_paper_table3_preserves_required_claim_groups(tmp_path: Path) -> None:
+    table = aei_paper_tables.build_paper_tables(ROOT, tmp_path)["table3"]
     claims = {
         claim
         for row in _rows(table.csv)
@@ -101,8 +101,8 @@ def test_aei_paper_table2_preserves_required_claim_groups(tmp_path: Path) -> Non
     } <= claims
 
 
-def test_aei_paper_table2_keeps_adverse_controls_in_main_table(tmp_path: Path) -> None:
-    table = aei_paper_tables.build_paper_tables(ROOT, tmp_path)["table2"]
+def test_aei_paper_table3_keeps_adverse_controls_in_main_table(tmp_path: Path) -> None:
+    table = aei_paper_tables.build_paper_tables(ROOT, tmp_path)["table3"]
     text = "\n".join(
         row["effect"] + " " + row["conclusion"] for row in _rows(table.csv)
     ).lower()
@@ -129,10 +129,10 @@ def test_aei_paper_tables_are_booktabs_without_internal_stage_labels(
         )
 
 
-def test_aei_paper_table2_latex_groups_repeated_layer_questions(
+def test_aei_paper_table3_latex_groups_repeated_layer_questions(
     tmp_path: Path,
 ) -> None:
-    latex = aei_paper_tables.build_paper_tables(ROOT, tmp_path)["table2"].tex.read_text(
+    latex = aei_paper_tables.build_paper_tables(ROOT, tmp_path)["table3"].tex.read_text(
         encoding="utf-8"
     )
     assert latex.count("Does it improve the task?") == 1
@@ -141,8 +141,8 @@ def test_aei_paper_table2_latex_groups_repeated_layer_questions(
     assert latex.count("\\addlinespace") == 2
 
 
-def test_aei_paper_table2_uses_readable_multipage_longtable(tmp_path: Path) -> None:
-    latex = aei_paper_tables.build_paper_tables(ROOT, tmp_path)["table2"].tex.read_text(
+def test_aei_paper_table3_uses_readable_multipage_longtable(tmp_path: Path) -> None:
+    latex = aei_paper_tables.build_paper_tables(ROOT, tmp_path)["table3"].tex.read_text(
         encoding="utf-8"
     )
     assert "\\begin{longtable}" in latex
@@ -171,7 +171,7 @@ def test_aei_paper_tables_regenerate_deterministically(tmp_path: Path) -> None:
 def test_aei_paper_table_manifest_binds_every_deliverable(tmp_path: Path) -> None:
     aei_paper_tables.build_paper_tables(ROOT, tmp_path)
     rows = _rows(tmp_path / "TABLE_CHECKSUMS.csv")
-    assert len(rows) == 6
+    assert len(rows) == 9
     for row in rows:
         path = tmp_path / row["path"]
         assert int(row["bytes"]) == path.stat().st_size

@@ -37,7 +37,7 @@ The paper has exactly six top-level sections:
 5. Experimental Results and Discussion
 6. Conclusions
 
-The four main figures and two main tables are generated from machine-readable
+The four main figures and three main tables are generated from machine-readable
 paper evidence. Retrospective teachers, oracles, and component substitutions
 are always identified as non-deployable. Acquisition cost is the exact fraction
 of unique native-raster locations revealed, not scanner time.
@@ -57,7 +57,7 @@ latexmk -pdf -interaction=nonstopmode -halt-on-error supplementary.tex
 ```
 
 The working tree includes the Elsevier class/style, four manuscript-width PDF
-figures, two generated LaTeX tables, and the machine-readable supplement. The
+figures, three generated LaTeX tables, and the machine-readable supplement. The
 deterministic flat Editorial Manager source bundle is generated under
 `../results/aei_information_hierarchy/deterministic_package/` by
 `cmc_bbdm.mavis.aei_paper_package`.

@@ -1,0 +1,1 @@
+**Table 1. Closest-work positioning.** The comparison separates measurement setting, acquisition objective, state dependence, downstream endpoint, and scope. The contribution is an operational joint test of three non-equivalent information claims, not a first adaptive-ultrasound or generic-VoI claim.

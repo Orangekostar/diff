@@ -28,8 +28,9 @@ _FIGURES = (
 )
 
 _TABLES = (
-    "table1_case_protocol.tex",
-    "table2_hierarchy_evidence.tex",
+    "table1_closest_work.tex",
+    "table2_case_protocol.tex",
+    "table3_hierarchy_evidence.tex",
 )
 
 _SUPPLEMENTARY_SOURCES = (
@@ -202,12 +203,16 @@ def _flat_manuscript(source: Path) -> str:
     return (
         text.replace(r"\graphicspath{{figures/}}", r"\graphicspath{{./}}")
         .replace(
-            r"\input{tables/table1_case_protocol.tex}",
-            r"\input{table1_case_protocol.tex}",
+            r"\input{tables/table1_closest_work.tex}",
+            r"\input{table1_closest_work.tex}",
         )
         .replace(
-            r"\input{tables/table2_hierarchy_evidence.tex}",
-            r"\input{table2_hierarchy_evidence.tex}",
+            r"\input{tables/table2_case_protocol.tex}",
+            r"\input{table2_case_protocol.tex}",
+        )
+        .replace(
+            r"\input{tables/table3_hierarchy_evidence.tex}",
+            r"\input{table3_hierarchy_evidence.tex}",
         )
     )
 

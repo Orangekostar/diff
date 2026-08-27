@@ -60,7 +60,7 @@ observable measurement value and end-to-end sensing benefit.
 
 \begin{keyword}
 adaptive ultrasonic inspection \sep compression after impact \sep
-value of information \sep task-driven sensing \sep domain generalization
+value of information \sep task-driven sensing \sep held-out-domain evaluation
 \end{keyword}
 
 \end{frontmatter}
@@ -119,9 +119,10 @@ native-raster location cost. Retrospective teachers and oracles are used only to
 measure opportunity or diagnose a component; they are never presented as
 deployable policies.
 
-The contribution is fourfold. First, the hierarchy supplies a precise vocabulary
-and operational test for separating task usefulness, conditional observability,
-and decision actionability. Second, matched scalar, surface, sparse-field,
+The contribution is fourfold. First, the hierarchy supplies an operational test
+of three non-equivalent information claims under one causal acquisition
+contract; it is not a new generic definition of value of information. Second,
+matched scalar, surface, sparse-field,
 full-field, and cross-objective oracle contrasts quantify where useful
 information exists and where its interpretation must remain bounded. Third,
 static, dynamic, position-only, reconstruction, and shuffled-content controls
@@ -228,6 +229,11 @@ novelty. Its contribution is an evidence hierarchy that separates three claims
 often collapsed in engineering machine learning: whether information is useful
 to a task, whether its conditional value is observable before acquisition, and
 whether the resulting estimate is actionable in a bounded sensing decision.
+
+Table~\ref{tab:closest-work} makes this distinction operational across the six
+closest sources rather than treating the three labels as the novelty.
+
+\input{tables/table1_closest_work.tex}
 
 \subsection{Problem formulation and research questions}
 \label{sec:problem-formulation}
@@ -380,15 +386,19 @@ The registered testbed also evaluates direct cost-aware scores and bounded
 lookahead, but all choices obey the same reveal and budget contract.
 
 Policy quality is measured over the complete error--budget curve rather than at
-one convenient endpoint. For checkpoints $q_1<\cdots<q_K$ with CAI errors
-$e_i(q_k)$, the per-specimen area under the error--budget curve is computed by
-trapezoidal integration,
+one convenient endpoint. For effective specimen budgets
+$x_{i,1}<\cdots<x_{i,K}$ with CAI errors $e_i(x_{i,k})$, the per-specimen area
+under the error--budget curve is
 \begin{equation}
-  \auebc_i = \sum_{k=1}^{K-1}
-  \frac{e_i(q_k)+e_i(q_{k+1})}{2}\,(q_{k+1}-q_k),
+  \auebc_i = \frac{1}{x_{i,K}-x_{i,1}}
+  \sum_{k=1}^{K-1}
+  \frac{e_i(x_{i,k})+e_i(x_{i,k+1})}{2}
+  (x_{i,k+1}-x_{i,k}),
   \label{eq:auebc}
 \end{equation}
-with lower values preferred. Component substitutions compare learned and
+AUEBC is the budget-span-normalized trapezoidal mean error over the observed
+effective-budget range, where $x$ is the actual/effective specimen budget;
+lower values are preferred. Component substitutions compare learned and
 retrospective valuation or planning under a bounded diagnostic. They locate
 decision headroom but remain non-deployable when true future values enter.
 Feedback is tested separately because re-scoring after each reveal can help
@@ -461,7 +471,7 @@ vary across the cohort: a nominal percentage alone does not specify the number
 of newly observed locations. Table~\ref{tab:case-protocol} summarizes the
 cohort and evaluation contract.
 
-\input{tables/table1_case_protocol.tex}
+\input{tables/table2_case_protocol.tex}
 
 \subsection{Information representations and candidate measurements}
 \label{sec:representations}
@@ -489,7 +499,7 @@ Eq.~\eqref{eq:task-value}. Reconstruction utility uses normalized RGB mean
 squared error over the same registered raster. These utilities are kept
 separate: an acquisition may be optimal for one and suboptimal for the other.
 
-\subsection{Whole-dataset generalization protocol}
+\subsection{Held-out-domain evaluation protocol}
 \label{sec:lodo}
 
 All headline results use leave-one-domain-out (LODO) evaluation. Each of the six
@@ -572,6 +582,13 @@ content-specific observability if its matched adverse controls remain stronger;
 and a planning diagnostic cannot support improved acquisition unless the
 frozen end-to-end policy also improves. Section~\ref{sec:results-discussion}
 reports the three answers in this order.
+
+The evidence chain contains distinct chronological roles. Historical
+comparisons and the final outer policy endpoint were frozen before the
+post-freeze science-closure diagnostics. Later analyses reuse hash-bound frozen
+states and outcomes to interrogate value evolution, state controls, task
+specificity, learner stability, component attribution, planning, and feedback.
+They were not used to re-select or modify the frozen outer endpoint.
 
 \section{Experimental Results and Discussion}
 \label{sec:results-discussion}
@@ -666,23 +683,29 @@ global mechanics mask captures or deploys that distinction.
 % Evidence: U5_RIDGE_HUBER_SPEARMAN; U5_RIDGE_HUBER_BEST_ACTION;
 % U5_RIDGE_HUBER_TOPK; U5_RIDGE_MLP_SPEARMAN;
 % U5_RIDGE_MLP_BEST_ACTION; U5_RIDGE_MLP_TOPK.
-Action-value maps were partly stable across related predictors and unstable
-across a larger learner change. Ridge and Huber strict-OOF values had Spearman
+Action-value maps were relatively stable between the two comparably performing
+low-complexity predictors and did not persist under the substantially less
+accurate shallow MLP. Full-state equal-domain strict-OOF MAE was 0.08964 for
+Ridge, 0.08618 for Huber, and 0.15067 for the shallow MLP. Ridge and Huber
+strict-OOF values had Spearman
 agreement 0.762 (95\% CI 0.699--0.821), best-action agreement 0.675 (95\% CI
 0.622--0.727), and top-$k$ Jaccard agreement 0.685 (95\% CI 0.650--0.719). Ridge
 and shallow-MLP values instead had rank agreement 0.116 (95\% CI 0.069--0.164),
 best-action agreement 0.233 (95\% CI 0.182--0.283), and top-$k$ agreement 0.213
-(95\% CI 0.192--0.235). The location ranking is therefore not a universal map of
-mechanical importance; it is conditional on the downstream predictor used to
-define improvement.
+(95\% CI 0.192--0.235). We therefore retain the predictor index $f$ in
+$U_f$ and avoid treating the value map as predictor-invariant. The current
+experiment does not determine how much value-map variation remains among
+equally accurate but structurally distinct predictors.
 
 \paragraph{Answer to RQ1.}
 Yes. Spatial internal information improved held-out-domain CAI prediction, a
 registered sparse condition retained most but not all of that gain, and
 retrospective oracle designs differed between CAI and reconstruction tasks.
-However, learned global masks did not reproduce the oracle separation, and the
-value map changed with the downstream predictor. Task usefulness is therefore
-supported, but remains objective- and predictor-conditioned.
+However, learned global masks did not reproduce the oracle separation. Value
+was stable between the similarly accurate Ridge and Huber predictors but not
+under the less accurate shallow MLP, leaving structural predictor sensitivity
+at matched accuracy unresolved. Task usefulness is therefore supported, but
+remains objective- and predictor-conditioned.
 
 \subsection{RQ2: Conditional observability during partial inspection}
 \label{sec:results-observable}
@@ -699,7 +722,7 @@ $-0.0591$--0.0195), with a favorable direction in three of six domains
 static scorer, compared with 0.07993 for the global mechanical score and
 0.07978 for the random median. Increasing static scorer complexity was not
 authorized by these results: the registered representation had not first
-established a transferable specimen-specific target.
+established specimen-specific content value across the six held-out domains.
 
 The confidence interval spans zero, so this result does not prove that value is
 information-theoretically unobservable. It shows that the tested pre-acquisition
@@ -833,7 +856,7 @@ Stratified diagnostics did not support larger conditional-value changes as the
 operative feedback mechanism. The result is implementation-bounded and does
 not imply that feedback is generally harmful.
 
-\subsubsection{Frozen cross-domain acquisition boundary}
+\subsubsection{Frozen held-out-domain acquisition boundary}
 \label{sec:results-final-boundary}
 
 % Evidence: A4_BASELINE_MINUS_MAVIS.
@@ -876,7 +899,7 @@ Table~\ref{tab:hierarchy-evidence} assembles the evidence without treating the
 three layers as a single model-development sequence.
 
 \clearpage
-\input{tables/table2_hierarchy_evidence.tex}
+\input{tables/table3_hierarchy_evidence.tex}
 
 RQ1 establishes a real target for acquisition: spatial C-scan information
 improves CAI assessment, much of its registered gain survives a sparse digital
@@ -902,10 +925,28 @@ frozen acquisition trajectory. The evidence therefore supports the hierarchy's
 central non-equivalence: Useful does not imply Observable, and partial
 Observable evidence does not imply Actionable improvement.
 
+\paragraph{Transfer conditions beyond the present case study.}
+The hierarchy can be instantiated in another sensing problem only with five
+operational elements: a defined downstream engineering endpoint and loss; a
+legal partial-observation state excluding future measurements and outcomes; a
+defensible retrospective or counterfactual target for marginal information
+value; matched controls separating measurement content from acquisition
+geometry and history; and an end-to-end cost-constrained decision metric
+distinct from local value prediction. These are methodological conditions, not
+proof of universal empirical transfer. Independent composite studies provide
+convergent motivation rather than validation: interlocked thin-ply experiments
+show that a scalar change in delamination extent and the corresponding CAI
+change need not be equivalent \cite{pascoe2019interlocking,pascoe2019dataset},
+and hybrid carbon--glass experiments likewise distinguish impact-damage
+resistance from CAI tolerance \cite{rhead2015damage}. Neither study validates
+the present hierarchy.
+
 Four limitations bound this interpretation. First, the empirical evidence
-covers six related CFRP experimental domains from a paired public data program;
-external empirical generalization to other inspection systems, materials, or
-damage mechanisms is not established. Second, cost is exact native-raster
+covers the six related CFRP experimental domains in the present paired public
+data program; evidence for other inspection systems, materials, or damage
+mechanisms is not established. Empirical statements therefore refer to results
+across the six held-out experimental domains in the present data program.
+Second, cost is exact native-raster
 location count, not travel time or industrial inspection cost. Third, the
 utility definition is specific to the chosen CAI predictors and cannot be read
 as causal attribution of failure mechanisms to selected image regions. Fourth,
@@ -922,18 +963,20 @@ from the ability to observe and use its value during acquisition. For RQ1,
 Useful information was established: the registered spatial field improved
 held-out-domain CAI prediction over matched scalar and surface references, the
 sparse condition retained most but not all of the full-field gain, and
-retrospective optimal designs depended on the downstream objective and
-predictor. These findings identify a legitimate acquisition target without
-equating sparse digital coverage with scanner time or treating an oracle as a
-policy.
+retrospective optimal designs depended on the downstream objective. Value was
+stable for the similarly accurate Ridge and Huber predictors but not for the
+less accurate shallow MLP; variation among equally accurate structurally
+distinct predictors remains unresolved. These findings identify a legitimate
+acquisition target without equating sparse digital coverage with scanner time
+or treating an oracle as a policy.
 
 For RQ2, observability was only partial. Conditional teacher values changed
 substantially as measurements accumulated, and dynamic scoring narrowly reduced
 regret relative to static scoring. However, static ranking was unsupported,
 measured content was worse than matched positions and reconstruction controls,
 and shuffled content remained the stronger dynamic control. The tested state
-representation therefore did not establish transferable specimen-specific
-content value.
+representation therefore did not establish specimen-specific content value
+across the six held-out domains.
 
 For RQ3, Actionable improvement was not established. Retrospective substitutions
 and bounded near-oracle planning exposed valuation and set-selection headroom,
@@ -942,7 +985,7 @@ strongest deployable baseline. The combined result is the hierarchy's central
 engineering-informatics conclusion: useful information may define what would be
 worth measuring in retrospect while remaining unobservable from a legal partial
 state and ineffective in an end-to-end acquisition policy. Progress should
-therefore be judged by matched information controls and frozen cross-domain
+therefore be judged by matched information controls and frozen held-out-domain
 policy outcomes, not by oracle opportunity or component-level improvements
 alone.
 

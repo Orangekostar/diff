@@ -186,7 +186,7 @@ def test_aei_paper_keeps_oracles_and_cost_semantics_bounded() -> None:
     )
 
 
-def test_aei_paper_uses_exactly_four_main_figures_and_two_main_tables() -> None:
+def test_aei_paper_uses_exactly_four_main_figures_and_three_main_tables() -> None:
     manuscript = _text(MAIN)
     figures = re.findall(r"\\includegraphics\[[^]]*\]\{([^}]+)\}", manuscript)
     tables = re.findall(r"\\input\{(tables/[^}]+)\}", manuscript)
@@ -197,8 +197,9 @@ def test_aei_paper_uses_exactly_four_main_figures_and_two_main_tables() -> None:
         "figure4_actionability.pdf",
     ]
     assert tables == [
-        "tables/table1_case_protocol.tex",
-        "tables/table2_hierarchy_evidence.tex",
+        "tables/table1_closest_work.tex",
+        "tables/table2_case_protocol.tex",
+        "tables/table3_hierarchy_evidence.tex",
     ]
 
 

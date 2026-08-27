@@ -13,7 +13,21 @@ _CANONICAL = "artifacts/aei_information_hierarchy/PAPER_CANONICAL_METRICS.csv"
 _AUTHORITY_MANIFEST = "artifacts/mavis_authority/artifact_manifest.json"
 _SCAN_MANIFEST = "artifacts/mavis_authority/scan_manifest.csv"
 _P10_CONTRASTS = "results/mavis_science_closure/p10_mris_causal/contrasts.csv"
-_TABLE2_COLUMNS = (
+_LITERATURE_LEDGER = "artifacts/mavis_science_closure/LITERATURE_LEDGER.md"
+_CLOSEST_WORK_COLUMNS = (
+    "work",
+    "citation_key",
+    "measurement_setting",
+    "acquisition_objective",
+    "state_dependence",
+    "downstream_endpoint",
+    "outside_scope",
+    "primary_source",
+    "source_status",
+    "source_artifact",
+    "source_hash",
+)
+_HIERARCHY_COLUMNS = (
     "layer",
     "question",
     "key_comparison",
@@ -139,7 +153,99 @@ def _hierarchy_row(
     }
 
 
-def _table1_rows(root: Path, canonical_hash: str) -> list[dict[str, str]]:
+def _closest_work_rows(root: Path) -> list[dict[str, str]]:
+    ledger = _source(root, _LITERATURE_LEDGER)
+    source_hash = _sha256(ledger)
+
+    def row(
+        work: str,
+        citation_key: str,
+        measurement_setting: str,
+        acquisition_objective: str,
+        state_dependence: str,
+        downstream_endpoint: str,
+        outside_scope: str,
+        primary_source: str,
+    ) -> dict[str, str]:
+        return {
+            "work": work,
+            "citation_key": citation_key,
+            "measurement_setting": measurement_setting,
+            "acquisition_objective": acquisition_objective,
+            "state_dependence": state_dependence,
+            "downstream_endpoint": downstream_endpoint,
+            "outside_scope": outside_scope,
+            "primary_source": primary_source,
+            "source_status": "VERIFIED_PRIMARY",
+            "source_artifact": _LITERATURE_LEDGER,
+            "source_hash": source_hash,
+        }
+
+    return [
+        row(
+            "Fuentes et al. (2020)",
+            "fuentes2020autonomous",
+            "robotic ultrasonic A-scan features sampled over a C-scan surface",
+            "Bayesian-optimization search over novelty and damage probability",
+            "sequential posterior update and next-location selection",
+            "damage and novelty localization",
+            "CAI-conditioned value and held-out-domain closed-loop utility were not study objectives",
+            "https://strathprints.strath.ac.uk/72351/",
+        ),
+        row(
+            "Cantero-Chinchilla et al. (2020)",
+            "cantero2020optimal",
+            "ultrasonic guided-wave structural-monitoring sensors",
+            "expected value of information with sensor-number and placement cost",
+            "static sensor configuration",
+            "Bayesian damage diagnosis and localization",
+            "within-specimen partial C-scan reveal and CAI prediction were not study objectives",
+            "https://www.sciencedirect.com/science/article/abs/pii/S0888327019305989",
+        ),
+        row(
+            "Memarzadeh and Pozzi (2016)",
+            "memarzadeh2016value",
+            "probabilistic component inspection and permanent monitoring",
+            "value of information for inspection and system scheduling",
+            "sequential belief and decision updates",
+            "maintenance and inspection scheduling",
+            "ultrasonic imaging and CAI mechanics were not study objectives",
+            "https://www.sciencedirect.com/science/article/abs/pii/S0951832016300771",
+        ),
+        row(
+            "Blumberg et al. (2024; TADRED)",
+            "blumberg2024experimental",
+            "densely sampled multi-channel imaging followed by sparse channel design",
+            "task-driven feature and channel selection",
+            "static global subset design",
+            "user-specified downstream image-analysis task",
+            "state-dependent within-specimen causal reveal and exact-cost sequential planning were outside scope",
+            "https://openreview.net/forum?id=MloaGA6WwX",
+        ),
+        row(
+            "Ji et al. (2026)",
+            "ji2026adaptive",
+            "sparse SLDV Lamb wavefield measurements on composite structures",
+            "Bayesian-optimization-guided sampling for STMAE reconstruction",
+            "adaptive spatial sampling-pattern construction",
+            "full wavefield reconstruction and damage-area fidelity",
+            "CAI mechanics and predictor-conditioned acquisition value were not study objectives",
+            "https://www.sciencedirect.com/science/article/abs/pii/S0041624X26000247",
+        ),
+        row(
+            "Mack et al. (2026)",
+            "mack2026cscan",
+            "complete ultrasonic C-scan images of impacted composites",
+            "no acquisition objective; full scans are inputs",
+            "static full-field prediction",
+            "impact energy and CAI-strength regression",
+            "sparse or adaptive acquisition and conditional next-measurement value were outside scope",
+            "https://www.sciencedirect.com/science/article/abs/pii/S1474034626002107",
+        ),
+    ]
+
+
+def _protocol_rows(root: Path, canonical_hash: str) -> list[dict[str, str]]:
     authority_path = _source(root, _AUTHORITY_MANIFEST)
     scan_path = _source(root, _SCAN_MANIFEST)
     authority = json.loads(authority_path.read_text(encoding="utf-8"))
@@ -230,7 +336,7 @@ def _table1_rows(root: Path, canonical_hash: str) -> list[dict[str, str]]:
     ]
 
 
-def _table2_rows(root: Path) -> list[dict[str, str]]:
+def _hierarchy_rows(root: Path) -> list[dict[str, str]]:
     metrics, canonical_hash = _canonical_rows(root)
 
     def claims(*ids: str) -> list[dict[str, str]]:
@@ -329,7 +435,7 @@ def _table2_rows(root: Path) -> list[dict[str, str]]:
             ci95=f"{_ci(u5_huber)}; {_ci(u5_mlp)}",
             domains="6 held-out domains",
             evidence_type="strict-OOF learner sensitivity",
-            conclusion="Measurement value is downstream-predictor-conditioned rather than an intrinsic location property.",
+            conclusion="Value is relatively stable for similarly accurate Ridge and Huber predictors but not for the less accurate shallow MLP; equally accurate structurally distinct predictors remain unresolved.",
             claims=claims("U5_RIDGE_HUBER_SPEARMAN", "U5_RIDGE_MLP_SPEARMAN"),
         ),
         _hierarchy_row(
@@ -462,7 +568,39 @@ def _latex(value: str) -> str:
     return "".join(_LATEX_ESCAPES.get(character, character) for character in value)
 
 
-def _table1_latex(rows: list[dict[str, str]]) -> str:
+def _closest_work_latex(rows: list[dict[str, str]]) -> str:
+    body = "\n".join(
+        " & ".join(
+            (
+                f"{_latex(row['work'])} \\cite{{{row['citation_key']}}}",
+                _latex(row["measurement_setting"]),
+                _latex(row["acquisition_objective"]),
+                _latex(row["state_dependence"]),
+                _latex(row["downstream_endpoint"]),
+                _latex(row["outside_scope"]),
+            )
+        )
+        + r" \\"
+        for row in rows
+    )
+    return f"""\\begin{{table*}}[!tp]
+\\centering
+\\caption{{Closest-work positioning by measurement setting, acquisition objective, state dependence, downstream endpoint, and scope. The present study jointly tests three non-equivalent information claims under one causal acquisition contract; it does not claim the first adaptive ultrasonic, ultrasound-VoI, or task-driven design.}}
+\\label{{tab:closest-work}}
+\\scriptsize
+\\setlength{{\\tabcolsep}}{{2.8pt}}
+\\begin{{tabularx}}{{\\textwidth}}{{@{{}}>{{\\RaggedRight\\arraybackslash}}p{{0.13\\textwidth}}>{{\\RaggedRight\\arraybackslash}}p{{0.15\\textwidth}}>{{\\RaggedRight\\arraybackslash}}p{{0.15\\textwidth}}>{{\\RaggedRight\\arraybackslash}}p{{0.13\\textwidth}}>{{\\RaggedRight\\arraybackslash}}p{{0.14\\textwidth}}Y@{{}}}}
+\\toprule
+Work & Measurement & Objective & State dependence & Endpoint & Outside scope \\\\
+\\midrule
+{body}
+\\bottomrule
+\\end{{tabularx}}
+\\end{{table*}}
+"""
+
+
+def _protocol_latex(rows: list[dict[str, str]]) -> str:
     body = "\n".join(
         f"{_latex(row['item'])} & {_latex(row['value'])} \\\\" for row in rows
     )
@@ -471,7 +609,7 @@ def _table1_latex(rows: list[dict[str, str]]) -> str:
 \\caption{{Multi-domain CFRP case study and evaluation protocol.}}
 \\label{{tab:case-protocol}}
 \\small
-\\begin{{tabularx}}{{\\textwidth}}{{@{{}}p{{0.22\\textwidth}}X@{{}}}}
+\\begin{{tabularx}}{{\\textwidth}}{{@{{}}>{{\\RaggedRight\\arraybackslash}}p{{0.22\\textwidth}}Y@{{}}}}
 \\toprule
 Item & Protocol value \\\\
 \\midrule
@@ -482,7 +620,7 @@ Item & Protocol value \\\\
 """
 
 
-def _table2_latex(rows: list[dict[str, str]]) -> str:
+def _hierarchy_latex(rows: list[dict[str, str]]) -> str:
     body_lines: list[str] = []
     previous_layer: str | None = None
     for row in rows:
@@ -530,13 +668,19 @@ Layer & Question & Key comparison & Effect & 95\\% CI & Domains & Evidence type 
 
 _CAPTIONS = {
     "table1": (
-        "**Table 1. Multi-domain CFRP case study and evaluation protocol.** "
+        "**Table 1. Closest-work positioning.** The comparison separates measurement "
+        "setting, acquisition objective, state dependence, downstream endpoint, and "
+        "scope. The contribution is an operational joint test of three non-equivalent "
+        "information claims, not a first adaptive-ultrasound or generic-VoI claim.\n"
+    ),
+    "table2": (
+        "**Table 2. Multi-domain CFRP case study and evaluation protocol.** "
         "The physical specimen and held-out domain are the statistical units; "
         "state-action rows are repeated computational records. Acquisition cost "
         "uses exact native-raster locations and is not scanner-time equivalence.\n"
     ),
-    "table2": (
-        "**Table 2. Evidence summary for the task-relevant information hierarchy.** "
+    "table3": (
+        "**Table 3. Evidence summary for the task-relevant information hierarchy.** "
         "Registered and retrospective usefulness evidence is separated from legal-state "
         "observability and deployable actionability. Central adverse controls remain in "
         "the main table; retrospective teachers, oracles, and substitutions are not "
@@ -574,31 +718,44 @@ def _write_manifest(output_root: Path, artifacts: dict[str, TableArtifact]) -> P
 
 
 def build_paper_tables(root: Path, output_root: Path) -> dict[str, TableArtifact]:
-    """Generate the two main-table CSV, booktabs LaTeX, and caption files."""
+    """Generate the three main-table CSV, booktabs LaTeX, and caption files."""
     root = root.resolve()
     output_root.mkdir(parents=True, exist_ok=True)
     _, canonical_hash = _canonical_rows(root)
-    table1_rows = _table1_rows(root, canonical_hash)
-    table2_rows = _table2_rows(root)
+    table1_rows = _closest_work_rows(root)
+    table2_rows = _protocol_rows(root, canonical_hash)
+    table3_rows = _hierarchy_rows(root)
 
     table1 = TableArtifact(
-        csv=output_root / "table1_case_protocol.csv",
-        tex=output_root / "table1_case_protocol.tex",
-        caption=output_root / "table1_case_protocol_caption.md",
+        csv=output_root / "table1_closest_work.csv",
+        tex=output_root / "table1_closest_work.tex",
+        caption=output_root / "table1_closest_work_caption.md",
     )
     table2 = TableArtifact(
-        csv=output_root / "table2_hierarchy_evidence.csv",
-        tex=output_root / "table2_hierarchy_evidence.tex",
-        caption=output_root / "table2_hierarchy_evidence_caption.md",
+        csv=output_root / "table2_case_protocol.csv",
+        tex=output_root / "table2_case_protocol.tex",
+        caption=output_root / "table2_case_protocol_caption.md",
     )
+    table3 = TableArtifact(
+        csv=output_root / "table3_hierarchy_evidence.csv",
+        tex=output_root / "table3_hierarchy_evidence.tex",
+        caption=output_root / "table3_hierarchy_evidence_caption.md",
+    )
+    _write_csv(table1.csv, table1_rows, _CLOSEST_WORK_COLUMNS)
     _write_csv(
-        table1.csv, table1_rows, ("item", "value", "source_artifact", "source_hash")
+        table2.csv, table2_rows, ("item", "value", "source_artifact", "source_hash")
     )
-    _write_csv(table2.csv, table2_rows, _TABLE2_COLUMNS)
-    table1.tex.write_text(_table1_latex(table1_rows), encoding="utf-8", newline="\n")
-    table2.tex.write_text(_table2_latex(table2_rows), encoding="utf-8", newline="\n")
+    _write_csv(table3.csv, table3_rows, _HIERARCHY_COLUMNS)
+    table1.tex.write_text(
+        _closest_work_latex(table1_rows), encoding="utf-8", newline="\n"
+    )
+    table2.tex.write_text(_protocol_latex(table2_rows), encoding="utf-8", newline="\n")
+    table3.tex.write_text(
+        _hierarchy_latex(table3_rows), encoding="utf-8", newline="\n"
+    )
     table1.caption.write_text(_CAPTIONS["table1"], encoding="utf-8", newline="\n")
     table2.caption.write_text(_CAPTIONS["table2"], encoding="utf-8", newline="\n")
-    artifacts = {"table1": table1, "table2": table2}
+    table3.caption.write_text(_CAPTIONS["table3"], encoding="utf-8", newline="\n")
+    artifacts = {"table1": table1, "table2": table2, "table3": table3}
     _write_manifest(output_root, artifacts)
     return artifacts

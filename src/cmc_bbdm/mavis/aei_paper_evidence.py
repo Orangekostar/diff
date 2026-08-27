@@ -676,8 +676,18 @@ def build_canonical_metrics(root: Path) -> tuple[PaperMetric, ...]:
                     else "LEARNER_DEPENDENT"
                 ),
                 manuscript_location="main",
-                allowed_wording="measurement value is downstream-predictor-conditioned task value",
-                forbidden_wording="intrinsic mechanical value of a location; universal mechanical-value map",
+                allowed_wording=(
+                    "downstream-predictor-conditioned task value is relatively stable "
+                    "between comparably performing low-complexity Ridge and Huber predictors"
+                    if "ridge__huber" in key
+                    else "downstream-predictor-conditioned task value does not persist under "
+                    "the substantially less accurate shallow MLP; variation among equally "
+                    "accurate structurally distinct predictors remains unresolved"
+                ),
+                forbidden_wording=(
+                    "intrinsic mechanical value of a location; universal mechanical-value "
+                    "map; predictor dependence independent of model quality"
+                ),
             )
         )
 

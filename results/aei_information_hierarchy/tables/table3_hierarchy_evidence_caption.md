@@ -1,0 +1,1 @@
+**Table 3. Evidence summary for the task-relevant information hierarchy.** Registered and retrospective usefulness evidence is separated from legal-state observability and deployable actionability. Central adverse controls remain in the main table; retrospective teachers, oracles, and substitutions are not deployable policies.

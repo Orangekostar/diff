@@ -21,8 +21,9 @@ def test_aei_paper_validation_closes_claim_figure_table_contract() -> None:
     assert report.canonical_claim_count == 39
     assert report.mapped_claim_count == 39
     assert report.figure_count == 4
-    assert report.table_count == 2
+    assert report.table_count == 3
     assert report.section_count == 6
+    assert report.semantic_errors == ()
 
 
 def test_aei_supplement_preserves_main_boundary_results() -> None:

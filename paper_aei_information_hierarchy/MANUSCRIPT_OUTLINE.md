@@ -62,6 +62,9 @@
 
 - Conceptual definition only; numerical answers are reserved for Section 5.
 - Required term: downstream-predictor-conditioned task value.
+- Table 1: source-backed closest-work positioning across six primary sources.
+- Novelty statement: operational joint test under one causal acquisition
+  contract, not a new generic taxonomy or first adaptive/VoI design.
 
 ## 3. Task-Relevant Information Hierarchy and Operational Framework
 
@@ -86,7 +89,8 @@
 
 ### 3.4 Decision actionability
 
-- Define exact-cost sequential choice and AUEBC.
+- Define exact-cost sequential choice and budget-span-normalized AUEBC on the
+  actual/effective specimen-budget coordinate.
 - Separate valuation error, bounded set-planning error, and feedback effects.
 
 ### 3.5 Operationalization with causal partial-state measurement valuation
@@ -129,7 +133,7 @@
   representations.
 - Distinguish mechanics-targeted and reconstruction-targeted utility.
 
-### 4.3 Whole-dataset generalization protocol
+### 4.3 Held-out-domain evaluation protocol
 
 - Strict nested leave-one-domain-out evaluation.
 - Outer-domain specimens and outcomes excluded from fitting and selection.
@@ -155,9 +159,11 @@
 
 ### 4.6 Validation matrix for RQ1-RQ3
 
-- Table 1: cohort, modalities, protocol, information boundary, cost, and
+- Table 2: cohort, modalities, protocol, information boundary, cost, and
   inference.
 - Map each research question to its registered comparison and adverse controls.
+- Distinguish pre-freeze evidence, the frozen outer endpoint, and post-freeze
+  diagnostics; state that later diagnostics did not modify the endpoint.
 
 ## 5. Experimental Results and Discussion
 
@@ -181,6 +187,8 @@
 
 - Claims U5_RIDGE_HUBER_SPEARMAN and U5_RIDGE_MLP_SPEARMAN, with best-action
   and top-k agreement in the supplement.
+- Report full-state OOF accuracy and state that the experiment does not resolve
+  value-map variation among equally accurate structurally distinct predictors.
 
 #### Direct RQ1 answer
 
@@ -230,7 +238,7 @@ control.
 
 - Claim A3_FEEDBACK_BENEFIT.
 
-#### 5.3.4 Frozen cross-domain acquisition boundary
+#### 5.3.4 Frozen held-out-domain acquisition boundary
 
 - Claim A4_BASELINE_MINUS_MAVIS.
 
@@ -248,7 +256,9 @@ does not outperform the strongest deployable baseline.
   value changes with both state and downstream predictor.
 - State the current deployment boundary and the need to validate each layer
   independently before increasing policy complexity.
-- Table 2 provides the complete main-text evidence ladder; Figures 2--4 provide
+- State five transfer conditions and label the Pascoe/Rhead examples as
+  literature-only motivation, not external validation.
+- Table 3 provides the complete main-text evidence ladder; Figures 2--4 provide
   the three direct experimental answers.
 
 ## 6. Conclusions

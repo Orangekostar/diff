@@ -15,6 +15,23 @@ domain consistency, and deployability qualifier must be preserved.
   fraction specified by the experiment; it does not denote scanner time.
 - Statistical inference is specimen-first and then equal-domain aggregated;
   state-action and checkpoint rows are repeated computational records.
+- AUEBC is the budget-span-normalized trapezoidal mean error over the observed
+  actual/effective specimen-budget range; lower is better.
+
+## Review-fix boundaries
+
+- Chronology: historical comparisons and the frozen outer endpoint predate the
+  post-freeze diagnostics; later diagnostics reused hash-bound frozen states
+  and outcomes and did not modify the endpoint.
+- Novelty: the contribution jointly tests three non-equivalent information
+  claims under one causal acquisition contract. Do not claim the first adaptive
+  ultrasonic inspection, ultrasound VoI, or task-driven design.
+- Transfer: framework reuse requires a defined endpoint/loss, a legal partial
+  state, a defensible marginal-value target, matched content/geometry/history
+  controls, and an end-to-end cost-constrained metric distinct from local value
+  prediction. These conditions are not external validation.
+- External feasibility: the current route is `MANUSCRIPT_ONLY_PRIMARY` and the
+  optional external micro-pilot is `EXTERNAL_MICRO_PILOT_NO_GO`.
 
 ## Useful
 
@@ -95,8 +112,14 @@ Registered sentence: Strict-OOF action-value rankings agreed substantially
 between ridge and Huber predictors (Spearman rho 0.762; 95% CI 0.699--0.821) but
 weakly between ridge and a shallow MLP (rho 0.116; 95% CI 0.069--0.164).
 
-Interpretation: Measurement value is downstream-predictor-conditioned rather
-than an intrinsic property of a location.
+Accuracy boundary: Full-state equal-domain strict-OOF MAE was 0.08964 for Ridge,
+0.08618 for Huber, and 0.15067 for the shallow MLP.
+
+Interpretation: Measurement value was relatively stable between the comparably
+performing low-complexity Ridge and Huber predictors but did not persist under
+the substantially less accurate shallow MLP. Retain the predictor index $f$.
+The experiment does not determine variation among equally accurate but
+structurally distinct predictors.
 
 ## Observable
 
