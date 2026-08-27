@@ -1,4 +1,4 @@
-"""Deterministic, evidence-bound tables for the AEI information hierarchy."""
+"""Deterministic tables for the AEI task-relevant acquisition paper."""
 
 from __future__ import annotations
 
@@ -27,15 +27,15 @@ _CLOSEST_WORK_COLUMNS = (
     "source_artifact",
     "source_hash",
 )
-_HIERARCHY_COLUMNS = (
-    "layer",
-    "question",
-    "key_comparison",
+_PROGRESSIVE_COLUMNS = (
+    "part",
+    "progressive_stage",
+    "scientific_question",
+    "key_evidence",
     "effect",
-    "ci95",
-    "domains",
-    "evidence_type",
-    "conclusion",
+    "ci95_domains",
+    "narrative_conclusion",
+    "control_boundary",
     "source_claim_ids",
     "source_artifacts",
     "source_hashes",
@@ -551,6 +551,200 @@ def _hierarchy_rows(root: Path) -> list[dict[str, str]]:
     ]
 
 
+def _progressive_rows(root: Path) -> list[dict[str, str]]:
+    metrics, canonical_hash = _canonical_rows(root)
+
+    def row(
+        part: str,
+        stage: str,
+        question: str,
+        evidence: str,
+        effect: str,
+        ci95_domains: str,
+        conclusion: str,
+        boundary: str,
+        *claim_ids: str,
+    ) -> dict[str, str]:
+        claims = [metrics[claim_id] for claim_id in claim_ids]
+        ids, sources, hashes = _provenance(claims)
+        return {
+            "part": part,
+            "progressive_stage": stage,
+            "scientific_question": question,
+            "key_evidence": evidence,
+            "effect": effect,
+            "ci95_domains": ci95_domains,
+            "narrative_conclusion": conclusion,
+            "control_boundary": boundary,
+            "source_claim_ids": ids,
+            "source_artifacts": sources,
+            "source_hashes": hashes,
+            "canonical_authority_hash": canonical_hash,
+        }
+
+    return [
+        row(
+            "Part I",
+            "I1 Spatial enrichment",
+            "Does spatial internal morphology enrich residual-capacity information?",
+            "Matched scalar and surface references versus selected B-family spatial field",
+            "MAE 0.18920 to 0.12849; reduction 0.06072 (32.1%)",
+            "familywise 95% CI [0.00664, 0.15364]; favorable 5/6 domains",
+            "Spatial morphology adds CAI-relevant information beyond lower-dimensional inputs.",
+            "The 0.08964 independent field estimate is sensitivity-only, not the matched confirmatory path.",
+            "U1_MATCHED_FIELD",
+            "U1_SURFACE_FIELD",
+            "U1_INDEPENDENT_FIELD_SENSITIVITY",
+        ),
+        row(
+            "Part I",
+            "I2 Sparse recoverability",
+            "How much registered full-field information survives sparse observation?",
+            "Selected 25% bilinear sparse field versus surface and full-field references",
+            "89.9% gain retained; sparse-to-full MAE gap 0.00602",
+            "gap 95% CI [0.00173, 0.01083]; favorable 5/6 versus surface and 0/6 versus full",
+            "Sparse observations preserve most of the registered spatial gain.",
+            "Native-raster fraction is not physical scanner time and sparse is not equivalent to full field.",
+            "U2_SPARSE_RETENTION",
+            "U2_SPARSE_GAIN",
+            "U2_SPARSE_FULL_GAP",
+        ),
+        row(
+            "Part I",
+            "I3 Spatial heterogeneity",
+            "Is task-relevant measurement opportunity spatially heterogeneous?",
+            "One-shot mechanical oracle versus uniform and reconstruction oracles",
+            "CAI-AUEBC improvements 0.00391 and 0.00373; 56.8% sequential headroom retained",
+            "95% CIs [0.00280, 0.00502] and [0.00284, 0.00469]; favorable 6/6",
+            "Specimen-specific spatial acquisition headroom exists retrospectively.",
+            "All oracle rows use unavailable counterfactual outcomes and are non-deployable.",
+            "U3_UNIFORM_ORACLE",
+            "U3_RECONSTRUCTION_ORACLE",
+            "U3_HEADROOM_RETENTION",
+        ),
+        row(
+            "Part I",
+            "I4 Objective conditioning",
+            "Do downstream objectives induce distinct measurement priorities?",
+            "Mechanical and registered normalized-RGB-MSE reconstruction oracles plus learned global masks",
+            "CAI contrast 0.04862; image-MSE contrast 5.503e-4; learned indicator 0",
+            "95% CIs [0.04527, 0.05205] and [5.006e-4, 6.063e-4]",
+            "Retrospective priorities are objective-conditioned.",
+            "Learned global masks do not reproduce the oracle separation or establish deployment value.",
+            "U4_ORACLE_CAI_SPECIFICITY",
+            "U4_ORACLE_IMAGE_SPECIFICITY",
+            "U4_LEARNED_SPECIFICITY_BOUNDARY",
+        ),
+        row(
+            "Part I",
+            "I5 State conditioning",
+            "Does measurement value evolve with inspection state?",
+            "Strict-OOF retrospective teacher from initial state to 18.75% checkpoint",
+            "70.4% best-action turnover; rank 0.405; top-5 overlap 0.307; opportunity 0.00531",
+            "descriptive across 276 specimens and 6 held-out domains",
+            "A fixed initial ranking omits material state-conditioned value evolution.",
+            "Teacher evolution does not show that the deployable scorer observes the change.",
+            "O2_TEACHER_TURNOVER",
+            "O2_TEACHER_RANK",
+            "O2_TEACHER_TOPK",
+            "O2_TEACHER_OPPORTUNITY",
+        ),
+        row(
+            "Part I",
+            "I6 Predictor conditioning",
+            "How does downstream predictor choice bound the task-value definition?",
+            "Ridge-Huber and Ridge-shallow-MLP strict-OOF value agreement",
+            "Spearman 0.762 versus 0.116; full-state MAE 0.08964, 0.08618, 0.15067",
+            "rank CIs [0.699, 0.821] and [0.069, 0.164]; 6 held-out domains",
+            "Value is stable between comparably performing low-complexity predictors.",
+            "The shallow MLP is substantially less accurate; equally accurate structurally distinct predictors remain unresolved.",
+            "U5_RIDGE_HUBER_SPEARMAN",
+            "U5_RIDGE_HUBER_BEST_ACTION",
+            "U5_RIDGE_HUBER_TOPK",
+            "U5_RIDGE_MLP_SPEARMAN",
+            "U5_RIDGE_MLP_BEST_ACTION",
+            "U5_RIDGE_MLP_TOPK",
+        ),
+        row(
+            "Part II",
+            "II1 Static reference",
+            "What reference motivates state-conditioned valuation?",
+            "Static legal-state scorer with global and random exact-budget controls",
+            "static Spearman -0.0196; set regret 0.08171 versus 0.07993 and 0.07978",
+            "rank 95% CI [-0.0591, 0.0195]; favorable 3/6 domains",
+            "The static reference motivates conditional valuation.",
+            "This tested representation does not imply information-theoretic impossibility.",
+            "O1_STATIC_SPEARMAN",
+            "O1_STATIC_SET_REGRET",
+            "O1_GLOBAL_SET_REGRET",
+            "O1_RANDOM_SET_REGRET",
+        ),
+        row(
+            "Part II",
+            "II2 Dynamic valuation",
+            "Does state-conditioned scoring capture incremental dependence?",
+            "Dynamic real-state scorer versus static scorer at 18.75%",
+            "dynamic minus static regret -0.001260",
+            "95% CI [-0.002123, -0.000444]; favorable 5/6 domains",
+            "Dynamic valuation improves over the static reference.",
+            "The comparison alone does not identify which state-information source drives the gain.",
+            "O4_DYNAMIC_MINUS_STATIC",
+        ),
+        row(
+            "Part II",
+            "II3 Information-source attribution",
+            "Which legal-state information licenses content attribution?",
+            "Real content versus initial, acquired-position/history, reconstruction, and shuffled controls",
+            "real change -0.000731; real-minus-history 0.01740; real-minus-reconstruction 0.03419; real-minus-shuffled 2.328e-4",
+            "all matched-control CIs exclude 0; real favorable 1/6 for each source control",
+            "Real measurements change prediction, while matched controls localize the decision signal.",
+            "Acquired-position/history is not geometry-only; reconstruction is registered normalized-RGB-MSE; shuffled remains the dynamic boundary.",
+            "O3_REAL_CHANGE",
+            "O3_FULL_FIELD_RECOVERY",
+            "O3_REAL_MINUS_POSITIONS",
+            "O3_REAL_MINUS_RECONSTRUCTION",
+            "O4_DYNAMIC_MINUS_SHUFFLED",
+        ),
+        row(
+            "Part II",
+            "II4 Valuation/planning decomposition",
+            "Where does controlled component headroom reside?",
+            "Privileged valuation and bounded planning substitutions",
+            "valuation 4.979e-5; learned planning 3.164e-6; true-value planning 1.117e-4",
+            "95% CIs [1.845e-5, 8.105e-5], [1.411e-7, 6.250e-6], [9.898e-5, 1.248e-4]",
+            "Valuation and planning contribute distinguishable retrospective headroom.",
+            "Substitutions are diagnostic and non-deployable; no representation bottleneck is claimed.",
+            "A1_VALUATION_SUBSTITUTION",
+            "A1_LEARNED_PLANNING_SUBSTITUTION",
+            "A1_TRUE_VALUE_PLANNING_SUBSTITUTION",
+        ),
+        row(
+            "Part II",
+            "II5 Bounded set realization",
+            "How much decision-level headroom remains in the reachable pool?",
+            "Greedy and beam-width-four selection versus retrospective joint near-oracle",
+            "greedy regret 1.207e-4; beam-4 point regret 1.127e-4",
+            "95% CIs [1.033e-4, 1.386e-4] and [9.485e-5, 1.308e-4]",
+            "A positive two-action set-realization gap remains.",
+            "The near-oracle is non-deployable and does not establish arbitrary-horizon regret.",
+            "A2_GREEDY_PLANNING_REGRET",
+            "A2_BEAM4_PLANNING_REGRET",
+        ),
+        row(
+            "Part II",
+            "II6 Deployment calibration",
+            "How does frozen end-to-end stress testing calibrate readiness?",
+            "Feedback/no-feedback stress test and strongest deployable outer reference",
+            "no-feedback advantage 1.496e-5; residual deployable gap 6.114e-5",
+            "feedback-benefit CI [-1.944e-5, -1.064e-5]; baseline-minus-learned CI [-8.461e-5, -3.777e-5]",
+            "The frozen endpoint quantifies the remaining representation-to-decision gap.",
+            "The no-feedback reference is retained and the learned endpoint is not performance-superior.",
+            "A3_FEEDBACK_BENEFIT",
+            "A4_BASELINE_MINUS_MAVIS",
+        ),
+    ]
+
+
 _LATEX_ESCAPES = {
     "&": r"\&",
     "%": r"\%",
@@ -566,6 +760,19 @@ _LATEX_ESCAPES = {
 
 def _latex(value: str) -> str:
     return "".join(_LATEX_ESCAPES.get(character, character) for character in value)
+
+
+def _table_latex(value: str) -> str:
+    text = _latex(value).replace("/", r"/\allowbreak{}")
+    breakable = {
+        "Information": r"Infor\allowbreak{}mation",
+        "information": r"infor\allowbreak{}mation",
+        "reconstruction": r"recon\allowbreak{}struction",
+        "representation": r"repre\allowbreak{}sentation",
+    }
+    for word, replacement in breakable.items():
+        text = text.replace(word, replacement)
+    return text
 
 
 def _closest_work_latex(rows: list[dict[str, str]]) -> str:
@@ -585,7 +792,7 @@ def _closest_work_latex(rows: list[dict[str, str]]) -> str:
     )
     return f"""\\begin{{table*}}[!tp]
 \\centering
-\\caption{{Closest-work positioning by measurement setting, acquisition objective, state dependence, downstream endpoint, and scope. The present study jointly tests three non-equivalent information claims under one causal acquisition contract; it does not claim the first adaptive ultrasonic, ultrasound-VoI, or task-driven design.}}
+\\caption{{Closest-work positioning by measurement setting, acquisition objective, state dependence, downstream endpoint, and scope. The present study connects information characterization to evidence-calibrated decision realization under one causal acquisition contract; it does not claim the first adaptive ultrasonic, ultrasound-VoI, or task-driven design.}}
 \\label{{tab:closest-work}}
 \\scriptsize
 \\setlength{{\\tabcolsep}}{{2.8pt}}
@@ -620,39 +827,39 @@ Item & Protocol value \\\\
 """
 
 
-def _hierarchy_latex(rows: list[dict[str, str]]) -> str:
+def _progressive_latex(rows: list[dict[str, str]]) -> str:
     body_lines: list[str] = []
-    previous_layer: str | None = None
+    previous_part: str | None = None
     for row in rows:
-        new_layer = row["layer"] != previous_layer
-        if previous_layer is not None and new_layer:
+        new_part = row["part"] != previous_part
+        if previous_part is not None and new_part:
             body_lines.append(r"\addlinespace[2pt]")
         values = (
-            row["layer"] if new_layer else "",
-            row["question"] if new_layer else "",
-            row["key_comparison"],
+            row["part"] if new_part else "",
+            row["progressive_stage"],
+            row["scientific_question"],
+            row["key_evidence"],
             row["effect"],
-            row["ci95"],
-            row["domains"],
-            row["evidence_type"],
-            row["conclusion"],
+            row["ci95_domains"],
+            row["narrative_conclusion"],
+            row["control_boundary"],
         )
-        body_lines.append(" & ".join(_latex(value) for value in values) + r" \\")
-        previous_layer = row["layer"]
+        body_lines.append(" & ".join(_table_latex(value) for value in values) + r" \\")
+        previous_part = row["part"]
     body = "\n".join(body_lines)
     return f"""\\begingroup
 \\scriptsize
-\\setlength{{\\tabcolsep}}{{2.5pt}}
-\\begin{{longtable}}{{@{{}}>{{\\RaggedRight\\arraybackslash}}p{{0.105\\textwidth}}>{{\\RaggedRight\\arraybackslash}}p{{0.085\\textwidth}}>{{\\RaggedRight\\arraybackslash}}p{{0.158\\textwidth}}>{{\\RaggedRight\\arraybackslash}}p{{0.12\\textwidth}}>{{\\RaggedRight\\arraybackslash}}p{{0.10\\textwidth}}>{{\\RaggedRight\\arraybackslash}}p{{0.082\\textwidth}}>{{\\RaggedRight\\arraybackslash}}p{{0.12\\textwidth}}>{{\\RaggedRight\\arraybackslash}}p{{0.137\\textwidth}}@{{}}}}
-\\caption{{Evidence summary for the task-relevant information hierarchy. Positive and negative directions are stated in the comparison text.}}
-\\label{{tab:hierarchy-evidence}}\\\\
+\\setlength{{\\tabcolsep}}{{1.5pt}}
+\\begin{{longtable}}{{@{{}}>{{\\RaggedRight\\arraybackslash}}p{{0.065\\textwidth}}>{{\\RaggedRight\\arraybackslash}}p{{0.095\\textwidth}}>{{\\RaggedRight\\arraybackslash}}p{{0.125\\textwidth}}>{{\\RaggedRight\\arraybackslash}}p{{0.145\\textwidth}}>{{\\RaggedRight\\arraybackslash}}p{{0.12\\textwidth}}>{{\\RaggedRight\\arraybackslash}}p{{0.12\\textwidth}}>{{\\RaggedRight\\arraybackslash}}p{{0.13\\textwidth}}>{{\\RaggedRight\\arraybackslash}}p{{0.13\\textwidth}}@{{}}}}
+\\caption{{Progressive evidence chain from information characterization to evidence-calibrated decision realization.}}
+\\label{{tab:progressive-evidence}}\\\\
 \\toprule
-Layer & Question & Key comparison & Effect & 95\\% CI & Domains & Evidence type & Conclusion \\\\
+Part & Stage & Scientific question & Key evidence & Effect & 95\\% CI / domains & Narrative conclusion & Control boundary \\\\
 \\midrule
 \\endfirsthead
 \\multicolumn{{8}}{{@{{}}l}}{{\\tablename~\\thetable{{}} (continued)}} \\\\
 \\toprule
-Layer & Question & Key comparison & Effect & 95\\% CI & Domains & Evidence type & Conclusion \\\\
+Part & Stage & Scientific question & Key evidence & Effect & 95\\% CI / domains & Narrative conclusion & Control boundary \\\\
 \\midrule
 \\endhead
 \\midrule
@@ -670,8 +877,8 @@ _CAPTIONS = {
     "table1": (
         "**Table 1. Closest-work positioning.** The comparison separates measurement "
         "setting, acquisition objective, state dependence, downstream endpoint, and "
-        "scope. The contribution is an operational joint test of three non-equivalent "
-        "information claims, not a first adaptive-ultrasound or generic-VoI claim.\n"
+        "scope. The contribution connects information characterization to calibrated "
+        "decision realization, not a first adaptive-ultrasound or generic-VoI claim.\n"
     ),
     "table2": (
         "**Table 2. Multi-domain CFRP case study and evaluation protocol.** "
@@ -680,11 +887,10 @@ _CAPTIONS = {
         "uses exact native-raster locations and is not scanner-time equivalence.\n"
     ),
     "table3": (
-        "**Table 3. Evidence summary for the task-relevant information hierarchy.** "
-        "Registered and retrospective usefulness evidence is separated from legal-state "
-        "observability and deployable actionability. Central adverse controls remain in "
-        "the main table; retrospective teachers, oracles, and substitutions are not "
-        "deployable policies.\n"
+        "**Table 3. Progressive evidence chain.** Twelve stages connect information "
+        "characterization to evidence-calibrated decision realization. Matched source "
+        "controls and the residual deployment gap remain in the main table; retrospective "
+        "teachers, oracles, and substitutions are non-deployable.\n"
     ),
 }
 
@@ -724,7 +930,7 @@ def build_paper_tables(root: Path, output_root: Path) -> dict[str, TableArtifact
     _, canonical_hash = _canonical_rows(root)
     table1_rows = _closest_work_rows(root)
     table2_rows = _protocol_rows(root, canonical_hash)
-    table3_rows = _hierarchy_rows(root)
+    table3_rows = _progressive_rows(root)
 
     table1 = TableArtifact(
         csv=output_root / "table1_closest_work.csv",
@@ -737,21 +943,21 @@ def build_paper_tables(root: Path, output_root: Path) -> dict[str, TableArtifact
         caption=output_root / "table2_case_protocol_caption.md",
     )
     table3 = TableArtifact(
-        csv=output_root / "table3_hierarchy_evidence.csv",
-        tex=output_root / "table3_hierarchy_evidence.tex",
-        caption=output_root / "table3_hierarchy_evidence_caption.md",
+        csv=output_root / "table3_progressive_evidence_chain.csv",
+        tex=output_root / "table3_progressive_evidence_chain.tex",
+        caption=output_root / "table3_progressive_evidence_chain_caption.md",
     )
     _write_csv(table1.csv, table1_rows, _CLOSEST_WORK_COLUMNS)
     _write_csv(
         table2.csv, table2_rows, ("item", "value", "source_artifact", "source_hash")
     )
-    _write_csv(table3.csv, table3_rows, _HIERARCHY_COLUMNS)
+    _write_csv(table3.csv, table3_rows, _PROGRESSIVE_COLUMNS)
     table1.tex.write_text(
         _closest_work_latex(table1_rows), encoding="utf-8", newline="\n"
     )
     table2.tex.write_text(_protocol_latex(table2_rows), encoding="utf-8", newline="\n")
     table3.tex.write_text(
-        _hierarchy_latex(table3_rows), encoding="utf-8", newline="\n"
+        _progressive_latex(table3_rows), encoding="utf-8", newline="\n"
     )
     table1.caption.write_text(_CAPTIONS["table1"], encoding="utf-8", newline="\n")
     table2.caption.write_text(_CAPTIONS["table2"], encoding="utf-8", newline="\n")

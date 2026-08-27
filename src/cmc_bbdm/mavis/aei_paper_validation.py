@@ -114,7 +114,11 @@ def evidence_chronology_rows(root: Path) -> list[dict[str, str]]:
     rows: list[dict[str, str]] = []
     for metric in aei_paper_evidence.build_canonical_metrics(root):
         prefix = next(
-            (candidate for candidate in _SOURCE_STAGES if metric.claim_id.startswith(candidate)),
+            (
+                candidate
+                for candidate in _SOURCE_STAGES
+                if metric.claim_id.startswith(candidate)
+            ),
             None,
         )
         if prefix is None:
@@ -124,14 +128,20 @@ def evidence_chronology_rows(root: Path) -> list[dict[str, str]]:
             frozen_before = "true"
             created_after = "false"
             used_to_modify = "true"
-            allowed = "frozen evidence available before the outer endpoint was finalized"
-            forbidden = "post-freeze diagnostic or proof that the outer endpoint was superior"
+            allowed = (
+                "frozen evidence available before the outer endpoint was finalized"
+            )
+            forbidden = (
+                "post-freeze diagnostic or proof that the outer endpoint was superior"
+            )
         elif metric.claim_id == "A4_BASELINE_MINUS_MAVIS":
             chronology_class = "FROZEN_OUTER_ENDPOINT"
             frozen_before = "false"
             created_after = "false"
             used_to_modify = "false"
-            allowed = "frozen outer policy endpoint evaluated once under the fixed protocol"
+            allowed = (
+                "frozen outer policy endpoint evaluated once under the fixed protocol"
+            )
             forbidden = "endpoint selected or modified using post-freeze diagnostics"
         else:
             chronology_class = "POST_P7_DIAGNOSTIC"
@@ -142,9 +152,7 @@ def evidence_chronology_rows(root: Path) -> list[dict[str, str]]:
                 "post-freeze diagnostic using hash-bound frozen states and outcomes; "
                 "not used to modify the frozen outer endpoint"
             )
-            forbidden = (
-                "preregistered confirmatory evidence or input to outer-endpoint selection"
-            )
+            forbidden = "preregistered confirmatory evidence or input to outer-endpoint selection"
         rows.append(
             {
                 "claim_id": metric.claim_id,
@@ -169,7 +177,9 @@ def write_evidence_chronology(root: Path, output_dir: Path) -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
     csv_path = output_dir / "PAPER_EVIDENCE_CHRONOLOGY.csv"
     with csv_path.open("w", encoding="utf-8", newline="") as stream:
-        writer = csv.DictWriter(stream, fieldnames=_CHRONOLOGY_COLUMNS, lineterminator="\n")
+        writer = csv.DictWriter(
+            stream, fieldnames=_CHRONOLOGY_COLUMNS, lineterminator="\n"
+        )
         writer.writeheader()
         writer.writerows(rows)
     counts = {
@@ -217,7 +227,12 @@ def semantic_validation_errors(root: Path) -> list[str]:
         "auebc_normalization": r"\frac{1}{x_{i,K}-x_{i,1}}",
         "effective_budget": r"x_{i,1}<\cdots<x_{i,K}",
         "chronology": "distinct chronological roles",
-        "operational_novelty": "three non-equivalent information claims",
+        "operational_novelty": "under one causal acquisition contract",
+        "part_i": r"\subsection{Part I --- From Spatial Morphology to State-Conditioned Task Value}",
+        "part_ii": r"\subsection{Part II --- From State-Conditioned Value to Evidence-Calibrated Decisions}",
+        "history_control": "acquired-position/history control",
+        "reconstruction_control": "registered normalized-RGB-MSE reconstruction objective",
+        "deployment_boundary": "not performance-superior",
         "predictor_accuracy_boundary": "substantially less accurate shallow MLP",
         "transfer_heading": "Transfer conditions beyond the present case study",
         "bounded_domains": "across the six held-out experimental domains in the present data program",
@@ -244,6 +259,25 @@ def semantic_validation_errors(root: Path) -> list[str]:
         ):
             errors.append("post_freeze_modified_endpoint")
 
+    narrative_path = (
+        root / "artifacts/aei_information_hierarchy/PAPER_POSITIVE_NARRATIVE_MAP.csv"
+    )
+    if not narrative_path.is_file():
+        errors.append("narrative_map_missing")
+    else:
+        with narrative_path.open(encoding="utf-8", newline="") as stream:
+            narrative = list(csv.DictReader(stream))
+        canonical = [
+            metric.claim_id
+            for metric in aei_paper_evidence.build_canonical_metrics(root)
+        ]
+        if [row.get("claim_id") for row in narrative] != canonical:
+            errors.append("narrative_map_claim_order")
+        if len(narrative) != 39 or any(
+            row.get("new_part") not in {"PART_I", "PART_II"} for row in narrative
+        ):
+            errors.append("narrative_map_stage_coverage")
+
     closest = root / "results/aei_information_hierarchy/tables/table1_closest_work.csv"
     if not closest.is_file():
         errors.append("closest_work_missing")
@@ -261,6 +295,13 @@ def semantic_validation_errors(root: Path) -> list[str]:
         "first task-driven",
         "externally validates the hierarchy",
         "external replication",
+        r"\subsection{rq1",
+        r"\subsection{rq2",
+        r"\subsection{rq3",
+        "figure2_usefulness.pdf",
+        "figure3_observability.pdf",
+        "figure4_actionability.pdf",
+        "table3_hierarchy_evidence.tex",
     )
     lower = manuscript.lower()
     errors.extend(f"forbidden:{phrase}" for phrase in forbidden if phrase in lower)
@@ -269,7 +310,9 @@ def semantic_validation_errors(root: Path) -> list[str]:
 
 def _matches_rounding(value: float, decimals: int, candidates: list[float]) -> bool:
     tolerance = 0.500001 * 10.0 ** (-decimals)
-    return any(math.isclose(value, candidate, abs_tol=tolerance) for candidate in candidates)
+    return any(
+        math.isclose(value, candidate, abs_tol=tolerance) for candidate in candidates
+    )
 
 
 def unmatched_results_numbers(root: Path) -> list[str]:

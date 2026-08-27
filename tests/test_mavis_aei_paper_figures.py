@@ -59,10 +59,12 @@ def test_aei_paper_figure2_uses_registered_b_path_and_learned_boundary(
     assert "U1_MATCHED_FIELD" in claim_ids
     assert "U1_INDEPENDENT_FIELD_SENSITIVITY" not in claim_ids
     assert "U2_SPARSE_RETENTION" in claim_ids
+    assert "U3_UNIFORM_ORACLE" in claim_ids
+    assert "U3_RECONSTRUCTION_ORACLE" in claim_ids
     assert "U4_LEARNED_SPECIFICITY_BOUNDARY" in claim_ids
 
 
-def test_aei_paper_figure3_preserves_all_central_observability_controls(
+def test_aei_paper_figure3_links_state_evolution_dynamic_value_and_attribution(
     tmp_path: Path,
 ) -> None:
     source = aei_paper_figures.build_figure_sources(ROOT, tmp_path)["figure3"]
@@ -70,11 +72,14 @@ def test_aei_paper_figure3_preserves_all_central_observability_controls(
     claim_ids = {row["source_claim_id"] for row in rows}
     assert {
         "O1_STATIC_SPEARMAN",
+        "O2_TEACHER_TURNOVER",
+        "O4_DYNAMIC_MINUS_STATIC",
         "O3_REAL_MINUS_POSITIONS",
         "O3_REAL_MINUS_RECONSTRUCTION",
         "O4_DYNAMIC_MINUS_SHUFFLED",
     } <= claim_ids
     assert any(row["status"] == "ADVERSE_CONTROL" for row in rows)
+    assert any("acquired-position/history" in row["series"].lower() for row in rows)
 
 
 def test_aei_paper_figure4_preserves_feedback_and_final_boundary(
@@ -109,6 +114,16 @@ def test_aei_paper_figures_export_vector_and_300_dpi_nonblank_raster(
         assert pixels.std() > 10.0
 
 
+def test_aei_paper_figure_outputs_use_progressive_stems(tmp_path: Path) -> None:
+    artifacts = aei_paper_figures.render_paper_figures(ROOT, tmp_path)
+    assert {key: value.pdf.name for key, value in artifacts.items()} == {
+        "figure1": "figure1_task_relevant_acquisition_framework.pdf",
+        "figure2": "figure2_information_characterization.pdf",
+        "figure3": "figure3_state_conditioned_value.pdf",
+        "figure4": "figure4_decision_calibration.pdf",
+    }
+
+
 def test_aei_paper_visible_figure_text_has_no_internal_stage_labels(
     tmp_path: Path,
 ) -> None:
@@ -119,6 +134,15 @@ def test_aei_paper_visible_figure_text_has_no_internal_stage_labels(
             encoding="utf-8"
         )
         assert not any(phrase in visible for phrase in forbidden)
+
+
+def test_aei_paper_generated_svgs_have_no_trailing_whitespace(
+    tmp_path: Path,
+) -> None:
+    artifacts = aei_paper_figures.render_paper_figures(ROOT, tmp_path)
+    for artifact in artifacts.values():
+        lines = artifact.svg.read_text(encoding="utf-8").splitlines()
+        assert all(line == line.rstrip() for line in lines)
 
 
 def test_aei_paper_figures_regenerate_deterministically(tmp_path: Path) -> None:

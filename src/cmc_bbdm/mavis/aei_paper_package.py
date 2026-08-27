@@ -21,17 +21,26 @@ _MAIN_FILES = (
 )
 
 _FIGURES = (
+    "figure1_task_relevant_acquisition_framework.pdf",
+    "figure2_information_characterization.pdf",
+    "figure3_state_conditioned_value.pdf",
+    "figure4_decision_calibration.pdf",
+)
+
+_TABLES = (
+    "table1_closest_work.tex",
+    "table2_case_protocol.tex",
+    "table3_progressive_evidence_chain.tex",
+)
+
+_LEGACY_FIGURES = (
     "figure1_information_hierarchy.pdf",
     "figure2_usefulness.pdf",
     "figure3_observability.pdf",
     "figure4_actionability.pdf",
 )
 
-_TABLES = (
-    "table1_closest_work.tex",
-    "table2_case_protocol.tex",
-    "table3_hierarchy_evidence.tex",
-)
+_LEGACY_TABLES = ("table3_hierarchy_evidence.tex",)
 
 _SUPPLEMENTARY_SOURCES = (
     (
@@ -129,6 +138,12 @@ def _copy(source: Path, destination: Path) -> None:
     shutil.copyfile(source, destination)
 
 
+def _reset_directory(path: Path) -> None:
+    if path.exists():
+        shutil.rmtree(path)
+    path.mkdir(parents=True)
+
+
 def _write_manifest(directory: Path, manifest: Path) -> None:
     rows = []
     for path in sorted(item for item in directory.iterdir() if item != manifest):
@@ -188,6 +203,10 @@ def _populate_working_package(root: Path, target: Path) -> tuple[Path, Path, Pat
 
 def materialize_paper_assets(root: Path) -> None:
     paper = root / _PAPER
+    for name in _LEGACY_FIGURES:
+        (paper / "figures" / name).unlink(missing_ok=True)
+    for name in _LEGACY_TABLES:
+        (paper / "tables" / name).unlink(missing_ok=True)
     for name in _FIGURES:
         _copy(root / _RESULTS / "figures" / name, paper / "figures" / name)
     for name in _TABLES:
@@ -211,8 +230,8 @@ def _flat_manuscript(source: Path) -> str:
             r"\input{table2_case_protocol.tex}",
         )
         .replace(
-            r"\input{tables/table3_hierarchy_evidence.tex}",
-            r"\input{table3_hierarchy_evidence.tex}",
+            r"\input{tables/table3_progressive_evidence_chain.tex}",
+            r"\input{table3_progressive_evidence_chain.tex}",
         )
     )
 
@@ -230,10 +249,11 @@ def _write_deterministic_zip(source: Path, archive: Path) -> None:
 
 def build_paper_package(root: Path, output_root: Path) -> PaperPackage:
     working = output_root / "working"
+    _reset_directory(working)
     figures, tables, supplementary_data = _populate_working_package(root, working)
 
     submission = output_root / "submission_source"
-    submission.mkdir(parents=True, exist_ok=True)
+    _reset_directory(submission)
     paper = root / _PAPER
     (submission / "main.tex").write_text(
         _flat_manuscript(paper / "main.tex"), encoding="utf-8", newline="\n"

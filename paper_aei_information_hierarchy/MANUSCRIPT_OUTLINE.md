@@ -9,19 +9,16 @@
    equal task value.
 2. Place the work after full C-scan-to-CAI prediction, sparse/adaptive
    ultrasound, task-driven sensing, and value-of-information research.
-3. Identify the unresolved distinction: useful information may not be
-   observable from the legal current state, and observable value may not be
-   actionable under a cost constraint.
-4. Introduce the three-layer Task-Relevant Information Hierarchy and state the
-   three research questions.
+3. Identify the positive gap between characterizing structured task-relevant
+   information and realizing it as an evidence-calibrated sensing decision.
+4. State RQ-A on information characterization and RQ-B on decision realization.
 5. Summarize the 276-specimen, six-domain, strict nested LODO evidence chain.
-6. State three contributions: the hierarchy, a leakage-safe operationalization,
-   and an experimental separation of the three layers including adverse
-   controls and non-superiority.
+6. State three contributions: a two-stage acquisition framework, leakage-safe
+   state-conditioned valuation, and calibrated end-to-end decision evidence.
 
 ### Assigned evidence
 
-- Figure 1: conceptual hierarchy and information boundary.
+- Figure 1: two-part acquisition framework and information boundary.
 - Literature boundary: direct C-scan CAI prediction, adaptive ultrasound,
   ultrasonic value of information, and task-driven multi-channel imaging.
 - No result numbers beyond the minimum needed to preview the evidence chain.
@@ -52,11 +49,10 @@
 - Define a downstream predictor `f`, legal current information `I_t`, candidate
   measurement `X`, and predictor-conditioned value
   `U_f(X | I_t) = R_f(I_t) - R_f(I_t union X)`.
-- RQ1: what information is useful, and does the acquisition objective depend on
-  the downstream task?
-- RQ2: can future-measurement value be inferred from legal current information?
-- RQ3: can conditionally valued information improve a cost-constrained sensing
-  decision?
+- RQ-A: what spatial, sparse, objective-conditioned, and state-dependent
+  structure defines task-relevant information?
+- RQ-B: how far can that structure be realized through legal-state valuation,
+  matched controls, bounded planning, feedback, and frozen policy evaluation?
 
 ### Assigned evidence
 
@@ -66,37 +62,41 @@
 - Novelty statement: operational joint test under one causal acquisition
   contract, not a new generic taxonomy or first adaptive/VoI design.
 
-## 3. Task-Relevant Information Hierarchy and Operational Framework
+## 3. Task-Relevant Information Acquisition Framework
 
 ### 3.1 Framework overview
 
-- Define Useful, Observable, and Actionable as three nested tests rather than
-  assumed implications.
-- Explain Figure 1 and the teacher/deployable-policy boundary.
+- Define Part I, Information Characterization, and Part II,
+  Evidence-Calibrated Decision Realization.
+- Explain Figure 1, the causal state transition, and the retrospective-teacher
+  versus deployable-policy boundary.
 
-### 3.2 Downstream-predictor-conditioned task usefulness
+### 3.2 Characterizing task-relevant information
 
 - Compare risk with and without a measurement under a fixed predictor and
   validation protocol.
 - Explain why a location has no universal intrinsic mechanical value.
 
-### 3.3 Conditional observability
+### 3.3 Causal partial-state valuation
 
 - Define the score available from legal state information and compare it with
   strict-OOF retrospective teacher values.
 - Separate value evolution from the ability of a learned representation to
   track that evolution.
 
-### 3.4 Decision actionability
+### 3.4 Evidence calibration through matched controls
 
-- Define exact-cost sequential choice and budget-span-normalized AUEBC on the
-  actual/effective specimen-budget coordinate.
-- Separate valuation error, bounded set-planning error, and feedback effects.
+- Separate real measured content from acquired-position/history,
+  reconstruction, and shuffled-content signals.
+- Treat usefulness, task-value observability, and actionability as validation
+  criteria inside the two stages.
 
-### 3.5 Operationalization with causal partial-state measurement valuation
+### 3.5 Decision realization and deployment calibration
 
 - Present MAVIS only as the frozen operational testbed used to evaluate
-  state-conditioned valuation and actionability.
+  state-conditioned valuation and decision calibration.
+- Define exact-cost sequential choice and budget-span-normalized AUEBC on the
+  actual/effective specimen-budget coordinate.
 - Describe causal reveal, current-state construction, strict-OOF teachers,
   dynamic scoring, legal rollouts, and frozen policy evaluation at the level
   required to interpret the evidence.
@@ -157,117 +157,107 @@
 - Synchronized within-domain specimen bootstrap followed by equal-domain
   aggregation; computational state-action rows are not independent samples.
 
-### 4.6 Validation matrix for RQ1-RQ3
+### 4.6 Validation criteria and evidence chronology
 
 - Table 2: cohort, modalities, protocol, information boundary, cost, and
   inference.
-- Map each research question to its registered comparison and adverse controls.
+- Map RQ-A and RQ-B to registered comparisons and matched controls.
 - Distinguish pre-freeze evidence, the frozen outer endpoint, and post-freeze
   diagnostics; state that later diagnostics did not modify the endpoint.
 
 ## 5. Experimental Results and Discussion
 
-### 5.1 RQ1: Task usefulness of spatial and sparse ultrasonic information
+### 5.1 Part I --- From Spatial Morphology to State-Conditioned Task Value
 
-#### 5.1.1 Registered scalar-to-spatial information contrast
+#### 5.1.1 Spatial morphology enriches residual-capacity information
 
 - Claims U1_MATCHED_FIELD and U1_SURFACE_FIELD.
 
-#### 5.1.2 Sparse retention and oracle headroom
+#### 5.1.2 Sparse observations preserve most task-relevant information
 
-- Claims U2_SPARSE_RETENTION, U2_SPARSE_GAIN, U2_SPARSE_FULL_GAP,
-  U3_UNIFORM_ORACLE, U3_RECONSTRUCTION_ORACLE, and U3_HEADROOM_RETENTION.
+- Claims U2_SPARSE_RETENTION, U2_SPARSE_GAIN, and U2_SPARSE_FULL_GAP.
 
-#### 5.1.3 Mechanics versus reconstruction task specificity
+#### 5.1.3 Measurement utility is spatially heterogeneous
+
+- Claims U3_UNIFORM_ORACLE, U3_RECONSTRUCTION_ORACLE, and
+  U3_HEADROOM_RETENTION.
+
+#### 5.1.4 Downstream objectives induce distinct measurement priorities
 
 - Claims U4_ORACLE_CAI_SPECIFICITY, U4_ORACLE_IMAGE_SPECIFICITY, and
   U4_LEARNED_SPECIFICITY_BOUNDARY.
 
-#### 5.1.4 Predictor-conditioned task value
+#### 5.1.5 Measurement value evolves with inspection state
+
+- Claims O2_TEACHER_TURNOVER, O2_TEACHER_RANK, O2_TEACHER_TOPK, and
+  O2_TEACHER_OPPORTUNITY.
+
+#### 5.1.6 Predictor conditioning bounds the task-value definition
 
 - Claims U5_RIDGE_HUBER_SPEARMAN and U5_RIDGE_MLP_SPEARMAN, with best-action
   and top-k agreement in the supplement.
 - Report full-state OOF accuracy and state that the experiment does not resolve
   value-map variation among equally accurate structurally distinct predictors.
 
-#### Direct RQ1 answer
+#### Part-I synthesis
 
-Spatial and sparse ultrasonic information is useful for the CAI task, and the
-oracle-optimal acquisition objective changes with the downstream task; the
-exact value map remains predictor-conditioned.
+Spatial morphology, sparse retention, heterogeneous opportunity, objective
+specificity, state evolution, and predictor conditioning jointly characterize
+the task-relevant information target.
 
-### 5.2 RQ2: Conditional observability during partial inspection
+### 5.2 Part II --- From State-Conditioned Value to Evidence-Calibrated Decisions
 
-#### 5.2.1 Static observability
+#### 5.2.1 A static reference motivates state-conditioned valuation
 
 - Claims O1_STATIC_SPEARMAN and its exact-budget controls.
 
-#### 5.2.2 Conditional value evolution
+#### 5.2.2 Dynamic valuation captures incremental state dependence
 
-- Claims O2_TEACHER_TURNOVER, O2_TEACHER_RANK, O2_TEACHER_TOPK, and
-  O2_TEACHER_OPPORTUNITY.
+- Claim O4_DYNAMIC_MINUS_STATIC.
 
-#### 5.2.3 Real-content, position, and reconstruction controls
+#### 5.2.3 Control decomposition identifies the source of decision signal
 
 - Claims O3_REAL_CHANGE, O3_FULL_FIELD_RECOVERY,
-  O3_REAL_MINUS_POSITIONS, and O3_REAL_MINUS_RECONSTRUCTION.
+  O3_REAL_MINUS_POSITIONS, O3_REAL_MINUS_RECONSTRUCTION, and
+  O4_DYNAMIC_MINUS_SHUFFLED.
 
-#### 5.2.4 Narrow dynamic-valuation gain and shuffled adverse control
-
-- Claims O4_DYNAMIC_MINUS_STATIC and O4_DYNAMIC_MINUS_SHUFFLED.
-
-#### Direct RQ2 answer
-
-Conditional value evolves materially, but it is only partially observable:
-the frozen real-content representation does not establish value beyond matched
-geometry/reconstruction controls, and shuffled content remains an adverse
-control.
-
-### 5.3 RQ3: From valuation to cost-constrained sensing decisions
-
-#### 5.3.1 Valuation and planning attribution
+#### 5.2.4 Component attribution separates valuation and planning headroom
 
 - Claims A1_VALUATION_SUBSTITUTION, A1_LEARNED_PLANNING_SUBSTITUTION, and
   A1_TRUE_VALUE_PLANNING_SUBSTITUTION.
 
-#### 5.3.2 Set-level planning gap
+#### 5.2.5 Bounded set realization exposes decision-level headroom
 
 - Claims A2_GREEDY_PLANNING_REGRET and A2_BEAM4_PLANNING_REGRET.
 
-#### 5.3.3 Feedback stress test
+#### 5.2.6 End-to-end stress testing calibrates deployment readiness
 
-- Claim A3_FEEDBACK_BENEFIT.
+- Claims A3_FEEDBACK_BENEFIT and A4_BASELINE_MINUS_MAVIS.
 
-#### 5.3.4 Frozen held-out-domain acquisition boundary
+#### Part-II synthesis
 
-- Claim A4_BASELINE_MINUS_MAVIS.
+State conditioning improves over the static reference; matched controls bound
+source attribution; controlled substitutions expose valuation and planning
+headroom; frozen stress tests quantify the residual deployable gap.
 
-#### Direct RQ3 answer
+### 5.3 Integrated interpretation
 
-Not under the current frozen learned implementation: retrospective valuation
-and planning headroom exists, but feedback is adverse and the learned policy
-does not outperform the strongest deployable baseline.
-
-### 5.4 Integrated engineering-informatics interpretation
-
-- Synthesize, without implying success: Useful does not imply Observable, and
-  Observable does not imply Actionable.
+- Synthesize the progressive contract from information structure through legal
+  state attribution to frozen decision outcomes.
 - Explain why reconstruction fidelity is task-specific and why measurement
   value changes with both state and downstream predictor.
 - State the current deployment boundary and the need to validate each layer
   independently before increasing policy complexity.
 - State five transfer conditions and label the Pascoe/Rhead examples as
   literature-only motivation, not external validation.
-- Table 3 provides the complete main-text evidence ladder; Figures 2--4 provide
-  the three direct experimental answers.
+- Table 3 provides the complete progressive evidence chain; Figures 2--4 show
+  information characterization, state-conditioned value, and decision
+  calibration.
 
 ## 6. Conclusions
 
-1. Answer RQ1: useful spatial/sparse information exists and oracle acquisition
-   is task-specific.
-2. Answer RQ2: true conditional value evolves, but robust specimen-specific
-   observability is not established.
-3. Answer RQ3: retrospective headroom does not become a superior frozen learned
-   acquisition policy.
-4. Close on the Task-Relevant Information Hierarchy as an evidence discipline
-   for engineering sensing, not on MAVIS performance.
+1. Close Part I on structured task-relevant information and its boundaries.
+2. Close Part II on evidence-calibrated realization and the residual deployable
+   gap.
+3. State the engineering implication and limitations without presenting MAVIS
+   as performance-superior.

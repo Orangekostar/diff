@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="416.16pt" height="183.492pt" viewBox="0 0 416.16 183.492" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <title>figure1_task_relevant_acquisition_framework</title>
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:title>figure1_task_relevant_acquisition_framework</dc:title>
+    <dc:date>2026-08-27</dc:date>
+    <dc:description>Figure 1. Task-relevant information acquisition framework. Part I characterizes spatial, sparse, objective-conditioned, and state-conditioned task information. Part II tests its realization through legal-state valuation, matched source controls, bounded planning, and the frozen endpoint. Usefulness, task-value observability, and actionability are validation criteria.</dc:description>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>cmc_bbdm AEI paper evidence renderer</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 183.492
+L 416.16 183.492
+L 416.16 0
+L 0 0
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 19.2528 88.36416
+L 192.0096 88.36416
+L 192.0096 41.0184
+L 19.2528 41.0184
+z
+" clip-path="url(#p0ae1b00534)" style="fill: #ffffff; stroke: #e69f00; stroke-width: 2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 19.2528 51.16392
+L 192.0096 51.16392
+L 192.0096 41.0184
+L 19.2528 41.0184
+z
+" clip-path="url(#p0ae1b00534)" style="fill: #e69f00; stroke: #e69f00; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 224.1504 88.36416
+L 396.9072 88.36416
+L 396.9072 41.0184
+L 224.1504 41.0184
+z
+" clip-path="url(#p0ae1b00534)" style="fill: #ffffff; stroke: #009e73; stroke-width: 2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 224.1504 51.16392
+L 396.9072 51.16392
+L 396.9072 41.0184
+L 224.1504 41.0184
+z
+" clip-path="url(#p0ae1b00534)" style="fill: #009e73; stroke: #009e73; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 15.2352 132.32808
+L 123.7104 132.32808
+L 123.7104 108.6552
+L 15.2352 108.6552
+z
+" clip-path="url(#p0ae1b00534)" style="fill: #f7f7f7; stroke-dasharray: 4.07,1.76; stroke-dashoffset: 0; stroke: #e69f00; stroke-width: 1.1; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 147.816 132.32808
+L 256.2912 132.32808
+L 256.2912 108.6552
+L 147.816 108.6552
+z
+" clip-path="url(#p0ae1b00534)" style="fill: #f7f7f7; stroke-dasharray: 4.07,1.76; stroke-dashoffset: 0; stroke: #0072b2; stroke-width: 1.1; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 280.3968 132.32808
+L 388.872 132.32808
+L 388.872 108.6552
+L 280.3968 108.6552
+z
+" clip-path="url(#p0ae1b00534)" style="fill: #f7f7f7; stroke-dasharray: 4.07,1.76; stroke-dashoffset: 0; stroke: #009e73; stroke-width: 1.1; stroke-linejoin: miter"/>
+   </g>
+   <g id="line2d_1">
+    <path d="M 99.6048 153.46458
+L 400.9248 153.46458
+" clip-path="url(#p0ae1b00534)" style="fill: none; stroke: #666666; stroke-width: 0.8; stroke-linecap: square"/>
+   </g>
+   <g id="text_1">
+    <text style="font-weight: 700; font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #222222" x="15.2352" y="23.253037" transform="rotate(-0 15.2352 23.253037)">Task-relevant information acquisition</text>
+   </g>
+   <g id="text_2">
+    <text style="font-weight: 700; font-size: 7.2px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #ffffff" x="105.6312" y="47.961472" transform="rotate(-0 105.6312 47.961472)">PART I  INFORMATION CHARACTERIZATION</text>
+   </g>
+   <g id="text_3">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'; fill: #222222" transform="translate(33.225575 63.94141)">Spatial structure  |  sparse retention</text>
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'; fill: #222222" transform="translate(41.21245 74.83516)">objective and state conditioning</text>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 6.8px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #666666" x="105.6312" y="85.058072" transform="rotate(-0 105.6312 85.058072)">What information is valuable to acquire?</text>
+   </g>
+   <g id="text_5">
+    <text style="font-weight: 700; font-size: 7.2px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #ffffff" x="310.5288" y="47.961472" transform="rotate(-0 310.5288 47.961472)">PART II  EVIDENCE-CALIBRATED REALIZATION</text>
+   </g>
+   <g id="text_6">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'; fill: #222222" transform="translate(234.730675 63.94141)">Legal-state value  |  matched controls</text>
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'; fill: #222222" transform="translate(232.719425 74.83516)">bounded planning and frozen endpoint</text>
+   </g>
+   <g id="text_7">
+    <text style="font-size: 6.8px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #666666" x="310.5288" y="85.058072" transform="rotate(-0 310.5288 85.058072)">How far does value reach a sensing decision?</text>
+   </g>
+   <g id="patch_9">
+    <path d="M 198.025946 64.69128
+Q 209.084351 64.69128 218.577509 64.69128
+" style="fill: none; stroke: #666666; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 215.777509 63.29128
+L 218.577509 64.69128
+L 215.777509 66.09128
+z
+" style="fill: #666666; stroke: #666666; stroke-width: 1.4; stroke-linecap: round"/>
+   </g>
+   <g id="text_8">
+    <text style="font-size: 6.1px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #666666" x="208.88352" y="36.7911" transform="rotate(-0 208.88352 36.7911)">calibrated transition</text>
+   </g>
+   <g id="text_9">
+    <text style="font-weight: 700; font-size: 6.8px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #222222" x="69.4728" y="119.831635" transform="rotate(-0 69.4728 119.831635)">Retrospective value source</text>
+   </g>
+   <g id="text_10">
+    <text style="font-size: 5.3px; font-family: 'DejaVu Sans'; fill: #666666" transform="translate(19.435831 124.417033)">teacher / oracle with future outcomes</text>
+    <text style="font-size: 5.3px; font-family: 'DejaVu Sans'; fill: #666666" transform="translate(42.7608 130.455306)">or unmeasured field</text>
+   </g>
+   <g id="text_11">
+    <text style="font-weight: 700; font-size: 6.8px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #222222" x="202.0536" y="119.805072" transform="rotate(-0 202.0536 119.805072)">Legal deployable state</text>
+   </g>
+   <g id="text_12">
+    <text style="font-size: 5.3px; font-family: 'DejaVu Sans'; fill: #666666" transform="translate(150.024163 124.111869)">metadata + acquired positions/content</text>
+    <text style="font-size: 5.3px; font-family: 'DejaVu Sans'; fill: #666666" transform="translate(185.378061 130.302517)">+ exact cost</text>
+   </g>
+   <g id="text_13">
+    <text style="font-weight: 700; font-size: 6.8px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #222222" x="334.6344" y="119.805072" transform="rotate(-0 334.6344 119.805072)">Frozen policy / planner</text>
+   </g>
+   <g id="text_14">
+    <text style="font-size: 5.3px; font-family: 'DejaVu Sans'; fill: #666666" transform="translate(291.879548 124.625306)">selection within information and</text>
+    <text style="font-size: 5.3px; font-family: 'DejaVu Sans'; fill: #666666" transform="translate(309.670572 129.941869)">budget constraints</text>
+   </g>
+   <g id="text_15">
+    <text style="font-weight: 700; font-size: 7.4px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #222222" x="15.2352" y="156.00096" transform="rotate(-0 15.2352 156.00096)">Evidence boundary</text>
+   </g>
+   <g id="text_16">
+    <text style="font-weight: 700; font-size: 7.4px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #0072b2" x="208.08" y="168.930682" transform="rotate(-0 208.08 168.930682)">Validation criteria: usefulness  |  task-value observability  |  actionability</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p0ae1b00534">
+   <rect x="7.2" y="7.2" width="401.76" height="169.092"/>
+  </clipPath>
+ </defs>
+</svg>

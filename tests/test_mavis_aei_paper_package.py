@@ -17,15 +17,15 @@ def _hash(path: Path) -> str:
 def test_aei_paper_package_has_complete_working_tree(tmp_path: Path) -> None:
     package = aei_paper_package.build_paper_package(ROOT, tmp_path)
     assert sorted(path.name for path in package.figures.glob("*.pdf")) == [
-        "figure1_information_hierarchy.pdf",
-        "figure2_usefulness.pdf",
-        "figure3_observability.pdf",
-        "figure4_actionability.pdf",
+        "figure1_task_relevant_acquisition_framework.pdf",
+        "figure2_information_characterization.pdf",
+        "figure3_state_conditioned_value.pdf",
+        "figure4_decision_calibration.pdf",
     ]
     assert sorted(path.name for path in package.tables.glob("*.tex")) == [
         "table1_closest_work.tex",
         "table2_case_protocol.tex",
-        "table3_hierarchy_evidence.tex",
+        "table3_progressive_evidence_chain.tex",
     ]
     assert (package.root / "elsarticle.cls").is_file()
     assert (package.root / "elsarticle-num.bst").is_file()
@@ -60,7 +60,7 @@ def test_aei_submission_source_is_flat_and_rewrites_local_inputs(
     assert "\\graphicspath{{./}}" in manuscript
     assert "\\input{table1_closest_work.tex}" in manuscript
     assert "\\input{table2_case_protocol.tex}" in manuscript
-    assert "\\input{table3_hierarchy_evidence.tex}" in manuscript
+    assert "\\input{table3_progressive_evidence_chain.tex}" in manuscript
 
 
 def test_aei_submission_manifest_matches_every_listed_file(tmp_path: Path) -> None:
@@ -82,4 +82,6 @@ def test_aei_submission_zip_regenerates_deterministically(tmp_path: Path) -> Non
     assert _hash(first.archive) == _hash(second.archive)
     with zipfile.ZipFile(first.archive) as archive:
         assert archive.namelist() == sorted(archive.namelist())
-        assert all(info.date_time == (2026, 1, 1, 0, 0, 0) for info in archive.infolist())
+        assert all(
+            info.date_time == (2026, 1, 1, 0, 0, 0) for info in archive.infolist()
+        )

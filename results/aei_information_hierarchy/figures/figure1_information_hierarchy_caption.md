@@ -1,1 +1,0 @@
-**Figure 1. Task-relevant information hierarchy.** Useful information improves the engineering task, observable information can be inferred from legally available inspection state, and actionable information improves a bounded sensing decision. Retrospective teacher/oracle evidence is separated from the deployable state and policy; passing one question does not imply the next.

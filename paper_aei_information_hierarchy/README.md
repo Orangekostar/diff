@@ -1,19 +1,20 @@
-# AEI Information Hierarchy Paper Package
+# AEI Task-Relevant Information Acquisition Paper Package
 
 This directory contains the paper-only package for the first Advanced
 Engineering Informatics manuscript derived from the frozen evidence at base
-commit `c2eab6eac79dd3fbb9ecb0d19f98923e515e762b`.
+commit `9c2d0f1c97a96358c5e697f488373254a099d0fe`.
 
 Working title:
 
-> From Useful to Actionable Information: A Task-Relevant Information
-> Hierarchy for Ultrasonic Inspection of Impacted Composites
+> Task-Relevant Information Acquisition for Ultrasonic Inspection of Impacted
+> Composites: From Spatial Information Structure to Evidence-Calibrated Sensing
 
-The manuscript is a mechanism-and-boundary engineering-informatics paper. It
-does not claim a superior adaptive scanner or introduce new model training.
-Its fixed argument is that task usefulness, conditional observability, and
-decision actionability are distinct propositions that require separate
-validation.
+The manuscript follows a positive progressive argument. Part I characterizes
+structured task-relevant information; Part II tests its evidence-calibrated
+realization in sensing decisions. It introduces no new model training and does
+not claim a performance-superior adaptive scanner. Usefulness, task-value
+observability, and actionability remain validation criteria within the two
+parts.
 
 ## Authority
 
@@ -32,7 +33,7 @@ The paper has exactly six top-level sections:
 
 1. Introduction
 2. Related Research and Problem Formulation
-3. Task-Relevant Information Hierarchy and Operational Framework
+3. Task-Relevant Information Acquisition Framework
 4. Multi-Domain CFRP Case Study and Experimental Design
 5. Experimental Results and Discussion
 6. Conclusions

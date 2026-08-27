@@ -55,25 +55,41 @@ def test_aei_paper_table2_provenance_hashes_are_valid(tmp_path: Path) -> None:
         assert row["source_hash"] == hashlib.sha256(source.read_bytes()).hexdigest()
 
 
-def test_aei_paper_table3_has_fixed_hierarchy_columns_and_rows(tmp_path: Path) -> None:
+def test_aei_paper_table3_has_progressive_columns_and_stage_order(
+    tmp_path: Path,
+) -> None:
     table = aei_paper_tables.build_paper_tables(ROOT, tmp_path)["table3"]
     rows = _rows(table.csv)
     required = {
-        "layer",
-        "question",
-        "key_comparison",
+        "part",
+        "progressive_stage",
+        "scientific_question",
+        "key_evidence",
         "effect",
-        "ci95",
-        "domains",
-        "evidence_type",
-        "conclusion",
+        "ci95_domains",
+        "narrative_conclusion",
+        "control_boundary",
         "source_claim_ids",
+        "source_artifacts",
+        "source_hashes",
+        "canonical_authority_hash",
     }
-    assert required <= set(rows[0])
-    assert len(rows) == 13
-    assert [row["layer"] for row in rows].count("Useful") == 5
-    assert [row["layer"] for row in rows].count("Observable") == 4
-    assert [row["layer"] for row in rows].count("Actionable") == 4
+    assert set(rows[0]) == required
+    assert len(rows) == 12
+    assert [row["progressive_stage"] for row in rows] == [
+        "I1 Spatial enrichment",
+        "I2 Sparse recoverability",
+        "I3 Spatial heterogeneity",
+        "I4 Objective conditioning",
+        "I5 State conditioning",
+        "I6 Predictor conditioning",
+        "II1 Static reference",
+        "II2 Dynamic valuation",
+        "II3 Information-source attribution",
+        "II4 Valuation/planning decomposition",
+        "II5 Bounded set realization",
+        "II6 Deployment calibration",
+    ]
 
 
 def test_aei_paper_table3_preserves_required_claim_groups(tmp_path: Path) -> None:
@@ -83,34 +99,27 @@ def test_aei_paper_table3_preserves_required_claim_groups(tmp_path: Path) -> Non
         for row in _rows(table.csv)
         for claim in row["source_claim_ids"].split(";")
     }
-    assert {
-        "U1_MATCHED_FIELD",
-        "U2_SPARSE_RETENTION",
-        "U3_UNIFORM_ORACLE",
-        "U4_LEARNED_SPECIFICITY_BOUNDARY",
-        "U5_RIDGE_MLP_SPEARMAN",
-        "O1_STATIC_SPEARMAN",
-        "O2_TEACHER_TURNOVER",
-        "O3_REAL_MINUS_POSITIONS",
-        "O3_REAL_MINUS_RECONSTRUCTION",
-        "O4_DYNAMIC_MINUS_SHUFFLED",
-        "A1_VALUATION_SUBSTITUTION",
-        "A2_GREEDY_PLANNING_REGRET",
-        "A3_FEEDBACK_BENEFIT",
-        "A4_BASELINE_MINUS_MAVIS",
-    } <= claims
+    canonical = {
+        row["claim_id"]
+        for row in _rows(
+            ROOT / "artifacts/aei_information_hierarchy/PAPER_CANONICAL_METRICS.csv"
+        )
+    }
+    assert claims == canonical
 
 
-def test_aei_paper_table3_keeps_adverse_controls_in_main_table(tmp_path: Path) -> None:
+def test_aei_paper_table3_keeps_calibration_boundaries_in_main_table(
+    tmp_path: Path,
+) -> None:
     table = aei_paper_tables.build_paper_tables(ROOT, tmp_path)["table3"]
     text = "\n".join(
-        row["effect"] + " " + row["conclusion"] for row in _rows(table.csv)
+        row["effect"] + " " + row["control_boundary"] for row in _rows(table.csv)
     ).lower()
     assert "learned global masks" in text
-    assert "worse than positions" in text
+    assert "acquired-position/history" in text
     assert "shuffled" in text
-    assert "feedback is adverse" in text
-    assert "did not outperform" in text
+    assert "no-feedback reference" in text
+    assert "not performance-superior" in text
 
 
 def test_aei_paper_tables_are_booktabs_without_internal_stage_labels(
@@ -129,16 +138,15 @@ def test_aei_paper_tables_are_booktabs_without_internal_stage_labels(
         )
 
 
-def test_aei_paper_table3_latex_groups_repeated_layer_questions(
+def test_aei_paper_table3_latex_groups_two_progressive_parts(
     tmp_path: Path,
 ) -> None:
     latex = aei_paper_tables.build_paper_tables(ROOT, tmp_path)["table3"].tex.read_text(
         encoding="utf-8"
     )
-    assert latex.count("Does it improve the task?") == 1
-    assert latex.count("Is value observable from legal state?") == 1
-    assert latex.count("Does it improve a bounded decision?") == 1
-    assert latex.count("\\addlinespace") == 2
+    assert latex.count("Part I") >= 1
+    assert latex.count("Part II") >= 1
+    assert latex.count("\\addlinespace") == 1
 
 
 def test_aei_paper_table3_uses_readable_multipage_longtable(tmp_path: Path) -> None:
@@ -150,6 +158,13 @@ def test_aei_paper_table3_uses_readable_multipage_longtable(tmp_path: Path) -> N
     assert "\\endhead" in latex
     assert "Continued on next page" in latex
     assert "\\begin{table" not in latex
+    assert table_path_name(tmp_path) == "table3_progressive_evidence_chain.tex"
+
+
+def table_path_name(tmp_path: Path) -> str:
+    return aei_paper_tables.build_paper_tables(ROOT, tmp_path / "name")[
+        "table3"
+    ].tex.name
 
 
 def test_aei_paper_tables_regenerate_deterministically(tmp_path: Path) -> None:

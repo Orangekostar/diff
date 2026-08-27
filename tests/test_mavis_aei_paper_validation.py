@@ -30,7 +30,21 @@ def test_aei_supplement_preserves_main_boundary_results() -> None:
     manuscript = (ROOT / "paper_aei_information_hierarchy/main.tex").read_text(
         encoding="utf-8"
     )
-    assert "Real minus positions was 0.01740" in manuscript
-    assert "Dynamic real minus dynamic shuffled-content regret" in manuscript
-    assert "feedback benefit was $-1.496\\times10^{-5}$" in manuscript
-    assert "does not support superiority of the learned policy" in manuscript
+    assert "real minus acquired-position/history" in manuscript
+    assert "dynamic real minus shuffled" in manuscript
+    assert "no-feedback reference retained" in manuscript
+    assert "not performance-superior" in manuscript
+
+
+def test_adverse_numerical_directions_are_preserved() -> None:
+    rows = {
+        row.claim_id: row
+        for row in aei_paper_validation.aei_paper_evidence.build_canonical_metrics(ROOT)
+    }
+    assert rows["O3_REAL_MINUS_POSITIONS"].estimate > 0
+    assert rows["O3_REAL_MINUS_RECONSTRUCTION"].estimate > 0
+    assert rows["O4_DYNAMIC_MINUS_SHUFFLED"].estimate > 0
+    assert rows["A3_FEEDBACK_BENEFIT"].estimate < 0
+    final = rows["A4_BASELINE_MINUS_MAVIS"]
+    assert final.reference_value < final.candidate_value
+    assert final.estimate < 0

@@ -50,8 +50,7 @@ def test_aei_paper_auebc_states_budget_span_normalization() -> None:
 
 def test_aei_paper_every_canonical_claim_has_chronology_class() -> None:
     canonical = {
-        row["claim_id"]
-        for row in _rows(ARTIFACTS / "PAPER_CANONICAL_METRICS.csv")
+        row["claim_id"] for row in _rows(ARTIFACTS / "PAPER_CANONICAL_METRICS.csv")
     }
     chronology = _rows(ARTIFACTS / "PAPER_EVIDENCE_CHRONOLOGY.csv")
     assert len(chronology) == 39
@@ -81,7 +80,9 @@ def test_aei_paper_does_not_call_post_freeze_diagnostics_preregistered() -> None
 def test_aei_paper_chronology_statement_is_present() -> None:
     manuscript = _text(MAIN)
     assert "distinct chronological roles" in manuscript
-    assert "were not used to re-select or modify the frozen outer endpoint" in manuscript
+    assert (
+        "were not used to re-select or modify the frozen outer endpoint" in manuscript
+    )
 
 
 def test_aei_paper_closest_work_matrix_has_verified_sources() -> None:
@@ -118,8 +119,62 @@ def test_aei_paper_no_first_task_driven_design_claim() -> None:
 def test_aei_paper_novelty_is_operational_not_taxonomy_only() -> None:
     manuscript = re.sub(r"\s+", " ", _text(MAIN))
     assert "not a new generic definition of value of information" in manuscript
-    assert "three non-equivalent information claims" in manuscript
+    assert "Information Characterization" in manuscript
+    assert "Evidence-Calibrated Decision Realization" in manuscript
     assert "one causal acquisition contract" in manuscript
+
+
+def test_all_39_canonical_claims_have_one_primary_narrative_stage() -> None:
+    canonical = _rows(ARTIFACTS / "PAPER_CANONICAL_METRICS.csv")
+    narrative = _rows(ARTIFACTS / "PAPER_POSITIVE_NARRATIVE_MAP.csv")
+    required = {
+        "claim_id",
+        "canonical_layer",
+        "chronology_class",
+        "new_part",
+        "new_stage",
+        "narrative_role",
+        "main_or_supporting",
+        "positive_headline",
+        "required_boundary",
+        "source_artifact",
+        "figure_assignment",
+        "table_assignment",
+        "manuscript_assignment",
+    }
+    assert len(canonical) == len(narrative) == 39
+    assert set(narrative[0]) == required
+    assert [row["claim_id"] for row in narrative] == [
+        row["claim_id"] for row in canonical
+    ]
+    assert len({row["claim_id"] for row in narrative}) == 39
+    assert all(row["new_part"] in {"PART_I", "PART_II"} for row in narrative)
+    assert all(row["new_stage"] for row in narrative)
+
+
+def test_narrative_map_preserves_canonical_layer_chronology_and_source() -> None:
+    canonical = {
+        row["claim_id"]: row for row in _rows(ARTIFACTS / "PAPER_CANONICAL_METRICS.csv")
+    }
+    chronology = {
+        row["claim_id"]: row
+        for row in _rows(ARTIFACTS / "PAPER_EVIDENCE_CHRONOLOGY.csv")
+    }
+    for row in _rows(ARTIFACTS / "PAPER_POSITIVE_NARRATIVE_MAP.csv"):
+        claim = canonical[row["claim_id"]]
+        timing = chronology[row["claim_id"]]
+        assert row["canonical_layer"] == claim["layer"]
+        assert row["chronology_class"] == timing["chronology_class"]
+        assert row["source_artifact"] == claim["source_artifact"]
+
+
+def test_canonical_metrics_file_is_unchanged_by_narrative_refactor() -> None:
+    import hashlib
+
+    payload = (ARTIFACTS / "PAPER_CANONICAL_METRICS.csv").read_bytes()
+    assert hashlib.sha256(payload).hexdigest() == (
+        "f0d2615637a6470744f275a2ac6e1c5e7aff110ca7e31cb323793c29405be4e6"
+    )
 
 
 def test_aei_paper_predictor_conditioning_discloses_accuracy_boundary() -> None:
@@ -129,9 +184,14 @@ def test_aei_paper_predictor_conditioning_discloses_accuracy_boundary() -> None:
     assert all(value in manuscript for value in ("0.08964", "0.08618", "0.15067"))
 
 
-def test_aei_paper_does_not_claim_predictor_dependence_independent_of_model_quality() -> None:
+def test_aei_paper_does_not_claim_predictor_dependence_independent_of_model_quality() -> (
+    None
+):
     manuscript = re.sub(r"\s+", " ", _text(MAIN))
-    assert "does not determine how much value-map variation remains among equally accurate" in manuscript
+    assert (
+        "does not determine how much value-map variation remains among equally accurate"
+        in manuscript
+    )
     assert "predictor dependence independent of model quality" not in manuscript.lower()
 
 
@@ -156,13 +216,19 @@ def test_aei_paper_has_explicit_transfer_conditions() -> None:
 
 def test_aei_paper_transfer_conditions_do_not_claim_external_validation() -> None:
     manuscript = re.sub(r"\s+", " ", _text(MAIN)).lower()
-    assert "methodological conditions, not proof of universal empirical transfer" in manuscript
+    assert (
+        "methodological conditions, not proof of universal empirical transfer"
+        in manuscript
+    )
     assert "externally validates the hierarchy" not in manuscript
 
 
 def test_aei_paper_empirical_cross_domain_wording_is_bounded() -> None:
     manuscript = re.sub(r"\s+", " ", _text(MAIN))
-    assert "across the six held-out experimental domains in the present data program" in manuscript
+    assert (
+        "across the six held-out experimental domains in the present data program"
+        in manuscript
+    )
     assert "external empirical generalization" not in manuscript.lower()
 
 

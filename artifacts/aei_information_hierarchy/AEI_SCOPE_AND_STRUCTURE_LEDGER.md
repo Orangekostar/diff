@@ -20,11 +20,12 @@ Paper 1 is therefore framed as an engineering-information contribution:
 
 - knowledge object: task-relevant measurement value under partial evidence;
 - engineering task: CAI-oriented decision support after composite impact;
-- generalizable construct: separate usefulness, conditional observability, and
-  actionability rather than treating information as intrinsically valuable;
+- generalizable construct: progress from information characterization to
+  evidence-calibrated decision realization rather than treating information as
+  intrinsically valuable;
 - validation: 276 physical specimens, six held-out experimental domains,
   registered nested LODO comparisons, synchronized specimen bootstrap, matched
-  controls, and explicit adverse results;
+  controls, and explicit calibration boundaries;
 - boundary: no generic model novelty, external deployment, or scanner-time
   claim.
 
@@ -66,11 +67,13 @@ Paper 1 adopts exactly six top-level sections:
 
 1. Introduction
 2. Related Research and Problem Formulation
-3. Task-Relevant Information Hierarchy and Operational Framework
+3. Task-Relevant Information Acquisition Framework
 4. Multi-Domain CFRP Case Study and Experimental Design
 5. Experimental Results and Discussion
 6. Conclusions
 
 This gives the knowledge construct its own framework section, isolates protocol
-and case-study validity, and keeps all Useful-Observable-Actionable evidence in
-one integrated Results and Discussion section.
+and case-study validity, and keeps Information Characterization and
+Evidence-Calibrated Decision Realization in one integrated Results and
+Discussion section. Usefulness, task-value observability, and actionability are
+retained as validation criteria rather than separate primary narratives.

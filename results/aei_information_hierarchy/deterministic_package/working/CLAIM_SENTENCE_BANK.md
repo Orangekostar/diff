@@ -23,9 +23,11 @@ domain consistency, and deployability qualifier must be preserved.
 - Chronology: historical comparisons and the frozen outer endpoint predate the
   post-freeze diagnostics; later diagnostics reused hash-bound frozen states
   and outcomes and did not modify the endpoint.
-- Novelty: the contribution jointly tests three non-equivalent information
-  claims under one causal acquisition contract. Do not claim the first adaptive
-  ultrasonic inspection, ultrasound VoI, or task-driven design.
+- Novelty: the contribution connects Information Characterization and
+  Evidence-Calibrated Decision Realization under one causal acquisition
+  contract. Usefulness, task-value observability, and actionability remain
+  validation criteria. Do not claim the first adaptive ultrasonic inspection,
+  ultrasound VoI, or task-driven design.
 - Transfer: framework reuse requires a defined endpoint/loss, a legal partial
   state, a defensible marginal-value target, matched content/geometry/history
   controls, and an end-to-end cost-constrained metric distinct from local value
@@ -33,7 +35,7 @@ domain consistency, and deployability qualifier must be preserved.
 - External feasibility: the current route is `MANUSCRIPT_ONLY_PRIMARY` and the
   optional external micro-pilot is `EXTERNAL_MICRO_PILOT_NO_GO`.
 
-## Useful
+## Part I --- Information Characterization
 
 ### U1_MATCHED_FIELD
 
@@ -71,8 +73,8 @@ relative to the surface reference by 0.05361 (95% CI 0.00561--0.13544), improved
 five of six domains, and retained 89.9% of the registered full-field gain.
 
 Boundary sentence: Its MAE remained 0.00602 above the selected full-field
-reference (95% CI 0.00173--0.01083), with the sparse condition worse in all six
-domains.
+reference (95% CI 0.00173--0.01083), with the sparse condition above the
+full-field error in all six domains.
 
 Interpretation: Sparse measurements retain most, but not all, of the registered
 full-field gain under the normalized-raster protocol; no scanner-time reduction
@@ -100,13 +102,25 @@ normalized RGB reconstruction MSE by 5.503e-4 (95% CI 5.006e-4--6.063e-4).
 
 ### U4_LEARNED_SPECIFICITY_BOUNDARY
 
-Adverse-control sentence: Source-trained global mechanics and reconstruction
-masks did not reproduce the oracle task separation.
+Boundary sentence: Source-trained global mechanics and reconstruction masks
+produced a support indicator of 0; the learned global mechanics mask does not
+reproduce the oracle task separation.
 
 Interpretation: Oracle task specificity does not establish learned-policy task
 specificity or deployment value.
 
-### U5_RIDGE_HUBER_SPEARMAN / U5_RIDGE_MLP_SPEARMAN
+### O2_TEACHER_TURNOVER / O2_TEACHER_RANK / O2_TEACHER_TOPK / O2_TEACHER_OPPORTUNITY
+
+Registered sentence: Between the initial state and the 18.75% checkpoint, the
+strict-OOF retrospective teacher changed its best action for 70.4% of specimens;
+rank agreement with initial action values was 0.405, top-five overlap was 0.307,
+and descriptive opportunity was 0.00531.
+
+Interpretation: Conditional measurement value evolves materially with acquired
+evidence, although this does not show that a deployable scorer tracks that
+evolution.
+
+### U5_RIDGE_HUBER_SPEARMAN / U5_RIDGE_HUBER_BEST_ACTION / U5_RIDGE_HUBER_TOPK / U5_RIDGE_MLP_SPEARMAN / U5_RIDGE_MLP_BEST_ACTION / U5_RIDGE_MLP_TOPK
 
 Registered sentence: Strict-OOF action-value rankings agreed substantially
 between ridge and Huber predictors (Spearman rho 0.762; 95% CI 0.699--0.821) but
@@ -121,7 +135,7 @@ the substantially less accurate shallow MLP. Retain the predictor index $f$.
 The experiment does not determine variation among equally accurate but
 structurally distinct predictors.
 
-## Observable
+## Part II --- Evidence-Calibrated Decision Realization
 
 ### O1_STATIC_SPEARMAN
 
@@ -137,17 +151,6 @@ Interpretation: The registered static representation did not establish
 transferable specimen-specific task-value observability; this is not a claim
 of information-theoretic impossibility.
 
-### O2_TEACHER_TURNOVER / O2_TEACHER_RANK / O2_TEACHER_TOPK
-
-Registered sentence: Between the initial state and the 18.75% checkpoint, the
-strict-OOF retrospective teacher changed its best action for 70.4% of specimens;
-rank agreement with the initial action values was 0.405 and top-five overlap was
-0.307.
-
-Interpretation: True conditional measurement value evolves materially with
-acquired evidence, although this does not show that a deployable scorer tracks
-that evolution.
-
 ### O3_REAL_CHANGE / O3_FULL_FIELD_RECOVERY
 
 Supporting sentence: Real partial measurements changed the prediction relative
@@ -159,28 +162,33 @@ sensitivity estimator, not the registered matched B-family full-field path.
 
 ### O3_REAL_MINUS_POSITIONS / O3_REAL_MINUS_RECONSTRUCTION
 
-Adverse-control sentence: The real-content representation had MAE 0.0174 above
-the matched positions control (95% CI 0.00890--0.0258) and 0.0342 above the
-reconstruction control (95% CI 0.0245--0.0438); measured content was favorable
-in only one of six domains for each contrast.
+Boundary sentence: The real-content representation had MAE 0.0174 above the
+acquired-position/history control (95% CI 0.00890--0.0258) and 0.0342 above the
+registered normalized-RGB-MSE reconstruction control (95% CI
+0.0245--0.0438); measured content was favorable in only one of six domains for
+each contrast. The positions-only input inherits acquisition history and is not
+a pure geometry-only control.
 
-Interpretation: The registered representation does not establish
-specimen-specific value from measured content beyond acquisition geometry and
-reconstruction controls.
+Interpretation: Real measurements change prediction from the initial state,
+while the registered representation does not establish specimen-specific value
+from measured content beyond the matched controls.
 
-### O4_DYNAMIC_MINUS_STATIC / O4_DYNAMIC_MINUS_SHUFFLED
+### O4_DYNAMIC_MINUS_STATIC
 
 Registered sentence: At the registered endpoint, the conditional real-state
 scorer reduced regret relative to the static scorer by 0.00126 (95% CI
-0.000444--0.00212; five of six domains), but its regret exceeded the shuffled
-content control by 2.328e-4 (95% CI 6.060e-5--4.180e-4; favorable in one of six
-domains).
+0.000444--0.00212), favorable in five of six domains.
 
-Interpretation: Dynamic scoring has a narrow advantage over static scoring, but
-the shuffled adverse control prevents attribution of that advantage to
-specimen-specific accumulated ultrasonic content.
+### O4_DYNAMIC_MINUS_SHUFFLED
 
-## Actionable
+Boundary sentence: Dynamic real minus shuffled-content regret was 2.328e-4
+(95% CI 6.060e-5--4.180e-4), favorable for real content in one of six domains.
+
+Interpretation: Dynamic scoring captures incremental state dependence relative
+to the static reference; the shuffled control prevents attribution of that
+advantage to specimen-specific accumulated ultrasonic content.
+
+### Decision realization evidence
 
 ### A1_VALUATION_SUBSTITUTION / A1_LEARNED_PLANNING_SUBSTITUTION / A1_TRUE_VALUE_PLANNING_SUBSTITUTION
 
@@ -204,12 +212,13 @@ is non-deployable and does not establish arbitrary-horizon regret.
 
 ### A3_FEEDBACK_BENEFIT
 
-Adverse-control sentence: Under the frozen cross-domain policy, the feedback
-benefit was -1.496e-5 (95% CI -1.944e-5 to -1.064e-5), with improvement in two
-of six held-out domains.
+Boundary sentence: The no-feedback reference retained an AUEBC advantage of
+1.496e-5 (95% CI 1.064e-5--1.944e-5). Equivalently, feedback benefit was
+-1.496e-5 (95% CI -1.944e-5 to -1.064e-5), with feedback favorable in two of
+six held-out domains.
 
-Interpretation: Feedback is adverse under this frozen implementation; the
-experiment does not support a general claim that feedback is harmful.
+Interpretation: The frozen stress test retains the simpler no-feedback
+reference; the direction is not generalized to other implementations.
 
 ### A4_BASELINE_MINUS_MAVIS
 
@@ -218,15 +227,15 @@ with 0.124992 for the strongest deployable baseline; baseline minus learned
 policy was -6.114e-5 (95% CI -8.461e-5 to -3.777e-5), and the learned policy
 improved two of six held-out domains.
 
-Interpretation: The frozen learned acquisition policy did not outperform the
-strongest deployable baseline.
+Interpretation: A residual deployable gap of 6.114e-5 remains in favor of the
+reference; the learned endpoint is not performance-superior.
 
 ## Integrated claim
 
-Main synthesis: The experiments support task usefulness, only partial
-conditional observability, and no actionability advantage under the frozen
-learned implementation. Therefore useful information is not automatically
-observable, and partially observable value is not automatically actionable.
+Main synthesis: Part I characterizes structured task-relevant information from
+spatial morphology through state evolution. Part II tests its realization with
+static and dynamic valuation, matched information-source controls, component
+substitutions, bounded planning, feedback, and the frozen outer comparison.
 
 ## Prohibited manuscript wording
 

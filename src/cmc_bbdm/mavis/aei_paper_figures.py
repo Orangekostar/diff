@@ -1,4 +1,4 @@
-"""Deterministic, evidence-bound figures for the AEI information-hierarchy paper."""
+"""Deterministic figures for the AEI task-relevant acquisition paper."""
 
 from __future__ import annotations
 
@@ -42,7 +42,7 @@ _REFERENCE = "#666666"
 _UNCERTAINTY = "#A6A6A6"
 _TEXT = "#222222"
 _GRID = "#D9D9D9"
-_FIXED_TIME = datetime(2026, 8, 26, tzinfo=UTC)
+_FIXED_TIME = datetime(2026, 8, 27, tzinfo=UTC)
 
 
 @dataclass(frozen=True)
@@ -151,45 +151,45 @@ def _load_csv(root: Path, metric: PaperMetric) -> list[dict[str, str]]:
 
 
 def _figure1_rows(root: Path) -> list[dict[str, str]]:
-    source = "artifacts/aei_information_hierarchy/AEI_SCOPE_AND_STRUCTURE_LEDGER.md"
+    source = "artifacts/aei_information_hierarchy/PAPER_POSITIVE_NARRATIVE_MAP.csv"
     source_path = root / source
     source_hash = _sha256(source_path)
     definitions = (
         (
-            "hierarchy",
-            "Useful",
-            "Does an information source improve the engineering task?",
-            "H1_USEFUL",
+            "Part I",
+            "Information characterization",
+            "Spatial structure, sparse recoverability, objective and state conditioning",
+            "H1_INFORMATION_CHARACTERIZATION",
         ),
         (
-            "hierarchy",
-            "Observable",
-            "Can legal inspection state identify future measurement value?",
-            "H2_OBSERVABLE",
+            "Part I",
+            "Retrospective task value",
+            "Predictor-conditioned teacher and oracle evidence",
+            "H2_RETROSPECTIVE_VALUE",
         ),
         (
-            "hierarchy",
-            "Actionable",
-            "Can the estimate improve a cost-constrained sensing decision?",
-            "H3_ACTIONABLE",
+            "Part II",
+            "Evidence-calibrated realization",
+            "Legal-state valuation, source controls, planning, and frozen endpoint",
+            "H3_DECISION_REALIZATION",
         ),
         (
-            "evidence boundary",
-            "Retrospective teacher or oracle",
-            "Diagnostic evidence; unavailable to a deployable policy",
-            "H4_RETROSPECTIVE",
+            "Part II",
+            "Legal partial state",
+            "Metadata, acquired-position history, measured content, and exact cost",
+            "H4_LEGAL_STATE",
         ),
         (
-            "evidence boundary",
-            "Legal deployable state",
-            "Metadata, acquired positions, measured content, and exact cost",
-            "H5_LEGAL_STATE",
+            "validation criteria",
+            "Usefulness and task-value observability",
+            "Information enrichment and inference from legal state",
+            "H5_VALIDATION_CRITERIA",
         ),
         (
-            "evidence boundary",
-            "Policy and planner",
-            "Selection under the frozen information and cost boundary",
-            "H6_POLICY",
+            "validation criteria",
+            "Actionability and deployment calibration",
+            "Bounded decision consequence under the frozen protocol",
+            "H6_DEPLOYMENT_CALIBRATION",
         ),
     )
     return [
@@ -214,6 +214,9 @@ def _figure2_rows(metrics: dict[str, PaperMetric]) -> list[dict[str, str]]:
     retention = metrics["U2_SPARSE_RETENTION"]
     sparse_gain = metrics["U2_SPARSE_GAIN"]
     sparse_gap = metrics["U2_SPARSE_FULL_GAP"]
+    uniform = metrics["U3_UNIFORM_ORACLE"]
+    reconstruction_oracle = metrics["U3_RECONSTRUCTION_ORACLE"]
+    headroom = metrics["U3_HEADROOM_RETENTION"]
     oracle_cai = metrics["U4_ORACLE_CAI_SPECIFICITY"]
     oracle_image = metrics["U4_ORACLE_IMAGE_SPECIFICITY"]
     learned = metrics["U4_LEARNED_SPECIFICITY_BOUNDARY"]
@@ -257,23 +260,30 @@ def _figure2_rows(metrics: dict[str, PaperMetric]) -> list[dict[str, str]]:
         _effect_row(retention, panel="b", series="Registered gain retained"),
         _effect_row(sparse_gain, panel="b", series="Surface-to-sparse reduction"),
         _effect_row(sparse_gap, panel="b", series="Sparse-to-full gap"),
-        _effect_row(oracle_cai, panel="c", series="CAI-specific oracle contrast"),
-        _effect_row(oracle_image, panel="c", series="Image-specific oracle contrast"),
-        _effect_row(learned, panel="c", series="Learned global-mask separation"),
+        _effect_row(uniform, panel="c", series="Mechanical vs uniform"),
+        _effect_row(
+            reconstruction_oracle,
+            panel="c",
+            series="Mechanical vs reconstruction",
+        ),
+        _effect_row(headroom, panel="c", series="Sequential headroom retained"),
+        _effect_row(oracle_cai, panel="d", series="CAI-specific oracle contrast"),
+        _effect_row(oracle_image, panel="d", series="Image-specific oracle contrast"),
+        _effect_row(learned, panel="d", series="Learned global-mask separation"),
     ]
 
 
 def _figure3_rows(root: Path, metrics: dict[str, PaperMetric]) -> list[dict[str, str]]:
     rows = [
         _effect_row(
-            metrics["O1_STATIC_SPEARMAN"], panel="a", series="Static value rank"
+            metrics["O1_STATIC_SPEARMAN"], panel="b", series="Static value rank"
         ),
-        _effect_row(metrics["O1_STATIC_SET_REGRET"], panel="a", series="Static scorer"),
+        _effect_row(metrics["O1_STATIC_SET_REGRET"], panel="b", series="Static scorer"),
         _effect_row(
-            metrics["O1_GLOBAL_SET_REGRET"], panel="a", series="Global reference"
+            metrics["O1_GLOBAL_SET_REGRET"], panel="b", series="Global reference"
         ),
         _effect_row(
-            metrics["O1_RANDOM_SET_REGRET"], panel="a", series="Random reference"
+            metrics["O1_RANDOM_SET_REGRET"], panel="b", series="Random reference"
         ),
     ]
     teacher_metric = metrics["O2_TEACHER_TURNOVER"]
@@ -289,7 +299,7 @@ def _figure3_rows(root: Path, metrics: dict[str, PaperMetric]) -> list[dict[str,
             rows.append(
                 _derived_row(
                     claim,
-                    panel="b",
+                    panel="a",
                     series=f"{key}@{format(cost, '.6g')}",
                     value=float(checkpoint[key]),
                     metric_name=key,
@@ -322,7 +332,7 @@ def _figure3_rows(root: Path, metrics: dict[str, PaperMetric]) -> list[dict[str,
             _derived_row(
                 positions,
                 panel="c",
-                series="Matched positions",
+                series="Acquired-position/history control",
                 value=float(endpoint["control_equal_domain_mae"]),
                 metric_name="endpoint_equal_domain_cai_mae",
             ),
@@ -333,13 +343,17 @@ def _figure3_rows(root: Path, metrics: dict[str, PaperMetric]) -> list[dict[str,
                 value=float(endpoint_reconstruction["control_equal_domain_mae"]),
                 metric_name="endpoint_equal_domain_cai_mae",
             ),
-            _effect_row(positions, panel="c", series="Measured minus positions"),
+            _effect_row(
+                positions,
+                panel="c",
+                series="Measured minus acquired-position/history",
+            ),
             _effect_row(
                 reconstruction, panel="c", series="Measured minus reconstruction"
             ),
             _effect_row(
                 metrics["O4_DYNAMIC_MINUS_STATIC"],
-                panel="c",
+                panel="b",
                 series="Conditional minus static regret",
             ),
             _effect_row(
@@ -397,13 +411,11 @@ def _figure4_rows(root: Path, metrics: dict[str, PaperMetric]) -> list[dict[str,
         )
     rows.extend(
         (
-            _effect_row(
-                metrics["A3_FEEDBACK_BENEFIT"], panel="c", series="Feedback benefit"
-            ),
+            _effect_row(metrics["A3_FEEDBACK_BENEFIT"], panel="c", series="Feedback"),
             _effect_row(
                 metrics["A4_BASELINE_MINUS_MAVIS"],
                 panel="c",
-                series="Baseline minus frozen policy",
+                series="Baseline - learned",
             ),
         )
     )
@@ -429,10 +441,10 @@ def build_figure_sources(root: Path, output_root: Path) -> dict[str, Path]:
         "figure4": _figure4_rows(root, canonical),
     }
     names = {
-        "figure1": "figure1_hierarchy.csv",
-        "figure2": "figure2_usefulness.csv",
-        "figure3": "figure3_observability.csv",
-        "figure4": "figure4_actionability.csv",
+        "figure1": "figure1_task_relevant_acquisition_framework.csv",
+        "figure2": "figure2_information_characterization.csv",
+        "figure3": "figure3_state_conditioned_value.csv",
+        "figure4": "figure4_decision_calibration.csv",
     }
     paths: dict[str, Path] = {}
     for figure_id, rows in rows_by_figure.items():
@@ -480,7 +492,7 @@ def _render_figure1(rows: list[dict[str, str]]) -> Figure:
     ax.text(
         0.02,
         0.95,
-        "Task-relevant information hierarchy",
+        "Task-relevant information acquisition",
         fontsize=10,
         fontweight="bold",
         color=_TEXT,
@@ -488,44 +500,37 @@ def _render_figure1(rows: list[dict[str, str]]) -> Figure:
     )
     stages = (
         (
-            0.02,
+            0.03,
             _USEFUL,
-            "USEFUL",
-            "Improves the\nengineering task",
-            "Retrospective evidence",
+            "PART I  INFORMATION CHARACTERIZATION",
+            "Spatial structure  |  sparse retention\nobjective and state conditioning",
+            "What information is valuable to acquire?",
         ),
         (
-            0.35,
-            _OBSERVABLE,
-            "OBSERVABLE",
-            "Identifiable from\nlegal inspection state",
-            "Conditional evidence",
-        ),
-        (
-            0.68,
+            0.54,
             _ACTIONABLE,
-            "ACTIONABLE",
-            "Improves a bounded\nsensing decision",
-            "Deployable endpoint",
+            "PART II  EVIDENCE-CALIBRATED REALIZATION",
+            "Legal-state value  |  matched controls\nbounded planning and frozen endpoint",
+            "How far does value reach a sensing decision?",
         ),
     )
     for x, color, heading, question, evidence in stages:
         ax.add_patch(
-            Rectangle((x, 0.52), 0.27, 0.28, facecolor="white", edgecolor=color, lw=2)
+            Rectangle((x, 0.52), 0.43, 0.28, facecolor="white", edgecolor=color, lw=2)
         )
-        ax.add_patch(Rectangle((x, 0.74), 0.27, 0.06, facecolor=color, edgecolor=color))
+        ax.add_patch(Rectangle((x, 0.74), 0.43, 0.06, facecolor=color, edgecolor=color))
         ax.text(
-            x + 0.135,
+            x + 0.215,
             0.77,
             heading,
             ha="center",
             va="center",
             color="white",
-            fontsize=8,
+            fontsize=7.2,
             fontweight="bold",
         )
         ax.text(
-            x + 0.135,
+            x + 0.215,
             0.645,
             question,
             ha="center",
@@ -535,7 +540,7 @@ def _render_figure1(rows: list[dict[str, str]]) -> Figure:
             linespacing=1.35,
         )
         ax.text(
-            x + 0.135,
+            x + 0.215,
             0.55,
             evidence,
             ha="center",
@@ -543,27 +548,26 @@ def _render_figure1(rows: list[dict[str, str]]) -> Figure:
             color=_REFERENCE,
             fontsize=6.8,
         )
-    for start in (0.29, 0.62):
-        ax.annotate(
-            "",
-            xy=(start + 0.055, 0.66),
-            xytext=(start, 0.66),
-            arrowprops={"arrowstyle": "-|>", "color": _REFERENCE, "lw": 1.4},
-        )
-        ax.text(
-            start + 0.0275,
-            0.825,
-            "must be tested",
-            ha="center",
-            fontsize=5.8,
-            color=_REFERENCE,
-        )
+    ax.annotate(
+        "",
+        xy=(0.535, 0.66),
+        xytext=(0.47, 0.66),
+        arrowprops={"arrowstyle": "-|>", "color": _REFERENCE, "lw": 1.4},
+    )
+    ax.text(
+        0.502,
+        0.825,
+        "calibrated transition",
+        ha="center",
+        fontsize=6.1,
+        color=_REFERENCE,
+    )
     lanes = (
         (
             0.02,
             0.26,
-            "Retrospective teacher\n/ oracle",
-            "future outcome and unmeasured\nfield available",
+            "Retrospective value source",
+            "teacher / oracle with future outcomes\nor unmeasured field",
             _USEFUL,
         ),
         (
@@ -595,7 +599,7 @@ def _render_figure1(rows: list[dict[str, str]]) -> Figure:
         )
         ax.text(
             x + 0.135,
-            y + 0.105,
+            y + 0.085,
             title,
             ha="center",
             va="center",
@@ -606,7 +610,7 @@ def _render_figure1(rows: list[dict[str, str]]) -> Figure:
         )
         ax.text(
             x + 0.135,
-            y + 0.038,
+            y + 0.040,
             detail,
             ha="center",
             va="center",
@@ -621,11 +625,11 @@ def _render_figure1(rows: list[dict[str, str]]) -> Figure:
     ax.text(
         0.5,
         0.055,
-        "Passing an earlier question does not imply observability or actionability.",
+        "Validation criteria: usefulness  |  task-value observability  |  actionability",
         ha="center",
         va="center",
         fontsize=7.4,
-        color=_ADVERSE,
+        color=_OBSERVABLE,
         fontweight="bold",
     )
     return fig
@@ -633,11 +637,12 @@ def _render_figure1(rows: list[dict[str, str]]) -> Figure:
 
 def _render_figure2(rows: list[dict[str, str]]) -> Figure:
     fig, axes = plt.subplots(
-        1,
-        3,
-        figsize=(7.2, 3.05),
-        gridspec_kw={"wspace": 0.40, "width_ratios": [1.0, 1.0, 1.12]},
+        2,
+        2,
+        figsize=(7.2, 4.7),
+        gridspec_kw={"wspace": 0.38, "hspace": 0.42},
     )
+    axes = axes.ravel()
     ax = axes[0]
     labels = ["Matched scalar", "Matched spatial field"]
     values = [_float(_find(rows, label), "value") for label in labels]
@@ -713,8 +718,41 @@ def _render_figure2(rows: list[dict[str, str]]) -> Figure:
     _clean_axis(ax, grid_axis="y")
 
     ax = axes[2]
+    oracle_labels = ["Mechanical vs uniform", "Mechanical vs reconstruction"]
+    for y, (label, marker) in enumerate(zip(oracle_labels, ("o", "s"), strict=True)):
+        row = _find(rows, label)
+        value = float(row["value"])
+        low = float(row["ci95_lower"])
+        high = float(row["ci95_upper"])
+        ax.errorbar(
+            value,
+            y,
+            xerr=[[value - low], [high - value]],
+            fmt=marker,
+            color=_USEFUL,
+            ecolor=_USEFUL,
+            capsize=3,
+            ms=5,
+        )
+    ax.axvline(0, color=_REFERENCE, lw=0.7)
+    ax.set_yticks([0, 1], ["vs uniform", "vs reconstruction"], fontsize=6.5)
+    ax.set_xlabel("Mechanical-oracle CAI-AUEBC improvement", fontsize=6.5)
+    retained = float(_find(rows, "Sequential headroom retained")["value"])
+    ax.text(
+        0.98,
+        0.08,
+        f"{retained * 100:.1f}% of sequential headroom retained",
+        transform=ax.transAxes,
+        ha="right",
+        fontsize=6.2,
+        color=_REFERENCE,
+    )
+    _panel_title(ax, "c", "Spatial heterogeneity")
+    _clean_axis(ax, grid_axis="x")
+
+    ax = axes[3]
     ax.axis("off")
-    _panel_title(ax, "c", "Task specificity")
+    _panel_title(ax, "d", "Objective conditioning")
     cai = _find(rows, "CAI-specific oracle contrast")
     image = _find(rows, "Image-specific oracle contrast")
     learned = _find(rows, "Learned global-mask separation")
@@ -785,7 +823,7 @@ def _render_figure2(rows: list[dict[str, str]]) -> Figure:
 
 def _render_figure3(rows: list[dict[str, str]]) -> Figure:
     fig, axes = plt.subplots(1, 3, figsize=(7.2, 3.05), gridspec_kw={"wspace": 0.48})
-    ax = axes[0]
+    ax = axes[1]
     regrets = [
         (label, float(_find(rows, label)["value"]))
         for label in ("Static scorer", "Global reference", "Random reference")
@@ -806,8 +844,12 @@ def _render_figure3(rows: list[dict[str, str]]) -> Figure:
     )
     ax.set_xlim(0, 0.09)
     ax.set_ylim(-0.5, 5.0)
-    ax.set_xlabel("Exact-budget set regret", fontsize=7)
-    _panel_title(ax, "a", "Static observability")
+    dynamic = _find(rows, "Conditional minus static regret")
+    ax.set_xlabel(
+        f"Exact-budget set regret\nDynamic - static: {float(dynamic['value']):.4f}",
+        fontsize=6.5,
+    )
+    _panel_title(ax, "b", "Static to dynamic")
     _clean_axis(ax, grid_axis="x")
 
     rank = _find(rows, "Static value rank")
@@ -832,8 +874,7 @@ def _render_figure3(rows: list[dict[str, str]]) -> Figure:
     inset.set_xlabel("Spearman correlation", fontsize=5.8, labelpad=1)
     inset.tick_params(labelsize=5.5, length=2)
     inset.spines[["top", "right"]].set_visible(False)
-
-    ax = axes[1]
+    ax = axes[0]
     metric_specs = (
         ("best_action_turnover", "Turnover", _OBSERVABLE, "s", "--"),
         ("rank_spearman", "Rank agreement", _REFERENCE, "o", "-"),
@@ -841,7 +882,7 @@ def _render_figure3(rows: list[dict[str, str]]) -> Figure:
     )
     for metric_name, label, color, marker, linestyle in metric_specs:
         selected = [
-            row for row in rows if row["panel"] == "b" and row["metric"] == metric_name
+            row for row in rows if row["panel"] == "a" and row["metric"] == metric_name
         ]
         x = np.asarray([float(row["series"].split("@")[1]) * 100 for row in selected])
         y = np.asarray([float(row["value"]) for row in selected])
@@ -859,7 +900,7 @@ def _render_figure3(rows: list[dict[str, str]]) -> Figure:
     ax.set_ylabel("Teacher-state diagnostic", fontsize=7)
     ax.set_ylim(0.25, 0.76)
     ax.legend(frameon=False, fontsize=5.8, loc="best", handlelength=2.3)
-    _panel_title(ax, "b", "Conditional value evolves")
+    _panel_title(ax, "a", "Value evolves with state")
     _clean_axis(ax, grid_axis="y")
 
     ax = axes[2]
@@ -867,7 +908,11 @@ def _render_figure3(rows: list[dict[str, str]]) -> Figure:
     ax.set_xticks([])
     ax.set_yticks([])
     _panel_title(ax, "c", "Content controls")
-    labels = ["Measured content", "Matched positions", "Reconstruction control"]
+    labels = [
+        "Measured content",
+        "Acquired-position/history control",
+        "Reconstruction control",
+    ]
     values = [float(_find(rows, label)["value"]) for label in labels]
     mae_ax = ax.inset_axes([0.02, 0.46, 0.96, 0.48])
     bars = mae_ax.bar(
@@ -880,15 +925,12 @@ def _render_figure3(rows: list[dict[str, str]]) -> Figure:
     )
     bars[1].set_hatch("//")
     bars[2].set_hatch("..")
-    mae_ax.set_xticks([0, 1, 2], ["Real", "Position", "Recon."], fontsize=5.8)
+    mae_ax.set_xticks([0, 1, 2], ["Real", "History", "Recon."], fontsize=5.8)
     mae_ax.set_ylim(0.08, 0.14)
     mae_ax.set_ylabel("Endpoint CAI MAE", fontsize=6)
     _clean_axis(mae_ax, grid_axis="y")
     inset = ax.inset_axes([0.12, 0.05, 0.84, 0.25])
-    controls = [
-        ("Conditional minus static regret", _OBSERVABLE, "s"),
-        ("Conditional minus shuffled regret", _ADVERSE, "x"),
-    ]
+    controls = [("Conditional minus shuffled regret", _ADVERSE, "x")]
     for y, (label, color, marker) in enumerate(controls):
         row = _find(rows, label)
         value = float(row["value"]) * 1000
@@ -905,7 +947,7 @@ def _render_figure3(rows: list[dict[str, str]]) -> Figure:
             ms=4,
         )
     inset.axvline(0, color=_REFERENCE, lw=0.7)
-    inset.set_yticks([0, 1], ["vs static", "vs shuffled"], fontsize=5.2)
+    inset.set_yticks([0], ["real - shuffled"], fontsize=5.2)
     inset.set_xlabel("Regret contrast (×10³)", fontsize=5.5)
     inset.tick_params(labelsize=5.2, length=1.5)
     inset.spines[["top", "right"]].set_visible(False)
@@ -1003,7 +1045,7 @@ def _render_figure4(rows: list[dict[str, str]]) -> Figure:
     )
 
     ax = axes[2]
-    labels = ["Feedback benefit", "Baseline minus frozen policy"]
+    labels = ["Feedback", "Baseline - learned"]
     _forest(
         ax, rows, labels, scale=10000, colors=[_ADVERSE, _ADVERSE], markers=["x", "D"]
     )
@@ -1013,7 +1055,7 @@ def _render_figure4(rows: list[dict[str, str]]) -> Figure:
     ax.text(
         0.02,
         -0.22,
-        "Positive favors feedback / frozen policy",
+        "Negative favors no-feedback / reference",
         transform=ax.transAxes,
         fontsize=5.5,
         color=_REFERENCE,
@@ -1023,46 +1065,43 @@ def _render_figure4(rows: list[dict[str, str]]) -> Figure:
 
 _CAPTIONS = {
     "figure1": (
-        "**Figure 1. Task-relevant information hierarchy.** Useful information improves "
-        "the engineering task, observable information can be inferred from legally "
-        "available inspection state, and actionable information improves a bounded "
-        "sensing decision. Retrospective teacher/oracle evidence is separated from the "
-        "deployable state and policy; passing one question does not imply the next.\n"
+        "**Figure 1. Task-relevant information acquisition framework.** Part I "
+        "characterizes spatial, sparse, objective-conditioned, and state-conditioned "
+        "task information. Part II tests its realization through legal-state valuation, "
+        "matched source controls, bounded planning, and the frozen endpoint. Usefulness, "
+        "task-value observability, and actionability are validation criteria.\n"
     ),
     "figure2": (
-        "**Figure 2. Usefulness evidence and boundaries.** (a) The registered matched "
+        "**Figure 2. Information characterization.** (a) The registered matched "
         "B-family spatial field reduces equal-domain CAI-ratio MAE relative to its "
         "scalar counterpart. (b) The selected sparse condition retains 89.9% of the "
-        "registered full-field gain but remains worse than the full field. (c) Oracle "
-        "acquisitions separate CAI and reconstruction objectives, whereas learned global "
-        "masks do not reproduce that separation. Oracle and sparse-design rows are "
-        "retrospective and do not establish scanner-time savings or deployability.\n"
+        "registered full-field gain while remaining distinct from the full field. "
+        "(c) Mechanical-oracle opportunity is spatially heterogeneous. (d) Retrospective "
+        "priorities depend on the downstream objective; learned global masks do not "
+        "reproduce the oracle separation. Oracle rows are non-deployable.\n"
     ),
     "figure3": (
-        "**Figure 3. Observability evidence and adverse controls.** (a) Strict-OOF static "
-        "value ranking is unsupported and its exact-budget regret is comparable with "
-        "global and random references. (b) Retrospective conditional values change with "
-        "acquisition state. (c) Measured-content prediction is worse than matched-position "
-        "and reconstruction controls; although conditional scoring narrowly improves on "
-        "the static scorer, shuffled content remains better. Intervals are synchronized "
-        "specimen-bootstrap intervals where shown.\n"
+        "**Figure 3. State-conditioned value and source attribution.** (a) Strict-OOF "
+        "teacher values evolve with acquisition state. (b) Dynamic valuation improves "
+        "one-step regret relative to the static reference. (c) Real content is calibrated "
+        "against acquired-position/history, reconstruction, and shuffled-content controls. "
+        "Intervals are synchronized specimen-bootstrap contrasts where shown.\n"
     ),
     "figure4": (
-        "**Figure 4. Actionability evidence and final boundary.** (a) Retrospective "
-        "component substitutions expose valuation and bounded planning gaps. (b) A "
-        "positive two-action reachable-pool planning gap remains; the near-oracle is "
-        "non-deployable. (c) Feedback is adverse and the frozen learned policy does not "
-        "outperform the strongest deployable baseline. Effects use specimen-first, "
-        "equal-domain aggregation and synchronized intervals where available.\n"
+        "**Figure 4. Decision realization and deployment calibration.** (a) Retrospective "
+        "substitutions expose valuation and bounded planning headroom. (b) Reachable-pool "
+        "analysis quantifies a set-realization gap while retaining the near-oracle as "
+        "non-deployable. (c) The no-feedback and strongest deployable references calibrate "
+        "the frozen learned endpoint as not performance-superior.\n"
     ),
 }
 
 
 _STEMS = {
-    "figure1": "figure1_information_hierarchy",
-    "figure2": "figure2_usefulness",
-    "figure3": "figure3_observability",
-    "figure4": "figure4_actionability",
+    "figure1": "figure1_task_relevant_acquisition_framework",
+    "figure2": "figure2_information_characterization",
+    "figure3": "figure3_state_conditioned_value",
+    "figure4": "figure4_decision_calibration",
 }
 
 
@@ -1074,10 +1113,10 @@ def _save_figure(fig: Figure, output_root: Path, figure_id: str) -> FigureArtifa
     source = (
         output_root
         / {
-            "figure1": "figure1_hierarchy.csv",
-            "figure2": "figure2_usefulness.csv",
-            "figure3": "figure3_observability.csv",
-            "figure4": "figure4_actionability.csv",
+            "figure1": "figure1_task_relevant_acquisition_framework.csv",
+            "figure2": "figure2_information_characterization.csv",
+            "figure3": "figure3_state_conditioned_value.csv",
+            "figure4": "figure4_decision_calibration.csv",
         }[figure_id]
     )
     caption = output_root / f"{stem}_caption.md"
@@ -1090,16 +1129,24 @@ def _save_figure(fig: Figure, output_root: Path, figure_id: str) -> FigureArtifa
             "Title": stem,
             "Creator": "cmc_bbdm AEI paper evidence renderer",
             "Description": _CAPTIONS[figure_id].replace("**", "").strip(),
-            "Date": "2026-08-26",
+            "Date": "2026-08-27",
         },
         **common,
+    )
+    svg.write_text(
+        "\n".join(
+            line.rstrip() for line in svg.read_text(encoding="utf-8").splitlines()
+        )
+        + "\n",
+        encoding="utf-8",
+        newline="\n",
     )
     fig.savefig(
         pdf,
         format="pdf",
         metadata={
             "Title": stem,
-            "Author": "AEI information-hierarchy paper package",
+            "Author": "AEI task-relevant acquisition paper package",
             "Subject": "Hash-bound paper evidence figure",
             "Keywords": "ultrasonic inspection, task-relevant information",
             "Creator": "cmc_bbdm AEI paper evidence renderer",
@@ -1176,7 +1223,7 @@ def render_paper_figures(root: Path, output_root: Path) -> dict[str, FigureArtif
         "pdf.fonttype": 42,
         "ps.fonttype": 42,
         "svg.fonttype": "none",
-        "svg.hashsalt": "aei-information-hierarchy-20260826",
+        "svg.hashsalt": "aei-task-relevant-acquisition-20260827",
     }
     with plt.rc_context(style):
         for figure_id, source in sources.items():

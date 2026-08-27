@@ -1,7 +1,7 @@
 # Supplementary Evidence Package
 
 This directory contains audit-heavy evidence for the manuscript. Central
-negative controls remain in the main text; these files provide the complete
+calibration controls remain in the main text; these files provide the complete
 checkpoint, domain, learner-pair, component-substitution, planning, feedback,
 provenance, and external-data records behind those conclusions.
 
