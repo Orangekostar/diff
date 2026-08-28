@@ -6,8 +6,8 @@
 - Branch: `aei-main-method-reframe`
 - User-referenced scientific base: `a21f84f583a3767f727aeace4c38ae7be3f880ee`
 - Operational task baseline: `b0aeba3f5c2eedda25e5b1c64cfd44d6ae0f4f2c`
-- Figure implementation commit: `PENDING_CONTENT_COMMIT`
-- Verified remote content commit: `PENDING_REMOTE_PUSH`
+- Figure implementation commit: `65c2987d2ceaca132cbffeed71aea6953bf6ccb0`
+- Verified remote content commit: `65c2987d2ceaca132cbffeed71aea6953bf6ccb0`
 
 ## 2. Figure plan summary
 
@@ -122,6 +122,7 @@ PYTHONPATH=src python -m pytest -q -p no:cacheprovider \
 - Commit command: `git commit -m "figures: strengthen AEI visual evidence and overlay support"`
 - Push command: `git push origin aei-main-method-reframe`
 - Remote branch: `refs/heads/aei-main-method-reframe`
-- Local content SHA: `PENDING_CONTENT_COMMIT`
-- Remote content SHA: `PENDING_REMOTE_PUSH`
-- Remote verification: `PENDING_REMOTE_PUSH`
+- Local content SHA: `65c2987d2ceaca132cbffeed71aea6953bf6ccb0`
+- Remote content SHA: `65c2987d2ceaca132cbffeed71aea6953bf6ccb0`
+- Remote verification: PASS; `git rev-parse HEAD` matched
+  `git ls-remote origin refs/heads/aei-main-method-reframe` after the content push.
