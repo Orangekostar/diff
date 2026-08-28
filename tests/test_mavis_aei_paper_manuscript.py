@@ -236,12 +236,14 @@ def test_aei_paper_results_use_required_three_plus_three_order() -> None:
         "\\subsection{State-Conditioned Task-Oriented Acquisition}", 1
     )
     part2 = remainder.split("\\subsection{Engineering Interpretation}", 1)[0]
-    assert re.findall(
-        r"^\\subsubsection\{([^}]+)\}", part1, flags=re.MULTILINE
-    ) == PART1_STAGES
-    assert re.findall(
-        r"^\\subsubsection\{([^}]+)\}", part2, flags=re.MULTILINE
-    ) == PART2_STAGES
+    assert (
+        re.findall(r"^\\subsubsection\{([^}]+)\}", part1, flags=re.MULTILINE)
+        == PART1_STAGES
+    )
+    assert (
+        re.findall(r"^\\subsubsection\{([^}]+)\}", part2, flags=re.MULTILINE)
+        == PART2_STAGES
+    )
 
 
 def test_part_ii_opens_with_dynamic_over_static_positive_result() -> None:
@@ -274,9 +276,7 @@ def test_main_claim_ids_follow_visibility_authority() -> None:
         if row["visibility"] in {"MAIN_HEADLINE", "MAIN_SUPPORT"}
     }
     supplement_only = {
-        row["claim_id"]
-        for row in visibility
-        if row["visibility"] == "SUPPLEMENT_ONLY"
+        row["claim_id"] for row in visibility if row["visibility"] == "SUPPLEMENT_ONLY"
     }
     assert mapped == required
     assert not mapped & supplement_only
@@ -314,9 +314,7 @@ def test_supplement_uses_s1_to_s6_and_covers_visibility_authority() -> None:
     ]
     visibility = _csv_rows(ARTIFACTS / "PAPER_CLAIM_VISIBILITY_MAP.csv")
     supplement_only = {
-        row["claim_id"]
-        for row in visibility
-        if row["visibility"] == "SUPPLEMENT_ONLY"
+        row["claim_id"] for row in visibility if row["visibility"] == "SUPPLEMENT_ONLY"
     }
     assert len(supplement_only) == 11
     assert all(claim_id in supplement for claim_id in supplement_only)
@@ -403,8 +401,7 @@ def test_aei_paper_citation_keys_are_defined() -> None:
 
 def test_aei_paper_claim_sentence_bank_references_only_canonical_claims() -> None:
     canonical = {
-        row["claim_id"]
-        for row in _csv_rows(ARTIFACTS / "PAPER_CANONICAL_METRICS.csv")
+        row["claim_id"] for row in _csv_rows(ARTIFACTS / "PAPER_CANONICAL_METRICS.csv")
     }
     referenced = set(
         re.findall(

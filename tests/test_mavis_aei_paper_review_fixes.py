@@ -166,9 +166,11 @@ def test_positive_narrative_map_uses_visibility_aware_writing_contract() -> None
         "MAIN_SYSTEM_DIAGNOSTIC": "MAIN_REQUIRED",
         "SUPPLEMENT_ONLY": "SUPPLEMENT_REQUIRED",
     }
-    assert {
-        row["narrative_visibility"] for row in narrative
-    } == {"MAIN_REQUIRED", "MAIN_OPTIONAL", "SUPPLEMENT_REQUIRED"}
+    assert {row["narrative_visibility"] for row in narrative} == {
+        "MAIN_REQUIRED",
+        "MAIN_OPTIONAL",
+        "SUPPLEMENT_REQUIRED",
+    }
     for row in narrative:
         assert row["narrative_visibility"] == expected[visibility[row["claim_id"]]]
 
@@ -202,17 +204,15 @@ def test_positive_narrative_map_matches_six_stage_visibility_authority() -> None
             else "PART_II"
         )
         assert actual["new_stage"] == expected["compressed_stage"]
-        assert actual["main_or_supporting"] == role_by_visibility[
-            expected["visibility"]
-        ]
+        assert (
+            actual["main_or_supporting"] == role_by_visibility[expected["visibility"]]
+        )
         assert actual["figure_assignment"] == expected["main_figure"]
         assert actual["table_assignment"] == expected["main_table"]
         assert actual["manuscript_assignment"] == expected["main_section"]
 
     markdown = _text(ARTIFACTS / "PAPER_POSITIVE_NARRATIVE_MAP.md")
-    for stage in {
-        row["compressed_stage"] for row in visibility
-    }:
+    for stage in {row["compressed_stage"] for row in visibility}:
         assert f"`{stage}`" in markdown
     for obsolete in (
         "I1 Spatial enrichment",

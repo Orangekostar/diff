@@ -79,7 +79,8 @@ Post-impact prediction, sparse ultrasound, adaptive inspection, and task-
 driven experimental design provide the foundations for this problem. Surface
 and image-resolved predictors support residual-capacity assessment
 \cite{hasebe2022internal,hasebe2025compression,bull2018image,mack2026cscan};
-sparse reconstruction and adaptive paths reduce digital measurement burden
+limited-data ultrasound segmentation and adaptive reconstruction or path
+selection address distinct data and measurement constraints
 \cite{nguyen2025sparse,ji2026adaptive,fuentes2020autonomous}; and value-of-
 information methods connect sensing choices to downstream utility
 \cite{blumberg2024experimental,memarzadeh2016value,cantero2020optimal}.
@@ -141,9 +142,10 @@ before the scan is complete.
 \subsection{Sparse and adaptive ultrasonic acquisition}
 \label{sec:related-adaptive}
 
-Sparse ultrasonic sampling can recover impact-delamination patterns from
-incomplete observations \cite{nguyen2025sparse}. Adaptive composite inspection
-has combined damage-guided sampling with masked reconstruction
+Learning-based ultrasonic damage segmentation has used augmentation and
+synthetic examples when available scan datasets are small
+\cite{nguyen2025sparse}. Separately, adaptive composite inspection has combined
+damage-guided sampling with masked reconstruction
 \cite{ji2026adaptive}, and robotic ultrasound has selected successive physical
 locations with Bayesian optimization over damage-probability or novelty fields
 \cite{fuentes2020autonomous}. These approaches establish sparse and sequential
@@ -331,10 +333,11 @@ statistical unit. Candidate actions, checkpoints, and seeds from one specimen
 are repeated computational records, not independent samples.
 
 Contrasts use synchronized within-domain specimen bootstrap resampling followed
-by equal-domain aggregation. The registered scalar-to-field family retains its
+by equal-domain aggregation, preserving the nested specimen/domain structure
+\cite{huang2018cluster}. The registered scalar-to-field family retains its
 familywise simultaneous interval, while other analyses retain their registered
 paired intervals. With six domains, direction counts accompany aggregate
-effects \cite{huang2018cluster}. Native-raster cost is exact digital coverage,
+effects. Native-raster cost is exact digital coverage,
 not travel time, coupling time, or industrial inspection cost.
 
 The evidence has distinct chronological roles. Historical comparisons and the

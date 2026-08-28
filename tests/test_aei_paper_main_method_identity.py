@@ -131,10 +131,7 @@ def test_claim_visibility_map_has_required_distribution_and_special_cases() -> N
     assert by_id["A3_FEEDBACK_BENEFIT"]["visibility"] == "SUPPLEMENT_ONLY"
     assert by_id["A3_FEEDBACK_BENEFIT"]["main_figure"] == "none"
     assert by_id["A3_FEEDBACK_BENEFIT"]["main_table"] == "none"
-    assert (
-        by_id["A4_BASELINE_MINUS_MAVIS"]["visibility"]
-        == "MAIN_SYSTEM_DIAGNOSTIC"
-    )
+    assert by_id["A4_BASELINE_MINUS_MAVIS"]["visibility"] == "MAIN_SYSTEM_DIAGNOSTIC"
     assert by_id["A4_BASELINE_MINUS_MAVIS"]["main_figure"] == "none"
     assert by_id["A4_BASELINE_MINUS_MAVIS"]["main_table"] == "none"
     assert by_id["A4_BASELINE_MINUS_MAVIS"]["main_section"] == "5.2.3"
@@ -142,8 +139,7 @@ def test_claim_visibility_map_has_required_distribution_and_special_cases() -> N
 
 def test_claim_visibility_map_preserves_evidence_identity() -> None:
     canonical = {
-        row["claim_id"]: row
-        for row in _rows(ARTIFACTS / "PAPER_CANONICAL_METRICS.csv")
+        row["claim_id"]: row for row in _rows(ARTIFACTS / "PAPER_CANONICAL_METRICS.csv")
     }
     chronology = {
         row["claim_id"]: row
