@@ -77,12 +77,18 @@ def test_aei_paper_does_not_call_post_freeze_diagnostics_preregistered() -> None
     assert "post-freeze diagnostics were registered confirmatory" not in text
 
 
-def test_aei_paper_chronology_statement_is_present() -> None:
+def test_aei_paper_chronology_is_removed_from_main_and_preserved_elsewhere() -> None:
     manuscript = _text(MAIN)
-    assert "distinct chronological roles" in manuscript
+    supplement = _text(PAPER / "supplementary/supplementary.tex")
+    authority = _text(ARTIFACTS / "PAPER_EVIDENCE_CHRONOLOGY.md")
+    assert "distinct chronological roles" not in manuscript
     assert (
-        "were not used to re-select or modify the frozen outer endpoint" in manuscript
+        "were not used to re-select or modify the frozen outer endpoint"
+        not in manuscript
     )
+    assert "chronology" in supplement.lower()
+    assert "not used to select or modify the frozen endpoint" in supplement
+    assert "not used to re-select or modify that endpoint" in authority
 
 
 def test_aei_paper_closest_work_ledger_has_primary_sources() -> None:
@@ -272,35 +278,65 @@ def test_aei_paper_keeps_predictor_index_f() -> None:
     assert "retain the predictor index $f$" in manuscript
 
 
-def test_aei_paper_has_explicit_transfer_conditions() -> None:
-    manuscript = re.sub(r"\s+", " ", _text(MAIN))
-    assert "Transfer conditions beyond the present case study" in manuscript
+def test_aei_paper_engineering_interpretation_has_compact_scope_paragraph() -> None:
+    manuscript = _text(MAIN)
+    interpretation = manuscript.split("\\subsection{Engineering Interpretation}", 1)[
+        1
+    ].split("\\section{Conclusions}", 1)[0]
+    paragraphs = [
+        re.sub(r"\s+", " ", block).strip()
+        for block in interpretation.split("\n\n")
+        if block.strip() and not block.lstrip().startswith("\\label")
+    ]
+    scope = paragraphs[-1]
+    assert 60 <= len(scope.split()) <= 100
     for phrase in (
-        "defined downstream engineering endpoint and loss",
-        "legal partial-observation state excluding future measurements and outcomes",
-        "retrospective or counterfactual target for marginal information value",
-        "matched controls separating measurement content from acquisition geometry and history",
-        "end-to-end cost-constrained decision metric distinct from local value prediction",
+        "exact native-raster acquisition cost",
+        "six CFRP experimental domains",
+        "downstream CAI predictor",
+        "registered action space",
+        "prospective validation",
+        "corresponding measurement process",
     ):
-        assert phrase in manuscript
+        assert phrase in scope
 
 
-def test_aei_paper_transfer_conditions_do_not_claim_external_validation() -> None:
+def test_aei_paper_removes_transfer_defense_language() -> None:
     manuscript = re.sub(r"\s+", " ", _text(MAIN)).lower()
-    assert (
-        "methodological conditions, not proof of universal empirical transfer"
-        in manuscript
-    )
+    for phrase in (
+        "transfer conditions beyond the present case study",
+        "not proof of universal empirical transfer",
+        "travel, coupling, settling",
+        "selected image regions do not identify causal failure mechanisms",
+        "these boundaries specify what must be revalidated",
+    ):
+        assert phrase not in manuscript
     assert "externally validates the hierarchy" not in manuscript
 
 
 def test_aei_paper_empirical_cross_domain_wording_is_bounded() -> None:
     manuscript = re.sub(r"\s+", " ", _text(MAIN))
+    assert "six CFRP experimental domains" in manuscript
     assert (
-        "across the six held-out experimental domains in the present data program"
+        "prospective validation under the corresponding measurement process"
         in manuscript
     )
     assert "external empirical generalization" not in manuscript.lower()
+
+
+def test_aei_supplement_preserves_audit_provenance_contract() -> None:
+    supplement = re.sub(r"\s+", " ", _text(PAPER / "supplementary/supplementary.tex"))
+    for phrase in (
+        "MAVIS",
+        "one implementation of State-Conditioned Task-Oriented Acquisition",
+        "A3\\_FEEDBACK\\_BENEFIT",
+        "A4\\_BASELINE\\_MINUS\\_MAVIS",
+        "Provenance, chronology, and scope boundaries",
+        "not used to select or modify the frozen endpoint",
+        "Physical path length, coupling, settling, hardware timing",
+        "registered CAI and normalized-RGB-MSE tasks",
+    ):
+        assert phrase in supplement
 
 
 def test_aei_paper_external_literature_is_not_called_external_replication() -> None:

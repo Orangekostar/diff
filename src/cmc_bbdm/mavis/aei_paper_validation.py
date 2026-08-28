@@ -243,7 +243,6 @@ def semantic_validation_errors(root: Path) -> list[str]:
         ),
         "auebc_normalization": r"\frac{1}{x_{i,K}-x_{i,1}}",
         "effective_budget": r"x_{i,1}<\cdots<x_{i,K}",
-        "chronology": "distinct chronological roles",
         "operational_novelty": "under one causal acquisition contract",
         "part_i": r"\subsection{Task-Relevant Information Characterization}",
         "part_ii": r"\subsection{State-Conditioned Task-Oriented Acquisition}",
@@ -251,8 +250,10 @@ def semantic_validation_errors(root: Path) -> list[str]:
         "reconstruction_control": "registered normalized-RGB-MSE reconstruction objective",
         "deployment_boundary": "this endpoint is an implementation boundary",
         "predictor_accuracy_boundary": "substantially less accurate shallow MLP",
-        "transfer_heading": "Transfer conditions beyond the present case study",
-        "bounded_domains": "across the six held-out experimental domains in the present data program",
+        "scope_cost": "exact native-raster acquisition cost",
+        "scope_domains": "six CFRP experimental domains",
+        "scope_conditioning": "downstream CAI predictor and the registered action space",
+        "scope_validation": "prospective validation under the corresponding measurement process",
         "figure4": "figure4_valuation_planning_realization.pdf",
         "table1": r"\input{tables/table1_case_protocol.tex}",
         "table2": r"\input{tables/table2_task_relevant_results.tex}",
@@ -348,9 +349,24 @@ def semantic_validation_errors(root: Path) -> list[str]:
         "figure4_decision_calibration.pdf",
         "table1_closest_work.tex",
         "table3_progressive_evidence_chain.tex",
+        "distinct chronological roles",
+        "were not used to re-select or modify the frozen outer endpoint",
+        "transfer conditions beyond the present case study",
+        "not proof of universal empirical transfer",
+        "travel, coupling, settling",
+        "selected image regions do not identify causal failure mechanisms",
+        "these boundaries specify what must be revalidated",
     )
     lower = visible.lower()
     errors.extend(f"forbidden:{phrase}" for phrase in forbidden if phrase in lower)
+    introduction = lower.split(r"\section{introduction}", maxsplit=1)[1].split(
+        r"\section{related work}", maxsplit=1
+    )[0]
+    errors.extend(
+        f"introduction_audit_residue:{phrase}"
+        for phrase in ("frozen", "post-freeze", "hash-bound")
+        if phrase in introduction
+    )
     for phrase in ("mavis", "mvd_m1_o2"):
         if phrase in lower:
             errors.append(f"internal_identity:{phrase}")

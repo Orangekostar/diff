@@ -11,6 +11,7 @@ PAPER = ROOT / "paper_aei_information_hierarchy"
 ARTIFACTS = ROOT / "artifacts/aei_information_hierarchy"
 MAIN = PAPER / "main.tex"
 SUPPLEMENT = PAPER / "supplementary/supplementary.tex"
+CHINESE_DRAFT = PAPER / "MANUSCRIPT_CHINESE_DRAFT.md"
 
 SECTIONS = [
     "Introduction",
@@ -104,6 +105,29 @@ def test_aei_paper_frontmatter_uses_method_identity_title() -> None:
     assert "Author information withheld for review" in manuscript
 
 
+def test_aei_paper_chinese_draft_mirrors_main_identity_and_core_results() -> None:
+    draft = _text(CHINESE_DRAFT)
+    for phrase in (
+        "本文件仅供中英文对照修改，不属于 AEI 投稿包",
+        "任务相关超声信息采集",
+        "任务相关信息表征",
+        "状态条件化任务导向采集",
+        "276 个试样",
+        "六个实验域",
+        "32.1%",
+        "89.9%",
+        "70.4%",
+        "0.125053",
+        "0.124992",
+        "-6.114\\times10^{-5}",
+        "该方向有利于静态参考",
+        "精确原生栅格采集成本",
+        "前瞻性验证",
+    ):
+        assert phrase in draft
+    assert "MAVIS 是论文主方法" not in draft
+
+
 def test_aei_paper_abstract_has_positive_framework_evidence() -> None:
     abstract = _abstract(_text(MAIN))
     assert 150 <= len(abstract.split()) <= 250
@@ -155,10 +179,10 @@ def test_aei_paper_introduction_has_six_positive_paragraphs() -> None:
     forbidden = (
         "MAVIS",
         "residual deployable gap",
+        "frozen",
         "post-freeze",
         "hash-bound",
         "not performance-superior",
-        "frozen outer endpoint",
     )
     assert not any(phrase in introduction for phrase in forbidden)
 
