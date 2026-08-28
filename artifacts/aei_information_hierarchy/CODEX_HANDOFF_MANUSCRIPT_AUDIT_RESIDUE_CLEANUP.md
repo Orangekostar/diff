@@ -9,8 +9,8 @@ Handoff date: 2026-08-28 UTC
 | Repository | `git@github.com:Orangekostar/diff.git` |
 | Branch | `aei-main-method-reframe` |
 | Base SHA | `a21f84f583a3767f727aeace4c38ae7be3f880ee` |
-| Final local SHA | `PENDING_PAYLOAD_COMMIT` |
-| Final remote SHA | `PENDING_REMOTE_VERIFICATION` |
+| Final local SHA (verified manuscript payload) | `9d7effaf18ecb5aa62f84b8380d8fbf701b9ef6b` |
+| Final remote SHA (verified manuscript payload) | `9d7effaf18ecb5aa62f84b8380d8fbf701b9ef6b` |
 | Remote branch | `refs/heads/aei-main-method-reframe` |
 
 The exact verified manuscript payload SHA is filled after its first push. A
@@ -108,15 +108,16 @@ code changed in this manuscript-only cleanup.**
 | `results/aei_information_hierarchy/submission/AEI_PAPER1_SUPPLEMENTARY.pdf` | `167b4bb3be001c7750397b0f9fec6d68f617b7310f6665d13d72c26cd4db8a53` |
 | `results/aei_information_hierarchy/deterministic_package/AEI_PAPER_SUBMISSION_SOURCE.zip` | `8bd5e9c956037a2867e9fcbfe94db6be3d560e39fb21ae8946f1611591a2b900` |
 | `results/aei_information_hierarchy/deterministic_package/submission_source/SUBMISSION_MANIFEST.csv` | `5fa7602fcb072a4d58ce6a02bbc55c6ab291b7c953d57797ffea0113d90a60b8` |
-| `artifacts/aei_information_hierarchy/MANUSCRIPT_AUDIT_RESIDUE_CLEANUP_COMPLETION.md` | `PENDING_FINALIZATION` |
+| `artifacts/aei_information_hierarchy/MANUSCRIPT_AUDIT_RESIDUE_CLEANUP_COMPLETION.md` | `11305a4905dadee2923aaac479b3e8a7103deb4b590b08320470ebebe71fcb78` |
 
 ## GitHub Verification
 
 Push command: `git push origin aei-main-method-reframe`
 Remote branch: `refs/heads/aei-main-method-reframe`
-Local payload SHA: `PENDING_PAYLOAD_COMMIT`
-Remote payload SHA: `PENDING_REMOTE_VERIFICATION`
-Remote verification: `PENDING_FINAL_PUSH`
+Local payload SHA: `9d7effaf18ecb5aa62f84b8380d8fbf701b9ef6b`
+Remote payload SHA: `9d7effaf18ecb5aa62f84b8380d8fbf701b9ef6b`
+Remote verification: passed; eight required remote paths were readable, the
+main-text residue scan passed, and remote PDF/ZIP/canonical hashes matched.
 PR: not created; no merge to `main`; no force push.
 
 ## Remaining Factual Issues

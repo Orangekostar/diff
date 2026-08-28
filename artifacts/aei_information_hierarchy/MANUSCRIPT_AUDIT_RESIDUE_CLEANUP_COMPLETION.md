@@ -6,8 +6,10 @@ Repository: `git@github.com:Orangekostar/diff.git`
 Base branch: `aei-main-method-reframe`
 Base SHA: `a21f84f583a3767f727aeace4c38ae7be3f880ee`
 Working branch: `aei-main-method-reframe`
-Final local SHA: `PENDING_PAYLOAD_COMMIT`
-Final remote SHA: `PENDING_REMOTE_VERIFICATION`
+Final local SHA (verified manuscript payload):
+`9d7effaf18ecb5aa62f84b8380d8fbf701b9ef6b`
+Final remote SHA (verified manuscript payload):
+`9d7effaf18ecb5aa62f84b8380d8fbf701b9ef6b`
 
 ## Exact Main-Text Changes
 
