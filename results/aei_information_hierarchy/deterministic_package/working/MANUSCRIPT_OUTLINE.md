@@ -118,8 +118,10 @@ information.
 ## Main visual contract
 
 - Figure 1: framework identity and causal information flow.
-- Figure 2: three Part-I stages.
-- Figure 3: state-conditioned valuation and source controls.
+- Figure 2: three Part-I stages plus registered sparse specimen states.
+- Figure 3: state-conditioned valuation, priority evolution, and source controls.
 - Figure 4: A1/A2 valuation, planning, and set realization only.
+- Figure 5: paired task-specific priority overlays on one registered CFRP state.
 - Table 1: compact case and protocol contract.
 - Table 2: six-stage task-relevant result summary.
+- Supplementary Figure S1: deterministic six-domain state-priority gallery.

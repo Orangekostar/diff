@@ -25,6 +25,11 @@ _FIGURES = (
     "figure2_information_characterization.pdf",
     "figure3_state_conditioned_value.pdf",
     "figure4_valuation_planning_realization.pdf",
+    "figure5_task_specific_measurement_priorities.pdf",
+)
+
+_SUPPLEMENTARY_FIGURES = (
+    "supplementary_figure_s1_cross_domain_state_priority_gallery.pdf",
 )
 
 _TABLES = (
@@ -129,6 +134,7 @@ class PaperPackage:
     figures: Path
     tables: Path
     supplementary_data: Path
+    supplementary_figures: Path
     submission_source: Path
     manifest: Path
     archive: Path
@@ -185,12 +191,15 @@ def _write_supplementary_manifest(root: Path, data_dir: Path) -> None:
             )
 
 
-def _populate_working_package(root: Path, target: Path) -> tuple[Path, Path, Path]:
+def _populate_working_package(
+    root: Path, target: Path
+) -> tuple[Path, Path, Path, Path]:
     paper = root / _PAPER
     figures = target / "figures"
     tables = target / "tables"
     supplementary = target / "supplementary"
     data_dir = supplementary / "data"
+    supplementary_figures = supplementary / "figures"
 
     for name in _MAIN_FILES:
         _copy(paper / name, target / name)
@@ -200,10 +209,15 @@ def _populate_working_package(root: Path, target: Path) -> tuple[Path, Path, Pat
         _copy(root / _RESULTS / "tables" / name, tables / name)
     for name in ("README.md", "supplementary.tex"):
         _copy(paper / "supplementary" / name, supplementary / name)
+    for name in _SUPPLEMENTARY_FIGURES:
+        _copy(
+            root / _RESULTS / "supplementary_figures" / name,
+            supplementary_figures / name,
+        )
     for name, source in _SUPPLEMENTARY_SOURCES:
         _copy(root / source, data_dir / name)
     _write_supplementary_manifest(root, data_dir)
-    return figures, tables, data_dir
+    return figures, tables, data_dir, supplementary_figures
 
 
 def materialize_paper_assets(root: Path) -> None:
@@ -214,6 +228,11 @@ def materialize_paper_assets(root: Path) -> None:
         (paper / "tables" / name).unlink(missing_ok=True)
     for name in _FIGURES:
         _copy(root / _RESULTS / "figures" / name, paper / "figures" / name)
+    for name in _SUPPLEMENTARY_FIGURES:
+        _copy(
+            root / _RESULTS / "supplementary_figures" / name,
+            paper / "supplementary" / "figures" / name,
+        )
     for name in _TABLES:
         _copy(root / _RESULTS / "tables" / name, paper / "tables" / name)
     data_dir = paper / "supplementary" / "data"
@@ -251,7 +270,9 @@ def _write_deterministic_zip(source: Path, archive: Path) -> None:
 def build_paper_package(root: Path, output_root: Path) -> PaperPackage:
     working = output_root / "working"
     _reset_directory(working)
-    figures, tables, supplementary_data = _populate_working_package(root, working)
+    figures, tables, supplementary_data, supplementary_figures = (
+        _populate_working_package(root, working)
+    )
 
     submission = output_root / "submission_source"
     _reset_directory(submission)
@@ -283,6 +304,7 @@ def build_paper_package(root: Path, output_root: Path) -> PaperPackage:
         figures=figures,
         tables=tables,
         supplementary_data=supplementary_data,
+        supplementary_figures=supplementary_figures,
         submission_source=submission,
         manifest=manifest,
         archive=archive,

@@ -55,6 +55,7 @@ FIGURES = [
     "figure2_information_characterization.pdf",
     "figure3_state_conditioned_value.pdf",
     "figure4_valuation_planning_realization.pdf",
+    "figure5_task_specific_measurement_priorities.pdf",
 ]
 TABLES = [
     "tables/table1_case_protocol.tex",
@@ -89,6 +90,14 @@ def _abstract(manuscript: str) -> str:
 def test_aei_paper_has_exactly_six_top_level_sections() -> None:
     sections = re.findall(r"^\\section\{([^}]+)\}", _text(MAIN), flags=re.MULTILINE)
     assert sections == SECTIONS
+
+
+def test_aei_supplement_binds_cross_domain_priority_gallery() -> None:
+    supplement = _text(SUPPLEMENT)
+    assert (
+        "supplementary_figure_s1_cross_domain_state_priority_gallery.pdf" in supplement
+    )
+    assert "lexicographically first specimen" in " ".join(supplement.split())
 
 
 def test_aei_paper_outline_matches_compressed_section_contract() -> None:

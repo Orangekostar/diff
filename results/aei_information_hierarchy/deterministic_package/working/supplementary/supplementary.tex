@@ -4,8 +4,10 @@
 \usepackage{lmodern}
 \usepackage{booktabs}
 \usepackage{longtable}
+\usepackage{graphicx}
 \usepackage[margin=1in]{geometry}
 \usepackage{hyperref}
+\graphicspath{{figures/}}
 \setlength{\emergencystretch}{3em}
 
 \title{Supplementary Material: Task-Relevant Ultrasonic Information
@@ -112,6 +114,22 @@ reconstruction control uses the registered image objective on the same legal
 trajectory. The shuffled-content control preserves recipient positions and
 budget while sourcing values from separated donor content. These semantics are
 required when interpreting the adverse real-minus-control directions.
+
+Figure~\ref{fig:supp-priority-gallery} provides a result-independent qualitative
+check across all domains. Within each sorted domain, the lexicographically first
+specimen was selected without using an outcome, effect size, or direction.
+
+\begin{figure}[p]
+  \centering
+  \includegraphics[width=0.96\textwidth]{supplementary_figure_s1_cross_domain_state_priority_gallery.pdf}
+  \caption{Cross-domain state-conditioned priority gallery. Each row shows one
+  deterministically selected specimen from a different held-out domain. Left
+  and right panels show the registered 3.13\% initial and 18.75\% states for the
+  same trajectory. Overlays encode within-state strict-OOF teacher-value
+  percentiles on the legal 8-by-8 action grid; they do not encode comparable
+  absolute magnitudes across panels.}
+  \label{fig:supp-priority-gallery}
+\end{figure}
 
 \section{S5. Cost-constrained realization and implementation diagnostics}
 

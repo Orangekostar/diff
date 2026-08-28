@@ -255,6 +255,7 @@ def semantic_validation_errors(root: Path) -> list[str]:
         "scope_conditioning": "downstream CAI predictor and the registered action space",
         "scope_validation": "prospective validation under the corresponding measurement process",
         "figure4": "figure4_valuation_planning_realization.pdf",
+        "figure5": "figure5_task_specific_measurement_priorities.pdf",
         "table1": r"\input{tables/table1_case_protocol.tex}",
         "table2": r"\input{tables/table2_task_relevant_results.tex}",
     }
@@ -457,7 +458,7 @@ def validate_paper(root: Path) -> ValidationReport:
     passed = (
         main_mapped == main_visible
         and combined_mapped == canonical
-        and len(figures) == 4
+        and len(figures) == 5
         and len(tables) == 2
         and len(sections) == 6
         and not unmatched

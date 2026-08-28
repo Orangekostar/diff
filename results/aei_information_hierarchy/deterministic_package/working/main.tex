@@ -366,6 +366,22 @@ six domains, and retained 89.9\% of the full-field gain. Its MAE remained
 sparse condition higher in all six domains. Sparse native-raster observation
 thus retains most, but not all, of the registered spatial gain.
 
+Figure~\ref{fig:information-characterization} links these aggregate contrasts
+to the registered sparse measurement states and then follows the Part-I evidence
+from task conditioning to state and predictor conditioning.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{figure2_information_characterization.pdf}
+  \caption{Spatial task-relevant ultrasonic information and sparse retention.
+  (a) Matched scalar, full-field, and 25\% sparse CAI-ratio error. (b,c)
+  Hash-verified reconstructions of specimen c8-2 at the initial scout and 25\%
+  uniform states; teal marks measured native-raster positions. (d) Exact-cost
+  oracle opportunity. (e) Strict-OOF teacher-value evolution.
+  (f) Predictor-conditioned value-rank agreement.}
+  \label{fig:information-characterization}
+\end{figure}
+
 \subsubsection{Task-conditioned spatial measurement value}
 \label{sec:results-task-conditioned}
 
@@ -386,6 +402,9 @@ reconstruction oracle improved normalized RGB image MSE by
 $5.503\times10^{-4}$ (95\% CI
 $5.006\times10^{-4}$--$6.063\times10^{-4}$). Mechanics and image objectives
 therefore induce distinct retrospective priorities.
+
+Figure~\ref{fig:task-specific-priorities} shows these paired priorities on the
+same representative specimen, initial state, and legal action grid.
 
 \subsubsection{State- and predictor-conditioned measurement value}
 \label{sec:results-state-predictor}
@@ -408,17 +427,6 @@ MLP. We retain the predictor index $f$ because the experiment does not
 determine how much value-map variation remains among equally accurate but
 structurally distinct predictors.
 
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=\textwidth]{figure2_information_characterization.pdf}
-  \caption{Task-relevant information characterization. (a) Spatial internal
-  information improves CAI prediction and the registered sparse field retains
-  most of the gain. (b) Exact-cost oracle comparisons show heterogeneous and
-  task-conditioned spatial value. (c) Teacher priorities change as evidence
-  accumulates. (d) Rank agreement depends on the downstream predictor.}
-  \label{fig:information-characterization}
-\end{figure}
-
 \input{tables/table2_task_relevant_results.tex}
 
 \subsection{State-Conditioned Task-Oriented Acquisition}
@@ -438,6 +446,22 @@ The static pre-acquisition score had equal-domain Spearman correlation
 $-0.0196$ with strict-OOF action values (95\% CI $-0.0591$--0.0195), with the
 favorable direction in three domains. The interval includes zero; the result
 defines a tested reference rather than an impossibility claim.
+
+Figure~\ref{fig:state-conditioned-value} places the aggregate contrast beside
+the state-specific teacher maps and registered acquisition history.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{figure3_state_conditioned_value.pdf}
+  \caption{State-conditioned measurement value evolves with acquired evidence.
+  (a) Dynamic real-state valuation versus the static reference. (b,c)
+  Strict-OOF teacher-priority percentiles at the initial scout state and 18.75\%
+  for specimen c8-2. (d) Registered acquired-cell history, from the initial
+  white marker to the latest red marker. (e) Matched endpoint states.
+  (f) Information-source contrasts. White outlines mark the five highest-
+  priority cells; maps are state- and predictor-conditioned.}
+  \label{fig:state-conditioned-value}
+\end{figure}
 
 \subsubsection{Information-source and component decomposition}
 \label{sec:results-decomposition}
@@ -471,17 +495,6 @@ $1.411\times10^{-7}$--$6.250\times10^{-6}$), while true-value planning
 improved it by $1.117\times10^{-4}$ (95\% CI
 $9.898\times10^{-5}$--$1.248\times10^{-4}$). These retrospective substitutions
 separate valuation and planning effects without defining deployable modules.
-
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=\textwidth]{figure3_state_conditioned_value.pdf}
-  \caption{State-conditioned valuation and information-source controls. (a)
-  Dynamic valuation improves next-action regret over the static reference. (b)
-  Real partial state changes CAI prediction, while acquired-position/history
-  and reconstruction controls delimit measured-content attribution. (c) The
-  shuffled-content contrast preserves the same causal boundary.}
-  \label{fig:state-conditioned-value}
-\end{figure}
 
 \subsubsection{Cost-constrained set realization}
 \label{sec:results-realization}
@@ -531,6 +544,18 @@ analyses then separate value estimation from the planner that converts local
 scores into a budgeted measurement set. The framework therefore treats
 characterization, valuation, source attribution, and realization as connected
 engineering-informatics operations.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{figure5_task_specific_measurement_priorities.pdf}
+  \caption{Task-specific measurement priorities on a representative CFRP
+  specimen. (a) Hash-verified initial reconstruction of c8-2. (b,c)
+  Retrospective CAI-mechanical and normalized-RGB-reconstruction oracle
+  priority percentiles on the same 8-by-8 action grid. (d) Paired percentile
+  difference, with red favoring CAI priority and blue favoring reconstruction
+  priority. White outlines mark each task's five highest-priority cells.}
+  \label{fig:task-specific-priorities}
+\end{figure}
 
 The present study uses exact native-raster acquisition cost and six CFRP
 experimental domains. Measurement value is defined relative to the downstream

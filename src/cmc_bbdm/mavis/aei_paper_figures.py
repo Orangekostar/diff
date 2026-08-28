@@ -12,15 +12,33 @@ from pathlib import Path
 from typing import Any
 
 import matplotlib
-import matplotlib.pyplot as plt
 import numpy as np
+
+matplotlib.use("Agg", force=True)
+
+import matplotlib.pyplot as plt
 from matplotlib.axes import Axes
+from matplotlib.colors import TwoSlopeNorm
 from matplotlib.figure import Figure
 from matplotlib.patches import Rectangle
 
 from cmc_bbdm.mavis.aei_paper_evidence import PaperMetric, build_canonical_metrics
-
-matplotlib.use("Agg", force=True)
+from cmc_bbdm.mavis.aei_paper_visual_assets import (
+    INITIAL_CHECKPOINT,
+    LATER_CHECKPOINT,
+    REPRESENTATIVE_METHOD,
+    REPRESENTATIVE_SPECIMEN,
+    PriorityState,
+    ReconstructedState,
+    gallery_specimen_roster,
+    load_gallery_states,
+    load_priority_state,
+    load_reconstructed_state,
+    load_task_priority_maps,
+)
+from cmc_bbdm.mavis.nature_figure_alignment import (
+    require_matplotlib_panel_alignment,
+)
 
 _COLUMNS = (
     "panel",
@@ -34,14 +52,16 @@ _COLUMNS = (
     "source_artifact",
     "source_hash",
 )
-_USEFUL = "#E69F00"
-_OBSERVABLE = "#0072B2"
-_ACTIONABLE = "#009E73"
-_ADVERSE = "#D55E00"
-_REFERENCE = "#666666"
-_UNCERTAINTY = "#A6A6A6"
-_TEXT = "#222222"
-_GRID = "#D9D9D9"
+_USEFUL = "#0F4D92"
+_OBSERVABLE = "#2A8C82"
+_ACTIONABLE = "#658B3A"
+_ADVERSE = "#B64342"
+_REFERENCE = "#606060"
+_UNCERTAINTY = "#A8A8A8"
+_TEXT = "#272727"
+_GRID = "#DCDCDC"
+_PAPER_WHITE = "#FFFFFF"
+_FULL_WIDTH_IN = 180.0 / 25.4
 _FIXED_TIME = datetime(2026, 8, 27, tzinfo=UTC)
 
 
@@ -54,10 +74,20 @@ class FigureArtifact:
     png: Path
     source_csv: Path
     caption: Path
+    alignment_json: Path | None = None
+    alignment_svg: Path | None = None
 
     @property
     def outputs(self) -> tuple[Path, Path, Path]:
         return (self.svg, self.pdf, self.png)
+
+    @property
+    def qa_outputs(self) -> tuple[Path, ...]:
+        return tuple(
+            path
+            for path in (self.alignment_json, self.alignment_svg)
+            if path is not None
+        )
 
 
 def _sha256(path: Path) -> str:
@@ -128,6 +158,32 @@ def _derived_row(
     )
     row["metric"] = metric_name
     return row
+
+
+def _source_row(
+    root: Path,
+    *,
+    panel: str,
+    series: str,
+    metric: str,
+    source_artifact: str,
+    status: str = "REPRESENTATIVE_VISUAL",
+) -> dict[str, str]:
+    source = root / source_artifact
+    if not source.is_file():
+        raise ValueError(f"figure source is unavailable: {source_artifact}")
+    return {
+        "panel": panel,
+        "series": series,
+        "metric": metric,
+        "value": "",
+        "ci95_lower": "",
+        "ci95_upper": "",
+        "status": status,
+        "source_claim_id": "",
+        "source_artifact": source_artifact,
+        "source_hash": _sha256(source),
+    }
 
 
 def _load_json(root: Path, metric: PaperMetric) -> dict[str, Any]:
@@ -312,6 +368,24 @@ def _figure2_rows(root: Path, metrics: dict[str, PaperMetric]) -> list[dict[str,
             ),
         )
     )
+    rows.extend(
+        (
+            _source_row(
+                root,
+                panel="b",
+                series="c8-2 initial reconstruction",
+                metric="registered_state_reconstruction",
+                source_artifact=("results/mavis/p1_state_bank/state_manifest.parquet"),
+            ),
+            _source_row(
+                root,
+                panel="c",
+                series="c8-2 uniform 25 percent reconstruction",
+                metric="registered_state_reconstruction",
+                source_artifact=("results/mavis/p1_state_bank/state_manifest.parquet"),
+            ),
+        )
+    )
     return rows
 
 
@@ -379,6 +453,31 @@ def _figure3_rows(root: Path, metrics: dict[str, PaperMetric]) -> list[dict[str,
             ),
         )
     )
+    rows.extend(
+        (
+            _source_row(
+                root,
+                panel="b",
+                series="c8-2 initial teacher priority",
+                metric="strict_oof_teacher_value_map",
+                source_artifact="results/mavis/p3_dynamic_voi/action_scores.parquet",
+            ),
+            _source_row(
+                root,
+                panel="c",
+                series="c8-2 later teacher priority",
+                metric="strict_oof_teacher_value_map",
+                source_artifact="results/mavis/p3_dynamic_voi/action_scores.parquet",
+            ),
+            _source_row(
+                root,
+                panel="d",
+                series="c8-2 acquired-cell path",
+                metric="registered_acquisition_history",
+                source_artifact=("results/mavis/p1_state_bank/state_manifest.parquet"),
+            ),
+        )
+    )
     return rows
 
 
@@ -410,6 +509,35 @@ def _figure4_rows(metrics: dict[str, PaperMetric]) -> list[dict[str, str]]:
     ]
 
 
+def _figure5_rows(root: Path, metrics: dict[str, PaperMetric]) -> list[dict[str, str]]:
+    return [
+        _source_row(
+            root,
+            panel="a",
+            series="c8-2 initial reconstruction",
+            metric="registered_state_reconstruction",
+            source_artifact="results/mavis/p1_state_bank/state_manifest.parquet",
+        ),
+        _source_row(
+            root,
+            panel="b-d",
+            series="c8-2 paired task-priority maps",
+            metric="paired_oracle_priority_percentile",
+            source_artifact="results/mva/a2_oracle_value/oracle_values.parquet",
+        ),
+        _effect_row(
+            metrics["U4_ORACLE_CAI_SPECIFICITY"],
+            panel="b",
+            series="CAI-specific oracle contrast",
+        ),
+        _effect_row(
+            metrics["U4_ORACLE_IMAGE_SPECIFICITY"],
+            panel="c",
+            series="Image-specific oracle contrast",
+        ),
+    ]
+
+
 def _write_rows(path: Path, rows: Iterable[dict[str, str]]) -> None:
     with path.open("w", encoding="utf-8", newline="") as stream:
         writer = csv.DictWriter(stream, fieldnames=_COLUMNS, lineterminator="\n")
@@ -427,12 +555,14 @@ def build_figure_sources(root: Path, output_root: Path) -> dict[str, Path]:
         "figure2": _figure2_rows(root, canonical),
         "figure3": _figure3_rows(root, canonical),
         "figure4": _figure4_rows(canonical),
+        "figure5": _figure5_rows(root, canonical),
     }
     names = {
         "figure1": "figure1_task_relevant_acquisition_framework.csv",
         "figure2": "figure2_information_characterization.csv",
         "figure3": "figure3_state_conditioned_value.csv",
         "figure4": "figure4_valuation_planning_realization.csv",
+        "figure5": "figure5_task_specific_measurement_priorities.csv",
     }
     paths: dict[str, Path] = {}
     for figure_id, rows in rows_by_figure.items():
@@ -459,9 +589,21 @@ def _find(rows: list[dict[str, str]], series: str) -> dict[str, str]:
 
 
 def _panel_title(ax: Axes, letter: str, title: str) -> None:
-    ax.set_title(
-        f"({letter})  {title}", loc="left", fontsize=8.5, fontweight="bold", pad=7
+    from matplotlib.transforms import ScaledTranslation
+
+    offset = ScaledTranslation(-9.0 / 72.0, 4.0 / 72.0, ax.figure.dpi_scale_trans)
+    ax.text(
+        0,
+        1,
+        letter,
+        transform=ax.transAxes + offset,
+        fontsize=8.2,
+        fontweight="bold",
+        ha="left",
+        va="bottom",
+        color=_TEXT,
     )
+    ax.set_title(title, loc="left", x=0.04, fontsize=7.4, fontweight="bold", pad=6)
 
 
 def _clean_axis(ax: Axes, *, grid_axis: str | None = None) -> None:
@@ -471,9 +613,144 @@ def _clean_axis(ax: Axes, *, grid_axis: str | None = None) -> None:
     ax.tick_params(labelsize=7, colors=_TEXT, length=2.5)
 
 
+def _attach_alignment_contract(
+    fig: Figure,
+    axes: list[Axes],
+    panel_ids: list[str],
+    *,
+    row_groups: list[list[str]],
+    column_groups: list[list[str]] | None = None,
+) -> None:
+    if len(axes) != len(panel_ids) or len(axes) < 2:
+        raise ValueError("multi-panel alignment contract is invalid")
+    fig._aei_alignment_options = {  # type: ignore[attr-defined]
+        "axes": axes,
+        "panel_ids": panel_ids,
+        "row_groups": row_groups,
+        "column_groups": [] if column_groups is None else column_groups,
+    }
+
+
+def _style_image_axis(ax: Axes) -> None:
+    ax.set_xticks([])
+    ax.set_yticks([])
+    for spine in ax.spines.values():
+        spine.set_visible(False)
+
+
+def _measurement_overlay(state: ReconstructedState, color: str) -> np.ndarray:
+    rgba = np.zeros((*state.measurement_mask.shape, 4), dtype=np.float64)
+    rgba[state.measurement_mask] = matplotlib.colors.to_rgba(color, alpha=0.34)
+    return rgba
+
+
+def _draw_reconstruction(
+    ax: Axes,
+    state: ReconstructedState,
+    *,
+    show_measurements: bool,
+) -> None:
+    ax.imshow(state.image, interpolation="nearest", aspect="auto")
+    if show_measurements:
+        ax.imshow(
+            _measurement_overlay(state, _OBSERVABLE),
+            interpolation="nearest",
+            aspect="auto",
+        )
+    _style_image_axis(ax)
+
+
+def _draw_priority_overlay(
+    ax: Axes,
+    state: PriorityState | ReconstructedState,
+    percentiles: np.ndarray | None = None,
+    *,
+    alpha: float = 0.56,
+) -> Any:
+    reconstruction = state.reconstruction if isinstance(state, PriorityState) else state
+    values = state.percentiles if isinstance(state, PriorityState) else percentiles
+    if values is None or values.shape != (8, 8):
+        raise ValueError("priority overlay requires one 8x8 map")
+    ax.imshow(reconstruction.image, interpolation="nearest", aspect="auto")
+    image = ax.pcolormesh(
+        np.asarray(reconstruction.column_boundaries, dtype=np.float64),
+        np.asarray(reconstruction.row_boundaries, dtype=np.float64),
+        values,
+        cmap="cividis",
+        vmin=0.0,
+        vmax=1.0,
+        shading="flat",
+        alpha=alpha,
+        edgecolors=(1.0, 1.0, 1.0, 0.26),
+        linewidth=0.25,
+    )
+    ax.set_xlim(0, reconstruction.image.shape[1] - 1)
+    ax.set_ylim(reconstruction.image.shape[0] - 1, 0)
+    _style_image_axis(ax)
+    return image
+
+
+def _draw_acquisition_path(ax: Axes, state: ReconstructedState) -> None:
+    _draw_reconstruction(ax, state, show_measurements=False)
+    cells = state.acquired_cell_indices
+    if not cells:
+        raise ValueError("acquisition path is empty")
+    rows = np.asarray(state.row_boundaries, dtype=np.float64)
+    columns = np.asarray(state.column_boundaries, dtype=np.float64)
+    x = np.asarray([(columns[cell % 8] + columns[cell % 8 + 1]) / 2 for cell in cells])
+    y = np.asarray([(rows[cell // 8] + rows[cell // 8 + 1]) / 2 for cell in cells])
+    ax.plot(x, y, color=_PAPER_WHITE, lw=1.4, alpha=0.9, zorder=3)
+    ax.scatter(
+        x,
+        y,
+        c=np.arange(len(cells)),
+        cmap="viridis",
+        s=9,
+        linewidths=0.25,
+        edgecolors=_PAPER_WHITE,
+        zorder=4,
+    )
+    ax.scatter(
+        [x[0], x[-1]],
+        [y[0], y[-1]],
+        s=22,
+        marker="o",
+        c=[_PAPER_WHITE, _ADVERSE],
+        edgecolors=_TEXT,
+        linewidths=0.45,
+        zorder=5,
+    )
+
+
+def _outline_top_cells(
+    ax: Axes,
+    state: ReconstructedState,
+    values: np.ndarray,
+    *,
+    color: str = _PAPER_WHITE,
+    count: int = 5,
+) -> None:
+    rows = state.row_boundaries
+    columns = state.column_boundaries
+    for cell in np.argsort(values.ravel())[-count:]:
+        row = int(cell) // 8
+        column = int(cell) % 8
+        ax.add_patch(
+            Rectangle(
+                (columns[column], rows[row]),
+                columns[column + 1] - columns[column],
+                rows[row + 1] - rows[row],
+                fill=False,
+                edgecolor=color,
+                linewidth=0.9,
+                zorder=6,
+            )
+        )
+
+
 def _render_figure1(rows: list[dict[str, str]]) -> Figure:
     del rows
-    fig, ax = plt.subplots(figsize=(7.2, 3.05))
+    fig, ax = plt.subplots(figsize=(_FULL_WIDTH_IN, 3.05))
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
     ax.axis("off")
@@ -497,7 +774,7 @@ def _render_figure1(rows: list[dict[str, str]]) -> Figure:
         (
             0.54,
             _ACTIONABLE,
-            "PART II  STATE-CONDITIONED TASK-ORIENTED ACQUISITION",
+            "PART II  STATE-CONDITIONED ACQUISITION",
             "Legal-state value  |  matched controls\ncost-constrained set realization",
             "How is value converted into a measurement set?",
         ),
@@ -514,7 +791,7 @@ def _render_figure1(rows: list[dict[str, str]]) -> Figure:
             ha="center",
             va="center",
             color="white",
-            fontsize=4.9 if x > 0.5 else 7.2,
+            fontsize=6.0 if x > 0.5 else 6.6,
             fontweight="bold",
         )
         ax.text(
@@ -545,7 +822,7 @@ def _render_figure1(rows: list[dict[str, str]]) -> Figure:
     ax.text(
         0.502,
         0.825,
-        "calibrated transition",
+        "state-conditioned transition",
         ha="center",
         fontsize=6.1,
         color=_REFERENCE,
@@ -554,22 +831,22 @@ def _render_figure1(rows: list[dict[str, str]]) -> Figure:
         (
             0.02,
             0.26,
-            "Retrospective value source",
-            "teacher / oracle with future outcomes\nor unmeasured field",
+            "Task-value characterization",
+            "registered outcomes and counterfactual\nmeasurement comparisons",
             _USEFUL,
         ),
         (
             0.35,
             0.26,
-            "Legal deployable state",
+            "Legal partial state",
             "metadata + acquired positions/content\n+ exact cost",
             _OBSERVABLE,
         ),
         (
             0.68,
             0.26,
-            "Frozen policy / planner",
-            "selection within information and\nbudget constraints",
+            "Cost-aware acquisition rule",
+            "measurement-set selection within\nlegal state and exact cost",
             _ACTIONABLE,
         ),
     )
@@ -587,7 +864,7 @@ def _render_figure1(rows: list[dict[str, str]]) -> Figure:
         )
         ax.text(
             x + 0.135,
-            y + 0.085,
+            y + 0.100,
             title,
             ha="center",
             va="center",
@@ -598,7 +875,7 @@ def _render_figure1(rows: list[dict[str, str]]) -> Figure:
         )
         ax.text(
             x + 0.135,
-            y + 0.040,
+            y + 0.032,
             detail,
             ha="center",
             va="center",
@@ -607,19 +884,16 @@ def _render_figure1(rows: list[dict[str, str]]) -> Figure:
             linespacing=1.1,
         )
     ax.text(
-        0.02, 0.12, "Evidence boundary", fontsize=7.4, fontweight="bold", color=_TEXT
-    )
-    ax.plot([0.23, 0.98], [0.135, 0.135], color=_REFERENCE, lw=0.8)
-    ax.text(
         0.5,
-        0.055,
-        "Validation criteria: usefulness  |  task-value observability  |  actionability",
+        0.095,
+        "spatial information  ->  state-conditioned value  ->  cost-constrained sensing",
         ha="center",
         va="center",
         fontsize=7.4,
-        color=_OBSERVABLE,
+        color=_USEFUL,
         fontweight="bold",
     )
+    fig.subplots_adjust(left=0.01, right=0.99, bottom=0.04, top=0.98)
     return fig
 
 
@@ -668,7 +942,7 @@ def _render_figure2(rows: list[dict[str, str]]) -> Figure:
     ax.set_ylim(-1.0, 1.55)
     ax.set_xlabel("Equal-domain CAI-ratio MAE", fontsize=7)
     _panel_title(ax, "a", "Matched morphology")
-    _clean_axis(ax, grid_axis="x")
+    _clean_axis(ax)
 
     ax = axes[1]
     labels = ["Surface reference", "Full spatial field", "Sparse spatial field"]
@@ -736,7 +1010,7 @@ def _render_figure2(rows: list[dict[str, str]]) -> Figure:
         color=_REFERENCE,
     )
     _panel_title(ax, "c", "Spatial heterogeneity")
-    _clean_axis(ax, grid_axis="x")
+    _clean_axis(ax)
 
     ax = axes[3]
     ax.axis("off")
@@ -838,7 +1112,7 @@ def _render_figure3(rows: list[dict[str, str]]) -> Figure:
         fontsize=6.5,
     )
     _panel_title(ax, "b", "Static to dynamic")
-    _clean_axis(ax, grid_axis="x")
+    _clean_axis(ax)
 
     rank = _find(rows, "Static value rank")
     estimate = float(rank["value"])
@@ -1361,7 +1635,9 @@ def _render_figure3_reframed(rows: list[dict[str, str]]) -> Figure:
 
 
 def _render_figure4_reframed(rows: list[dict[str, str]]) -> Figure:
-    fig, axes = plt.subplots(1, 2, figsize=(7.2, 3.0), gridspec_kw={"wspace": 0.48})
+    fig, axes = plt.subplots(
+        1, 2, figsize=(_FULL_WIDTH_IN, 2.9), gridspec_kw={"wspace": 0.48}
+    )
     ax = axes[0]
     labels = ["Valuation", "Bounded learned planning", "True-value stronger planning"]
     _forest(
@@ -1390,49 +1666,489 @@ def _render_figure4_reframed(rows: list[dict[str, str]]) -> Figure:
     )
     ax.set_xlabel("Reachable-set planning regret (x10^4)", fontsize=6.8)
     ax.text(
-        0.02,
-        -0.21,
-        "Positive regret is measured against a retrospective joint near-oracle set.",
+        0.08,
+        0.48,
+        "Reference: retrospective\njoint near-oracle set",
         transform=ax.transAxes,
-        fontsize=5.8,
+        fontsize=5.5,
         color=_REFERENCE,
     )
     _panel_title(ax, "b", "Cost-constrained set realization")
-    _clean_axis(ax, grid_axis="x")
+    _clean_axis(ax)
+    fig.subplots_adjust(left=0.18, right=0.985, bottom=0.22, top=0.88, wspace=0.52)
+    _attach_alignment_contract(
+        fig,
+        list(axes),
+        ["a", "b"],
+        row_groups=[["a", "b"]],
+    )
+    return fig
+
+
+def _render_figure2_nature(root: Path, rows: list[dict[str, str]]) -> Figure:
+    initial = load_reconstructed_state(
+        root,
+        specimen_id=REPRESENTATIVE_SPECIMEN,
+        method=REPRESENTATIVE_METHOD,
+        checkpoint=INITIAL_CHECKPOINT,
+    )
+    sparse = load_reconstructed_state(
+        root,
+        specimen_id=REPRESENTATIVE_SPECIMEN,
+        method="uniform",
+        checkpoint=0.25,
+    )
+    fig, axes_grid = plt.subplots(2, 3, figsize=(_FULL_WIDTH_IN, 5.05))
+    axes = list(axes_grid.ravel())
+
+    ax = axes[0]
+    labels = ["Matched scalar", "Matched spatial field", "Sparse spatial field"]
+    values = [_float(_find(rows, label), "value") for label in labels]
+    y = np.arange(3)[::-1]
+    colors = [_REFERENCE, _USEFUL, _OBSERVABLE]
+    ax.hlines(y, 0.12, values, colors=colors, linewidth=1.5)
+    ax.scatter(values, y, c=colors, s=30, zorder=3, edgecolors=_PAPER_WHITE, lw=0.5)
+    for yi, value in zip(y, values, strict=True):
+        ax.text(value + 0.002, yi, f"{value:.3f}", va="center", fontsize=6.2)
+    retention = float(_find(rows, "Registered gain retained")["value"])
+    ax.text(
+        0.98,
+        0.08,
+        f"{100 * retention:.1f}% full-field gain retained",
+        transform=ax.transAxes,
+        ha="right",
+        fontsize=5.8,
+        color=_OBSERVABLE,
+        fontweight="bold",
+    )
+    ax.set_yticks(y, ["Scalar", "Full field", "25% sparse"], fontsize=6.1)
+    ax.set_xlim(0.118, 0.208)
+    ax.set_ylim(-0.55, 2.55)
+    ax.set_xlabel("Equal-domain CAI-ratio MAE", fontsize=6.6)
+    _panel_title(ax, "a", "Spatial gain and retention")
+    _clean_axis(ax)
+
+    ax = axes[1]
+    _draw_reconstruction(ax, initial, show_measurements=True)
+    ax.text(
+        0.03,
+        0.04,
+        f"{initial.exact_acquired_cost:,} measured pixels",
+        transform=ax.transAxes,
+        color=_PAPER_WHITE,
+        fontsize=5.8,
+        fontweight="bold",
+    )
+    _panel_title(ax, "b", "Initial scout | 3.13%")
+
+    ax = axes[2]
+    _draw_reconstruction(ax, sparse, show_measurements=True)
+    ax.text(
+        0.03,
+        0.04,
+        f"{sparse.exact_acquired_cost:,} measured pixels",
+        transform=ax.transAxes,
+        color=_PAPER_WHITE,
+        fontsize=5.8,
+        fontweight="bold",
+    )
+    _panel_title(ax, "c", "Uniform sparse | 25%")
+
+    ax = axes[3]
+    task_labels = ["Mechanical vs uniform", "Mechanical vs reconstruction"]
+    _forest(
+        ax,
+        rows,
+        task_labels,
+        scale=1000,
+        colors=[_USEFUL, _USEFUL],
+        markers=["o", "s"],
+        display_labels=["Uniform", "Reconstruction"],
+    )
+    ax.set_xlim(2.2, 5.5)
+    ax.set_ylim(-0.8, 1.6)
+    ax.set_xlabel("CAI-AUEBC improvement (x10^3)", fontsize=6.4)
+    cai = float(_find(rows, "CAI-specific oracle contrast")["value"])
+    image = float(_find(rows, "Image-specific oracle contrast")["value"])
+    ax.text(
+        0.02,
+        0.06,
+        f"Cross-objective\nCAI {cai:.5f} | RGB MSE {image:.3e}",
+        transform=ax.transAxes,
+        fontsize=5.25,
+        color=_REFERENCE,
+    )
+    _panel_title(ax, "d", "Task-conditioned opportunity")
+    _clean_axis(ax)
+
+    ax = axes[4]
+    metric_specs = (
+        ("best_action_turnover", "Best-action turnover", _OBSERVABLE, "s", "--"),
+        ("rank_spearman", "Rank agreement", _REFERENCE, "o", "-"),
+        ("top_k_jaccard", "Top-5 overlap", _USEFUL, "^", ":"),
+    )
+    direct_labels = {
+        "best_action_turnover": "Turnover",
+        "rank_spearman": "Rank",
+        "top_k_jaccard": "Top-5",
+    }
+    for metric_name, label, color, marker, linestyle in metric_specs:
+        selected = [
+            row for row in rows if row["panel"] == "c" and row["metric"] == metric_name
+        ]
+        x = np.asarray([float(row["series"].split("@")[1]) * 100 for row in selected])
+        values = np.asarray([float(row["value"]) for row in selected])
+        ax.plot(
+            x,
+            values,
+            label=label,
+            color=color,
+            marker=marker,
+            linestyle=linestyle,
+            linewidth=1.15,
+            markersize=3.5,
+        )
+        ax.text(
+            x[-1] + 0.45,
+            values[-1],
+            direct_labels[metric_name],
+            color=color,
+            fontsize=5.1,
+            va="center",
+        )
+    ax.set_xlabel("Acquired normalized cost (%)", fontsize=6.5)
+    ax.set_ylabel("Teacher-state diagnostic", fontsize=6.5)
+    ax.set_ylim(0.25, 0.76)
+    ax.set_xlim(5.5, 23.5)
+    _panel_title(ax, "e", "Value evolves with state")
+    _clean_axis(ax)
+
+    ax = axes[5]
+    _forest(
+        ax,
+        rows,
+        ["Ridge-Huber rank agreement", "Ridge-MLP rank agreement"],
+        scale=1,
+        colors=[_ACTIONABLE, _ADVERSE],
+        markers=["o", "s"],
+        display_labels=["Ridge-Huber", "Ridge-MLP"],
+    )
+    ax.set_xlim(0, 0.9)
+    ax.set_ylim(-0.65, 1.55)
+    ax.set_xlabel("Strict-OOF action-value Spearman", fontsize=6.3)
+    ax.text(
+        0.02,
+        0.06,
+        "Full-state MAE\nRidge 0.08964 | Huber 0.08618\nMLP 0.15067",
+        transform=ax.transAxes,
+        fontsize=5.1,
+        color=_REFERENCE,
+    )
+    _panel_title(ax, "f", "Predictor dependence")
+    _clean_axis(ax)
+
+    fig.subplots_adjust(
+        left=0.125, right=0.985, bottom=0.09, top=0.94, wspace=0.5, hspace=0.52
+    )
+    _attach_alignment_contract(
+        fig,
+        axes,
+        list("abcdef"),
+        row_groups=[["a", "b", "c"], ["d", "e", "f"]],
+        column_groups=[["a", "d"], ["b", "e"], ["c", "f"]],
+    )
+    return fig
+
+
+def _render_figure3_nature(root: Path, rows: list[dict[str, str]]) -> Figure:
+    initial = load_priority_state(
+        root,
+        specimen_id=REPRESENTATIVE_SPECIMEN,
+        method=REPRESENTATIVE_METHOD,
+        checkpoint=INITIAL_CHECKPOINT,
+    )
+    later = load_priority_state(
+        root,
+        specimen_id=REPRESENTATIVE_SPECIMEN,
+        method=REPRESENTATIVE_METHOD,
+        checkpoint=LATER_CHECKPOINT,
+    )
+    fig, axes_grid = plt.subplots(2, 3, figsize=(_FULL_WIDTH_IN, 5.0))
+    axes = list(axes_grid.ravel())
+
+    ax = axes[0]
+    dynamic = _find(rows, "Conditional minus static regret")
+    value = float(dynamic["value"]) * 1000
+    low = float(dynamic["ci95_lower"]) * 1000
+    high = float(dynamic["ci95_upper"]) * 1000
+    ax.errorbar(
+        value,
+        0,
+        xerr=[[value - low], [high - value]],
+        fmt="o",
+        color=_USEFUL,
+        ecolor=_USEFUL,
+        capsize=3,
+        ms=5,
+    )
+    ax.axvline(0, color=_REFERENCE, lw=0.8, linestyle="--")
+    ax.set_yticks([0], ["Dynamic - static"], fontsize=6.0)
+    ax.set_xlim(-2.6, 0.45)
+    ax.set_ylim(-0.8, 0.8)
+    ax.set_xlabel("One-step value regret (x10^3)", fontsize=6.4)
+    rank = _find(rows, "Static value rank")
+    ax.text(
+        0.02,
+        0.08,
+        f"Static rank Spearman {float(rank['value']):.4f}\n"
+        f"95% CI [{float(rank['ci95_lower']):.4f}, {float(rank['ci95_upper']):.4f}]",
+        transform=ax.transAxes,
+        fontsize=5.4,
+        color=_REFERENCE,
+    )
+    _panel_title(ax, "a", "Dynamic versus static")
+    _clean_axis(ax)
+
+    ax = axes[1]
+    image = _draw_priority_overlay(ax, initial)
+    _outline_top_cells(ax, initial.reconstruction, initial.percentiles)
+    _panel_title(ax, "b", "Initial priority | 3.13%")
+
+    ax = axes[2]
+    _draw_priority_overlay(ax, later)
+    _outline_top_cells(ax, later.reconstruction, later.percentiles)
+    _panel_title(ax, "c", "Updated priority | 18.75%")
+
+    ax = axes[3]
+    _draw_acquisition_path(ax, later.reconstruction)
+    _panel_title(ax, "d", "Acquisition history")
+
+    ax = axes[4]
+    labels = [
+        "Measured content",
+        "Acquired-position/history control",
+        "Reconstruction control",
+    ]
+    values = [float(_find(rows, label)["value"]) for label in labels]
+    ax.bar(
+        [0, 1, 2],
+        values,
+        color=[_USEFUL, _REFERENCE, _UNCERTAINTY],
+        edgecolor="none",
+        linewidth=0,
+        width=0.62,
+    )
+    ax.set_xticks([0, 1, 2], ["Real", "History", "Recon."], fontsize=5.8)
+    ax.set_ylim(0.08, 0.14)
+    ax.set_ylabel("Endpoint CAI MAE", fontsize=6.4)
+    _panel_title(ax, "e", "Matched state controls")
+    _clean_axis(ax, grid_axis="y")
+
+    ax = axes[5]
+    _forest(
+        ax,
+        rows,
+        [
+            "Measured minus acquired-position/history",
+            "Measured minus reconstruction",
+        ],
+        scale=1,
+        colors=[_ADVERSE, _ADVERSE],
+        markers=["o", "s"],
+        display_labels=["Real - history", "Real - recon."],
+    )
+    ax.set_xlim(-0.005, 0.05)
+    ax.set_ylim(-0.75, 1.55)
+    ax.set_xlabel("Endpoint CAI-MAE contrast", fontsize=6.3)
+    shuffled = _find(rows, "Conditional minus shuffled regret")
+    ax.text(
+        0.12,
+        0.05,
+        f"Real - shuffled {float(shuffled['value']):.3e}\n"
+        f"95% CI [{float(shuffled['ci95_lower']):.3e}, {float(shuffled['ci95_upper']):.3e}]",
+        transform=ax.transAxes,
+        fontsize=5.1,
+        color=_ADVERSE,
+    )
+    _panel_title(ax, "f", "Source-control contrasts")
+    _clean_axis(ax)
+
+    fig.subplots_adjust(
+        left=0.125, right=0.985, bottom=0.09, top=0.94, wspace=0.5, hspace=0.52
+    )
+    color_axis = fig.add_axes([0.43, 0.505, 0.24, 0.012])
+    colorbar = fig.colorbar(image, cax=color_axis, orientation="horizontal")
+    colorbar.set_label("Priority percentile", fontsize=5.4, labelpad=1)
+    colorbar.ax.xaxis.set_label_position("top")
+    colorbar.ax.tick_params(labelsize=5.0, length=1.5)
+    _attach_alignment_contract(
+        fig,
+        axes,
+        list("abcdef"),
+        row_groups=[["a", "b", "c"], ["d", "e", "f"]],
+        column_groups=[["a", "d"], ["b", "e"], ["c", "f"]],
+    )
+    return fig
+
+
+def _render_figure5_nature(root: Path, rows: list[dict[str, str]]) -> Figure:
+    del rows
+    priorities = load_task_priority_maps(root, specimen_id=REPRESENTATIVE_SPECIMEN)
+    state = priorities.reconstruction
+    fig, axes_grid = plt.subplots(1, 4, figsize=(_FULL_WIDTH_IN, 2.65))
+    axes = list(axes_grid.ravel())
+
+    ax = axes[0]
+    _draw_reconstruction(ax, state, show_measurements=True)
+    _panel_title(ax, "a", "Initial state")
+
+    ax = axes[1]
+    image = _draw_priority_overlay(ax, state, priorities.mechanical_percentiles)
+    _outline_top_cells(ax, state, priorities.mechanical_percentiles)
+    _panel_title(ax, "b", "CAI priority")
+
+    ax = axes[2]
+    _draw_priority_overlay(ax, state, priorities.reconstruction_percentiles)
+    _outline_top_cells(ax, state, priorities.reconstruction_percentiles)
+    _panel_title(ax, "c", "RGB priority")
+
+    ax = axes[3]
+    ax.imshow(state.image, interpolation="nearest", aspect="auto")
+    difference = ax.pcolormesh(
+        np.asarray(state.column_boundaries, dtype=np.float64),
+        np.asarray(state.row_boundaries, dtype=np.float64),
+        priorities.percentile_difference,
+        cmap="RdBu_r",
+        norm=TwoSlopeNorm(vmin=-1.0, vcenter=0.0, vmax=1.0),
+        shading="flat",
+        alpha=0.66,
+        edgecolors=(1.0, 1.0, 1.0, 0.24),
+        linewidth=0.25,
+    )
+    ax.set_xlim(0, state.image.shape[1] - 1)
+    ax.set_ylim(state.image.shape[0] - 1, 0)
+    _style_image_axis(ax)
+    _panel_title(ax, "d", "CAI - RGB priority")
+
+    fig.subplots_adjust(left=0.035, right=0.995, bottom=0.22, top=0.88, wspace=0.12)
+    value_axis = fig.add_axes([0.295, 0.105, 0.39, 0.018])
+    value_bar = fig.colorbar(image, cax=value_axis, orientation="horizontal")
+    value_bar.set_label("Within-map priority percentile", fontsize=5.4, labelpad=1)
+    value_bar.ax.tick_params(labelsize=5.0, length=1.5)
+    difference_axis = fig.add_axes([0.79, 0.105, 0.18, 0.018])
+    difference_bar = fig.colorbar(
+        difference, cax=difference_axis, orientation="horizontal"
+    )
+    difference_bar.set_label("Task-priority difference", fontsize=5.4, labelpad=1)
+    difference_bar.ax.tick_params(labelsize=5.0, length=1.5)
+    _attach_alignment_contract(
+        fig,
+        axes,
+        list("abcd"),
+        row_groups=[["a", "b", "c", "d"]],
+    )
+    return fig
+
+
+def _render_supplementary_gallery(root: Path) -> Figure:
+    pairs = load_gallery_states(root)
+    fig, axes_grid = plt.subplots(6, 2, figsize=(_FULL_WIDTH_IN, 8.75))
+    axes = list(axes_grid.ravel())
+    panel_ids = list("abcdefghijkl")
+    image = None
+    for row_index, pair in enumerate(pairs):
+        for column_index, state in enumerate((pair.initial, pair.later)):
+            index = row_index * 2 + column_index
+            ax = axes[index]
+            image = _draw_priority_overlay(ax, state, alpha=0.54)
+            checkpoint = "3.13%" if column_index == 0 else "18.75%"
+            _panel_title(
+                ax,
+                panel_ids[index],
+                f"{pair.specimen.specimen_id} | {checkpoint}",
+            )
+    if image is None:
+        raise ValueError("supplementary gallery is empty")
+    fig.subplots_adjust(
+        left=0.045, right=0.99, bottom=0.075, top=0.98, wspace=0.08, hspace=0.34
+    )
+    color_axis = fig.add_axes([0.33, 0.025, 0.36, 0.012])
+    colorbar = fig.colorbar(image, cax=color_axis, orientation="horizontal")
+    colorbar.set_label(
+        "Within-state teacher-value percentile", fontsize=5.4, labelpad=1
+    )
+    colorbar.ax.tick_params(labelsize=5.0, length=1.5)
+    _attach_alignment_contract(
+        fig,
+        axes,
+        panel_ids,
+        row_groups=[
+            panel_ids[index : index + 2] for index in range(0, len(panel_ids), 2)
+        ],
+        column_groups=[panel_ids[0::2], panel_ids[1::2]],
+    )
     return fig
 
 
 _CAPTIONS = {
     "figure1": (
-        "**Figure 1. Task-relevant information acquisition framework.** Part I "
-        "characterizes spatial, sparse, objective-conditioned, and state-conditioned "
-        "task information. Part II, state-conditioned task-oriented acquisition, tests "
-        "its realization through legal-state valuation, matched source controls, "
-        "bounded planning, and the frozen endpoint. Usefulness, task-value "
-        "observability, and actionability are validation criteria.\n"
+        "**Figure 1. Task-Relevant Information Acquisition.** Part I characterizes "
+        "spatial, sparse, objective-conditioned, and state-conditioned task "
+        "information. Part II estimates value from legal partial state and realizes "
+        "measurement sets under exact native-raster cost. Retrospective teachers and "
+        "oracles characterize value; the acquisition rule uses only legal state.\n"
     ),
     "figure2": (
-        "**Figure 2. Information characterization.** (a) The registered matched "
-        "B-family spatial field reduces equal-domain CAI-ratio MAE relative to its "
-        "scalar counterpart, and the selected sparse condition retains 89.9% of the "
-        "registered full-field gain while remaining distinct from the full field. "
-        "(b) Exact-cost oracle comparisons show heterogeneous, task-conditioned spatial "
-        "value. (c) Teacher priorities change with accumulated evidence. (d) Value-rank "
-        "agreement depends on the downstream predictor. Oracle and teacher rows are "
-        "retrospective.\n"
+        "**Figure 2. Spatial task-relevant ultrasonic information and sparse "
+        "retention.** (a) Equal-domain CAI-ratio MAE for matched scalar, full-field, "
+        "and registered 25% sparse representations; the sparse representation retains "
+        "89.9% of the full-field gain. (b,c) Hash-verified reconstructions of specimen "
+        "c8-2 at the 3.13% initial scout state and 25% uniform state; teal pixels mark "
+        "measured native-raster positions. (d) Retrospective exact-cost mechanical "
+        "oracle improvements over uniform and reconstruction acquisition. (e) "
+        "Strict-OOF teacher priorities evolve over normalized cost. (f) Value-rank "
+        "agreement varies with the downstream predictor. Aggregate intervals are "
+        "synchronized specimen-bootstrap contrasts where shown.\n"
     ),
     "figure3": (
-        "**Figure 3. State-conditioned value and source attribution.** (a) Dynamic "
-        "valuation improves one-step regret relative to the static reference. (b) Real "
-        "partial state changes endpoint prediction. (c) Real content is calibrated "
-        "against acquired-position/history, reconstruction, and shuffled-content controls. "
-        "Intervals are synchronized specimen-bootstrap contrasts where shown.\n"
+        "**Figure 3. State-conditioned measurement value evolves with acquired "
+        "evidence.** (a) Dynamic real-state valuation has lower one-step regret than "
+        "the static reference at 18.75%. (b,c) Within-state percentiles of strict-OOF "
+        "teacher values for all 64 legal next-cell actions on specimen c8-2 at 3.13% "
+        "and 18.75%; white outlines mark the five highest-priority cells. (d) Stored "
+        "acquired-cell history for the same trajectory, from the initial white marker "
+        "to the latest red marker. (e) Endpoint CAI MAE under "
+        "real, acquired-position/history, and reconstruction states. (f) Matched source "
+        "contrasts retain their observed adverse directions. Priority maps are "
+        "predictor- and state-conditioned, not universal material maps.\n"
     ),
     "figure4": (
         "**Figure 4. Valuation, planning, and set realization.** (a) Retrospective "
         "substitutions expose valuation and bounded planning effects. (b) Greedy and "
         "beam-width-four selection retain positive regret relative to the retrospective "
         "joint set within the registered two-action reachable pool.\n"
+    ),
+    "figure5": (
+        "**Figure 5. Task-specific measurement priorities on a CFRP specimen.** "
+        "(a) Hash-verified initial reconstruction of specimen c8-2; teal marks the "
+        "registered measured positions. (b,c) Retrospective CAI-mechanical and "
+        "normalized-RGB-reconstruction oracle priorities on the same initial state and "
+        "8x8 action grid; white outlines mark the five highest-priority cells. (d) "
+        "Paired within-map percentile difference, with red favoring CAI priority and "
+        "blue favoring reconstruction priority. Across all six domains, the CAI "
+        "contrast is 0.04862 (95% CI 0.04527-0.05205) and the registered normalized-"
+        "RGB-MSE contrast is 5.503e-4 (95% CI 5.006e-4-6.063e-4). These panels "
+        "visualize retrospective oracle opportunity, not learned-policy performance.\n"
+    ),
+    "supplementary_figure_s1": (
+        "**Supplementary Figure S1. Cross-domain state-conditioned priority "
+        "gallery.** Rows show one specimen from each of six held-out domains, selected "
+        "as the lexicographically first specimen in the sorted domain roster without "
+        "using outcomes or effects. Left and right panels show the registered 3.13% "
+        "initial and 18.75% states for the same one-shot mechanical-oracle trajectory. "
+        "Overlays are within-state percentiles of strict-OOF teacher value on the "
+        "registered 8x8 legal action grid. The gallery demonstrates qualitative "
+        "breadth and does not define cross-panel absolute value magnitudes.\n"
     ),
 }
 
@@ -1442,6 +2158,22 @@ _STEMS = {
     "figure2": "figure2_information_characterization",
     "figure3": "figure3_state_conditioned_value",
     "figure4": "figure4_valuation_planning_realization",
+    "figure5": "figure5_task_specific_measurement_priorities",
+    "supplementary_figure_s1": (
+        "supplementary_figure_s1_cross_domain_state_priority_gallery"
+    ),
+}
+
+
+_SOURCE_NAMES = {
+    "figure1": "figure1_task_relevant_acquisition_framework.csv",
+    "figure2": "figure2_information_characterization.csv",
+    "figure3": "figure3_state_conditioned_value.csv",
+    "figure4": "figure4_valuation_planning_realization.csv",
+    "figure5": "figure5_task_specific_measurement_priorities.csv",
+    "supplementary_figure_s1": (
+        "supplementary_figure_s1_cross_domain_state_priority_gallery.csv"
+    ),
 }
 
 
@@ -1450,18 +2182,26 @@ def _save_figure(fig: Figure, output_root: Path, figure_id: str) -> FigureArtifa
     svg = output_root / f"{stem}.svg"
     pdf = output_root / f"{stem}.pdf"
     png = output_root / f"{stem}.png"
-    source = (
-        output_root
-        / {
-            "figure1": "figure1_task_relevant_acquisition_framework.csv",
-            "figure2": "figure2_information_characterization.csv",
-            "figure3": "figure3_state_conditioned_value.csv",
-            "figure4": "figure4_valuation_planning_realization.csv",
-        }[figure_id]
-    )
+    source = output_root / _SOURCE_NAMES[figure_id]
     caption = output_root / f"{stem}_caption.md"
     caption.write_text(_CAPTIONS[figure_id], encoding="utf-8", newline="\n")
-    common = {"bbox_inches": "tight", "facecolor": "white"}
+    alignment_json = None
+    alignment_svg = None
+    alignment_options = getattr(fig, "_aei_alignment_options", None)
+    if alignment_options is not None:
+        alignment_json = output_root / f"{stem}.alignment.json"
+        alignment_svg = output_root / f"{stem}.alignment.svg"
+        require_matplotlib_panel_alignment(
+            fig,
+            json_out=alignment_json,
+            overlay_svg=alignment_svg,
+            tolerance_pt=1.5,
+            gutter_tolerance_pt=1.5,
+            require_panel_labels=True,
+            strict=True,
+            **alignment_options,
+        )
+    common = {"facecolor": "white"}
     fig.savefig(
         svg,
         format="svg",
@@ -1503,7 +2243,15 @@ def _save_figure(fig: Figure, output_root: Path, figure_id: str) -> FigureArtifa
         metadata={"Software": "cmc_bbdm AEI paper evidence renderer"},
         **common,
     )
-    return FigureArtifact(svg=svg, pdf=pdf, png=png, source_csv=source, caption=caption)
+    return FigureArtifact(
+        svg=svg,
+        pdf=pdf,
+        png=png,
+        source_csv=source,
+        caption=caption,
+        alignment_json=alignment_json,
+        alignment_svg=alignment_svg,
+    )
 
 
 def _write_figure_manifest(
@@ -1525,6 +2273,8 @@ def _write_figure_manifest(
                 ("png", artifact.png),
                 ("source_csv", artifact.source_csv),
                 ("caption", artifact.caption),
+                *(("alignment_json", path) for path in artifact.qa_outputs[:1]),
+                *(("alignment_svg", path) for path in artifact.qa_outputs[1:]),
             )
             for artifact_type, deliverable in entries:
                 writer.writerow(
@@ -1539,36 +2289,105 @@ def _write_figure_manifest(
     return path
 
 
-def render_paper_figures(root: Path, output_root: Path) -> dict[str, FigureArtifact]:
-    """Render four deterministic figures and their captions."""
+def _supplementary_source_rows(root: Path) -> list[dict[str, str]]:
+    rows: list[dict[str, str]] = []
+    panel_ids = list("abcdefghijkl")
+    for row_index, specimen in enumerate(gallery_specimen_roster(root)):
+        for column_index, checkpoint in enumerate(
+            (INITIAL_CHECKPOINT, LATER_CHECKPOINT)
+        ):
+            panel = panel_ids[row_index * 2 + column_index]
+            label = f"{specimen.specimen_id}@{checkpoint:.6g}"
+            rows.extend(
+                (
+                    _source_row(
+                        root,
+                        panel=panel,
+                        series=f"{label} reconstruction",
+                        metric="registered_state_reconstruction",
+                        source_artifact=(
+                            "results/mavis/p1_state_bank/state_manifest.parquet"
+                        ),
+                    ),
+                    _source_row(
+                        root,
+                        panel=panel,
+                        series=f"{label} teacher priority",
+                        metric="strict_oof_teacher_value_map",
+                        source_artifact=(
+                            "results/mavis/p3_dynamic_voi/action_scores.parquet"
+                        ),
+                    ),
+                )
+            )
+    return rows
+
+
+def build_supplementary_figure_sources(
+    root: Path, output_root: Path
+) -> dict[str, Path]:
+    """Write source indices for supplementary qualitative figures."""
+
     output_root.mkdir(parents=True, exist_ok=True)
-    sources = build_figure_sources(root, output_root)
-    renderers = {
-        "figure1": _render_figure1,
-        "figure2": _render_figure2_reframed,
-        "figure3": _render_figure3_reframed,
-        "figure4": _render_figure4_reframed,
-    }
-    artifacts: dict[str, FigureArtifact] = {}
-    style = {
-        "font.family": "DejaVu Sans",
+    path = output_root / _SOURCE_NAMES["supplementary_figure_s1"]
+    _write_rows(path, _supplementary_source_rows(root.resolve()))
+    return {"supplementary_figure_s1": path}
+
+
+def _figure_style() -> dict[str, Any]:
+    return {
+        "font.family": "sans-serif",
+        "font.sans-serif": ["Arial", "DejaVu Sans", "Liberation Sans"],
         "font.size": 7,
         "text.color": _TEXT,
         "axes.labelcolor": _TEXT,
         "axes.edgecolor": _TEXT,
-        "axes.linewidth": 0.65,
+        "axes.linewidth": 0.75,
         "axes.axisbelow": True,
+        "axes.spines.top": False,
+        "axes.spines.right": False,
+        "legend.frameon": False,
         "figure.facecolor": "white",
         "savefig.facecolor": "white",
         "pdf.fonttype": 42,
         "ps.fonttype": 42,
         "svg.fonttype": "none",
-        "svg.hashsalt": "aei-task-relevant-acquisition-20260827",
+        "svg.hashsalt": "aei-task-relevant-acquisition-20260828",
     }
-    with plt.rc_context(style):
+
+
+def render_paper_figures(root: Path, output_root: Path) -> dict[str, FigureArtifact]:
+    """Render five deterministic main-paper figures and their captions."""
+    output_root.mkdir(parents=True, exist_ok=True)
+    sources = build_figure_sources(root, output_root)
+    renderers = {
+        "figure1": _render_figure1,
+        "figure2": lambda rows: _render_figure2_nature(root, rows),
+        "figure3": lambda rows: _render_figure3_nature(root, rows),
+        "figure4": _render_figure4_reframed,
+        "figure5": lambda rows: _render_figure5_nature(root, rows),
+    }
+    artifacts: dict[str, FigureArtifact] = {}
+    with plt.rc_context(_figure_style()):
         for figure_id, source in sources.items():
             fig = renderers[figure_id](_read_rows(source))
             artifacts[figure_id] = _save_figure(fig, output_root, figure_id)
             plt.close(fig)
+    _write_figure_manifest(output_root, artifacts)
+    return artifacts
+
+
+def render_supplementary_figures(
+    root: Path, output_root: Path
+) -> dict[str, FigureArtifact]:
+    """Render the deterministic six-domain supplementary gallery."""
+
+    output_root.mkdir(parents=True, exist_ok=True)
+    build_supplementary_figure_sources(root, output_root)
+    with plt.rc_context(_figure_style()):
+        fig = _render_supplementary_gallery(root)
+        artifact = _save_figure(fig, output_root, "supplementary_figure_s1")
+        plt.close(fig)
+    artifacts = {"supplementary_figure_s1": artifact}
     _write_figure_manifest(output_root, artifacts)
     return artifacts
