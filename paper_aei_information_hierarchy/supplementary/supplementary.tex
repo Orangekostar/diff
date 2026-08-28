@@ -8,86 +8,157 @@
 \usepackage{hyperref}
 \setlength{\emergencystretch}{3em}
 
-\title{Supplementary Material: Task-Relevant Information Acquisition for
-Ultrasonic Inspection of Impacted Composites}
+\title{Supplementary Material: Task-Relevant Ultrasonic Information
+Acquisition for Impacted Composites}
 \author{Author information withheld for review}
 \date{}
 
 \begin{document}
 \maketitle
 
-\section{Purpose and statistical units}
+\section{S1. Evidence authority and statistical units}
 
-This supplement exposes the audit-heavy records behind the main manuscript.
-It does not introduce a second method, new training, or additional performance
-claims. Physical specimens are the first statistical unit and the six held-out
-experimental domains are the second. Repeated state, checkpoint, action, and
-learner-pair rows are computational records rather than independent samples.
-All oracle, teacher, and component-substitution records are retrospective and
-non-deployable unless a file explicitly marks a row as deployable.
+The supplement exposes detailed controls, sensitivities, implementation
+diagnostics, and machine-readable provenance omitted from the compressed main
+paper. Numerical authority remains the 39-row canonical metrics file. Physical
+specimens are the first statistical unit and the six held-out experimental
+domains are equally weighted. State, checkpoint, candidate, seed, and learner-
+pair rows are repeated computational records rather than independent samples.
+All teacher, oracle, and component-substitution quantities are retrospective
+unless an evidence record explicitly marks them deployable.
 
-\section{Machine-readable evidence index}
+% Reference code identity: mvd_m1_o2.
+The codebase refers to the supervised state-conditioned closed-loop
+implementation as MAVIS. This is one implementation of State-Conditioned
+Task-Oriented Acquisition, not the paper-level method. The code identifier
+\texttt{mvd\_m1\_o2} denotes the static deployable reference used in the final
+comparison; it is not a published competing method.
 
-\begin{longtable}{@{}p{0.15\textwidth}p{0.78\textwidth}@{}}
+\begin{longtable}{@{}p{0.18\textwidth}p{0.74\textwidth}@{}}
 \toprule
-Files & Content \\
+Record group & Content \\
 \midrule
 \endfirsthead
 \toprule
-Files & Content \\
+Record group & Content \\
 \midrule
 \endhead
 \bottomrule
 \endfoot
-S01--S02 & Full domain-by-domain scalar/spatial and static-observability metrics. \\
-S03--S04 & Full checkpoint and domain records for strict-OOF conditional-value evolution. \\
-S05--S07 & Complete real, position-only, shuffled, static, reconstruction, and full-field control records. \\
-S08--S09 & Dynamic-valuation regret, Spearman, NDCG, recall, utility, and domain records. \\
-S10--S11 & Valuation/planning component substitutions and their domain-level effects. \\
-S12 & Current greedy, beam, lookahead, and retrospective reachable-pool planning records by domain. \\
-S13--S14 & Learner fits and all specimen-level learner-pair rank, top-$k$, best-action, and spatial metrics. \\
-S15--S16 & Feedback-effect strata and association diagnostics for tested mechanism variables. \\
-S17 & Paper source paths and SHA-256 provenance authority. \\
-S18 & External-dataset feasibility audit; no external method-performance evaluation is present. \\
+S01--S04 & Full domain and checkpoint records for spatial, sparse, static, and conditional-value comparisons. \\
+S05--S09 & Real-state, acquired-position/history, reconstruction, shuffled-content, and dynamic-valuation controls. \\
+S10--S12 & Component substitutions and bounded reachable-set planning records. \\
+S13--S16 & Learner-pair value stability, feedback strata, and implementation diagnostics. \\
+S17--S18 & Source hashes, chronology, and external-data feasibility boundaries. \\
 \end{longtable}
 
-\section{Part I: Information characterization details}
+\section{S2. Spatial information and sparse recoverability}
 
-S01 provides all domain-level full-field candidate metrics, including the
-matched metadata-plus-surface B-family path and the distinct independent
-metadata-only I-family estimator. The registered confirmatory claim uses the
-B-family scalar-to-spatial contrast. S12--S14 preserve the full planning and
-learner-sensitivity records used to show that measurement value is conditioned
-on the downstream predictor and decision set rather than being an intrinsic
-property of a location.
+% Supplement-only evidence: U1_INDEPENDENT_FIELD_SENSITIVITY.
+The registered main comparison uses the matched B-family scalar-to-spatial
+path. The distinct independent internal-field estimator
+(\texttt{U1\_INDEPENDENT\_FIELD\_SENSITIVITY}) had point MAE 0.08964 and is
+retained only as a sensitivity path. It is not substituted for the matched
+32.1\% effect.
 
-\section{Part II: State-conditioned valuation and source controls}
+The sparse condition observes a registered 25\% normalized-raster pattern and
+uses bilinear interpolation before the frozen field pathway. Its 89.9\%
+retention is referenced to the matched full-field gain. The residual sparse-to-
+full MAE gap remains positive in all domains, and the sampling fraction has no
+scanner-time interpretation.
 
-S02 contains the full static-observability comparison. S03--S04 contain every
-tested checkpoint transition and value source for the conditional teacher.
-S05--S07 expose all state-matched content controls, including the
-acquired-position/history and registered normalized-RGB-MSE reconstruction
-comparisons. The positions-only input inherits the frozen acquisition history
-and is not a pure geometry-only control. S08--S09 retain secondary rank metrics
-and the shuffled-content boundary. These records delimit specimen-specific
-content attribution for the tested legal state.
+\section{S3. Task-conditioned and predictor-conditioned value}
 
-\section{Part II: Decision realization and deployment calibration}
+% Supplement-only evidence: U4_LEARNED_SPECIFICITY_BOUNDARY.
+The cross-objective oracle result is bounded by the learned global-mask test.
+Source-trained global mechanics and reconstruction masks produced the
+predeclared support indicator 0
+(\texttt{U4\_LEARNED\_SPECIFICITY\_BOUNDARY}); the learned global mechanics
+mask therefore did not reproduce the oracle separation. The reconstruction
+task in this comparison is the registered normalized-RGB-MSE objective, not a
+claim about all image representations or metrics.
 
-S10--S11 expose the full component-substitution matrix and domain effects. S12
-contains the bounded two-action reachable-pool diagnostics; the retrospective
-near-oracle is not a deployable policy and does not establish arbitrary-horizon
-planning regret. S15--S16 retain the full feedback strata and association
-analyses. The frozen stress test retains the no-feedback reference, and the
-learned endpoint remains not performance-superior to the strongest deployable
-reference.
+% Supplement-only evidence: U5_RIDGE_HUBER_BEST_ACTION;
+% U5_RIDGE_HUBER_TOPK; U5_RIDGE_MLP_BEST_ACTION; U5_RIDGE_MLP_TOPK.
+Under identical strict-OOF states and splits, Ridge--Huber best-action agreement
+was 0.675 (95\% CI 0.622--0.727)
+(\texttt{U5\_RIDGE\_HUBER\_BEST\_ACTION}), and top-$k$ agreement was 0.685
+(95\% CI 0.650--0.719) (\texttt{U5\_RIDGE\_HUBER\_TOPK}). Ridge--MLP
+best-action agreement was 0.233 (95\% CI 0.182--0.283)
+(\texttt{U5\_RIDGE\_MLP\_BEST\_ACTION}), and top-$k$ agreement was 0.213
+(95\% CI 0.192--0.235) (\texttt{U5\_RIDGE\_MLP\_TOPK}). Because the shallow
+MLP was substantially less accurate, these contrasts do not isolate predictor
+architecture at equal predictive accuracy.
 
-\section{Provenance and external-data boundary}
+\section{S4. State-conditioned valuation and source controls}
 
-S17 binds the paper-specific canonical authority to the immutable source
-artifacts. `SUPPLEMENTARY\_DATA\_MANIFEST.csv' independently binds each copied
-supplement file to its source digest. S18 is an audit of external dataset
-feasibility only. It contains no external replication, scanner-time validation,
-or industrial deployment result.
+% Supplement-only evidence: O1_STATIC_SET_REGRET; O1_GLOBAL_SET_REGRET;
+% O1_RANDOM_SET_REGRET.
+The registered exact-budget set regrets were 0.08171 for the static scorer
+(\texttt{O1\_STATIC\_SET\_REGRET}), 0.07993 for the global score
+(\texttt{O1\_GLOBAL\_SET\_REGRET}), and 0.07978 for the random median
+(\texttt{O1\_RANDOM\_SET\_REGRET}). These source-only references annotate the
+static representation; they do not establish information-theoretic
+unobservability.
+
+% Supplement-only evidence: O3_FULL_FIELD_RECOVERY.
+At the endpoint, the real-state trajectory recovered 26.6\% (95\% CI
+10.6\%--41.0\%) of the static-to-independent-full-field error ratio
+(\texttt{O3\_FULL\_FIELD\_RECOVERY}). Its denominator is the independent
+internal-field sensitivity estimator, not the matched B-family field path.
+
+The acquired-position/history control inherits the exact positions, ordering,
+and costs of the recipient trajectory while removing measured content. The
+reconstruction control uses the registered image objective on the same legal
+trajectory. The shuffled-content control preserves recipient positions and
+budget while sourcing values from separated donor content. These semantics are
+required when interpreting the adverse real-minus-control directions.
+
+\section{S5. Cost-constrained realization and implementation diagnostics}
+
+The reachable-set analysis is restricted to the registered two-action pool at
+6.25\%. The joint near-oracle compares reachable sets retrospectively; it is
+not deployable and does not establish arbitrary-horizon planning regret.
+
+% Supplement-only evidence: A3_FEEDBACK_BENEFIT.
+For \texttt{A3\_FEEDBACK\_BENEFIT}, the no-feedback reference retained an
+AUEBC advantage of $1.496\times10^{-5}$ (95\% CI
+$1.064\times10^{-5}$--$1.944\times10^{-5}$). With the registered sign
+convention, feedback benefit was $-1.496\times10^{-5}$ (95\% CI
+$-1.944\times10^{-5}$ to $-1.064\times10^{-5}$), with feedback favorable in
+two of six held-out domains. This is a frozen implementation diagnostic and is
+not generalized to other state representations or policies.
+
+% Full system diagnostic: A4_BASELINE_MINUS_MAVIS.
+For \texttt{A4\_BASELINE\_MINUS\_MAVIS}, equal-domain CAI AUEBC was 0.125053
+for the supervised state-conditioned implementation and 0.124992 for the
+static reference. Reference minus learned was
+$-6.114\times10^{-5}$ (95\% CI $-8.461\times10^{-5}$ to
+$-3.777\times10^{-5}$), and the learned implementation improved two of six
+held-out domains. The direction favors the reference. This comparison is one
+system-level endpoint and does not define the performance of the full Task-
+Relevant Information Acquisition framework.
+
+\section{S6. Provenance, chronology, and scope boundaries}
+
+The evidence chronology separates pre-existing spatial and static-reference
+analyses, the frozen outer implementation endpoint, and later diagnostic
+analyses. Later diagnostics reused fixed states, source bindings, splits, and
+outcomes; they were not used to select or modify the frozen endpoint. No model
+training, tuning, result selection, or canonical numerical claim was changed
+for the manuscript identity reframe.
+
+The machine-readable visibility map assigns every canonical claim to main
+headline, main support, one main system diagnostic, or supplement-only use.
+Source-hash records bind every number to its immutable result artifact, and the
+supplement manifest independently records copied-file digests. External-data
+records are feasibility audits only and contain no external method-performance
+evaluation.
+
+Scope remains the paired 276-specimen, six-domain CFRP data program; exact
+native-raster digital cost; the fixed predictor families, state
+representations, action hierarchy, and planners; and the registered CAI and
+normalized-RGB-MSE tasks. Physical path length, coupling, settling, hardware
+timing, industrial cost, and external empirical transfer are not established.
 
 \end{document}

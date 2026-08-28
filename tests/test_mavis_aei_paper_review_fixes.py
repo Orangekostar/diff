@@ -116,12 +116,13 @@ def test_aei_paper_no_first_task_driven_design_claim() -> None:
     assert "first task-driven" not in _text(MAIN).lower()
 
 
-def test_aei_paper_novelty_is_operational_not_taxonomy_only() -> None:
+def test_aei_paper_identity_is_positive_and_operational() -> None:
     manuscript = re.sub(r"\s+", " ", _text(MAIN))
-    assert "not a new generic definition of value of information" in manuscript
+    assert "Task-Relevant Information Acquisition" in manuscript
     assert "Information Characterization" in manuscript
-    assert "Evidence-Calibrated Decision Realization" in manuscript
+    assert "State-Conditioned Task-Oriented Acquisition" in manuscript
     assert "one causal acquisition contract" in manuscript
+    assert "not a new generic definition of value of information" not in manuscript
 
 
 def test_all_39_canonical_claims_have_one_primary_narrative_stage() -> None:

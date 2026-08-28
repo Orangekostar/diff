@@ -1,263 +1,125 @@
-# Fixed Six-Section Manuscript Outline
+# AEI Manuscript Outline: Main-Method Identity Reframe
+
+## Scientific identity
+
+- Primary method: **Task-Relevant Information Acquisition**.
+- Part I: **Task-Relevant Information Characterization**.
+- Part II: **State-Conditioned Task-Oriented Acquisition**.
+- The supervised closed-loop implementation is evidence for one system
+  diagnostic, not the paper-level method.
+- The static source-only scorer is a reference; oracles and source controls are
+  evidence instruments.
 
 ## 1. Introduction
 
-### Paragraph sequence
+Six paragraphs: engineering motivation; prior capability; integrated gap;
+RQ-A/RQ-B and two-part method; 276-specimen six-domain protocol; three
+contributions. Headline identity stays at the framework level.
 
-1. Establish ultrasonic inspection as spatial engineering information for
-   residual-capacity assessment, without assuming every measured location has
-   equal task value.
-2. Place the work after full C-scan-to-CAI prediction, sparse/adaptive
-   ultrasound, task-driven sensing, and value-of-information research.
-3. Identify the positive gap between characterizing structured task-relevant
-   information and realizing it as an evidence-calibrated sensing decision.
-4. State RQ-A on information characterization and RQ-B on decision realization.
-5. Summarize the 276-specimen, six-domain, strict nested LODO evidence chain.
-6. State three contributions: a two-stage acquisition framework, leakage-safe
-   state-conditioned valuation, and calibrated end-to-end decision evidence.
+## 2. Related Work
 
-### Assigned evidence
+### 2.1 Post-impact ultrasonic information and residual-capacity assessment
 
-- Figure 1: two-part acquisition framework and information boundary.
-- Literature boundary: direct C-scan CAI prediction, adaptive ultrasound,
-  ultrasonic value of information, and task-driven multi-channel imaging.
-- No result numbers beyond the minimum needed to preview the evidence chain.
+Full-field and surface predictors establish predictive feasibility and motivate
+spatial internal information.
 
-## 2. Related Research and Problem Formulation
+### 2.2 Sparse and adaptive ultrasonic acquisition
 
-### 2.1 Ultrasonic information for post-impact performance assessment
+Sparse reconstruction, adaptive paths, and robotic inspection establish the
+acquisition setting; task loss is distinguished from reconstruction loss.
 
-- Surface observables, C-scan morphology, and residual CAI assessment.
-- Closest AEI full C-scan-to-CAI study as prior work, not as a matched baseline.
-- Distinguish predictive feasibility from task-specific information value.
+### 2.3 Task-relevant information acquisition formulation
 
-### 2.2 Sparse and adaptive ultrasonic inspection
-
-- Sparse ultrasound reconstruction and adaptive wavefield acquisition.
-- Distinguish native-raster acquisition fraction from scanner time.
-- Separate reconstruction quality from residual-capacity utility.
-
-### 2.3 Task-driven sensing and value of information
-
-- Task-driven imaging, Bayesian/sequential value of information, and
-  cost-constrained sensing.
-- Establish that retrospective oracle utility is a diagnostic target, not a
-  deployable policy.
-
-### 2.4 Problem formulation and research questions
-
-- Define a downstream predictor `f`, legal current information `I_t`, candidate
-  measurement `X`, and predictor-conditioned value
-  `U_f(X | I_t) = R_f(I_t) - R_f(I_t union X)`.
-- RQ-A: what spatial, sparse, objective-conditioned, and state-dependent
-  structure defines task-relevant information?
-- RQ-B: how far can that structure be realized through legal-state valuation,
-  matched controls, bounded planning, feedback, and frozen policy evaluation?
-
-### Assigned evidence
-
-- Conceptual definition only; numerical answers are reserved for Section 5.
-- Required term: downstream-predictor-conditioned task value.
-- Table 1: source-backed closest-work positioning across six primary sources.
-- Novelty statement: operational joint test under one causal acquisition
-  contract, not a new generic taxonomy or first adaptive/VoI design.
+Task-driven design, value of information, and partial observability motivate
+state-conditioned value under one causal acquisition contract.
 
 ## 3. Task-Relevant Information Acquisition Framework
 
-### 3.1 Framework overview
+### 3.1 Task-Relevant Information Characterization
 
-- Define Part I, Information Characterization, and Part II,
-  Evidence-Calibrated Decision Realization.
-- Explain Figure 1, the causal state transition, and the retrospective-teacher
-  versus deployable-policy boundary.
+Define legal information, downstream-predictor-conditioned task value
+`U_f(X | I_{i,t})`, and the retrospective opportunity boundary.
 
-### 3.2 Characterizing task-relevant information
+### 3.2 State-Conditioned Measurement Valuation
 
-- Compare risk with and without a measurement under a fixed predictor and
-  validation protocol.
-- Explain why a location has no universal intrinsic mechanical value.
+Define `U_hat`, strict source-only fitting, and static,
+acquired-position/history, reconstruction, and shuffled-content controls.
 
-### 3.3 Causal partial-state valuation
+### 3.3 Cost-Constrained Task-Oriented Acquisition
 
-- Define the score available from legal state information and compare it with
-  strict-OOF retrospective teacher values.
-- Separate value evolution from the ability of a learned representation to
-  track that evolution.
+Define the legal policy, causal reveal, exact incremental cost, and
+budget-span-normalized AUEBC.
 
-### 3.4 Evidence calibration through matched controls
+## 4. Multi-Domain CFRP Experimental Design
 
-- Separate real measured content from acquired-position/history,
-  reconstruction, and shuffled-content signals.
-- Treat usefulness, task-value observability, and actionability as validation
-  criteria inside the two stages.
+### 4.1 Dataset and Information Representations
 
-### 3.5 Decision realization and deployment calibration
+Describe 276 specimens, six indivisible domains, scalar/full/sparse/partial
+state representations, 25% sparse observation, and the 8-by-8 action grid.
 
-- Present MAVIS only as the frozen operational testbed used to evaluate
-  state-conditioned valuation and decision calibration.
-- Define exact-cost sequential choice and budget-span-normalized AUEBC on the
-  actual/effective specimen-budget coordinate.
-- Describe causal reveal, current-state construction, strict-OOF teachers,
-  dynamic scoring, legal rollouts, and frozen policy evaluation at the level
-  required to interpret the evidence.
-- State that no future C-scan content or held-out-domain CAI outcome enters a
-  deployable decision.
+### 4.2 Causal Acquisition Protocol
 
-### Assigned implementation
+Separate legal, privileged, and forbidden information; preserve exact reveal
+and native-raster cost semantics.
 
-- `src/cmc_bbdm/mavis/reveal.py`
-- `src/cmc_bbdm/mavis/state_bank.py`
-- `src/cmc_bbdm/mavis/state_encoder.py`
-- `src/cmc_bbdm/mavis/mechanics_head.py`
-- `src/cmc_bbdm/mavis/teacher.py`
-- `src/cmc_bbdm/mavis/dynamic_voi.py`
-- `src/cmc_bbdm/mavis/dynamic_training.py`
-- `src/cmc_bbdm/mavis/rollout.py`
-- `src/cmc_bbdm/mavis/policy.py`
-- `src/cmc_bbdm/mavis/dynamic_metrics.py`
-- `src/cmc_bbdm/mavis/closed_loop_metrics.py`
+### 4.3 Held-Out-Domain Evaluation and Statistical Analysis
 
-## 4. Multi-Domain CFRP Case Study and Experimental Design
-
-### 4.1 Specimens and ultrasonic/CAI measurements
-
-- 276 CAI-complete CFRP specimens across six experimental domains.
-- Domain counts: 45, 49, 43, 59, 42, and 38.
-- Modalities: specimen metadata, surface observables, ultrasonic RGB C-scan,
-  and damaged-to-intact CAI-strength ratio.
-
-### 4.2 Information representations and candidate measurements
-
-- Scalar surface/internal descriptors, spatial full field, registered 25%
-  bilinear sparse field, hierarchical native-raster actions, and current-state
-  representations.
-- Distinguish mechanics-targeted and reconstruction-targeted utility.
-
-### 4.3 Held-out-domain evaluation protocol
-
-- Strict nested leave-one-domain-out evaluation.
-- Outer-domain specimens and outcomes excluded from fitting and selection.
-- Physical specimen is the first statistical unit; six domains receive equal
-  weight.
-
-### 4.4 Privileged, deployable, and forbidden information
-
-- Deployable: metadata, acquired positions, measured current content, legal
-  actions, current exact cost.
-- Retrospective only: future measurements, counterfactual values, true outcomes,
-  and oracle action sets.
-- Forbidden at decision time: unrevealed C-scan content and held-out outcomes.
-
-### 4.5 Exact acquisition cost, metrics, and statistical inference
-
-- Cost: unique newly observed native-raster locations divided by native count.
-- Checkpoints: 3.125%, 6.25%, 9.375%, 12.5%, 18.75%, and 25%.
-- CAI MAE and AUEBC, reconstruction MSE, value rank/agreement, and exact-budget
-  set regret.
-- Synchronized within-domain specimen bootstrap followed by equal-domain
-  aggregation; computational state-action rows are not independent samples.
-
-### 4.6 Validation criteria and evidence chronology
-
-- Table 2: cohort, modalities, protocol, information boundary, cost, and
-  inference.
-- Map RQ-A and RQ-B to registered comparisons and matched controls.
-- Distinguish pre-freeze evidence, the frozen outer endpoint, and post-freeze
-  diagnostics; state that later diagnostics did not modify the endpoint.
+Use nested LODO, specimen-first synchronized bootstrap contrasts, equal-domain
+aggregation, and explicit evidence chronology.
 
 ## 5. Experimental Results and Discussion
 
-### 5.1 Part I --- From Spatial Morphology to State-Conditioned Task Value
+### 5.1 From Spatial Information to State-Conditioned Task Value
 
-#### 5.1.1 Spatial morphology enriches residual-capacity information
+#### 5.1.1 Spatial information and sparse recoverability
 
-- Claims U1_MATCHED_FIELD and U1_SURFACE_FIELD.
+Main: U1 matched/surface evidence and U2 retention/gain/full-gap evidence.
+Supplement: independent-field sensitivity.
 
-#### 5.1.2 Sparse observations preserve most task-relevant information
+#### 5.1.2 Task-conditioned spatial measurement value
 
-- Claims U2_SPARSE_RETENTION, U2_SPARSE_GAIN, and U2_SPARSE_FULL_GAP.
+Main: U3 oracle opportunity/headroom and U4 cross-objective specificity.
+Supplement: learned global-mask boundary.
 
-#### 5.1.3 Measurement utility is spatially heterogeneous
+#### 5.1.3 State- and predictor-conditioned measurement value
 
-- Claims U3_UNIFORM_ORACLE, U3_RECONSTRUCTION_ORACLE, and
-  U3_HEADROOM_RETENTION.
+Main: O2 value evolution and U5 rank agreement/accuracy boundary. Supplement:
+best-action and top-k learner-pair details.
 
-#### 5.1.4 Downstream objectives induce distinct measurement priorities
+### 5.2 State-Conditioned Task-Oriented Acquisition
 
-- Claims U4_ORACLE_CAI_SPECIFICITY, U4_ORACLE_IMAGE_SPECIFICITY, and
-  U4_LEARNED_SPECIFICITY_BOUNDARY.
+#### 5.2.1 State-conditioned valuation improves next-action estimation
 
-#### 5.1.5 Measurement value evolves with inspection state
+Open with dynamic-minus-static regret, then annotate the static rank reference.
 
-- Claims O2_TEACHER_TURNOVER, O2_TEACHER_RANK, O2_TEACHER_TOPK, and
-  O2_TEACHER_OPPORTUNITY.
+#### 5.2.2 Information-source and component decomposition
 
-#### 5.1.6 Predictor conditioning bounds the task-value definition
+Report real-state change, acquired-position/history, reconstruction and
+shuffled controls, followed by valuation/planning substitutions.
 
-- Claims U5_RIDGE_HUBER_SPEARMAN and U5_RIDGE_MLP_SPEARMAN, with best-action
-  and top-k agreement in the supplement.
-- Report full-state OOF accuracy and state that the experiment does not resolve
-  value-map variation among equally accurate structurally distinct predictors.
+#### 5.2.3 Cost-constrained set realization
 
-#### Part-I synthesis
+Report greedy and beam-4 reachable-set regret. Retain one concise system-level
+diagnostic against the static reference; keep its full interval and domain
+detail in the supplement.
 
-Spatial morphology, sparse retention, heterogeneous opportunity, objective
-specificity, state evolution, and predictor conditioning jointly characterize
-the task-relevant information target.
+### 5.3 Engineering Interpretation
 
-### 5.2 Part II --- From State-Conditioned Value to Evidence-Calibrated Decisions
-
-#### 5.2.1 A static reference motivates state-conditioned valuation
-
-- Claims O1_STATIC_SPEARMAN and its exact-budget controls.
-
-#### 5.2.2 Dynamic valuation captures incremental state dependence
-
-- Claim O4_DYNAMIC_MINUS_STATIC.
-
-#### 5.2.3 Control decomposition identifies the source of decision signal
-
-- Claims O3_REAL_CHANGE, O3_FULL_FIELD_RECOVERY,
-  O3_REAL_MINUS_POSITIONS, O3_REAL_MINUS_RECONSTRUCTION, and
-  O4_DYNAMIC_MINUS_SHUFFLED.
-
-#### 5.2.4 Component attribution separates valuation and planning headroom
-
-- Claims A1_VALUATION_SUBSTITUTION, A1_LEARNED_PLANNING_SUBSTITUTION, and
-  A1_TRUE_VALUE_PLANNING_SUBSTITUTION.
-
-#### 5.2.5 Bounded set realization exposes decision-level headroom
-
-- Claims A2_GREEDY_PLANNING_REGRET and A2_BEAM4_PLANNING_REGRET.
-
-#### 5.2.6 End-to-end stress testing calibrates deployment readiness
-
-- Claims A3_FEEDBACK_BENEFIT and A4_BASELINE_MINUS_MAVIS.
-
-#### Part-II synthesis
-
-State conditioning improves over the static reference; matched controls bound
-source attribution; controlled substitutions expose valuation and planning
-headroom; frozen stress tests quantify the residual deployable gap.
-
-### 5.3 Integrated interpretation
-
-- Synthesize the progressive contract from information structure through legal
-  state attribution to frozen decision outcomes.
-- Explain why reconstruction fidelity is task-specific and why measurement
-  value changes with both state and downstream predictor.
-- State the current deployment boundary and the need to validate each layer
-  independently before increasing policy complexity.
-- State five transfer conditions and label the Pascoe/Rhead examples as
-  literature-only motivation, not external validation.
-- Table 3 provides the complete progressive evidence chain; Figures 2--4 show
-  information characterization, state-conditioned value, and decision
-  calibration.
+Synthesize characterization, valuation, attribution, and realization. State
+five transfer conditions and scope the evidence to the current digital-cost,
+six-domain CFRP program.
 
 ## 6. Conclusions
 
-1. Close Part I on structured task-relevant information and its boundaries.
-2. Close Part II on evidence-calibrated realization and the residual deployable
-   gap.
-3. State the engineering implication and limitations without presenting MAVIS
-   as performance-superior.
+Three paragraphs: Part-I evidence; Part-II mechanism and boundaries;
+engineering implication from measuring everything to measuring task-relevant
+information.
+
+## Main visual contract
+
+- Figure 1: framework identity and causal information flow.
+- Figure 2: three Part-I stages.
+- Figure 3: state-conditioned valuation and source controls.
+- Figure 4: A1/A2 valuation, planning, and set realization only.
+- Table 1: compact case and protocol contract.
+- Table 2: six-stage task-relevant result summary.
