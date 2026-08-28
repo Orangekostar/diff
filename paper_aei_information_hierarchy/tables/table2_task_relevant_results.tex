@@ -1,0 +1,19 @@
+\begin{table*}[t]
+\centering
+\caption{Task-relevant acquisition results across the six-stage evidence chain.}
+\label{tab:task-relevant-results}
+\scriptsize
+\setlength{\tabcolsep}{2.5pt}
+\begin{tabularx}{\textwidth}{@{}>{\RaggedRight\arraybackslash}p{0.19\textwidth}>{\RaggedRight\arraybackslash}p{0.22\textwidth}>{\RaggedRight\arraybackslash}p{0.25\textwidth}X@{}}
+\toprule
+Stage & Question & Headline evidence & Scope boundary \\
+\midrule
+Spatial information and sparse recoverability & Does spatial ultrasonic information improve CAI estimation, and how much of the gain survives sparse observation? & 32.1\% MAE reduction; 89.9\% of full-field gain retained & Matched confirmatory field and retrospective 25\% normalized-raster sampling; normalized cost is not scanner time \\
+Task-conditioned spatial measurement value & Is measurement opportunity spatially heterogeneous and conditioned on the downstream task? & Mechanical vs uniform 0.0039; CAI task contrast 0.0486; image task contrast 5.503e-04 & One-shot oracle and cross-objective priorities are retrospective and do not establish learned-policy specificity \\
+State- and predictor-conditioned measurement value & Does measurement value change with accumulated evidence and the downstream predictor? & Best-action turnover 70.4\%; value-rank agreement 0.762 vs 0.116 & Teacher targets are retrospective; the shallow MLP is less accurate, and equal-accuracy structurally distinct predictors remain unresolved \\
+State-conditioned valuation & Can legal-state conditioning improve next-action valuation over a static scorer? & Dynamic - static regret -0.0013; static Spearman -0.0196 & Same legal actions and exact cost at 18.75\%; this does not uniquely attribute the gain to accumulated measured content \\
+Information-source and component decomposition & Which legal-state sources and bounded components account for the remaining acquisition headroom? & Real - history 0.0174; real - reconstruction 0.0342; valuation substitution 4.979e-05 & Matched controls preserve position history and exact cost; component substitutions are retrospective and do not identify a representation bottleneck \\
+Cost-constrained set realization & How closely does bounded set realization approach a retrospective joint near-oracle set? & Greedy regret 1.207e-04; beam-4 regret 1.127e-04 & Two-action reachable-pool diagnostic at 6.25\%; the near-oracle is non-deployable and does not establish arbitrary-horizon regret \\
+\bottomrule
+\end{tabularx}
+\end{table*}

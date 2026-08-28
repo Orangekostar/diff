@@ -7,8 +7,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PAPER = ROOT / "paper_aei_information_hierarchy"
 ARTIFACTS = ROOT / "artifacts/aei_information_hierarchy"
-TABLES = ROOT / "results/aei_information_hierarchy/tables"
 MAIN = PAPER / "main.tex"
+LITERATURE = ROOT / "artifacts/mavis_science_closure/LITERATURE_LEDGER.md"
 
 
 def _text(path: Path) -> str:
@@ -85,14 +85,14 @@ def test_aei_paper_chronology_statement_is_present() -> None:
     )
 
 
-def test_aei_paper_closest_work_matrix_has_verified_sources() -> None:
-    rows = _rows(TABLES / "table1_closest_work.csv")
-    assert all(row["primary_source"].startswith("https://") for row in rows)
-    assert all(row["source_status"] == "VERIFIED_PRIMARY" for row in rows)
+def test_aei_paper_closest_work_ledger_has_primary_sources() -> None:
+    ledger = _text(LITERATURE)
+    assert ledger.count("- Primary source") == 6
+    assert len(re.findall(r"\]\(https://[^)]+\)", ledger)) >= 6
 
 
-def test_aei_paper_closest_work_matrix_contains_required_prior_works() -> None:
-    works = "\n".join(row["work"] for row in _rows(TABLES / "table1_closest_work.csv"))
+def test_aei_paper_closest_work_ledger_contains_required_prior_works() -> None:
+    works = _text(LITERATURE)
     for name in (
         "Fuentes",
         "Cantero-Chinchilla",

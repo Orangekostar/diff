@@ -1,1 +1,0 @@
-**Figure 4. Decision realization and deployment calibration.** (a) Retrospective substitutions expose valuation and bounded planning headroom. (b) Reachable-pool analysis quantifies a set-realization gap while retaining the near-oracle as non-deployable. (c) The no-feedback and strongest deployable references calibrate the frozen learned endpoint as not performance-superior.

@@ -1,0 +1,1 @@
+**Figure 4. Valuation, planning, and set realization.** (a) Retrospective substitutions expose valuation and bounded planning effects. (b) Greedy and beam-width-four selection retain positive regret relative to the retrospective joint set within the registered two-action reachable pool.

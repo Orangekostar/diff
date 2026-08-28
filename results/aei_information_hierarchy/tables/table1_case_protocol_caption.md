@@ -1,0 +1,1 @@
+**Table 1. Case study and protocol.** The cohort, information forms, action-cost definition, deployability boundary, strict nested leave-one-domain-out evaluation, and physical-specimen-first statistical contract are fixed before the main scientific comparisons.

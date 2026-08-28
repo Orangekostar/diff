@@ -1,1 +1,0 @@
-**Table 3. Progressive evidence chain.** Twelve stages connect information characterization to evidence-calibrated decision realization. Matched source controls and the residual deployment gap remain in the main table; retrospective teachers, oracles, and substitutions are non-deployable.

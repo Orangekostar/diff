@@ -50,18 +50,22 @@ def test_aei_paper_figure1_contains_no_performance_values(tmp_path: Path) -> Non
     assert all(not row["value"] for row in _rows(source))
 
 
-def test_aei_paper_figure2_uses_registered_b_path_and_learned_boundary(
+def _visible_claims(prefix: str) -> set[str]:
+    rows = _rows(
+        ROOT / "artifacts/aei_information_hierarchy/PAPER_CLAIM_VISIBILITY_MAP.csv"
+    )
+    return {row["claim_id"] for row in rows if row["main_figure"].startswith(prefix)}
+
+
+def test_aei_paper_figure2_uses_only_part_i_main_visible_claims(
     tmp_path: Path,
 ) -> None:
     source = aei_paper_figures.build_figure_sources(ROOT, tmp_path)["figure2"]
     rows = _rows(source)
     claim_ids = {row["source_claim_id"] for row in rows}
-    assert "U1_MATCHED_FIELD" in claim_ids
+    assert claim_ids == _visible_claims("figure2")
     assert "U1_INDEPENDENT_FIELD_SENSITIVITY" not in claim_ids
-    assert "U2_SPARSE_RETENTION" in claim_ids
-    assert "U3_UNIFORM_ORACLE" in claim_ids
-    assert "U3_RECONSTRUCTION_ORACLE" in claim_ids
-    assert "U4_LEARNED_SPECIFICITY_BOUNDARY" in claim_ids
+    assert "U4_LEARNED_SPECIFICITY_BOUNDARY" not in claim_ids
 
 
 def test_aei_paper_figure3_links_state_evolution_dynamic_value_and_attribution(
@@ -70,24 +74,30 @@ def test_aei_paper_figure3_links_state_evolution_dynamic_value_and_attribution(
     source = aei_paper_figures.build_figure_sources(ROOT, tmp_path)["figure3"]
     rows = _rows(source)
     claim_ids = {row["source_claim_id"] for row in rows}
-    assert {
-        "O1_STATIC_SPEARMAN",
-        "O2_TEACHER_TURNOVER",
-        "O4_DYNAMIC_MINUS_STATIC",
-        "O3_REAL_MINUS_POSITIONS",
-        "O3_REAL_MINUS_RECONSTRUCTION",
-        "O4_DYNAMIC_MINUS_SHUFFLED",
-    } <= claim_ids
+    assert rows[0]["source_claim_id"] == "O4_DYNAMIC_MINUS_STATIC"
+    assert claim_ids == _visible_claims("figure3")
     assert any(row["status"] == "ADVERSE_CONTROL" for row in rows)
     assert any("acquired-position/history" in row["series"].lower() for row in rows)
 
 
-def test_aei_paper_figure4_preserves_feedback_and_final_boundary(
+def test_aei_paper_figure4_contains_only_a1_a2_realization_claims(
     tmp_path: Path,
 ) -> None:
     source = aei_paper_figures.build_figure_sources(ROOT, tmp_path)["figure4"]
-    claim_ids = {row["source_claim_id"] for row in _rows(source)}
-    assert {"A3_FEEDBACK_BENEFIT", "A4_BASELINE_MINUS_MAVIS"} <= claim_ids
+    rows = _rows(source)
+    claim_ids = {row["source_claim_id"] for row in rows}
+    assert len(rows) == 5
+    assert (
+        claim_ids
+        == _visible_claims("figure4")
+        == {
+            "A1_VALUATION_SUBSTITUTION",
+            "A1_LEARNED_PLANNING_SUBSTITUTION",
+            "A1_TRUE_VALUE_PLANNING_SUBSTITUTION",
+            "A2_GREEDY_PLANNING_REGRET",
+            "A2_BEAM4_PLANNING_REGRET",
+        }
+    )
 
 
 def test_aei_paper_figures_export_vector_and_300_dpi_nonblank_raster(
@@ -120,7 +130,7 @@ def test_aei_paper_figure_outputs_use_progressive_stems(tmp_path: Path) -> None:
         "figure1": "figure1_task_relevant_acquisition_framework.pdf",
         "figure2": "figure2_information_characterization.pdf",
         "figure3": "figure3_state_conditioned_value.pdf",
-        "figure4": "figure4_decision_calibration.pdf",
+        "figure4": "figure4_valuation_planning_realization.pdf",
     }
 
 
@@ -128,7 +138,15 @@ def test_aei_paper_visible_figure_text_has_no_internal_stage_labels(
     tmp_path: Path,
 ) -> None:
     artifacts = aei_paper_figures.render_paper_figures(ROOT, tmp_path)
-    forbidden = ("M0_GO", "M1_NO_GO", "Tier B", "CLAIM_NARROWING_GO", "P9 passed")
+    forbidden = (
+        "M0_GO",
+        "M1_NO_GO",
+        "Tier B",
+        "CLAIM_NARROWING_GO",
+        "P9 passed",
+        "MAVIS",
+        "not performance-superior",
+    )
     for artifact in artifacts.values():
         visible = artifact.svg.read_text(encoding="utf-8") + artifact.caption.read_text(
             encoding="utf-8"

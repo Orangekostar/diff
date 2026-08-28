@@ -1,1 +1,0 @@
-**Table 2. Multi-domain CFRP case study and evaluation protocol.** The physical specimen and held-out domain are the statistical units; state-action rows are repeated computational records. Acquisition cost uses exact native-raster locations and is not scanner-time equivalence.

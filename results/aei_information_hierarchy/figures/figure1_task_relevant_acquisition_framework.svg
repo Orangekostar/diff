@@ -9,7 +9,7 @@
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
     <dc:title>figure1_task_relevant_acquisition_framework</dc:title>
     <dc:date>2026-08-27</dc:date>
-    <dc:description>Figure 1. Task-relevant information acquisition framework. Part I characterizes spatial, sparse, objective-conditioned, and state-conditioned task information. Part II tests its realization through legal-state valuation, matched source controls, bounded planning, and the frozen endpoint. Usefulness, task-value observability, and actionability are validation criteria.</dc:description>
+    <dc:description>Figure 1. Task-relevant information acquisition framework. Part I characterizes spatial, sparse, objective-conditioned, and state-conditioned task information. Part II, state-conditioned task-oriented acquisition, tests its realization through legal-state valuation, matched source controls, bounded planning, and the frozen endpoint. Usefulness, task-value observability, and actionability are validation criteria.</dc:description>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
@@ -104,17 +104,17 @@ L 400.9248 153.46458
     <text style="font-size: 8px; font-family: 'DejaVu Sans'; fill: #222222" transform="translate(41.21245 74.83516)">objective and state conditioning</text>
    </g>
    <g id="text_4">
-    <text style="font-size: 6.8px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #666666" x="105.6312" y="85.058072" transform="rotate(-0 105.6312 85.058072)">What information is valuable to acquire?</text>
+    <text style="font-size: 6.8px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #666666" x="105.6312" y="82.521692" transform="rotate(-0 105.6312 82.521692)">What information is valuable to acquire?</text>
    </g>
    <g id="text_5">
-    <text style="font-weight: 700; font-size: 7.2px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #ffffff" x="310.5288" y="47.961472" transform="rotate(-0 310.5288 47.961472)">PART II  EVIDENCE-CALIBRATED REALIZATION</text>
+    <text style="font-weight: 700; font-size: 4.9px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #ffffff" x="310.5288" y="47.364012" transform="rotate(-0 310.5288 47.364012)">PART II  STATE-CONDITIONED TASK-ORIENTED ACQUISITION</text>
    </g>
    <g id="text_6">
     <text style="font-size: 8px; font-family: 'DejaVu Sans'; fill: #222222" transform="translate(234.730675 63.94141)">Legal-state value  |  matched controls</text>
-    <text style="font-size: 8px; font-family: 'DejaVu Sans'; fill: #222222" transform="translate(232.719425 74.83516)">bounded planning and frozen endpoint</text>
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'; fill: #222222" transform="translate(247.6513 75.61016)">cost-constrained set realization</text>
    </g>
    <g id="text_7">
-    <text style="font-size: 6.8px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #666666" x="310.5288" y="85.058072" transform="rotate(-0 310.5288 85.058072)">How far does value reach a sensing decision?</text>
+    <text style="font-size: 6.8px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #666666" x="310.5288" y="82.521692" transform="rotate(-0 310.5288 82.521692)">How is value converted into a measurement set?</text>
    </g>
    <g id="patch_9">
     <path d="M 198.025946 64.69128

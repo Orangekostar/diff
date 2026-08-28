@@ -1,0 +1,1 @@
+**Table 2. Six-stage task-relevant acquisition results.** The table compresses the main-visible evidence from spatial information and sparse recoverability through state-conditioned valuation, matched source controls, component substitutions, and cost-constrained set realization; each row retains its governing scope boundary.

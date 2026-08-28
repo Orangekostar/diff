@@ -1,1 +1,0 @@
-**Table 1. Closest-work positioning.** The comparison separates measurement setting, acquisition objective, state dependence, downstream endpoint, and scope. The contribution connects information characterization to calibrated decision realization, not a first adaptive-ultrasound or generic-VoI claim.
