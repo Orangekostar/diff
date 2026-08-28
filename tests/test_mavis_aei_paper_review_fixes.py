@@ -141,6 +141,7 @@ def test_all_39_canonical_claims_have_one_primary_narrative_stage() -> None:
         "figure_assignment",
         "table_assignment",
         "manuscript_assignment",
+        "narrative_visibility",
     }
     assert len(canonical) == len(narrative) == 39
     assert set(narrative[0]) == required
@@ -150,6 +151,75 @@ def test_all_39_canonical_claims_have_one_primary_narrative_stage() -> None:
     assert len({row["claim_id"] for row in narrative}) == 39
     assert all(row["new_part"] in {"PART_I", "PART_II"} for row in narrative)
     assert all(row["new_stage"] for row in narrative)
+
+
+def test_positive_narrative_map_uses_visibility_aware_writing_contract() -> None:
+    narrative = _rows(ARTIFACTS / "PAPER_POSITIVE_NARRATIVE_MAP.csv")
+    visibility = {
+        row["claim_id"]: row["visibility"]
+        for row in _rows(ARTIFACTS / "PAPER_CLAIM_VISIBILITY_MAP.csv")
+    }
+    expected = {
+        "MAIN_HEADLINE": "MAIN_REQUIRED",
+        "MAIN_SUPPORT": "MAIN_OPTIONAL",
+        "MAIN_SYSTEM_DIAGNOSTIC": "MAIN_REQUIRED",
+        "SUPPLEMENT_ONLY": "SUPPLEMENT_REQUIRED",
+    }
+    assert {
+        row["narrative_visibility"] for row in narrative
+    } == {"MAIN_REQUIRED", "MAIN_OPTIONAL", "SUPPLEMENT_REQUIRED"}
+    for row in narrative:
+        assert row["narrative_visibility"] == expected[visibility[row["claim_id"]]]
+
+    markdown = _text(ARTIFACTS / "PAPER_POSITIVE_NARRATIVE_MAP.md")
+    for value in (
+        "MAIN_REQUIRED",
+        "MAIN_OPTIONAL",
+        "SUPPLEMENT_REQUIRED",
+        "INTERNAL_ONLY",
+    ):
+        assert f"`{value}`" in markdown
+
+
+def test_positive_narrative_map_matches_six_stage_visibility_authority() -> None:
+    narrative = {
+        row["claim_id"]: row
+        for row in _rows(ARTIFACTS / "PAPER_POSITIVE_NARRATIVE_MAP.csv")
+    }
+    visibility = _rows(ARTIFACTS / "PAPER_CLAIM_VISIBILITY_MAP.csv")
+    role_by_visibility = {
+        "MAIN_HEADLINE": "main",
+        "MAIN_SUPPORT": "supporting",
+        "MAIN_SYSTEM_DIAGNOSTIC": "system_diagnostic",
+        "SUPPLEMENT_ONLY": "supplement",
+    }
+    for expected in visibility:
+        actual = narrative[expected["claim_id"]]
+        assert actual["new_part"] == (
+            "PART_I"
+            if expected["paper_module"] == "PART_I_CHARACTERIZATION"
+            else "PART_II"
+        )
+        assert actual["new_stage"] == expected["compressed_stage"]
+        assert actual["main_or_supporting"] == role_by_visibility[
+            expected["visibility"]
+        ]
+        assert actual["figure_assignment"] == expected["main_figure"]
+        assert actual["table_assignment"] == expected["main_table"]
+        assert actual["manuscript_assignment"] == expected["main_section"]
+
+    markdown = _text(ARTIFACTS / "PAPER_POSITIVE_NARRATIVE_MAP.md")
+    for stage in {
+        row["compressed_stage"] for row in visibility
+    }:
+        assert f"`{stage}`" in markdown
+    for obsolete in (
+        "I1 Spatial enrichment",
+        "I6 Predictor conditioning",
+        "II1 Static reference",
+        "II6 Deployment calibration",
+    ):
+        assert obsolete not in markdown
 
 
 def test_narrative_map_preserves_canonical_layer_chronology_and_source() -> None:
