@@ -12,8 +12,8 @@ Handoff date: 2026-08-28 UTC
 | Working branch | `aei-main-method-reframe` |
 | Final local SHA | self-referential finalization commit; resolve with `git rev-parse refs/heads/aei-main-method-reframe` |
 | Remote branch | `origin/aei-main-method-reframe` |
-| Verified payload SHA | `PAYLOAD_COMMIT_PENDING` |
-| Remote verification | `PENDING_FINAL_PUSH` |
+| Verified payload SHA | `7967a12bcc4ea1c79724f6780806ccbd5aa61442` |
+| Remote verification | `origin/aei-main-method-reframe` matched the payload SHA; required remote paths and artifact hashes passed |
 
 A tracked Git file cannot contain the hash of the commit that contains the file;
 changing the hash text changes the commit hash. The exact final local/remote SHA
@@ -221,7 +221,8 @@ the static reference are not established.
 
 Push command: `git push -u origin aei-main-method-reframe`
 Remote branch: `refs/heads/aei-main-method-reframe`
-Payload commit: `PAYLOAD_COMMIT_PENDING`
-Remote payload SHA: `PAYLOAD_COMMIT_PENDING`
-Remote verification status: `PENDING_FINAL_PUSH`
+Payload commit: `7967a12bcc4ea1c79724f6780806ccbd5aa61442`
+Remote payload SHA: `7967a12bcc4ea1c79724f6780806ccbd5aa61442`
+Remote verification status: verified; required remote paths and artifact hashes
+passed.
 PR URL: not created; automatic merge to `main` is prohibited.
