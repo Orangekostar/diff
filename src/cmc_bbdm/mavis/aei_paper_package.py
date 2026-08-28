@@ -24,13 +24,12 @@ _FIGURES = (
     "figure1_task_relevant_acquisition_framework.pdf",
     "figure2_information_characterization.pdf",
     "figure3_state_conditioned_value.pdf",
-    "figure4_decision_calibration.pdf",
+    "figure4_valuation_planning_realization.pdf",
 )
 
 _TABLES = (
-    "table1_closest_work.tex",
-    "table2_case_protocol.tex",
-    "table3_progressive_evidence_chain.tex",
+    "table1_case_protocol.tex",
+    "table2_task_relevant_results.tex",
 )
 
 _LEGACY_FIGURES = (
@@ -38,9 +37,15 @@ _LEGACY_FIGURES = (
     "figure2_usefulness.pdf",
     "figure3_observability.pdf",
     "figure4_actionability.pdf",
+    "figure4_decision_calibration.pdf",
 )
 
-_LEGACY_TABLES = ("table3_hierarchy_evidence.tex",)
+_LEGACY_TABLES = (
+    "table1_closest_work.tex",
+    "table2_case_protocol.tex",
+    "table3_hierarchy_evidence.tex",
+    "table3_progressive_evidence_chain.tex",
+)
 
 _SUPPLEMENTARY_SOURCES = (
     (
@@ -222,16 +227,12 @@ def _flat_manuscript(source: Path) -> str:
     return (
         text.replace(r"\graphicspath{{figures/}}", r"\graphicspath{{./}}")
         .replace(
-            r"\input{tables/table1_closest_work.tex}",
-            r"\input{table1_closest_work.tex}",
+            r"\input{tables/table1_case_protocol.tex}",
+            r"\input{table1_case_protocol.tex}",
         )
         .replace(
-            r"\input{tables/table2_case_protocol.tex}",
-            r"\input{table2_case_protocol.tex}",
-        )
-        .replace(
-            r"\input{tables/table3_progressive_evidence_chain.tex}",
-            r"\input{table3_progressive_evidence_chain.tex}",
+            r"\input{tables/table2_task_relevant_results.tex}",
+            r"\input{table2_task_relevant_results.tex}",
         )
     )
 

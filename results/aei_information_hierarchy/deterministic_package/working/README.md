@@ -6,11 +6,12 @@ commit `9c2d0f1c97a96358c5e697f488373254a099d0fe`.
 
 Working title:
 
-> Task-Relevant Information Acquisition for Ultrasonic Inspection of Impacted
-> Composites: From Spatial Information Structure to Evidence-Calibrated Sensing
+> Task-Relevant Ultrasonic Information Acquisition for Impacted Composites:
+> From Spatial Information to State-Conditioned Sensing
 
-The manuscript follows a positive progressive argument. Part I characterizes
-structured task-relevant information; Part II tests its evidence-calibrated
+The manuscript follows a positive progressive argument. Part I, Task-Relevant
+Information Characterization, characterizes structured task-relevant
+information. Part II, State-Conditioned Task-Oriented Acquisition, tests its
 realization in sensing decisions. It introduces no new model training and does
 not claim a performance-superior adaptive scanner. Usefulness, task-value
 observability, and actionability remain validation criteria within the two
@@ -38,7 +39,7 @@ The paper has exactly six top-level sections:
 5. Experimental Results and Discussion
 6. Conclusions
 
-The four main figures and three main tables are generated from machine-readable
+The four main figures and two main tables are generated from machine-readable
 paper evidence. Retrospective teachers, oracles, and component substitutions
 are always identified as non-deployable. Acquisition cost is the exact fraction
 of unique native-raster locations revealed, not scanner time.
@@ -58,7 +59,7 @@ latexmk -pdf -interaction=nonstopmode -halt-on-error supplementary.tex
 ```
 
 The working tree includes the Elsevier class/style, four manuscript-width PDF
-figures, three generated LaTeX tables, and the machine-readable supplement. The
+figures, two generated LaTeX tables, and the machine-readable supplement. The
 deterministic flat Editorial Manager source bundle is generated under
 `../results/aei_information_hierarchy/deterministic_package/` by
 `cmc_bbdm.mavis.aei_paper_package`.

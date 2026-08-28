@@ -1,0 +1,19 @@
+\begin{table*}[t]
+\centering
+\caption{Case study and evaluation protocol.}
+\label{tab:case-protocol}
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabularx}{\textwidth}{@{}>{\RaggedRight\arraybackslash}p{0.20\textwidth}X@{}}
+\toprule
+Item & Value \\
+\midrule
+Cohort & 276 physical specimens across 6 experimental domains; domain counts 45, 49, 43, 59, 42, 38 \\
+Information representations & Specimen metadata and surface observables; full ultrasonic C-scan field; 25\% normalized-raster sparse field; current partial state \\
+Actions and cost & 8 x 8 cells with three acquisition levels; cost is exact unique native-raster locations divided by native count, with no scanner-time equivalence \\
+Information boundary & Deployable state contains metadata, acquired positions and content, legal actions, and exact cost; teacher and oracle information is retrospective and non-deployable \\
+Evaluation & Strict nested leave-one-domain-out (LODO); outer-domain outcomes are excluded from training, selection, and calibration \\
+Statistics & physical specimen first and held-out domain second; equal-domain aggregation with synchronized within-domain bootstrap; repeated computational records are not independent samples \\
+\bottomrule
+\end{tabularx}
+\end{table*}

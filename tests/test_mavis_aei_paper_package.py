@@ -20,12 +20,11 @@ def test_aei_paper_package_has_complete_working_tree(tmp_path: Path) -> None:
         "figure1_task_relevant_acquisition_framework.pdf",
         "figure2_information_characterization.pdf",
         "figure3_state_conditioned_value.pdf",
-        "figure4_decision_calibration.pdf",
+        "figure4_valuation_planning_realization.pdf",
     ]
     assert sorted(path.name for path in package.tables.glob("*.tex")) == [
-        "table1_closest_work.tex",
-        "table2_case_protocol.tex",
-        "table3_progressive_evidence_chain.tex",
+        "table1_case_protocol.tex",
+        "table2_task_relevant_results.tex",
     ]
     assert (package.root / "elsarticle.cls").is_file()
     assert (package.root / "elsarticle-num.bst").is_file()
@@ -58,9 +57,10 @@ def test_aei_submission_source_is_flat_and_rewrites_local_inputs(
     assert "figures/" not in manuscript
     assert "tables/" not in manuscript
     assert "\\graphicspath{{./}}" in manuscript
-    assert "\\input{table1_closest_work.tex}" in manuscript
-    assert "\\input{table2_case_protocol.tex}" in manuscript
-    assert "\\input{table3_progressive_evidence_chain.tex}" in manuscript
+    assert "\\input{table1_case_protocol.tex}" in manuscript
+    assert "\\input{table2_task_relevant_results.tex}" in manuscript
+    assert "table1_closest_work" not in manuscript
+    assert "table3_progressive_evidence_chain" not in manuscript
 
 
 def test_aei_submission_manifest_matches_every_listed_file(tmp_path: Path) -> None:

@@ -9,7 +9,7 @@ from pathlib import Path
 
 from cmc_bbdm.mavis import aei_paper_evidence
 
-_BASE_COMMIT = "ba9709545e3ade21424540547e6ab277279345de"
+_BASE_COMMIT = "ff4730b3fcf368d6ac43f0f72f034703e1556f7d"
 _FROZEN_PATHS = (
     "results/p1_full_field_oracle",
     "analysis_tables",
@@ -35,7 +35,7 @@ _SCIENTIFIC = re.compile(
     r"(?P<mantissa>[+-]?\d+(?:\.\d+)?)\\times10\^\{(?P<exponent>[+-]?\d+)\}"
 )
 _DECIMAL = re.compile(r"(?<![A-Za-z0-9_.])(?P<value>[+-]?\d+\.\d+)")
-_ALLOWED_PROTOCOL_VALUES = (18.75,)
+_ALLOWED_PROTOCOL_VALUES = (6.25, 18.75)
 _CHRONOLOGY_COLUMNS = (
     "claim_id",
     "paper_layer",
@@ -71,7 +71,9 @@ _SOURCE_STAGES = {
 class ValidationReport:
     passed: bool
     canonical_claim_count: int
-    mapped_claim_count: int
+    main_visible_claim_count: int
+    main_mapped_claim_count: int
+    combined_mapped_claim_count: int
     figure_count: int
     table_count: int
     section_count: int
@@ -82,6 +84,16 @@ class ValidationReport:
 
 def _visible_text(text: str) -> str:
     return "\n".join(re.sub(r"(?<!\\)%.*$", "", line) for line in text.splitlines())
+
+
+def _claim_ids(text: str) -> set[str]:
+    return set(re.findall(r"\b[UOA][1-5]_[A-Z0-9_]+\b", text))
+
+
+def _visibility_rows(root: Path) -> list[dict[str, str]]:
+    path = root / "artifacts/aei_information_hierarchy/PAPER_CLAIM_VISIBILITY_MAP.csv"
+    with path.open(encoding="utf-8", newline="") as stream:
+        return list(csv.DictReader(stream))
 
 
 def _canonical_values(root: Path) -> list[float]:
@@ -220,25 +232,33 @@ def semantic_validation_errors(root: Path) -> list[str]:
     manuscript = (root / "paper_aei_information_hierarchy/main.tex").read_text(
         encoding="utf-8"
     )
-    flat = re.sub(r"\s+", " ", manuscript)
     errors: list[str] = []
 
+    visible = _visible_text(manuscript)
+    visible_flat = re.sub(r"\s+", " ", visible)
     required_main = {
+        "title": (
+            "Task-Relevant Ultrasonic Information Acquisition for Impacted "
+            "Composites: From Spatial Information to State-Conditioned Sensing"
+        ),
         "auebc_normalization": r"\frac{1}{x_{i,K}-x_{i,1}}",
         "effective_budget": r"x_{i,1}<\cdots<x_{i,K}",
         "chronology": "distinct chronological roles",
         "operational_novelty": "under one causal acquisition contract",
-        "part_i": r"\subsection{Part I --- From Spatial Morphology to State-Conditioned Task Value}",
-        "part_ii": r"\subsection{Part II --- From State-Conditioned Value to Evidence-Calibrated Decisions}",
+        "part_i": r"\subsection{Task-Relevant Information Characterization}",
+        "part_ii": r"\subsection{State-Conditioned Task-Oriented Acquisition}",
         "history_control": "acquired-position/history control",
         "reconstruction_control": "registered normalized-RGB-MSE reconstruction objective",
-        "deployment_boundary": "not performance-superior",
+        "deployment_boundary": "this endpoint is an implementation boundary",
         "predictor_accuracy_boundary": "substantially less accurate shallow MLP",
         "transfer_heading": "Transfer conditions beyond the present case study",
         "bounded_domains": "across the six held-out experimental domains in the present data program",
+        "figure4": "figure4_valuation_planning_realization.pdf",
+        "table1": r"\input{tables/table1_case_protocol.tex}",
+        "table2": r"\input{tables/table2_task_relevant_results.tex}",
     }
     for label, phrase in required_main.items():
-        if phrase not in flat:
+        if phrase not in visible_flat:
             errors.append(label)
 
     chronology_path = (
@@ -278,16 +298,39 @@ def semantic_validation_errors(root: Path) -> list[str]:
         ):
             errors.append("narrative_map_stage_coverage")
 
-    closest = root / "results/aei_information_hierarchy/tables/table1_closest_work.csv"
-    if not closest.is_file():
-        errors.append("closest_work_missing")
+    visibility = _visibility_rows(root)
+    canonical_claims = {
+        metric.claim_id for metric in aei_paper_evidence.build_canonical_metrics(root)
+    }
+    if (
+        len(visibility) != 39
+        or {row.get("claim_id") for row in visibility} != canonical_claims
+    ):
+        errors.append("visibility_claim_coverage")
+    visibility_counts = {
+        value: sum(row.get("visibility") == value for row in visibility)
+        for value in (
+            "MAIN_HEADLINE",
+            "MAIN_SUPPORT",
+            "MAIN_SYSTEM_DIAGNOSTIC",
+            "SUPPLEMENT_ONLY",
+        )
+    }
+    if visibility_counts != {
+        "MAIN_HEADLINE": 12,
+        "MAIN_SUPPORT": 15,
+        "MAIN_SYSTEM_DIAGNOSTIC": 1,
+        "SUPPLEMENT_ONLY": 11,
+    }:
+        errors.append("visibility_partition")
+
+    literature = root / "artifacts/mavis_science_closure/LITERATURE_LEDGER.md"
+    if not literature.is_file():
+        errors.append("literature_ledger_missing")
     else:
-        with closest.open(encoding="utf-8", newline="") as stream:
-            rows = list(csv.DictReader(stream))
-        if len(rows) != 6 or any(
-            row.get("source_status") != "VERIFIED_PRIMARY" for row in rows
-        ):
-            errors.append("closest_work_source_coverage")
+        literature_text = literature.read_text(encoding="utf-8")
+        if literature_text.count("- Primary source") != 6:
+            errors.append("literature_primary_source_coverage")
 
     forbidden = (
         "first adaptive ultrasonic",
@@ -302,9 +345,15 @@ def semantic_validation_errors(root: Path) -> list[str]:
         "figure3_observability.pdf",
         "figure4_actionability.pdf",
         "table3_hierarchy_evidence.tex",
+        "figure4_decision_calibration.pdf",
+        "table1_closest_work.tex",
+        "table3_progressive_evidence_chain.tex",
     )
-    lower = manuscript.lower()
+    lower = visible.lower()
     errors.extend(f"forbidden:{phrase}" for phrase in forbidden if phrase in lower)
+    for phrase in ("mavis", "mvd_m1_o2"):
+        if phrase in lower:
+            errors.append(f"internal_identity:{phrase}")
     return errors
 
 
@@ -370,19 +419,30 @@ def validate_paper(root: Path) -> ValidationReport:
     manuscript = (root / "paper_aei_information_hierarchy/main.tex").read_text(
         encoding="utf-8"
     )
+    supplement = (
+        root / "paper_aei_information_hierarchy/supplementary/supplementary.tex"
+    ).read_text(encoding="utf-8")
     canonical = {
         row.claim_id for row in aei_paper_evidence.build_canonical_metrics(root)
     }
-    mapped = set(re.findall(r"\b[UOA][1-5]_[A-Z0-9_]+\b", manuscript))
+    visibility = _visibility_rows(root)
+    main_visible = {
+        row["claim_id"]
+        for row in visibility
+        if row["visibility"] in {"MAIN_HEADLINE", "MAIN_SUPPORT"}
+    }
+    main_mapped = _claim_ids(manuscript)
+    combined_mapped = _claim_ids(manuscript + "\n" + supplement)
     figures = re.findall(r"\\includegraphics\[[^]]*\]\{([^}]+)\}", manuscript)
     tables = re.findall(r"\\input\{tables/[^}]+\}", manuscript)
     sections = re.findall(r"^\\section\{[^}]+\}", manuscript, flags=re.MULTILINE)
     unmatched = tuple(unmatched_results_numbers(root))
     changed = tuple(changed_frozen_paths(root))
     passed = (
-        mapped == canonical
+        main_mapped == main_visible
+        and combined_mapped == canonical
         and len(figures) == 4
-        and len(tables) == 3
+        and len(tables) == 2
         and len(sections) == 6
         and not unmatched
         and not changed
@@ -391,7 +451,9 @@ def validate_paper(root: Path) -> ValidationReport:
     return ValidationReport(
         passed=passed,
         canonical_claim_count=len(canonical),
-        mapped_claim_count=len(mapped),
+        main_visible_claim_count=len(main_visible),
+        main_mapped_claim_count=len(main_mapped),
+        combined_mapped_claim_count=len(combined_mapped),
         figure_count=len(figures),
         table_count=len(tables),
         section_count=len(sections),

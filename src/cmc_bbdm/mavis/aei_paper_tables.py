@@ -218,8 +218,8 @@ def _result_rows(root: Path) -> list[dict[str, str]]:
                 f"{_format(u4_image['estimate'])}"
             ),
             (
-                "One-shot oracle and cross-objective priorities are retrospective and "
-                "do not establish learned-policy specificity"
+                "Oracle rows and cross-task priorities are retrospective; learned-policy "
+                "specificity is outside this test"
             ),
         ),
         (

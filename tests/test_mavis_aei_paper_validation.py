@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
 from cmc_bbdm.mavis import aei_paper_validation
@@ -19,21 +20,42 @@ def test_aei_paper_validation_closes_claim_figure_table_contract() -> None:
     report = aei_paper_validation.validate_paper(ROOT)
     assert report.passed
     assert report.canonical_claim_count == 39
-    assert report.mapped_claim_count == 39
+    assert report.main_visible_claim_count == 27
+    assert report.main_mapped_claim_count == 27
+    assert report.combined_mapped_claim_count == 39
     assert report.figure_count == 4
-    assert report.table_count == 3
+    assert report.table_count == 2
     assert report.section_count == 6
     assert report.semantic_errors == ()
 
 
 def test_aei_supplement_preserves_main_boundary_results() -> None:
-    manuscript = (ROOT / "paper_aei_information_hierarchy/main.tex").read_text(
-        encoding="utf-8"
+    manuscript = re.sub(
+        r"\s+",
+        " ",
+        (ROOT / "paper_aei_information_hierarchy/main.tex").read_text(encoding="utf-8"),
     )
-    assert "real minus acquired-position/history" in manuscript
-    assert "dynamic real minus shuffled" in manuscript
-    assert "no-feedback reference retained" in manuscript
-    assert "not performance-superior" in manuscript
+    supplement = re.sub(
+        r"\s+",
+        " ",
+        (
+            ROOT / "paper_aei_information_hierarchy/supplementary/supplementary.tex"
+        ).read_text(encoding="utf-8"),
+    )
+    assert re.search(
+        r"real minus acquired-\s*position/history", manuscript, re.IGNORECASE
+    )
+    assert "dynamic real minus shuffled" in manuscript.lower()
+    assert "no-feedback reference retained" in supplement
+    assert "A3_FEEDBACK_BENEFIT" in supplement
+    assert "A3_FEEDBACK_BENEFIT" not in manuscript
+    assert "A4_BASELINE_MINUS_MAVIS" not in manuscript
+
+
+def test_aei_main_and_supplement_follow_visibility_partition() -> None:
+    report = aei_paper_validation.validate_paper(ROOT)
+    assert report.main_mapped_claim_count == report.main_visible_claim_count
+    assert report.combined_mapped_claim_count == report.canonical_claim_count
 
 
 def test_adverse_numerical_directions_are_preserved() -> None:
