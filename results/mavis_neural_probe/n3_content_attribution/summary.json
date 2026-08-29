@@ -1,0 +1,114 @@
+{
+  "base_commit": "9794d53a9549f2e3501fe482e8db8735f468ba20",
+  "bootstrap_replicates": 5000,
+  "clean_nonprivileged_methods": [
+    "random",
+    "uniform"
+  ],
+  "config_sha256": "26299353b1870081660af452cb7e8ca3ba0b4fe87666f26c3922ef1a9ef7fc66",
+  "frozen_p2_manifest_sha256": "acc4db107c8c870eafd8035a744f03785b3f6f167dc50192d276b7ee014feb5c",
+  "frozen_p3_manifest_sha256": "123c1caa64ecec69be25086457a02c3b247fee8ca703f09a66a800cb9456c022",
+  "gate": "CONTENT_NO_GO",
+  "gate_scope": "both_p2_and_p3_clean_nonprivileged_layers",
+  "headline_contrasts": [
+    {
+      "ci95_lower": -0.0262319396391438,
+      "ci95_upper": -0.009597427261780258,
+      "control_minus_real": -0.017829930713996318,
+      "control_mode": "positions_only",
+      "favorable_domain_count": 1,
+      "metric": "p2_auebc",
+      "model": "deepsets",
+      "stage": "p2",
+      "stratum": "clean_nonpriv"
+    },
+    {
+      "ci95_lower": -0.0028401922695820876,
+      "ci95_upper": 0.011091405468023414,
+      "control_minus_real": 0.004086698671233599,
+      "control_mode": "shuffled",
+      "favorable_domain_count": 3,
+      "metric": "p2_auebc",
+      "model": "deepsets",
+      "stage": "p2",
+      "stratum": "clean_nonpriv"
+    },
+    {
+      "ci95_lower": -0.012299530432577805,
+      "ci95_upper": 0.0064825515611149674,
+      "control_minus_real": -0.0030174325402961533,
+      "control_mode": "positions_only",
+      "favorable_domain_count": 2,
+      "metric": "p2_auebc",
+      "model": "spatial",
+      "stage": "p2",
+      "stratum": "clean_nonpriv"
+    },
+    {
+      "ci95_lower": -0.009681788535039754,
+      "ci95_upper": 0.006255578734136045,
+      "control_minus_real": -0.0015067303386449918,
+      "control_mode": "shuffled",
+      "favorable_domain_count": 3,
+      "metric": "p2_auebc",
+      "model": "spatial",
+      "stage": "p2",
+      "stratum": "clean_nonpriv"
+    },
+    {
+      "ci95_lower": -0.00013534375810373984,
+      "ci95_upper": 0.0006052474388000966,
+      "control_minus_real": 0.00023077185344432243,
+      "control_mode": "positions_only",
+      "favorable_domain_count": 4,
+      "metric": "p3_next_action_regret",
+      "model": "deepsets",
+      "stage": "p3",
+      "stratum": "clean_nonpriv"
+    },
+    {
+      "ci95_lower": -0.00045474625442315606,
+      "ci95_upper": -4.932271440517415e-05,
+      "control_minus_real": -0.0002466120882503216,
+      "control_mode": "shuffled",
+      "favorable_domain_count": 2,
+      "metric": "p3_next_action_regret",
+      "model": "deepsets",
+      "stage": "p3",
+      "stratum": "clean_nonpriv"
+    },
+    {
+      "ci95_lower": -0.00040688535139083473,
+      "ci95_upper": -6.411536917089499e-05,
+      "control_minus_real": -0.00023258685713885112,
+      "control_mode": "positions_only",
+      "favorable_domain_count": 2,
+      "metric": "p3_next_action_regret",
+      "model": "spatial",
+      "stage": "p3",
+      "stratum": "clean_nonpriv"
+    },
+    {
+      "ci95_lower": -0.0003397380296151985,
+      "ci95_upper": -2.7211141967040487e-05,
+      "control_minus_real": -0.00018722287215730432,
+      "control_mode": "shuffled",
+      "favorable_domain_count": 2,
+      "metric": "p3_next_action_regret",
+      "model": "spatial",
+      "stage": "p3",
+      "stratum": "clean_nonpriv"
+    }
+  ],
+  "n1_manifest_sha256": "e504642131a738172e649bb36e2975b142de45ce09f6cfa00ab9e2f55540d570",
+  "n2_manifest_sha256": "d5f2a0b14bae320f67745ccb61cc15d5144fab29a47639343b86de467939cfa4",
+  "runtime_head": "dde8030bbf0b8f9e13d45e13abed6b05aab20d32",
+  "schema_version": 1,
+  "seed": 20260825,
+  "stage": "N3_CONTENT_ATTRIBUTION",
+  "statistical_units": [
+    "physical_specimen",
+    "held_out_domain"
+  ],
+  "unified_contrast": "control_minus_real"
+}

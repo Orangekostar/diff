@@ -1,0 +1,32 @@
+{
+  "artifact": "mavis_neural_probe_n3_content_attribution",
+  "base_commit": "9794d53a9549f2e3501fe482e8db8735f468ba20",
+  "config_sha256": "26299353b1870081660af452cb7e8ca3ba0b4fe87666f26c3922ef1a9ef7fc66",
+  "files": {
+    "REPORT.md": {
+      "bytes": 1373,
+      "sha256": "ade3846a6ea9fc961ee9b59d0f760c7d3a64265429ac10e22cbd87c059923248"
+    },
+    "aggregate_metrics.csv": {
+      "bytes": 2961,
+      "sha256": "cfba45f3b2b5e214246e0f6802b2997a6ece66325e5d6eae94474cf03646d59b"
+    },
+    "bootstrap.csv": {
+      "bytes": 12742254,
+      "sha256": "778e229e413daa6281e016ee030cbce86a6847ef19e94ed42494136a89794252"
+    },
+    "config.json": {
+      "bytes": 1730,
+      "sha256": "26299353b1870081660af452cb7e8ca3ba0b4fe87666f26c3922ef1a9ef7fc66"
+    },
+    "domain_metrics.csv": {
+      "bytes": 17762,
+      "sha256": "0e74f8a272472796af5e2fe4f1410948d7437cabc756d97bfb99f5a40154a698"
+    },
+    "summary.json": {
+      "bytes": 3725,
+      "sha256": "c72fdbb51b58de4d5813ebc2b2c22c9436ead3628b59d1d07e74589b058f2b09"
+    }
+  },
+  "schema_version": 1
+}

@@ -22,6 +22,10 @@ from cmc_bbdm.mavis.neural_probe.artifacts import (
     verify_artifact_integrity,
     write_artifact_integrity,
 )
+from cmc_bbdm.mavis.neural_probe.attribution import (
+    CLEAN_NONPRIV,
+    evaluate_content_attribution,
+)
 from cmc_bbdm.mavis.neural_probe.execution import (
     run_spatial_dynamic_outer_domain,
     run_spatial_mris_outer_domain,
@@ -334,3 +338,135 @@ def test_neural_probe_artifact_integrity_round_trip(tmp_path: Path) -> None:
     manifest = verify_artifact_integrity(tmp_path)
     assert manifest["artifact"] == "mavis_neural_probe_test"
     assert set(manifest["files"]) == {"REPORT.md", "summary.json"}
+
+
+def _content_predictions(*, spatial: bool) -> pl.DataFrame:
+    rows: list[dict[str, object]] = []
+    errors = {
+        "uniform": {
+            "real": 0.10,
+            "positions_only": 0.20 if spatial else 0.15,
+            "shuffled": 0.30 if spatial else 0.20,
+            "static": 0.35,
+        },
+        "reconstruction_driven": {
+            "real": 0.20,
+            "positions_only": 0.10,
+            "shuffled": 0.15,
+            "static": 0.40,
+        },
+    }
+    errors["random"] = dict(errors["uniform"])
+    for domain_index in range(6):
+        domain = f"d{domain_index}"
+        for specimen_index in range(2):
+            specimen = f"{domain}-{specimen_index}"
+            for method, mode_errors in errors.items():
+                for checkpoint_index, cost in enumerate((10, 20)):
+                    state_id = f"{specimen}-{method}-{checkpoint_index}"
+                    for mode, error in mode_errors.items():
+                        rows.append(
+                            {
+                                "outer_domain": domain,
+                                "state_id": state_id,
+                                "specimen_id": specimen,
+                                "trajectory_id": f"trajectory-{specimen}-{method}",
+                                "method": method,
+                                "seed": None,
+                                "nominal_checkpoint": 0.1 * (checkpoint_index + 1),
+                                "exact_acquired_cost": cost,
+                                "native_count": 100,
+                                "effective_budget": cost / 100.0,
+                                "mode": mode,
+                                "target": 0.0,
+                                "prediction": error,
+                                "absolute_error": error,
+                                "model_state_sha256": "a" * 64,
+                            }
+                        )
+    return pl.DataFrame(rows, infer_schema_length=None)
+
+
+def _content_dynamic_metrics(*, spatial: bool) -> pl.DataFrame:
+    rows: list[dict[str, object]] = []
+    regrets = {
+        "uniform": {
+            "real": 0.10,
+            "positions_only": 0.20 if spatial else 0.15,
+            "shuffled": 0.30 if spatial else 0.20,
+            "static": 0.35,
+        },
+        "reconstruction_driven": {
+            "real": 0.20,
+            "positions_only": 0.10,
+            "shuffled": 0.15,
+            "static": 0.40,
+        },
+    }
+    regrets["random"] = dict(regrets["uniform"])
+    for domain_index in range(6):
+        domain = f"d{domain_index}"
+        for specimen_index in range(2):
+            specimen = f"{domain}-{specimen_index}"
+            for method, mode_regrets in regrets.items():
+                state_id = f"state-{specimen}-{method}"
+                for mode, regret in mode_regrets.items():
+                    rows.append(
+                        {
+                            "outer_domain": domain,
+                            "domain_id": domain,
+                            "specimen_id": specimen,
+                            "state_id": state_id,
+                            "method": method,
+                            "mode": mode,
+                            "next_action_regret": regret,
+                            "one_step_cai_utility": -regret,
+                            "spearman": 0.5,
+                            "ndcg": 0.5,
+                            "recall_at_k": 0.5,
+                        }
+                    )
+    return pl.DataFrame(rows, infer_schema_length=None)
+
+
+def test_n3_content_attribution_uses_fixed_strata_and_unified_sign() -> None:
+    result = evaluate_content_attribution(
+        spatial_p2_predictions=_content_predictions(spatial=True),
+        deepsets_p2_predictions=_content_predictions(spatial=False),
+        spatial_p3_state_metrics=_content_dynamic_metrics(spatial=True),
+        deepsets_p3_state_metrics=_content_dynamic_metrics(spatial=False),
+        domain_order=tuple(f"d{index}" for index in range(6)),
+        bootstrap_replicates=100,
+        seed=20260825,
+    )
+
+    assert CLEAN_NONPRIV == frozenset({"uniform", "random"})
+    assert set(result.aggregate_metrics.get_column("stratum")) == {
+        "full_bank",
+        "clean_nonpriv",
+    }
+    assert set(result.aggregate_metrics.get_column("stage")) == {"p2", "p3"}
+    assert set(result.aggregate_metrics.get_column("model")) == {
+        "spatial",
+        "deepsets",
+    }
+    assert set(result.aggregate_metrics.get_column("control_mode")) == {
+        "positions_only",
+        "shuffled",
+        "static",
+    }
+    spatial_clean = result.aggregate_metrics.filter(
+        (pl.col("model") == "spatial")
+        & (pl.col("stratum") == "clean_nonpriv")
+    ).sort(["stage", "control_mode"])
+    assert spatial_clean.filter(pl.col("control_mode") == "positions_only").get_column(
+        "control_minus_real"
+    ).to_list() == pytest.approx([0.1, 0.1])
+    assert spatial_clean.filter(pl.col("control_mode") == "shuffled").get_column(
+        "control_minus_real"
+    ).to_list() == pytest.approx([0.2, 0.2])
+    assert spatial_clean.filter(pl.col("control_mode") == "static").get_column(
+        "control_minus_real"
+    ).to_list() == pytest.approx([0.25, 0.25])
+    assert spatial_clean.get_column("favorable_domain_count").to_list() == [6] * 6
+    assert result.gate == "CONTENT_STRONG_GO"
