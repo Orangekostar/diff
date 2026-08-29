@@ -1,0 +1,56 @@
+{
+  "artifact": "mavis_neural_probe_n4_closed_loop",
+  "base_commit": "9794d53a9549f2e3501fe482e8db8735f468ba20",
+  "config_sha256": "26299353b1870081660af452cb7e8ca3ba0b4fe87666f26c3922ef1a9ef7fc66",
+  "files": {
+    "REPORT.md": {
+      "bytes": 681,
+      "sha256": "e6c3e4fcb76c19fea5a74dfc26d97ea70ad25bdd86f56abe47f30c4472e90b13"
+    },
+    "action_trajectories.parquet": {
+      "bytes": 759302,
+      "sha256": "12dc6efa6a42f432b6e83c4eae34a3e11dc4b28b3b855f257f151ff35806c4b3"
+    },
+    "aggregate_auebc.csv": {
+      "bytes": 389,
+      "sha256": "1efaa2d6358e218316eb1c3223bc705d46cb482137b0ea87f0a97c7fb1dafa6f"
+    },
+    "aggregate_curves.csv": {
+      "bytes": 2334,
+      "sha256": "536aeff2f3589c60a7a4baa16e0e4dc70fb5162351f1645db7d587841330f909"
+    },
+    "bootstrap.csv": {
+      "bytes": 1178044,
+      "sha256": "63fc4460b54e84f6a9879ce8ede1e5eff40be0c9dc7f65477f08cb4a5eecf4ab"
+    },
+    "closed_loop_predictions.parquet": {
+      "bytes": 479814,
+      "sha256": "0469d6146ae99a899af11d40253a1f12a9745130167dd7f0441996d07555ab6c"
+    },
+    "config.json": {
+      "bytes": 1730,
+      "sha256": "26299353b1870081660af452cb7e8ca3ba0b4fe87666f26c3922ef1a9ef7fc66"
+    },
+    "domain_curves.csv": {
+      "bytes": 12194,
+      "sha256": "7f235b9f1950774fde70845e89bdb26ffbfe09b9c0e419fbd547c3bbe1feeb84"
+    },
+    "domain_metrics.csv": {
+      "bytes": 868,
+      "sha256": "09866bc1b3f04f7a279d36d2972eca3eee1fc2f8c653160a0fa3be58f375b9ec"
+    },
+    "per_specimen_auebc.csv": {
+      "bytes": 73714,
+      "sha256": "7b563c82cf343caa5eb1dd8facc4c681437afbb3c9b91ca6d2f5e0543837ea01"
+    },
+    "per_specimen_curves.csv": {
+      "bytes": 535992,
+      "sha256": "c460ae69020073362b07e6c12530e61f250f4537d3a420b8adaa063fbf3c7374"
+    },
+    "summary.json": {
+      "bytes": 2463,
+      "sha256": "d25a48a728f78c4f86a3ce7674bdfbbc2692dbaaad48623bc90c20e283ae8c94"
+    }
+  },
+  "schema_version": 1
+}

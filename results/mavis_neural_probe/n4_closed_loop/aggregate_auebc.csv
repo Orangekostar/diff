@@ -1,0 +1,4 @@
+method,domain_count,domain_balanced_cai_auebc,worst_domain_cai_auebc,domain_balanced_reconstruction_auebc,statistical_unit
+mavis_full,6,0.12505318220938968,0.15140573423506754,0.0012571689238081336,equal_domain
+mvd_m1_o2,6,0.12499204011570479,0.15113358891638629,0.0009408535124404022,equal_domain
+spatial_probe,6,0.12499078849544681,0.14568376413790032,0.0012667927973657113,equal_domain

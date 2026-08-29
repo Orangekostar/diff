@@ -1,0 +1,57 @@
+{
+  "architecture_name": "spatial_grid_cnn_v1",
+  "base_commit": "9794d53a9549f2e3501fe482e8db8735f468ba20",
+  "bootstrap_replicates": 5000,
+  "bootstrap_seed": 20261225,
+  "canonical_contrast": "static_reference_minus_spatial_probe_auebc",
+  "ci95_lower": -0.006536628756850945,
+  "ci95_upper": 0.006390642775385911,
+  "config_sha256": "26299353b1870081660af452cb7e8ca3ba0b4fe87666f26c3922ef1a9ef7fc66",
+  "favorable_domain_count": 3,
+  "frozen_learned_auebc": 0.12505318220938968,
+  "frozen_mavis_config_sha256": "e99b47e161663fdaefe28719d16321a010f95b4ad8cf8f506a6e18d1d7f57b9d",
+  "frozen_p7_manifest_sha256": "02c816ae7d86138c3a8607cd0852567df8290635ab29fbe20aef19f574e45961",
+  "frozen_static_reference": "mvd_m1_o2",
+  "frozen_static_reference_auebc": 0.12499204011570479,
+  "gate": "END_TO_END_NO_GO",
+  "n1_manifest_sha256": "e504642131a738172e649bb36e2975b142de45ce09f6cfa00ab9e2f55540d570",
+  "n2_manifest_sha256": "d5f2a0b14bae320f67745ccb61cc15d5144fab29a47639343b86de467939cfa4",
+  "new_candidate_auebc": 0.12499078849544681,
+  "new_candidate_better_than_frozen_learned": true,
+  "point_estimate": 1.2516202579869e-06,
+  "runtime_head": "c663ebf306c7cebd996f9c4a5efc0c668f26a588",
+  "schema_version": 1,
+  "seed": 20260825,
+  "stage": "N4_CLOSED_LOOP",
+  "statistical_units": [
+    "physical_specimen",
+    "held_out_domain"
+  ],
+  "target_data_used_for_training_or_selection": false,
+  "worker_model_states": [
+    {
+      "p2": "7f0179aedbac84c600bb28ea7d47a0d9cfbaaf8b03faba71a04a7f80bf462595",
+      "p3": "a5bdb2833f20b250c84a94e228a07d6721a541851375a792210c663edf63610e"
+    },
+    {
+      "p2": "5f68b95f0ca81c4f10ffa66838aa658a611b3871fe7ccad970f808a32cfbe8bf",
+      "p3": "54599e17260c991e0a56481fde40b3be9d165ad1f302076a09f4af459a9b673e"
+    },
+    {
+      "p2": "c35d63dee544962e4aedbef28b42095f5d248b0ad1804f3316fbb89b7bc14641",
+      "p3": "b14bd3c127c0087d686c2effc117bf0207f28010c99aeb7adfcc57eca5ac68ad"
+    },
+    {
+      "p2": "2d9c29d415bcc1a27ec2c3e6f7ce62ad20ebc3b2ae283ecd5ac85fe9d3618f0f",
+      "p3": "695286b8a664edd5b096d285cf1bc39b51ce27d8e32200f16487b6b7cb4b6771"
+    },
+    {
+      "p2": "60c2b96f2a52ee1cd4bd6dccd2152231a7940e5af2e4681205adbf1da23a295f",
+      "p3": "ca0b160771569dab6ed5644250b0c4cac0ac1ccacf76d766ee3a9716ace877f8"
+    },
+    {
+      "p2": "ca1e63feabc4baf4e6a76a5ebe9e2c5ff1509a2c85e0aac096d6cc2f489f0fc5",
+      "p3": "8cb66907ff64e2df2ffdf9e06c0705e24cfad7a6ab4c3d4ee6a59fd32bf41718"
+    }
+  ]
+}
