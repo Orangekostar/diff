@@ -1,0 +1,98 @@
+{
+  "architecture_name": "spatial_grid_cnn_v1",
+  "base_commit": "9794d53a9549f2e3501fe482e8db8735f468ba20",
+  "bootstrap_replicates": 5000,
+  "canonical_contrast": "deepsets_real_auebc_minus_spatial_real_auebc",
+  "ci95_lower": -0.006710730567792872,
+  "ci95_upper": 0.006054003152852283,
+  "config_sha256": "26299353b1870081660af452cb7e8ca3ba0b4fe87666f26c3922ef1a9ef7fc66",
+  "control_bootstrap": {
+    "positions_only": {
+      "ci95_lower": -0.011992046368602571,
+      "ci95_upper": 0.006514284432582109,
+      "mean_control_minus_real": -0.0029363554258467353
+    },
+    "reconstruction": {
+      "ci95_lower": -0.046686021938599345,
+      "ci95_upper": -0.02872348733554731,
+      "mean_control_minus_real": -0.037622405873995055
+    },
+    "shuffled": {
+      "ci95_lower": -0.009638516031386064,
+      "ci95_upper": 0.006641642549103939,
+      "mean_control_minus_real": -0.00149196717055755
+    },
+    "static": {
+      "ci95_lower": -0.019089179195608895,
+      "ci95_upper": -0.000985338833186888,
+      "mean_control_minus_real": -0.010022737189571487
+    }
+  },
+  "control_minus_real_auebc": {
+    "positions_only": -0.0029585619457306728,
+    "reconstruction": -0.037682359036707594,
+    "shuffled": -0.0014399565520188534,
+    "static": -0.010053228799415156
+  },
+  "deepsets_real_domain_balanced_auebc": 0.1250432019430529,
+  "favorable_domain_count": 3,
+  "feature_bank_input_state_sha256": "0a87a47c33bb4d2ff2378da1a9346686c24a4d181ebd1edfa9cd7991b4687306",
+  "feature_bank_target_state_sha256": "0a79950427ce5ebe30a33ee14520eea8a110a60dd5e4e3bec1d149d5a9ca7680",
+  "frozen_p2_manifest_sha256": "acc4db107c8c870eafd8035a744f03785b3f6f167dc50192d276b7ee014feb5c",
+  "frozen_p2_verified": true,
+  "gate": "REPRESENTATION_NO_GO",
+  "point_estimate": -0.00032102886283468895,
+  "runtime_head": "5a388d68b91a1711ec2a6a1cb414607ef6d79e63",
+  "schema_version": 1,
+  "seed": 20260825,
+  "spatial_real_domain_balanced_auebc": 0.12536423080588757,
+  "stage": "N1_SPATIAL_P2",
+  "statistical_units": [
+    "physical_specimen",
+    "held_out_domain"
+  ],
+  "worker_model_states": [
+    {
+      "positions_only": "6a1c3b4129bff6e799dfafb272f04513e684415151f053a468dfa5687e3b0bef",
+      "real": "7f0179aedbac84c600bb28ea7d47a0d9cfbaaf8b03faba71a04a7f80bf462595",
+      "reconstruction": "6dfce3c0855781e2880686634682aec1cf848c061e7461407d5baeb295d17711",
+      "shuffled": "ebdad1a155333671840f46c046a77964887b24042a49228471388ec3ec345670",
+      "static": "6e9edcd8d8a2f6cbfb2418c61f747b84b166fdfc147dffd11cc47e37f899fd1b"
+    },
+    {
+      "positions_only": "a98eadce726c3131fbe79ceaafa58dcd335bafe42af6e681844b1b9d61928105",
+      "real": "5f68b95f0ca81c4f10ffa66838aa658a611b3871fe7ccad970f808a32cfbe8bf",
+      "reconstruction": "44924b31f67e72b5486defaba94605e0aa5eddef25c5b4e048841a935754f3f5",
+      "shuffled": "cc64b8b051bf8898caa7733c6096f8b8bbc1a7b931f48db7709a66b9bb74a5ee",
+      "static": "8973c37221c41ae8e55c70fe5db74d19cd1ed5feda460ffedcf1de6a0db3108d"
+    },
+    {
+      "positions_only": "b90cdd7adc44f01765f4fd30405abcacd20c3feb02cf375ba912c49d8ffe0557",
+      "real": "c35d63dee544962e4aedbef28b42095f5d248b0ad1804f3316fbb89b7bc14641",
+      "reconstruction": "cc9462a86edb95958a141a89fdee4b20c9d25efc9c92d7b0afc9e2bf902fd231",
+      "shuffled": "b35ee71140731b6ceb022ef7cd00024fc6ddebef8e528b9bb350effc68c3ce2f",
+      "static": "a910b1fa7e485eac494443b872cd130b0c401227cb717c560f668b469ea541d0"
+    },
+    {
+      "positions_only": "5dc006ea12f7023b447c9d7302dd7499a1c5f14b00b76f84e1dfea03a0410c78",
+      "real": "2d9c29d415bcc1a27ec2c3e6f7ce62ad20ebc3b2ae283ecd5ac85fe9d3618f0f",
+      "reconstruction": "9cbd6d19327127cf367dc8e121d899de1ff94b6b1ecdd02ad0343b4a9b7ea08b",
+      "shuffled": "d5d81854865a7a7f3ab62090094b3f266999a668a011456a3e632ab7b5fc2eb7",
+      "static": "5aab0babbbd4b8261e2f40632b3534f113bab4121db4e41931e5a9bca8ef4cd0"
+    },
+    {
+      "positions_only": "25700da6d10927a554e3da98cbaea5db969f2f98908ec0e310f8283e09a9c68e",
+      "real": "60c2b96f2a52ee1cd4bd6dccd2152231a7940e5af2e4681205adbf1da23a295f",
+      "reconstruction": "fe3dac2833bebee0c096c6747832794981e7e8ac4c4fe29f9d955ffb68831c69",
+      "shuffled": "2f8511c9334859ba30c7e58bbccf3eb958e6e16f43c1a5760c3165e0385d7dd4",
+      "static": "fafa7097946fe66ad3e6502b729e44d7a7dfe58e4c14b9128d000882f3712b58"
+    },
+    {
+      "positions_only": "4e25975f8fc7c0e5330ca6a3895136f5753f428bb6105b42913c70e2a0793d39",
+      "real": "ca1e63feabc4baf4e6a76a5ebe9e2c5ff1509a2c85e0aac096d6cc2f489f0fc5",
+      "reconstruction": "0f6be61bd7d8a72a04c0db367e73cfabd0e7f58f9a04553b005e982750f864ba",
+      "shuffled": "feb2506b7744fead74a2feba0df891480a9ace41e03f1b423954507131a1e529",
+      "static": "3dbc06928136fffe20d4a7841a14250adce16f186fe779c2aa96699de8a3b965"
+    }
+  ]
+}
