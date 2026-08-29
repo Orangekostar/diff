@@ -28,6 +28,8 @@ Audit date: 2026-08-29. No training was run during N0.
 - frozen config: `paper_v3/configs/mavis_final.yaml`
 - frozen config SHA-256: `e99b47e161663fdaefe28719d16321a010f95b4ad8cf8f506a6e18d1d7f57b9d`
 - P7 config snapshot has the same SHA-256.
+- registered probe config: `artifacts/mavis_neural_probe/NEURAL_PROBE_CONFIG.json`
+- probe config SHA-256: `26299353b1870081660af452cb7e8ca3ba0b4fe87666f26c3922ef1a9ef7fc66`
 
 The old result roots, canonical metrics, paper evidence code, paper sources, and
 all native scientific result paths are read-only for this probe.

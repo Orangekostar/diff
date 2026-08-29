@@ -1,0 +1,61 @@
+{
+  "architecture": {
+    "context_dimension": 34,
+    "context_layers": [37, 32, 32],
+    "fusion_layers": [96, 64, 64],
+    "grid_shape": [8, 8],
+    "input_channels": 7,
+    "name": "spatial_grid_cnn_v1",
+    "output_dimension": 64,
+    "p2_parameter_count": 27617,
+    "spatial_channels": [7, 16, 32, 32]
+  },
+  "base_commit": "9794d53a9549f2e3501fe482e8db8735f468ba20",
+  "clean_nonprivileged_methods": [
+    "uniform",
+    "random"
+  ],
+  "domain_order": [
+    "74t7kcdgkr",
+    "cgtnjyggtm",
+    "w68dtmpfyf",
+    "xcmzfsbd9t",
+    "yfxyg8jm46",
+    "ykhs7s2dck"
+  ],
+  "feature_bank": {
+    "file_sha256": "280c608d43be164cce8617aea1cc24bf3152d537c94a48d40b61ea15085d6467",
+    "input_state_sha256": "0a87a47c33bb4d2ff2378da1a9346686c24a4d181ebd1edfa9cd7991b4687306",
+    "row_count": 8280,
+    "target_state_sha256": "0a79950427ce5ebe30a33ee14520eea8a110a60dd5e4e3bec1d149d5a9ca7680"
+  },
+  "frozen_authorities": {
+    "canonical_metrics_sha256": "f0d2615637a6470744f275a2ac6e1c5e7aff110ca7e31cb323793c29405be4e6",
+    "mavis_config_sha256": "e99b47e161663fdaefe28719d16321a010f95b4ad8cf8f506a6e18d1d7f57b9d"
+  },
+  "master_prompt_sha256": "41583d88f2ded977f59e6bed039b60d74979446b3f6b9f00a32fb0bc60bdf879",
+  "modes": [
+    "static",
+    "positions_only",
+    "real",
+    "shuffled"
+  ],
+  "n5_authorized": false,
+  "optimization": {
+    "learning_rate": 0.001,
+    "p2_batch_size": 256,
+    "p2_max_epochs": 80,
+    "p2_patience": 10,
+    "p3_batch_size": 64,
+    "p3_max_epochs": 40,
+    "p3_patience": 5,
+    "seed": 20260825
+  },
+  "schema_version": 1,
+  "statistics": {
+    "bootstrap_replicates": 5000,
+    "bootstrap_seed": 20260825,
+    "domain_weighting": "equal",
+    "primary_unit": "physical_specimen"
+  }
+}
