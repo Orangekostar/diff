@@ -1,0 +1,12 @@
+{
+  "architecture": "spatial_grid_cnn_v1",
+  "base_commit": "9794d53a9549f2e3501fe482e8db8735f468ba20",
+  "canonical_metrics_sha256": "f0d2615637a6470744f275a2ac6e1c5e7aff110ca7e31cb323793c29405be4e6",
+  "decision": "N1_AUTHORIZED",
+  "feature_bank_rows": 8280,
+  "feature_bank_sha256": "280c608d43be164cce8617aea1cc24bf3152d537c94a48d40b61ea15085d6467",
+  "frozen_config_sha256": "e99b47e161663fdaefe28719d16321a010f95b4ad8cf8f506a6e18d1d7f57b9d",
+  "new_training": false,
+  "seed": 20260825,
+  "stage": "n0"
+}
