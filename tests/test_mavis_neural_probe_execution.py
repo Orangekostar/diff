@@ -9,6 +9,10 @@ import pytest
 from test_mavis_dynamic_execution import _tables
 from test_mavis_mris_execution import _feature_bank
 
+from cmc_bbdm.mavis.dynamic_data import (
+    build_dynamic_training_groups,
+    build_target_evaluation_groups,
+)
 from cmc_bbdm.mavis.dynamic_training import load_fitted_dynamic_checkpoint
 from cmc_bbdm.mavis.dynamic_voi import DynamicActionScorer
 from cmc_bbdm.mavis.neural_probe.artifacts import (
@@ -21,6 +25,7 @@ from cmc_bbdm.mavis.neural_probe.artifacts import (
 from cmc_bbdm.mavis.neural_probe.execution import (
     run_spatial_dynamic_outer_domain,
     run_spatial_mris_outer_domain,
+    spatial_dynamic_action_subset,
 )
 from cmc_bbdm.mavis.neural_probe.training import (
     load_fitted_spatial_mris_checkpoint,
@@ -172,6 +177,33 @@ def test_spatial_dynamic_worker_reuses_frozen_scorer_and_source_folds(
     assert audits.filter(pl.col("record_type") == "final_refit").height == 1
     assert not audits.get_column("target_data_used_for_selection").any()
     assert type(fitted.model.scorer) is DynamicActionScorer
+
+
+def test_spatial_dynamic_action_subset_preserves_group_state_hashes() -> None:
+    bank = _feature_bank()
+    states, actions = _tables(bank)
+    subset = spatial_dynamic_action_subset(actions, outer_domain="d0")
+
+    full_training = build_dynamic_training_groups(
+        states, actions, outer_domain="d0"
+    )
+    subset_training = build_dynamic_training_groups(
+        states, subset, outer_domain="d0"
+    )
+    full_target = build_target_evaluation_groups(
+        states, actions, target_domain="d0"
+    )
+    subset_target = build_target_evaluation_groups(
+        states, subset, target_domain="d0"
+    )
+
+    assert subset.height < actions.height
+    assert [group.state_sha256 for group in subset_training] == [
+        group.state_sha256 for group in full_training
+    ]
+    assert [group.state_sha256 for group in subset_target] == [
+        group.state_sha256 for group in full_target
+    ]
 
 
 def _comparison_predictions(*, error: float) -> pl.DataFrame:

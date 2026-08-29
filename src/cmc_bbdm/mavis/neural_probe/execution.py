@@ -314,6 +314,29 @@ def _spatial_dynamic_audit_row(
     return row
 
 
+def spatial_dynamic_action_subset(
+    actions: pl.DataFrame,
+    *,
+    outer_domain: str,
+) -> pl.DataFrame:
+    required = {"outer_domain", "domain_id"}
+    if (
+        not isinstance(actions, pl.DataFrame)
+        or actions.height == 0
+        or not required <= set(actions.columns)
+        or type(outer_domain) is not str
+        or not outer_domain
+    ):
+        raise SpatialMRISExecutionError("spatial P3 action table is invalid")
+    subset = actions.filter(
+        (pl.col("outer_domain") == outer_domain)
+        | (pl.col("domain_id") == outer_domain)
+    )
+    if subset.height == 0:
+        raise SpatialMRISExecutionError("spatial P3 action subset is empty")
+    return subset
+
+
 def run_spatial_dynamic_outer_domain(
     bank: MRISFeatureBank,
     *,
@@ -344,14 +367,18 @@ def run_spatial_dynamic_outer_domain(
         or any(mode not in _TRAINABLE_MODES for mode in modes)
     ):
         raise SpatialMRISExecutionError("spatial P3 outer worker request is invalid")
+    relevant_actions = spatial_dynamic_action_subset(
+        actions,
+        outer_domain=outer_domain,
+    )
     training_groups = build_dynamic_training_groups(
         states,
-        actions,
+        relevant_actions,
         outer_domain=outer_domain,
     )
     target_groups = build_target_evaluation_groups(
         states,
-        actions,
+        relevant_actions,
         target_domain=outer_domain,
     )
     source_domains = tuple(
@@ -590,4 +617,5 @@ __all__ = [
     "SpatialMRISExecutionError",
     "run_spatial_dynamic_outer_domain",
     "run_spatial_mris_outer_domain",
+    "spatial_dynamic_action_subset",
 ]
