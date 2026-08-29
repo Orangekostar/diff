@@ -40,8 +40,9 @@ def test_spatial_grid_uses_row_major_token_order_and_mask_channel() -> None:
     grid = spatial_grid_from_tokens(tokens, masks)
 
     assert grid.shape == (1, 7, 8, 8)
-    assert grid[0, 0, 3, 5].item() == 29.0
-    assert grid[0, 0, 7, 7].item() == 63.0
+    expected = torch.arange(64, dtype=torch.float32).reshape(8, 8)
+    expected[1, 1] = 0.0
+    torch.testing.assert_close(grid[0, 0], expected, rtol=0.0, atol=0.0)
     assert grid[0, 1, 1, 1].item() == 0.0
     assert grid[0, 6, 1, 1].item() == 0.0
     assert grid[0, 6, 3, 5].item() == 1.0
