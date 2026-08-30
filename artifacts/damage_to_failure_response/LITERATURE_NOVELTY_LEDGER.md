@@ -27,7 +27,8 @@ the closest accessible work; it does not establish absence from the literature.
 
 | Work | Evidence type and material | Input | Output / endpoint | Sample count | Split protocol | Full response? | Pre-CAI-only input? | Exact boundary relative to this route |
 |---|---|---|---|---:|---|---|---|---|
-| [Mack et al., AEI 72, 104518 (2026)](https://doi.org/10.1016/j.aei.2026.104518) | Experimental composite C-scan | Full and damage-focused C-scan images | Impact energy and ultimate CAI strength scalars; SHAP interpretation | 1,428 augmented images; unique specimens `UNKNOWN_FROM_ACCESSIBLE_PRIMARY_SOURCE` | `UNKNOWN_FROM_ACCESSIBLE_PRIMARY_SOURCE` | No | Yes | Closest direct data route, but it predicts scalars rather than subsequent compression-response descriptors or curves. C-scan-to-CAI-strength is not a novelty claim here. |
+| [Mack et al., AEI 72, 104518 (2026)](https://doi.org/10.1016/j.aei.2026.104518) | Experimental composite C-scan | Full and damage-focused C-scan images | Impact energy and ultimate CAI strength scalars; SHAP interpretation | 238 C-scan images; 1,428 after augmentation | `UNKNOWN_FROM_ACCESSIBLE_PRIMARY_SOURCE` | No | Yes | Closest direct modern data route, but it predicts scalars rather than subsequent compression-response descriptors or curves. C-scan-to-CAI-strength is not a novelty claim here. |
+| [Geiselman, Embry-Riddle master's thesis (2011)](https://commons.erau.edu/db-theses/282/) | Experimental graphite-epoxy coupons | Ultrasonic C-scan RGB pixel summaries, with an FFT sensitivity | Ultimate CAI load scalar | 21 coupons | 15 train / 6 test | No | Yes | Establishes an earlier neural C-scan-to-ultimate-load route. Neither image-to-CAI scalar prediction nor its neural implementation is a novelty claim here. |
 | [Hasebe et al., Composites Part A 189, 108560 (2025)](https://doi.org/10.1016/j.compositesa.2024.108560) | Experimental CFRP | Post-impact surface profiles | Ultimate CAI strength scalar | Exact modeling subset `UNKNOWN_FROM_ACCESSIBLE_PRIMARY_SOURCE` | 75/25 holdout and four-fold cross-validation are reported | No | Yes | Surface-profile-to-CAI-strength is established; the present question concerns information beyond the strength scalar under strict held-out-domain evaluation. |
 | [Yang et al., Materials & Design 189, 108509 (2020)](https://doi.org/10.1016/j.matdes.2020.108509) | Finite-element composite microstructures | Binary microstructure images | 61-point stress-strain curves | 100,000 simulated microstructures | 95/5 train/test | Yes | Not a post-impact CAI setting | Establishes image-to-full-curve prediction in composites, but not experimental pre-CAI damage observations or cross-domain CAI response. |
 | [Liu et al., Composites Part A 188, 108574 (2025)](https://doi.org/10.1016/j.compositesa.2024.108574) | Simulated unidirectional composite response, validated against experiments | Fiber-misalignment micrographs | Longitudinal compressive response curves | More than 15,000 simulated curves; validation against 83 experiments | `UNKNOWN_FROM_ACCESSIBLE_PRIMARY_SOURCE` | Yes | Not a post-impact CAI setting | Establishes micrograph-to-compressive-response learning, but not post-impact NDE-to-CAI response or six-domain transfer. |
@@ -52,10 +53,40 @@ the closest accessible work; it does not establish absence from the literature.
 | Publisher results excluded by the operator source policy, including MDPI search hits | Excluded from retained evidence and not used to support any claim. |
 | Reviews, aggregators, and citation-index pages | Used at most for discovery; not accepted as evidence. |
 
+## Final same-day refresh
+
+The primary-source search was repeated after the P2 gate on 2026-08-30 using
+all eight preregistered topic families and explicit combinations of
+`C-scan`, `NDE`, `post-impact damage`, `compression-after-impact`,
+`load-displacement`, `stress-strain`, `response curve`, and `machine learning`.
+The refresh changed one retained boundary: the official Embry-Riddle record
+for Geiselman's 2011 thesis establishes experimental ultrasonic C-scan to
+ultimate CAI-load prediction on 21 coupons, before the Mack scalar study.
+
+Additional primary records located in the refresh were screened as follows:
+
+- [Liu, Falzon, and Tan (2018)](https://doi.org/10.1016/j.compositesa.2017.11.021)
+  predicts CAI structural response with a progressive finite-element model
+  initialized by simulated impact damage and validated against experiments;
+  it is not a learned direct mapping from experimental pre-CAI NDE.
+- [A 2026 CAI-fatigue study](https://doi.org/10.1016/j.ijfatigue.2026.109754)
+  combines repeated ultrasonic inspection, DIC, and CAI-stage acoustic
+  emission classification; its sensing occurs during fatigue loading and is
+  therefore answer-side under the present input contract.
+- Experimental studies containing both post-impact C-scans and measured CAI
+  load-displacement curves were observational or FE-validation studies, not
+  strict cross-domain learned prediction of the subsequent full response from
+  pre-test NDE alone.
+
+No accessible primary record located by this refresh implemented the exact
+experimental pre-CAI C-scan-to-full-CAI-response learning protocol. This is a
+bounded search result, not proof of absence, and it does not authorize a
+novelty claim after the empirical P2 no-go.
+
 ## Bounded interpretation
 
-The closest accessible boundaries are: Mack supplies direct pre-CAI C-scan but
-only scalar endpoints; Lu supplies pre-CAI CT and a simulated full CAI response
+The closest accessible boundaries are: Geiselman and Mack supply direct pre-CAI
+C-scan but only scalar endpoints; Lu supplies pre-CAI CT and a simulated full CAI response
 but depends on experiment-calibrated mechanics; Du tracks response using
 CAI-stage AE; and Yang, Liu, Zhang, and Wu establish full-curve learning outside
 the proposed experimental post-impact CAI setting. No title/abstract search can
@@ -64,4 +95,5 @@ prove that the exact route is absent, so no direct novelty claim is authorized.
 Novelty status: SEARCHED_NOT_ASSUMED  
 Direct novelty claim authorized: NO  
 P0/P1 scientific question retained: YES  
+P2 paper route authorized: NO (`MACK_EXTENSION_NO_GO`)
 Reason: closest work determines differentiation, while empirical gates determine support.
