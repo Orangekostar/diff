@@ -5,9 +5,11 @@ import csv
 import hashlib
 import json
 import math
+import os
 import re
 import stat
 import sys
+import tempfile
 from collections import Counter
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
@@ -21,7 +23,9 @@ import yaml
 from cmc_bbdm.damage_response.artifacts import (
     ArtifactError,
     replay_p0,
+    replay_p1,
     write_p0_package,
+    write_p1_package,
 )
 from cmc_bbdm.damage_response.authority import AuthorityError, snapshot_file
 from cmc_bbdm.damage_response.contracts import (
@@ -33,7 +37,14 @@ from cmc_bbdm.damage_response.contracts import (
     StageStatus,
     evaluate_p0_gate,
 )
+from cmc_bbdm.damage_response.feature_views import PRIMARY_TARGET_FIELDS
+from cmc_bbdm.damage_response.p1_gate import (
+    ENDPOINT_RANGE_TOLERANCES,
+    EndpointGateFacts,
+    evaluate_p1_gate,
+)
 from cmc_bbdm.damage_response.pairing import (
+    FeatureIdentity,
     PairingError,
     TraceIdentity,
     load_feature_identities,
@@ -46,6 +57,15 @@ from cmc_bbdm.damage_response.raw_cai import (
     StrainUnitStatus,
     decode_raw_cai_csv,
 )
+from cmc_bbdm.damage_response.representative_pairs import (
+    CurveRecord,
+    select_representative_pairs,
+)
+from cmc_bbdm.damage_response.response_extraction import (
+    ExtractedResponse,
+    ExtractionError,
+    extract_prepeak_response,
+)
 from cmc_bbdm.damage_response.sources import (
     OFFICIAL_FOLDER_COUNTS,
     OfficialFileRecord,
@@ -54,6 +74,7 @@ from cmc_bbdm.damage_response.sources import (
     load_official_inventory,
     load_spatial_pairs,
     read_lvi_observations,
+    read_primary_design_metadata,
     read_published_peaks,
     read_specimen_sizes,
 )
@@ -81,6 +102,80 @@ _REGISTERED_CHANNEL_NAMES = (
     "Strain-BR",
 )
 _DOWNSTREAM_STAGES = ("P1", "P2", "P3", "P4", "P5")
+_P0_CONFIG_RELATIVE_PATH = "paper_v3/configs/damage_to_failure_response.yaml"
+_EXPECTED_P1_CONFIG = {
+    "schema_version": 1,
+    "base_sha": _EXPECTED_BASE_SHA,
+    "p0": {
+        "summary_relative_path": (
+            "results/damage_to_failure_response/p0_data_audit/summary.json"
+        ),
+        "summary_sha256": (
+            "9d44ead975119db2181a91efbf14b74165671a9d25b7b576d90f6e104757a633"
+        ),
+        "required_status": "P0_GO",
+    },
+    "extraction": {
+        "baseline_samples": 50,
+        "grid_points": 101,
+        "minimum_unique_extension_positions": 50,
+        "primary_scope": "pre_peak_inclusive",
+        "duplicate_extension_aggregation": "median",
+        "interpolation": "linear",
+        "smoothing": "none",
+        "clipping": "none",
+    },
+    "primary_endpoints": {
+        "extension_peak_mm": {"range_tolerance": 0.001},
+        "slope_u20_u60_mpa_per_mm": {
+            "range_tolerance": 1.0,
+            "fit_u_min": 0.2,
+            "fit_u_max": 0.6,
+        },
+        "normalized_prepeak_auc": {"range_tolerance": 0.0001},
+    },
+    "redundancy_model": {
+        "outer_split": "leave_one_domain_out",
+        "strength_polynomial_degree": 3,
+        "ridge_alpha": 0.000001,
+        "hyperparameter_search": False,
+    },
+    "design_sensitivity": {
+        "numeric_fields": ["ply_count", "width_mm", "thickness_mm"],
+        "categorical_fields": {
+            "laminate_type": ["cross_ply", "quasi_isotropic"],
+            "impactor": [
+                "coni120",
+                "coni60",
+                "flat",
+                "hemia",
+                "hemib",
+                "hemic",
+            ],
+        },
+        "privileged_only_fields": ["impactor"],
+        "excluded_fields": [
+            "height_mm",
+            "impact_energy",
+            "energy_per_thickness_j_per_mm",
+            "scan_angle",
+        ],
+    },
+    "gate": {
+        "minimum_coverage_fraction": 0.9,
+        "required_domain_count": 6,
+        "near_deterministic_pooled_r2": 0.9,
+        "near_deterministic_absolute_domain_spearman": 0.95,
+        "nonredundant_domain_count": 4,
+        "minimum_range_tolerance_multiplier": 10.0,
+        "replay_required": True,
+    },
+    "representative_pairs": {
+        "nearest_strength_neighbors_per_specimen": 1,
+        "maximum_pairs": 12,
+        "ranking": "normalized_curve_rms_desc_then_ids",
+    },
+}
 
 
 class PipelineError(RuntimeError):
@@ -118,6 +213,38 @@ class P0Config:
 class P0RunResult:
     status: StageStatus
     output: Path
+
+
+@dataclass(frozen=True)
+class P1Config:
+    base_sha: str
+    p0_summary_relative_path: str
+    p0_summary_sha256: str
+    required_p0_status: StageStatus
+    baseline_samples: int
+    grid_points: int
+    minimum_unique_extension_positions: int
+    ridge_alpha: float
+    minimum_coverage_fraction: float
+    near_deterministic_pooled_r2: float
+    maximum_representative_pairs: int
+
+
+@dataclass(frozen=True)
+class P1RunResult:
+    status: StageStatus
+    output: Path
+    decision_output: Path
+    passing_endpoints: tuple[str, ...]
+
+
+@dataclass(frozen=True)
+class P1PairAuthority:
+    specimen_id: str
+    domain_id: str
+    raw_relative_path: str
+    v3_relative_path: str
+    raw_trace_sha256: str
 
 
 def _mapping(value: object, *, label: str, keys: set[str]) -> dict[str, object]:
@@ -271,6 +398,94 @@ def load_p0_config(path: Path) -> P0Config:
         minimum_exact_pairs_per_domain=20,
         maximum_missing_primary_channel_fraction=0.2,
     )
+
+
+def load_p1_config(path: Path) -> P1Config:
+    """Load the exact preregistered P1 response-richness configuration."""
+
+    try:
+        payload = Path(path).read_text(encoding="utf-8")
+        value = yaml.safe_load(payload)
+    except (OSError, UnicodeDecodeError, yaml.YAMLError) as error:
+        raise PipelineError("P1 config cannot be read") from error
+    if value != _EXPECTED_P1_CONFIG:
+        raise PipelineError("P1 config differs from the frozen contract")
+    p0 = value["p0"]
+    extraction = value["extraction"]
+    redundancy = value["redundancy_model"]
+    gate = value["gate"]
+    pairs = value["representative_pairs"]
+    return P1Config(
+        base_sha=_EXPECTED_BASE_SHA,
+        p0_summary_relative_path=_relative_path(
+            p0["summary_relative_path"], label="P1 P0 summary"
+        ),
+        p0_summary_sha256=_digest(
+            p0["summary_sha256"], label="P1 P0 summary"
+        ),
+        required_p0_status=StageStatus.P0_GO,
+        baseline_samples=int(extraction["baseline_samples"]),
+        grid_points=int(extraction["grid_points"]),
+        minimum_unique_extension_positions=int(
+            extraction["minimum_unique_extension_positions"]
+        ),
+        ridge_alpha=float(redundancy["ridge_alpha"]),
+        minimum_coverage_fraction=float(gate["minimum_coverage_fraction"]),
+        near_deterministic_pooled_r2=float(
+            gate["near_deterministic_pooled_r2"]
+        ),
+        maximum_representative_pairs=int(pairs["maximum_pairs"]),
+    )
+
+
+def validate_p1_p0_authority(config: P1Config, repo_root: Path) -> Path:
+    """Require the exact committed P0 package before any external P1 read."""
+
+    repository = Path(repo_root)
+    summary_path = repository / config.p0_summary_relative_path
+    try:
+        snapshot = snapshot_file(
+            summary_path,
+            max_bytes=16 * 1024 * 1024,
+            logical_source="git:p0_data_audit",
+            relative_path=config.p0_summary_relative_path,
+        )
+    except AuthorityError as error:
+        raise PipelineError("P0 summary authority is unavailable") from error
+    if snapshot.sha256 != config.p0_summary_sha256:
+        raise PipelineError(
+            "P0 summary SHA-256 mismatch: "
+            f"expected {config.p0_summary_sha256}, observed {snapshot.sha256}"
+        )
+    try:
+        payload = summary_path.read_bytes()
+    except OSError as error:
+        raise PipelineError("P0 summary cannot be read") from error
+    if (
+        len(payload) != snapshot.size
+        or hashlib.sha256(payload).hexdigest() != snapshot.sha256
+    ):
+        raise PipelineError("P0 summary changed during P1 authorization")
+    try:
+        replay_p0(summary_path.parent)
+    except ArtifactError as error:
+        raise PipelineError(f"P0 package replay failed: {error}") from error
+    try:
+        summary = json.loads(payload.decode("ascii"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as error:
+        raise PipelineError("P0 summary cannot be decoded") from error
+    if (
+        not isinstance(summary, dict)
+        or summary.get("base_sha") != config.base_sha
+        or not isinstance(summary.get("gate"), dict)
+        or summary["gate"].get("status") != config.required_p0_status.value
+        or not isinstance(summary.get("pairing"), dict)
+        or summary["pairing"].get("primary_exact_pairs")
+        != sum(PRIMARY_COUNTS.values())
+        or summary["pairing"].get("per_domain") != dict(PRIMARY_COUNTS)
+    ):
+        raise PipelineError("P0 summary does not authorize P1")
+    return summary_path.parent
 
 
 def _regular_directory(path: Path, *, label: str) -> Path:
@@ -1245,6 +1460,843 @@ def run_p0_audit(
     return P0RunResult(status=status, output=destination)
 
 
+def _stable_bound_payload(
+    path: Path,
+    *,
+    expected_sha256: str,
+    logical_source: str,
+    relative_path: str,
+    max_bytes: int,
+) -> bytes:
+    try:
+        snapshot = snapshot_file(
+            path,
+            max_bytes=max_bytes,
+            logical_source=logical_source,
+            relative_path=relative_path,
+        )
+    except AuthorityError as error:
+        raise PipelineError(str(error)) from error
+    if snapshot.sha256 != expected_sha256:
+        raise PipelineError(f"source SHA-256 mismatch: {relative_path}")
+    try:
+        payload = path.read_bytes()
+    except OSError as error:
+        raise PipelineError(f"source cannot be read: {relative_path}") from error
+    if (
+        len(payload) != snapshot.size
+        or hashlib.sha256(payload).hexdigest() != snapshot.sha256
+    ):
+        raise PipelineError(f"source changed during read: {relative_path}")
+    return payload
+
+
+def _read_p1_pair_authority(
+    package: Path,
+    identities: tuple[FeatureIdentity, ...],
+    p0_config: P0Config,
+) -> tuple[P1PairAuthority, ...]:
+    manifest_path = package / "pairing_manifest.csv"
+    try:
+        manifest_snapshot = snapshot_file(
+            manifest_path,
+            max_bytes=16 * 1024 * 1024,
+            logical_source="artifact:p0_data_audit",
+            relative_path="pairing_manifest.csv",
+        )
+        payload = manifest_path.read_bytes()
+    except (AuthorityError, OSError) as error:
+        raise PipelineError("P0 pairing manifest cannot be read") from error
+    if (
+        len(payload) != manifest_snapshot.size
+        or hashlib.sha256(payload).hexdigest() != manifest_snapshot.sha256
+    ):
+        raise PipelineError("P0 pairing manifest changed during P1 read")
+    try:
+        reader = csv.DictReader(payload.decode("utf-8").splitlines())
+    except UnicodeDecodeError as error:
+        raise PipelineError("P0 pairing manifest is not UTF-8") from error
+    fields = (
+        "specimen_id",
+        "domain_id",
+        "raw_relative_path",
+        "raw_trace_sha256",
+        "source_dataset_id",
+        "source_dataset_version",
+        "internal_title",
+        "title_matches_canonical",
+        "identity_rule",
+    )
+    if tuple(reader.fieldnames or ()) != fields:
+        raise PipelineError("P0 pairing manifest schema changed")
+    rows = tuple(reader)
+    if len(rows) != len(identities):
+        raise PipelineError("P0 pairing manifest row count changed")
+
+    records: list[P1PairAuthority] = []
+    for identity, row in zip(identities, rows, strict=True):
+        if set(row) != set(fields):
+            raise PipelineError("P0 pairing manifest row schema changed")
+        specimen_id = str(row["specimen_id"] or "").strip().casefold()
+        domain_id = str(row["domain_id"] or "").strip().casefold()
+        digest = str(row["raw_trace_sha256"] or "").strip().casefold()
+        raw_relative = str(row["raw_relative_path"] or "").strip()
+        path = PurePosixPath(raw_relative)
+        expected_prefix = (
+            p0_config.dataset_id,
+            f"v{p0_config.dataset_version}",
+            p0_config.raw_folder,
+        )
+        if (
+            specimen_id != identity.specimen_id
+            or domain_id != identity.domain_id
+            or _SHA256_RE.fullmatch(digest) is None
+            or path.is_absolute()
+            or ".." in path.parts
+            or len(path.parts) != 4
+            or path.parts[:3] != expected_prefix
+            or row["source_dataset_id"] != p0_config.dataset_id
+            or row["source_dataset_version"] != str(p0_config.dataset_version)
+            or row["identity_rule"]
+            != "OFFICIAL_FILENAME_PLUS_DOMAIN_PLUS_SHA256"
+        ):
+            raise PipelineError(f"P0 pairing authority changed: {identity.specimen_id}")
+        records.append(
+            P1PairAuthority(
+                specimen_id=specimen_id,
+                domain_id=domain_id,
+                raw_relative_path=path.as_posix(),
+                v3_relative_path=PurePosixPath(*path.parts[2:]).as_posix(),
+                raw_trace_sha256=digest,
+            )
+        )
+    return tuple(records)
+
+
+def _extraction_sha256(record: ExtractedResponse) -> str:
+    metadata = {
+        "baseline_extension_mm": record.baseline_extension_mm.hex(),
+        "baseline_stress_mpa": record.baseline_stress_mpa.hex(),
+        "extension_peak_mm": record.extension_peak_mm.hex(),
+        "normalized_prepeak_auc": record.normalized_prepeak_auc.hex(),
+        "peak_row": record.peak_row,
+        "q_midpoint": record.q_midpoint.hex(),
+        "slope_u20_u60_mpa_per_mm": record.slope_u20_u60_mpa_per_mm.hex(),
+        "specimen_id": record.specimen_id,
+        "unique_extension_positions": record.unique_extension_positions,
+        "zeroed_peak_stress_mpa": record.zeroed_peak_stress_mpa.hex(),
+    }
+    digest = hashlib.sha256(
+        json.dumps(metadata, sort_keys=True, separators=(",", ":")).encode("ascii")
+    )
+    for values in (
+        record.u,
+        record.extension_mm,
+        record.zeroed_stress_mpa,
+        record.normalized_stress,
+    ):
+        digest.update(
+            np.ascontiguousarray(values, dtype="<f8").tobytes(order="C")
+        )
+    return digest.hexdigest()
+
+
+def _execute_p1(
+    *,
+    config_path: Path,
+    config: P1Config,
+    repo_root: Path,
+    legacy_root: Path,
+    v3_root: Path,
+    p0_package: Path,
+) -> tuple[
+    StageStatus,
+    tuple[str, ...],
+    dict[str, bytes],
+    bytes,
+]:
+    from cmc_bbdm.damage_response.nested_eval import (
+        P1RedundancyRecord,
+        evaluate_p1_redundancy,
+    )
+
+    config_snapshot = snapshot_file(
+        config_path,
+        max_bytes=1024 * 1024,
+        logical_source="git:research_branch",
+        relative_path="paper_v3/configs/damage_to_failure_response_p1.yaml",
+    )
+    p0_config_path = repo_root / _P0_CONFIG_RELATIVE_PATH
+    p0_config = load_p0_config(p0_config_path)
+    if p0_config.base_sha != config.base_sha:
+        raise PipelineError("P0 and P1 base identities differ")
+
+    feature_identities = load_feature_identities(
+        repo_root / p0_config.feature_bank.relative_path,
+        expected_sha256=p0_config.feature_bank.sha256,
+    )
+    pair_authority = _read_p1_pair_authority(
+        p0_package, feature_identities, p0_config
+    )
+    sizes = read_specimen_sizes(
+        v3_root / p0_config.size_workbook.relative_path,
+        expected_sha256=p0_config.size_workbook.sha256,
+    )
+    published_peaks = read_published_peaks(
+        v3_root / p0_config.peak_workbook.relative_path,
+        expected_sha256=p0_config.peak_workbook.sha256,
+    )
+    design_records = read_primary_design_metadata(
+        legacy_root / p0_config.legacy_spatial_manifest.relative_path,
+        p0_config.legacy_spatial_manifest.sha256,
+        feature_identities,
+        sizes,
+    )
+    design_by_id = {record.specimen_id: record for record in design_records}
+    tolerance = derive_global_absolute_tolerance(published_peaks.values())
+
+    extracted_by_id: dict[str, ExtractedResponse] = {}
+    extraction_hashes: dict[str, str] = {}
+    descriptor_qc_rows: list[dict[str, object]] = []
+    descriptor_rows: list[dict[str, object]] = []
+    extraction_replay_identical = True
+    maximum_peak_error = 0.0
+
+    for identity, authority in zip(
+        feature_identities, pair_authority, strict=True
+    ):
+        specimen_id = identity.specimen_id
+        size = sizes.get(specimen_id)
+        published = published_peaks.get(specimen_id)
+        if size is None or published is None or specimen_id not in design_by_id:
+            raise PipelineError(f"P1 source metadata is missing: {specimen_id}")
+        raw_payload = _stable_bound_payload(
+            v3_root / authority.v3_relative_path,
+            expected_sha256=authority.raw_trace_sha256,
+            logical_source="local:hasebe_v3_root",
+            relative_path=authority.raw_relative_path,
+            max_bytes=64 * 1024 * 1024,
+        )
+        trace = decode_raw_cai_csv(raw_payload)
+        response = convert_trace_to_response(
+            trace,
+            width_mm=size.width_mm,
+            thickness_mm=size.thickness_mm,
+            canonical_specimen_id=specimen_id,
+        )
+        reconciliation = reconcile_published_peak(
+            response,
+            published,
+            absolute_tolerance_mpa=tolerance,
+        )
+        maximum_peak_error = max(
+            maximum_peak_error, reconciliation.absolute_error_mpa
+        )
+        if not reconciliation.passed:
+            raise PipelineError(f"P1 peak reconciliation changed: {specimen_id}")
+        try:
+            first = extract_prepeak_response(
+                response,
+                baseline_samples=config.baseline_samples,
+                grid_points=config.grid_points,
+                minimum_unique_extension_positions=(
+                    config.minimum_unique_extension_positions
+                ),
+            )
+            second = extract_prepeak_response(
+                response,
+                baseline_samples=config.baseline_samples,
+                grid_points=config.grid_points,
+                minimum_unique_extension_positions=(
+                    config.minimum_unique_extension_positions
+                ),
+            )
+        except ExtractionError as error:
+            descriptor_qc_rows.append(
+                {
+                    "specimen_id": specimen_id,
+                    "domain_id": identity.domain_id,
+                    "raw_relative_path": authority.raw_relative_path,
+                    "raw_trace_sha256": authority.raw_trace_sha256,
+                    "published_cai_strength_mpa": published.value_mpa,
+                    "status": "FAIL",
+                    "error": str(error),
+                    "peak_row": response.peak_row,
+                    "raw_peak_mpa": reconciliation.raw_peak_mpa,
+                    "peak_absolute_error_mpa": (
+                        reconciliation.absolute_error_mpa
+                    ),
+                    "unique_extension_positions": "",
+                    "extraction_sha256": "",
+                    "repeat_extraction_byte_identical": False,
+                }
+            )
+            extraction_replay_identical = False
+            continue
+        first_sha = _extraction_sha256(first)
+        second_sha = _extraction_sha256(second)
+        repeat_identical = first_sha == second_sha
+        extraction_replay_identical &= repeat_identical
+        if not repeat_identical:
+            raise PipelineError(f"P1 extraction replay differs: {specimen_id}")
+        extracted_by_id[specimen_id] = first
+        extraction_hashes[specimen_id] = first_sha
+        descriptor_qc_rows.append(
+            {
+                "specimen_id": specimen_id,
+                "domain_id": identity.domain_id,
+                "raw_relative_path": authority.raw_relative_path,
+                "raw_trace_sha256": authority.raw_trace_sha256,
+                "published_cai_strength_mpa": published.value_mpa,
+                "status": "PASS",
+                "error": "",
+                "peak_row": first.peak_row,
+                "raw_peak_mpa": reconciliation.raw_peak_mpa,
+                "peak_absolute_error_mpa": reconciliation.absolute_error_mpa,
+                "unique_extension_positions": first.unique_extension_positions,
+                "extraction_sha256": first_sha,
+                "repeat_extraction_byte_identical": True,
+            }
+        )
+        descriptor_rows.append(
+            {
+                "specimen_id": specimen_id,
+                "domain_id": identity.domain_id,
+                "published_cai_strength_mpa": published.value_mpa,
+                "extension_peak_mm": first.extension_peak_mm,
+                "slope_u20_u60_mpa_per_mm": (
+                    first.slope_u20_u60_mpa_per_mm
+                ),
+                "normalized_prepeak_auc": first.normalized_prepeak_auc,
+                "q_midpoint": first.q_midpoint,
+                "peak_row": first.peak_row,
+                "baseline_extension_mm": first.baseline_extension_mm,
+                "baseline_stress_mpa": first.baseline_stress_mpa,
+                "zeroed_peak_stress_mpa": first.zeroed_peak_stress_mpa,
+                "unique_extension_positions": first.unique_extension_positions,
+                "extraction_sha256": first_sha,
+            }
+        )
+
+    valid_identities = tuple(
+        identity
+        for identity in feature_identities
+        if identity.specimen_id in extracted_by_id
+    )
+    valid_counts = Counter(identity.domain_id for identity in valid_identities)
+    if set(valid_counts) != set(PRIMARY_COUNTS) or min(valid_counts.values()) < 2:
+        raise PipelineError(
+            "P1 valid extraction cannot support six-domain redundancy evaluation"
+        )
+    redundancy_records = tuple(
+        P1RedundancyRecord(
+            specimen_id=identity.specimen_id,
+            domain_id=identity.domain_id,
+            published_cai_strength_mpa=(
+                published_peaks[identity.specimen_id].value_mpa
+            ),
+            extension_peak_mm=(
+                extracted_by_id[identity.specimen_id].extension_peak_mm
+            ),
+            slope_u20_u60_mpa_per_mm=(
+                extracted_by_id[
+                    identity.specimen_id
+                ].slope_u20_u60_mpa_per_mm
+            ),
+            normalized_prepeak_auc=(
+                extracted_by_id[identity.specimen_id].normalized_prepeak_auc
+            ),
+            design=design_by_id[identity.specimen_id],
+        )
+        for identity in valid_identities
+    )
+    evaluation = evaluate_p1_redundancy(redundancy_records)
+    metrics = {
+        (metric.endpoint, metric.model): metric for metric in evaluation.metrics
+    }
+
+    endpoint_ranges = {
+        endpoint: max(float(getattr(record, endpoint)) for record in redundancy_records)
+        - min(float(getattr(record, endpoint)) for record in redundancy_records)
+        for endpoint in PRIMARY_TARGET_FIELDS
+    }
+    gate = evaluate_p1_gate(
+        tuple(
+            EndpointGateFacts(
+                endpoint=endpoint,
+                valid_count=len(redundancy_records),
+                valid_domain_counts={
+                    domain: valid_counts.get(domain, 0) for domain in PRIMARY_COUNTS
+                },
+                strength_only_pooled_r2=metrics[
+                    (endpoint, "strength_only")
+                ].pooled_r2,
+                strength_only_domain_spearman={
+                    item.domain_id: item.spearman
+                    for item in metrics[
+                        (endpoint, "strength_only")
+                    ].domain_spearman
+                },
+                descriptor_range=endpoint_ranges[endpoint],
+                range_tolerance=ENDPOINT_RANGE_TOLERANCES[endpoint],
+                replay_byte_identical=extraction_replay_identical,
+            )
+            for endpoint in PRIMARY_TARGET_FIELDS
+        )
+    )
+
+    curve_records = tuple(
+        CurveRecord(
+            specimen_id=identity.specimen_id,
+            domain_id=identity.domain_id,
+            published_cai_strength_mpa=(
+                published_peaks[identity.specimen_id].value_mpa
+            ),
+            normalized_curve=extracted_by_id[
+                identity.specimen_id
+            ].normalized_stress,
+        )
+        for identity in valid_identities
+    )
+    representative_pairs = select_representative_pairs(curve_records)
+    if len(representative_pairs) != config.maximum_representative_pairs:
+        raise PipelineError("P1 representative-pair count changed")
+
+    oof_rows = [
+        {
+            "specimen_id": row.specimen_id,
+            "domain_id": row.domain_id,
+            "held_out_domain": row.held_out_domain,
+            "endpoint": row.endpoint,
+            "model": row.model,
+            "truth": row.truth,
+            "prediction": row.prediction,
+            "residual": row.truth - row.prediction,
+            "fold_state_sha256": row.fold_state_sha256,
+        }
+        for row in evaluation.predictions
+    ]
+    domain_rows: list[dict[str, object]] = []
+    for endpoint in PRIMARY_TARGET_FIELDS:
+        strength_metric = metrics[(endpoint, "strength_only")]
+        design_metric = metrics[(endpoint, "strength_plus_design")]
+        strength_correlations = {
+            item.domain_id: item.spearman
+            for item in strength_metric.domain_spearman
+        }
+        design_correlations = {
+            item.domain_id: item.spearman
+            for item in design_metric.domain_spearman
+        }
+        for domain in PRIMARY_COUNTS:
+            values = [
+                float(getattr(record, endpoint))
+                for record in redundancy_records
+                if record.domain_id == domain
+            ]
+            domain_rows.append(
+                {
+                    "endpoint": endpoint,
+                    "domain_id": domain,
+                    "valid_count": len(values),
+                    "descriptor_min": min(values),
+                    "descriptor_max": max(values),
+                    "descriptor_range": max(values) - min(values),
+                    "strength_only_pooled_r2": strength_metric.pooled_r2,
+                    "strength_only_domain_spearman": (
+                        strength_correlations[domain]
+                    ),
+                    "strength_plus_design_pooled_r2": design_metric.pooled_r2,
+                    "strength_plus_design_domain_spearman": (
+                        design_correlations[domain]
+                    ),
+                }
+            )
+
+    curve_fields = [
+        "specimen_id",
+        "domain_id",
+        "raw_trace_sha256",
+        "extraction_sha256",
+        "normalized_curve_sha256",
+        *(f"q_u{index:03d}" for index in range(config.grid_points)),
+    ]
+    curve_rows: list[dict[str, object]] = []
+    authority_by_id = {record.specimen_id: record for record in pair_authority}
+    for identity in valid_identities:
+        extracted = extracted_by_id[identity.specimen_id]
+        normalized = np.ascontiguousarray(
+            extracted.normalized_stress, dtype="<f8"
+        )
+        row: dict[str, object] = {
+            "specimen_id": identity.specimen_id,
+            "domain_id": identity.domain_id,
+            "raw_trace_sha256": authority_by_id[
+                identity.specimen_id
+            ].raw_trace_sha256,
+            "extraction_sha256": extraction_hashes[identity.specimen_id],
+            "normalized_curve_sha256": hashlib.sha256(
+                normalized.tobytes(order="C")
+            ).hexdigest(),
+        }
+        row.update(
+            {
+                f"q_u{index:03d}": float(value)
+                for index, value in enumerate(normalized)
+            }
+        )
+        curve_rows.append(row)
+
+    representative_rows = [
+        {
+            "rank": rank,
+            "left_specimen_id": pair.left_specimen_id,
+            "right_specimen_id": pair.right_specimen_id,
+            "left_domain_id": pair.left_domain_id,
+            "right_domain_id": pair.right_domain_id,
+            "left_strength_mpa": pair.left_strength_mpa,
+            "right_strength_mpa": pair.right_strength_mpa,
+            "strength_abs_difference_mpa": pair.strength_abs_difference_mpa,
+            "normalized_curve_rms": pair.curve_rms,
+            "selection_rule": "NEAREST_STRENGTH_THEN_CURVE_RMS",
+        }
+        for rank, pair in enumerate(representative_pairs, start=1)
+    ]
+
+    endpoint_summaries: dict[str, object] = {}
+    for decision in gate.endpoint_decisions:
+        model_summaries: dict[str, object] = {}
+        for model_name in ("strength_only", "strength_plus_design"):
+            metric = metrics[(decision.endpoint, model_name)]
+            model_summaries[model_name] = {
+                "domain_spearman": {
+                    item.domain_id: item.spearman
+                    for item in metric.domain_spearman
+                },
+                "pooled_r2": metric.pooled_r2,
+            }
+        endpoint_summaries[decision.endpoint] = {
+            "coverage_fraction": decision.coverage_fraction,
+            "descriptor_range": endpoint_ranges[decision.endpoint],
+            "gate_passed": decision.passed,
+            "gate_reasons": list(decision.reasons),
+            "models": model_summaries,
+            "nonredundant_domain_count": decision.nonredundant_domain_count,
+            "range_tolerance": ENDPOINT_RANGE_TOLERANCES[decision.endpoint],
+            "valid_count": len(redundancy_records),
+        }
+    downstream_status = {
+        "P2": (
+            "AUTHORIZED_NOT_RUN"
+            if gate.status is StageStatus.P1_GO
+            else StageStatus.NOT_RUN_NOT_AUTHORIZED.value
+        ),
+        "P3": StageStatus.NOT_RUN_NOT_AUTHORIZED.value,
+        "P4": StageStatus.NOT_RUN_NOT_AUTHORIZED.value,
+        "P5": StageStatus.NOT_RUN_NOT_AUTHORIZED.value,
+    }
+    summary = {
+        "artifact_replay_byte_identical": True,
+        "base_sha": config.base_sha,
+        "config_sha256": config_snapshot.sha256,
+        "downstream_status": downstream_status,
+        "endpoints": endpoint_summaries,
+        "estimator_contract": {
+            "design_sensitivity_is_gate_input": False,
+            "fixed_ridge_alpha": config.ridge_alpha,
+            "fixed_ridge_fit_count": len(evaluation.fold_states),
+            "hyperparameter_search": False,
+            "outer_split": "leave_one_domain_out",
+            "strength_only_is_gate_input": True,
+        },
+        "extraction": {
+            "baseline_samples": config.baseline_samples,
+            "failed": len(feature_identities) - len(redundancy_records),
+            "grid_points": config.grid_points,
+            "maximum_peak_reconciliation_error_mpa": maximum_peak_error,
+            "peak_reconciliation_tolerance_mpa": tolerance,
+            "repeat_extraction_byte_identical": extraction_replay_identical,
+            "valid": len(redundancy_records),
+        },
+        "gate": {
+            "passing_endpoints": list(gate.passing_endpoints),
+            "status": gate.status.value,
+        },
+        "input_boundary": {
+            "post_cai_image_used": False,
+            "strain_endpoint_used": False,
+            "target_domain_outcome_used_for_fit": False,
+            "true_response_used_as_predictor": False,
+        },
+        "new_damage_to_response_model_training": False,
+        "p0_authority": {
+            "required_status": config.required_p0_status.value,
+            "summary_relative_path": config.p0_summary_relative_path,
+            "summary_sha256": config.p0_summary_sha256,
+        },
+        "primary_cohort": {
+            "expected": sum(PRIMARY_COUNTS.values()),
+            "per_domain_valid": {
+                domain: valid_counts.get(domain, 0) for domain in PRIMARY_COUNTS
+            },
+            "valid": len(redundancy_records),
+        },
+        "representative_pairs": {
+            "count": len(representative_pairs),
+            "manual_selection": False,
+            "rule": "nearest strength, deduplicate, curve RMS desc, pair IDs",
+        },
+        "schema_version": 1,
+        "strain_status": "STRAIN_UNIT_UNRESOLVED",
+    }
+
+    metric_lines = []
+    for endpoint in PRIMARY_TARGET_FIELDS:
+        strength = metrics[(endpoint, "strength_only")]
+        design = metrics[(endpoint, "strength_plus_design")]
+        decision = next(
+            item for item in gate.endpoint_decisions if item.endpoint == endpoint
+        )
+        metric_lines.append(
+            f"- `{endpoint}`: range `{endpoint_ranges[endpoint]:.17g}`, "
+            f"strength-only pooled R2 `{strength.pooled_r2:.17g}`, "
+            f"strength+design pooled R2 `{design.pooled_r2:.17g}`, "
+            f"gate `{'PASS' if decision.passed else 'FAIL'}`."
+        )
+    metric_text = "\n".join(metric_lines)
+    strength_gate_text = "\n".join(
+        f"  - `{endpoint}`: pooled R2 "
+        f"`{metrics[(endpoint, 'strength_only')].pooled_r2:.17g}`"
+        for endpoint in PRIMARY_TARGET_FIELDS
+    )
+    report = f"""# P1 CAI Response Richness Audit
+
+Status: `{gate.status.value}`
+
+## Authority and scope
+
+- Exact Git base: `{config.base_sha}`
+- P0 summary SHA-256: `{config.p0_summary_sha256}` (`P0_GO`)
+- Primary cohort: {len(redundancy_records)}/276 valid, with all six domains.
+- Response axis: stress-extension only; strain remains `STRAIN_UNIT_UNRESOLVED`.
+- New damage-to-response model training: NO.
+- Fixed redundancy reference fits: {len(evaluation.fold_states)}; no search.
+
+## Endpoint decisions
+
+{metric_text}
+
+## Decision
+
+- Passing endpoints: {list(gate.passing_endpoints)}
+- Artifact/extraction replay byte-identical: YES
+- P2 status: `{downstream_status['P2']}`
+- P3-P5: `NOT_RUN_NOT_AUTHORIZED`
+"""
+    decision_payload = f"""# P1 Response Richness Decision
+
+Status: `{gate.status.value}`
+
+- Base SHA: `{config.base_sha}`
+- P0 authority: `{config.p0_summary_sha256}` / `P0_GO`
+- Valid responses: {len(redundancy_records)}/276 across 6/6 domains
+- Passing endpoints: {', '.join(gate.passing_endpoints) or 'NONE'}
+- Strength-only gate metrics:
+{strength_gate_text}
+- Extraction repeat: byte-identical
+- Artifact package replay: required and verified by the publishing command
+- P2: `{downstream_status['P2']}`
+- P3-P5: `NOT_RUN_NOT_AUTHORIZED`
+- Evidence: `results/damage_to_failure_response/p1_response_richness/`
+- Manual specimen/result selection: NO
+- Hyperparameter search: NO
+""".encode()
+
+    payloads = {
+        "descriptor_table.csv": _csv_payload(
+            (
+                "specimen_id",
+                "domain_id",
+                "published_cai_strength_mpa",
+                "extension_peak_mm",
+                "slope_u20_u60_mpa_per_mm",
+                "normalized_prepeak_auc",
+                "q_midpoint",
+                "peak_row",
+                "baseline_extension_mm",
+                "baseline_stress_mpa",
+                "zeroed_peak_stress_mpa",
+                "unique_extension_positions",
+                "extraction_sha256",
+            ),
+            descriptor_rows,
+        ),
+        "descriptor_qc.csv": _csv_payload(
+            (
+                "specimen_id",
+                "domain_id",
+                "raw_relative_path",
+                "raw_trace_sha256",
+                "published_cai_strength_mpa",
+                "status",
+                "error",
+                "peak_row",
+                "raw_peak_mpa",
+                "peak_absolute_error_mpa",
+                "unique_extension_positions",
+                "extraction_sha256",
+                "repeat_extraction_byte_identical",
+            ),
+            descriptor_qc_rows,
+        ),
+        "domain_summary.csv": _csv_payload(
+            (
+                "endpoint",
+                "domain_id",
+                "valid_count",
+                "descriptor_min",
+                "descriptor_max",
+                "descriptor_range",
+                "strength_only_pooled_r2",
+                "strength_only_domain_spearman",
+                "strength_plus_design_pooled_r2",
+                "strength_plus_design_domain_spearman",
+            ),
+            domain_rows,
+        ),
+        "strength_redundancy_oof.csv": _csv_payload(
+            (
+                "specimen_id",
+                "domain_id",
+                "held_out_domain",
+                "endpoint",
+                "model",
+                "truth",
+                "prediction",
+                "residual",
+                "fold_state_sha256",
+            ),
+            oof_rows,
+        ),
+        "response_curve_manifest.csv": _csv_payload(curve_fields, curve_rows),
+        "representative_pair_manifest.csv": _csv_payload(
+            (
+                "rank",
+                "left_specimen_id",
+                "right_specimen_id",
+                "left_domain_id",
+                "right_domain_id",
+                "left_strength_mpa",
+                "right_strength_mpa",
+                "strength_abs_difference_mpa",
+                "normalized_curve_rms",
+                "selection_rule",
+            ),
+            representative_rows,
+        ),
+        "summary.json": _json_payload(summary),
+        "REPORT.md": report.encode("utf-8"),
+    }
+    return gate.status, gate.passing_endpoints, payloads, decision_payload
+
+
+def _verify_p1_package_determinism(
+    parent: Path, payloads: Mapping[str, bytes]
+) -> None:
+    parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix=".p1-replay-", dir=parent) as directory:
+        temporary = Path(directory)
+        first = temporary / "first"
+        second = temporary / "second"
+        write_p1_package(first, payloads)
+        write_p1_package(second, payloads)
+        first_report = replay_p1(first)
+        second_report = replay_p1(second)
+        first_names = sorted(path.name for path in first.iterdir())
+        second_names = sorted(path.name for path in second.iterdir())
+        if (
+            not first_report.verified
+            or not second_report.verified
+            or first_names != second_names
+            or any(
+                (first / name).read_bytes() != (second / name).read_bytes()
+                for name in first_names
+            )
+        ):
+            raise PipelineError("P1 package replay is not byte-identical")
+
+
+def _write_new_regular_file(path: Path, payload: bytes) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL
+    flags |= getattr(os, "O_CLOEXEC", 0)
+    try:
+        descriptor = os.open(path, flags, 0o644)
+    except OSError as error:
+        raise PipelineError(f"P1 decision cannot be created: {path}") from error
+    completed = False
+    try:
+        view = memoryview(payload)
+        written = 0
+        while written < len(view):
+            written += os.write(descriptor, view[written:])
+        os.fsync(descriptor)
+        completed = True
+    except OSError as error:
+        raise PipelineError(f"P1 decision cannot be written: {path}") from error
+    finally:
+        os.close(descriptor)
+        if not completed:
+            try:
+                path.unlink()
+            except OSError:
+                pass
+
+
+def run_p1_audit(
+    *,
+    config_path: Path,
+    repo_root: Path,
+    legacy_root: Path,
+    hasebe_v3_root: Path,
+    output: Path,
+    decision_output: Path,
+) -> P1RunResult:
+    """Execute the fixed P1 audit after verifying the committed P0 package."""
+
+    destination = Path(output)
+    decision_path = Path(decision_output)
+    for label, path in (("P1 output", destination), ("P1 decision", decision_path)):
+        if path.exists() or path.is_symlink():
+            raise PipelineError(f"{label} already exists: {path}")
+    repository = _regular_directory(repo_root, label="repository")
+    config = load_p1_config(config_path)
+    p0_package = validate_p1_p0_authority(config, repository)
+    historical = _regular_directory(legacy_root, label="legacy_root")
+    v3_root = _regular_directory(hasebe_v3_root, label="hasebe_v3_root")
+    status, passing_endpoints, payloads, decision_payload = _execute_p1(
+        config_path=Path(config_path),
+        config=config,
+        repo_root=repository,
+        legacy_root=historical,
+        v3_root=v3_root,
+        p0_package=p0_package,
+    )
+    try:
+        _verify_p1_package_determinism(destination.parent, payloads)
+        write_p1_package(destination, payloads)
+        replay_p1(destination)
+    except ArtifactError as error:
+        raise PipelineError(str(error)) from error
+    _write_new_regular_file(decision_path, decision_payload)
+    return P1RunResult(
+        status=status,
+        output=destination,
+        decision_output=decision_path,
+        passing_endpoints=passing_endpoints,
+    )
+
+
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Damage-response stage-gated audit")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -1255,6 +2307,18 @@ def _parser() -> argparse.ArgumentParser:
     audit.add_argument("--output", type=Path, required=True)
     replay = subparsers.add_parser("replay-p0", help="verify a P0 artifact package")
     replay.add_argument("--path", type=Path, required=True)
+    audit_p1 = subparsers.add_parser(
+        "audit-p1", help="execute the fixed response-richness audit"
+    )
+    audit_p1.add_argument("--config", type=Path, required=True)
+    audit_p1.add_argument("--legacy-root", type=Path, required=True)
+    audit_p1.add_argument("--hasebe-v3-root", type=Path, required=True)
+    audit_p1.add_argument("--output", type=Path, required=True)
+    audit_p1.add_argument("--decision-output", type=Path, required=True)
+    replay_p1_parser = subparsers.add_parser(
+        "replay-p1", help="verify a P1 artifact package"
+    )
+    replay_p1_parser.add_argument("--path", type=Path, required=True)
     return parser
 
 
@@ -1271,9 +2335,23 @@ def main(argv: Sequence[str] | None = None) -> int:
                 output=arguments.output,
             )
             print(f"{result.status.value} {result.output}")
-        else:
+        elif arguments.command == "replay-p0":
             report = replay_p0(arguments.path)
             print(f"P0_REPLAY_OK payloads={report.payload_count}")
+        elif arguments.command == "audit-p1":
+            repository = Path(__file__).resolve().parents[3]
+            result = run_p1_audit(
+                config_path=arguments.config,
+                repo_root=repository,
+                legacy_root=arguments.legacy_root,
+                hasebe_v3_root=arguments.hasebe_v3_root,
+                output=arguments.output,
+                decision_output=arguments.decision_output,
+            )
+            print(f"{result.status.value} {result.output}")
+        else:
+            report = replay_p1(arguments.path)
+            print(f"P1_REPLAY_OK payloads={report.payload_count}")
     except (
         ArtifactError,
         AuthorityError,
