@@ -1,0 +1,55 @@
+{
+  "files": [
+    {
+      "path": "config.yaml",
+      "sha256": "c04a206be7fc6847dbcb43b1eb9252733dce173901276ee4e62dcfc5f3494d92",
+      "size": 4202
+    },
+    {
+      "path": "feature_authority.csv",
+      "sha256": "d112e0c23b975513952bf0476f6d269c7446d5218449741cd41ba7332907b8d5",
+      "size": 180203
+    },
+    {
+      "path": "feature_provenance.json",
+      "sha256": "3500d0be3dfae5038732d56784ecc9821348d0f5ac7483747300fc444a3705da",
+      "size": 4458
+    },
+    {
+      "path": "inner_selection.csv",
+      "sha256": "954ee1c86ff5174fa7607953a7c9ab57ef512fb6423e4db86fcfe1c5c9f0b356",
+      "size": 148596
+    },
+    {
+      "path": "oof_predictions.csv",
+      "sha256": "a6641db63243964270a9874a1aefa525bd5608c1f477a9d1997b404fd33ed64f",
+      "size": 1431585
+    },
+    {
+      "path": "aggregate_metrics.csv",
+      "sha256": "b0f47ae8dad70207030086a1296690acd49d599b0c606b73eae9f27731973403",
+      "size": 2067
+    },
+    {
+      "path": "domain_metrics.csv",
+      "sha256": "2a523dfaaddc2bdec811d98057d26396b638c4ca9b41b9cb798ac8bc8858b6ad",
+      "size": 10716
+    },
+    {
+      "path": "bootstrap_contrasts.csv",
+      "sha256": "822983786a8fc9aff1c1978c87da1c5c80c6d529245b3e154d3620a432e0031e",
+      "size": 5295
+    },
+    {
+      "path": "summary.json",
+      "sha256": "c3942d728b43a11ab270e7c9e600bc459be21471a915f16b1deb8e15a77db628",
+      "size": 14009
+    },
+    {
+      "path": "REPORT.md",
+      "sha256": "f671670bc2d8fe7e9fac3b12d5e99240ad7316b2a58c538ae13af98a1d05fa7d",
+      "size": 5428
+    }
+  ],
+  "schema_version": 1
+}

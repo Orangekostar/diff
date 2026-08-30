@@ -1,0 +1,109 @@
+{
+  "authority_replay_byte_identical": true,
+  "cohort": {
+    "domain_counts": {
+      "74t7kcdgkr": 45,
+      "cgtnjyggtm": 49,
+      "w68dtmpfyf": 43,
+      "xcmzfsbd9t": 59,
+      "yfxyg8jm46": 42,
+      "ykhs7s2dck": 38
+    },
+    "specimen_count": 276
+  },
+  "embedding": {
+    "dimension": 512,
+    "encoder_sha256": "f37072fd47e89c5e827621c5baffa7500819f7896bbacec160b1a16c560e07ec",
+    "row_sha256_registry": "4e402a65b476052471a5cd59b12a01c64ef74de7f5a07b83587151b2d2651389",
+    "state_sha256": "67ce8ae200ee446331c620c0e0db58ef1b7958f23b0e1c1ea10d6463a220728d",
+    "view": "FULL"
+  },
+  "feature_contract": {
+    "damage_scalar_names": [
+      "projected_damage_area",
+      "damage_height",
+      "damage_width"
+    ],
+    "full_embedding_values_serialized": false,
+    "post_cai_content_used": false,
+    "response_or_strength_values_serialized": false,
+    "surface_profile_names": [
+      "minimum_delta",
+      "maximum_delta",
+      "quantile_01",
+      "quantile_05",
+      "quantile_25",
+      "median_delta",
+      "quantile_75",
+      "quantile_95",
+      "quantile_99",
+      "mean_delta",
+      "standard_deviation",
+      "negative_volume_mean",
+      "positive_volume_mean",
+      "negative_fraction",
+      "positive_fraction",
+      "gradient_mean",
+      "gradient_standard_deviation",
+      "gradient_quantile_95",
+      "dent_centroid_y",
+      "dent_centroid_x",
+      "dent_radial_extent"
+    ]
+  },
+  "implementation_sha256": {
+    "paper_v3/configs/damage_to_failure_response_p2.yaml": "c04a206be7fc6847dbcb43b1eb9252733dce173901276ee4e62dcfc5f3494d92",
+    "scripts/run_damage_response.py": "1d0d6d3ea16824cb4f919b186e31c7f7dbc1a1c6442223000f740eb9a399c0f7",
+    "src/cmc_bbdm/damage_response/artifacts.py": "cba50225468c9add5967eb16312bf73a8f06af7e4822538545fe5e28a36b4c33",
+    "src/cmc_bbdm/damage_response/p2_evaluation.py": "e809bb9bbfa9e1674ce9309fac40c5d0446f8acb02dcca2d97f4abaa33012ae1",
+    "src/cmc_bbdm/damage_response/p2_features.py": "efe977b9a02aaa15455e5cedd380dadf0686ae59551735c86ad81439ce8293b9",
+    "src/cmc_bbdm/damage_response/p2_gate.py": "9fa23119c037e70ea8f116d677fa4efd58e57cfacac902c244072639b85180c9",
+    "src/cmc_bbdm/damage_response/p2_pipeline.py": "ed9d2864f5699fea09d549ae025403abce36b2bbc185b953147318f5a035ae57",
+    "src/cmc_bbdm/damage_response/p2_statistics.py": "4236fb88d7114fe23049c603e8d7e9420de2a2cc870777214d5bad3ee42043f8",
+    "src/cmc_bbdm/damage_response/p2_views.py": "8a74a10708bf466e617637f41289b8f4a3577e7dee89238579be0fe313981550",
+    "src/cmc_bbdm/damage_response/pipeline.py": "48917e2224a8bf5733fec77da40dd86a895c3e00e2b3a9cbe2547e5d94f346a6"
+  },
+  "schema_version": 1,
+  "sources": {
+    "design_manifest": {
+      "relative_path": "data/public/hasebe/manifest/paired.csv",
+      "root": "legacy",
+      "sha256": "f81002981bf2f6aed84818b48da87cd57e6336f5f3da8d78df1a58d26dd8026f"
+    },
+    "embedding_config": {
+      "relative_path": "paper_v3/configs/aei_multiview_regression.yaml",
+      "root": "repository",
+      "sha256": "8b46986c23ccd87d5e79f2a6f94f034a90d10e91ec21d39c40a1a58e3b41a357"
+    },
+    "feature_bank": {
+      "relative_path": "results/aei_selective_invariance/a2_paired_features/paired_features.npz",
+      "root": "repository",
+      "sha256": "f2a69f0da75e20880202d7fc4a6a92f979978406ec21f9d83e4bc8db07fb72a8"
+    },
+    "feature_cache": {
+      "relative_path": "results/public_recoverability/feature_cache.npz",
+      "root": "legacy",
+      "sha256": "6d581c77e0db18782406bd55dd2c0716d048c16c64c8df4423d5b331c84aeb52"
+    },
+    "lvi_workbook": {
+      "relative_path": "1_Low velocity impact testing condition/Low velocity impact testing condition and damage_v0.2.xlsx",
+      "root": "hasebe_v3",
+      "sha256": "e6d98c968f57ac5748e104dc1da5e112114d25d77c03c7222ba3a0d93ac23cf1"
+    },
+    "physical_descriptors": {
+      "relative_path": "results/cpb_cfrp_revision/physical_descriptors.csv",
+      "root": "legacy",
+      "sha256": "2f2c3b3a16cbe1b48364b76ad10999a91c01de000b81525ba56c8ec90399e078"
+    },
+    "provenance_specimens": {
+      "relative_path": "paper_v2/data/provenance/specimens.csv",
+      "root": "legacy",
+      "sha256": "84617cb12012ac9acc1b756b59161738a2a0a1089bd3eb432b7d01a066e65f9f"
+    },
+    "size_workbook": {
+      "relative_path": "2_Specimen size/Specimen size_v0.2.xlsx",
+      "root": "hasebe_v3",
+      "sha256": "72c6dc7e1e8790883dba2b4b1e3ee1259fdfbad61d22d241a866d4621834fa65"
+    }
+  }
+}
