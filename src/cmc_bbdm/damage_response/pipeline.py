@@ -24,6 +24,7 @@ from cmc_bbdm.damage_response.artifacts import (
     ArtifactError,
     replay_p0,
     replay_p1,
+    replay_p2,
     write_p0_package,
     write_p1_package,
 )
@@ -236,6 +237,14 @@ class P1RunResult:
     output: Path
     decision_output: Path
     passing_endpoints: tuple[str, ...]
+
+
+@dataclass(frozen=True)
+class P2RunResult:
+    status: StageStatus
+    output: Path
+    decision_output: Path
+    passing_contrasts: tuple[tuple[str, str, str], ...]
 
 
 @dataclass(frozen=True)
@@ -2297,6 +2306,69 @@ def run_p1_audit(
     )
 
 
+def load_p2_config(path: Path) -> object:
+    """Load the P2 protocol without importing its execution stack at startup."""
+
+    from cmc_bbdm.damage_response.p2_pipeline import P2PipelineError
+    from cmc_bbdm.damage_response.p2_pipeline import (
+        load_p2_config as load_p2_config_core,
+    )
+
+    try:
+        return load_p2_config_core(path)
+    except P2PipelineError as error:
+        raise PipelineError(str(error)) from error
+
+
+def validate_p2_upstream_authority(config: object, repo_root: Path) -> object:
+    """Verify committed P0/P1 authority before opening external P2 sources."""
+
+    from cmc_bbdm.damage_response.p2_pipeline import P2PipelineError
+    from cmc_bbdm.damage_response.p2_pipeline import (
+        validate_p2_upstream_authority as validate_p2_upstream_authority_core,
+    )
+
+    try:
+        return validate_p2_upstream_authority_core(config, repo_root)
+    except P2PipelineError as error:
+        raise PipelineError(str(error)) from error
+
+
+def run_p2_audit(
+    *,
+    config_path: Path,
+    repo_root: Path,
+    legacy_root: Path,
+    hasebe_v3_root: Path,
+    output: Path,
+    decision_output: Path,
+) -> P2RunResult:
+    """Execute and publish the fixed nested-LODO P2 baseline audit."""
+
+    from cmc_bbdm.damage_response.p2_pipeline import P2PipelineError
+    from cmc_bbdm.damage_response.p2_pipeline import (
+        run_p2_audit as run_p2_audit_core,
+    )
+
+    try:
+        result = run_p2_audit_core(
+            config_path=config_path,
+            repo_root=repo_root,
+            legacy_root=legacy_root,
+            hasebe_v3_root=hasebe_v3_root,
+            output=output,
+            decision_output=decision_output,
+        )
+    except P2PipelineError as error:
+        raise PipelineError(str(error)) from error
+    return P2RunResult(
+        status=result.status,
+        output=result.output,
+        decision_output=result.decision_output,
+        passing_contrasts=result.passing_contrasts,
+    )
+
+
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Damage-response stage-gated audit")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -2319,6 +2391,18 @@ def _parser() -> argparse.ArgumentParser:
         "replay-p1", help="verify a P1 artifact package"
     )
     replay_p1_parser.add_argument("--path", type=Path, required=True)
+    audit_p2 = subparsers.add_parser(
+        "audit-p2", help="execute the fixed damage-response baseline audit"
+    )
+    audit_p2.add_argument("--config", type=Path, required=True)
+    audit_p2.add_argument("--legacy-root", type=Path, required=True)
+    audit_p2.add_argument("--hasebe-v3-root", type=Path, required=True)
+    audit_p2.add_argument("--output", type=Path, required=True)
+    audit_p2.add_argument("--decision-output", type=Path, required=True)
+    replay_p2_parser = subparsers.add_parser(
+        "replay-p2", help="verify a P2 artifact package"
+    )
+    replay_p2_parser.add_argument("--path", type=Path, required=True)
     return parser
 
 
@@ -2349,9 +2433,23 @@ def main(argv: Sequence[str] | None = None) -> int:
                 decision_output=arguments.decision_output,
             )
             print(f"{result.status.value} {result.output}")
-        else:
+        elif arguments.command == "replay-p1":
             report = replay_p1(arguments.path)
             print(f"P1_REPLAY_OK payloads={report.payload_count}")
+        elif arguments.command == "audit-p2":
+            repository = Path(__file__).resolve().parents[3]
+            result = run_p2_audit(
+                config_path=arguments.config,
+                repo_root=repository,
+                legacy_root=arguments.legacy_root,
+                hasebe_v3_root=arguments.hasebe_v3_root,
+                output=arguments.output,
+                decision_output=arguments.decision_output,
+            )
+            print(f"{result.status.value} {result.output}")
+        else:
+            report = replay_p2(arguments.path)
+            print(f"P2_REPLAY_OK payloads={report.payload_count}")
     except (
         ArtifactError,
         AuthorityError,
