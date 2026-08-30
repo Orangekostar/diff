@@ -33,6 +33,18 @@ REQUIRED_P1_PAYLOADS = (
     "summary.json",
     "REPORT.md",
 )
+REQUIRED_P2_PAYLOADS = (
+    "config.yaml",
+    "feature_authority.csv",
+    "feature_provenance.json",
+    "inner_selection.csv",
+    "oof_predictions.csv",
+    "aggregate_metrics.csv",
+    "domain_metrics.csv",
+    "bootstrap_contrasts.csv",
+    "summary.json",
+    "REPORT.md",
+)
 _MANIFEST_NAME = "artifact_manifest.json"
 _CHECKSUM_NAME = "CHECKSUMS.sha256"
 _SHA256_RE = re.compile(r"[0-9a-f]{64}")
@@ -85,6 +97,11 @@ P1_PACKAGE_SPEC = PackageSpec(
     label="P1",
     logical_source="artifact:p1_response_richness",
     required_payloads=REQUIRED_P1_PAYLOADS,
+)
+P2_PACKAGE_SPEC = PackageSpec(
+    label="P2",
+    logical_source="artifact:p2_response_baselines",
+    required_payloads=REQUIRED_P2_PAYLOADS,
 )
 
 
@@ -197,6 +214,12 @@ def write_p1_package(destination: Path, payloads: Mapping[str, bytes]) -> None:
     """Write one deterministic P1 package through an atomic sibling rename."""
 
     write_exact_package(destination, payloads, spec=P1_PACKAGE_SPEC)
+
+
+def write_p2_package(destination: Path, payloads: Mapping[str, bytes]) -> None:
+    """Write one deterministic P2 package through an atomic sibling rename."""
+
+    write_exact_package(destination, payloads, spec=P2_PACKAGE_SPEC)
 
 
 def _regular_package_members(root: Path, *, spec: PackageSpec) -> set[str]:
@@ -345,3 +368,9 @@ def replay_p1(path: Path) -> ReplayReport:
     """Replay the fixed P1 package contract."""
 
     return replay_exact_package(path, spec=P1_PACKAGE_SPEC)
+
+
+def replay_p2(path: Path) -> ReplayReport:
+    """Replay the fixed P2 package contract."""
+
+    return replay_exact_package(path, spec=P2_PACKAGE_SPEC)

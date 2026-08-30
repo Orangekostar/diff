@@ -7,11 +7,14 @@ import pytest
 from cmc_bbdm.damage_response.artifacts import (
     REQUIRED_P0_PAYLOADS,
     REQUIRED_P1_PAYLOADS,
+    REQUIRED_P2_PAYLOADS,
     ArtifactError,
     replay_p0,
     replay_p1,
+    replay_p2,
     write_p0_package,
     write_p1_package,
+    write_p2_package,
 )
 
 
@@ -158,6 +161,91 @@ def test_identical_p1_inputs_produce_byte_identical_packages(tmp_path: Path) -> 
     second = tmp_path / "second-p1"
     write_p1_package(first, _p1_payloads())
     write_p1_package(second, _p1_payloads())
+
+    first_names = sorted(path.name for path in first.iterdir())
+    second_names = sorted(path.name for path in second.iterdir())
+    assert first_names == second_names
+    for name in first_names:
+        assert (first / name).read_bytes() == (second / name).read_bytes()
+
+
+def _p2_payloads() -> dict[str, bytes]:
+    return {
+        name: (
+            b'{"status":"MACK_EXTENSION_NO_GO"}\n'
+            if name == "summary.json"
+            else f"fixture:{name}\n".encode("ascii")
+        )
+        for name in REQUIRED_P2_PAYLOADS
+    }
+
+
+@pytest.fixture
+def complete_p2_package(tmp_path: Path) -> Path:
+    destination = tmp_path / "p2"
+    write_p2_package(destination, _p2_payloads())
+    return destination
+
+
+def test_p2_payload_registry_is_exact() -> None:
+    assert REQUIRED_P2_PAYLOADS == (
+        "config.yaml",
+        "feature_authority.csv",
+        "feature_provenance.json",
+        "inner_selection.csv",
+        "oof_predictions.csv",
+        "aggregate_metrics.csv",
+        "domain_metrics.csv",
+        "bootstrap_contrasts.csv",
+        "summary.json",
+        "REPORT.md",
+    )
+
+
+def test_p2_writer_requires_exact_payload_membership(tmp_path: Path) -> None:
+    payloads = _p2_payloads()
+    payloads.pop("inner_selection.csv")
+
+    with pytest.raises(ArtifactError, match="payload membership"):
+        write_p2_package(tmp_path / "p2", payloads)
+
+
+def test_p2_replay_accepts_only_complete_regular_package(
+    complete_p2_package: Path,
+) -> None:
+    report = replay_p2(complete_p2_package)
+
+    assert report.payload_count == len(REQUIRED_P2_PAYLOADS)
+    assert report.verified is True
+
+
+@pytest.mark.parametrize("mutation", ("missing", "extra", "changed", "symlink"))
+def test_p2_replay_rejects_package_drift(
+    complete_p2_package: Path, tmp_path: Path, mutation: str
+) -> None:
+    if mutation == "missing":
+        (complete_p2_package / "oof_predictions.csv").unlink()
+    elif mutation == "extra":
+        (complete_p2_package / "extra.txt").write_text("extra\n", encoding="ascii")
+    elif mutation == "changed":
+        path = complete_p2_package / "oof_predictions.csv"
+        path.write_bytes(path.read_bytes() + b"changed\n")
+    else:
+        path = complete_p2_package / "oof_predictions.csv"
+        target = tmp_path / "outside.csv"
+        target.write_text("outside\n", encoding="ascii")
+        path.unlink()
+        path.symlink_to(target)
+
+    with pytest.raises(ArtifactError):
+        replay_p2(complete_p2_package)
+
+
+def test_identical_p2_inputs_produce_byte_identical_packages(tmp_path: Path) -> None:
+    first = tmp_path / "first-p2"
+    second = tmp_path / "second-p2"
+    write_p2_package(first, _p2_payloads())
+    write_p2_package(second, _p2_payloads())
 
     first_names = sorted(path.name for path in first.iterdir())
     second_names = sorted(path.name for path in second.iterdir())
