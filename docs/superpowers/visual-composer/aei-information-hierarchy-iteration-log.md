@@ -71,3 +71,19 @@
 - Reran PDF collision audits after the final render, shortened the Figure 2
   field-content row label, and moved Figure 3 endpoint labels inside their panel.
   The final reports contain no blocking collision findings.
+
+## Iteration 6: appearance-saliency evidence migration
+
+- Replaced Figure 2's reconstruction-derived comparison with the frozen
+  mechanical-versus-appearance oracle evidence, using independently ranked
+  8-by-8 maps and a paired percentile-difference panel.
+- Removed the reconstruction-derived control from main Figure 4 while retaining
+  the position/history and shuffled-content adverse directions.
+- Exported and hash-verified 29 unscaled panel PNGs; two-directory replay was
+  byte-identical for figures, tables, panels, and the deterministic package.
+- All four multi-panel alignment reports passed with 0 warnings. PDF text audits
+  found no glyph below 5 pt. Collision reports contain 0 failures; Figure 2 has
+  three reviewed fill-edge warnings from numeric labels placed beside their own
+  point markers.
+- Inspected all standalone figures and their final manuscript pages; no clipping,
+  distortion, incoherent overlap, or legacy field-content label remains.

@@ -45,8 +45,9 @@ strict nested leave-one-domain-out validation, specimen-first inference, and
 native-raster acquisition accounting. Spatial internal information reduced
 equal-domain compression-after-impact prediction error by 32.1\%, while a
 registered 25\% sparse condition retained 89.9\% of the full-field gain.
-Task-conditioned oracle analyses separated CAI-task priority from a registered
-field-content reference, and the highest-valued action changed for 70.4\%
+Task-conditioned oracle analyses separated CAI-task priority from a
+preregistered task-agnostic C-scan appearance-saliency reference, and the
+highest-valued action changed for 70.4\%
 of specimens as evidence accumulated. State-conditioned valuation reduced
 next-action regret relative to a static reference in five of six held-out
 domains. Matched information-source controls and component substitutions then
@@ -79,7 +80,7 @@ Post-impact prediction, sparse ultrasound, adaptive inspection, and task-
 driven experimental design provide the foundations for this problem. Surface
 and image-resolved predictors support residual-capacity assessment
 \cite{hasebe2022internal,hasebe2025compression,bull2018image,mack2026cscan};
-limited-data ultrasound segmentation and adaptive reconstruction or path
+limited-data ultrasound segmentation and adaptive sampling or path
 selection address distinct data and measurement constraints
 \cite{nguyen2025sparse,ji2026adaptive,fuentes2020autonomous}; and value-of-
 information methods connect sensing choices to downstream utility
@@ -89,10 +90,10 @@ Existing work does not yet provide an integrated account of how useful
 ultrasonic information is distributed across a specimen, how its value changes
 as evidence accumulates, and how local value is converted into a legal bounded
 measurement set. Full-field predictive accuracy does not identify where a
-limited budget should be spent. A region may appear important for recovering
-the C-scan field without being the region that most reduces CAI loss. The
-acquisition problem must therefore separate CAI-task value from a registered
-field-content reference and update priority from the current inspection state.
+limited budget should be spent. A high-priority CAI region may simply be a
+location with strong task-agnostic C-scan appearance saliency. We therefore
+distinguish downstream CAI value from a preregistered saliency reference before
+asking how value evolves with inspection state and can be realized under cost.
 
 We therefore ask two linked questions. RQ-A asks how task-relevant ultrasonic
 information is structured under limited sensing for downstream CAI assessment.
@@ -110,7 +111,7 @@ analyses, and oracle or teacher quantities are used only to characterize
 opportunity or a prediction target unavailable at decision time.
 
 The contribution is threefold. First, the framework characterizes task-
-relevant information from spatial enrichment and sparse recoverability through
+relevant information from spatial enrichment and sparse retention through
 task-, state-, and predictor-conditioned value. Second, it formulates legal
 partial-state valuation and matched source controls that distinguish state
 dependence from content attribution. Third, it connects estimated value to
@@ -146,20 +147,20 @@ before the scan is complete.
 Learning-based ultrasonic damage segmentation has used augmentation and
 synthetic examples when available scan datasets are small
 \cite{nguyen2025sparse}. Separately, adaptive composite inspection has combined
-damage-guided sampling with masked reconstruction
+damage-guided adaptive sampling
 \cite{ji2026adaptive}, and robotic ultrasound has selected successive physical
 locations with Bayesian optimization over damage-probability or novelty fields
 \cite{fuentes2020autonomous}. These approaches establish sparse and sequential
 acquisition as practical design patterns.
 
-Their objectives are not interchangeable. Field-centric sensing rewards
-measurements that improve the recovered C-scan under the registered normalized-
-RGB-MSE reconstruction objective, whereas task-oriented sensing rewards
-measurements that reduce downstream CAI loss. A CAI-useful measurement need not
-minimize global image error. Comparing the CAI task with this field-content
-reference under the same legal action and exact-cost contract makes the
-distinction observable without translating a digital sampling fraction into
-scanner time.
+These acquisition strategies can prioritize measurements using task-agnostic
+signal properties or downstream decision value. We use a deliberately simple,
+preregistered appearance-saliency reference that ranks newly revealed C-scan
+samples by their absolute RGB deviation from the specimen border median and
+does not use CAI outcomes. Comparing CAI-task value with this reference under a
+common legal-action and exact-cost protocol tests whether CAI priority is merely
+a copy of that saliency heuristic, without translating digital sampling fraction
+into scanner time.
 
 \subsection{Task-relevant information acquisition formulation}
 \label{sec:related-task}
@@ -210,12 +211,29 @@ intrinsic coordinate property nor a universal mechanical map.
 Information Characterization varies the relevant dependency while holding the
 cohort, held-out domains, loss, and cost logic fixed. Matched scalar-to-spatial
 comparisons test information enrichment, a registered sparse protocol tests
-recoverability, candidate comparisons test spatial heterogeneity, common-cost
-CAI-task and registered field-content objectives test task conditioning, and
-repeated states and predictors test state and predictor conditioning. A
-retrospective oracle may maximize Eq.~\eqref{eq:task-value} using
-counterfactual measurements and true outcomes; it characterizes opportunity
-and remains non-deployable.
+retention, candidate comparisons test spatial heterogeneity, a common-cost
+CAI-task and appearance-saliency comparison tests whether task value reduces to
+the registered heuristic, and repeated states and predictors test state and
+predictor conditioning.
+
+For that comparison, let $N_i(X\mid\legal_{i,t})$ be the native-raster samples
+newly revealed by $X$, let $C_{i,k}(p)$ be RGB channel $k$ at sample $p$, and
+let $m^{\mathrm{border}}_{i,k}$ be the specimen-specific border median. The
+registered task-agnostic appearance-saliency reference is
+\begin{equation}
+  S_{\mathrm{app}}(X\mid\legal_{i,t})=
+  \frac{1}{255\,3\,|N_i(X\mid\legal_{i,t})|}
+  \sum_{p\in N_i(X\mid\legal_{i,t})}\sum_{k=1}^{3}
+  \left|C_{i,k}(p)-m^{\mathrm{border}}_{i,k}\right|.
+  \label{eq:appearance-saliency}
+\end{equation}
+It assigns each candidate the mean absolute RGB deviation of newly revealed
+samples from the specimen-specific border median, normalized by 255, and does
+not use CAI outcomes. Complete candidate C-scan values are required, so the
+reference is retrospective and non-deployable; it is not a damage-severity
+measure or a universal saliency definition. A retrospective CAI oracle may
+maximize Eq.~\eqref{eq:task-value} using counterfactual measurements and true
+outcomes; it likewise characterizes opportunity and remains non-deployable.
 
 \begin{figure}[t]
   \centering
@@ -247,10 +265,8 @@ domain is queried only after every fitting and selection choice is fixed.
 Matched controls determine what Eq.~\eqref{eq:value-scorer} has learned. A
 static reference removes state conditioning. The acquired-position/history control
 inherits the exact coordinates, history, and cost while removing measured
-values. A field-content control derives information from the legal
-partial field using the registered normalized-RGB-MSE reconstruction objective,
-and a shuffled-content control preserves recipient positions and budget while
-replacing values with source-separated donor content.
+values. A shuffled-content control preserves recipient positions and budget
+while replacing values with source-separated donor content.
 Improvement over the static reference supports state dependence; attribution
 to measured content additionally requires favorable matched-control evidence.
 
@@ -302,8 +318,9 @@ The sparse condition is sampled on a normalized raster before the frozen field
 pathway. Sequential acquisition partitions each native scan into an
 8$\times$8 cell grid with three refinement levels. Candidate descriptors store
 cell position, level transition, added native locations, native count, and
-remaining budget. CAI-task utility uses CAI loss; the field-content reference
-uses the registered normalized-RGB-MSE reconstruction objective.
+remaining budget. CAI-task utility uses CAI loss; the registered task-agnostic
+appearance-saliency reference uses candidate C-scan values only through
+Eq.~\eqref{eq:appearance-saliency}.
 
 \input{table1_case_protocol.tex}
 
@@ -350,7 +367,7 @@ not travel time, coupling time, or industrial inspection cost.
 \subsection{From Spatial Information to State-Conditioned Task Value}
 \label{sec:results-characterization}
 
-\subsubsection{Spatial information and sparse recoverability}
+\subsubsection{Spatial information and sparse retention}
 \label{sec:results-spatial-sparse}
 
 % Evidence: U1_MATCHED_FIELD; U1_SURFACE_FIELD; U2_SPARSE_RETENTION;
@@ -372,47 +389,49 @@ thus retains most, but not all, of the registered spatial gain.
 
 Figure~\ref{fig:information-characterization} links these aggregate contrasts
 to a registered legal state, spatially heterogeneous opportunity, and paired
-CAI-task and field-content priorities.
+CAI-task and task-agnostic saliency priorities.
 
 \begin{figure}[t]
   \centering
   \includegraphics[width=\textwidth]{figure2_information_characterization.pdf}
   \caption{What ultrasonic information matters for CAI? (a) Equal-domain
   CAI-ratio MAE for matched scalar, full spatial field, and registered 25\%
-  sparse field. (b) Hash-verified initial legal state for specimen c8-2; teal
-  marks measured native-raster positions. (c) Retrospective mechanical-oracle
-  opportunity relative to uniform acquisition and the registered field-content
-  reference. (d,e) CAI-task and C-scan-content priority percentiles on the same
-  state and legal action grid; white outlines mark the five highest-priority
-  cells. The field-content reference is operationalized by the registered
-  normalized-RGB-MSE reconstruction objective. (f) Paired CAI-specific excess
-  priority, not raw utility or a causal material map. Oracles are retrospective
-  and non-deployable.}
+  sparse field. (b) Hash-verified initial legal C-scan state for specimen c8-2;
+  teal marks measured native-raster positions. (c) CAI oracle versus the
+  preregistered task-agnostic appearance-saliency reference under the common
+  registered acquisition protocol. (d,e) Within-map priority percentiles for
+  CAI-task value and task-agnostic C-scan saliency on the same initial state and
+  legal 8$\times$8 action grid; white outlines mark the five highest-priority
+  cells. Saliency is the mean absolute RGB deviation of newly revealed samples
+  from the specimen-specific border median and uses no CAI outcomes. (f) Paired
+  CAI-minus-saliency percentile difference, not raw utility or a causal material
+  map. Both oracles are retrospective and non-deployable.}
   \label{fig:information-characterization}
 \end{figure}
 
-\subsubsection{CAI-specific measurement value beyond field content}
+\subsubsection{Separating CAI-task priority from task-agnostic C-scan saliency}
 \label{sec:results-task-conditioned}
 
-% Evidence: U3_UNIFORM_ORACLE; U3_RECONSTRUCTION_ORACLE;
-% U3_HEADROOM_RETENTION; U4_ORACLE_CAI_SPECIFICITY;
-% U4_ORACLE_IMAGE_SPECIFICITY.
+% Evidence: U3_UNIFORM_ORACLE; U3_HEADROOM_RETENTION;
+% U3_CAI_VS_APPEARANCE_SALIENCY_AUEBC;
+% U4_CAI_SALIENCY_MAP_SPEARMAN; U4_CAI_SALIENCY_TOP10_OVERLAP.
 One-shot mechanical-oracle CAI AUEBC was 0.013458, compared with 0.017363 for
-uniform acquisition and 0.017188 for the one-shot field-content reference. The
-mechanical improvements were 0.00391 (95\% CI 0.00280--0.00502) and 0.00373
-(95\% CI 0.00284--0.00469), respectively, favorable in all six domains. The
-one-shot oracle retained 56.8\% of sequential-oracle headroom, showing that
-spatial opportunity is heterogeneous while remaining retrospective.
+uniform acquisition. The mechanical improvement was 0.00391 (95\% CI
+0.00280--0.00502), favorable in all six domains. The one-shot oracle retained
+56.8\% of sequential-oracle headroom, showing that spatial opportunity is
+heterogeneous while remaining retrospective.
 
-The preferred locations also depended on objective. Under the same exact-cost
-contract, the CAI-task oracle improved CAI AUEBC over the field-content
-reference by 0.04862 (95\% CI 0.04527--0.05205). In the reverse comparison, the
-field-content reference improved normalized RGB image MSE by
-$5.503\times10^{-4}$ (95\% CI
-$5.006\times10^{-4}$--$6.063\times10^{-4}$). CAI-task and C-scan-content
-objectives therefore induce distinct retrospective priorities. Figure~\ref{fig:information-characterization}(c--f)
-places the heterogeneous opportunity and paired priorities on the same
-representative specimen, initial state, and legal action grid.
+Under the common registered sequential protocol, appearance-saliency minus
+CAI-oracle AUEBC was 0.007080 (95\% CI 0.004799--0.009740), positive in all six
+held-out domains. Because lower CAI AUEBC is better, the CAI-oriented
+retrospective oracle outperformed the preregistered task-agnostic saliency
+reference for the CAI objective. Across 276 paired initial-state maps, mean
+Spearman rank agreement was 0.0222 and mean top-decile overlap was 0.2003.
+These descriptive diagnostics show weak rank agreement and limited overlap
+under this registered comparator; they do not establish independence or
+universal separation from other non-CAI objectives.
+Figure~\ref{fig:information-characterization}(c--f) places both priorities on
+the same representative specimen, initial state, and legal action grid.
 
 \subsubsection{State- and predictor-conditioned measurement value}
 \label{sec:results-state-predictor}
@@ -479,16 +498,14 @@ Figure~\ref{fig:state-conditioned-value}(e).
 \label{sec:results-decomposition}
 
 % Evidence: O3_REAL_CHANGE; O3_REAL_MINUS_POSITIONS;
-% O3_REAL_MINUS_RECONSTRUCTION; O4_DYNAMIC_MINUS_SHUFFLED.
+% O4_DYNAMIC_MINUS_SHUFFLED.
 Real partial measurements changed CAI prediction relative to the initial state:
 at 25\%, real-state MAE changed by $-0.000731$ (95\% CI
 $-0.001184$ to $-0.000250$). The matched controls delimit its source. Real
 minus acquired-position/history MAE was 0.01740 (95\% CI 0.00890--0.02582),
-and real minus field-content-control MAE was 0.03419 (95\% CI
-0.02450--0.04384); real content was favorable in one of six domains for each
-contrast. The position control inherits the actual acquisition history and is
-not geometry alone. The field-content control is the registered reconstruction
-control under the same legal trajectory and exact-cost contract.
+with real content favorable in one of six domains. Because lower MAE is better,
+the positive aggregate contrast favors the control. The position control
+inherits the actual acquisition history and is not geometry alone.
 
 Dynamic real minus shuffled-content regret was
 $2.328\times10^{-4}$ (95\% CI
@@ -537,9 +554,8 @@ result beside this subordinate deployment calibration.
   \centering
   \includegraphics[width=\textwidth]{figure4_valuation_planning_realization.pdf}
   \caption{From state-conditioned value to a cost-constrained decision. (a)
-  Matched measured-state, acquired-position/history, field-content, and
-  shuffled-content controls retain their observed directions; the field-content
-  control uses the registered reconstruction control. (b) Retrospective
+  Matched measured-state, acquired-position/history, and shuffled-content
+  evidence retain their observed directions. (b) Retrospective
   substitutions separate valuation and bounded-planning effects. (c) Greedy and
   beam-4 selection retain positive regret relative to a retrospective joint
   near-oracle set in the registered two-action pool. (d) Signed deployment
@@ -554,10 +570,11 @@ result beside this subordinate deployment calibration.
 
 Part I shows why acquisition should be organized around information value
 rather than scan completeness. Spatial morphology carries CAI-relevant signal,
-most of the registered gain survives sparse observation, and exact-cost oracle
-comparisons show that preferred locations depend on the downstream task. The
-changing teacher priority further rules out a single fixed value map for all
-inspection states.
+most of the registered gain survives sparse observation, and the registered
+task-agnostic saliency heuristic neither matched CAI-oracle AUEBC nor reproduced
+its initial priority ranking. This distinction is bounded to that preregistered
+appearance comparator. The changing teacher priority further rules out a single
+fixed value map for all inspection states.
 
 Part II shows how that structure enters a decision. State-conditioned
 valuation improves over the static reference, but matched controls determine
@@ -579,11 +596,12 @@ corresponding measurement process.
 \label{sec:conclusions}
 
 Task-Relevant Information Acquisition connects two scientific parts. Information
-Characterization establishes spatial enrichment, sparse recoverability, task-
+Characterization establishes spatial enrichment, sparse retention, task-
 conditioned priorities, and state- and predictor-conditioned value. In the
 six-domain CFRP study, the matched spatial field reduced CAI-ratio error by
-32.1\%, the sparse field retained 89.9\% of that gain, and the best teacher
-action changed for 70.4\% of specimens as evidence accumulated.
+32.1\%, the sparse field retained 89.9\% of that gain, CAI-oriented priorities
+were distinct from the preregistered task-agnostic saliency reference, and the
+best teacher action changed for 70.4\% of specimens as evidence accumulated.
 
 State-Conditioned Task-Oriented Acquisition converts that structure into legal
 partial-state valuation and cost-constrained sets. Dynamic valuation improved

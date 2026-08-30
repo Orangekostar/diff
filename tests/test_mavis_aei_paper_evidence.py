@@ -79,6 +79,44 @@ def test_aei_paper_m0_oracle_metrics_match_frozen_summary(
     assert uniform.deployable_status == "retrospective_non_deployable"
 
 
+def test_aei_paper_appearance_saliency_auebc_matches_frozen_a2_bootstrap(
+    metrics: dict[str, object],
+) -> None:
+    row = metrics["U3_CAI_VS_APPEARANCE_SALIENCY_AUEBC"]
+    assert row.metric == "cai_auebc"
+    assert row.reference_method == "appearance_oracle"
+    assert row.candidate_method == "mechanical_oracle"
+    assert row.estimate == pytest.approx(0.007080059382261465)
+    assert row.ci95_lower == pytest.approx(0.004799356600193281)
+    assert row.ci95_upper == pytest.approx(0.00974029297002471)
+    assert row.domains_improved == "6/6"
+    assert row.source_artifact == "results/mva/a2_oracle_value/bootstrap.csv"
+    assert row.deployable_status == "retrospective_non_deployable"
+    assert "scanner time" in row.forbidden_wording
+
+
+def test_aei_paper_cai_saliency_map_similarity_matches_all_frozen_initial_maps(
+    metrics: dict[str, object],
+) -> None:
+    spearman = metrics["U4_CAI_SALIENCY_MAP_SPEARMAN"]
+    overlap = metrics["U4_CAI_SALIENCY_TOP10_OVERLAP"]
+    assert spearman.estimate == pytest.approx(0.02221200907923673)
+    assert overlap.estimate == pytest.approx(0.20031055900621111)
+    assert (
+        spearman.source_artifact
+        == overlap.source_artifact
+        == ("results/mva/a2_oracle_value/map_similarity.csv")
+    )
+    assert (
+        spearman.cohort
+        == overlap.cohort
+        == ("276 physical specimens; 6 held-out experimental domains")
+    )
+    assert spearman.status == overlap.status == "DESCRIPTIVE_BOUNDARY"
+    assert "independence" in spearman.forbidden_wording
+    assert "no overlap" in overlap.forbidden_wording
+
+
 def test_aei_paper_task_specificity_uses_frozen_reconstruction_metric(
     metrics: dict[str, object],
 ) -> None:
@@ -216,7 +254,7 @@ def test_aei_paper_source_hashes_bind_existing_files(
 
 def test_aei_paper_claim_ids_are_unique() -> None:
     rows = aei_paper_evidence.build_canonical_metrics(ROOT)
-    assert len(rows) == len({row.claim_id for row in rows})
+    assert len(rows) == len({row.claim_id for row in rows}) == 42
 
 
 def test_aei_paper_authority_files_regenerate_deterministically(tmp_path: Path) -> None:
@@ -246,4 +284,11 @@ def test_aei_paper_source_hashes_bind_domain_roster(tmp_path: Path) -> None:
     assert {
         "artifacts/mavis_authority/artifact_manifest.json",
         "artifacts/mavis_authority/scan_manifest.csv",
+        "docs/MVA_A0_A3_PROTOCOL.md",
+        "src/cmc_bbdm/mva/appearance_value.py",
+        "src/cmc_bbdm/mva/oracle_execution.py",
+        "results/mva/a2_oracle_value/bootstrap.csv",
+        "results/mva/a2_oracle_value/domain_metrics.csv",
+        "results/mva/a2_oracle_value/map_similarity.csv",
+        "results/mva/a2_oracle_value/oracle_values.parquet",
     } <= sources

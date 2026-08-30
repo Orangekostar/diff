@@ -75,9 +75,29 @@ def test_aei_paper_figure2_uses_only_part_i_main_visible_claims(
     assert "U1_INDEPENDENT_FIELD_SENSITIVITY" not in claim_ids
     assert "U4_LEARNED_SPECIFICITY_BOUNDARY" not in claim_ids
     assert {
+        "U3_CAI_VS_APPEARANCE_SALIENCY_AUEBC",
+        "U4_CAI_SALIENCY_MAP_SPEARMAN",
+        "U4_CAI_SALIENCY_TOP10_OVERLAP",
+    } <= claim_ids
+    assert not claim_ids & {
+        "U3_RECONSTRUCTION_ORACLE",
+        "U4_ORACLE_CAI_SPECIFICITY",
+        "U4_ORACLE_IMAGE_SPECIFICITY",
+    }
+    assert {
+        "results/mva/a2_oracle_value/bootstrap.csv",
+        "results/mva/a2_oracle_value/map_similarity.csv",
         "results/mva/a2_oracle_value/oracle_values.parquet",
         "results/mavis/p1_state_bank/state_manifest.parquet",
     } <= {row["source_artifact"] for row in rows}
+    paired = [
+        row
+        for row in rows
+        if row["source_artifact"] == "results/mva/a2_oracle_value/oracle_values.parquet"
+    ]
+    assert [row["series"] for row in paired] == [
+        "c8-2 paired CAI and appearance-saliency priority maps"
+    ]
     assert set("abcdef") <= {panel for row in rows for panel in row["panel"]}
 
 
@@ -117,7 +137,6 @@ def test_aei_paper_figure4_contains_controls_realization_and_a4_boundary(
         == {
             "O3_REAL_CHANGE",
             "O3_REAL_MINUS_POSITIONS",
-            "O3_REAL_MINUS_RECONSTRUCTION",
             "O4_DYNAMIC_MINUS_SHUFFLED",
             "A1_VALUATION_SUBSTITUTION",
             "A1_LEARNED_PLANNING_SUBSTITUTION",
@@ -128,7 +147,8 @@ def test_aei_paper_figure4_contains_controls_realization_and_a4_boundary(
         }
     )
     assert "A3_FEEDBACK_BENEFIT" not in claim_ids
-    assert any(row["series"] == "Field-content control" for row in rows)
+    assert "O3_REAL_MINUS_RECONSTRUCTION" not in claim_ids
+    assert not any("field-content" in row["series"].lower() for row in rows)
 
 
 def test_aei_paper_figures_export_vector_and_300_dpi_nonblank_raster(
@@ -185,6 +205,32 @@ def test_aei_paper_visible_figure_text_has_no_internal_stage_labels(
         assert not any(phrase in visible for phrase in forbidden)
 
 
+def test_figure2_uses_saliency_language_without_recovery_storyline(
+    tmp_path: Path,
+) -> None:
+    artifact = aei_paper_figures.render_paper_figures(ROOT, tmp_path)["figure2"]
+    visible = (
+        artifact.svg.read_text(encoding="utf-8")
+        + artifact.caption.read_text(encoding="utf-8")
+    ).lower()
+    for phrase in (
+        "cai oracle vs saliency reference",
+        "task-agnostic c-scan saliency",
+        "cai - saliency priority",
+        "mean absolute rgb deviation",
+    ):
+        assert phrase in visible
+    for phrase in (
+        "field-content",
+        "c-scan-content priority",
+        "reconstruction oracle",
+        "reconstruction objective",
+        "image recovery",
+        "field recovery",
+    ):
+        assert phrase not in visible
+
+
 def test_aei_paper_visual_narrative_uses_four_stage_why_flow_and_compact_titles(
     tmp_path: Path,
 ) -> None:
@@ -201,7 +247,7 @@ def test_aei_paper_visual_narrative_uses_four_stage_why_flow_and_compact_titles(
 
     figure2 = artifacts["figure2"].svg.read_text(encoding="utf-8")
     figure3 = artifacts["figure3"].svg.read_text(encoding="utf-8")
-    assert "Heterogeneous" in figure2 and "spatial opportunity" in figure2
+    assert "CAI oracle vs" in figure2 and "saliency reference" in figure2
     assert "Value changes with" in figure3 and "acquired evidence" in figure3
 
 

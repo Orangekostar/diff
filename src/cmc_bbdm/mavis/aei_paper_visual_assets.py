@@ -86,6 +86,21 @@ class TaskPriorityMaps:
 
 
 @dataclass(frozen=True, slots=True, eq=False)
+class TaskSaliencyMaps:
+    """Paired retrospective CAI-task and appearance-saliency maps."""
+
+    specimen_id: str
+    domain_id: str
+    reconstruction: ReconstructedState
+    cell_indices: tuple[int, ...]
+    mechanical_values: np.ndarray
+    saliency_values: np.ndarray
+    mechanical_percentiles: np.ndarray
+    saliency_percentiles: np.ndarray
+    percentile_difference: np.ndarray
+
+
+@dataclass(frozen=True, slots=True, eq=False)
 class GalleryStatePair:
     """Initial and later priority states for one deterministic gallery specimen."""
 
@@ -394,6 +409,67 @@ def load_task_priority_maps(
     )
 
 
+def load_task_saliency_maps(
+    root: Path, *, specimen_id: str = REPRESENTATIVE_SPECIMEN
+) -> TaskSaliencyMaps:
+    """Load paired CAI-task and registered appearance-saliency maps."""
+
+    project = _resolved_root(root)
+    reconstruction = load_reconstructed_state(
+        project,
+        specimen_id=specimen_id,
+        method=REPRESENTATIVE_METHOD,
+        checkpoint=INITIAL_CHECKPOINT,
+    )
+    try:
+        rows = (
+            pl.scan_parquet(project / _ORACLE_VALUES)
+            .filter(
+                (pl.col("specimen_id") == specimen_id)
+                & (pl.col("step") == 0)
+                & pl.col("method").is_in(["mechanical_oracle", "appearance_oracle"])
+            )
+            .select(
+                "dataset_id",
+                "method",
+                "nominal_checkpoint",
+                "cell_index",
+                "from_level",
+                "to_level",
+                "primary_value",
+            )
+            .collect()
+        )
+    except (OSError, pl.exceptions.PolarsError) as error:
+        raise AEIVisualAssetError("oracle-value evidence is unavailable") from error
+    if rows.get_column("dataset_id").unique().to_list() != [reconstruction.domain_id]:
+        raise AEIVisualAssetError("saliency oracle and legal-state domains disagree")
+    if (
+        rows.get_column("nominal_checkpoint").unique().to_list() != [0.0625]
+        or rows.get_column("from_level").unique().to_list() != [0]
+        or rows.get_column("to_level").unique().to_list() != [1]
+    ):
+        raise AEIVisualAssetError("registered initial oracle comparison changed")
+    mechanical, mechanical_percentiles = _map_from_rows(
+        rows.filter(pl.col("method") == "mechanical_oracle"), "primary_value"
+    )
+    saliency, saliency_percentiles = _map_from_rows(
+        rows.filter(pl.col("method") == "appearance_oracle"), "primary_value"
+    )
+    difference = _readonly(mechanical_percentiles - saliency_percentiles)
+    return TaskSaliencyMaps(
+        specimen_id=specimen_id,
+        domain_id=reconstruction.domain_id,
+        reconstruction=reconstruction,
+        cell_indices=tuple(range(64)),
+        mechanical_values=mechanical,
+        saliency_values=saliency,
+        mechanical_percentiles=mechanical_percentiles,
+        saliency_percentiles=saliency_percentiles,
+        percentile_difference=difference,
+    )
+
+
 def gallery_specimen_roster(root: Path) -> tuple[GallerySpecimen, ...]:
     """Return one fixed, result-independent specimen from each sorted domain."""
 
@@ -452,9 +528,11 @@ __all__ = [
     "PriorityState",
     "ReconstructedState",
     "TaskPriorityMaps",
+    "TaskSaliencyMaps",
     "gallery_specimen_roster",
     "load_gallery_states",
     "load_priority_state",
     "load_reconstructed_state",
     "load_task_priority_maps",
+    "load_task_saliency_maps",
 ]

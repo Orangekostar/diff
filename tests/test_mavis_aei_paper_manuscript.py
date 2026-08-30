@@ -41,8 +41,8 @@ EXPERIMENT_SUBSECTIONS = [
     "Held-Out-Domain Evaluation and Statistical Analysis",
 ]
 PART1_STAGES = [
-    "Spatial information and sparse recoverability",
-    "CAI-specific measurement value beyond field content",
+    "Spatial information and sparse retention",
+    "Separating CAI-task priority from task-agnostic C-scan saliency",
     "State- and predictor-conditioned measurement value",
 ]
 PART2_STAGES = [
@@ -124,6 +124,10 @@ def test_aei_paper_chinese_draft_mirrors_main_identity_and_core_results() -> Non
         "32.1%",
         "89.9%",
         "70.4%",
+        "任务无关的 C 扫描外观显著性",
+        "0.007080",
+        "0.0222",
+        "0.2003",
         "0.125053",
         "0.124992",
         "-6.114\\times10^{-5}",
@@ -149,6 +153,7 @@ def test_aei_paper_abstract_has_positive_framework_evidence() -> None:
         "five of six held-out domains",
         "task-oriented",
         "cost-constrained sensing",
+        "preregistered task-agnostic C-scan appearance-saliency reference",
     )
     forbidden = (
         "MAVIS",
@@ -162,6 +167,10 @@ def test_aei_paper_abstract_has_positive_framework_evidence() -> None:
         "frozen endpoint",
         "post-freeze",
         "hash-bound",
+        "field-content reference",
+        "reconstruction objective",
+        "image recovery",
+        "field recovery",
     )
     assert all(phrase in abstract for phrase in required)
     assert not any(phrase in abstract for phrase in forbidden)
@@ -183,6 +192,7 @@ def test_aei_paper_introduction_has_six_positive_paragraphs() -> None:
     assert "nested leave-one-domain-out" in introduction
     assert "specimen-first" in introduction and "equal-domain" in introduction
     assert "threefold" in introduction
+    assert "task-agnostic C-scan appearance saliency" in introduction
     forbidden = (
         "MAVIS",
         "residual deployable gap",
@@ -190,6 +200,10 @@ def test_aei_paper_introduction_has_six_positive_paragraphs() -> None:
         "post-freeze",
         "hash-bound",
         "not performance-superior",
+        "field-content reference",
+        "reconstruction objective",
+        "image recovery",
+        "field recovery",
     )
     assert not any(phrase in introduction for phrase in forbidden)
 
@@ -212,6 +226,9 @@ def test_aei_paper_related_work_has_exactly_three_forward_subsections() -> None:
         "not the novelty",
     )
     assert not any(phrase in related.lower() for phrase in defensive)
+    assert "task-agnostic" in related.lower()
+    assert "field-content" not in related.lower()
+    assert "reconstruction" not in related.lower()
 
 
 def test_aei_paper_method_has_exactly_three_subsections() -> None:
@@ -223,10 +240,24 @@ def test_aei_paper_method_has_exactly_three_subsections() -> None:
     )
     headings = re.findall(r"^\\subsection\{([^}]+)\}", method, flags=re.MULTILINE)
     assert headings == METHOD_SUBSECTIONS
+    method_flat = re.sub(r"\s+", " ", method)
     assert r"U_f(X\mid\legal_{i,t})" in method
     assert r"\widehat U" in method
     assert r"\pi(\legal_{i,t})" in method
     assert "acquired-position/history control" in method
+    for phrase in (
+        r"S_{\mathrm{app}}",
+        "mean absolute RGB deviation",
+        "specimen-specific border median",
+        "normalized by 255",
+        "does not use CAI outcomes",
+        "retrospective",
+        "non-deployable",
+        "not a damage-severity measure",
+    ):
+        assert phrase in method_flat
+    assert "field-content" not in method.lower()
+    assert "reconstruction objective" not in method.lower()
     assert "pure geometry-only" not in method
     assert "MAVIS" not in method
 
@@ -240,6 +271,7 @@ def test_aei_paper_experimental_design_has_exactly_three_subsections() -> None:
     )
     headings = re.findall(r"^\\subsection\{([^}]+)\}", design, flags=re.MULTILINE)
     assert headings == EXPERIMENT_SUBSECTIONS
+    design_flat = re.sub(r"\s+", " ", design)
     for phrase in (
         "276",
         "45, 49, 43, 59, 42, and 38",
@@ -250,8 +282,9 @@ def test_aei_paper_experimental_design_has_exactly_three_subsections() -> None:
         "native-raster",
         "physical specimen",
         "equal-domain",
+        "task-agnostic appearance-saliency reference",
     ):
-        assert phrase in design
+        assert phrase in design_flat
 
 
 def test_aei_paper_results_use_required_three_plus_three_order() -> None:
@@ -349,7 +382,7 @@ def test_supplement_uses_s1_to_s6_and_covers_visibility_authority() -> None:
     supplement_only = {
         row["claim_id"] for row in visibility if row["visibility"] == "SUPPLEMENT_ONLY"
     }
-    assert len(supplement_only) == 11
+    assert len(supplement_only) == 15
     assert all(claim_id in supplement for claim_id in supplement_only)
     for phrase in (
         "-1.496\\times10^{-5}",
@@ -479,11 +512,42 @@ def test_aei_paper_keeps_cost_statistics_and_oracle_scope_bounded() -> None:
     assert re.search(
         r"repeated\s+computational records, not independent samples", manuscript
     )
-    assert "registered normalized-RGB-MSE reconstruction objective" in manuscript
-    assert "field-content reference" in manuscript
-    assert "field-content control" in manuscript
-    assert "one-shot reconstruction oracle" not in manuscript
-    assert "real minus reconstruction MAE" not in manuscript
+    for phrase in (
+        "registered task-agnostic appearance-saliency reference",
+        "mean absolute RGB deviation",
+        "specimen-specific border median",
+        "does not use CAI outcomes",
+        "retrospective and non-deployable",
+    ):
+        assert phrase in manuscript
+    for phrase in (
+        "field-content reference",
+        "field-content control",
+        "reconstruction oracle",
+        "reconstruction objective",
+        "C-scan-content priority",
+        "image recovery",
+        "field recovery",
+        "recovering the C-scan field",
+    ):
+        assert phrase.lower() not in manuscript.lower()
+
+
+def test_supplement_preserves_legacy_reconstruction_evidence_without_relabeling() -> (
+    None
+):
+    supplement = _text(SUPPLEMENT)
+    for claim_id in (
+        "U3_RECONSTRUCTION_ORACLE",
+        "U4_ORACLE_CAI_SPECIFICITY",
+        "U4_ORACLE_IMAGE_SPECIFICITY",
+        "U4_LEARNED_SPECIFICITY_BOUNDARY",
+        "O3_REAL_MINUS_RECONSTRUCTION",
+    ):
+        assert claim_id in supplement
+    assert "legacy reconstruction" in supplement.lower()
+    assert "distinct from appearance saliency" in supplement.lower()
+    assert "reconstruction-derived control" in supplement.lower()
 
 
 def test_result_headings_avoid_defensive_language() -> None:
@@ -520,6 +584,11 @@ def test_main_headline_numbers_match_canonical_metrics() -> None:
         f"{100 * rows['U1_MATCHED_FIELD'].relative_effect:.1f}\\%",
         f"{100 * rows['U2_SPARSE_RETENTION'].estimate:.1f}\\%",
         f"{100 * rows['O2_TEACHER_TURNOVER'].estimate:.1f}\\%",
+        f"{rows['U3_CAI_VS_APPEARANCE_SALIENCY_AUEBC'].estimate:.6f}",
+        f"{rows['U3_CAI_VS_APPEARANCE_SALIENCY_AUEBC'].ci95_lower:.6f}",
+        f"{rows['U3_CAI_VS_APPEARANCE_SALIENCY_AUEBC'].ci95_upper:.6f}",
+        f"{rows['U4_CAI_SALIENCY_MAP_SPEARMAN'].estimate:.4f}",
+        f"{rows['U4_CAI_SALIENCY_TOP10_OVERLAP'].estimate:.4f}",
         f"{rows['O4_DYNAMIC_MINUS_STATIC'].estimate:.6f}",
         f"{rows['A4_BASELINE_MINUS_MAVIS'].candidate_value:.6f}",
         f"{rows['A4_BASELINE_MINUS_MAVIS'].reference_value:.6f}",

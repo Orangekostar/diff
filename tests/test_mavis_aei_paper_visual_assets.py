@@ -4,6 +4,7 @@ import importlib.util
 from pathlib import Path
 
 import numpy as np
+import polars as pl
 import pytest
 
 from cmc_bbdm.mavis import aei_paper_visual_assets
@@ -88,6 +89,72 @@ def test_task_priority_maps_are_paired_on_one_legal_grid() -> None:
         priorities.reconstruction.output_sha256
         == priorities.reconstruction.expected_output_sha256
     )
+
+
+def test_task_saliency_maps_bind_frozen_mechanical_and_appearance_oracles() -> None:
+    priorities = aei_paper_visual_assets.load_task_saliency_maps(
+        ROOT, specimen_id="c8-2"
+    )
+    source = (
+        pl.scan_parquet(ROOT / "results/mva/a2_oracle_value/oracle_values.parquet")
+        .filter(
+            (pl.col("specimen_id") == "c8-2")
+            & (pl.col("step") == 0)
+            & pl.col("method").is_in(["mechanical_oracle", "appearance_oracle"])
+        )
+        .select("method", "cell_index", "primary_value")
+        .collect()
+    )
+
+    assert priorities.mechanical_values.shape == (8, 8)
+    assert priorities.saliency_values.shape == (8, 8)
+    assert priorities.mechanical_percentiles.shape == (8, 8)
+    assert priorities.saliency_percentiles.shape == (8, 8)
+    assert priorities.percentile_difference.shape == (8, 8)
+    assert priorities.cell_indices == tuple(range(64))
+    assert source.group_by("method").len().sort("method").to_dicts() == [
+        {"method": "appearance_oracle", "len": 64},
+        {"method": "mechanical_oracle", "len": 64},
+    ]
+    for method, actual in (
+        ("mechanical_oracle", priorities.mechanical_values),
+        ("appearance_oracle", priorities.saliency_values),
+    ):
+        expected = (
+            source.filter(pl.col("method") == method)
+            .sort("cell_index")
+            .get_column("primary_value")
+            .to_numpy()
+            .reshape(8, 8)
+        )
+        np.testing.assert_array_equal(actual, expected)
+
+    np.testing.assert_array_equal(
+        priorities.percentile_difference,
+        priorities.mechanical_percentiles - priorities.saliency_percentiles,
+    )
+    assert not np.array_equal(
+        priorities.mechanical_percentiles, priorities.saliency_percentiles
+    )
+    assert priorities.domain_id == "74t7kcdgkr"
+    assert priorities.reconstruction.output_sha256 == (
+        priorities.reconstruction.expected_output_sha256
+    )
+    for array in (
+        priorities.mechanical_values,
+        priorities.saliency_values,
+        priorities.mechanical_percentiles,
+        priorities.saliency_percentiles,
+        priorities.percentile_difference,
+    ):
+        assert not array.flags.writeable
+
+
+def test_task_saliency_loader_has_no_synthetic_fallback() -> None:
+    with pytest.raises(aei_paper_visual_assets.AEIVisualAssetError):
+        aei_paper_visual_assets.load_task_saliency_maps(
+            ROOT, specimen_id="not-a-real-specimen"
+        )
 
 
 def test_gallery_roster_is_deterministic_and_domain_complete() -> None:

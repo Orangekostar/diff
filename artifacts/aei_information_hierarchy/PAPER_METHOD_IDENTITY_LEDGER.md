@@ -13,9 +13,10 @@ references, oracles, and source controls.
 | MAVIS | codebase closed-loop implementation | IMPLEMENTATION ONLY | state-conditioned learned implementation |
 | mvd_m1_o2 | static deployable reference/comparator | REFERENCE | static reference |
 | mechanical oracle | retrospective task-value opportunity analysis | ORACLE | mechanical oracle |
-| reconstruction oracle | retrospective objective comparator | ORACLE | field-content reference oracle |
+| appearance oracle | preregistered task-agnostic signal-saliency comparator | ORACLE | task-agnostic C-scan saliency reference |
+| reconstruction oracle | legacy retrospective objective comparator | LEGACY ORACLE | legacy reconstruction oracle (supplement only) |
 | acquired-position/history | source control | CONTROL | acquired-position/history control |
-| reconstruction | source control | CONTROL | field-content control |
+| reconstruction | legacy source control | LEGACY CONTROL | legacy reconstruction-derived control (supplement only) |
 | shuffled content | source control | CONTROL | shuffled-content control |
 
 ## Main-text rules
@@ -32,10 +33,11 @@ references, oracles, and source controls.
   implementation, not to the complete proposed framework.
 - Retrospective oracles characterize opportunity; controls identify which
   state signals contribute. Neither category is the proposed method.
-- Frozen artifact identifiers retain the term `reconstruction`. The
-  field-content wording is a manuscript-level role label for the same
-  registered normalized-RGB-MSE objective and control; it does not redefine
-  the underlying experiment.
+- The appearance oracle is the preregistered task-agnostic comparator; its score
+  uses newly revealed RGB versus the specimen border median, uses no CAI labels,
+  and is retrospective/nondeployable.
+- Frozen artifact identifiers retain the term `reconstruction`. They are legacy
+  supplement evidence and must never be renamed as appearance saliency.
 
 ## System diagnostic rule
 

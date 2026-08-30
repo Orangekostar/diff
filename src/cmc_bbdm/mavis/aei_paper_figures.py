@@ -35,7 +35,7 @@ from cmc_bbdm.mavis.aei_paper_visual_assets import (
     gallery_specimen_roster,
     load_gallery_states,
     load_priority_state,
-    load_task_priority_maps,
+    load_task_saliency_maps,
 )
 from cmc_bbdm.mavis.nature_figure_alignment import (
     require_matplotlib_panel_alignment,
@@ -271,11 +271,9 @@ def _figure2_rows(root: Path, metrics: dict[str, PaperMetric]) -> list[dict[str,
     retention = metrics["U2_SPARSE_RETENTION"]
     sparse_gain = metrics["U2_SPARSE_GAIN"]
     sparse_gap = metrics["U2_SPARSE_FULL_GAP"]
-    uniform = metrics["U3_UNIFORM_ORACLE"]
-    reconstruction_oracle = metrics["U3_RECONSTRUCTION_ORACLE"]
-    headroom = metrics["U3_HEADROOM_RETENTION"]
-    oracle_cai = metrics["U4_ORACLE_CAI_SPECIFICITY"]
-    oracle_image = metrics["U4_ORACLE_IMAGE_SPECIFICITY"]
+    saliency_auebc = metrics["U3_CAI_VS_APPEARANCE_SALIENCY_AUEBC"]
+    saliency_spearman = metrics["U4_CAI_SALIENCY_MAP_SPEARMAN"]
+    saliency_overlap = metrics["U4_CAI_SALIENCY_TOP10_OVERLAP"]
     rows = [
         _derived_row(
             matched,
@@ -307,18 +305,20 @@ def _figure2_rows(root: Path, metrics: dict[str, PaperMetric]) -> list[dict[str,
         _effect_row(retention, panel="a", series="Registered gain retained"),
         _effect_row(sparse_gain, panel="a", series="Surface-to-sparse reduction"),
         _effect_row(sparse_gap, panel="a", series="Sparse-to-full gap"),
-        _effect_row(uniform, panel="c", series="Mechanical vs uniform"),
         _effect_row(
-            reconstruction_oracle,
+            saliency_auebc,
             panel="c",
-            series="Mechanical vs field-content reference",
+            series="Appearance saliency minus CAI oracle",
         ),
-        _effect_row(headroom, panel="c", series="Sequential headroom retained"),
-        _effect_row(oracle_cai, panel="d", series="CAI-task priority specificity"),
         _effect_row(
-            oracle_image,
-            panel="e",
-            series="Field-content priority specificity",
+            saliency_spearman,
+            panel="f",
+            series="Mean CAI-saliency map Spearman",
+        ),
+        _effect_row(
+            saliency_overlap,
+            panel="f",
+            series="Mean CAI-saliency top-decile overlap",
         ),
     ]
     rows.extend(
@@ -326,14 +326,14 @@ def _figure2_rows(root: Path, metrics: dict[str, PaperMetric]) -> list[dict[str,
             _source_row(
                 root,
                 panel="b",
-                series="c8-2 initial reconstruction",
-                metric="registered_state_reconstruction",
+                series="c8-2 initial legal C-scan state",
+                metric="registered_legal_state_visualization",
                 source_artifact=("results/mavis/p1_state_bank/state_manifest.parquet"),
             ),
             _source_row(
                 root,
-                panel="d-f",
-                series="c8-2 paired CAI and field-content priority maps",
+                panel="d,e,f",
+                series="c8-2 paired CAI and appearance-saliency priority maps",
                 metric="paired_oracle_priority_percentile",
                 source_artifact="results/mva/a2_oracle_value/oracle_values.parquet",
             ),
@@ -409,18 +409,11 @@ def _figure3_rows(root: Path, metrics: dict[str, PaperMetric]) -> list[dict[str,
 
 def _figure4_rows(root: Path, metrics: dict[str, PaperMetric]) -> list[dict[str, str]]:
     positions = metrics["O3_REAL_MINUS_POSITIONS"]
-    field_content = metrics["O3_REAL_MINUS_RECONSTRUCTION"]
     endpoint = next(
         row
         for row in _load_csv(root, positions)
         if row["nominal_checkpoint"] == "0.25"
         and row["control_mode"] == "positions_only"
-    )
-    field_endpoint = next(
-        row
-        for row in _load_csv(root, field_content)
-        if row["nominal_checkpoint"] == "0.25"
-        and row["control_mode"] == "reconstruction"
     )
     return [
         _effect_row(metrics["O3_REAL_CHANGE"], panel="a", series="Real-state change"),
@@ -438,19 +431,11 @@ def _figure4_rows(root: Path, metrics: dict[str, PaperMetric]) -> list[dict[str,
             value=float(endpoint["control_equal_domain_mae"]),
             metric_name="endpoint_equal_domain_cai_mae",
         ),
-        _derived_row(
-            field_content,
-            panel="a",
-            series="Field-content control",
-            value=float(field_endpoint["control_equal_domain_mae"]),
-            metric_name="endpoint_equal_domain_cai_mae",
-        ),
         _effect_row(
             positions,
             panel="a",
             series="Measured minus acquired-position/history",
         ),
-        _effect_row(field_content, panel="a", series="Measured minus field-content"),
         _effect_row(
             metrics["O4_DYNAMIC_MINUS_SHUFFLED"],
             panel="a",
@@ -917,7 +902,7 @@ def _forest(
 
 
 def _render_figure2_nature(root: Path, rows: list[dict[str, str]]) -> Figure:
-    priorities = load_task_priority_maps(root, specimen_id=REPRESENTATIVE_SPECIMEN)
+    priorities = load_task_saliency_maps(root, specimen_id=REPRESENTATIVE_SPECIMEN)
     state = priorities.reconstruction
     fig, axes_grid = plt.subplots(2, 3, figsize=(_FULL_WIDTH_IN, 5.15))
     axes = list(axes_grid.ravel())
@@ -954,32 +939,32 @@ def _render_figure2_nature(root: Path, rows: list[dict[str, str]]) -> Figure:
 
     ax = axes[1]
     _draw_reconstruction(ax, state, show_measurements=True)
-    _panel_title(ax, "b", "Initial legal state | 3.13%")
+    _panel_title(ax, "b", "Initial legal C-scan state | 3.13%")
 
     ax = axes[2]
-    task_labels = ["Mechanical vs uniform", "Mechanical vs field-content reference"]
+    task_labels = ["Appearance saliency minus CAI oracle"]
     _forest(
         ax,
         rows,
         task_labels,
         scale=1000,
-        colors=[_USEFUL, _USEFUL],
-        markers=["o", "s"],
-        display_labels=["vs uniform", "field-content"],
+        colors=[_USEFUL],
+        markers=["o"],
+        display_labels=["Saliency - CAI"],
     )
-    ax.set_xlim(2.2, 5.5)
-    ax.set_ylim(-0.8, 1.6)
-    ax.set_xlabel("CAI-AUEBC improvement (x10^3)", fontsize=6.4)
-    headroom = 100 * float(_find(rows, "Sequential headroom retained")["value"])
+    ax.set_xlim(-0.5, 10.5)
+    ax.set_ylim(-0.75, 0.75)
+    ax.set_xlabel("CAI-AUEBC gap (appearance - CAI, x10^3)", fontsize=5.8)
     ax.text(
-        0.02,
-        0.06,
-        f"{headroom:.1f}% of sequential-oracle headroom\nRetrospective; non-deployable",
+        0.98,
+        0.10,
+        "6/6 domains\nRetrospective; non-deployable",
         transform=ax.transAxes,
+        ha="right",
         fontsize=5.2,
         color=_REFERENCE,
     )
-    _panel_title(ax, "c", "Heterogeneous\nspatial opportunity")
+    _panel_title(ax, "c", "CAI oracle vs\nsaliency reference")
     _clean_axis(ax)
 
     ax = axes[3]
@@ -990,13 +975,13 @@ def _render_figure2_nature(root: Path, rows: list[dict[str, str]]) -> Figure:
     _panel_title(ax, "d", "CAI-task priority")
 
     ax = axes[4]
-    _draw_priority_overlay(ax, state, priorities.reconstruction_percentiles)
-    _outline_top_cells(ax, state, priorities.reconstruction_percentiles)
-    _panel_title(ax, "e", "C-scan-content priority")
+    _draw_priority_overlay(ax, state, priorities.saliency_percentiles)
+    _outline_top_cells(ax, state, priorities.saliency_percentiles)
+    _panel_title(ax, "e", "Task-agnostic\nC-scan saliency")
     ax.text(
         0.5,
         -0.10,
-        "registered normalized-RGB-MSE field-content reference",
+        "Mean absolute RGB deviation from border median",
         transform=ax.transAxes,
         ha="center",
         va="top",
@@ -1021,7 +1006,7 @@ def _render_figure2_nature(root: Path, rows: list[dict[str, str]]) -> Figure:
     ax.set_ylim(state.image.shape[0] - 1, 0)
     ax.set_aspect("equal", adjustable="datalim")
     _style_image_axis(ax)
-    _panel_title(ax, "f", "CAI-specific excess priority")
+    _panel_title(ax, "f", "CAI - saliency priority")
 
     fig.subplots_adjust(
         left=0.125, right=0.985, bottom=0.14, top=0.94, wspace=0.5, hspace=0.52
@@ -1034,7 +1019,7 @@ def _render_figure2_nature(root: Path, rows: list[dict[str, str]]) -> Figure:
     difference_bar = fig.colorbar(
         difference, cax=difference_axis, orientation="horizontal"
     )
-    difference_bar.set_label("CAI - field-content percentile", fontsize=5.0, labelpad=1)
+    difference_bar.set_label("CAI - saliency percentile", fontsize=5.0, labelpad=1)
     difference_bar.ax.tick_params(labelsize=5.0, length=1.5)
     _attach_alignment_contract(
         fig,
@@ -1214,29 +1199,28 @@ def _render_figure4_reframed(rows: list[dict[str, str]]) -> Figure:
     labels = [
         "Measured state",
         "Acquired-position/history control",
-        "Field-content control",
     ]
     values = np.asarray([float(_find(rows, label)["value"]) for label in labels])
-    positions = np.arange(3)[::-1]
-    colors = [_USEFUL, _REFERENCE, _UNCERTAINTY]
+    positions = np.arange(2)[::-1]
+    colors = [_USEFUL, _REFERENCE]
     ax.hlines(positions, 0.07, values, colors=colors, linewidth=1.5)
     ax.scatter(values, positions, c=colors, s=30, zorder=3, edgecolors="white")
     ax.set_yticks(
         positions,
-        ["Measured state", "Position/history", "Field-content"],
+        ["Measured state", "Position/history"],
         fontsize=5.8,
     )
     ax.set_xlim(0.07, 0.14)
-    ax.set_ylim(-1.35, 2.55)
+    ax.set_ylim(-1.10, 1.55)
     ax.set_xlabel("Endpoint CAI MAE (lower is better)", fontsize=6.2)
     history = _find(rows, "Measured minus acquired-position/history")
-    field = _find(rows, "Measured minus field-content")
+    change = _find(rows, "Real-state change")
     shuffled = _find(rows, "Dynamic minus shuffled regret")
     ax.text(
         0.02,
-        0.10,
+        0.06,
+        f"Real change from initial {float(change['value']):+.5f}\n"
         f"Real - history {float(history['value']):+.5f}\n"
-        f"Real - field-content {float(field['value']):+.5f}\n"
         f"Dynamic real - shuffled {float(shuffled['value']):+.3e}",
         transform=ax.transAxes,
         fontsize=5.15,
@@ -1373,15 +1357,16 @@ _CAPTIONS = {
     "figure2": (
         "**Figure 2. What ultrasonic information matters for CAI?** (a) Equal-domain "
         "CAI-ratio MAE for matched scalar, full spatial field, and registered 25% "
-        "sparse field. (b) Hash-verified initial legal state for specimen c8-2; teal "
-        "marks measured native-raster positions. (c) Retrospective mechanical-oracle "
-        "opportunity relative to uniform acquisition and the registered field-content "
-        "reference. (d,e) CAI-task and C-scan-content within-map priority percentiles "
-        "on the same initial state and legal 8x8 action grid; white outlines mark the "
-        "five highest-priority cells. The field-content reference is operationalized "
-        "by the registered normalized-RGB-MSE reconstruction objective. (f) Paired "
-        "CAI-minus-field-content percentile difference, not raw utility or a causal "
-        "material map. Oracles are retrospective and non-deployable.\n"
+        "sparse field. (b) Hash-verified initial legal C-scan state for specimen c8-2; "
+        "teal marks measured native-raster positions. (c) CAI oracle vs saliency "
+        "reference under the common registered A2 acquisition protocol. (d,e) "
+        "Within-map priority percentiles for CAI-task value and task-agnostic C-scan "
+        "saliency on the same initial state and legal 8x8 action grid; white outlines "
+        "mark the five highest-priority cells. Saliency is the mean absolute RGB "
+        "deviation of newly revealed samples from the specimen border median and uses "
+        "no CAI outcome. (f) Paired "
+        "CAI-minus-saliency percentile difference, not raw utility or a causal material "
+        "map. Both oracles are retrospective and non-deployable.\n"
     ),
     "figure3": (
         "**Figure 3. Why must measurement value be state-conditioned?** (a,b) "
@@ -1397,9 +1382,8 @@ _CAPTIONS = {
     ),
     "figure4": (
         "**Figure 4. From state-conditioned value to a cost-constrained decision.** "
-        "(a) Matched measured-state, acquired-position/history, field-content, and "
-        "shuffled-content controls retain their observed adverse directions; the "
-        "field-content control uses the registered reconstruction control. (b) "
+        "(a) Matched measured-state, acquired-position/history, and shuffled-content "
+        "evidence retain their observed adverse directions. (b) "
         "Retrospective substitutions separate valuation and bounded-planning effects. "
         "(c) Greedy and beam-4 selection retain positive regret relative to a "
         "retrospective joint near-oracle set in the registered two-action pool. (d) "

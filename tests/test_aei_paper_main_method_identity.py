@@ -67,10 +67,16 @@ EXPECTED_IDENTITY_ROWS = (
         "mechanical oracle",
     ),
     (
-        "reconstruction oracle",
-        "retrospective objective comparator",
+        "appearance oracle",
+        "preregistered task-agnostic signal-saliency comparator",
         "ORACLE",
-        "field-content reference oracle",
+        "task-agnostic C-scan saliency reference",
+    ),
+    (
+        "reconstruction oracle",
+        "legacy retrospective objective comparator",
+        "LEGACY ORACLE",
+        "legacy reconstruction oracle (supplement only)",
     ),
     (
         "acquired-position/history",
@@ -80,9 +86,9 @@ EXPECTED_IDENTITY_ROWS = (
     ),
     (
         "reconstruction",
-        "source control",
-        "CONTROL",
-        "field-content control",
+        "legacy source control",
+        "LEGACY CONTROL",
+        "legacy reconstruction-derived control (supplement only)",
     ),
     (
         "shuffled content",
@@ -107,28 +113,43 @@ def test_method_identity_ledger_declares_exact_scientific_roles() -> None:
     assert "MAVIS is the proposed method" not in text
     assert "mvd_m1_o2 is a published competing method" not in text
     assert "Frozen artifact identifiers retain the term `reconstruction`" in text
+    assert "must never be renamed as appearance saliency" in text
 
 
 def test_claim_visibility_map_covers_canonical_authority_once_in_order() -> None:
     canonical = _rows(ARTIFACTS / "PAPER_CANONICAL_METRICS.csv")
     visibility = _rows(VISIBILITY_CSV)
     assert tuple(visibility[0]) == VISIBILITY_COLUMNS
-    assert len(canonical) == len(visibility) == 39
+    assert len(canonical) == len(visibility) == 42
     assert [row["claim_id"] for row in visibility] == [
         row["claim_id"] for row in canonical
     ]
-    assert len({row["claim_id"] for row in visibility}) == 39
+    assert len({row["claim_id"] for row in visibility}) == 42
 
 
 def test_claim_visibility_map_has_required_distribution_and_special_cases() -> None:
     rows = _rows(VISIBILITY_CSV)
     assert Counter(row["visibility"] for row in rows) == {
-        "MAIN_HEADLINE": 12,
-        "MAIN_SUPPORT": 15,
+        "MAIN_HEADLINE": 10,
+        "MAIN_SUPPORT": 16,
         "MAIN_SYSTEM_DIAGNOSTIC": 1,
-        "SUPPLEMENT_ONLY": 11,
+        "SUPPLEMENT_ONLY": 15,
     }
     by_id = {row["claim_id"]: row for row in rows}
+    assert by_id["U3_CAI_VS_APPEARANCE_SALIENCY_AUEBC"]["visibility"] == (
+        "MAIN_HEADLINE"
+    )
+    assert by_id["U4_CAI_SALIENCY_MAP_SPEARMAN"]["visibility"] == "MAIN_SUPPORT"
+    assert by_id["U4_CAI_SALIENCY_TOP10_OVERLAP"]["visibility"] == "MAIN_SUPPORT"
+    for claim_id in (
+        "U3_RECONSTRUCTION_ORACLE",
+        "U4_ORACLE_CAI_SPECIFICITY",
+        "U4_ORACLE_IMAGE_SPECIFICITY",
+        "U4_LEARNED_SPECIFICITY_BOUNDARY",
+        "O3_REAL_MINUS_RECONSTRUCTION",
+    ):
+        assert by_id[claim_id]["visibility"] == "SUPPLEMENT_ONLY"
+        assert by_id[claim_id]["main_figure"] == "none"
     assert by_id["A3_FEEDBACK_BENEFIT"]["visibility"] == "SUPPLEMENT_ONLY"
     assert by_id["A3_FEEDBACK_BENEFIT"]["main_figure"] == "none"
     assert by_id["A3_FEEDBACK_BENEFIT"]["main_table"] == "none"
@@ -159,16 +180,18 @@ def test_claim_visibility_map_preserves_evidence_identity() -> None:
 
 def test_claim_visibility_markdown_matches_csv_categories() -> None:
     text = VISIBILITY_MD.read_text(encoding="utf-8")
-    assert "39 canonical claims" in text
+    assert "42 canonical claims" in text
     for visibility, count in (
-        ("MAIN_HEADLINE", 12),
-        ("MAIN_SUPPORT", 15),
+        ("MAIN_HEADLINE", 10),
+        ("MAIN_SUPPORT", 16),
         ("MAIN_SYSTEM_DIAGNOSTIC", 1),
-        ("SUPPLEMENT_ONLY", 11),
+        ("SUPPLEMENT_ONLY", 15),
     ):
         assert f"| `{visibility}` | {count} |" in text
     for claim_id in (
         "U1_MATCHED_FIELD",
+        "U3_CAI_VS_APPEARANCE_SALIENCY_AUEBC",
+        "U4_CAI_SALIENCY_MAP_SPEARMAN",
         "O4_DYNAMIC_MINUS_STATIC",
         "A3_FEEDBACK_BENEFIT",
         "A4_BASELINE_MINUS_MAVIS",

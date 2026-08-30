@@ -25,9 +25,25 @@ retention is `0.8989734770`. The distinct sparse-minus-full gap is
 in all six domains. The gap interval is not the interval for surface-to-sparse
 improvement.
 
+## Task-agnostic appearance-saliency authority
+
+The preregistered appearance reference is the mean absolute RGB deviation of a
+candidate's newly revealed native-raster values from the specimen-specific
+full-image border median, divided by 255. It uses no CAI outcome but is
+retrospective because the full candidate values are available. Appearance
+minus CAI-oriented mechanical-oracle AUEBC is `0.0070800594` with
+synchronized held-out-domain interval `[0.0047993566,
+0.0097402930]` and `6/6` domains favoring
+CAI-oriented acquisition. Across 276 registered initial maps, mean Spearman is
+`0.0222120091` and mean top-decile overlap is
+`0.2003105590`. These descriptive values do not establish
+independence, causal damage localization, or deployability.
+
 ## Paper rule
 
 `PAPER_CANONICAL_METRICS.csv` is the only numeric source for manuscript prose,
-captions, and main tables. Historical artifacts remain unchanged. P10's
+captions, and main tables. This controlled authority version adds frozen A2
+appearance-saliency claims while retaining legacy reconstruction evidence for
+supplementary provenance. Historical artifacts remain unchanged. P10's
 explicit `I_field_selected` recovery endpoint remains a separately labeled
 diagnostic.

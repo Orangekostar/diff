@@ -56,20 +56,22 @@ contract, caption file, and checksums.
 Artifact: WHAT ultrasonic information matters for CAI.
 
 Core claim: spatial and sparse fields improve CAI prediction, opportunity is
-heterogeneous, and retrospective CAI-task priorities differ from the registered
-field-content reference.
+heterogeneous, and retrospective CAI-task priorities are not reproduced by the
+preregistered task-agnostic C-scan appearance-saliency reference.
 
-Reviewer question: Is the usefulness claim registered, sparse, and genuinely
-task-specific rather than a generic reconstruction effect?
+Reviewer question: Are CAI-priority regions merely those ranked highly by a
+simple task-agnostic appearance-saliency heuristic?
 
 Evidence layer: main result plus limitation.
 
 Source data: `PAPER_CANONICAL_METRICS.csv`, P1/P5 metrics, the registered real
-state manifest, and the bound oracle-value parquet used previously by Figure 5.
+state manifest, and frozen A2 bootstrap, map-similarity, and oracle-value
+artifacts.
 
 Statistics / uncertainty: registered simultaneous intervals for P1/P5 effects;
-synchronized specimen-bootstrap intervals for P14 oracle contrasts; six-domain
-equal weighting.
+the frozen 100000-resample synchronized domain-bootstrap interval for the A2
+appearance-minus-mechanical contrast; descriptive means over 276 paired
+initial-state maps; six-domain equal weighting.
 
 Figure prototype: six coordinated panels in a 2-by-3 layout.
 
@@ -77,13 +79,14 @@ Panel map:
 
 - (a) matched spatial and sparse gains with registered boundaries;
 - (b) one hash-verified compact legal state;
-- (c) heterogeneous retrospective opportunity relative to uniform acquisition
-  and the registered field-content reference;
+- (c) retrospective CAI-oracle versus appearance-saliency AUEBC;
 - (d) CAI-task priority on that state;
-- (e) field-content priority under the registered normalized-RGB-MSE objective;
-- (f) CAI-specific excess priority.
+- (e) task-agnostic C-scan appearance-saliency priority on the same state;
+- (f) paired CAI-minus-saliency priority-percentile difference.
 
-Caption role: answer RQ1 and mark all oracle rows non-deployable.
+Caption role: answer RQ-A while stating that the appearance metric uses no CAI
+outcome, both oracles are retrospective/nondeployable, and the difference is
+neither raw utility nor a causal material map.
 
 Manuscript placement: first part of Section 5.
 
@@ -151,13 +154,15 @@ Figure prototype: four coordinated panels in a 2-by-2 layout.
 
 Panel map:
 
-- (a) real-state and matched acquired-position/history, field-content, and
-  shuffled-content controls with adverse directions explicit;
+- (a) real-state, acquired-position/history, and shuffled-content evidence with
+  adverse directions explicit;
 - (b) valuation, learned-planning, and true-value-planning substitutions;
 - (c) current, beam, and lookahead exact-cost planning regret;
 - (d) frozen method-minus-strongest-baseline boundary.
 
-Caption role: answer RQ3 as a boundary, not an end-to-end success claim.
+Caption role: answer RQ-B as a boundary, not an end-to-end success claim. The
+legacy reconstruction-derived control remains traceable in the supplement and
+is not relabeled as saliency.
 
 Manuscript placement: final evidence block of Section 5.
 

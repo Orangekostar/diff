@@ -16,13 +16,35 @@ def test_aei_paper_frozen_evidence_paths_are_unchanged() -> None:
     assert aei_paper_validation.changed_frozen_paths(ROOT) == []
 
 
+def test_aei_paper_chronology_classifies_preregistered_a2_before_p7() -> None:
+    rows = {
+        row["claim_id"]: row
+        for row in aei_paper_validation.evidence_chronology_rows(ROOT)
+    }
+    for claim_id in (
+        "U3_CAI_VS_APPEARANCE_SALIENCY_AUEBC",
+        "U4_CAI_SALIENCY_MAP_SPEARMAN",
+        "U4_CAI_SALIENCY_TOP10_OVERLAP",
+    ):
+        row = rows[claim_id]
+        assert row["source_stage"] == "MVA_A2_ORACLE_VALUE"
+        assert row["chronology_class"] == "PRE_P7_FROZEN_EVIDENCE"
+        assert row["evidence_frozen_before_p7"] == "true"
+        assert row["analysis_created_after_p7"] == "false"
+        assert row["used_to_modify_p7"] == "true"
+
+    assert rows["U4_ORACLE_CAI_SPECIFICITY"]["chronology_class"] == (
+        "POST_P7_DIAGNOSTIC"
+    )
+
+
 def test_aei_paper_validation_closes_claim_figure_table_contract() -> None:
     report = aei_paper_validation.validate_paper(ROOT)
     assert report.passed
-    assert report.canonical_claim_count == 39
-    assert report.main_visible_claim_count == 27
-    assert report.main_mapped_claim_count == 27
-    assert report.combined_mapped_claim_count == 39
+    assert report.canonical_claim_count == 42
+    assert report.main_visible_claim_count == 26
+    assert report.main_mapped_claim_count == 26
+    assert report.combined_mapped_claim_count == 42
     assert report.figure_count == 4
     assert report.table_count == 1
     assert report.section_count == 6
@@ -50,6 +72,8 @@ def test_aei_supplement_preserves_main_boundary_results() -> None:
     assert "A3_FEEDBACK_BENEFIT" in supplement
     assert "A3_FEEDBACK_BENEFIT" not in manuscript
     assert "A4_BASELINE_MINUS_MAVIS" not in manuscript
+    assert "O3_REAL_MINUS_RECONSTRUCTION" not in manuscript
+    assert "O3_REAL_MINUS_RECONSTRUCTION" in supplement
 
 
 def test_aei_main_and_supplement_follow_visibility_partition() -> None:

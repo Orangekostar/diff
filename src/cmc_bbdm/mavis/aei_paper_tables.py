@@ -175,15 +175,15 @@ def _result_rows(root: Path) -> list[dict[str, str]]:
     u1 = metric("U1_MATCHED_FIELD")
     u2 = metric("U2_SPARSE_RETENTION")
     u3 = metric("U3_UNIFORM_ORACLE")
-    u4_cai = metric("U4_ORACLE_CAI_SPECIFICITY")
-    u4_image = metric("U4_ORACLE_IMAGE_SPECIFICITY")
+    saliency_auebc = metric("U3_CAI_VS_APPEARANCE_SALIENCY_AUEBC")
+    saliency_spearman = metric("U4_CAI_SALIENCY_MAP_SPEARMAN")
     o2 = metric("O2_TEACHER_TURNOVER")
     u5_huber = metric("U5_RIDGE_HUBER_SPEARMAN")
     u5_mlp = metric("U5_RIDGE_MLP_SPEARMAN")
     o4 = metric("O4_DYNAMIC_MINUS_STATIC")
     o1 = metric("O1_STATIC_SPEARMAN")
     o3_pos = metric("O3_REAL_MINUS_POSITIONS")
-    o3_rec = metric("O3_REAL_MINUS_RECONSTRUCTION")
+    o4_shuffled = metric("O4_DYNAMIC_MINUS_SHUFFLED")
     a1 = metric("A1_VALUATION_SUBSTITUTION")
     a2_greedy = metric("A2_GREEDY_PLANNING_REGRET")
     a2_beam = metric("A2_BEAM4_PLANNING_REGRET")
@@ -210,16 +210,16 @@ def _result_rows(root: Path) -> list[dict[str, str]]:
             "Task-conditioned spatial measurement value",
             (
                 "Is measurement opportunity spatially heterogeneous and conditioned "
-                "on the downstream task?"
+                "on the downstream task rather than simple C-scan saliency?"
             ),
             (
-                f"Mechanical vs uniform {_format(u3['estimate'])}; CAI task contrast "
-                f"{_format(u4_cai['estimate'])}; image task contrast "
-                f"{_format(u4_image['estimate'])}"
+                f"Mechanical vs uniform {_format(u3['estimate'])}; appearance - CAI "
+                f"AUEBC {_format(saliency_auebc['estimate'], 6)}; map Spearman "
+                f"{_format(saliency_spearman['estimate'])}"
             ),
             (
-                "Oracle rows and cross-task priorities are retrospective; learned-policy "
-                "specificity is outside this test"
+                "Both oracle maps are retrospective; appearance saliency uses no CAI "
+                "outcomes and is non-deployable"
             ),
         ),
         (
@@ -263,14 +263,14 @@ def _result_rows(root: Path) -> list[dict[str, str]]:
                 "remaining acquisition headroom?"
             ),
             (
-                f"Real - history {_format(o3_pos['estimate'])}; real - reconstruction "
-                f"{_format(o3_rec['estimate'])}; valuation substitution "
+                f"Real - history {_format(o3_pos['estimate'])}; dynamic real - shuffled "
+                f"{_format(o4_shuffled['estimate'])}; valuation substitution "
                 f"{_format(a1['estimate'])}"
             ),
             (
-                "Matched controls preserve position history and exact cost; component "
-                "substitutions are retrospective and do not identify a representation "
-                "bottleneck"
+                "Position/history and shuffled controls preserve legal actions and exact "
+                "cost; component substitutions are retrospective and do not identify a "
+                "representation bottleneck"
             ),
         ),
         (

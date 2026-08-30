@@ -53,7 +53,7 @@ def test_aei_paper_every_canonical_claim_has_chronology_class() -> None:
         row["claim_id"] for row in _rows(ARTIFACTS / "PAPER_CANONICAL_METRICS.csv")
     }
     chronology = _rows(ARTIFACTS / "PAPER_EVIDENCE_CHRONOLOGY.csv")
-    assert len(chronology) == 39
+    assert len(chronology) == 42
     assert {row["claim_id"] for row in chronology} == canonical
     assert {row["chronology_class"] for row in chronology} == {
         "PRE_P7_FROZEN_EVIDENCE",
@@ -131,7 +131,7 @@ def test_aei_paper_identity_is_positive_and_operational() -> None:
     assert "not a new generic definition of value of information" not in manuscript
 
 
-def test_all_39_canonical_claims_have_one_primary_narrative_stage() -> None:
+def test_all_42_canonical_claims_have_one_primary_narrative_stage() -> None:
     canonical = _rows(ARTIFACTS / "PAPER_CANONICAL_METRICS.csv")
     narrative = _rows(ARTIFACTS / "PAPER_POSITIVE_NARRATIVE_MAP.csv")
     required = {
@@ -150,12 +150,12 @@ def test_all_39_canonical_claims_have_one_primary_narrative_stage() -> None:
         "manuscript_assignment",
         "narrative_visibility",
     }
-    assert len(canonical) == len(narrative) == 39
+    assert len(canonical) == len(narrative) == 42
     assert set(narrative[0]) == required
     assert [row["claim_id"] for row in narrative] == [
         row["claim_id"] for row in canonical
     ]
-    assert len({row["claim_id"] for row in narrative}) == 39
+    assert len({row["claim_id"] for row in narrative}) == 42
     assert all(row["new_part"] in {"PART_I", "PART_II"} for row in narrative)
     assert all(row["new_stage"] for row in narrative)
 
@@ -245,13 +245,16 @@ def test_narrative_map_preserves_canonical_layer_chronology_and_source() -> None
         assert row["source_artifact"] == claim["source_artifact"]
 
 
-def test_canonical_metrics_file_is_unchanged_by_narrative_refactor() -> None:
+def test_canonical_metrics_file_records_controlled_saliency_migration() -> None:
     import hashlib
 
     payload = (ARTIFACTS / "PAPER_CANONICAL_METRICS.csv").read_bytes()
-    assert hashlib.sha256(payload).hexdigest() == (
-        "f0d2615637a6470744f275a2ac6e1c5e7aff110ca7e31cb323793c29405be4e6"
-    )
+    new_sha = hashlib.sha256(payload).hexdigest()
+    old_sha = "f0d2615637a6470744f275a2ac6e1c5e7aff110ca7e31cb323793c29405be4e6"
+    audit = _text(ARTIFACTS / "SIGNAL_SALIENCY_AUTHORITY_MIGRATION_AUDIT.md")
+    assert new_sha != old_sha
+    assert old_sha in audit
+    assert new_sha in audit
 
 
 def test_aei_paper_predictor_conditioning_discloses_accuracy_boundary() -> None:

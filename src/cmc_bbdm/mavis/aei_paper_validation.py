@@ -50,6 +50,13 @@ _CHRONOLOGY_COLUMNS = (
     "forbidden_description",
 )
 _PRE_P7_PREFIXES = ("U1_", "U2_", "U3_", "O1_")
+_MVA_A2_CLAIMS = frozenset(
+    {
+        "U3_CAI_VS_APPEARANCE_SALIENCY_AUEBC",
+        "U4_CAI_SALIENCY_MAP_SPEARMAN",
+        "U4_CAI_SALIENCY_TOP10_OVERLAP",
+    }
+)
 _SOURCE_STAGES = {
     "U1_": "P1_FULL_FIELD",
     "U2_": "P5_SPARSE_SCAN",
@@ -135,7 +142,14 @@ def evidence_chronology_rows(root: Path) -> list[dict[str, str]]:
         )
         if prefix is None:
             raise ValueError(f"unclassified paper claim: {metric.claim_id}")
-        if metric.claim_id.startswith(_PRE_P7_PREFIXES):
+        source_stage = (
+            "MVA_A2_ORACLE_VALUE"
+            if metric.claim_id in _MVA_A2_CLAIMS
+            else _SOURCE_STAGES[prefix]
+        )
+        if metric.claim_id in _MVA_A2_CLAIMS or metric.claim_id.startswith(
+            _PRE_P7_PREFIXES
+        ):
             chronology_class = "PRE_P7_FROZEN_EVIDENCE"
             frozen_before = "true"
             created_after = "false"
@@ -169,7 +183,7 @@ def evidence_chronology_rows(root: Path) -> list[dict[str, str]]:
             {
                 "claim_id": metric.claim_id,
                 "paper_layer": metric.layer,
-                "source_stage": _SOURCE_STAGES[prefix],
+                "source_stage": source_stage,
                 "chronology_class": chronology_class,
                 "evidence_frozen_before_p7": frozen_before,
                 "analysis_created_after_p7": created_after,
@@ -232,6 +246,9 @@ def semantic_validation_errors(root: Path) -> list[str]:
     manuscript = (root / "paper_aei_information_hierarchy/main.tex").read_text(
         encoding="utf-8"
     )
+    supplement = (
+        root / "paper_aei_information_hierarchy/supplementary/supplementary.tex"
+    ).read_text(encoding="utf-8")
     errors: list[str] = []
 
     visible = _visible_text(manuscript)
@@ -247,9 +264,13 @@ def semantic_validation_errors(root: Path) -> list[str]:
         "part_i": r"\subsection{Task-Relevant Information Characterization}",
         "part_ii": r"\subsection{State-Conditioned Task-Oriented Acquisition}",
         "history_control": "acquired-position/history control",
-        "field_content_reference": "field-content reference",
-        "field_content_control": "field-content control",
-        "reconstruction_objective": "registered normalized-RGB-MSE reconstruction objective",
+        "saliency_reference": "registered task-agnostic appearance-saliency reference",
+        "saliency_formula": r"S_{\mathrm{app}}",
+        "saliency_metric": "mean absolute RGB deviation",
+        "saliency_border": "specimen-specific border median",
+        "saliency_no_cai": "does not use CAI outcomes",
+        "saliency_boundary": "reference is retrospective and non-deployable",
+        "saliency_damage_boundary": "not a damage-severity measure",
         "deployment_boundary": "this endpoint is an implementation boundary",
         "predictor_accuracy_boundary": "substantially less accurate shallow MLP",
         "scope_cost": "exact native-raster acquisition cost",
@@ -265,6 +286,16 @@ def semantic_validation_errors(root: Path) -> list[str]:
     for label, phrase in required_main.items():
         if phrase not in visible_flat:
             errors.append(label)
+
+    legacy_supplement_claims = (
+        "U3_RECONSTRUCTION_ORACLE",
+        "U4_ORACLE_CAI_SPECIFICITY",
+        "U4_ORACLE_IMAGE_SPECIFICITY",
+        "U4_LEARNED_SPECIFICITY_BOUNDARY",
+        "O3_REAL_MINUS_RECONSTRUCTION",
+    )
+    if any(claim_id not in supplement for claim_id in legacy_supplement_claims):
+        errors.append("legacy_reconstruction_supplement_traceability")
 
     chronology_path = (
         root / "artifacts/aei_information_hierarchy/PAPER_EVIDENCE_CHRONOLOGY.csv"
@@ -298,7 +329,7 @@ def semantic_validation_errors(root: Path) -> list[str]:
         ]
         if [row.get("claim_id") for row in narrative] != canonical:
             errors.append("narrative_map_claim_order")
-        if len(narrative) != 39 or any(
+        if len(narrative) != 42 or any(
             row.get("new_part") not in {"PART_I", "PART_II"} for row in narrative
         ):
             errors.append("narrative_map_stage_coverage")
@@ -308,7 +339,7 @@ def semantic_validation_errors(root: Path) -> list[str]:
         metric.claim_id for metric in aei_paper_evidence.build_canonical_metrics(root)
     }
     if (
-        len(visibility) != 39
+        len(visibility) != 42
         or {row.get("claim_id") for row in visibility} != canonical_claims
     ):
         errors.append("visibility_claim_coverage")
@@ -322,10 +353,10 @@ def semantic_validation_errors(root: Path) -> list[str]:
         )
     }
     if visibility_counts != {
-        "MAIN_HEADLINE": 12,
-        "MAIN_SUPPORT": 15,
+        "MAIN_HEADLINE": 10,
+        "MAIN_SUPPORT": 16,
         "MAIN_SYSTEM_DIAGNOSTIC": 1,
-        "SUPPLEMENT_ONLY": 11,
+        "SUPPLEMENT_ONLY": 15,
     }:
         errors.append("visibility_partition")
 
@@ -362,6 +393,23 @@ def semantic_validation_errors(root: Path) -> list[str]:
         "travel, coupling, settling",
         "selected image regions do not identify causal failure mechanisms",
         "these boundaries specify what must be revalidated",
+        "reconstruction oracle",
+        "field-content reference",
+        "field-content control",
+        "c-scan-content priority",
+        "registered normalized-rgb-mse reconstruction objective",
+        "image recovery",
+        "field recovery",
+        "recovering the c-scan field",
+        "signal information density",
+        "saliency contains no mechanical information",
+        "cai priority is independent of signal appearance",
+        "appearance is irrelevant",
+        "saliency causes no strength change",
+        "physically causal damage regions",
+        "saliency oracle is a deployable scanner",
+        "generic visual features cannot predict cai",
+        "all non-task objectives choose different regions",
     )
     lower = visible.lower()
     errors.extend(f"forbidden:{phrase}" for phrase in forbidden if phrase in lower)

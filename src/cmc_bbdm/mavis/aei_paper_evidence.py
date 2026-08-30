@@ -6,6 +6,7 @@ import csv
 import hashlib
 import io
 import json
+import math
 from dataclasses import asdict, dataclass, fields
 from pathlib import Path
 from typing import Any
@@ -45,6 +46,9 @@ _P7_TREE = "931dc86c26caf1c7246709c4706a7cd0428e3a1533b6ff1ad3c2ad8f9517d1e4"
 _SOURCE_PATHS = (
     "artifacts/mavis_authority/artifact_manifest.json",
     "artifacts/mavis_authority/scan_manifest.csv",
+    "docs/MVA_A0_A3_PROTOCOL.md",
+    "src/cmc_bbdm/mva/appearance_value.py",
+    "src/cmc_bbdm/mva/oracle_execution.py",
     "results/p1_full_field_oracle/metrics.json",
     "results/p1_full_field_oracle/domain_metrics.csv",
     "results/p5_sparse_scan/retention.csv",
@@ -52,6 +56,14 @@ _SOURCE_PATHS = (
     "results/mvd/m0_one_shot_oracle/summary.json",
     "results/mvd/m1_observability/bootstrap.csv",
     "results/mvd/m1_observability/model_metrics.csv",
+    "results/mva/a2_oracle_value/bootstrap.csv",
+    "results/mva/a2_oracle_value/domain_metrics.csv",
+    "results/mva/a2_oracle_value/map_similarity.csv",
+    "results/mva/a2_oracle_value/oracle_values.parquet",
+    "results/mva/a2_oracle_value/REPORT.md",
+    "results/mva/a2_oracle_value/config.yaml",
+    "results/mva/a2_oracle_value/artifact_manifest.json",
+    "results/mva/a2_oracle_value/CHECKSUMS.sha256",
     "results/mavis_science_closure/p9_value_evolution/summary.json",
     "results/mavis_science_closure/p10_mris_causal/summary.json",
     "results/mavis_science_closure/p10_mris_causal/contrasts.csv",
@@ -74,7 +86,9 @@ def _source(root: Path, relative: str) -> Path:
     base = root.resolve()
     path = (base / relative).resolve()
     if base not in path.parents or not path.is_file():
-        raise PaperEvidenceError(f"missing or invalid paper evidence source: {relative}")
+        raise PaperEvidenceError(
+            f"missing or invalid paper evidence source: {relative}"
+        )
     return path
 
 
@@ -100,7 +114,9 @@ def _csv(root: Path, relative: str) -> list[dict[str, str]]:
 
 def _one(rows: list[dict[str, str]], source: str, **matches: str) -> dict[str, str]:
     selected = [
-        row for row in rows if all(row.get(column) == value for column, value in matches.items())
+        row
+        for row in rows
+        if all(row.get(column) == value for column, value in matches.items())
     ]
     if len(selected) != 1:
         raise PaperEvidenceError(
@@ -122,10 +138,19 @@ def _float(value: Any, label: str) -> float:
 
 
 def _mean_method(rows: list[dict[str, str]], method: str) -> float:
-    values = [_float(row["mae"], f"{method} MAE") for row in rows if row["method"] == method]
+    values = [
+        _float(row["mae"], f"{method} MAE") for row in rows if row["method"] == method
+    ]
     if len(values) != 6:
         raise PaperEvidenceError(f"{method} must have exactly six domain MAEs")
     return sum(values) / len(values)
+
+
+def _mean_column(rows: list[dict[str, str]], column: str, label: str) -> float:
+    values = [_float(row[column], label) for row in rows]
+    if not values:
+        raise PaperEvidenceError(f"{label} must contain at least one value")
+    return math.fsum(values) / len(values)
 
 
 def _metric(
@@ -204,7 +229,10 @@ def build_canonical_metrics(root: Path) -> tuple[PaperMetric, ...]:
     field_mae = _mean_method(p1_domains, "B_field_selected")
     surface_mae = _mean_method(p1_domains, "A_surface")
     independent_mae = _mean_method(p1_domains, "I_field_selected")
-    if scalar_effect["reference"] != "B_scalar" or scalar_effect["candidate"] != "B_field_selected":
+    if (
+        scalar_effect["reference"] != "B_scalar"
+        or scalar_effect["candidate"] != "B_field_selected"
+    ):
         raise PaperEvidenceError("registered P1 scalar-field methods changed")
 
     p5_retention_source = "results/p5_sparse_scan/retention.csv"
@@ -227,6 +255,33 @@ def build_canonical_metrics(root: Path) -> tuple[PaperMetric, ...]:
     m1_o2 = _one(m1_models, m1_models_source, method="o2_global_candidate")
     m1_global = _one(m1_models, m1_models_source, method="global_mechanical")
     m1_random = _one(m1_models, m1_models_source, method="random_median")
+
+    a2_boot_source = "results/mva/a2_oracle_value/bootstrap.csv"
+    a2_saliency = _one(
+        _csv(root, a2_boot_source),
+        a2_boot_source,
+        effect_id="appearance_minus_mechanical_auebc",
+    )
+    if (
+        a2_saliency["seed"] != "20260823"
+        or a2_saliency["resamples"] != "100000"
+        or a2_saliency["improved_domains"] != "6"
+    ):
+        raise PaperEvidenceError("registered appearance bootstrap changed")
+    a2_map_source = "results/mva/a2_oracle_value/map_similarity.csv"
+    a2_map_rows = [
+        row
+        for row in _csv(root, a2_map_source)
+        if row["first_method"] == "mechanical_oracle"
+        and row["second_method"] == "appearance_oracle"
+    ]
+    if (
+        len(a2_map_rows) != 276
+        or len({row["specimen_id"] for row in a2_map_rows}) != 276
+        or len({row["dataset_id"] for row in a2_map_rows}) != 6
+        or {row["candidate_count"] for row in a2_map_rows} != {"64"}
+    ):
+        raise PaperEvidenceError("registered mechanical-appearance maps changed")
 
     p9_source = "results/mavis_science_closure/p9_value_evolution/summary.json"
     p9 = _json(root, p9_source)
@@ -334,7 +389,9 @@ def build_canonical_metrics(root: Path) -> tuple[PaperMetric, ...]:
                 surface_effect["relative_improvement"], "P1 surface relative effect"
             ),
             ci95_lower=_float(surface_interval["simultaneous_low"], "P1 surface lower"),
-            ci95_upper=_float(surface_interval["simultaneous_high"], "P1 surface upper"),
+            ci95_upper=_float(
+                surface_interval["simultaneous_high"], "P1 surface upper"
+            ),
             domains_improved=f"{surface_effect['improved_domains']}/6",
             protocol="strict nested LODO; specimen-first equal-domain MAE; familywise simultaneous interval",
             source_artifact=p1_source,
@@ -415,7 +472,9 @@ def build_canonical_metrics(root: Path) -> tuple[PaperMetric, ...]:
             direction="reference_minus_candidate; positive_favors_sparse_field",
             reference_method="A_surface",
             candidate_method="bilinear_0.25 sparse field",
-            reference_value=_float(p5_selected["surface_equal_domain_mae"], "P5 surface MAE"),
+            reference_value=_float(
+                p5_selected["surface_equal_domain_mae"], "P5 surface MAE"
+            ),
             candidate_value=sparse_mae,
             estimate=_float(p5_gain["point_estimate"], "P5 sparse gain"),
             relative_effect=_float(p5_selected["retention"], "P5 retention"),
@@ -533,6 +592,95 @@ def build_canonical_metrics(root: Path) -> tuple[PaperMetric, ...]:
             forbidden_wording="one-shot acquisition is deployable or additive",
         )
     )
+    add(
+        _metric(
+            root,
+            claim_id="U3_CAI_VS_APPEARANCE_SALIENCY_AUEBC",
+            layer="Useful",
+            paper_role="headline",
+            metric="cai_auebc",
+            contrast="appearance-saliency oracle minus CAI-oriented mechanical oracle",
+            direction="reference_minus_candidate; positive_favors_CAI_oriented_oracle",
+            reference_method="appearance_oracle",
+            candidate_method="mechanical_oracle",
+            reference_value=None,
+            candidate_value=None,
+            estimate=_float(a2_saliency["point_estimate"], "A2 saliency effect"),
+            relative_effect=None,
+            ci95_lower=_float(a2_saliency["lower"], "A2 saliency lower"),
+            ci95_upper=_float(a2_saliency["upper"], "A2 saliency upper"),
+            domains_improved="6/6",
+            protocol=(
+                "preregistered retrospective A2 P-B curve evaluation; exact "
+                "native-raster cost; synchronized 100000-resample held-out-domain "
+                "bootstrap"
+            ),
+            source_artifact=a2_boot_source,
+            evidence_type="preregistered_retrospective_oracle",
+            deployable_status="retrospective_non_deployable",
+            status="SUPPORTED_ORACLE_ONLY",
+            manuscript_location="main",
+            allowed_wording=(
+                "CAI-oriented retrospective acquisition has lower CAI AUEBC than "
+                "the preregistered task-agnostic appearance-saliency oracle across "
+                "all six held-out domains"
+            ),
+            forbidden_wording=(
+                "saliency is useless; mechanical oracle is deployable; scanner time "
+                "reduction; universal task specificity"
+            ),
+        )
+    )
+    for claim_id, metric_name, column, allowed, forbidden in (
+        (
+            "U4_CAI_SALIENCY_MAP_SPEARMAN",
+            "mean_initial_map_spearman",
+            "spearman",
+            (
+                "CAI and appearance-saliency value maps have weak average rank "
+                "agreement under the registered initial-state comparison"
+            ),
+            "statistical independence; zero association universally",
+        ),
+        (
+            "U4_CAI_SALIENCY_TOP10_OVERLAP",
+            "mean_initial_map_top10_overlap",
+            "top10_overlap",
+            "top-decile overlap is limited under the registered comparator",
+            "no overlap; universally disjoint priority maps",
+        ),
+    ):
+        add(
+            _metric(
+                root,
+                claim_id=claim_id,
+                layer="Useful",
+                paper_role="supporting",
+                metric=metric_name,
+                contrast="mechanical_oracle versus appearance_oracle initial maps",
+                direction="descriptive_agreement; higher_is_more_rank_overlap",
+                reference_method="appearance_oracle",
+                candidate_method="mechanical_oracle",
+                reference_value=None,
+                candidate_value=None,
+                estimate=_mean_column(a2_map_rows, column, f"A2 {column}"),
+                relative_effect=None,
+                ci95_lower=None,
+                ci95_upper=None,
+                domains_improved="276 initial maps across 6 held-out domains",
+                protocol=(
+                    "preregistered A2 step-0 comparison on paired 8x8 legal action "
+                    "grids; arithmetic mean across 276 physical specimens"
+                ),
+                source_artifact=a2_map_source,
+                evidence_type="preregistered_descriptive_map_comparison",
+                deployable_status="retrospective_non_deployable",
+                status="DESCRIPTIVE_BOUNDARY",
+                manuscript_location="main",
+                allowed_wording=allowed,
+                forbidden_wording=forbidden,
+            )
+        )
 
     p14_cai = p14["contrasts"]["oracle_reconstruction_minus_mechanics_cai"]
     p14_image = p14["contrasts"]["oracle_mechanics_minus_reconstruction_image"]
@@ -736,7 +884,9 @@ def build_canonical_metrics(root: Path) -> tuple[PaperMetric, ...]:
                 reference_method="retrospective best legal set",
                 candidate_method=method,
                 reference_value=None,
-                candidate_value=_float(row["mean_budgeted_regret"], f"{claim_id} regret"),
+                candidate_value=_float(
+                    row["mean_budgeted_regret"], f"{claim_id} regret"
+                ),
                 estimate=_float(row["mean_budgeted_regret"], f"{claim_id} regret"),
                 relative_effect=None,
                 ci95_lower=None,
@@ -746,7 +896,9 @@ def build_canonical_metrics(root: Path) -> tuple[PaperMetric, ...]:
                 source_artifact=m1_models_source,
                 evidence_type="registered_static_observability_control",
                 deployable_status="deployable_or_control",
-                status="NOT_SUPPORTED" if claim_id == "O1_STATIC_SET_REGRET" else "REFERENCE",
+                status="NOT_SUPPORTED"
+                if claim_id == "O1_STATIC_SET_REGRET"
+                else "REFERENCE",
                 manuscript_location="main",
                 allowed_wording="the static O2 scorer has higher exact-budget regret than global and random controls",
                 forbidden_wording="larger model capacity would solve static observability",
@@ -768,7 +920,9 @@ def build_canonical_metrics(root: Path) -> tuple[PaperMetric, ...]:
                 root,
                 claim_id=claim_id,
                 layer="Observable",
-                paper_role="headline" if claim_id in {"O2_TEACHER_TURNOVER", "O2_TEACHER_OPPORTUNITY"} else "supporting",
+                paper_role="headline"
+                if claim_id in {"O2_TEACHER_TURNOVER", "O2_TEACHER_OPPORTUNITY"}
+                else "supporting",
                 metric=metric_name,
                 contrast="strict-OOF teacher at 18.75% versus initial state",
                 direction="descriptive_value_evolution",
@@ -805,7 +959,9 @@ def build_canonical_metrics(root: Path) -> tuple[PaperMetric, ...]:
             candidate_method="real state at 25%",
             reference_value=None,
             candidate_value=None,
-            estimate=_float(p10["endpoint_real_change_from_initial_mae"], "P10 real change"),
+            estimate=_float(
+                p10["endpoint_real_change_from_initial_mae"], "P10 real change"
+            ),
             relative_effect=None,
             ci95_lower=_float(p10["endpoint_real_change_ci95"][0], "P10 change lower"),
             ci95_upper=_float(p10["endpoint_real_change_ci95"][1], "P10 change upper"),
@@ -833,7 +989,9 @@ def build_canonical_metrics(root: Path) -> tuple[PaperMetric, ...]:
             candidate_method="real state at 25%",
             reference_value=None,
             candidate_value=None,
-            estimate=_float(p10["endpoint_full_field_utility_recovery_fraction"], "P10 recovery"),
+            estimate=_float(
+                p10["endpoint_full_field_utility_recovery_fraction"], "P10 recovery"
+            ),
             relative_effect=None,
             ci95_lower=_float(p10["endpoint_recovery_ci95"][0], "P10 recovery lower"),
             ci95_upper=_float(p10["endpoint_recovery_ci95"][1], "P10 recovery upper"),
@@ -863,9 +1021,13 @@ def build_canonical_metrics(root: Path) -> tuple[PaperMetric, ...]:
                 direction="candidate_minus_reference; negative_would_favor_real",
                 reference_method=control,
                 candidate_method="real partial state",
-                reference_value=_float(values["control_equal_domain_mae"], f"{control} MAE"),
+                reference_value=_float(
+                    values["control_equal_domain_mae"], f"{control} MAE"
+                ),
                 candidate_value=_float(values["real_equal_domain_mae"], "P10 real MAE"),
-                estimate=_float(values["equal_domain_real_minus_control_mae"], f"{control} contrast"),
+                estimate=_float(
+                    values["equal_domain_real_minus_control_mae"], f"{control} contrast"
+                ),
                 relative_effect=None,
                 ci95_lower=_float(values["ci95_lower"], f"{control} lower"),
                 ci95_upper=_float(values["ci95_upper"], f"{control} upper"),
@@ -903,7 +1065,9 @@ def build_canonical_metrics(root: Path) -> tuple[PaperMetric, ...]:
                 root,
                 claim_id=claim_id,
                 layer="Observable",
-                paper_role="headline" if status == "NARROWLY_SUPPORTED" else "central_adverse_control",
+                paper_role="headline"
+                if status == "NARROWLY_SUPPORTED"
+                else "central_adverse_control",
                 metric="one_step_value_regret_at_18_75_percent",
                 contrast=f"dynamic real minus {control}",
                 direction="negative_favors_dynamic_real",
@@ -956,7 +1120,9 @@ def build_canonical_metrics(root: Path) -> tuple[PaperMetric, ...]:
                 root,
                 claim_id=claim_id,
                 layer="Actionable",
-                paper_role="headline" if claim_id == "A1_VALUATION_SUBSTITUTION" else "supporting",
+                paper_role="headline"
+                if claim_id == "A1_VALUATION_SUBSTITUTION"
+                else "supporting",
                 metric="cai_auebc_improvement",
                 contrast=contrast,
                 direction="positive_is_improvement",
@@ -1028,7 +1194,9 @@ def build_canonical_metrics(root: Path) -> tuple[PaperMetric, ...]:
             candidate_method="frozen feedback policy",
             reference_value=None,
             candidate_value=None,
-            estimate=_float(p16["overall_feedback_auebc_benefit"], "P16 feedback benefit"),
+            estimate=_float(
+                p16["overall_feedback_auebc_benefit"], "P16 feedback benefit"
+            ),
             relative_effect=None,
             ci95_lower=_float(p16_interval[0], "P16 lower"),
             ci95_upper=_float(p16_interval[1], "P16 upper"),
@@ -1060,8 +1228,12 @@ def build_canonical_metrics(root: Path) -> tuple[PaperMetric, ...]:
             candidate_value=mavis,
             estimate=baseline - mavis,
             relative_effect=None,
-            ci95_lower=_float(p7["mavis_control_minus_reference_ci95_lower"], "P7 lower"),
-            ci95_upper=_float(p7["mavis_control_minus_reference_ci95_upper"], "P7 upper"),
+            ci95_lower=_float(
+                p7["mavis_control_minus_reference_ci95_lower"], "P7 lower"
+            ),
+            ci95_upper=_float(
+                p7["mavis_control_minus_reference_ci95_upper"], "P7 upper"
+            ),
             domains_improved=f"{p7['mavis_improved_domain_count']}/{p7['domain_count']}",
             protocol="frozen source-selected cross-domain policy; exact cost; specimen-first equal-domain AUEBC",
             source_artifact=p7_source,
@@ -1087,7 +1259,11 @@ def _csv_text(rows: list[dict[str, object]], columns: list[str]) -> str:
     for row in rows:
         writer.writerow(
             {
-                key: "" if value is None else format(value, ".17g") if type(value) is float else value
+                key: ""
+                if value is None
+                else format(value, ".17g")
+                if type(value) is float
+                else value
                 for key, value in row.items()
             }
         )
@@ -1101,6 +1277,15 @@ def _reconciliation_text(rows: tuple[PaperMetric, ...]) -> str:
     )
     sparse = next(row for row in rows if row.claim_id == "U2_SPARSE_RETENTION")
     sparse_gap = next(row for row in rows if row.claim_id == "U2_SPARSE_FULL_GAP")
+    saliency = next(
+        row for row in rows if row.claim_id == "U3_CAI_VS_APPEARANCE_SALIENCY_AUEBC"
+    )
+    saliency_rank = next(
+        row for row in rows if row.claim_id == "U4_CAI_SALIENCY_MAP_SPEARMAN"
+    )
+    saliency_overlap = next(
+        row for row in rows if row.claim_id == "U4_CAI_SALIENCY_TOP10_OVERLAP"
+    )
     return f"""# Evidence Authority Reconciliation
 
 Generated deterministically from frozen machine-readable evidence.
@@ -1128,10 +1313,26 @@ retention is `{sparse.estimate:.10f}`. The distinct sparse-minus-full gap is
 in all six domains. The gap interval is not the interval for surface-to-sparse
 improvement.
 
+## Task-agnostic appearance-saliency authority
+
+The preregistered appearance reference is the mean absolute RGB deviation of a
+candidate's newly revealed native-raster values from the specimen-specific
+full-image border median, divided by 255. It uses no CAI outcome but is
+retrospective because the full candidate values are available. Appearance
+minus CAI-oriented mechanical-oracle AUEBC is `{saliency.estimate:.10f}` with
+synchronized held-out-domain interval `[{saliency.ci95_lower:.10f},
+{saliency.ci95_upper:.10f}]` and `{saliency.domains_improved}` domains favoring
+CAI-oriented acquisition. Across 276 registered initial maps, mean Spearman is
+`{saliency_rank.estimate:.10f}` and mean top-decile overlap is
+`{saliency_overlap.estimate:.10f}`. These descriptive values do not establish
+independence, causal damage localization, or deployability.
+
 ## Paper rule
 
 `PAPER_CANONICAL_METRICS.csv` is the only numeric source for manuscript prose,
-captions, and main tables. Historical artifacts remain unchanged. P10's
+captions, and main tables. This controlled authority version adds frozen A2
+appearance-saliency claims while retaining legacy reconstruction evidence for
+supplementary provenance. Historical artifacts remain unchanged. P10's
 explicit `I_field_selected` recovery endpoint remains a separately labeled
 diagnostic.
 """
@@ -1157,6 +1358,7 @@ def _claim_map_text(rows: tuple[PaperMetric, ...]) -> str:
         [
             "",
             "Required term: `downstream-predictor-conditioned task value`.",
+            "Main comparator term: `task-agnostic C-scan appearance saliency`.",
             "Retrospective teachers, oracles, and substitutions are explicitly non-deployable.",
             "",
         ]

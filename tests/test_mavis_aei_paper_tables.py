@@ -110,6 +110,20 @@ def test_aei_paper_table2_contains_only_main_visible_claims(tmp_path: Path) -> N
     assert "A4_BASELINE_MINUS_MAVIS" not in claims
 
 
+def test_aei_paper_table2_uses_saliency_not_legacy_reconstruction_story(
+    tmp_path: Path,
+) -> None:
+    table = aei_paper_tables.build_paper_tables(ROOT, tmp_path)["table2"]
+    visible = table.csv.read_text(encoding="utf-8") + table.tex.read_text(
+        encoding="utf-8"
+    )
+    assert "appearance - CAI AUEBC" in visible
+    assert "map Spearman" in visible
+    assert "dynamic real - shuffled" in visible
+    assert "real - reconstruction" not in visible.lower()
+    assert "image task contrast" not in visible.lower()
+
+
 def test_aei_paper_tables_are_booktabs_without_internal_stage_labels(
     tmp_path: Path,
 ) -> None:

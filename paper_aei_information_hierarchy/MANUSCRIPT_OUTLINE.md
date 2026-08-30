@@ -1,4 +1,4 @@
-# AEI Manuscript Outline: Main-Method Identity Reframe
+# AEI Manuscript Outline: Signal-Saliency Reframe
 
 ## Scientific identity
 
@@ -25,9 +25,9 @@ spatial internal information.
 
 ### 2.2 Sparse and adaptive ultrasonic acquisition
 
-Sparse field recovery, adaptive paths, and robotic inspection establish the
-acquisition setting; CAI-task value is distinguished from the registered
-field-content reference.
+Sparse sampling, adaptive paths, and robotic inspection establish the
+acquisition setting; CAI-task value is distinguished from a preregistered
+task-agnostic C-scan appearance-saliency reference.
 
 ### 2.3 Task-relevant information acquisition formulation
 
@@ -39,13 +39,14 @@ state-conditioned value under one causal acquisition contract.
 ### 3.1 Task-Relevant Information Characterization
 
 Define legal information, downstream-predictor-conditioned task value
-`U_f(X | I_{i,t})`, and the retrospective opportunity boundary.
+`U_f(X | I_{i,t})`, the exact border-median appearance-saliency score, and the
+retrospective/non-deployable opportunity boundary.
 
 ### 3.2 State-Conditioned Measurement Valuation
 
 Define `U_hat`, strict source-only fitting, and static,
-acquired-position/history, field-content, and shuffled-content controls. The
-field-content control retains the registered reconstruction objective.
+acquired-position/history, and shuffled-content controls. The legacy
+reconstruction-derived control is supplement-only.
 
 ### 3.3 Cost-Constrained Task-Oriented Acquisition
 
@@ -73,15 +74,16 @@ aggregation, registered paired intervals, and domain-direction counts.
 
 ### 5.1 From Spatial Information to State-Conditioned Task Value
 
-#### 5.1.1 Spatial information and sparse recoverability
+#### 5.1.1 Spatial information and sparse retention
 
 Main: U1 matched/surface evidence and U2 retention/gain/full-gap evidence.
 Supplement: independent-field sensitivity.
 
-#### 5.1.2 CAI-specific measurement value beyond field content
+#### 5.1.2 Separating CAI-task priority from task-agnostic C-scan saliency
 
-Main: U3 oracle opportunity/headroom and U4 cross-objective specificity.
-Supplement: learned global-mask boundary.
+Main: U3 uniform opportunity/headroom, appearance-minus-CAI AUEBC, and paired
+CAI/saliency map agreement. Supplement: legacy reconstruction-oracle and
+cross-objective evidence, without relabeling it as saliency.
 
 #### 5.1.3 State- and predictor-conditioned measurement value
 
@@ -96,8 +98,9 @@ Open with dynamic-minus-static regret, then annotate the static rank reference.
 
 #### 5.2.2 Information-source and component decomposition
 
-Report real-state change, acquired-position/history, field-content and shuffled
-controls, followed by valuation/planning substitutions.
+Report real-state change, acquired-position/history and shuffled controls,
+followed by valuation/planning substitutions. Preserve the legacy
+reconstruction-derived control in the supplement.
 
 #### 5.2.3 Cost-constrained set realization
 
@@ -120,12 +123,14 @@ information.
 ## Main visual contract
 
 - Figure 1 (WHY): framework identity and causal information flow.
-- Figure 2 (WHAT): spatial gain, sparse retention, heterogeneous opportunity,
-  and paired CAI-task/field-content priorities on one registered CFRP state.
+- Figure 2 (WHAT): spatial gain, sparse retention, CAI-versus-saliency AUEBC,
+  and paired CAI-task/appearance-saliency priorities on one registered CFRP
+  state.
 - Figure 3 (WHEN): initial and updated priority, acquisition history, state
   evolution, dynamic-versus-static valuation, and predictor dependence.
-- Figure 4 (HOW): matched source controls, A1 substitutions, A2 bounded-set
-  realization, and subordinate A4 deployment calibration.
+- Figure 4 (HOW): acquired-position/history and shuffled source evidence, A1
+  substitutions, A2 bounded-set realization, and subordinate A4 deployment
+  calibration.
 - Table 1: compact case and protocol contract.
 - The six-stage result table remains an internal deterministic source and is
   not a main-manuscript table.

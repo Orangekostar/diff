@@ -2,7 +2,7 @@
 
 This directory contains the paper-only package for the first Advanced
 Engineering Informatics manuscript derived from the frozen evidence at base
-commit `9794d53a9549f2e3501fe482e8db8735f468ba20`.
+commit `35248f17f603e94962dc19e939162e9ef4eee5f2`.
 
 Working title:
 
@@ -11,17 +11,19 @@ Working title:
 
 The manuscript follows a positive progressive argument. Part I, Task-Relevant
 Information Characterization, characterizes structured task-relevant
-information. Part II, State-Conditioned Task-Oriented Acquisition, tests its
-realization in sensing decisions. It introduces no new model training and does
-not claim a performance-superior adaptive scanner. Usefulness, task-value
-observability, and actionability remain validation criteria within the two
-parts.
+information, including a bounded comparison with the preregistered
+task-agnostic C-scan appearance-saliency reference. Part II,
+State-Conditioned Task-Oriented Acquisition, tests its realization in sensing
+decisions. It introduces no new model training and does not claim a
+performance-superior adaptive scanner. Legacy reconstruction evidence remains
+supplement-only and is not relabeled as saliency.
 
 ## Authority
 
 - Numeric authority: `../artifacts/aei_information_hierarchy/PAPER_CANONICAL_METRICS.csv`
 - Claim authority: `../artifacts/aei_information_hierarchy/PAPER_CLAIM_MAP.md`
 - Source hashes: `../artifacts/aei_information_hierarchy/PAPER_SOURCE_HASHES.csv`
+- Authority migration: `../artifacts/aei_information_hierarchy/SIGNAL_SALIENCY_AUTHORITY_MIGRATION_AUDIT.md`
 - Main figure sources: `../results/aei_information_hierarchy/figures/`
 - Main table sources: `../results/aei_information_hierarchy/tables/`
 
@@ -33,16 +35,18 @@ package must not rewrite them.
 The paper has exactly six top-level sections:
 
 1. Introduction
-2. Related Research and Problem Formulation
+2. Related Work
 3. Task-Relevant Information Acquisition Framework
-4. Multi-Domain CFRP Case Study and Experimental Design
+4. Multi-Domain CFRP Experimental Design
 5. Experimental Results and Discussion
 6. Conclusions
 
-The four main figures and one main table are generated from machine-readable
-paper evidence. Retrospective teachers, oracles, and component substitutions
-are always identified as non-deployable. Acquisition cost is the exact fraction
-of unique native-raster locations revealed, not scanner time.
+The four main figures and one main table are generated from the 42-claim
+machine-readable paper authority. The controlled migration adds three claims
+from existing frozen A2 appearance evidence and changes no frozen scientific
+result. Retrospective teachers, oracles, and component substitutions are always
+identified as non-deployable. Acquisition cost is the exact fraction of unique
+native-raster locations revealed, not scanner time.
 
 ## Build
 

@@ -3,6 +3,7 @@
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
 \usepackage{booktabs}
+\usepackage{array}
 \usepackage{longtable}
 \usepackage{graphicx}
 \usepackage[margin=1in]{geometry}
@@ -22,7 +23,7 @@ Acquisition for Impacted Composites}
 
 The supplement exposes detailed controls, sensitivities, implementation
 diagnostics, and machine-readable provenance omitted from the compressed main
-paper. Numerical authority remains the 39-row canonical metrics file. Physical
+paper. Numerical authority is the 42-row canonical metrics file. Physical
 specimens are the first statistical unit and the six held-out experimental
 domains are equally weighted. State, checkpoint, candidate, seed, and learner-
 pair rows are repeated computational records rather than independent samples.
@@ -36,7 +37,7 @@ Task-Oriented Acquisition, not the paper-level method. The code identifier
 \texttt{mvd\_m1\_o2} denotes the static deployable reference used in the final
 comparison; it is not a published competing method.
 
-\begin{longtable}{@{}p{0.18\textwidth}p{0.74\textwidth}@{}}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.18\textwidth}>{\raggedright\arraybackslash}p{0.74\textwidth}@{}}
 \toprule
 Record group & Content \\
 \midrule
@@ -48,7 +49,7 @@ Record group & Content \\
 \bottomrule
 \endfoot
 S01--S04 & Full domain and checkpoint records for spatial, sparse, static, and conditional-value comparisons. \\
-S05--S09 & Real-state, acquired-position/history, field-content (registered reconstruction), shuffled-content, and dynamic-valuation controls. \\
+S05--S09 & Real-state, acquired-position/history, legacy reconstruction-derived, shuffled-content, and dynamic-valuation controls. \\
 S10--S12 & Component substitutions and bounded reachable-set planning records. \\
 S13--S16 & Learner-pair value stability, feedback strata, and implementation diagnostics. \\
 S17--S18 & Source hashes, chronology, and external-data feasibility boundaries. \\
@@ -71,14 +72,35 @@ scanner-time interpretation.
 
 \section{S3. Task-conditioned and predictor-conditioned value}
 
-% Supplement-only evidence: U4_LEARNED_SPECIFICITY_BOUNDARY.
-The cross-objective oracle result is bounded by the learned global-mask test.
-Source-trained global mechanics and reconstruction masks produced the
-predeclared support indicator 0; the learned global mechanics mask therefore
-did not reproduce the oracle separation. In the reviewer-visible narrative,
-the latter is the field-content reference. It is operationalized by the
-registered normalized-RGB-MSE reconstruction objective and is not a claim
-about all image representations or metrics.
+The main paper uses the preregistered \texttt{appearance\_oracle} as its
+task-agnostic C-scan appearance-saliency reference. It assigns a candidate the mean
+absolute RGB deviation of newly revealed samples from the specimen-specific
+border median, normalized by 255, and uses no CAI outcome. Complete candidate
+values make it retrospective and non-deployable. The registered protocol
+predates formal oracle execution; the comparator is not a damage-severity
+measure or a universal saliency definition. Appearance minus mechanical CAI
+AUEBC was 0.0070800594 (95\% CI 0.0047993566--0.0097402930), with the CAI oracle
+favored in all six domains. Across 276 paired initial-state maps, mean Spearman
+agreement was 0.0222120 and mean top-decile overlap was 0.2003106.
+
+% Supplement-only evidence: U3_RECONSTRUCTION_ORACLE;
+% U4_ORACLE_CAI_SPECIFICITY; U4_ORACLE_IMAGE_SPECIFICITY;
+% U4_LEARNED_SPECIFICITY_BOUNDARY.
+Legacy reconstruction evidence is distinct from appearance saliency and is
+retained here without relabeling. The one-shot mechanical oracle had CAI AUEBC
+0.013458 versus 0.017188 for the legacy reconstruction oracle; the mechanical
+improvement was 0.00373 (95\% CI 0.00284--0.00469), favorable in all six
+domains (\texttt{U3\_RECONSTRUCTION\_ORACLE}). In the later registered
+cross-objective diagnostic, the CAI-task oracle improved CAI AUEBC by 0.04862
+(95\% CI 0.04527--0.05205)
+(\texttt{U4\_ORACLE\_CAI\_SPECIFICITY}), while the reconstruction oracle
+improved normalized RGB MSE by $5.503\times10^{-4}$ (95\% CI
+$5.006\times10^{-4}$--$6.063\times10^{-4}$)
+(\texttt{U4\_ORACLE\_IMAGE\_SPECIFICITY}). Source-trained global mechanics and
+reconstruction masks produced the predeclared support indicator 0, so the
+learned global mechanics mask did not reproduce that legacy oracle separation
+(\texttt{U4\_LEARNED\_SPECIFICITY\_BOUNDARY}). These results remain bounded to
+the registered normalized-RGB-MSE objective.
 
 % Supplement-only evidence: U5_RIDGE_HUBER_BEST_ACTION;
 % U5_RIDGE_HUBER_TOPK; U5_RIDGE_MLP_BEST_ACTION; U5_RIDGE_MLP_TOPK.
@@ -111,10 +133,16 @@ internal-field sensitivity estimator, not the matched B-family field path.
 
 The acquired-position/history control inherits the exact positions, ordering,
 and costs of the recipient trajectory while removing measured content. The
-reviewer-visible field-content control retains the frozen
-\texttt{reconstruction} control mode and uses the registered image objective on
-the same legal trajectory. The shuffled-content control preserves recipient
-positions and budget while sourcing values from separated donor content. These
+shuffled-content control preserves recipient positions and budget while
+sourcing values from separated donor content.
+
+% Supplement-only evidence: O3_REAL_MINUS_RECONSTRUCTION.
+An additional legacy reconstruction-derived control retains the frozen
+\texttt{reconstruction} mode and registered normalized-RGB-MSE objective on the
+same legal trajectory. Real minus this control was 0.03419 in CAI MAE (95\% CI
+0.02450--0.04384), with real content favorable in one of six domains
+(\texttt{O3\_REAL\_MINUS\_RECONSTRUCTION}). This technical control is not the
+appearance-saliency comparator and was not relabeled as saliency. These control
 semantics are required when interpreting the adverse real-minus-control
 directions.
 
@@ -165,8 +193,10 @@ The evidence chronology separates pre-existing spatial and static-reference
 analyses, the frozen outer implementation endpoint, and later diagnostic
 analyses. Later diagnostics reused fixed states, source bindings, splits, and
 outcomes; they were not used to select or modify the frozen endpoint. No model
-training, tuning, result selection, or canonical numerical claim was changed
-for the manuscript identity reframe.
+training, tuning, result selection, frozen scientific artifact, or existing
+canonical numerical value was changed. The controlled authority migration adds
+three claims from preregistered frozen appearance evidence and changes only
+paper visibility and narrative roles for legacy reconstruction claims.
 
 The machine-readable visibility map assigns every canonical claim to main
 headline, main support, one main system diagnostic, or supplement-only use.
@@ -178,6 +208,7 @@ evaluation.
 Scope remains the paired 276-specimen, six-domain CFRP data program; exact
 native-raster digital cost; the fixed predictor families, state
 representations, action hierarchy, and planners; and the registered CAI and
+appearance-saliency comparison. Legacy evidence retains the registered CAI and
 normalized-RGB-MSE tasks. Physical path length, coupling, settling, hardware
 timing, industrial cost, and external empirical transfer are not established.
 

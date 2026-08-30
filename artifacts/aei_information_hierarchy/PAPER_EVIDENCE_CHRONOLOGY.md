@@ -4,7 +4,7 @@ The frozen outer endpoint predates all post-freeze diagnostics. The later analys
 
 | Chronology class | Claims | Endpoint-selection role |
 |---|---:|---|
-| PRE_P7_FROZEN_EVIDENCE | 13 | Available before endpoint freeze |
+| PRE_P7_FROZEN_EVIDENCE | 16 | Available before endpoint freeze |
 | FROZEN_OUTER_ENDPOINT | 1 | Fixed evaluation endpoint |
 | POST_P7_DIAGNOSTIC | 25 | Not used to modify P7 |
 
@@ -21,6 +21,9 @@ Post-freeze diagnostics are diagnostic evidence, not preregistered confirmatory 
 | U3_UNIFORM_ORACLE | Useful | MVD_M0 | PRE_P7_FROZEN_EVIDENCE | `results/mvd/m0_one_shot_oracle/summary.json` |
 | U3_RECONSTRUCTION_ORACLE | Useful | MVD_M0 | PRE_P7_FROZEN_EVIDENCE | `results/mvd/m0_one_shot_oracle/summary.json` |
 | U3_HEADROOM_RETENTION | Useful | MVD_M0 | PRE_P7_FROZEN_EVIDENCE | `results/mvd/m0_one_shot_oracle/summary.json` |
+| U3_CAI_VS_APPEARANCE_SALIENCY_AUEBC | Useful | MVA_A2_ORACLE_VALUE | PRE_P7_FROZEN_EVIDENCE | `results/mva/a2_oracle_value/bootstrap.csv` |
+| U4_CAI_SALIENCY_MAP_SPEARMAN | Useful | MVA_A2_ORACLE_VALUE | PRE_P7_FROZEN_EVIDENCE | `results/mva/a2_oracle_value/map_similarity.csv` |
+| U4_CAI_SALIENCY_TOP10_OVERLAP | Useful | MVA_A2_ORACLE_VALUE | PRE_P7_FROZEN_EVIDENCE | `results/mva/a2_oracle_value/map_similarity.csv` |
 | U4_ORACLE_CAI_SPECIFICITY | Useful | POST_FREEZE_TASK_SPECIFICITY | POST_P7_DIAGNOSTIC | `results/mavis_science_closure/p14_task_specificity/summary.json` |
 | U4_ORACLE_IMAGE_SPECIFICITY | Useful | POST_FREEZE_TASK_SPECIFICITY | POST_P7_DIAGNOSTIC | `results/mavis_science_closure/p14_task_specificity/summary.json` |
 | U4_LEARNED_SPECIFICITY_BOUNDARY | Useful | POST_FREEZE_TASK_SPECIFICITY | POST_P7_DIAGNOSTIC | `results/mavis_science_closure/p14_task_specificity/summary.json` |
