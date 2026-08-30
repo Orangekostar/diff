@@ -11,6 +11,7 @@ from cmc_bbdm.damage_response.feature_views import (
     fit_fold_local_design_encoder,
     validate_p1_redundancy_view,
 )
+from cmc_bbdm.damage_response.p2_views import P2ViewError, validate_p2_view
 from cmc_bbdm.damage_response.sources import DesignMetadata
 
 REGISTERED_VIEWS = {
@@ -107,3 +108,21 @@ def test_held_out_numeric_sentinels_do_not_change_encoder_state() -> None:
     assert not set(sentinel_encoder.fit_specimen_ids) & held_out_ids
     np.testing.assert_array_equal(reference.means, sentinel_encoder.means)
     np.testing.assert_array_equal(reference.scales, sentinel_encoder.scales)
+
+
+@pytest.mark.parametrize(
+    "forbidden",
+    (
+        "true_cai_strength",
+        "raw_cai_trace",
+        "response_curve",
+        "post_cai_image",
+        "privileged_total_impact_energy_j",
+        "privileged_impactor",
+    ),
+)
+def test_p2_deployable_view_rejects_outcome_and_privileged_fields(
+    forbidden: str,
+) -> None:
+    with pytest.raises(P2ViewError):
+        validate_p2_view("F4", ("F0", "surface_profile_stats21", forbidden))
