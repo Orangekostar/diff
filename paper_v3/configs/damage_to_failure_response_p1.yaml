@@ -1,0 +1,46 @@
+schema_version: 1
+base_sha: 3951f71f28b6efdf8c74eea0fe274b2a78a9cd57
+p0:
+  summary_relative_path: results/damage_to_failure_response/p0_data_audit/summary.json
+  summary_sha256: 9d44ead975119db2181a91efbf14b74165671a9d25b7b576d90f6e104757a633
+  required_status: P0_GO
+
+extraction:
+  baseline_samples: 50
+  grid_points: 101
+  minimum_unique_extension_positions: 50
+  primary_scope: pre_peak_inclusive
+  duplicate_extension_aggregation: median
+  interpolation: linear
+  smoothing: none
+  clipping: none
+
+primary_endpoints:
+  extension_peak_mm:
+    range_tolerance: 0.001
+  slope_u20_u60_mpa_per_mm:
+    range_tolerance: 1.0
+    fit_u_min: 0.2
+    fit_u_max: 0.6
+  normalized_prepeak_auc:
+    range_tolerance: 0.0001
+
+redundancy_model:
+  outer_split: leave_one_domain_out
+  strength_polynomial_degree: 3
+  ridge_alpha: 0.000001
+  hyperparameter_search: false
+
+gate:
+  minimum_coverage_fraction: 0.9
+  required_domain_count: 6
+  near_deterministic_pooled_r2: 0.9
+  near_deterministic_absolute_domain_spearman: 0.95
+  nonredundant_domain_count: 4
+  minimum_range_tolerance_multiplier: 10.0
+  replay_required: true
+
+representative_pairs:
+  nearest_strength_neighbors_per_specimen: 1
+  maximum_pairs: 12
+  ranking: normalized_curve_rms_desc_then_ids
