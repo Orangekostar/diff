@@ -297,12 +297,67 @@ class P2FoldPreprocessor:
     state_sha256: str
 
 
+@dataclass(frozen=True, slots=True)
+class P2PCABasis:
+    roster_sha256: str
+    fit_indices: tuple[int, ...]
+    fit_specimen_ids: tuple[str, ...]
+    maximum_dimension: int
+    mean: np.ndarray
+    components: np.ndarray
+    state_sha256: str
+
+
+def fit_p2_pca_basis(
+    authority: P2FeatureAuthority,
+    fit_indices: object,
+    *,
+    maximum_dimension: int,
+) -> P2PCABasis:
+    """Fit one source-only PCA basis for registered prefix dimensions."""
+
+    if not isinstance(authority, P2FeatureAuthority):
+        raise P2ViewError("P2 feature authority type changed")
+    if type(maximum_dimension) is not int or maximum_dimension < 1:
+        raise P2ViewError("maximum PCA dimension must be positive")
+    fit = _indices(fit_indices, rows=len(authority.specimen_ids), label="fit indices")
+    mean, components = _fit_pca(
+        authority.full_cscan_embedding, fit, maximum_dimension
+    )
+    immutable_mean = _readonly(mean)
+    immutable_components = _readonly(components)
+    fit_tuple = tuple(int(index) for index in fit)
+    fit_ids = tuple(authority.specimen_ids[index] for index in fit_tuple)
+    roster_sha256 = _roster_sha256(authority)
+    metadata = {
+        "fit_indices": fit_tuple,
+        "fit_specimen_ids": fit_ids,
+        "maximum_dimension": maximum_dimension,
+        "roster_sha256": roster_sha256,
+    }
+    digest = hashlib.sha256(
+        json.dumps(metadata, sort_keys=True, separators=(",", ":")).encode("ascii")
+    )
+    digest.update(immutable_mean.tobytes(order="C"))
+    digest.update(immutable_components.tobytes(order="C"))
+    return P2PCABasis(
+        roster_sha256=roster_sha256,
+        fit_indices=fit_tuple,
+        fit_specimen_ids=fit_ids,
+        maximum_dimension=maximum_dimension,
+        mean=immutable_mean,
+        components=immutable_components,
+        state_sha256=digest.hexdigest(),
+    )
+
+
 def fit_p2_preprocessor(
     authority: P2FeatureAuthority,
     view_name: str,
     fit_indices: object,
     *,
     pca_dimension: int | None,
+    pca_basis: P2PCABasis | None = None,
 ) -> P2FoldPreprocessor:
     """Fit one source-only feature transform without accepting response data."""
 
@@ -312,8 +367,23 @@ def fit_p2_preprocessor(
     dimension = _pca_dimension(view_name, pca_dimension)
     fit = _indices(fit_indices, rows=len(authority.specimen_ids), label="fit indices")
     if dimension is None:
+        if pca_basis is not None:
+            raise P2ViewError("PCA basis is forbidden for nonembedding views")
         pca_mean = np.empty(0, dtype=np.float64)
         pca_components = np.empty((0, 512), dtype=np.float64)
+    elif pca_basis is not None:
+        fit_tuple = tuple(int(index) for index in fit)
+        if (
+            not isinstance(pca_basis, P2PCABasis)
+            or pca_basis.roster_sha256 != _roster_sha256(authority)
+            or pca_basis.fit_indices != fit_tuple
+            or pca_basis.maximum_dimension < dimension
+        ):
+            raise P2ViewError("PCA basis does not match the requested source fold")
+        pca_mean = np.asarray(pca_basis.mean, dtype=np.float64)
+        pca_components = np.asarray(
+            pca_basis.components[:dimension], dtype=np.float64
+        )
     else:
         pca_mean, pca_components = _fit_pca(
             authority.full_cscan_embedding, fit, dimension
