@@ -42,7 +42,7 @@ EXPERIMENT_SUBSECTIONS = [
 ]
 PART1_STAGES = [
     "Spatial information and sparse recoverability",
-    "Task-conditioned spatial measurement value",
+    "CAI-specific measurement value beyond field content",
     "State- and predictor-conditioned measurement value",
 ]
 PART2_STAGES = [
@@ -55,11 +55,9 @@ FIGURES = [
     "figure2_information_characterization.pdf",
     "figure3_state_conditioned_value.pdf",
     "figure4_valuation_planning_realization.pdf",
-    "figure5_task_specific_measurement_priorities.pdf",
 ]
 TABLES = [
     "tables/table1_case_protocol.tex",
-    "tables/table2_task_relevant_results.tex",
 ]
 
 
@@ -290,13 +288,15 @@ def test_part_ii_opens_with_dynamic_over_static_positive_result() -> None:
     assert "five of six held-out domains" in flat
 
 
-def test_main_manuscript_has_four_figures_and_two_tables() -> None:
+def test_main_manuscript_has_four_figures_and_one_table() -> None:
     manuscript = _text(MAIN)
     figures = re.findall(r"\\includegraphics\[[^]]*\]\{([^}]+)\}", manuscript)
     tables = re.findall(r"\\input\{(tables/[^}]+)\}", manuscript)
     assert figures == FIGURES
     assert tables == TABLES
     assert "table1_closest_work" not in manuscript
+    assert "figure5_task_specific_measurement_priorities.pdf" not in manuscript
+    assert "table2_task_relevant_results.tex" not in manuscript
 
 
 def test_main_claim_ids_follow_visibility_authority() -> None:
@@ -480,6 +480,10 @@ def test_aei_paper_keeps_cost_statistics_and_oracle_scope_bounded() -> None:
         r"repeated\s+computational records, not independent samples", manuscript
     )
     assert "registered normalized-RGB-MSE reconstruction objective" in manuscript
+    assert "field-content reference" in manuscript
+    assert "field-content control" in manuscript
+    assert "one-shot reconstruction oracle" not in manuscript
+    assert "real minus reconstruction MAE" not in manuscript
 
 
 def test_result_headings_avoid_defensive_language() -> None:

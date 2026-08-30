@@ -17,6 +17,9 @@ remain unchanged.
   equally weighted.
 - AUEBC is the budget-span-normalized trapezoidal mean error over observed
   effective specimen budgets; lower is better.
+- Reviewer-visible `field-content reference` and `field-content control` roles
+  remain operationalized by the registered normalized-RGB-MSE reconstruction
+  objective; frozen claim IDs and control modes retain `reconstruction`.
 - Main text contains headline/support claims, one concise system diagnostic,
   and no implementation identity.
 
@@ -54,7 +57,7 @@ by 0.05361 (95% CI 0.00561--0.13544), favorable in five domains.
 Main boundary: Sparse MAE remained 0.00602 above the selected full field (95%
 CI 0.00173--0.01083), with the sparse condition higher in all six domains.
 
-## I-B: Task-conditioned spatial measurement value
+## I-B: CAI-specific measurement value beyond field content
 
 ### U3_UNIFORM_ORACLE
 
@@ -63,8 +66,8 @@ acquisition by 0.00391 (95% CI 0.00280--0.00502), favorable in all domains.
 
 ### U3_RECONSTRUCTION_ORACLE
 
-Main: The one-shot mechanical oracle improved CAI AUEBC over the one-shot
-reconstruction oracle by 0.00373 (95% CI 0.00284--0.00469), favorable in all
+Main: The one-shot mechanical oracle improved CAI AUEBC over the registered
+field-content reference by 0.00373 (95% CI 0.00284--0.00469), favorable in all
 domains.
 
 ### U3_HEADROOM_RETENTION
@@ -74,14 +77,14 @@ oracle headroom. The comparison is retrospective and non-deployable.
 
 ### U4_ORACLE_CAI_SPECIFICITY
 
-Main: The mechanics oracle improved CAI AUEBC over the reconstruction oracle by
+Main: The CAI-task oracle improved CAI AUEBC over the field-content reference by
 0.04862 (95% CI 0.04527--0.05205).
 
 ### U4_ORACLE_IMAGE_SPECIFICITY
 
-Main: The reconstruction oracle improved normalized RGB reconstruction MSE by
-5.503e-4 (95% CI 5.006e-4--6.063e-4). Scope is the registered normalized-
-RGB-MSE objective.
+Main: The field-content reference improved normalized RGB MSE by 5.503e-4 (95%
+CI 5.006e-4--6.063e-4). It is operationalized by the registered normalized-
+RGB-MSE reconstruction objective.
 
 ### U4_LEARNED_SPECIFICITY_BOUNDARY
 
@@ -181,8 +184,9 @@ Main boundary: Real minus acquired-position/history MAE was 0.01740 (95% CI
 
 ### O3_REAL_MINUS_RECONSTRUCTION
 
-Main boundary: Real minus reconstruction MAE was 0.03419 (95% CI
-0.02450--0.04384), favorable for real content in one domain.
+Main boundary: Real minus field-content-control MAE was 0.03419 (95% CI
+0.02450--0.04384), favorable for real content in one domain. The frozen record
+is the registered reconstruction control.
 
 ### O4_DYNAMIC_MINUS_SHUFFLED
 

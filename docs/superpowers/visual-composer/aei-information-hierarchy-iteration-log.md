@@ -1,6 +1,6 @@
 # AEI Information Hierarchy Visual Iteration Log
 
-## Iteration 0: contract freeze
+## Iteration 0: original contract freeze
 
 - Fixed four figures and two tables from the master prompt.
 - Assigned stable Useful/Observable/Actionable semantic colors.
@@ -42,3 +42,32 @@
   the machine-readable CSV retains complete fields on every row.
 - Compiled and rendered a standalone two-page harness with no overfull or
   underfull boxes; manuscript-class integration remains a later gate.
+
+## Iteration 4: narrative consolidation
+
+- Reframed the visual sequence as WHY, WHAT, WHEN, and HOW.
+- Rebuilt Figure 1 as a four-stage acquisition argument without performance
+  numbers.
+- Merged the former Figure 5 real-state task-priority evidence into Figure 2
+  panels (d--f), preserving its registered inputs and task-specific boundary.
+- Reorganized Figure 3 around early/late legal states and changed next actions.
+- Consolidated matched controls, component substitutions, planning, and the
+  frozen end-to-end boundary in Figure 4.
+- Retired standalone Figure 5 and main Table 2 from manuscript and package;
+  retained the table generator only as provenance support.
+- Adopted reviewer-visible field-content reference/control labels while keeping
+  frozen reconstruction IDs, modes, and normalized-RGB-MSE semantics unchanged.
+
+## Iteration 5: rendered QA repair
+
+- Exported 29 aspect-preserving main/supplement panel PNGs with hashes.
+- Wrapped Figure 1 stage text and adjacent Figure 2/3 titles after original-size
+  visual inspection.
+- Moved Figure 2 annotations into reserved whitespace.
+- Repaired real-state image geometry without distortion and removed fixed-limit
+  rendering warnings.
+- Added regression checks for title bounds, aligned axes, nonblank panel crops,
+  aspect preservation, and deterministic outputs.
+- Reran PDF collision audits after the final render, shortened the Figure 2
+  field-content row label, and moved Figure 3 endpoint labels inside their panel.
+  The final reports contain no blocking collision findings.

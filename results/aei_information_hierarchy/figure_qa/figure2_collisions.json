@@ -3,16 +3,16 @@
   "auditable": true,
   "verdict": "REVIEW REQUIRED",
   "page_count": 1,
-  "visible_text_box_count": 59,
-  "text_trace_count": 63,
-  "stroke_path_count": 74,
-  "filled_region_count": 62,
-  "image_region_count": 2,
+  "visible_text_box_count": 50,
+  "text_trace_count": 61,
+  "stroke_path_count": 247,
+  "filled_region_count": 234,
+  "image_region_count": 6,
   "summary": {
     "fail": 0,
     "warn": 3,
-    "contained_fill_overlays": 14,
-    "contained_image_overlays": 2
+    "contained_fill_overlays": 8,
+    "contained_image_overlays": 0
   },
   "thresholds": {
     "text_inset_pt": 0.6,
@@ -28,16 +28,16 @@
       "text": "0.128",
       "text_bbox": [
         79.00277709960938,
-        79.803955078125,
+        77.77163696289062,
         96.75299835205078,
-        86.00395202636719
+        83.97163391113281
       ],
       "other_text": null,
       "other_bbox": [
         73.82637023925781,
-        80.3988265991211,
+        78.36652374267578,
         79.3035888671875,
-        85.87604522705078
+        83.84374237060547
       ],
       "object_count": 1,
       "object_indexes": [
@@ -52,16 +52,16 @@
       "text": "0.135",
       "text_bbox": [
         86.3458480834961,
-        119.36616516113281,
+        115.74400329589844,
         104.0960693359375,
-        125.566162109375
+        121.94400024414062
       ],
       "other_text": null,
       "other_bbox": [
         81.16944122314453,
-        119.9610366821289,
+        116.33887481689453,
         86.64665985107422,
-        125.4382553100586
+        121.81609344482422
       ],
       "object_count": 1,
       "object_indexes": [
@@ -76,16 +76,16 @@
       "text": "0.189",
       "text_bbox": [
         153.00820922851562,
-        40.24172592163086,
+        39.79928207397461,
         170.7584228515625,
-        46.44172668457031
+        45.99928283691406
       ],
       "other_text": null,
       "other_bbox": [
         147.83180236816406,
-        40.836612701416016,
+        40.394168853759766,
         153.3090362548828,
-        46.313838958740234
+        45.871395111083984
       ],
       "object_count": 1,
       "object_indexes": [

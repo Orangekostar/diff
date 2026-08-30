@@ -25,8 +25,9 @@ spatial internal information.
 
 ### 2.2 Sparse and adaptive ultrasonic acquisition
 
-Sparse reconstruction, adaptive paths, and robotic inspection establish the
-acquisition setting; task loss is distinguished from reconstruction loss.
+Sparse field recovery, adaptive paths, and robotic inspection establish the
+acquisition setting; CAI-task value is distinguished from the registered
+field-content reference.
 
 ### 2.3 Task-relevant information acquisition formulation
 
@@ -43,7 +44,8 @@ Define legal information, downstream-predictor-conditioned task value
 ### 3.2 State-Conditioned Measurement Valuation
 
 Define `U_hat`, strict source-only fitting, and static,
-acquired-position/history, reconstruction, and shuffled-content controls.
+acquired-position/history, field-content, and shuffled-content controls. The
+field-content control retains the registered reconstruction objective.
 
 ### 3.3 Cost-Constrained Task-Oriented Acquisition
 
@@ -65,7 +67,7 @@ and native-raster cost semantics.
 ### 4.3 Held-Out-Domain Evaluation and Statistical Analysis
 
 Use nested LODO, specimen-first synchronized bootstrap contrasts, equal-domain
-aggregation, and explicit evidence chronology.
+aggregation, registered paired intervals, and domain-direction counts.
 
 ## 5. Experimental Results and Discussion
 
@@ -76,7 +78,7 @@ aggregation, and explicit evidence chronology.
 Main: U1 matched/surface evidence and U2 retention/gain/full-gap evidence.
 Supplement: independent-field sensitivity.
 
-#### 5.1.2 Task-conditioned spatial measurement value
+#### 5.1.2 CAI-specific measurement value beyond field content
 
 Main: U3 oracle opportunity/headroom and U4 cross-objective specificity.
 Supplement: learned global-mask boundary.
@@ -94,8 +96,8 @@ Open with dynamic-minus-static regret, then annotate the static rank reference.
 
 #### 5.2.2 Information-source and component decomposition
 
-Report real-state change, acquired-position/history, reconstruction and
-shuffled controls, followed by valuation/planning substitutions.
+Report real-state change, acquired-position/history, field-content and shuffled
+controls, followed by valuation/planning substitutions.
 
 #### 5.2.3 Cost-constrained set realization
 
@@ -105,9 +107,9 @@ detail in the supplement.
 
 ### 5.3 Engineering Interpretation
 
-Synthesize characterization, valuation, attribution, and realization. State
-five transfer conditions and scope the evidence to the current digital-cost,
-six-domain CFRP program.
+Synthesize characterization, valuation, attribution, and realization. Close
+with one compact scope paragraph tied to the current digital-cost, predictor,
+action-space, and six-domain CFRP program.
 
 ## 6. Conclusions
 
@@ -117,11 +119,16 @@ information.
 
 ## Main visual contract
 
-- Figure 1: framework identity and causal information flow.
-- Figure 2: three Part-I stages plus registered sparse specimen states.
-- Figure 3: state-conditioned valuation, priority evolution, and source controls.
-- Figure 4: A1/A2 valuation, planning, and set realization only.
-- Figure 5: paired task-specific priority overlays on one registered CFRP state.
+- Figure 1 (WHY): framework identity and causal information flow.
+- Figure 2 (WHAT): spatial gain, sparse retention, heterogeneous opportunity,
+  and paired CAI-task/field-content priorities on one registered CFRP state.
+- Figure 3 (WHEN): initial and updated priority, acquisition history, state
+  evolution, dynamic-versus-static valuation, and predictor dependence.
+- Figure 4 (HOW): matched source controls, A1 substitutions, A2 bounded-set
+  realization, and subordinate A4 deployment calibration.
 - Table 1: compact case and protocol contract.
-- Table 2: six-stage task-relevant result summary.
+- The six-stage result table remains an internal deterministic source and is
+  not a main-manuscript table.
 - Supplementary Figure S1: deterministic six-domain state-priority gallery.
+- Organized component PNGs: Figure 1, Figure 2(a--f), Figure 3(a--f), Figure
+  4(a--d), and Supplementary Figure S1(a--l).

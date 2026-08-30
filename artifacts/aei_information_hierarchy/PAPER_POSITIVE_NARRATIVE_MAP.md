@@ -67,7 +67,7 @@ classification is:
 | Stage | Main required claims | Main optional claims | Supplement required claims | Scientific role | Boundary |
 |---|---|---|---|---|---|
 | `I-A_SPATIAL_AND_SPARSE` | `U1_MATCHED_FIELD`; `U2_SPARSE_RETENTION` | `U1_SURFACE_FIELD`; `U2_SPARSE_GAIN`; `U2_SPARSE_FULL_GAP` | `U1_INDEPENDENT_FIELD_SENSITIVITY` | Spatial information matters, and most of its gain survives sparse observation. | The matched estimator remains confirmatory; sparse retention is not full-field recovery, and normalized-raster fraction is not scanner time. |
-| `I-B_TASK_CONDITIONED_SPATIAL_VALUE` | `U3_UNIFORM_ORACLE`; `U3_RECONSTRUCTION_ORACLE`; `U4_ORACLE_CAI_SPECIFICITY`; `U4_ORACLE_IMAGE_SPECIFICITY` | `U3_HEADROOM_RETENTION` | `U4_LEARNED_SPECIFICITY_BOUNDARY` | Acquisition opportunity is spatially heterogeneous and depends on the downstream task. | Oracle evidence is retrospective and non-deployable; reconstruction is the registered normalized-RGB-MSE objective, and learned global masks do not reproduce oracle separation. |
+| `I-B_TASK_CONDITIONED_SPATIAL_VALUE` | `U3_UNIFORM_ORACLE`; `U3_RECONSTRUCTION_ORACLE`; `U4_ORACLE_CAI_SPECIFICITY`; `U4_ORACLE_IMAGE_SPECIFICITY` | `U3_HEADROOM_RETENTION` | `U4_LEARNED_SPECIFICITY_BOUNDARY` | CAI-specific measurement value extends beyond the registered field-content reference. | Oracle evidence is retrospective and non-deployable; field content is operationalized by the registered normalized-RGB-MSE reconstruction objective, and learned global masks do not reproduce oracle separation. |
 | `I-C_STATE_AND_PREDICTOR_CONDITIONED_VALUE` | `U5_RIDGE_HUBER_SPEARMAN`; `O2_TEACHER_TURNOVER` | `U5_RIDGE_MLP_SPEARMAN`; `O2_TEACHER_RANK`; `O2_TEACHER_TOPK`; `O2_TEACHER_OPPORTUNITY` | `U5_RIDGE_HUBER_BEST_ACTION`; `U5_RIDGE_HUBER_TOPK`; `U5_RIDGE_MLP_BEST_ACTION`; `U5_RIDGE_MLP_TOPK` | Measurement value changes with accumulated evidence and the downstream predictor. | The teacher target is strict-OOF and retrospective; variation among equally accurate structurally distinct predictors remains unresolved. |
 
 ## Part II: State-Conditioned Task-Oriented Acquisition
@@ -75,15 +75,15 @@ classification is:
 | Stage | Main required claims | Main optional claims | Supplement required claims | Scientific role | Boundary |
 |---|---|---|---|---|---|
 | `II-A_STATE_CONDITIONED_VALUATION` | `O4_DYNAMIC_MINUS_STATIC` | `O1_STATIC_SPEARMAN` | `O1_STATIC_SET_REGRET`; `O1_GLOBAL_SET_REGRET`; `O1_RANDOM_SET_REGRET` | State-conditioned valuation improves next-action estimation over the static reference. | The static comparison is a registered reference, not an information-theoretic impossibility claim. |
-| `II-B_SOURCE_AND_COMPONENT_DECOMPOSITION` | `A1_VALUATION_SUBSTITUTION`; `A1_TRUE_VALUE_PLANNING_SUBSTITUTION` | `O3_REAL_CHANGE`; `O3_REAL_MINUS_POSITIONS`; `O3_REAL_MINUS_RECONSTRUCTION`; `O4_DYNAMIC_MINUS_SHUFFLED`; `A1_LEARNED_PLANNING_SUBSTITUTION` | `O3_FULL_FIELD_RECOVERY` | Matched controls identify state signals, and component substitutions localize headroom. | Real change alone does not identify measured-content value; acquired-position/history controls, reconstruction controls, and retrospective substitutions retain their registered boundaries. |
+| `II-B_SOURCE_AND_COMPONENT_DECOMPOSITION` | `A1_VALUATION_SUBSTITUTION`; `A1_TRUE_VALUE_PLANNING_SUBSTITUTION` | `O3_REAL_CHANGE`; `O3_REAL_MINUS_POSITIONS`; `O3_REAL_MINUS_RECONSTRUCTION`; `O4_DYNAMIC_MINUS_SHUFFLED`; `A1_LEARNED_PLANNING_SUBSTITUTION` | `O3_FULL_FIELD_RECOVERY` | Matched controls identify state signals, and component substitutions localize headroom. | Real change alone does not identify measured-content value; acquired-position/history and field-content controls retain their frozen semantics, and retrospective substitutions retain their registered boundaries. |
 | `II-C_COST_CONSTRAINED_REALIZATION` | `A2_GREEDY_PLANNING_REGRET` | `A2_BEAM4_PLANNING_REGRET` | `A3_FEEDBACK_BENEFIT` | Cost-constrained set realization converts estimated value into budgeted measurements. | Scope is the registered two-action reachable pool; feedback remains a frozen diagnostic and the observed direction is retained. |
 
 ## A4 System Diagnostic
 
 `A4_BASELINE_MINUS_MAVIS` is a single `system_diagnostic` recorded under
 `II-C_COST_CONSTRAINED_REALIZATION` in the CSV authority. It is main-required
-for traceability, but it is not a framework headline, figure, table, or
-abstract conclusion. Its CSV assignments remain `none` for figure and table,
+for traceability, but it is not a framework headline, table, or abstract
+conclusion. Its CSV assignment is `figure4d` and `none` for the main table,
 with manuscript section `5.2.3`; it reports one frozen implementation endpoint
 and does not redefine the framework.
 

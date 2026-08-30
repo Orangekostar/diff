@@ -2,7 +2,7 @@
 
 This directory contains the paper-only package for the first Advanced
 Engineering Informatics manuscript derived from the frozen evidence at base
-commit `9c2d0f1c97a96358c5e697f488373254a099d0fe`.
+commit `9794d53a9549f2e3501fe482e8db8735f468ba20`.
 
 Working title:
 
@@ -39,7 +39,7 @@ The paper has exactly six top-level sections:
 5. Experimental Results and Discussion
 6. Conclusions
 
-The five main figures and two main tables are generated from machine-readable
+The four main figures and one main table are generated from machine-readable
 paper evidence. Retrospective teachers, oracles, and component substitutions
 are always identified as non-deployable. Acquisition cost is the exact fraction
 of unique native-raster locations revealed, not scanner time.
@@ -58,8 +58,10 @@ Build the reader-facing supplement from `supplementary/`:
 latexmk -pdf -interaction=nonstopmode -halt-on-error supplementary.tex
 ```
 
-The working tree includes the Elsevier class/style, five manuscript-width PDF
-figures, two generated LaTeX tables, and the machine-readable supplement. The
+The working tree includes the Elsevier class/style, four manuscript-width PDF
+figures, one main LaTeX table, and the machine-readable supplement. Organized,
+unscaled component PNGs and their SHA-256 manifest are written to `panel_pngs/`
+for manual composition; they are not part of the submission package. The
 deterministic flat Editorial Manager source bundle is generated under
 `../results/aei_information_hierarchy/deterministic_package/` by
 `cmc_bbdm.mavis.aei_paper_package`.

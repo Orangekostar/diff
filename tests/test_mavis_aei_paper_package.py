@@ -21,11 +21,9 @@ def test_aei_paper_package_has_complete_working_tree(tmp_path: Path) -> None:
         "figure2_information_characterization.pdf",
         "figure3_state_conditioned_value.pdf",
         "figure4_valuation_planning_realization.pdf",
-        "figure5_task_specific_measurement_priorities.pdf",
     ]
     assert sorted(path.name for path in package.tables.glob("*.tex")) == [
         "table1_case_protocol.tex",
-        "table2_task_relevant_results.tex",
     ]
     assert (package.root / "elsarticle.cls").is_file()
     assert (package.root / "elsarticle-num.bst").is_file()
@@ -62,9 +60,17 @@ def test_aei_submission_source_is_flat_and_rewrites_local_inputs(
     assert "tables/" not in manuscript
     assert "\\graphicspath{{./}}" in manuscript
     assert "\\input{table1_case_protocol.tex}" in manuscript
-    assert "\\input{table2_task_relevant_results.tex}" in manuscript
+    assert "table2_task_relevant_results.tex" not in manuscript
+    assert "figure5_task_specific_measurement_priorities.pdf" not in manuscript
     assert "table1_closest_work" not in manuscript
     assert "table3_progressive_evidence_chain" not in manuscript
+
+
+def test_aei_materialization_declares_current_figure5_and_table2_stale() -> None:
+    assert "figure5_task_specific_measurement_priorities.pdf" in (
+        aei_paper_package._LEGACY_FIGURES
+    )
+    assert "table2_task_relevant_results.tex" in aei_paper_package._LEGACY_TABLES
 
 
 def test_aei_submission_manifest_matches_every_listed_file(tmp_path: Path) -> None:

@@ -18,30 +18,31 @@ editable; PNG is preview only.
 
 ## Figure 1
 
-Artifact: Information hierarchy.
+Artifact: WHY task-relevant acquisition is needed.
 
-Core claim: usefulness, conditional observability, and actionability are
-distinct validation questions.
+Core claim: a complete sensing field must be reduced under exact acquisition
+cost according to task-relevant, state-conditioned value.
 
-Reviewer question: What is the paper's engineering-information construct, and
-where do retrospective and deployable information diverge?
+Reviewer question: Why is full-field sensing not the decision object, and how
+do retrospective evidence and deployable acquisition differ?
 
 Evidence layer: conceptual main framework; no performance numbers.
 
-Source data: generated `figure1_hierarchy.csv` defining nodes, roles, and gate
-states; fixed wording from the paper scope ledger.
+Source data: generated `figure1_task_relevant_acquisition_framework.csv`
+defining four stages and the frozen evidence lanes.
 
 Statistics / uncertainty: none.
 
-Figure prototype: left-to-right staged flow with a lower evidence-lane
-distinction between retrospective teacher/oracle, legal deployable state, and
-policy/planner.
+Figure prototype: one continuous left-to-right flow: complete sensing field,
+limited sensing under exact cost, task-relevant value, and state-conditioned
+acquisition loop. Part I and Part II bands separate characterization from
+realization; the lower lanes distinguish retrospective teacher/oracle evidence
+from legal deployable state and bounded planning.
 
-Panel map: one unframed framework panel. Each gate is visually distinct; arrows
-after Useful are not depicted as automatically successful.
+Panel map: one unframed framework panel exported as one full panel.
 
-Caption role: define the hierarchy and its validation logic without implying
-all gates pass.
+Caption role: define the acquisition problem and evidence boundary without
+implying that every downstream gate passes.
 
 Manuscript placement: Section 3, after formal problem definition.
 
@@ -52,49 +53,49 @@ contract, caption file, and checksums.
 
 ## Figure 2
 
-Artifact: What is useful?
+Artifact: WHAT ultrasonic information matters for CAI.
 
-Core claim: matched spatial morphology improves CAI prediction, sparse
-measurements retain most of that gain, and oracle-optimal design depends on the
-task; learned global masks do not reproduce the oracle separation.
+Core claim: spatial and sparse fields improve CAI prediction, opportunity is
+heterogeneous, and retrospective CAI-task priorities differ from the registered
+field-content reference.
 
 Reviewer question: Is the usefulness claim registered, sparse, and genuinely
 task-specific rather than a generic reconstruction effect?
 
 Evidence layer: main result plus limitation.
 
-Source data: `PAPER_CANONICAL_METRICS.csv`, P1 domain metrics, P5 retention and
-bootstrap rows, and bound P14 task matrix.
+Source data: `PAPER_CANONICAL_METRICS.csv`, P1/P5 metrics, the registered real
+state manifest, and the bound oracle-value parquet used previously by Figure 5.
 
 Statistics / uncertainty: registered simultaneous intervals for P1/P5 effects;
 synchronized specimen-bootstrap intervals for P14 oracle contrasts; six-domain
 equal weighting.
 
-Figure prototype: three coordinated panels.
+Figure prototype: six coordinated panels in a 2-by-3 layout.
 
 Panel map:
 
-- (a) matched scalar versus selected B-family spatial MAE with the registered
-  effect and simultaneous interval;
-- (b) surface/full/sparse MAE and explicit 89.9% gain retention, with the
-  sparse-minus-full boundary visible;
-- (c) CAI and reconstruction objective-specific oracle outcomes, with the
-  learned global-mask failure explicitly marked.
+- (a) matched spatial and sparse gains with registered boundaries;
+- (b) one hash-verified compact legal state;
+- (c) heterogeneous retrospective opportunity relative to uniform acquisition
+  and the registered field-content reference;
+- (d) CAI-task priority on that state;
+- (e) field-content priority under the registered normalized-RGB-MSE objective;
+- (f) CAI-specific excess priority.
 
 Caption role: answer RQ1 and mark all oracle rows non-deployable.
 
 Manuscript placement: first part of Section 5.
 
-Output formats and traceability: as Figure 1, using `figure2_usefulness.csv`.
+Output formats and traceability: as Figure 1, using
+`figure2_information_characterization.csv` plus alignment geometry.
 
 ## Figure 3
 
-Artifact: Why usefulness is not observability.
+Artifact: WHEN measurement value changes.
 
-Core claim: static value observability is weak while true conditional value
-evolves; real-content representation does not establish value beyond matched
-positions/reconstruction controls, and shuffled content remains an adverse
-dynamic control.
+Core claim: useful measurement value changes with acquired evidence and depends
+on the predictor; state-conditioned valuation improves next-action estimation.
 
 Reviewer question: Does the legally available state robustly identify future
 measurement value?
@@ -102,62 +103,66 @@ measurement value?
 Evidence layer: main mechanism and central adverse controls.
 
 Source data: canonical metrics, bound MVD M1 rows, P9 aggregate checkpoint
-metrics, P10 matched-control contrasts, and P11 endpoint contrasts.
+metrics, registered state images/actions, and P11 endpoint contrasts.
 
 Statistics / uncertainty: strict-OOF Spearman interval; teacher checkpoint
 descriptives over 276 specimens/six domains; synchronized bootstrap intervals
 for P10/P11 contrasts.
 
-Figure prototype: three panels.
+Figure prototype: six coordinated panels in a 2-by-3 layout.
 
 Panel map:
 
-- (a) static Spearman estimate/CI plus exact-budget regret controls;
-- (b) teacher turnover, rank agreement, and top-k overlap across checkpoints;
-- (c) real/positions/reconstruction MAE and dynamic real-minus-static/shuffled
-  regret contrasts, with adverse direction explicit.
+- (a) initial legal-state priority;
+- (b) updated priority after acquired evidence;
+- (c) acquisition history on the same trajectory;
+- (d) best-action turnover, rank agreement, and top-five overlap across states;
+- (e) dynamic-versus-static next-action regret;
+- (f) predictor-conditioned rank agreement.
 
 Caption role: answer RQ2 without claiming information-theoretic impossibility.
 
 Manuscript placement: middle of Section 5.
 
 Output formats and traceability: as Figure 1, using
-`figure3_observability.csv`.
+`figure3_state_conditioned_value.csv` plus alignment geometry.
 
 ## Figure 4
 
-Artifact: Why observability is not actionability.
+Artifact: HOW state-conditioned value becomes a bounded decision.
 
-Core claim: retrospective valuation and bounded set-planning gaps exist, but
-feedback is adverse and the frozen policy does not beat the strongest
-deployable baseline.
+Core claim: matched source controls identify what the valuation uses, component
+substitutions localize headroom, and exact-cost planning remains bounded by the
+frozen end-to-end result.
 
 Reviewer question: Is retrospective value converted into a better
 cost-constrained sensing decision?
 
 Evidence layer: main boundary and central adverse controls.
 
-Source data: canonical metrics, bound P12 substitution matrix, P13 planning
-summary, P16 feedback summary, and frozen P7 claim evidence.
+Source data: canonical metrics, P10 matched-control contrasts, bound P12
+substitution matrix, P13 planning summary, and frozen P7 claim evidence.
 
 Statistics / uncertainty: synchronized specimen-bootstrap intervals;
 specimen-first equal-domain aggregation; retrospective planners marked
 non-deployable.
 
-Figure prototype: three panels.
+Figure prototype: four coordinated panels in a 2-by-2 layout.
 
 Panel map:
 
-- (a) valuation, learned-planning, and true-value-planning substitution gains;
-- (b) current/beam/lookahead planning regret versus bounded near-oracle;
-- (c) feedback benefit and baseline-minus-MAVIS effects centered on zero.
+- (a) real-state and matched acquired-position/history, field-content, and
+  shuffled-content controls with adverse directions explicit;
+- (b) valuation, learned-planning, and true-value-planning substitutions;
+- (c) current, beam, and lookahead exact-cost planning regret;
+- (d) frozen method-minus-strongest-baseline boundary.
 
 Caption role: answer RQ3 as a boundary, not an end-to-end success claim.
 
 Manuscript placement: final evidence block of Section 5.
 
 Output formats and traceability: as Figure 1, using
-`figure4_actionability.csv`.
+`figure4_valuation_planning_realization.csv` plus alignment geometry.
 
 ## Table 1
 
@@ -177,18 +182,10 @@ teacher/oracle versus deployable information; aggregation; bootstrap.
 Output: CSV and booktabs LaTeX. No vertical rules and no invented scanner-time
 equivalence.
 
-## Table 2
+## Retired Table 2
 
-Artifact: Information hierarchy evidence table.
-
-Core claim: each hierarchy layer has a distinct question, comparison,
-uncertainty statement, evidence type, and bounded conclusion.
-
-Reviewer question: Which results support or bound each layer?
-
-Source data: `PAPER_CANONICAL_METRICS.csv` only.
-
-Table map: Layer; Question; Key comparison; Effect; 95% CI; Domains; Evidence
-type; Conclusion. Central adverse controls remain in the main table.
-
-Output: CSV and booktabs LaTeX with consistent precision and direction notes.
+The former information-hierarchy evidence table is not a manuscript or
+submission asset. Its internal generator may remain as provenance-only support,
+but its scientific content is carried by Figures 2--4, their captions, and the
+corresponding Section 5 text. No `table2_task_relevant_results.tex` file is
+materialized into the paper or deterministic package.

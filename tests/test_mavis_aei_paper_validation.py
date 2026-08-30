@@ -23,8 +23,8 @@ def test_aei_paper_validation_closes_claim_figure_table_contract() -> None:
     assert report.main_visible_claim_count == 27
     assert report.main_mapped_claim_count == 27
     assert report.combined_mapped_claim_count == 39
-    assert report.figure_count == 5
-    assert report.table_count == 2
+    assert report.figure_count == 4
+    assert report.table_count == 1
     assert report.section_count == 6
     assert report.semantic_errors == ()
 

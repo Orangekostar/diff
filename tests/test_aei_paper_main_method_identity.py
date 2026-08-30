@@ -70,7 +70,7 @@ EXPECTED_IDENTITY_ROWS = (
         "reconstruction oracle",
         "retrospective objective comparator",
         "ORACLE",
-        "reconstruction oracle",
+        "field-content reference oracle",
     ),
     (
         "acquired-position/history",
@@ -82,7 +82,7 @@ EXPECTED_IDENTITY_ROWS = (
         "reconstruction",
         "source control",
         "CONTROL",
-        "reconstruction control",
+        "field-content control",
     ),
     (
         "shuffled content",
@@ -106,6 +106,7 @@ def test_method_identity_ledger_declares_exact_scientific_roles() -> None:
         assert row in normalized
     assert "MAVIS is the proposed method" not in text
     assert "mvd_m1_o2 is a published competing method" not in text
+    assert "Frozen artifact identifiers retain the term `reconstruction`" in text
 
 
 def test_claim_visibility_map_covers_canonical_authority_once_in_order() -> None:
@@ -132,9 +133,10 @@ def test_claim_visibility_map_has_required_distribution_and_special_cases() -> N
     assert by_id["A3_FEEDBACK_BENEFIT"]["main_figure"] == "none"
     assert by_id["A3_FEEDBACK_BENEFIT"]["main_table"] == "none"
     assert by_id["A4_BASELINE_MINUS_MAVIS"]["visibility"] == "MAIN_SYSTEM_DIAGNOSTIC"
-    assert by_id["A4_BASELINE_MINUS_MAVIS"]["main_figure"] == "none"
+    assert by_id["A4_BASELINE_MINUS_MAVIS"]["main_figure"] == "figure4d"
     assert by_id["A4_BASELINE_MINUS_MAVIS"]["main_table"] == "none"
     assert by_id["A4_BASELINE_MINUS_MAVIS"]["main_section"] == "5.2.3"
+    assert {row["main_table"] for row in rows} == {"none"}
 
 
 def test_claim_visibility_map_preserves_evidence_identity() -> None:

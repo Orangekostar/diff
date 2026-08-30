@@ -25,17 +25,13 @@ _FIGURES = (
     "figure2_information_characterization.pdf",
     "figure3_state_conditioned_value.pdf",
     "figure4_valuation_planning_realization.pdf",
-    "figure5_task_specific_measurement_priorities.pdf",
 )
 
 _SUPPLEMENTARY_FIGURES = (
     "supplementary_figure_s1_cross_domain_state_priority_gallery.pdf",
 )
 
-_TABLES = (
-    "table1_case_protocol.tex",
-    "table2_task_relevant_results.tex",
-)
+_TABLES = ("table1_case_protocol.tex",)
 
 _LEGACY_FIGURES = (
     "figure1_information_hierarchy.pdf",
@@ -43,6 +39,7 @@ _LEGACY_FIGURES = (
     "figure3_observability.pdf",
     "figure4_actionability.pdf",
     "figure4_decision_calibration.pdf",
+    "figure5_task_specific_measurement_priorities.pdf",
 )
 
 _LEGACY_TABLES = (
@@ -50,6 +47,7 @@ _LEGACY_TABLES = (
     "table2_case_protocol.tex",
     "table3_hierarchy_evidence.tex",
     "table3_progressive_evidence_chain.tex",
+    "table2_task_relevant_results.tex",
 )
 
 _SUPPLEMENTARY_SOURCES = (
@@ -243,16 +241,9 @@ def materialize_paper_assets(root: Path) -> None:
 
 def _flat_manuscript(source: Path) -> str:
     text = source.read_text(encoding="utf-8")
-    return (
-        text.replace(r"\graphicspath{{figures/}}", r"\graphicspath{{./}}")
-        .replace(
-            r"\input{tables/table1_case_protocol.tex}",
-            r"\input{table1_case_protocol.tex}",
-        )
-        .replace(
-            r"\input{tables/table2_task_relevant_results.tex}",
-            r"\input{table2_task_relevant_results.tex}",
-        )
+    return text.replace(r"\graphicspath{{figures/}}", r"\graphicspath{{./}}").replace(
+        r"\input{tables/table1_case_protocol.tex}",
+        r"\input{table1_case_protocol.tex}",
     )
 
 

@@ -5,6 +5,7 @@ from __future__ import annotations
 import csv
 import hashlib
 import json
+import shutil
 from collections.abc import Iterable
 from dataclasses import dataclass
 from datetime import UTC, datetime
@@ -21,6 +22,7 @@ from matplotlib.axes import Axes
 from matplotlib.colors import TwoSlopeNorm
 from matplotlib.figure import Figure
 from matplotlib.patches import Rectangle
+from PIL import Image
 
 from cmc_bbdm.mavis.aei_paper_evidence import PaperMetric, build_canonical_metrics
 from cmc_bbdm.mavis.aei_paper_visual_assets import (
@@ -33,7 +35,6 @@ from cmc_bbdm.mavis.aei_paper_visual_assets import (
     gallery_specimen_roster,
     load_gallery_states,
     load_priority_state,
-    load_reconstructed_state,
     load_task_priority_maps,
 )
 from cmc_bbdm.mavis.nature_figure_alignment import (
@@ -297,77 +298,29 @@ def _figure2_rows(root: Path, metrics: dict[str, PaperMetric]) -> list[dict[str,
             series="Surface-to-field reduction",
         ),
         _derived_row(
-            sparse_gain,
-            panel="b",
-            series="Surface reference",
-            value=float(sparse_gain.reference_value),
-            metric_name="equal_domain_cai_ratio_mae",
-        ),
-        _derived_row(
             retention,
-            panel="b",
-            series="Full spatial field",
-            value=float(retention.reference_value),
-            metric_name="equal_domain_cai_ratio_mae",
-        ),
-        _derived_row(
-            retention,
-            panel="b",
+            panel="a",
             series="Sparse spatial field",
             value=float(retention.candidate_value),
             metric_name="equal_domain_cai_ratio_mae",
         ),
-        _effect_row(retention, panel="b", series="Registered gain retained"),
-        _effect_row(sparse_gain, panel="b", series="Surface-to-sparse reduction"),
-        _effect_row(sparse_gap, panel="b", series="Sparse-to-full gap"),
-        _effect_row(uniform, panel="b", series="Mechanical vs uniform"),
+        _effect_row(retention, panel="a", series="Registered gain retained"),
+        _effect_row(sparse_gain, panel="a", series="Surface-to-sparse reduction"),
+        _effect_row(sparse_gap, panel="a", series="Sparse-to-full gap"),
+        _effect_row(uniform, panel="c", series="Mechanical vs uniform"),
         _effect_row(
             reconstruction_oracle,
-            panel="b",
-            series="Mechanical vs reconstruction",
+            panel="c",
+            series="Mechanical vs field-content reference",
         ),
-        _effect_row(headroom, panel="b", series="Sequential headroom retained"),
-        _effect_row(oracle_cai, panel="b", series="CAI-specific oracle contrast"),
-        _effect_row(oracle_image, panel="b", series="Image-specific oracle contrast"),
+        _effect_row(headroom, panel="c", series="Sequential headroom retained"),
+        _effect_row(oracle_cai, panel="d", series="CAI-task priority specificity"),
+        _effect_row(
+            oracle_image,
+            panel="e",
+            series="Field-content priority specificity",
+        ),
     ]
-    teacher_metric = metrics["O2_TEACHER_TURNOVER"]
-    payload = _load_json(root, teacher_metric)
-    claim_by_key = {
-        "best_action_turnover": metrics["O2_TEACHER_TURNOVER"],
-        "rank_spearman": metrics["O2_TEACHER_RANK"],
-        "top_k_jaccard": metrics["O2_TEACHER_TOPK"],
-    }
-    for checkpoint in payload["teacher_by_checkpoint"]:
-        cost = float(checkpoint["current_checkpoint"])
-        for key, claim in claim_by_key.items():
-            rows.append(
-                _derived_row(
-                    claim,
-                    panel="c",
-                    series=f"{key}@{format(cost, '.6g')}",
-                    value=float(checkpoint[key]),
-                    metric_name=key,
-                )
-            )
-    rows.extend(
-        (
-            _effect_row(
-                metrics["O2_TEACHER_OPPORTUNITY"],
-                panel="c",
-                series="Final-state opportunity",
-            ),
-            _effect_row(
-                metrics["U5_RIDGE_HUBER_SPEARMAN"],
-                panel="d",
-                series="Ridge-Huber rank agreement",
-            ),
-            _effect_row(
-                metrics["U5_RIDGE_MLP_SPEARMAN"],
-                panel="d",
-                series="Ridge-MLP rank agreement",
-            ),
-        )
-    )
     rows.extend(
         (
             _source_row(
@@ -379,10 +332,10 @@ def _figure2_rows(root: Path, metrics: dict[str, PaperMetric]) -> list[dict[str,
             ),
             _source_row(
                 root,
-                panel="c",
-                series="c8-2 uniform 25 percent reconstruction",
-                metric="registered_state_reconstruction",
-                source_artifact=("results/mavis/p1_state_bank/state_manifest.parquet"),
+                panel="d-f",
+                series="c8-2 paired CAI and field-content priority maps",
+                metric="paired_oracle_priority_percentile",
+                source_artifact="results/mva/a2_oracle_value/oracle_values.parquet",
             ),
         )
     )
@@ -390,88 +343,61 @@ def _figure2_rows(root: Path, metrics: dict[str, PaperMetric]) -> list[dict[str,
 
 
 def _figure3_rows(root: Path, metrics: dict[str, PaperMetric]) -> list[dict[str, str]]:
-    rows = [
-        _effect_row(
-            metrics["O4_DYNAMIC_MINUS_STATIC"],
-            panel="a",
-            series="Conditional minus static regret",
-        ),
-        _effect_row(
-            metrics["O1_STATIC_SPEARMAN"], panel="a", series="Static value rank"
-        ),
-        _effect_row(metrics["O3_REAL_CHANGE"], panel="b", series="Real-state change"),
-    ]
-    positions = metrics["O3_REAL_MINUS_POSITIONS"]
-    reconstruction = metrics["O3_REAL_MINUS_RECONSTRUCTION"]
-    endpoint = next(
-        row
-        for row in _load_csv(root, positions)
-        if row["nominal_checkpoint"] == "0.25"
-        and row["control_mode"] == "positions_only"
-    )
-    endpoint_reconstruction = next(
-        row
-        for row in _load_csv(root, reconstruction)
-        if row["nominal_checkpoint"] == "0.25"
-        and row["control_mode"] == "reconstruction"
-    )
+    teacher_metric = metrics["O2_TEACHER_TURNOVER"]
+    payload = _load_json(root, teacher_metric)
+    claim_by_key = {
+        "best_action_turnover": metrics["O2_TEACHER_TURNOVER"],
+        "rank_spearman": metrics["O2_TEACHER_RANK"],
+        "top_k_jaccard": metrics["O2_TEACHER_TOPK"],
+    }
+    rows: list[dict[str, str]] = []
+    for checkpoint in payload["teacher_by_checkpoint"]:
+        cost = float(checkpoint["current_checkpoint"])
+        for key, claim in claim_by_key.items():
+            rows.append(
+                _derived_row(
+                    claim,
+                    panel="d",
+                    series=f"{key}@{format(cost, '.6g')}",
+                    value=float(checkpoint[key]),
+                    metric_name=key,
+                )
+            )
     rows.extend(
         (
-            _derived_row(
-                positions,
-                panel="b",
-                series="Measured content",
-                value=float(endpoint["real_equal_domain_mae"]),
-                metric_name="endpoint_equal_domain_cai_mae",
-            ),
-            _derived_row(
-                positions,
-                panel="b",
-                series="Acquired-position/history control",
-                value=float(endpoint["control_equal_domain_mae"]),
-                metric_name="endpoint_equal_domain_cai_mae",
-            ),
-            _derived_row(
-                reconstruction,
-                panel="b",
-                series="Reconstruction control",
-                value=float(endpoint_reconstruction["control_equal_domain_mae"]),
-                metric_name="endpoint_equal_domain_cai_mae",
-            ),
             _effect_row(
-                positions,
-                panel="c",
-                series="Measured minus acquired-position/history",
-            ),
-            _effect_row(
-                reconstruction, panel="c", series="Measured minus reconstruction"
-            ),
-            _effect_row(
-                metrics["O4_DYNAMIC_MINUS_SHUFFLED"],
-                panel="c",
-                series="Conditional minus shuffled regret",
-            ),
-        )
-    )
-    rows.extend(
-        (
-            _source_row(
-                root,
-                panel="b",
-                series="c8-2 initial teacher priority",
-                metric="strict_oof_teacher_value_map",
-                source_artifact="results/mavis/p3_dynamic_voi/action_scores.parquet",
-            ),
-            _source_row(
-                root,
-                panel="c",
-                series="c8-2 later teacher priority",
-                metric="strict_oof_teacher_value_map",
-                source_artifact="results/mavis/p3_dynamic_voi/action_scores.parquet",
-            ),
-            _source_row(
-                root,
+                metrics["O2_TEACHER_OPPORTUNITY"],
                 panel="d",
+                series="Final-state opportunity",
+            ),
+            _effect_row(
+                metrics["O4_DYNAMIC_MINUS_STATIC"],
+                panel="e",
+                series="Dynamic minus static regret",
+            ),
+            _effect_row(
+                metrics["O1_STATIC_SPEARMAN"], panel="e", series="Static value rank"
+            ),
+            _effect_row(
+                metrics["U5_RIDGE_HUBER_SPEARMAN"],
+                panel="f",
+                series="Ridge-Huber rank agreement",
+            ),
+            _effect_row(
+                metrics["U5_RIDGE_MLP_SPEARMAN"],
+                panel="f",
+                series="Ridge-MLP rank agreement",
+            ),
+            _source_row(
+                root,
+                panel="a-b",
+                series="c8-2 initial and updated teacher priority",
+                metric="strict_oof_teacher_value_map",
+                source_artifact="results/mavis/p3_dynamic_voi/action_scores.parquet",
+            ),
+            _source_row(
+                root,
+                panel="c",
                 series="c8-2 acquired-cell path",
                 metric="registered_acquisition_history",
                 source_artifact=("results/mavis/p1_state_bank/state_manifest.parquet"),
@@ -481,59 +407,82 @@ def _figure3_rows(root: Path, metrics: dict[str, PaperMetric]) -> list[dict[str,
     return rows
 
 
-def _figure4_rows(metrics: dict[str, PaperMetric]) -> list[dict[str, str]]:
+def _figure4_rows(root: Path, metrics: dict[str, PaperMetric]) -> list[dict[str, str]]:
+    positions = metrics["O3_REAL_MINUS_POSITIONS"]
+    field_content = metrics["O3_REAL_MINUS_RECONSTRUCTION"]
+    endpoint = next(
+        row
+        for row in _load_csv(root, positions)
+        if row["nominal_checkpoint"] == "0.25"
+        and row["control_mode"] == "positions_only"
+    )
+    field_endpoint = next(
+        row
+        for row in _load_csv(root, field_content)
+        if row["nominal_checkpoint"] == "0.25"
+        and row["control_mode"] == "reconstruction"
+    )
     return [
+        _effect_row(metrics["O3_REAL_CHANGE"], panel="a", series="Real-state change"),
+        _derived_row(
+            positions,
+            panel="a",
+            series="Measured state",
+            value=float(endpoint["real_equal_domain_mae"]),
+            metric_name="endpoint_equal_domain_cai_mae",
+        ),
+        _derived_row(
+            positions,
+            panel="a",
+            series="Acquired-position/history control",
+            value=float(endpoint["control_equal_domain_mae"]),
+            metric_name="endpoint_equal_domain_cai_mae",
+        ),
+        _derived_row(
+            field_content,
+            panel="a",
+            series="Field-content control",
+            value=float(field_endpoint["control_equal_domain_mae"]),
+            metric_name="endpoint_equal_domain_cai_mae",
+        ),
         _effect_row(
-            metrics["A1_VALUATION_SUBSTITUTION"], panel="a", series="Valuation"
+            positions,
+            panel="a",
+            series="Measured minus acquired-position/history",
+        ),
+        _effect_row(field_content, panel="a", series="Measured minus field-content"),
+        _effect_row(
+            metrics["O4_DYNAMIC_MINUS_SHUFFLED"],
+            panel="a",
+            series="Dynamic minus shuffled regret",
+        ),
+        _effect_row(
+            metrics["A1_VALUATION_SUBSTITUTION"], panel="b", series="Valuation"
         ),
         _effect_row(
             metrics["A1_LEARNED_PLANNING_SUBSTITUTION"],
-            panel="a",
+            panel="b",
             series="Bounded learned planning",
         ),
         _effect_row(
             metrics["A1_TRUE_VALUE_PLANNING_SUBSTITUTION"],
-            panel="a",
+            panel="b",
             series="True-value stronger planning",
         ),
         _effect_row(
             metrics["A2_GREEDY_PLANNING_REGRET"],
-            panel="b",
+            panel="c",
             series="Current greedy",
         ),
         _effect_row(
             metrics["A2_BEAM4_PLANNING_REGRET"],
-            panel="b",
+            panel="c",
             series="Beam width 4",
         ),
-    ]
-
-
-def _figure5_rows(root: Path, metrics: dict[str, PaperMetric]) -> list[dict[str, str]]:
-    return [
-        _source_row(
-            root,
-            panel="a",
-            series="c8-2 initial reconstruction",
-            metric="registered_state_reconstruction",
-            source_artifact="results/mavis/p1_state_bank/state_manifest.parquet",
-        ),
-        _source_row(
-            root,
-            panel="b-d",
-            series="c8-2 paired task-priority maps",
-            metric="paired_oracle_priority_percentile",
-            source_artifact="results/mva/a2_oracle_value/oracle_values.parquet",
-        ),
         _effect_row(
-            metrics["U4_ORACLE_CAI_SPECIFICITY"],
-            panel="b",
-            series="CAI-specific oracle contrast",
-        ),
-        _effect_row(
-            metrics["U4_ORACLE_IMAGE_SPECIFICITY"],
-            panel="c",
-            series="Image-specific oracle contrast",
+            metrics["A4_BASELINE_MINUS_MAVIS"],
+            panel="d",
+            series="Static reference minus learned implementation",
         ),
     ]
 
@@ -554,15 +503,13 @@ def build_figure_sources(root: Path, output_root: Path) -> dict[str, Path]:
         "figure1": _figure1_rows(root),
         "figure2": _figure2_rows(root, canonical),
         "figure3": _figure3_rows(root, canonical),
-        "figure4": _figure4_rows(canonical),
-        "figure5": _figure5_rows(root, canonical),
+        "figure4": _figure4_rows(root, canonical),
     }
     names = {
         "figure1": "figure1_task_relevant_acquisition_framework.csv",
         "figure2": "figure2_information_characterization.csv",
         "figure3": "figure3_state_conditioned_value.csv",
         "figure4": "figure4_valuation_planning_realization.csv",
-        "figure5": "figure5_task_specific_measurement_priorities.csv",
     }
     paths: dict[str, Path] = {}
     for figure_id, rows in rows_by_figure.items():
@@ -632,6 +579,7 @@ def _attach_alignment_contract(
 
 
 def _style_image_axis(ax: Axes) -> None:
+    ax.autoscale(enable=True, axis="both", tight=True)
     ax.set_xticks([])
     ax.set_yticks([])
     for spine in ax.spines.values():
@@ -657,6 +605,7 @@ def _draw_reconstruction(
             interpolation="nearest",
             aspect="auto",
         )
+    ax.set_aspect("equal", adjustable="datalim")
     _style_image_axis(ax)
 
 
@@ -686,6 +635,7 @@ def _draw_priority_overlay(
     )
     ax.set_xlim(0, reconstruction.image.shape[1] - 1)
     ax.set_ylim(reconstruction.image.shape[0] - 1, 0)
+    ax.set_aspect("equal", adjustable="datalim")
     _style_image_axis(ax)
     return image
 
@@ -763,456 +713,167 @@ def _render_figure1(rows: list[dict[str, str]]) -> Figure:
         color=_TEXT,
         va="top",
     )
+    bands = (
+        (0.025, 0.690, _USEFUL, "PART I - INFORMATION CHARACTERIZATION"),
+        (0.745, 0.230, _ACTIONABLE, "PART II\nSTATE-CONDITIONED ACQUISITION"),
+    )
+    for x, width, color, label in bands:
+        ax.add_patch(
+            Rectangle((x, 0.82), width, 0.07, facecolor=color, edgecolor=color)
+        )
+        ax.text(
+            x + width / 2,
+            0.855,
+            label,
+            ha="center",
+            va="center",
+            color="white",
+            fontsize=6.2 if width > 0.3 else 5.1,
+            fontweight="bold",
+            linespacing=1.25,
+        )
     stages = (
         (
-            0.03,
+            0.025,
             _USEFUL,
-            "PART I  INFORMATION CHARACTERIZATION",
-            "Spatial structure  |  sparse retention\nobjective and state conditioning",
-            "What information is valuable to acquire?",
+            "a",
+            "Complete sensing field",
+            "Information-rich field\n!= engineering decision",
         ),
         (
-            0.54,
+            0.265,
+            _OBSERVABLE,
+            "b",
+            "Limited sensing under exact cost",
+            "Only a legal subset\ncan be measured",
+        ),
+        (
+            0.505,
+            _USEFUL,
+            "c",
+            "Task-relevant value",
+            "Candidates differ in\ndownstream CAI value",
+        ),
+        (
+            0.745,
             _ACTIONABLE,
-            "PART II  STATE-CONDITIONED ACQUISITION",
-            "Legal-state value  |  matched controls\ncost-constrained set realization",
-            "How is value converted into a measurement set?",
+            "d",
+            "State-conditioned\nacquisition loop",
+            "I_t -> value -> legal action\n-> reveal -> I_{t+1}",
         ),
     )
-    for x, color, heading, question, evidence in stages:
+    for x, color, panel, heading, detail in stages:
         ax.add_patch(
-            Rectangle((x, 0.52), 0.43, 0.28, facecolor="white", edgecolor=color, lw=2)
+            Rectangle(
+                (x, 0.43),
+                0.21,
+                0.31,
+                facecolor="#FAFAFA",
+                edgecolor=color,
+                lw=1.5,
+            )
         )
-        ax.add_patch(Rectangle((x, 0.74), 0.43, 0.06, facecolor=color, edgecolor=color))
         ax.text(
-            x + 0.215,
-            0.77,
+            x + 0.014,
+            0.715,
+            panel,
+            ha="left",
+            va="center",
+            color=color,
+            fontsize=7.2,
+            fontweight="bold",
+        )
+        ax.text(
+            x + 0.105,
+            0.655,
             heading,
             ha="center",
             va="center",
-            color="white",
-            fontsize=6.0 if x > 0.5 else 6.6,
-            fontweight="bold",
-        )
-        ax.text(
-            x + 0.215,
-            0.645,
-            question,
-            ha="center",
-            va="center",
             color=_TEXT,
-            fontsize=8,
-            linespacing=1.35,
-        )
-        ax.text(
-            x + 0.215,
-            0.565,
-            evidence,
-            ha="center",
-            va="center",
-            color=_REFERENCE,
-            fontsize=6.8,
-        )
-    ax.annotate(
-        "",
-        xy=(0.535, 0.66),
-        xytext=(0.47, 0.66),
-        arrowprops={"arrowstyle": "-|>", "color": _REFERENCE, "lw": 1.4},
-    )
-    ax.text(
-        0.502,
-        0.825,
-        "state-conditioned transition",
-        ha="center",
-        fontsize=6.1,
-        color=_REFERENCE,
-    )
-    lanes = (
-        (
-            0.02,
-            0.26,
-            "Task-value characterization",
-            "registered outcomes and counterfactual\nmeasurement comparisons",
-            _USEFUL,
-        ),
-        (
-            0.35,
-            0.26,
-            "Legal partial state",
-            "metadata + acquired positions/content\n+ exact cost",
-            _OBSERVABLE,
-        ),
-        (
-            0.68,
-            0.26,
-            "Cost-aware acquisition rule",
-            "measurement-set selection within\nlegal state and exact cost",
-            _ACTIONABLE,
-        ),
-    )
-    for x, y, title, detail, color in lanes:
-        ax.add_patch(
-            Rectangle(
-                (x, y),
-                0.27,
-                0.14,
-                facecolor="#F7F7F7",
-                edgecolor=color,
-                lw=1.1,
-                linestyle="--",
-            )
-        )
-        ax.text(
-            x + 0.135,
-            y + 0.100,
-            title,
-            ha="center",
-            va="center",
-            fontsize=6.8,
+            fontsize=5.35 if panel == "b" else 5.7 if panel == "d" else 6.0,
             fontweight="bold",
-            color=_TEXT,
-            linespacing=0.9,
+            linespacing=1.25,
         )
         ax.text(
-            x + 0.135,
-            y + 0.032,
+            x + 0.105,
+            0.535,
             detail,
             ha="center",
             va="center",
-            fontsize=5.3,
             color=_REFERENCE,
-            linespacing=1.1,
+            fontsize=5.55,
+            linespacing=1.25,
         )
+    for left, right in ((0.235, 0.265), (0.475, 0.505), (0.715, 0.745)):
+        ax.annotate(
+            "",
+            xy=(right - 0.003, 0.585),
+            xytext=(left + 0.003, 0.585),
+            arrowprops={"arrowstyle": "-|>", "color": _REFERENCE, "lw": 1.2},
+        )
+    ax.axvline(0.73, ymin=0.15, ymax=0.78, color=_OBSERVABLE, lw=0.9, ls="--")
     ax.text(
-        0.5,
-        0.095,
-        "spatial information  ->  state-conditioned value  ->  cost-constrained sensing",
+        0.730,
+        0.115,
+        "legal-state boundary",
         ha="center",
         va="center",
-        fontsize=7.4,
+        fontsize=5.0,
+        color=_OBSERVABLE,
+    )
+    ax.add_patch(
+        Rectangle(
+            (0.025, 0.19),
+            0.690,
+            0.12,
+            facecolor="white",
+            edgecolor=_USEFUL,
+            lw=1.0,
+            linestyle="--",
+        )
+    )
+    ax.text(
+        0.370,
+        0.250,
+        "Retrospective teacher/oracle evidence | characterization only",
+        ha="center",
+        va="center",
+        fontsize=5.7,
         color=_USEFUL,
+        fontweight="bold",
+    )
+    ax.add_patch(
+        Rectangle(
+            (0.745, 0.19),
+            0.230,
+            0.12,
+            facecolor="white",
+            edgecolor=_ACTIONABLE,
+            lw=1.0,
+            linestyle="--",
+        )
+    )
+    ax.text(
+        0.860,
+        0.250,
+        "Deployable decision uses\nlegal state and exact cost only",
+        ha="center",
+        va="center",
+        fontsize=5.45,
+        color=_ACTIONABLE,
+        fontweight="bold",
+    )
+    ax.text(
+        0.5,
+        0.085,
+        "WHY: complete-field information is not the same as decision-relevant measurement value",
+        ha="center",
+        va="center",
+        fontsize=6.6,
+        color=_TEXT,
         fontweight="bold",
     )
     fig.subplots_adjust(left=0.01, right=0.99, bottom=0.04, top=0.98)
-    return fig
-
-
-def _render_figure2(rows: list[dict[str, str]]) -> Figure:
-    fig, axes = plt.subplots(
-        2,
-        2,
-        figsize=(7.2, 4.7),
-        gridspec_kw={"wspace": 0.38, "hspace": 0.42},
-    )
-    axes = axes.ravel()
-    ax = axes[0]
-    labels = ["Matched scalar", "Matched spatial field"]
-    values = [_float(_find(rows, label), "value") for label in labels]
-    ax.barh(
-        [1, 0],
-        values,
-        color=[_REFERENCE, _USEFUL],
-        edgecolor=_TEXT,
-        linewidth=0.5,
-        height=0.56,
-        hatch=["//", ""],
-    )
-    for y, value in zip((1, 0), values, strict=True):
-        ax.text(
-            value - 0.004,
-            y,
-            f"{value:.3f}",
-            ha="right",
-            va="center",
-            fontsize=7,
-            color="white",
-            fontweight="bold",
-        )
-    effect = _find(rows, "Registered MAE reduction")
-    ax.text(
-        0.004,
-        -0.72,
-        f"Reduction {float(effect['value']):.3f}\n95% CI [{float(effect['ci95_lower']):.3f}, {float(effect['ci95_upper']):.3f}]",
-        fontsize=6.5,
-        color=_TEXT,
-        va="center",
-    )
-    ax.set_yticks([1, 0], labels, fontsize=7)
-    ax.set_xlim(0, 0.21)
-    ax.set_ylim(-1.0, 1.55)
-    ax.set_xlabel("Equal-domain CAI-ratio MAE", fontsize=7)
-    _panel_title(ax, "a", "Matched morphology")
-    _clean_axis(ax)
-
-    ax = axes[1]
-    labels = ["Surface reference", "Full spatial field", "Sparse spatial field"]
-    values = [_float(_find(rows, label), "value") for label in labels]
-    colors = [_REFERENCE, _USEFUL, _USEFUL]
-    bars = ax.bar(
-        [0, 1, 2], values, color=colors, edgecolor=_TEXT, linewidth=0.5, width=0.65
-    )
-    bars[2].set_hatch("..")
-    for x, value in enumerate(values):
-        ax.text(x, value + 0.003, f"{value:.3f}", ha="center", fontsize=6.6)
-    retention = float(_find(rows, "Registered gain retained")["value"])
-    gap = _find(rows, "Sparse-to-full gap")
-    ax.text(
-        1.5,
-        0.198,
-        f"{retention * 100:.1f}% gain retained",
-        ha="center",
-        fontsize=6.6,
-        color=_USEFUL,
-        fontweight="bold",
-    )
-    ax.text(
-        1.5,
-        0.153,
-        f"Residual gap {float(gap['value']):.4f}\nCI [{float(gap['ci95_lower']):.4f}, {float(gap['ci95_upper']):.4f}]",
-        ha="center",
-        fontsize=5.8,
-        color=_ADVERSE,
-    )
-    ax.set_xticks([0, 1, 2], ["Surface", "Full", "Sparse"], fontsize=7)
-    ax.set_ylim(0.10, 0.205)
-    ax.set_ylabel("Equal-domain CAI-ratio MAE", fontsize=7)
-    _panel_title(ax, "b", "Sparse retention")
-    _clean_axis(ax, grid_axis="y")
-
-    ax = axes[2]
-    oracle_labels = ["Mechanical vs uniform", "Mechanical vs reconstruction"]
-    for y, (label, marker) in enumerate(zip(oracle_labels, ("o", "s"), strict=True)):
-        row = _find(rows, label)
-        value = float(row["value"])
-        low = float(row["ci95_lower"])
-        high = float(row["ci95_upper"])
-        ax.errorbar(
-            value,
-            y,
-            xerr=[[value - low], [high - value]],
-            fmt=marker,
-            color=_USEFUL,
-            ecolor=_USEFUL,
-            capsize=3,
-            ms=5,
-        )
-    ax.axvline(0, color=_REFERENCE, lw=0.7)
-    ax.set_yticks([0, 1], ["vs uniform", "vs reconstruction"], fontsize=6.5)
-    ax.set_xlabel("Mechanical-oracle CAI-AUEBC improvement", fontsize=6.5)
-    retained = float(_find(rows, "Sequential headroom retained")["value"])
-    ax.text(
-        0.98,
-        0.08,
-        f"{retained * 100:.1f}% of sequential headroom retained",
-        transform=ax.transAxes,
-        ha="right",
-        fontsize=6.2,
-        color=_REFERENCE,
-    )
-    _panel_title(ax, "c", "Spatial heterogeneity")
-    _clean_axis(ax)
-
-    ax = axes[3]
-    ax.axis("off")
-    _panel_title(ax, "d", "Objective conditioning")
-    cai = _find(rows, "CAI-specific oracle contrast")
-    image = _find(rows, "Image-specific oracle contrast")
-    learned = _find(rows, "Learned global-mask separation")
-    blocks = (
-        (
-            0.86,
-            _USEFUL,
-            "CAI objective",
-            f"Mechanics oracle benefit\n{float(cai['value']):.4f}  [{float(cai['ci95_lower']):.4f}, {float(cai['ci95_upper']):.4f}]",
-        ),
-        (
-            0.55,
-            _OBSERVABLE,
-            "Image objective",
-            f"Reconstruction oracle benefit\n{float(image['value']):.6f}  [{float(image['ci95_lower']):.6f}, {float(image['ci95_upper']):.6f}]",
-        ),
-        (
-            0.29,
-            _ADVERSE,
-            "Learned global masks",
-            "Oracle separation not reproduced"
-            if float(learned["value"]) == 0
-            else "Separation reproduced",
-        ),
-    )
-    for y, color, title, detail in blocks:
-        ax.add_patch(
-            Rectangle(
-                (0.02, y - 0.19),
-                0.96,
-                0.22,
-                transform=ax.transAxes,
-                facecolor="white",
-                edgecolor=color,
-                lw=1.3,
-                hatch="//" if color == _ADVERSE else None,
-            )
-        )
-        ax.text(
-            0.06,
-            y - 0.04,
-            title,
-            transform=ax.transAxes,
-            fontsize=7.2,
-            fontweight="bold",
-            color=color,
-            va="center",
-        )
-        ax.text(
-            0.06,
-            y - 0.13,
-            detail,
-            transform=ax.transAxes,
-            fontsize=5.6,
-            color=_TEXT,
-            va="center",
-        )
-    ax.text(
-        0.04,
-        0.0,
-        "Oracle rows are retrospective, not deployable.",
-        transform=ax.transAxes,
-        fontsize=6.3,
-        color=_REFERENCE,
-    )
-    return fig
-
-
-def _render_figure3(rows: list[dict[str, str]]) -> Figure:
-    fig, axes = plt.subplots(1, 3, figsize=(7.2, 3.05), gridspec_kw={"wspace": 0.48})
-    ax = axes[1]
-    regrets = [
-        (label, float(_find(rows, label)["value"]))
-        for label in ("Static scorer", "Global reference", "Random reference")
-    ]
-    ax.barh(
-        [2, 1, 0],
-        [value for _, value in regrets],
-        color=[_OBSERVABLE, _REFERENCE, _REFERENCE],
-        edgecolor=_TEXT,
-        linewidth=0.4,
-        height=0.55,
-        hatch=["", "//", ".."],
-    )
-    ax.set_yticks(
-        [2, 1, 0],
-        [label.replace(" reference", "") for label, _ in regrets],
-        fontsize=6.2,
-    )
-    ax.set_xlim(0, 0.09)
-    ax.set_ylim(-0.5, 5.0)
-    dynamic = _find(rows, "Conditional minus static regret")
-    ax.set_xlabel(
-        f"Exact-budget set regret\nDynamic - static: {float(dynamic['value']):.4f}",
-        fontsize=6.5,
-    )
-    _panel_title(ax, "b", "Static to dynamic")
-    _clean_axis(ax)
-
-    rank = _find(rows, "Static value rank")
-    estimate = float(rank["value"])
-    low = float(rank["ci95_lower"])
-    high = float(rank["ci95_upper"])
-    inset = ax.inset_axes([0.04, 0.67, 0.92, 0.20])
-    inset.errorbar(
-        estimate,
-        0,
-        xerr=[[estimate - low], [high - estimate]],
-        fmt="s",
-        color=_OBSERVABLE,
-        ecolor=_UNCERTAINTY,
-        capsize=3,
-        ms=4,
-    )
-    inset.axvline(0, color=_REFERENCE, lw=0.7)
-    inset.set_xlim(-0.12, 0.12)
-    inset.set_ylim(-0.5, 0.5)
-    inset.set_yticks([0], ["Strict-OOF rank"], fontsize=5.5)
-    inset.set_xlabel("Spearman correlation", fontsize=5.8, labelpad=1)
-    inset.tick_params(labelsize=5.5, length=2)
-    inset.spines[["top", "right"]].set_visible(False)
-    ax = axes[0]
-    metric_specs = (
-        ("best_action_turnover", "Turnover", _OBSERVABLE, "s", "--"),
-        ("rank_spearman", "Rank agreement", _REFERENCE, "o", "-"),
-        ("top_k_jaccard", "Top-5 overlap", _USEFUL, "^", ":"),
-    )
-    for metric_name, label, color, marker, linestyle in metric_specs:
-        selected = [
-            row for row in rows if row["panel"] == "a" and row["metric"] == metric_name
-        ]
-        x = np.asarray([float(row["series"].split("@")[1]) * 100 for row in selected])
-        y = np.asarray([float(row["value"]) for row in selected])
-        ax.plot(
-            x,
-            y,
-            label=label,
-            color=color,
-            marker=marker,
-            linestyle=linestyle,
-            linewidth=1.2,
-            markersize=4,
-        )
-    ax.set_xlabel("Acquired normalized cost (%)", fontsize=7)
-    ax.set_ylabel("Teacher-state diagnostic", fontsize=7)
-    ax.set_ylim(0.25, 0.76)
-    ax.legend(frameon=False, fontsize=5.8, loc="best", handlelength=2.3)
-    _panel_title(ax, "a", "Value evolves with state")
-    _clean_axis(ax, grid_axis="y")
-
-    ax = axes[2]
-    ax.set_frame_on(False)
-    ax.set_xticks([])
-    ax.set_yticks([])
-    _panel_title(ax, "c", "Content controls")
-    labels = [
-        "Measured content",
-        "Acquired-position/history control",
-        "Reconstruction control",
-    ]
-    values = [float(_find(rows, label)["value"]) for label in labels]
-    mae_ax = ax.inset_axes([0.02, 0.46, 0.96, 0.48])
-    bars = mae_ax.bar(
-        [0, 1, 2],
-        values,
-        color=[_OBSERVABLE, _REFERENCE, _REFERENCE],
-        edgecolor=_TEXT,
-        linewidth=0.5,
-        width=0.66,
-    )
-    bars[1].set_hatch("//")
-    bars[2].set_hatch("..")
-    mae_ax.set_xticks([0, 1, 2], ["Real", "History", "Recon."], fontsize=5.8)
-    mae_ax.set_ylim(0.08, 0.14)
-    mae_ax.set_ylabel("Endpoint CAI MAE", fontsize=6)
-    _clean_axis(mae_ax, grid_axis="y")
-    inset = ax.inset_axes([0.12, 0.05, 0.84, 0.25])
-    controls = [("Conditional minus shuffled regret", _ADVERSE, "x")]
-    for y, (label, color, marker) in enumerate(controls):
-        row = _find(rows, label)
-        value = float(row["value"]) * 1000
-        low = float(row["ci95_lower"]) * 1000
-        high = float(row["ci95_upper"]) * 1000
-        inset.errorbar(
-            value,
-            y,
-            xerr=[[value - low], [high - value]],
-            fmt=marker,
-            color=color,
-            ecolor=color,
-            capsize=2,
-            ms=4,
-        )
-    inset.axvline(0, color=_REFERENCE, lw=0.7)
-    inset.set_yticks([0], ["real - shuffled"], fontsize=5.2)
-    inset.set_xlabel("Regret contrast (×10³)", fontsize=5.5)
-    inset.tick_params(labelsize=5.2, length=1.5)
-    inset.spines[["top", "right"]].set_visible(False)
     return fig
 
 
@@ -1255,450 +916,10 @@ def _forest(
     ax.axvline(0, color=_REFERENCE, lw=0.8)
 
 
-def _render_figure4(rows: list[dict[str, str]]) -> Figure:
-    fig, axes = plt.subplots(1, 3, figsize=(7.2, 3.05), gridspec_kw={"wspace": 0.55})
-    ax = axes[0]
-    labels = ["Valuation", "Bounded learned planning", "True-value stronger planning"]
-    _forest(
-        ax,
-        rows,
-        labels,
-        scale=10000,
-        colors=[_USEFUL, _ACTIONABLE, _USEFUL],
-        markers=["o", "s", "D"],
-    )
-    ax.set_xlabel("Retrospective CAI-AUEBC improvement (×10⁴)", fontsize=6.5)
-    _panel_title(ax, "a", "Component substitutions")
-    _clean_axis(ax, grid_axis="x")
-
-    ax = axes[1]
-    labels = [
-        "Current greedy",
-        "Beam width 2",
-        "Beam width 4",
-        "Two-step lookahead",
-        "Bounded near-oracle",
-    ]
-    _forest(
-        ax,
-        rows,
-        labels,
-        scale=10000,
-        colors=[_REFERENCE, _ACTIONABLE, _ACTIONABLE, _ACTIONABLE, _USEFUL],
-        markers=["o", "s", "D", "^", "*"],
-        display_labels=[
-            "Current greedy",
-            "Beam 2",
-            "Beam 4",
-            "Two-step",
-            "Near-oracle*",
-        ],
-    )
-    ax.set_xlabel("Bounded set-planning regret (×10⁴)", fontsize=6.5)
-    _panel_title(ax, "b", "Planning boundary")
-    _clean_axis(ax, grid_axis="x")
-    ax.text(
-        0.02,
-        -0.20,
-        "Near-oracle is retrospective.",
-        transform=ax.transAxes,
-        fontsize=5.8,
-        color=_REFERENCE,
-    )
-
-    ax = axes[2]
-    labels = ["Feedback", "Baseline - learned"]
-    _forest(
-        ax, rows, labels, scale=10000, colors=[_ADVERSE, _ADVERSE], markers=["x", "D"]
-    )
-    ax.set_xlabel("CAI-AUEBC effect (×10⁴)", fontsize=6.5)
-    _panel_title(ax, "c", "Deployable boundary")
-    _clean_axis(ax, grid_axis="x")
-    ax.text(
-        0.02,
-        -0.22,
-        "Negative favors no-feedback / reference",
-        transform=ax.transAxes,
-        fontsize=5.5,
-        color=_REFERENCE,
-    )
-    return fig
-
-
-def _render_figure2_reframed(rows: list[dict[str, str]]) -> Figure:
-    fig, axes = plt.subplots(
-        2,
-        2,
-        figsize=(7.2, 4.7),
-        gridspec_kw={"wspace": 0.42, "hspace": 0.58},
-    )
-    axes = axes.ravel()
-
-    ax = axes[0]
-    labels = ["Matched scalar", "Matched spatial field", "Sparse spatial field"]
-    values = [_float(_find(rows, label), "value") for label in labels]
-    bars = ax.barh(
-        [2, 1, 0],
-        values,
-        color=[_REFERENCE, _USEFUL, _USEFUL],
-        edgecolor=_TEXT,
-        linewidth=0.5,
-        height=0.58,
-    )
-    bars[0].set_hatch("//")
-    bars[2].set_hatch("..")
-    for y, value in zip((2, 1, 0), values, strict=True):
-        ax.text(
-            value - 0.004,
-            y,
-            f"{value:.3f}",
-            ha="right",
-            va="center",
-            fontsize=6.5,
-            color="white",
-            fontweight="bold",
-        )
-    retention = float(_find(rows, "Registered gain retained")["value"])
-    ax.text(
-        0.98,
-        0.06,
-        f"{retention * 100:.1f}% of full-field gain retained",
-        transform=ax.transAxes,
-        ha="right",
-        fontsize=6.2,
-        color=_TEXT,
-        fontweight="bold",
-        bbox={"facecolor": "white", "edgecolor": "none", "pad": 1.5},
-    )
-    ax.set_yticks([2, 1, 0], ["Scalar", "Full field", "25% sparse"], fontsize=6.5)
-    ax.set_xlim(0, 0.21)
-    ax.set_xlabel("Equal-domain CAI-ratio MAE", fontsize=7)
-    _panel_title(ax, "a", "Spatial information and sparse recovery")
-    _clean_axis(ax, grid_axis="x")
-
-    ax = axes[1]
-    ax.axis("off")
-    _panel_title(ax, "b", "Task-conditioned spatial value")
-    task_rows = (
-        ("Mechanical vs uniform", "Mechanical vs uniform", _USEFUL, ".4f"),
-        (
-            "Mechanical vs reconstruction",
-            "Mechanical vs reconstruction",
-            _USEFUL,
-            ".4f",
-        ),
-        ("CAI-specific oracle contrast", "CAI task contrast", _OBSERVABLE, ".4f"),
-        ("Image-specific oracle contrast", "Image task contrast", _ACTIONABLE, ".6f"),
-    )
-    for index, (series, label, color, number_format) in enumerate(task_rows):
-        row = _find(rows, series)
-        y = 0.84 - index * 0.22
-        ax.add_patch(
-            Rectangle(
-                (0.02, y - 0.13),
-                0.96,
-                0.17,
-                transform=ax.transAxes,
-                facecolor="white",
-                edgecolor=color,
-                lw=1.1,
-            )
-        )
-        ax.text(
-            0.06,
-            y - 0.01,
-            label,
-            transform=ax.transAxes,
-            fontsize=6.8,
-            fontweight="bold",
-            color=color,
-            va="center",
-        )
-        value = format(float(row["value"]), number_format)
-        ax.text(
-            0.94,
-            y - 0.01,
-            value,
-            transform=ax.transAxes,
-            fontsize=7.2,
-            color=_TEXT,
-            ha="right",
-            va="center",
-        )
-        ax.text(
-            0.94,
-            y - 0.08,
-            f"95% CI [{format(float(row['ci95_lower']), number_format)}, {format(float(row['ci95_upper']), number_format)}]",
-            transform=ax.transAxes,
-            fontsize=5.3,
-            color=_REFERENCE,
-            ha="right",
-            va="center",
-        )
-    headroom = float(_find(rows, "Sequential headroom retained")["value"])
-    ax.text(
-        0.04,
-        -0.09,
-        f"One-shot mechanics retains {headroom * 100:.1f}% of sequential headroom; all oracle rows are retrospective.",
-        transform=ax.transAxes,
-        fontsize=5.8,
-        color=_REFERENCE,
-        clip_on=False,
-    )
-
-    ax = axes[2]
-    metric_specs = (
-        ("best_action_turnover", "Best-action turnover", _OBSERVABLE, "s", "--"),
-        ("rank_spearman", "Rank agreement", _REFERENCE, "o", "-"),
-        ("top_k_jaccard", "Top-5 overlap", _USEFUL, "^", ":"),
-    )
-    for metric_name, label, color, marker, linestyle in metric_specs:
-        selected = [
-            row for row in rows if row["panel"] == "c" and row["metric"] == metric_name
-        ]
-        x = np.asarray([float(row["series"].split("@")[1]) * 100 for row in selected])
-        y = np.asarray([float(row["value"]) for row in selected])
-        ax.plot(
-            x,
-            y,
-            label=label,
-            color=color,
-            marker=marker,
-            linestyle=linestyle,
-            linewidth=1.2,
-            markersize=4,
-        )
-    opportunity = float(_find(rows, "Final-state opportunity")["value"])
-    ax.text(
-        0.98,
-        0.06,
-        f"Final opportunity {opportunity:.5f}",
-        transform=ax.transAxes,
-        ha="right",
-        fontsize=6.0,
-        color=_OBSERVABLE,
-    )
-    ax.set_xlabel("Acquired normalized cost (%)", fontsize=7)
-    ax.set_ylabel("Teacher-state diagnostic", fontsize=7)
-    ax.set_ylim(0.25, 0.76)
-    ax.legend(frameon=False, fontsize=5.6, loc="best", handlelength=2.2)
-    _panel_title(ax, "c", "Value changes with evidence")
-    _clean_axis(ax, grid_axis="y")
-
-    ax = axes[3]
-    labels = ["Ridge-Huber rank agreement", "Ridge-MLP rank agreement"]
-    _forest(
-        ax,
-        rows,
-        labels,
-        scale=1,
-        colors=[_ACTIONABLE, _ADVERSE],
-        markers=["o", "s"],
-        display_labels=["Ridge-Huber", "Ridge-MLP"],
-    )
-    ax.set_xlim(0, 0.9)
-    ax.set_xlabel("Strict-OOF action-value Spearman", fontsize=6.7)
-    ax.text(
-        0.02,
-        0.48,
-        "Full-state MAE: Ridge 0.08964 | Huber 0.08618 | MLP 0.15067",
-        transform=ax.transAxes,
-        fontsize=5.6,
-        color=_REFERENCE,
-    )
-    _panel_title(ax, "d", "Predictor-conditioned value")
-    _clean_axis(ax, grid_axis="x")
-    return fig
-
-
-def _render_figure3_reframed(rows: list[dict[str, str]]) -> Figure:
-    fig, axes = plt.subplots(1, 3, figsize=(7.2, 3.05), gridspec_kw={"wspace": 0.58})
-
-    ax = axes[0]
-    ax.axis("off")
-    _panel_title(ax, "a", "State-conditioned value")
-
-    dynamic = _find(rows, "Conditional minus static regret")
-    value = float(dynamic["value"]) * 1000
-    low = float(dynamic["ci95_lower"]) * 1000
-    high = float(dynamic["ci95_upper"]) * 1000
-    dynamic_ax = ax.inset_axes([0.05, 0.58, 0.92, 0.27])
-    dynamic_ax.errorbar(
-        value,
-        0,
-        xerr=[[value - low], [high - value]],
-        fmt="o",
-        color=_OBSERVABLE,
-        ecolor=_OBSERVABLE,
-        capsize=3,
-        ms=5,
-    )
-    dynamic_ax.axvline(0, color=_REFERENCE, lw=0.7)
-    dynamic_ax.set_yticks([0], ["Dynamic - static"], fontsize=5.2)
-    dynamic_ax.set_xlim(-2.6, 0.4)
-    dynamic_ax.set_xlabel("One-step regret (x10^3)", fontsize=5.4, labelpad=1)
-    dynamic_ax.tick_params(labelsize=5.0, length=2)
-    dynamic_ax.spines[["top", "right"]].set_visible(False)
-    ax.text(
-        0.03,
-        0.41,
-        "Negative regret favors dynamic valuation",
-        transform=ax.transAxes,
-        fontsize=5.6,
-        color=_OBSERVABLE,
-    )
-
-    rank = _find(rows, "Static value rank")
-    rvalue = float(rank["value"])
-    rlow = float(rank["ci95_lower"])
-    rhigh = float(rank["ci95_upper"])
-    rank_ax = ax.inset_axes([0.05, 0.12, 0.92, 0.24])
-    rank_ax.errorbar(
-        rvalue,
-        0,
-        xerr=[[rvalue - rlow], [rhigh - rvalue]],
-        fmt="s",
-        color=_REFERENCE,
-        ecolor=_UNCERTAINTY,
-        capsize=3,
-        ms=4,
-    )
-    rank_ax.axvline(0, color=_REFERENCE, lw=0.7)
-    rank_ax.set_xlim(-0.12, 0.12)
-    rank_ax.set_yticks([0], ["Static scorer"], fontsize=5.2)
-    rank_ax.set_xlabel("Action-value Spearman", fontsize=5.4, labelpad=1)
-    rank_ax.tick_params(labelsize=5.0, length=2)
-    rank_ax.spines[["top", "right"]].set_visible(False)
-
-    ax = axes[1]
-    labels = [
-        "Measured content",
-        "Acquired-position/history control",
-        "Reconstruction control",
-    ]
-    values = [float(_find(rows, label)["value"]) for label in labels]
-    bars = ax.bar(
-        [0, 1, 2],
-        values,
-        color=[_OBSERVABLE, _REFERENCE, _REFERENCE],
-        edgecolor=_TEXT,
-        linewidth=0.5,
-        width=0.66,
-    )
-    bars[1].set_hatch("//")
-    bars[2].set_hatch("..")
-    ax.set_xticks([0, 1, 2], ["Real", "History", "Recon."], fontsize=5.9)
-    ax.set_ylim(0.08, 0.14)
-    ax.set_ylabel("Endpoint CAI MAE", fontsize=6.5)
-    change = _find(rows, "Real-state change")
-    ax.text(
-        0.98,
-        0.95,
-        f"Real-state change {float(change['value']):.6f}",
-        transform=ax.transAxes,
-        ha="right",
-        va="top",
-        fontsize=5.7,
-        color=_OBSERVABLE,
-    )
-    _panel_title(ax, "b", "Matched source controls")
-    _clean_axis(ax, grid_axis="y")
-
-    ax = axes[2]
-    labels = [
-        "Measured minus acquired-position/history",
-        "Measured minus reconstruction",
-    ]
-    _forest(
-        ax,
-        rows,
-        labels,
-        scale=1,
-        colors=[_ADVERSE, _ADVERSE],
-        markers=["o", "s"],
-        display_labels=["Real - history", "Real - recon."],
-    )
-    ax.axvline(0, color=_REFERENCE, lw=0.7)
-    ax.set_xlabel("Endpoint CAI-MAE contrast", fontsize=6.5)
-    shuffled = _find(rows, "Conditional minus shuffled regret")
-    ax.text(
-        0.03,
-        -0.23,
-        f"Real - shuffled regret: {float(shuffled['value']):.6f}\n95% CI [{float(shuffled['ci95_lower']):.6f}, {float(shuffled['ci95_upper']):.6f}]",
-        transform=ax.transAxes,
-        fontsize=5.4,
-        color=_ADVERSE,
-    )
-    _panel_title(ax, "c", "Attribution boundary")
-    _clean_axis(ax, grid_axis="x")
-    return fig
-
-
-def _render_figure4_reframed(rows: list[dict[str, str]]) -> Figure:
-    fig, axes = plt.subplots(
-        1, 2, figsize=(_FULL_WIDTH_IN, 2.9), gridspec_kw={"wspace": 0.48}
-    )
-    ax = axes[0]
-    labels = ["Valuation", "Bounded learned planning", "True-value stronger planning"]
-    _forest(
-        ax,
-        rows,
-        labels,
-        scale=10000,
-        colors=[_USEFUL, _ACTIONABLE, _USEFUL],
-        markers=["o", "s", "D"],
-        display_labels=["Valuation", "Learned planning", "True-value planning"],
-    )
-    ax.set_xlabel("Retrospective CAI-AUEBC improvement (x10^4)", fontsize=6.8)
-    _panel_title(ax, "a", "Valuation and planning substitutions")
-    _clean_axis(ax, grid_axis="x")
-
-    ax = axes[1]
-    labels = ["Current greedy", "Beam width 4"]
-    _forest(
-        ax,
-        rows,
-        labels,
-        scale=10000,
-        colors=[_REFERENCE, _ACTIONABLE],
-        markers=["o", "D"],
-        display_labels=["Current greedy", "Beam width 4"],
-    )
-    ax.set_xlabel("Reachable-set planning regret (x10^4)", fontsize=6.8)
-    ax.text(
-        0.08,
-        0.48,
-        "Reference: retrospective\njoint near-oracle set",
-        transform=ax.transAxes,
-        fontsize=5.5,
-        color=_REFERENCE,
-    )
-    _panel_title(ax, "b", "Cost-constrained set realization")
-    _clean_axis(ax)
-    fig.subplots_adjust(left=0.18, right=0.985, bottom=0.22, top=0.88, wspace=0.52)
-    _attach_alignment_contract(
-        fig,
-        list(axes),
-        ["a", "b"],
-        row_groups=[["a", "b"]],
-    )
-    return fig
-
-
 def _render_figure2_nature(root: Path, rows: list[dict[str, str]]) -> Figure:
-    initial = load_reconstructed_state(
-        root,
-        specimen_id=REPRESENTATIVE_SPECIMEN,
-        method=REPRESENTATIVE_METHOD,
-        checkpoint=INITIAL_CHECKPOINT,
-    )
-    sparse = load_reconstructed_state(
-        root,
-        specimen_id=REPRESENTATIVE_SPECIMEN,
-        method="uniform",
-        checkpoint=0.25,
-    )
-    fig, axes_grid = plt.subplots(2, 3, figsize=(_FULL_WIDTH_IN, 5.05))
+    priorities = load_task_priority_maps(root, specimen_id=REPRESENTATIVE_SPECIMEN)
+    state = priorities.reconstruction
+    fig, axes_grid = plt.subplots(2, 3, figsize=(_FULL_WIDTH_IN, 5.15))
     axes = list(axes_grid.ravel())
 
     ax = axes[0]
@@ -1710,52 +931,33 @@ def _render_figure2_nature(root: Path, rows: list[dict[str, str]]) -> Figure:
     ax.scatter(values, y, c=colors, s=30, zorder=3, edgecolors=_PAPER_WHITE, lw=0.5)
     for yi, value in zip(y, values, strict=True):
         ax.text(value + 0.002, yi, f"{value:.3f}", va="center", fontsize=6.2)
-    retention = float(_find(rows, "Registered gain retained")["value"])
+    reduction = 100 * (values[0] - values[1]) / values[0]
+    retention = 100 * float(_find(rows, "Registered gain retained")["value"])
+    gap = float(_find(rows, "Sparse-to-full gap")["value"])
     ax.text(
         0.98,
-        0.08,
-        f"{100 * retention:.1f}% full-field gain retained",
+        0.58,
+        f"{reduction:.1f}% MAE reduction\n{retention:.1f}% of full-field gain retained\n"
+        f"Sparse-to-full gap {gap:.5f}",
         transform=ax.transAxes,
         ha="right",
-        fontsize=5.8,
+        fontsize=5.35,
         color=_OBSERVABLE,
         fontweight="bold",
     )
     ax.set_yticks(y, ["Scalar", "Full field", "25% sparse"], fontsize=6.1)
     ax.set_xlim(0.118, 0.208)
     ax.set_ylim(-0.55, 2.55)
-    ax.set_xlabel("Equal-domain CAI-ratio MAE", fontsize=6.6)
-    _panel_title(ax, "a", "Spatial gain and retention")
+    ax.set_xlabel("Equal-domain CAI-ratio MAE (lower is better)", fontsize=6.1)
+    _panel_title(ax, "a", "Spatial gain and sparse retention")
     _clean_axis(ax)
 
     ax = axes[1]
-    _draw_reconstruction(ax, initial, show_measurements=True)
-    ax.text(
-        0.03,
-        0.04,
-        f"{initial.exact_acquired_cost:,} measured pixels",
-        transform=ax.transAxes,
-        color=_PAPER_WHITE,
-        fontsize=5.8,
-        fontweight="bold",
-    )
-    _panel_title(ax, "b", "Initial scout | 3.13%")
+    _draw_reconstruction(ax, state, show_measurements=True)
+    _panel_title(ax, "b", "Initial legal state | 3.13%")
 
     ax = axes[2]
-    _draw_reconstruction(ax, sparse, show_measurements=True)
-    ax.text(
-        0.03,
-        0.04,
-        f"{sparse.exact_acquired_cost:,} measured pixels",
-        transform=ax.transAxes,
-        color=_PAPER_WHITE,
-        fontsize=5.8,
-        fontweight="bold",
-    )
-    _panel_title(ax, "c", "Uniform sparse | 25%")
-
-    ax = axes[3]
-    task_labels = ["Mechanical vs uniform", "Mechanical vs reconstruction"]
+    task_labels = ["Mechanical vs uniform", "Mechanical vs field-content reference"]
     _forest(
         ax,
         rows,
@@ -1763,93 +965,77 @@ def _render_figure2_nature(root: Path, rows: list[dict[str, str]]) -> Figure:
         scale=1000,
         colors=[_USEFUL, _USEFUL],
         markers=["o", "s"],
-        display_labels=["Uniform", "Reconstruction"],
+        display_labels=["vs uniform", "field-content"],
     )
     ax.set_xlim(2.2, 5.5)
     ax.set_ylim(-0.8, 1.6)
     ax.set_xlabel("CAI-AUEBC improvement (x10^3)", fontsize=6.4)
-    cai = float(_find(rows, "CAI-specific oracle contrast")["value"])
-    image = float(_find(rows, "Image-specific oracle contrast")["value"])
+    headroom = 100 * float(_find(rows, "Sequential headroom retained")["value"])
     ax.text(
         0.02,
         0.06,
-        f"Cross-objective\nCAI {cai:.5f} | RGB MSE {image:.3e}",
+        f"{headroom:.1f}% of sequential-oracle headroom\nRetrospective; non-deployable",
         transform=ax.transAxes,
-        fontsize=5.25,
+        fontsize=5.2,
         color=_REFERENCE,
     )
-    _panel_title(ax, "d", "Task-conditioned opportunity")
+    _panel_title(ax, "c", "Heterogeneous\nspatial opportunity")
     _clean_axis(ax)
+
+    ax = axes[3]
+    priority_image = _draw_priority_overlay(
+        ax, state, priorities.mechanical_percentiles
+    )
+    _outline_top_cells(ax, state, priorities.mechanical_percentiles)
+    _panel_title(ax, "d", "CAI-task priority")
 
     ax = axes[4]
-    metric_specs = (
-        ("best_action_turnover", "Best-action turnover", _OBSERVABLE, "s", "--"),
-        ("rank_spearman", "Rank agreement", _REFERENCE, "o", "-"),
-        ("top_k_jaccard", "Top-5 overlap", _USEFUL, "^", ":"),
-    )
-    direct_labels = {
-        "best_action_turnover": "Turnover",
-        "rank_spearman": "Rank",
-        "top_k_jaccard": "Top-5",
-    }
-    for metric_name, label, color, marker, linestyle in metric_specs:
-        selected = [
-            row for row in rows if row["panel"] == "c" and row["metric"] == metric_name
-        ]
-        x = np.asarray([float(row["series"].split("@")[1]) * 100 for row in selected])
-        values = np.asarray([float(row["value"]) for row in selected])
-        ax.plot(
-            x,
-            values,
-            label=label,
-            color=color,
-            marker=marker,
-            linestyle=linestyle,
-            linewidth=1.15,
-            markersize=3.5,
-        )
-        ax.text(
-            x[-1] + 0.45,
-            values[-1],
-            direct_labels[metric_name],
-            color=color,
-            fontsize=5.1,
-            va="center",
-        )
-    ax.set_xlabel("Acquired normalized cost (%)", fontsize=6.5)
-    ax.set_ylabel("Teacher-state diagnostic", fontsize=6.5)
-    ax.set_ylim(0.25, 0.76)
-    ax.set_xlim(5.5, 23.5)
-    _panel_title(ax, "e", "Value evolves with state")
-    _clean_axis(ax)
-
-    ax = axes[5]
-    _forest(
-        ax,
-        rows,
-        ["Ridge-Huber rank agreement", "Ridge-MLP rank agreement"],
-        scale=1,
-        colors=[_ACTIONABLE, _ADVERSE],
-        markers=["o", "s"],
-        display_labels=["Ridge-Huber", "Ridge-MLP"],
-    )
-    ax.set_xlim(0, 0.9)
-    ax.set_ylim(-0.65, 1.55)
-    ax.set_xlabel("Strict-OOF action-value Spearman", fontsize=6.3)
+    _draw_priority_overlay(ax, state, priorities.reconstruction_percentiles)
+    _outline_top_cells(ax, state, priorities.reconstruction_percentiles)
+    _panel_title(ax, "e", "C-scan-content priority")
     ax.text(
-        0.02,
-        0.06,
-        "Full-state MAE\nRidge 0.08964 | Huber 0.08618\nMLP 0.15067",
+        0.5,
+        -0.10,
+        "registered normalized-RGB-MSE field-content reference",
         transform=ax.transAxes,
-        fontsize=5.1,
+        ha="center",
+        va="top",
+        fontsize=5.0,
         color=_REFERENCE,
     )
-    _panel_title(ax, "f", "Predictor dependence")
-    _clean_axis(ax)
+
+    ax = axes[5]
+    ax.imshow(state.image, interpolation="nearest", aspect="auto")
+    difference = ax.pcolormesh(
+        np.asarray(state.column_boundaries, dtype=np.float64),
+        np.asarray(state.row_boundaries, dtype=np.float64),
+        priorities.percentile_difference,
+        cmap="RdBu_r",
+        norm=TwoSlopeNorm(vmin=-1.0, vcenter=0.0, vmax=1.0),
+        shading="flat",
+        alpha=0.66,
+        edgecolors=(1.0, 1.0, 1.0, 0.24),
+        linewidth=0.25,
+    )
+    ax.set_xlim(0, state.image.shape[1] - 1)
+    ax.set_ylim(state.image.shape[0] - 1, 0)
+    ax.set_aspect("equal", adjustable="datalim")
+    _style_image_axis(ax)
+    _panel_title(ax, "f", "CAI-specific excess priority")
 
     fig.subplots_adjust(
-        left=0.125, right=0.985, bottom=0.09, top=0.94, wspace=0.5, hspace=0.52
+        left=0.125, right=0.985, bottom=0.14, top=0.94, wspace=0.5, hspace=0.52
     )
+    value_axis = fig.add_axes([0.15, 0.045, 0.48, 0.012])
+    value_bar = fig.colorbar(priority_image, cax=value_axis, orientation="horizontal")
+    value_bar.set_label("Within-map priority percentile", fontsize=5.2, labelpad=1)
+    value_bar.ax.tick_params(labelsize=5.0, length=1.5)
+    difference_axis = fig.add_axes([0.74, 0.045, 0.20, 0.012])
+    difference_bar = fig.colorbar(
+        difference, cax=difference_axis, orientation="horizontal"
+    )
+    difference_bar.set_label("CAI - field-content percentile", fontsize=5.0, labelpad=1)
+    difference_bar.ax.tick_params(labelsize=5.0, length=1.5)
     _attach_alignment_contract(
         fig,
         axes,
@@ -1877,7 +1063,63 @@ def _render_figure3_nature(root: Path, rows: list[dict[str, str]]) -> Figure:
     axes = list(axes_grid.ravel())
 
     ax = axes[0]
-    dynamic = _find(rows, "Conditional minus static regret")
+    image = _draw_priority_overlay(ax, initial)
+    _outline_top_cells(ax, initial.reconstruction, initial.percentiles)
+    _panel_title(ax, "a", "Initial priority | 3.13%")
+
+    ax = axes[1]
+    _draw_priority_overlay(ax, later)
+    _outline_top_cells(ax, later.reconstruction, later.percentiles)
+    _panel_title(ax, "b", "Updated priority | 18.75%")
+
+    ax = axes[2]
+    _draw_acquisition_path(ax, later.reconstruction)
+    _panel_title(ax, "c", "Acquisition history")
+
+    ax = axes[3]
+    metric_specs = (
+        ("best_action_turnover", "Best-action turnover", _OBSERVABLE, "s", "--"),
+        ("rank_spearman", "Rank agreement", _REFERENCE, "o", "-"),
+        ("top_k_jaccard", "Top-5 overlap", _USEFUL, "^", ":"),
+    )
+    for metric_name, label, color, marker, linestyle in metric_specs:
+        selected = [
+            row for row in rows if row["panel"] == "d" and row["metric"] == metric_name
+        ]
+        x = np.asarray([float(row["series"].split("@")[1]) * 100 for row in selected])
+        values = np.asarray([float(row["value"]) for row in selected])
+        ax.plot(
+            x,
+            values,
+            label=label,
+            color=color,
+            marker=marker,
+            linestyle=linestyle,
+            linewidth=1.15,
+            markersize=3.5,
+        )
+    for y_position, label, color in (
+        (0.735, "Turnover 70.4%", _OBSERVABLE),
+        (0.435, "Rank 0.405", _REFERENCE),
+        (0.275, "Top-5 0.307", _USEFUL),
+    ):
+        ax.text(
+            16.2,
+            y_position,
+            label,
+            fontsize=5.0,
+            color=color,
+            va="center",
+        )
+    ax.set_xlabel("Acquired normalized cost (%)", fontsize=6.2)
+    ax.set_ylabel("Teacher-state diagnostic", fontsize=6.2)
+    ax.set_ylim(0.25, 0.82)
+    ax.set_xlim(5.5, 23.5)
+    _panel_title(ax, "d", "Value changes with\nacquired evidence")
+    _clean_axis(ax)
+
+    ax = axes[4]
+    dynamic = _find(rows, "Dynamic minus static regret")
     value = float(dynamic["value"]) * 1000
     low = float(dynamic["ci95_lower"]) * 1000
     high = float(dynamic["ci95_upper"]) * 1000
@@ -1892,7 +1134,7 @@ def _render_figure3_nature(root: Path, rows: list[dict[str, str]]) -> Figure:
         ms=5,
     )
     ax.axvline(0, color=_REFERENCE, lw=0.8, linestyle="--")
-    ax.set_yticks([0], ["Dynamic - static"], fontsize=6.0)
+    ax.set_yticks([0], ["Dynamic\n- static"], fontsize=6.0)
     ax.set_xlim(-2.6, 0.45)
     ax.set_ylim(-0.8, 0.8)
     ax.set_xlabel("One-step value regret (x10^3)", fontsize=6.4)
@@ -1906,71 +1148,44 @@ def _render_figure3_nature(root: Path, rows: list[dict[str, str]]) -> Figure:
         fontsize=5.4,
         color=_REFERENCE,
     )
-    _panel_title(ax, "a", "Dynamic versus static")
-    _clean_axis(ax)
-
-    ax = axes[1]
-    image = _draw_priority_overlay(ax, initial)
-    _outline_top_cells(ax, initial.reconstruction, initial.percentiles)
-    _panel_title(ax, "b", "Initial priority | 3.13%")
-
-    ax = axes[2]
-    _draw_priority_overlay(ax, later)
-    _outline_top_cells(ax, later.reconstruction, later.percentiles)
-    _panel_title(ax, "c", "Updated priority | 18.75%")
-
-    ax = axes[3]
-    _draw_acquisition_path(ax, later.reconstruction)
-    _panel_title(ax, "d", "Acquisition history")
-
-    ax = axes[4]
-    labels = [
-        "Measured content",
-        "Acquired-position/history control",
-        "Reconstruction control",
-    ]
-    values = [float(_find(rows, label)["value"]) for label in labels]
-    ax.bar(
-        [0, 1, 2],
-        values,
-        color=[_USEFUL, _REFERENCE, _UNCERTAINTY],
-        edgecolor="none",
-        linewidth=0,
-        width=0.62,
+    ax.text(
+        0.02,
+        0.90,
+        "Negative favors\ndynamic valuation",
+        transform=ax.transAxes,
+        ha="left",
+        va="top",
+        fontsize=5.2,
+        color=_USEFUL,
     )
-    ax.set_xticks([0, 1, 2], ["Real", "History", "Recon."], fontsize=5.8)
-    ax.set_ylim(0.08, 0.14)
-    ax.set_ylabel("Endpoint CAI MAE", fontsize=6.4)
-    _panel_title(ax, "e", "Matched state controls")
-    _clean_axis(ax, grid_axis="y")
+    _panel_title(ax, "e", "Dynamic versus static valuation")
+    _clean_axis(ax)
 
     ax = axes[5]
     _forest(
         ax,
         rows,
         [
-            "Measured minus acquired-position/history",
-            "Measured minus reconstruction",
+            "Ridge-Huber rank agreement",
+            "Ridge-MLP rank agreement",
         ],
         scale=1,
-        colors=[_ADVERSE, _ADVERSE],
+        colors=[_ACTIONABLE, _ADVERSE],
         markers=["o", "s"],
-        display_labels=["Real - history", "Real - recon."],
+        display_labels=["Ridge-Huber", "Ridge-MLP"],
     )
-    ax.set_xlim(-0.005, 0.05)
-    ax.set_ylim(-0.75, 1.55)
-    ax.set_xlabel("Endpoint CAI-MAE contrast", fontsize=6.3)
-    shuffled = _find(rows, "Conditional minus shuffled regret")
+    ax.set_xlim(0, 0.9)
+    ax.set_ylim(-0.65, 1.55)
+    ax.set_xlabel("Strict-OOF action-value Spearman", fontsize=6.1)
     ax.text(
-        0.12,
-        0.05,
-        f"Real - shuffled {float(shuffled['value']):.3e}\n"
-        f"95% CI [{float(shuffled['ci95_lower']):.3e}, {float(shuffled['ci95_upper']):.3e}]",
+        0.02,
+        0.06,
+        "Full-state MAE\nRidge 0.08964 | Huber 0.08618\nMLP 0.15067",
         transform=ax.transAxes,
         fontsize=5.1,
-        color=_ADVERSE,
+        color=_REFERENCE,
     )
-    _panel_title(ax, "f", "Source-control contrasts")
+    _panel_title(ax, "f", "Predictor dependence")
     _clean_axis(ax)
 
     fig.subplots_adjust(
@@ -1991,61 +1206,118 @@ def _render_figure3_nature(root: Path, rows: list[dict[str, str]]) -> Figure:
     return fig
 
 
-def _render_figure5_nature(root: Path, rows: list[dict[str, str]]) -> Figure:
-    del rows
-    priorities = load_task_priority_maps(root, specimen_id=REPRESENTATIVE_SPECIMEN)
-    state = priorities.reconstruction
-    fig, axes_grid = plt.subplots(1, 4, figsize=(_FULL_WIDTH_IN, 2.65))
+def _render_figure4_reframed(rows: list[dict[str, str]]) -> Figure:
+    fig, axes_grid = plt.subplots(2, 2, figsize=(_FULL_WIDTH_IN, 5.05))
     axes = list(axes_grid.ravel())
 
     ax = axes[0]
-    _draw_reconstruction(ax, state, show_measurements=True)
-    _panel_title(ax, "a", "Initial state")
+    labels = [
+        "Measured state",
+        "Acquired-position/history control",
+        "Field-content control",
+    ]
+    values = np.asarray([float(_find(rows, label)["value"]) for label in labels])
+    positions = np.arange(3)[::-1]
+    colors = [_USEFUL, _REFERENCE, _UNCERTAINTY]
+    ax.hlines(positions, 0.07, values, colors=colors, linewidth=1.5)
+    ax.scatter(values, positions, c=colors, s=30, zorder=3, edgecolors="white")
+    ax.set_yticks(
+        positions,
+        ["Measured state", "Position/history", "Field-content"],
+        fontsize=5.8,
+    )
+    ax.set_xlim(0.07, 0.14)
+    ax.set_ylim(-1.35, 2.55)
+    ax.set_xlabel("Endpoint CAI MAE (lower is better)", fontsize=6.2)
+    history = _find(rows, "Measured minus acquired-position/history")
+    field = _find(rows, "Measured minus field-content")
+    shuffled = _find(rows, "Dynamic minus shuffled regret")
+    ax.text(
+        0.02,
+        0.10,
+        f"Real - history {float(history['value']):+.5f}\n"
+        f"Real - field-content {float(field['value']):+.5f}\n"
+        f"Dynamic real - shuffled {float(shuffled['value']):+.3e}",
+        transform=ax.transAxes,
+        fontsize=5.15,
+        color=_ADVERSE,
+    )
+    _panel_title(ax, "a", "Matched source controls")
+    _clean_axis(ax)
 
     ax = axes[1]
-    image = _draw_priority_overlay(ax, state, priorities.mechanical_percentiles)
-    _outline_top_cells(ax, state, priorities.mechanical_percentiles)
-    _panel_title(ax, "b", "CAI priority")
+    _forest(
+        ax,
+        rows,
+        ["Valuation", "Bounded learned planning", "True-value stronger planning"],
+        scale=10000,
+        colors=[_USEFUL, _ACTIONABLE, _USEFUL],
+        markers=["o", "s", "D"],
+        display_labels=["Valuation", "Learned planning", "True-value planning"],
+    )
+    ax.set_xlabel("Retrospective CAI-AUEBC improvement (x10^4)", fontsize=6.2)
+    _panel_title(ax, "b", "Valuation and planning substitutions")
+    _clean_axis(ax, grid_axis="x")
 
     ax = axes[2]
-    _draw_priority_overlay(ax, state, priorities.reconstruction_percentiles)
-    _outline_top_cells(ax, state, priorities.reconstruction_percentiles)
-    _panel_title(ax, "c", "RGB priority")
+    _forest(
+        ax,
+        rows,
+        ["Current greedy", "Beam width 4"],
+        scale=10000,
+        colors=[_REFERENCE, _ACTIONABLE],
+        markers=["o", "D"],
+        display_labels=["Current greedy", "Beam width 4"],
+    )
+    ax.set_xlabel("Reachable-set planning regret (x10^4)", fontsize=6.2)
+    ax.text(
+        0.10,
+        0.52,
+        "Reference: retrospective joint near-oracle set\n"
+        "Two-action reachable pool at 6.25%",
+        transform=ax.transAxes,
+        fontsize=5.2,
+        color=_REFERENCE,
+        va="center",
+    )
+    _panel_title(ax, "c", "Cost-constrained set realization")
+    _clean_axis(ax)
 
     ax = axes[3]
-    ax.imshow(state.image, interpolation="nearest", aspect="auto")
-    difference = ax.pcolormesh(
-        np.asarray(state.column_boundaries, dtype=np.float64),
-        np.asarray(state.row_boundaries, dtype=np.float64),
-        priorities.percentile_difference,
-        cmap="RdBu_r",
-        norm=TwoSlopeNorm(vmin=-1.0, vcenter=0.0, vmax=1.0),
-        shading="flat",
-        alpha=0.66,
-        edgecolors=(1.0, 1.0, 1.0, 0.24),
-        linewidth=0.25,
+    _forest(
+        ax,
+        rows,
+        ["Static reference minus learned implementation"],
+        scale=10000,
+        colors=[_ADVERSE],
+        markers=["D"],
+        display_labels=["Reference - learned"],
     )
-    ax.set_xlim(0, state.image.shape[1] - 1)
-    ax.set_ylim(state.image.shape[0] - 1, 0)
-    _style_image_axis(ax)
-    _panel_title(ax, "d", "CAI - RGB priority")
+    ax.set_xlim(-1.05, 0.20)
+    ax.set_ylim(-0.75, 0.75)
+    ax.set_xlabel("CAI-AUEBC contrast (x10^4)", fontsize=6.2)
+    ax.text(
+        0.04,
+        0.90,
+        "Negative favors the static reference\nLearned 0.125053 | static 0.124992",
+        transform=ax.transAxes,
+        ha="left",
+        va="top",
+        fontsize=5.2,
+        color=_ADVERSE,
+    )
+    _panel_title(ax, "d", "Deployment calibration")
+    _clean_axis(ax)
 
-    fig.subplots_adjust(left=0.035, right=0.995, bottom=0.22, top=0.88, wspace=0.12)
-    value_axis = fig.add_axes([0.295, 0.105, 0.39, 0.018])
-    value_bar = fig.colorbar(image, cax=value_axis, orientation="horizontal")
-    value_bar.set_label("Within-map priority percentile", fontsize=5.4, labelpad=1)
-    value_bar.ax.tick_params(labelsize=5.0, length=1.5)
-    difference_axis = fig.add_axes([0.79, 0.105, 0.18, 0.018])
-    difference_bar = fig.colorbar(
-        difference, cax=difference_axis, orientation="horizontal"
+    fig.subplots_adjust(
+        left=0.18, right=0.985, bottom=0.10, top=0.94, wspace=0.52, hspace=0.50
     )
-    difference_bar.set_label("Task-priority difference", fontsize=5.4, labelpad=1)
-    difference_bar.ax.tick_params(labelsize=5.0, length=1.5)
     _attach_alignment_contract(
         fig,
         axes,
         list("abcd"),
-        row_groups=[["a", "b", "c", "d"]],
+        row_groups=[["a", "b"], ["c", "d"]],
+        column_groups=[["a", "c"], ["b", "d"]],
     )
     return fig
 
@@ -2099,46 +1371,41 @@ _CAPTIONS = {
         "oracles characterize value; the acquisition rule uses only legal state.\n"
     ),
     "figure2": (
-        "**Figure 2. Spatial task-relevant ultrasonic information and sparse "
-        "retention.** (a) Equal-domain CAI-ratio MAE for matched scalar, full-field, "
-        "and registered 25% sparse representations; the sparse representation retains "
-        "89.9% of the full-field gain. (b,c) Hash-verified reconstructions of specimen "
-        "c8-2 at the 3.13% initial scout state and 25% uniform state; teal pixels mark "
-        "measured native-raster positions. (d) Retrospective exact-cost mechanical "
-        "oracle improvements over uniform and reconstruction acquisition. (e) "
-        "Strict-OOF teacher priorities evolve over normalized cost. (f) Value-rank "
-        "agreement varies with the downstream predictor. Aggregate intervals are "
-        "synchronized specimen-bootstrap contrasts where shown.\n"
+        "**Figure 2. What ultrasonic information matters for CAI?** (a) Equal-domain "
+        "CAI-ratio MAE for matched scalar, full spatial field, and registered 25% "
+        "sparse field. (b) Hash-verified initial legal state for specimen c8-2; teal "
+        "marks measured native-raster positions. (c) Retrospective mechanical-oracle "
+        "opportunity relative to uniform acquisition and the registered field-content "
+        "reference. (d,e) CAI-task and C-scan-content within-map priority percentiles "
+        "on the same initial state and legal 8x8 action grid; white outlines mark the "
+        "five highest-priority cells. The field-content reference is operationalized "
+        "by the registered normalized-RGB-MSE reconstruction objective. (f) Paired "
+        "CAI-minus-field-content percentile difference, not raw utility or a causal "
+        "material map. Oracles are retrospective and non-deployable.\n"
     ),
     "figure3": (
-        "**Figure 3. State-conditioned measurement value evolves with acquired "
-        "evidence.** (a) Dynamic real-state valuation has lower one-step regret than "
-        "the static reference at 18.75%. (b,c) Within-state percentiles of strict-OOF "
-        "teacher values for all 64 legal next-cell actions on specimen c8-2 at 3.13% "
-        "and 18.75%; white outlines mark the five highest-priority cells. (d) Stored "
-        "acquired-cell history for the same trajectory, from the initial white marker "
-        "to the latest red marker. (e) Endpoint CAI MAE under "
-        "real, acquired-position/history, and reconstruction states. (f) Matched source "
-        "contrasts retain their observed adverse directions. Priority maps are "
-        "predictor- and state-conditioned, not universal material maps.\n"
+        "**Figure 3. Why must measurement value be state-conditioned?** (a,b) "
+        "Within-state strict-OOF teacher-value percentiles for all 64 legal next-cell "
+        "actions on specimen c8-2 at 3.13% and 18.75%; white outlines mark the five "
+        "highest-priority cells. (c) Stored acquisition history for the same trajectory, "
+        "from the initial white marker to the latest red marker. (d) Best-action "
+        "turnover, rank agreement, and top-five overlap over acquired normalized cost. "
+        "(e) Dynamic real-state versus static next-action regret; negative favors "
+        "dynamic valuation. (f) Predictor-conditioned rank agreement with the unequal "
+        "shallow-MLP accuracy boundary. Priority maps are state- and "
+        "predictor-conditioned, not universal material maps.\n"
     ),
     "figure4": (
-        "**Figure 4. Valuation, planning, and set realization.** (a) Retrospective "
-        "substitutions expose valuation and bounded planning effects. (b) Greedy and "
-        "beam-width-four selection retain positive regret relative to the retrospective "
-        "joint set within the registered two-action reachable pool.\n"
-    ),
-    "figure5": (
-        "**Figure 5. Task-specific measurement priorities on a CFRP specimen.** "
-        "(a) Hash-verified initial reconstruction of specimen c8-2; teal marks the "
-        "registered measured positions. (b,c) Retrospective CAI-mechanical and "
-        "normalized-RGB-reconstruction oracle priorities on the same initial state and "
-        "8x8 action grid; white outlines mark the five highest-priority cells. (d) "
-        "Paired within-map percentile difference, with red favoring CAI priority and "
-        "blue favoring reconstruction priority. Across all six domains, the CAI "
-        "contrast is 0.04862 (95% CI 0.04527-0.05205) and the registered normalized-"
-        "RGB-MSE contrast is 5.503e-4 (95% CI 5.006e-4-6.063e-4). These panels "
-        "visualize retrospective oracle opportunity, not learned-policy performance.\n"
+        "**Figure 4. From state-conditioned value to a cost-constrained decision.** "
+        "(a) Matched measured-state, acquired-position/history, field-content, and "
+        "shuffled-content controls retain their observed adverse directions; the "
+        "field-content control uses the registered reconstruction control. (b) "
+        "Retrospective substitutions separate valuation and bounded-planning effects. "
+        "(c) Greedy and beam-4 selection retain positive regret relative to a "
+        "retrospective joint near-oracle set in the registered two-action pool. (d) "
+        "Signed deployment calibration for one registered supervised implementation; "
+        "negative favors the static reference. This endpoint does not define the "
+        "performance of the full Task-Relevant Information Acquisition framework.\n"
     ),
     "supplementary_figure_s1": (
         "**Supplementary Figure S1. Cross-domain state-conditioned priority "
@@ -2158,7 +1425,6 @@ _STEMS = {
     "figure2": "figure2_information_characterization",
     "figure3": "figure3_state_conditioned_value",
     "figure4": "figure4_valuation_planning_realization",
-    "figure5": "figure5_task_specific_measurement_priorities",
     "supplementary_figure_s1": (
         "supplementary_figure_s1_cross_domain_state_priority_gallery"
     ),
@@ -2170,7 +1436,6 @@ _SOURCE_NAMES = {
     "figure2": "figure2_information_characterization.csv",
     "figure3": "figure3_state_conditioned_value.csv",
     "figure4": "figure4_valuation_planning_realization.csv",
-    "figure5": "figure5_task_specific_measurement_priorities.csv",
     "supplementary_figure_s1": (
         "supplementary_figure_s1_cross_domain_state_priority_gallery.csv"
     ),
@@ -2357,7 +1622,7 @@ def _figure_style() -> dict[str, Any]:
 
 
 def render_paper_figures(root: Path, output_root: Path) -> dict[str, FigureArtifact]:
-    """Render five deterministic main-paper figures and their captions."""
+    """Render four deterministic main-paper figures and their captions."""
     output_root.mkdir(parents=True, exist_ok=True)
     sources = build_figure_sources(root, output_root)
     renderers = {
@@ -2365,7 +1630,6 @@ def render_paper_figures(root: Path, output_root: Path) -> dict[str, FigureArtif
         "figure2": lambda rows: _render_figure2_nature(root, rows),
         "figure3": lambda rows: _render_figure3_nature(root, rows),
         "figure4": _render_figure4_reframed,
-        "figure5": lambda rows: _render_figure5_nature(root, rows),
     }
     artifacts: dict[str, FigureArtifact] = {}
     with plt.rc_context(_figure_style()):
@@ -2391,3 +1655,170 @@ def render_supplementary_figures(
     artifacts = {"supplementary_figure_s1": artifact}
     _write_figure_manifest(output_root, artifacts)
     return artifacts
+
+
+def _panel_crop_boxes(
+    alignment: dict[str, Any],
+    image: Image.Image,
+    *,
+    axes_only: bool = False,
+) -> dict[str, tuple[int, int, int, int]]:
+    layout = alignment.get("layout", {})
+    figure = layout.get("figure", {})
+    panels = layout.get("panels", [])
+    width_pt = float(figure.get("width_pt", 0))
+    height_pt = float(figure.get("height_pt", 0))
+    if width_pt <= 0 or height_pt <= 0 or not panels:
+        raise ValueError("panel alignment geometry is incomplete")
+
+    columns: dict[int, list[dict[str, Any]]] = {}
+    for panel in panels:
+        columns.setdefault(int(panel["col_start"]), []).append(panel)
+    column_ids = sorted(columns)
+    x_extents = {
+        column: (
+            float(np.mean([item["bbox_pt"][0] for item in columns[column]])),
+            float(np.mean([item["bbox_pt"][2] for item in columns[column]])),
+        )
+        for column in column_ids
+    }
+    boxes: dict[str, tuple[int, int, int, int]] = {}
+    for panel in panels:
+        column = int(panel["col_start"])
+        column_index = column_ids.index(column)
+        left_pt = (
+            0.0
+            if column_index == 0
+            else (x_extents[column_ids[column_index - 1]][1] + x_extents[column][0]) / 2
+        )
+        right_pt = (
+            width_pt
+            if column_index == len(column_ids) - 1
+            else (x_extents[column][1] + x_extents[column_ids[column_index + 1]][0]) / 2
+        )
+        panel_bbox = [float(value) for value in panel["bbox_pt"]]
+        if axes_only:
+            left_pt, bottom_pt, right_pt, top_pt = panel_bbox
+        else:
+            top_pt = min(height_pt, panel_bbox[3] + 16.0)
+            bottom_pt = max(0.0, panel_bbox[1] - 28.0)
+        left = max(0, int(np.floor(left_pt / width_pt * image.width)))
+        right = min(image.width, int(np.ceil(right_pt / width_pt * image.width)))
+        upper = max(0, int(np.floor((height_pt - top_pt) / height_pt * image.height)))
+        lower = min(
+            image.height,
+            int(np.ceil((height_pt - bottom_pt) / height_pt * image.height)),
+        )
+        if right <= left or lower <= upper:
+            raise ValueError(f"panel {panel['id']} has invalid crop geometry")
+        boxes[str(panel["id"])] = (left, upper, right, lower)
+    return boxes
+
+
+def _trim_white_margin(image: Image.Image, *, padding: int = 12) -> Image.Image:
+    pixels = np.asarray(image.convert("RGB"), dtype=np.uint8)
+    content = np.any(pixels < 250, axis=2)
+    y, x = np.nonzero(content)
+    if not len(x):
+        raise ValueError("panel crop contains no visible content")
+    left = max(0, int(x.min()) - padding)
+    upper = max(0, int(y.min()) - padding)
+    right = min(image.width, int(x.max()) + padding + 1)
+    lower = min(image.height, int(y.max()) + padding + 1)
+    return image.crop((left, upper, right, lower))
+
+
+def export_panel_pngs(
+    artifacts: dict[str, FigureArtifact], output_root: Path
+) -> dict[str, Path]:
+    """Export formal figure panels as deterministic, unscaled PNG crops."""
+
+    if output_root.exists():
+        shutil.rmtree(output_root)
+    output_root.mkdir(parents=True)
+    exports: dict[str, Path] = {}
+    manifest_rows: list[dict[str, str | int]] = []
+    for figure_id in sorted(artifacts):
+        artifact = artifacts[figure_id]
+        figure_dir = output_root / figure_id
+        figure_dir.mkdir()
+        with Image.open(artifact.png) as source:
+            image = source.convert("RGB")
+            if artifact.alignment_json is None:
+                if figure_id != "figure1":
+                    raise ValueError(f"{figure_id} has no panel alignment geometry")
+                panel_images = {"full": image.copy()}
+            else:
+                alignment = json.loads(
+                    artifact.alignment_json.read_text(encoding="utf-8")
+                )
+                if alignment.get("verdict") != "PASS":
+                    raise ValueError(f"{figure_id} panel alignment did not pass")
+                axes_only = figure_id == "supplementary_figure_s1"
+                panel_images = {
+                    panel_id: _trim_white_margin(image.crop(box))
+                    for panel_id, box in _panel_crop_boxes(
+                        alignment, image, axes_only=axes_only
+                    ).items()
+                }
+        for panel_id, panel_image in panel_images.items():
+            extrema = panel_image.getextrema()
+            if not any(low != high for low, high in extrema):
+                raise ValueError(f"{figure_id} panel {panel_id} is blank")
+            destination = figure_dir / f"{figure_id}_panel_{panel_id}.png"
+            panel_image.save(
+                destination,
+                format="PNG",
+                dpi=(300, 300),
+                compress_level=9,
+                optimize=False,
+            )
+            key = f"{figure_id}_{panel_id}"
+            exports[key] = destination
+            manifest_rows.append(
+                {
+                    "figure_id": figure_id,
+                    "panel_id": panel_id,
+                    "path": destination.relative_to(output_root).as_posix(),
+                    "source_png": artifact.png.name,
+                    "width_px": panel_image.width,
+                    "height_px": panel_image.height,
+                    "aspect_ratio": format(
+                        panel_image.width / panel_image.height, ".8f"
+                    ),
+                    "sha256": _sha256(destination),
+                    "bytes": destination.stat().st_size,
+                }
+            )
+    manifest = output_root / "PANEL_PNG_MANIFEST.csv"
+    with manifest.open("w", encoding="utf-8", newline="") as stream:
+        writer = csv.DictWriter(
+            stream,
+            fieldnames=(
+                "figure_id",
+                "panel_id",
+                "path",
+                "source_png",
+                "width_px",
+                "height_px",
+                "aspect_ratio",
+                "sha256",
+                "bytes",
+            ),
+            lineterminator="\n",
+        )
+        writer.writeheader()
+        writer.writerows(manifest_rows)
+    (output_root / "README.md").write_text(
+        "# AEI figure panels\n\n"
+        "These PNG files are aspect-preserving crops of the final 300-dpi figures "
+        "for manual composition. They are not part of the submission package.\n\n"
+        "Main-panel crops retain their local titles and labels. Shared color bars "
+        "remain in the composed figures and are not duplicated into individual "
+        "panels. Supplementary Figure S1 crops contain only the correctly "
+        "proportioned scan panels; use the panel IDs in the full figure or source "
+        "CSV when rebuilding labels.\n",
+        encoding="ascii",
+        newline="\n",
+    )
+    return exports

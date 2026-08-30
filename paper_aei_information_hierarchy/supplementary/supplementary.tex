@@ -48,7 +48,7 @@ Record group & Content \\
 \bottomrule
 \endfoot
 S01--S04 & Full domain and checkpoint records for spatial, sparse, static, and conditional-value comparisons. \\
-S05--S09 & Real-state, acquired-position/history, reconstruction, shuffled-content, and dynamic-valuation controls. \\
+S05--S09 & Real-state, acquired-position/history, field-content (registered reconstruction), shuffled-content, and dynamic-valuation controls. \\
 S10--S12 & Component substitutions and bounded reachable-set planning records. \\
 S13--S16 & Learner-pair value stability, feedback strata, and implementation diagnostics. \\
 S17--S18 & Source hashes, chronology, and external-data feasibility boundaries. \\
@@ -75,9 +75,10 @@ scanner-time interpretation.
 The cross-objective oracle result is bounded by the learned global-mask test.
 Source-trained global mechanics and reconstruction masks produced the
 predeclared support indicator 0; the learned global mechanics mask therefore
-did not reproduce the oracle separation. The reconstruction task in this
-comparison is the registered normalized-RGB-MSE objective, not a claim about
-all image representations or metrics.
+did not reproduce the oracle separation. In the reviewer-visible narrative,
+the latter is the field-content reference. It is operationalized by the
+registered normalized-RGB-MSE reconstruction objective and is not a claim
+about all image representations or metrics.
 
 % Supplement-only evidence: U5_RIDGE_HUBER_BEST_ACTION;
 % U5_RIDGE_HUBER_TOPK; U5_RIDGE_MLP_BEST_ACTION; U5_RIDGE_MLP_TOPK.
@@ -110,10 +111,12 @@ internal-field sensitivity estimator, not the matched B-family field path.
 
 The acquired-position/history control inherits the exact positions, ordering,
 and costs of the recipient trajectory while removing measured content. The
-reconstruction control uses the registered image objective on the same legal
-trajectory. The shuffled-content control preserves recipient positions and
-budget while sourcing values from separated donor content. These semantics are
-required when interpreting the adverse real-minus-control directions.
+reviewer-visible field-content control retains the frozen
+\texttt{reconstruction} control mode and uses the registered image objective on
+the same legal trajectory. The shuffled-content control preserves recipient
+positions and budget while sourcing values from separated donor content. These
+semantics are required when interpreting the adverse real-minus-control
+directions.
 
 Figure~\ref{fig:supp-priority-gallery} provides a result-independent qualitative
 check across all domains. Within each sorted domain, the lexicographically first

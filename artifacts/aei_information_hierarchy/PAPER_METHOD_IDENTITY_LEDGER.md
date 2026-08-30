@@ -13,9 +13,9 @@ references, oracles, and source controls.
 | MAVIS | codebase closed-loop implementation | IMPLEMENTATION ONLY | state-conditioned learned implementation |
 | mvd_m1_o2 | static deployable reference/comparator | REFERENCE | static reference |
 | mechanical oracle | retrospective task-value opportunity analysis | ORACLE | mechanical oracle |
-| reconstruction oracle | retrospective objective comparator | ORACLE | reconstruction oracle |
+| reconstruction oracle | retrospective objective comparator | ORACLE | field-content reference oracle |
 | acquired-position/history | source control | CONTROL | acquired-position/history control |
-| reconstruction | source control | CONTROL | reconstruction control |
+| reconstruction | source control | CONTROL | field-content control |
 | shuffled content | source control | CONTROL | shuffled-content control |
 
 ## Main-text rules
@@ -32,10 +32,15 @@ references, oracles, and source controls.
   implementation, not to the complete proposed framework.
 - Retrospective oracles characterize opportunity; controls identify which
   state signals contribute. Neither category is the proposed method.
+- Frozen artifact identifiers retain the term `reconstruction`. The
+  field-content wording is a manuscript-level role label for the same
+  registered normalized-RGB-MSE objective and control; it does not redefine
+  the underlying experiment.
 
 ## System diagnostic rule
 
 `A4_BASELINE_MINUS_MAVIS` is one direction-preserving system-level diagnostic
-in Section 5.2.3. It is absent from the abstract, Introduction, contributions,
-figures, main summary table, and Conclusions. Its complete interval and domain
-directions remain in the supplement and machine-readable evidence.
+in Section 5.2.3 and the subordinate calibration panel in Figure 4(d). It is
+absent from the abstract, Introduction, contributions, main tables, and
+Conclusions. Its complete interval and domain directions remain in the
+supplement and machine-readable evidence.

@@ -23,9 +23,9 @@ def _rows(path: Path) -> list[dict[str, str]]:
         return list(csv.DictReader(stream))
 
 
-def test_aei_paper_builds_five_traceable_figure_sources(tmp_path: Path) -> None:
+def test_aei_paper_builds_four_traceable_figure_sources(tmp_path: Path) -> None:
     sources = aei_paper_figures.build_figure_sources(ROOT, tmp_path)
-    assert set(sources) == {"figure1", "figure2", "figure3", "figure4", "figure5"}
+    assert set(sources) == {"figure1", "figure2", "figure3", "figure4"}
     required = {
         "panel",
         "series",
@@ -64,8 +64,21 @@ def test_aei_paper_figure2_uses_only_part_i_main_visible_claims(
     rows = _rows(source)
     claim_ids = {row["source_claim_id"] for row in rows if row["source_claim_id"]}
     assert claim_ids == _visible_claims("figure2")
+    assert not claim_ids & {
+        "O2_TEACHER_TURNOVER",
+        "O2_TEACHER_RANK",
+        "O2_TEACHER_TOPK",
+        "O2_TEACHER_OPPORTUNITY",
+        "U5_RIDGE_HUBER_SPEARMAN",
+        "U5_RIDGE_MLP_SPEARMAN",
+    }
     assert "U1_INDEPENDENT_FIELD_SENSITIVITY" not in claim_ids
     assert "U4_LEARNED_SPECIFICITY_BOUNDARY" not in claim_ids
+    assert {
+        "results/mva/a2_oracle_value/oracle_values.parquet",
+        "results/mavis/p1_state_bank/state_manifest.parquet",
+    } <= {row["source_artifact"] for row in rows}
+    assert set("abcdef") <= {panel for row in rows for panel in row["panel"]}
 
 
 def test_aei_paper_figure3_links_state_evolution_dynamic_value_and_attribution(
@@ -74,51 +87,55 @@ def test_aei_paper_figure3_links_state_evolution_dynamic_value_and_attribution(
     source = aei_paper_figures.build_figure_sources(ROOT, tmp_path)["figure3"]
     rows = _rows(source)
     claim_ids = {row["source_claim_id"] for row in rows if row["source_claim_id"]}
-    assert rows[0]["source_claim_id"] == "O4_DYNAMIC_MINUS_STATIC"
     assert claim_ids == _visible_claims("figure3")
-    assert any(row["status"] == "ADVERSE_CONTROL" for row in rows)
-    assert any("acquired-position/history" in row["series"].lower() for row in rows)
+    assert {
+        "O2_TEACHER_TURNOVER",
+        "O2_TEACHER_RANK",
+        "O2_TEACHER_TOPK",
+        "O2_TEACHER_OPPORTUNITY",
+        "U5_RIDGE_HUBER_SPEARMAN",
+        "U5_RIDGE_MLP_SPEARMAN",
+        "O4_DYNAMIC_MINUS_STATIC",
+        "O1_STATIC_SPEARMAN",
+    } == claim_ids
+    assert {
+        "results/mavis/p3_dynamic_voi/action_scores.parquet",
+        "results/mavis/p1_state_bank/state_manifest.parquet",
+    } <= {row["source_artifact"] for row in rows}
+    assert not any(row["source_claim_id"].startswith("O3_") for row in rows)
 
 
-def test_aei_paper_figure4_contains_only_a1_a2_realization_claims(
+def test_aei_paper_figure4_contains_controls_realization_and_a4_boundary(
     tmp_path: Path,
 ) -> None:
     source = aei_paper_figures.build_figure_sources(ROOT, tmp_path)["figure4"]
     rows = _rows(source)
-    claim_ids = {row["source_claim_id"] for row in rows}
-    assert len(rows) == 5
+    claim_ids = {row["source_claim_id"] for row in rows if row["source_claim_id"]}
     assert (
         claim_ids
         == _visible_claims("figure4")
         == {
+            "O3_REAL_CHANGE",
+            "O3_REAL_MINUS_POSITIONS",
+            "O3_REAL_MINUS_RECONSTRUCTION",
+            "O4_DYNAMIC_MINUS_SHUFFLED",
             "A1_VALUATION_SUBSTITUTION",
             "A1_LEARNED_PLANNING_SUBSTITUTION",
             "A1_TRUE_VALUE_PLANNING_SUBSTITUTION",
             "A2_GREEDY_PLANNING_REGRET",
             "A2_BEAM4_PLANNING_REGRET",
+            "A4_BASELINE_MINUS_MAVIS",
         }
     )
-
-
-def test_aei_paper_figure5_binds_real_task_specific_sources(tmp_path: Path) -> None:
-    source = aei_paper_figures.build_figure_sources(ROOT, tmp_path)["figure5"]
-    rows = _rows(source)
-    claim_ids = {row["source_claim_id"] for row in rows if row["source_claim_id"]}
-    assert {
-        "U4_ORACLE_CAI_SPECIFICITY",
-        "U4_ORACLE_IMAGE_SPECIFICITY",
-    } <= claim_ids
-    assert {
-        "results/mva/a2_oracle_value/oracle_values.parquet",
-        "results/mavis/p1_state_bank/state_manifest.parquet",
-    } <= {row["source_artifact"] for row in rows}
+    assert "A3_FEEDBACK_BENEFIT" not in claim_ids
+    assert any(row["series"] == "Field-content control" for row in rows)
 
 
 def test_aei_paper_figures_export_vector_and_300_dpi_nonblank_raster(
     tmp_path: Path,
 ) -> None:
     artifacts = aei_paper_figures.render_paper_figures(ROOT, tmp_path)
-    assert set(artifacts) == {"figure1", "figure2", "figure3", "figure4", "figure5"}
+    assert set(artifacts) == {"figure1", "figure2", "figure3", "figure4"}
     for artifact in artifacts.values():
         assert {artifact.svg.suffix, artifact.pdf.suffix, artifact.png.suffix} == {
             ".svg",
@@ -145,7 +162,6 @@ def test_aei_paper_figure_outputs_use_progressive_stems(tmp_path: Path) -> None:
         "figure2": "figure2_information_characterization.pdf",
         "figure3": "figure3_state_conditioned_value.pdf",
         "figure4": "figure4_valuation_planning_realization.pdf",
-        "figure5": "figure5_task_specific_measurement_priorities.pdf",
     }
 
 
@@ -167,6 +183,69 @@ def test_aei_paper_visible_figure_text_has_no_internal_stage_labels(
             encoding="utf-8"
         )
         assert not any(phrase in visible for phrase in forbidden)
+
+
+def test_aei_paper_visual_narrative_uses_four_stage_why_flow_and_compact_titles(
+    tmp_path: Path,
+) -> None:
+    artifacts = aei_paper_figures.render_paper_figures(ROOT, tmp_path)
+    figure1 = artifacts["figure1"].svg.read_text(encoding="utf-8")
+    for phrase in (
+        "Complete sensing field",
+        "Limited sensing under exact cost",
+        "Task-relevant value",
+    ):
+        assert phrase in figure1
+    assert "State-conditioned" in figure1
+    assert "acquisition loop" in figure1
+
+    figure2 = artifacts["figure2"].svg.read_text(encoding="utf-8")
+    figure3 = artifacts["figure3"].svg.read_text(encoding="utf-8")
+    assert "Heterogeneous" in figure2 and "spatial opportunity" in figure2
+    assert "Value changes with" in figure3 and "acquired evidence" in figure3
+
+
+def test_aei_paper_narrative_titles_fit_their_declared_columns(tmp_path: Path) -> None:
+    figure1 = aei_paper_figures._render_figure1([])
+    figure1.canvas.draw()
+    renderer = figure1.canvas.get_renderer()
+    axis = figure1.axes[0]
+    by_text = {text.get_text(): text for text in axis.texts}
+    for label, width_fraction in (
+        ("PART II\nSTATE-CONDITIONED ACQUISITION", 0.23),
+        ("State-conditioned\nacquisition loop", 0.21),
+    ):
+        assert by_text[label].get_window_extent(renderer).width <= (
+            width_fraction * axis.get_window_extent(renderer).width - 4
+        )
+
+    sources = aei_paper_figures.build_figure_sources(ROOT, tmp_path)
+    figures = (
+        aei_paper_figures._render_figure2_nature(ROOT, _rows(sources["figure2"])),
+        aei_paper_figures._render_figure3_nature(ROOT, _rows(sources["figure3"])),
+    )
+    for figure in figures:
+        figure.canvas.draw()
+        renderer = figure.canvas.get_renderer()
+        axes = figure._aei_alignment_options["axes"]
+        for row in (axes[:3], axes[3:]):
+            for index, panel_axis in enumerate(row):
+                title_box = panel_axis._left_title.get_window_extent(renderer)
+                right_limit = (
+                    row[index + 1].get_window_extent(renderer).x0 - 3
+                    if index + 1 < len(row)
+                    else figure.bbox.x1 - 3
+                )
+                assert title_box.x1 <= right_limit
+
+
+def test_aei_paper_image_aspect_render_has_no_fixed_limit_warning(
+    tmp_path: Path, caplog: pytest.LogCaptureFixture
+) -> None:
+    caplog.set_level("WARNING", logger="matplotlib.axes._base")
+    aei_paper_figures.render_paper_figures(ROOT, tmp_path / "main")
+    aei_paper_figures.render_supplementary_figures(ROOT, tmp_path / "supplement")
+    assert not any("Ignoring fixed" in record.getMessage() for record in caplog.records)
 
 
 def test_aei_paper_generated_svgs_have_no_trailing_whitespace(
@@ -212,7 +291,7 @@ def test_aei_paper_figure_manifest_binds_every_deliverable(tmp_path: Path) -> No
     artifacts = aei_paper_figures.render_paper_figures(ROOT, tmp_path)
     manifest = tmp_path / "FIGURE_CHECKSUMS.csv"
     rows = _rows(manifest)
-    assert len(rows) == 33
+    assert len(rows) == 26
     assert {row["figure_id"] for row in rows} == set(artifacts)
     for row in rows:
         path = tmp_path / row["path"]
@@ -235,3 +314,34 @@ def test_aei_supplementary_gallery_is_traceable_and_nonblank(tmp_path: Path) -> 
     assert pixels.shape[0] > 1800
     assert pixels.shape[1] > 1400
     assert pixels.std() > 10.0
+
+
+def test_aei_paper_exports_all_formal_panels_as_unscaled_pngs(
+    tmp_path: Path,
+) -> None:
+    main = aei_paper_figures.render_paper_figures(ROOT, tmp_path / "main")
+    supplement = aei_paper_figures.render_supplementary_figures(
+        ROOT, tmp_path / "supplement"
+    )
+    exports = aei_paper_figures.export_panel_pngs(
+        {**main, **supplement}, tmp_path / "panels"
+    )
+    expected = {
+        "figure1_full",
+        *(f"figure2_{panel}" for panel in "abcdef"),
+        *(f"figure3_{panel}" for panel in "abcdef"),
+        *(f"figure4_{panel}" for panel in "abcd"),
+        *(f"supplementary_figure_s1_{panel}" for panel in "abcdefghijkl"),
+    }
+    assert set(exports) == expected
+    manifest = _rows(tmp_path / "panels/PANEL_PNG_MANIFEST.csv")
+    assert len(manifest) == len(expected) == 29
+    assert all(not Path(row["source_png"]).is_absolute() for row in manifest)
+    for key, path in exports.items():
+        assert path.is_file() and path.stat().st_size > 1000, key
+        image = Image.open(path).convert("RGB")
+        pixels = np.asarray(image, dtype=np.float64)
+        assert image.width > 300 and image.height > 200
+        assert pixels.std() > 8.0
+        if key.startswith("supplementary_figure_s1_"):
+            assert 0.65 <= image.width / image.height <= 1.65

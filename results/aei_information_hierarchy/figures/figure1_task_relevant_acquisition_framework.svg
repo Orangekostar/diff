@@ -33,120 +33,167 @@ z
   </g>
   <g id="axes_1">
    <g id="patch_2">
-    <path d="M 20.103307 103.47552
-L 235.11685 103.47552
-L 235.11685 45.6768
-L 20.103307 45.6768
-z
-" clip-path="url(#pe58727ee0b)" style="fill: #ffffff; stroke: #0f4d92; stroke-width: 2; stroke-linejoin: miter"/>
-   </g>
-   <g id="patch_3">
-    <path d="M 20.103307 58.06224
-L 235.11685 58.06224
-L 235.11685 45.6768
-L 20.103307 45.6768
+    <path d="M 17.60315 41.54832
+L 362.624882 41.54832
+L 362.624882 27.09864
+L 17.60315 27.09864
 z
 " clip-path="url(#pe58727ee0b)" style="fill: #0f4d92; stroke: #0f4d92; stroke-linejoin: miter"/>
    </g>
-   <g id="patch_4">
-    <path d="M 275.11937 103.47552
-L 490.132913 103.47552
-L 490.132913 45.6768
-L 275.11937 45.6768
-z
-" clip-path="url(#pe58727ee0b)" style="fill: #ffffff; stroke: #658b3a; stroke-width: 2; stroke-linejoin: miter"/>
-   </g>
-   <g id="patch_5">
-    <path d="M 275.11937 58.06224
-L 490.132913 58.06224
-L 490.132913 45.6768
-L 275.11937 45.6768
+   <g id="patch_3">
+    <path d="M 377.625827 41.54832
+L 492.633071 41.54832
+L 492.633071 27.09864
+L 377.625827 27.09864
 z
 " clip-path="url(#pe58727ee0b)" style="fill: #658b3a; stroke: #658b3a; stroke-linejoin: miter"/>
    </g>
-   <g id="patch_6">
-    <path d="M 15.102992 157.14576
-L 150.111496 157.14576
-L 150.111496 128.2464
-L 15.102992 128.2464
+   <g id="patch_4">
+    <path d="M 17.60315 122.05368
+L 122.609764 122.05368
+L 122.609764 58.06224
+L 17.60315 58.06224
 z
-" clip-path="url(#pe58727ee0b)" style="fill: #f7f7f7; stroke-dasharray: 4.07,1.76; stroke-dashoffset: 0; stroke: #0f4d92; stroke-width: 1.1; stroke-linejoin: miter"/>
+" clip-path="url(#pe58727ee0b)" style="fill: #fafafa; stroke: #0f4d92; stroke-width: 1.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 137.610709 122.05368
+L 242.617323 122.05368
+L 242.617323 58.06224
+L 137.610709 58.06224
+z
+" clip-path="url(#pe58727ee0b)" style="fill: #fafafa; stroke: #2a8c82; stroke-width: 1.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 257.618268 122.05368
+L 362.624882 122.05368
+L 362.624882 58.06224
+L 257.618268 58.06224
+z
+" clip-path="url(#pe58727ee0b)" style="fill: #fafafa; stroke: #0f4d92; stroke-width: 1.5; stroke-linejoin: miter"/>
    </g>
    <g id="patch_7">
-    <path d="M 180.113386 157.14576
-L 315.12189 157.14576
-L 315.12189 128.2464
-L 180.113386 128.2464
+    <path d="M 377.625827 122.05368
+L 482.632441 122.05368
+L 482.632441 58.06224
+L 377.625827 58.06224
 z
-" clip-path="url(#pe58727ee0b)" style="fill: #f7f7f7; stroke-dasharray: 4.07,1.76; stroke-dashoffset: 0; stroke: #2a8c82; stroke-width: 1.1; stroke-linejoin: miter"/>
+" clip-path="url(#pe58727ee0b)" style="fill: #fafafa; stroke: #658b3a; stroke-width: 1.5; stroke-linejoin: miter"/>
    </g>
    <g id="patch_8">
-    <path d="M 345.12378 157.14576
-L 480.132283 157.14576
-L 480.132283 128.2464
-L 345.12378 128.2464
+    <path d="M 17.60315 171.59544
+L 362.624882 171.59544
+L 362.624882 146.82456
+L 17.60315 146.82456
 z
-" clip-path="url(#pe58727ee0b)" style="fill: #f7f7f7; stroke-dasharray: 4.07,1.76; stroke-dashoffset: 0; stroke: #658b3a; stroke-width: 1.1; stroke-linejoin: miter"/>
+" clip-path="url(#pe58727ee0b)" style="fill: #ffffff; stroke-dasharray: 3.7,1.6; stroke-dashoffset: 0; stroke: #0f4d92; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 377.625827 171.59544
+L 492.633071 171.59544
+L 492.633071 146.82456
+L 377.625827 146.82456
+z
+" clip-path="url(#pe58727ee0b)" style="fill: #ffffff; stroke-dasharray: 3.7,1.6; stroke-dashoffset: 0; stroke: #658b3a; stroke-linejoin: miter"/>
+   </g>
+   <g id="line2d_1">
+    <path d="M 370.125354 179.8524
+L 370.125354 49.80528
+" clip-path="url(#pe58727ee0b)" style="fill: none; stroke-dasharray: 3.33,1.44; stroke-dashoffset: 0; stroke: #2a8c82; stroke-width: 0.9"/>
    </g>
    <g id="text_1">
     <text style="font-weight: 700; font-size: 10px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif; text-anchor: start; fill: #272727" x="15.102992" y="22.311637" transform="rotate(-0 15.102992 22.311637)">Task-relevant information acquisition</text>
    </g>
    <g id="text_2">
-    <text style="font-weight: 700; font-size: 6.6px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif; text-anchor: middle; fill: #ffffff" x="127.610079" y="53.583973" transform="rotate(-0 127.610079 53.583973)">PART I  INFORMATION CHARACTERIZATION</text>
+    <text style="font-weight: 700; font-size: 6.2px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif; text-anchor: middle; fill: #ffffff" x="190.114016" y="36.580183" transform="rotate(-0 190.114016 36.580183)">PART I - INFORMATION CHARACTERIZATION</text>
    </g>
    <g id="text_3">
-    <text style="font-size: 8px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif; fill: #272727" transform="translate(55.204454 74.38627)">Spatial structure  |  sparse retention</text>
-    <text style="font-size: 8px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif; fill: #272727" transform="translate(63.191329 85.28002)">objective and state conditioning</text>
+    <text style="font-weight: 700; font-size: 5.1px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif; fill: #ffffff" transform="translate(425.146996 32.995089)">PART II</text>
+    <text style="font-weight: 700; font-size: 5.1px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif; fill: #ffffff" transform="translate(385.653074 39.031418)">STATE-CONDITIONED ACQUISITION</text>
    </g>
    <g id="text_4">
-    <text style="font-size: 6.8px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif; text-anchor: middle; fill: #606060" x="127.610079" y="95.953112" transform="rotate(-0 127.610079 95.953112)">What information is valuable to acquire?</text>
+    <text style="font-weight: 700; font-size: 7.2px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif; text-anchor: start; fill: #0f4d92" x="24.603591" y="65.093153" transform="rotate(-0 24.603591 65.093153)">a</text>
    </g>
    <g id="text_5">
-    <text style="font-weight: 700; font-size: 6px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif; text-anchor: middle; fill: #ffffff" x="382.626142" y="53.428114" transform="rotate(-0 382.626142 53.428114)">PART II  STATE-CONDITIONED ACQUISITION</text>
+    <text style="font-weight: 700; font-size: 6px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif; text-anchor: middle; fill: #272727" x="70.106457" y="77.240467" transform="rotate(-0 70.106457 77.240467)">Complete sensing field</text>
    </g>
    <g id="text_6">
-    <text style="font-size: 8px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif; fill: #272727" transform="translate(306.828017 74.38627)">Legal-state value  |  matched controls</text>
-    <text style="font-size: 8px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif; fill: #272727" transform="translate(319.748642 86.05502)">cost-constrained set realization</text>
+    <text style="font-size: 5.55px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif; fill: #606060" transform="translate(40.975894 98.979519)">Information-rich field</text>
+    <text style="font-size: 5.55px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif; fill: #606060" transform="translate(36.86109 105.379363)">!= engineering decision</text>
    </g>
    <g id="text_7">
-    <text style="font-size: 6.8px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif; text-anchor: middle; fill: #606060" x="382.626142" y="95.953112" transform="rotate(-0 382.626142 95.953112)">How is value converted into a measurement set?</text>
-   </g>
-   <g id="patch_9">
-    <path d="M 242.120771 74.57616
-Q 256.370378 74.57616 269.054739 74.57616
-" style="fill: none; stroke: #606060; stroke-width: 1.4; stroke-linecap: round"/>
-    <path d="M 266.254739 73.17616
-L 269.054739 74.57616
-L 266.254739 75.97616
-z
-" style="fill: #606060; stroke: #606060; stroke-width: 1.4; stroke-linecap: round"/>
+    <text style="font-weight: 700; font-size: 7.2px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif; text-anchor: start; fill: #2a8c82" x="144.61115" y="65.093434" transform="rotate(-0 144.61115 65.093434)">b</text>
    </g>
    <g id="text_8">
-    <text style="font-size: 6.1px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif; text-anchor: middle; fill: #606060" x="256.118173" y="40.5162" transform="rotate(-0 256.118173 40.5162)">state-conditioned transition</text>
+    <text style="font-weight: 700; font-size: 5.35px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif; text-anchor: middle; fill: #272727" x="190.114016" y="77.063647" transform="rotate(-0 190.114016 77.063647)">Limited sensing under exact cost</text>
    </g>
    <g id="text_9">
-    <text style="font-weight: 700; font-size: 6.8px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif; text-anchor: middle; fill: #272727" x="82.607244" y="139.038485" transform="rotate(-0 82.607244 139.038485)">Task-value characterization</text>
+    <text style="font-size: 5.55px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif; fill: #606060" transform="translate(163.49266 98.441863)">Only a legal subset</text>
+    <text style="font-size: 5.55px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif; fill: #606060" transform="translate(166.031785 105.917019)">can be measured</text>
    </g>
    <g id="text_10">
-    <text style="font-size: 5.3px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif; fill: #606060" transform="translate(29.321541 149.087661)">registered outcomes and counterfactual</text>
-    <text style="font-size: 5.3px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif; fill: #606060" transform="translate(46.423978 154.917661)">measurement comparisons</text>
+    <text style="font-weight: 700; font-size: 7.2px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif; text-anchor: start; fill: #0f4d92" x="264.618709" y="65.093153" transform="rotate(-0 264.618709 65.093153)">c</text>
    </g>
    <g id="text_11">
-    <text style="font-weight: 700; font-size: 6.8px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif; text-anchor: middle; fill: #272727" x="247.617638" y="138.353172" transform="rotate(-0 247.617638 138.353172)">Legal partial state</text>
+    <text style="font-weight: 700; font-size: 6px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif; text-anchor: middle; fill: #272727" x="310.121575" y="77.845155" transform="rotate(-0 310.121575 77.845155)">Task-relevant value</text>
    </g>
    <g id="text_12">
-    <text style="font-size: 5.3px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif; fill: #606060" transform="translate(195.5882 149.087661)">metadata + acquired positions/content</text>
-    <text style="font-size: 5.3px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif; fill: #606060" transform="translate(230.942099 155.278309)">+ exact cost</text>
+    <text style="font-size: 5.55px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif; fill: #606060" transform="translate(282.902727 98.979519)">Candidates differ in</text>
+    <text style="font-size: 5.55px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif; fill: #606060" transform="translate(278.911063 105.917019)">downstream CAI value</text>
    </g>
    <g id="text_13">
-    <text style="font-weight: 700; font-size: 6.8px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif; text-anchor: middle; fill: #272727" x="412.628031" y="138.379735" transform="rotate(-0 412.628031 138.379735)">Cost-aware acquisition rule</text>
+    <text style="font-weight: 700; font-size: 7.2px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif; text-anchor: start; fill: #658b3a" x="384.626268" y="65.093434" transform="rotate(-0 384.626268 65.093434)">d</text>
    </g>
    <g id="text_14">
-    <text style="font-size: 5.3px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif; fill: #606060" transform="translate(367.501844 149.601098)">measurement-set selection within</text>
-    <text style="font-size: 5.3px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif; fill: #606060" transform="translate(378.380922 154.917661)">legal state and exact cost</text>
+    <text style="font-weight: 700; font-size: 5.7px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif; fill: #272727" transform="translate(401.320532 74.170811)">State-conditioned</text>
+    <text style="font-weight: 700; font-size: 5.7px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif; fill: #272727" transform="translate(404.545931 80.743624)">acquisition loop</text>
    </g>
    <g id="text_15">
-    <text style="font-weight: 700; font-size: 7.4px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif; text-anchor: middle; fill: #0f4d92" x="255.11811" y="193.128275" transform="rotate(-0 255.11811 193.128275)">spatial information  -&gt;  state-conditioned value  -&gt;  cost-constrained sensing</text>
+    <text style="font-size: 5.55px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif; fill: #606060" transform="translate(392.938931 98.364683)">I_t -&gt; value -&gt; legal action</text>
+    <text style="font-size: 5.55px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif; fill: #606060" transform="translate(401.305556 105.302183)">-&gt; reveal -&gt; I_{t+1}</text>
+   </g>
+   <g id="patch_10">
+    <path d="M 126.110961 90.05796
+Q 130.112287 90.05796 132.771972 90.05796
+" style="fill: none; stroke: #606060; stroke-width: 1.2; stroke-linecap: round"/>
+    <path d="M 129.971972 88.65796
+L 132.771972 90.05796
+L 129.971972 91.45796
+z
+" style="fill: #606060; stroke: #606060; stroke-width: 1.2; stroke-linecap: round"/>
+   </g>
+   <g id="patch_11">
+    <path d="M 246.11852 90.05796
+Q 250.119846 90.05796 252.779531 90.05796
+" style="fill: none; stroke: #606060; stroke-width: 1.2; stroke-linecap: round"/>
+    <path d="M 249.979531 88.65796
+L 252.779531 90.05796
+L 249.979531 91.45796
+z
+" style="fill: #606060; stroke: #606060; stroke-width: 1.2; stroke-linecap: round"/>
+   </g>
+   <g id="patch_12">
+    <path d="M 366.126079 90.05796
+Q 370.127405 90.05796 372.78709 90.05796
+" style="fill: none; stroke: #606060; stroke-width: 1.2; stroke-linecap: round"/>
+    <path d="M 369.98709 88.65796
+L 372.78709 90.05796
+L 369.98709 91.45796
+z
+" style="fill: #606060; stroke: #606060; stroke-width: 1.2; stroke-linecap: round"/>
+   </g>
+   <g id="text_16">
+    <text style="font-size: 5px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif; text-anchor: middle; fill: #2a8c82" x="370.125354" y="188.376263" transform="rotate(-0 370.125354 188.376263)">legal-state boundary</text>
+   </g>
+   <g id="text_17">
+    <text style="font-weight: 700; font-size: 5.7px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif; text-anchor: middle; fill: #0f4d92" x="190.114016" y="160.703355" transform="rotate(-0 190.114016 160.703355)">Retrospective teacher/oracle evidence | characterization only</text>
+   </g>
+   <g id="text_18">
+    <text style="font-weight: 700; font-size: 5.45px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif; fill: #658b3a" transform="translate(396.268394 157.35519)">Deployable decision uses</text>
+    <text style="font-weight: 700; font-size: 5.45px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif; fill: #658b3a" transform="translate(387.939687 163.896681)">legal state and exact cost only</text>
+   </g>
+   <g id="text_19">
+    <text style="font-weight: 700; font-size: 6.6px; font-family: 'Arial', 'DejaVu Sans', 'Liberation Sans', sans-serif; text-anchor: middle; fill: #272727" x="255.11811" y="194.984671" transform="rotate(-0 255.11811 194.984671)">WHY: complete-field information is not the same as decision-relevant measurement value</text>
    </g>
   </g>
  </g>

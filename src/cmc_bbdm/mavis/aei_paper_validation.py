@@ -247,17 +247,20 @@ def semantic_validation_errors(root: Path) -> list[str]:
         "part_i": r"\subsection{Task-Relevant Information Characterization}",
         "part_ii": r"\subsection{State-Conditioned Task-Oriented Acquisition}",
         "history_control": "acquired-position/history control",
-        "reconstruction_control": "registered normalized-RGB-MSE reconstruction objective",
+        "field_content_reference": "field-content reference",
+        "field_content_control": "field-content control",
+        "reconstruction_objective": "registered normalized-RGB-MSE reconstruction objective",
         "deployment_boundary": "this endpoint is an implementation boundary",
         "predictor_accuracy_boundary": "substantially less accurate shallow MLP",
         "scope_cost": "exact native-raster acquisition cost",
         "scope_domains": "six CFRP experimental domains",
         "scope_conditioning": "downstream CAI predictor and the registered action space",
         "scope_validation": "prospective validation under the corresponding measurement process",
+        "figure1": "figure1_task_relevant_acquisition_framework.pdf",
+        "figure2": "figure2_information_characterization.pdf",
+        "figure3": "figure3_state_conditioned_value.pdf",
         "figure4": "figure4_valuation_planning_realization.pdf",
-        "figure5": "figure5_task_specific_measurement_priorities.pdf",
         "table1": r"\input{tables/table1_case_protocol.tex}",
-        "table2": r"\input{tables/table2_task_relevant_results.tex}",
     }
     for label, phrase in required_main.items():
         if phrase not in visible_flat:
@@ -350,6 +353,8 @@ def semantic_validation_errors(root: Path) -> list[str]:
         "figure4_decision_calibration.pdf",
         "table1_closest_work.tex",
         "table3_progressive_evidence_chain.tex",
+        "figure5_task_specific_measurement_priorities.pdf",
+        "table2_task_relevant_results.tex",
         "distinct chronological roles",
         "were not used to re-select or modify the frozen outer endpoint",
         "transfer conditions beyond the present case study",
@@ -458,8 +463,8 @@ def validate_paper(root: Path) -> ValidationReport:
     passed = (
         main_mapped == main_visible
         and combined_mapped == canonical
-        and len(figures) == 5
-        and len(tables) == 2
+        and len(figures) == 4
+        and len(tables) == 1
         and len(sections) == 6
         and not unmatched
         and not changed
