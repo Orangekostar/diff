@@ -1,0 +1,120 @@
+schema_version: 1
+base_sha: 3951f71f28b6efdf8c74eea0fe274b2a78a9cd57
+
+p0:
+  config_relative_path: paper_v3/configs/damage_to_failure_response.yaml
+  required_status: P0_GO
+
+p1:
+  package_relative_path: results/damage_to_failure_response/p1_response_richness
+  summary_sha256: 37da95962395a0915f586820ab03f06d8d859856e8637d975bc302b1d555ebc7
+  checksums_sha256: 29bea7be282fec60badfaab1b4c3fa162b84fea2cddfc6556887ffe9bb728924
+  descriptor_table_sha256: 14ecb8c8625b775ddf36fb30877c8e497225a6cef3e4db45e795947ef9c4a833
+  required_status: P1_GO
+  endpoints:
+    - extension_peak_mm
+    - slope_u20_u60_mpa_per_mm
+    - normalized_prepeak_auc
+
+sources:
+  feature_bank:
+    root: repository
+    relative_path: results/aei_selective_invariance/a2_paired_features/paired_features.npz
+    sha256: f2a69f0da75e20880202d7fc4a6a92f979978406ec21f9d83e4bc8db07fb72a8
+  embedding_config:
+    root: repository
+    relative_path: paper_v3/configs/aei_multiview_regression.yaml
+    sha256: 8b46986c23ccd87d5e79f2a6f94f034a90d10e91ec21d39c40a1a58e3b41a357
+  design_manifest:
+    root: legacy
+    relative_path: data/public/hasebe/manifest/paired.csv
+    sha256: f81002981bf2f6aed84818b48da87cd57e6336f5f3da8d78df1a58d26dd8026f
+  feature_cache:
+    root: legacy
+    relative_path: results/public_recoverability/feature_cache.npz
+    sha256: 6d581c77e0db18782406bd55dd2c0716d048c16c64c8df4423d5b331c84aeb52
+  physical_descriptors:
+    root: legacy
+    relative_path: results/cpb_cfrp_revision/physical_descriptors.csv
+    sha256: 2f2c3b3a16cbe1b48364b76ad10999a91c01de000b81525ba56c8ec90399e078
+  provenance_specimens:
+    root: legacy
+    relative_path: paper_v2/data/provenance/specimens.csv
+    sha256: 84617cb12012ac9acc1b756b59161738a2a0a1089bd3eb432b7d01a066e65f9f
+  lvi_workbook:
+    root: hasebe_v3
+    relative_path: 1_Low velocity impact testing condition/Low velocity impact testing condition and damage_v0.2.xlsx
+    sha256: e6d98c968f57ac5748e104dc1da5e112114d25d77c03c7222ba3a0d93ac23cf1
+  size_workbook:
+    root: hasebe_v3
+    relative_path: 2_Specimen size/Specimen size_v0.2.xlsx
+    sha256: 72c6dc7e1e8790883dba2b4b1e3ee1259fdfbad61d22d241a866d4621834fa65
+
+cohort:
+  expected_n: 276
+  domain_counts:
+    74t7kcdgkr: 45
+    cgtnjyggtm: 49
+    w68dtmpfyf: 43
+    xcmzfsbd9t: 59
+    yfxyg8jm46: 42
+    ykhs7s2dck: 38
+
+features:
+  F0: [laminate_type, ply_count, width_mm, thickness_mm]
+  F1: [F0, surface_profile_stats21]
+  F2: [F0, projected_damage_area, damage_height, damage_width]
+  F3: [F0, full_cscan_embedding512]
+  F4: [F0, surface_profile_stats21, full_cscan_embedding512]
+  F5: [F4, privileged_total_impact_energy_j, privileged_impactor]
+  full_embedding_view: FULL
+  pca_dimensions: [8, 16, 32]
+  privileged_views: [F5]
+  deployable_views: [F0, F1, F2, F3, F4]
+
+evaluation:
+  outer_split: leave_one_domain_out
+  inner_split: leave_one_source_domain_out
+  aggregation: equal_domain_raw_mae
+  estimator: Ridge
+  ridge_alphas: [0.1, 1.0, 10.0, 100.0]
+  fit_target_scale: raw
+  standardized_sensitivity: outer_source_target_standard_deviation
+  tie_tolerance: 1.0e-12
+  tie_order: [lower_pca_dimension, larger_ridge_alpha]
+  fold_local:
+    - numeric_median_imputation
+    - numeric_standardization
+    - fixed_category_one_hot
+    - embedding_pca
+
+bootstrap:
+  generator: PCG64
+  seed: 20260830
+  replicates: 100000
+  resampling_unit: specimen_within_domain
+  synchronized_across_views_and_endpoints: true
+  aggregation: equal_domain
+  primary_contrast_count: 6
+  ordinary_lower_quantile: 0.025
+  ordinary_upper_quantile: 0.975
+  familywise_lower_quantile: 0.004166666666666667
+  familywise_upper_quantile: 0.9958333333333333
+
+gate:
+  minimum_relative_equal_domain_mae_improvement: 0.10
+  minimum_improved_domain_count: 4
+  familywise_lower_bound_strictly_positive: true
+  primary_reference: F2
+  primary_candidates: [F3, F4]
+  all_fail_status: MACK_EXTENSION_NO_GO
+
+input_boundary:
+  true_impact_context_primary_forbidden: true
+  true_cai_strength_input_forbidden: true
+  raw_cai_trace_input_forbidden: true
+  response_target_input_forbidden: true
+  post_cai_image_input_forbidden: true
+  target_domain_fit_state_forbidden: true
+  neural_model_authorized: false
+  p3_curve_model_authorized: false
