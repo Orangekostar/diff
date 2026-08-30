@@ -1,0 +1,59 @@
+schema_version: 1
+base_sha: 3951f71f28b6efdf8c74eea0fe274b2a78a9cd57
+
+dataset:
+  id: 8scdmfdcfb
+  version: 3
+  inventory:
+    relative_path: data/public/hasebe_cai/inventory.jsonl
+    sha256: 5ad443c1171e5cd34d85999822b7232c826b7a9b11c6f11bd6308c4e14be2ff7
+  lvi_workbook:
+    relative_path: 1_Low velocity impact testing condition/Low velocity impact testing condition and damage_v0.2.xlsx
+    sha256: e6d98c968f57ac5748e104dc1da5e112114d25d77c03c7222ba3a0d93ac23cf1
+  size_workbook:
+    relative_path: 2_Specimen size/Specimen size_v0.2.xlsx
+    sha256: 72c6dc7e1e8790883dba2b4b1e3ee1259fdfbad61d22d241a866d4621834fa65
+  peak_workbook:
+    relative_path: 5_Compression after impact strength/Compression after impact strength_v0.2.xlsx
+    sha256: 0de44feca06294c33f2c6bc98ce6e9a8035476ff8fbef21d29f852e820cf4e2d
+  raw_folder: 4_Compression after impact testing raw data
+
+feature_bank:
+  relative_path: results/aei_selective_invariance/a2_paired_features/paired_features.npz
+  sha256: f2a69f0da75e20880202d7fc4a6a92f979978406ec21f9d83e4bc8db07fb72a8
+
+legacy_spatial_manifest:
+  relative_path: data/public/hasebe/manifest/paired.csv
+  sha256: f81002981bf2f6aed84818b48da87cd57e6336f5f3da8d78df1a58d26dd8026f
+
+historical_sources:
+  src/cmc_bbdm/cpb_v3/data.py: 4d294d3b047fc32540adb499402b7171700bfec152dac71263d10f92808b8e03
+  src/cmc_bbdm/cpb_v3/config.py: be07e8313127bb76b31b2b498a131fda151268e7c0d86a0ced36d65f4676f2e3
+  src/cmc_bbdm/cpb_v3/evaluation.py: 2165376d1ee6459329da748f725b0a12d4b3d94d3138b811448b2649190688c9
+  src/cmc_bbdm/cpb_v3/morphology.py: 953f37282149b4fd616dfafb9c9babd3afc600ead252ba99c5f4b85d83b91542
+  src/cmc_bbdm/cpb_redesign/mechanical_utility.py: feb57997c4e9e824a50c9ea7dd8f1922b2fb68c4489e528a2e4d7429159e9e73
+  src/cmc_bbdm/hasebe_cai.py: e788f77e01fd534b14168f06d3177ba81c24abc3fe53ca8ab7feebeb0d0dbf07
+  src/cmc_bbdm/mendeley.py: c7bdbe66f6337c51f06d674f5de860a4749d42830b3814f0d6b892a6a98bf44e
+  scripts/run_cpb_v3_p1.py: 1def1cd19a1bab162a9291bba621cd2ef9feb9ca0e91f7b1e461a3ef1309c5a7
+
+primary_counts:
+  74t7kcdgkr: 45
+  cgtnjyggtm: 49
+  w68dtmpfyf: 43
+  xcmzfsbd9t: 59
+  yfxyg8jm46: 42
+  ykhs7s2dck: 38
+
+calibration:
+  load_kn_per_volt: 25.0
+  displacement_mm_per_volt: 1.0
+  sampling_hz: 50.0
+
+review_thresholds:
+  minimum_exact_pairs_per_domain: 20
+  maximum_missing_primary_channel_fraction: 0.2
+
+input_boundary:
+  post_cai_image_input_forbidden: true
+  true_cai_trace_input_forbidden: true
+  true_peak_strength_input_forbidden: true

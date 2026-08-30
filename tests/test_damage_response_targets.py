@@ -52,6 +52,18 @@ def test_trace_conversion_uses_registered_global_calibrations() -> None:
     assert response.peak_absolute_stress_mpa == 500.0
 
 
+def test_trace_conversion_can_bind_separately_verified_canonical_identity() -> None:
+    payload = _trace_payload().replace(b'"c8-2"', b'"c8-222"')
+    response = convert_trace_to_response(
+        decode_raw_cai_csv(payload),
+        width_mm=10.0,
+        thickness_mm=2.0,
+        canonical_specimen_id="c8-2",
+    )
+
+    assert response.specimen_id == "c8-2"
+
+
 @pytest.mark.parametrize(
     ("width_mm", "thickness_mm"),
     ((0.0, 2.0), (10.0, -1.0), (float("nan"), 2.0), (True, 2.0)),

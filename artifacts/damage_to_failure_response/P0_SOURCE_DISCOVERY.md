@@ -22,14 +22,14 @@ The compact base lacks these P0-relevant historical candidates:
 
 | Historical candidate | SHA-256 in `local:historical_full_tree` |
 |---|---|
-| `src/cmc_bbdm/cpb_v3/data.py` | `4d294d9abceee655f2ea5fbf2f9058658ad822ad8e87f14178a3e57671e9dbf7` |
-| `src/cmc_bbdm/cpb_v3/config.py` | `be07e84bc95622833ea86149946950209450870247fd868772177950385137a5d` |
-| `src/cmc_bbdm/cpb_v3/evaluation.py` | `216537469d426d0025859c624cf38d4b05d7684fcc4d29fc5485190a6d33c4f5` |
-| `src/cmc_bbdm/cpb_v3/morphology.py` | `953f37b602127b1f73e65f7f2cde1530bc10bf1829055b3be8bd3e619c9acc06` |
-| `src/cmc_bbdm/cpb_redesign/mechanical_utility.py` | `feb57922560238823340430917f9c8022edbf601074e8030cd0b4950dc0f4d13` |
-| `src/cmc_bbdm/hasebe_cai.py` | `e788f76db5c23d4558b4d94cd01fd32ed95507281f66b962771349864487e958` |
-| `src/cmc_bbdm/mendeley.py` | `c7bdbe7a45b050feae8246352fac3c9922d4b42958596c032250815661cc12a8` |
-| `scripts/run_cpb_v3_p1.py` | `1def1ce609394d16eb7b39ff55105e2a76757bdb0aa3f871f0a7a3d7bbf2444c` |
+| `src/cmc_bbdm/cpb_v3/data.py` | `4d294d3b047fc32540adb499402b7171700bfec152dac71263d10f92808b8e03` |
+| `src/cmc_bbdm/cpb_v3/config.py` | `be07e8313127bb76b31b2b498a131fda151268e7c0d86a0ced36d65f4676f2e3` |
+| `src/cmc_bbdm/cpb_v3/evaluation.py` | `2165376d1ee6459329da748f725b0a12d4b3d94d3138b811448b2649190688c9` |
+| `src/cmc_bbdm/cpb_v3/morphology.py` | `953f37282149b4fd616dfafb9c9babd3afc600ead252ba99c5f4b85d83b91542` |
+| `src/cmc_bbdm/cpb_redesign/mechanical_utility.py` | `feb57997c4e9e824a50c9ea7dd8f1922b2fb68c4489e528a2e4d7429159e9e73` |
+| `src/cmc_bbdm/hasebe_cai.py` | `e788f77e01fd534b14168f06d3177ba81c24abc3fe53ca8ab7feebeb0d0dbf07` |
+| `src/cmc_bbdm/mendeley.py` | `c7bdbe66f6337c51f06d674f5de860a4749d42830b3814f0d6b892a6a98bf44e` |
+| `scripts/run_cpb_v3_p1.py` | `1def1cd19a1bab162a9291bba621cd2ef9feb9ca0e91f7b1e461a3ef1309c5a7` |
 
 These hashes are discovery evidence only. New focused code must be reviewed and
 tested in the current Git repository rather than treating the historical files
@@ -87,15 +87,17 @@ The official outcome workbook contains 448 rows. `c8-1` and `c8-10` have no raw
 trace and a nonnumeric outcome; the remaining 446 trace identities have numeric
 published CAI strength. Of the 170 trace identities outside the primary 276,
 144 are impacted specimens with numeric projected-delamination area and dent
-depth, while 26 are intact. This proves additional exact raw-trace plus scalar
-pre-CAI-observation pairs. It does **not** prove exact full C-scan or surface-
-profile availability for those 170 identities. In particular, `r0/r45` remains
-a candidate extension, not an authorized training cohort or an "untouched"
-test set.
+depth, while 26 are intact. The hash-bound historical spatial manifest
+intersects 281 raw-file identities: all 276 primary specimens plus five
+additional identities. One additional identity, `q8-17`, has a truncated raw
+CSV, leaving four additional spatial identities with a valid decoded response.
+The remaining 139 impacted identities have scalar observations but no
+established spatial pair. No `r0/r45` identity has an exact spatial pair in the
+available manifest, so those families are not an authorized extension.
 
 ## Raw schema and unresolved semantics
 
-Direct CP932 decoding of an official CSV records 50 Hz sampling and the source
+Direct CP932 decoding of the official CSVs records 50 Hz sampling and the source
 headers `Extension[V]`, `Load[V]`, `Strain-FL`, `Strain-FR`, `Strain-BL`, and
 `Strain-BR`. The source calibration is 1 mm/V for extension and 25 kN/V for
 load. The four strain columns declare `με` in the CSV unit row. The Data in
@@ -103,6 +105,13 @@ Brief prose labels those columns `[µm]`, and the sign/averaging/preload
 convention is not independently resolved. The conservative audit state is
 therefore `STRAIN_UNIT_UNRESOLVED`. JIS modulus and maximum-strain endpoints
 remain unauthorized; load/extension auditing may proceed.
+
+Strict decoding succeeds for 445/446 official raw files and for all 276 primary
+files. The non-primary `q8-17` file declares 15,711 rows and 314.22 s but
+contains 3,840 rows ending at 76.78 s. The primary `c24-12` file has internal
+title `c24-112`; canonical `c24-12` is independently supported by the official
+filename, dataset version, file SHA-256, and all three workbooks, and the title
+conflict remains explicit in `raw_trace_qc.csv`.
 
 Post-CAI images are identity/integrity audit outputs only. They are not model
 inputs: `POST_CAI_IMAGE_INPUT_FORBIDDEN = true`.
@@ -114,17 +123,17 @@ inputs: `POST_CAI_IMAGE_INPUT_FORBIDDEN = true`.
 | 1 | Exact base SHA? | `3951f71f28b6efdf8c74eea0fe274b2a78a9cd57` | CLOSED |
 | 2 | Which compact authority modules/raw inputs were missing? | Eight P0-relevant historical source candidates above; all 446 raw CAI CSVs were initially absent from the historical external folder and are now official-SHA verified outside Git. | CLOSED |
 | 3 | Does the full authority repository exist, and what is its HEAD? | A historical full tree exists, but it is not a Git repository; HEAD is `NO_GIT_AUTHORITY`. | CLOSED |
-| 4 | What is the actual raw-folder structure? | One official v3 folder, 446 unique specimen CSVs across eight named families, CP932 metadata/data rows, six registered channels. | CLOSED_PENDING_ALL_FILE_SCHEMA_QC |
-| 5 | How many current 276 have exact raw traces? | 276/276, with exact per-domain counts `45/49/43/59/42/38`. | CLOSED_PENDING_MANIFEST_REPLAY |
-| 6 | Which of 446 additionally exact-pair to pre-CAI C-scan? | 144 additional impacted identities have exact raw trace plus scalar pre-CAI damage observations; exact full C-scan/profile pairing is not yet established. | OPEN_REQUIRES_SPATIAL_SOURCE_AUDIT |
+| 4 | What is the actual raw-folder structure? | One official v3 folder, 446 unique specimen CSVs across eight named families, CP932 metadata/data rows, six registered channels; 445 decode strictly and the one truncated non-primary file is retained in QC. | CLOSED |
+| 5 | How many current 276 have exact raw traces? | 276/276, with exact per-domain counts `45/49/43/59/42/38`; package replay and checksums pass. | CLOSED |
+| 6 | Which of 446 additionally exact-pair to pre-CAI C-scan? | The existing hash-bound spatial manifest intersects 281 raw identities: primary 276 plus five additional file identities. Because `q8-17` is truncated, four additional identities have valid decoded responses. Another 139 impacted identities have scalar-only observations; `r0/r45` has no established spatial pair. | CLOSED |
 | 7 | Are strain unit and sign unambiguous? | No. CSV unit metadata says `με`, article prose conflicts, and sign semantics remain unresolved. | CLOSED_AS_STRAIN_UNIT_UNRESOLVED |
-| 8 | Does raw peak reproduce published CAI strength? | Formula and source calibration are fixed; real 446-row global-tolerance reconciliation has not yet run. | OPEN_REQUIRES_P0_RECONCILIATION |
-| 9 | Which response endpoints may legally enter P1? | Peak stress and extension-derived quantities require P0 reconciliation/QC; all strain-dependent endpoints are disabled. Final legal endpoint list is not yet authorized. | OPEN_REQUIRES_P0_GATE |
+| 8 | Does raw peak reproduce published CAI strength? | Yes for 276/276 primary specimens under one formula and 0.005 MPa global tolerance; maximum absolute error is `2.2737367544323206e-13` MPa. | CLOSED |
+| 9 | Which response endpoints may legally enter P1? | Stress-extension peak extension, a uniformly defined pre-peak slope/integral, and normalized pre-peak stress-extension shape. All strain/gauge-derived endpoints remain disabled. | CLOSED |
 | 10 | What work is closest and how is this route different? | Mack (pre-CAI C-scan, scalar), Lu (pre-CAI CT to calibrated simulated full response), Du (CAI-stage AE), and composite full-curve work outside experimental post-impact CAI are closest. | CLOSED_SEARCHED_NOT_ASSUMED |
 
-No model/training code is authorized while questions 6, 8, and 9 remain open.
-P0 authority, parsing, reconciliation, and replay code is audit infrastructure,
-not model code, and is permitted solely to close these questions.
+All ten questions are now source-backed. P0 status is `P0_GO`. P1 execution
+still requires a separate preregistered implementation plan and failing tests
+before any estimator code or training is added.
 
 ## Baseline execution state
 

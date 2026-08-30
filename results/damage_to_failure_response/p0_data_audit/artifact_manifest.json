@@ -1,0 +1,45 @@
+{
+  "files": [
+    {
+      "path": "REPORT.md",
+      "sha256": "72057485f7a32b3a0b3a1e2f3f54884488a888dd670198b4a6fbfd07e2eebf12",
+      "size": 1939
+    },
+    {
+      "path": "pairing_manifest.csv",
+      "sha256": "674cfac14392bd43a2d13b93e09c43a53de7c9583536afdc2cf0c7d0285d5bf4",
+      "size": 61592
+    },
+    {
+      "path": "post_cai_image_manifest.csv",
+      "sha256": "7943eee8506cb3b1ab062f564ceb90948c26304bac32664f0cec057af58bf50d",
+      "size": 184773
+    },
+    {
+      "path": "published_peak_reconciliation.csv",
+      "sha256": "231cff4571d4f7dac664ec21a7a07c106424f3d91676f8366a2a337521f75d9a",
+      "size": 78872
+    },
+    {
+      "path": "raw_trace_qc.csv",
+      "sha256": "304051a1c90936402b630472e378b5c261b36083bfb21eace07c6baa541db0f6",
+      "size": 202096
+    },
+    {
+      "path": "source_hashes.csv",
+      "sha256": "6f55a4409f77f994672e948fd63e53a6dc6128c5ab22588b61ecfb7576d9620e",
+      "size": 111738
+    },
+    {
+      "path": "strain_unit_audit.csv",
+      "sha256": "370e2dc2f0b368abffe5fab1fedc0c93253e20f251f8a17cc30478f310f9f290",
+      "size": 56416
+    },
+    {
+      "path": "summary.json",
+      "sha256": "9d44ead975119db2181a91efbf14b74165671a9d25b7b576d90f6e104757a633",
+      "size": 5663
+    }
+  ],
+  "schema_version": 1
+}

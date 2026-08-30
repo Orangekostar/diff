@@ -44,12 +44,22 @@ class ResponseTrace:
 
 
 def convert_trace_to_response(
-    trace: RawCaiTrace, *, width_mm: float, thickness_mm: float
+    trace: RawCaiTrace,
+    *,
+    width_mm: float,
+    thickness_mm: float,
+    canonical_specimen_id: str | None = None,
 ) -> ResponseTrace:
     """Apply the one registered load/displacement conversion and measured area."""
 
     width = _positive_dimension(width_mm, "width_mm")
     thickness = _positive_dimension(thickness_mm, "thickness_mm")
+    if canonical_specimen_id is None:
+        specimen_id = trace.specimen_id
+    elif not isinstance(canonical_specimen_id, str) or not canonical_specimen_id.strip():
+        raise TargetError("canonical specimen identity must be nonempty")
+    else:
+        specimen_id = canonical_specimen_id.strip().casefold()
     extension_mm = trace.extension_volts * DISPLACEMENT_MM_PER_VOLT
     load_kn = trace.load_volts * LOAD_KN_PER_VOLT
     stress_mpa = load_kn * 1000.0 / (width * thickness)
@@ -58,7 +68,7 @@ def convert_trace_to_response(
         raise TargetError("converted response has fewer than two finite stress rows")
     peak_row = int(np.nanargmax(np.abs(stress_mpa)))
     return ResponseTrace(
-        specimen_id=trace.specimen_id,
+        specimen_id=specimen_id,
         extension_mm=_readonly(extension_mm),
         load_kn=_readonly(load_kn),
         stress_mpa=_readonly(stress_mpa),

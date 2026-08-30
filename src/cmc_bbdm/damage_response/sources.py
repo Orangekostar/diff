@@ -7,6 +7,7 @@ import math
 import re
 from collections import Counter
 from collections.abc import Mapping
+from collections.abc import Set as AbstractSet
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 
@@ -416,6 +417,41 @@ class SpatialPairIdentity:
     surface_image_sha256: str
     cscan_sha256: str
     surface_profile_available: bool
+
+
+@dataclass(frozen=True)
+class SpatialExpansion:
+    identity_pair_ids: tuple[str, ...]
+    valid_trace_pair_ids: tuple[str, ...]
+    extra_identity_pair_ids: tuple[str, ...]
+    extra_valid_trace_pair_ids: tuple[str, ...]
+
+
+def classify_spatial_expansion(
+    *,
+    raw_identity_ids: AbstractSet[str],
+    valid_trace_ids: AbstractSet[str],
+    spatial_ids: AbstractSet[str],
+    primary_ids: AbstractSet[str],
+) -> SpatialExpansion:
+    """Separate exact file identity intersections from usable decoded traces."""
+
+    raw = {value.strip().casefold() for value in raw_identity_ids}
+    valid = {value.strip().casefold() for value in valid_trace_ids}
+    spatial = {value.strip().casefold() for value in spatial_ids}
+    primary = {value.strip().casefold() for value in primary_ids}
+    if "" in raw | valid | spatial | primary:
+        raise SourceError("spatial expansion identities must be nonempty")
+    if not valid.issubset(raw):
+        raise SourceError("valid trace identities are not a subset of raw identities")
+    identity_pairs = raw & spatial
+    valid_pairs = valid & spatial
+    return SpatialExpansion(
+        identity_pair_ids=tuple(sorted(identity_pairs)),
+        valid_trace_pair_ids=tuple(sorted(valid_pairs)),
+        extra_identity_pair_ids=tuple(sorted(identity_pairs - primary)),
+        extra_valid_trace_pair_ids=tuple(sorted(valid_pairs - primary)),
+    )
 
 
 def load_spatial_pairs(

@@ -10,6 +10,7 @@ from openpyxl import Workbook
 
 from cmc_bbdm.damage_response.sources import (
     SourceError,
+    classify_spatial_expansion,
     load_official_inventory,
     load_spatial_pairs,
     read_lvi_observations,
@@ -242,3 +243,17 @@ def test_spatial_manifest_returns_identities_without_private_paths(
     assert records[0].cscan_sha256 == "b" * 64
     assert records[0].surface_profile_available is True
     assert "/private/" not in repr(records[0])
+
+
+def test_spatial_expansion_distinguishes_identity_from_valid_trace() -> None:
+    result = classify_spatial_expansion(
+        raw_identity_ids={"c8-2", "q8-17", "q8-18"},
+        valid_trace_ids={"c8-2", "q8-18"},
+        spatial_ids={"c8-2", "q8-17", "q8-18"},
+        primary_ids={"c8-2"},
+    )
+
+    assert result.identity_pair_ids == ("c8-2", "q8-17", "q8-18")
+    assert result.valid_trace_pair_ids == ("c8-2", "q8-18")
+    assert result.extra_identity_pair_ids == ("q8-17", "q8-18")
+    assert result.extra_valid_trace_pair_ids == ("q8-18",)

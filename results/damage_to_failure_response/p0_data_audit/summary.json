@@ -1,0 +1,217 @@
+{
+  "base_sha": "3951f71f28b6efdf8c74eea0fe274b2a78a9cd57",
+  "dataset": {
+    "id": "8scdmfdcfb",
+    "version": 3
+  },
+  "downstream_status": {
+    "P1": "NOT_RUN_NOT_AUTHORIZED",
+    "P2": "NOT_RUN_NOT_AUTHORIZED",
+    "P3": "NOT_RUN_NOT_AUTHORIZED",
+    "P4": "NOT_RUN_NOT_AUTHORIZED",
+    "P5": "NOT_RUN_NOT_AUTHORIZED"
+  },
+  "gate": {
+    "reasons": [],
+    "status": "P0_GO"
+  },
+  "identity": {
+    "identity_guessed": false,
+    "primary_title_conflicts": [
+      "c24-12"
+    ],
+    "primary_title_conflicts_crosschecked_by_three_workbooks": 1,
+    "rule": "official filename + feature-bank domain + raw-file SHA-256"
+  },
+  "new_training": false,
+  "pairing": {
+    "per_domain": {
+      "74t7kcdgkr": 45,
+      "cgtnjyggtm": 49,
+      "w68dtmpfyf": 43,
+      "xcmzfsbd9t": 59,
+      "yfxyg8jm46": 42,
+      "ykhs7s2dck": 38
+    },
+    "primary_exact_pairs": 276,
+    "primary_expected": 276
+  },
+  "peak_reconciliation": {
+    "global_absolute_tolerance_mpa": 0.005,
+    "maximum_primary_absolute_error_mpa": 2.2737367544323206e-13,
+    "primary_passed": 276,
+    "primary_total": 276
+  },
+  "post_cai_images": {
+    "input_forbidden": true,
+    "local_bytes_verified": 0,
+    "official_hash_bound_records": 892
+  },
+  "pre_model_authority_questions": {
+    "q1": {
+      "answer": "3951f71f28b6efdf8c74eea0fe274b2a78a9cd57",
+      "evidence": [
+        "paper_v3/configs/damage_to_failure_response.yaml",
+        "source_hashes.csv"
+      ],
+      "status": "CLOSED"
+    },
+    "q10": {
+      "answer": "SEARCHED_NOT_ASSUMED",
+      "evidence": [
+        "artifacts/damage_to_failure_response/LITERATURE_NOVELTY_LEDGER.md"
+      ],
+      "status": "CLOSED_SEARCHED_NOT_ASSUMED"
+    },
+    "q2": {
+      "answer": {
+        "compact_missing_historical_candidates": [
+          "scripts/run_cpb_v3_p1.py",
+          "src/cmc_bbdm/cpb_redesign/mechanical_utility.py",
+          "src/cmc_bbdm/cpb_v3/config.py",
+          "src/cmc_bbdm/cpb_v3/data.py",
+          "src/cmc_bbdm/cpb_v3/evaluation.py",
+          "src/cmc_bbdm/cpb_v3/morphology.py",
+          "src/cmc_bbdm/hasebe_cai.py",
+          "src/cmc_bbdm/mendeley.py"
+        ],
+        "raw_csvs_verified_outside_git": 446
+      },
+      "evidence": [
+        "artifacts/damage_to_failure_response/P0_SOURCE_DISCOVERY.md",
+        "source_hashes.csv"
+      ],
+      "status": "CLOSED"
+    },
+    "q3": {
+      "answer": "HISTORICAL_FULL_TREE_EXISTS_NO_GIT_AUTHORITY",
+      "evidence": [
+        "artifacts/damage_to_failure_response/P0_SOURCE_DISCOVERY.md",
+        "source_hashes.csv"
+      ],
+      "status": "CLOSED"
+    },
+    "q4": {
+      "answer": {
+        "official_raw_files": 446,
+        "strict_decode_failures": [
+          "q8-17"
+        ],
+        "strictly_decoded": 445
+      },
+      "evidence": [
+        "raw_trace_qc.csv"
+      ],
+      "status": "CLOSED"
+    },
+    "q5": {
+      "answer": {
+        "per_domain": {
+          "74t7kcdgkr": 45,
+          "cgtnjyggtm": 49,
+          "w68dtmpfyf": 43,
+          "xcmzfsbd9t": 59,
+          "yfxyg8jm46": 42,
+          "ykhs7s2dck": 38
+        },
+        "primary_exact_pairs": 276
+      },
+      "evidence": [
+        "pairing_manifest.csv"
+      ],
+      "status": "CLOSED"
+    },
+    "q6": {
+      "answer": {
+        "extra_valid_trace_pairs": 4,
+        "raw_spatial_identity_pairs": 281,
+        "raw_spatial_valid_trace_pairs": 280
+      },
+      "evidence": [
+        "artifacts/damage_to_failure_response/P0_SOURCE_DISCOVERY.md",
+        "raw_trace_qc.csv"
+      ],
+      "status": "CLOSED"
+    },
+    "q7": {
+      "answer": "STRAIN_UNIT_UNRESOLVED",
+      "evidence": [
+        "strain_unit_audit.csv"
+      ],
+      "status": "CLOSED_AS_STRAIN_UNIT_UNRESOLVED"
+    },
+    "q8": {
+      "answer": {
+        "global_absolute_tolerance_mpa": 0.005,
+        "primary_passed": 276,
+        "primary_total": 276
+      },
+      "evidence": [
+        "published_peak_reconciliation.csv"
+      ],
+      "status": "CLOSED"
+    },
+    "q9": {
+      "answer": {
+        "legal_stress_extension_endpoints": [
+          "extension_at_peak_load",
+          "uniform_pre_peak_stress_extension_slope",
+          "pre_peak_integrated_stress_extension_index",
+          "normalized_pre_peak_stress_extension_shape"
+        ],
+        "strain_dependent_authorized": false
+      },
+      "evidence": [
+        "strain_unit_audit.csv",
+        "published_peak_reconciliation.csv"
+      ],
+      "status": "CLOSED"
+    }
+  },
+  "raw_trace_qc": {
+    "decoded": 445,
+    "failed": 1,
+    "failed_specimens": [
+      "q8-17"
+    ],
+    "official_records": 446,
+    "primary_decoded": 276
+  },
+  "response_endpoint_boundary": {
+    "legal_for_p1_audit": [
+      "extension_at_peak_load",
+      "uniform_pre_peak_stress_extension_slope",
+      "pre_peak_integrated_stress_extension_index",
+      "normalized_pre_peak_stress_extension_shape"
+    ],
+    "strain_dependent_authorized": false
+  },
+  "schema_version": 1,
+  "spatial_expansion": {
+    "extra_exact_spatial_identity_pairs": 5,
+    "extra_exact_spatial_identity_specimen_ids": [
+      "c24-1",
+      "c24-4",
+      "c8-11t",
+      "q24-17",
+      "q8-17"
+    ],
+    "extra_valid_spatial_trace_pairs": 4,
+    "extra_valid_spatial_trace_specimen_ids": [
+      "c24-1",
+      "c24-4",
+      "c8-11t",
+      "q24-17"
+    ],
+    "intact_raw_specimens": 26,
+    "raw_plus_spatial_identity_pairs": 281,
+    "raw_plus_spatial_valid_trace_pairs": 280,
+    "scalar_only_impacted_without_spatial_pair": 139
+  },
+  "strain": {
+    "cross_source_label_conflict": true,
+    "csv_unit_metadata": "microstrain",
+    "sign_convention_resolved": false,
+    "status": "STRAIN_UNIT_UNRESOLVED"
+  }
+}
