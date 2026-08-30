@@ -1,0 +1,168 @@
+{
+  "artifact_replay_byte_identical": true,
+  "base_sha": "3951f71f28b6efdf8c74eea0fe274b2a78a9cd57",
+  "config_sha256": "360d8cbfffcc65fb210e39e1c753fc50b667735a6606111143dbc26a9c6cfb16",
+  "downstream_status": {
+    "P2": "AUTHORIZED_NOT_RUN",
+    "P3": "NOT_RUN_NOT_AUTHORIZED",
+    "P4": "NOT_RUN_NOT_AUTHORIZED",
+    "P5": "NOT_RUN_NOT_AUTHORIZED"
+  },
+  "endpoints": {
+    "extension_peak_mm": {
+      "coverage_fraction": 1.0,
+      "descriptor_range": 1.4367192500000001,
+      "gate_passed": true,
+      "gate_reasons": [],
+      "models": {
+        "strength_only": {
+          "domain_spearman": {
+            "74t7kcdgkr": 0.9221343873517786,
+            "cgtnjyggtm": 0.9719387755102041,
+            "w68dtmpfyf": 0.9723648444578676,
+            "xcmzfsbd9t": 0.886323787258913,
+            "yfxyg8jm46": 0.9782837695486591,
+            "ykhs7s2dck": 0.919684867053288
+          },
+          "pooled_r2": 0.6815059345568462
+        },
+        "strength_plus_design": {
+          "domain_spearman": {
+            "74t7kcdgkr": 0.9183135704874834,
+            "cgtnjyggtm": 0.9715306122448979,
+            "w68dtmpfyf": 0.96843853820598,
+            "xcmzfsbd9t": 0.9702513150204559,
+            "yfxyg8jm46": 0.9726116198039058,
+            "ykhs7s2dck": 0.9293139293139293
+          },
+          "pooled_r2": 0.9333088448283546
+        }
+      },
+      "nonredundant_domain_count": 3,
+      "range_tolerance": 0.001,
+      "valid_count": 276
+    },
+    "normalized_prepeak_auc": {
+      "coverage_fraction": 1.0,
+      "descriptor_range": 0.34018986134233753,
+      "gate_passed": true,
+      "gate_reasons": [],
+      "models": {
+        "strength_only": {
+          "domain_spearman": {
+            "74t7kcdgkr": 0.7724637681159419,
+            "cgtnjyggtm": 0.2396938775510204,
+            "w68dtmpfyf": -0.25279371790999694,
+            "xcmzfsbd9t": 0.2614260666277031,
+            "yfxyg8jm46": -0.03378980633660157,
+            "ykhs7s2dck": 0.5883575883575883
+          },
+          "pooled_r2": 0.24905174995994184
+        },
+        "strength_plus_design": {
+          "domain_spearman": {
+            "74t7kcdgkr": 0.7720685111989459,
+            "cgtnjyggtm": 0.5329591836734694,
+            "w68dtmpfyf": 0.286771368166717,
+            "xcmzfsbd9t": 0.5080070134424314,
+            "yfxyg8jm46": 0.5162466574831862,
+            "ykhs7s2dck": 0.587263376737061
+          },
+          "pooled_r2": 0.6085034032239915
+        }
+      },
+      "nonredundant_domain_count": 6,
+      "range_tolerance": 0.0001,
+      "valid_count": 276
+    },
+    "slope_u20_u60_mpa_per_mm": {
+      "coverage_fraction": 1.0,
+      "descriptor_range": 555.1680866867356,
+      "gate_passed": true,
+      "gate_reasons": [],
+      "models": {
+        "strength_only": {
+          "domain_spearman": {
+            "74t7kcdgkr": 0.6181818181818182,
+            "cgtnjyggtm": -0.38612244897959175,
+            "w68dtmpfyf": -0.3684687405617639,
+            "xcmzfsbd9t": -0.1990064289888954,
+            "yfxyg8jm46": -0.35888501742160284,
+            "ykhs7s2dck": 0.16183389867600392
+          },
+          "pooled_r2": -1.2037088518000298
+        },
+        "strength_plus_design": {
+          "domain_spearman": {
+            "74t7kcdgkr": 0.6836627140974967,
+            "cgtnjyggtm": 0.5925510204081632,
+            "w68dtmpfyf": 0.43506493506493504,
+            "xcmzfsbd9t": 0.5060198714202222,
+            "yfxyg8jm46": 0.425006077303298,
+            "ykhs7s2dck": 0.2539665171244119
+          },
+          "pooled_r2": 0.7430793890508709
+        }
+      },
+      "nonredundant_domain_count": 6,
+      "range_tolerance": 1.0,
+      "valid_count": 276
+    }
+  },
+  "estimator_contract": {
+    "design_sensitivity_is_gate_input": false,
+    "fixed_ridge_alpha": 1e-06,
+    "fixed_ridge_fit_count": 36,
+    "hyperparameter_search": false,
+    "outer_split": "leave_one_domain_out",
+    "strength_only_is_gate_input": true
+  },
+  "extraction": {
+    "baseline_samples": 50,
+    "failed": 0,
+    "grid_points": 101,
+    "maximum_peak_reconciliation_error_mpa": 2.2737367544323206e-13,
+    "peak_reconciliation_tolerance_mpa": 0.005,
+    "repeat_extraction_byte_identical": true,
+    "valid": 276
+  },
+  "gate": {
+    "passing_endpoints": [
+      "extension_peak_mm",
+      "slope_u20_u60_mpa_per_mm",
+      "normalized_prepeak_auc"
+    ],
+    "status": "P1_GO"
+  },
+  "input_boundary": {
+    "post_cai_image_used": false,
+    "strain_endpoint_used": false,
+    "target_domain_outcome_used_for_fit": false,
+    "true_response_used_as_predictor": false
+  },
+  "new_damage_to_response_model_training": false,
+  "p0_authority": {
+    "required_status": "P0_GO",
+    "summary_relative_path": "results/damage_to_failure_response/p0_data_audit/summary.json",
+    "summary_sha256": "9d44ead975119db2181a91efbf14b74165671a9d25b7b576d90f6e104757a633"
+  },
+  "primary_cohort": {
+    "expected": 276,
+    "per_domain_valid": {
+      "74t7kcdgkr": 45,
+      "cgtnjyggtm": 49,
+      "w68dtmpfyf": 43,
+      "xcmzfsbd9t": 59,
+      "yfxyg8jm46": 42,
+      "ykhs7s2dck": 38
+    },
+    "valid": 276
+  },
+  "representative_pairs": {
+    "count": 12,
+    "manual_selection": false,
+    "rule": "nearest strength, deduplicate, curve RMS desc, pair IDs"
+  },
+  "schema_version": 1,
+  "strain_status": "STRAIN_UNIT_UNRESOLVED"
+}
