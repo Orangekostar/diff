@@ -3,17 +3,25 @@ from __future__ import annotations
 import csv
 import hashlib
 import json
+from dataclasses import fields
 from pathlib import Path
 
 import pytest
 from openpyxl import Workbook
 
+from cmc_bbdm.damage_response.contracts import PRIMARY_COUNTS
+from cmc_bbdm.damage_response.pairing import FeatureIdentity
 from cmc_bbdm.damage_response.sources import (
+    IMPACTOR_CATEGORIES,
+    LAMINATE_CATEGORIES,
+    DesignMetadata,
     SourceError,
+    SpecimenSize,
     classify_spatial_expansion,
     load_official_inventory,
     load_spatial_pairs,
     read_lvi_observations,
+    read_primary_design_metadata,
     read_published_peaks,
     read_specimen_sizes,
 )
@@ -257,3 +265,162 @@ def test_spatial_expansion_distinguishes_identity_from_valid_trace() -> None:
     assert result.valid_trace_pair_ids == ("c8-2", "q8-18")
     assert result.extra_identity_pair_ids == ("q8-17", "q8-18")
     assert result.extra_valid_trace_pair_ids == ("q8-18",)
+
+
+def _primary_design_identities() -> tuple[FeatureIdentity, ...]:
+    return tuple(
+        FeatureIdentity(f"{domain[:4]}-{index:03d}", domain)
+        for domain, count in PRIMARY_COUNTS.items()
+        for index in range(1, count + 1)
+    )
+
+
+def _primary_design_rows(
+    identities: tuple[FeatureIdentity, ...],
+) -> list[dict[str, str]]:
+    return [
+        {
+            "sample_id": identity.specimen_id,
+            "dataset_id": identity.domain_id,
+            "laminate_type": LAMINATE_CATEGORIES[position % len(LAMINATE_CATEGORIES)],
+            "ply_count": str(8 + 4 * (position % 3)),
+            "impactor": IMPACTOR_CATEGORIES[position % len(IMPACTOR_CATEGORIES)],
+        }
+        for position, identity in enumerate(identities)
+    ]
+
+
+def _write_primary_design_csv(
+    path: Path, rows: list[dict[str, str]]
+) -> str:
+    fieldnames = (
+        "sample_id",
+        "dataset_id",
+        "laminate_type",
+        "ply_count",
+        "impactor",
+    )
+    with path.open("w", encoding="utf-8", newline="") as stream:
+        writer = csv.DictWriter(stream, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(rows)
+    return _sha(path)
+
+
+def _size_records(
+    identities: tuple[FeatureIdentity, ...],
+) -> dict[str, SpecimenSize]:
+    return {
+        identity.specimen_id: SpecimenSize(
+            specimen_id=identity.specimen_id,
+            height_mm=80.0 + position,
+            width_mm=50.0 + position / 10.0,
+            thickness_mm=2.0 + position / 100.0,
+        )
+        for position, identity in enumerate(identities, start=1)
+    }
+
+
+def test_primary_design_metadata_binds_exact_roster_in_primary_order(
+    tmp_path: Path,
+) -> None:
+    identities = _primary_design_identities()
+    sizes = _size_records(identities)
+    rows = _primary_design_rows(identities)
+    path = tmp_path / "design.csv"
+    expected_sha256 = _write_primary_design_csv(path, list(reversed(rows)))
+
+    records = read_primary_design_metadata(
+        path,
+        expected_sha256,
+        identities,
+        sizes,
+    )
+
+    assert len(records) == sum(PRIMARY_COUNTS.values()) == 276
+    assert [(record.specimen_id, record.domain_id) for record in records] == [
+        (identity.specimen_id, identity.domain_id) for identity in identities
+    ]
+    expected_rows = {row["sample_id"]: row for row in rows}
+    for record in records:
+        row = expected_rows[record.specimen_id]
+        size = sizes[record.specimen_id]
+        assert record.domain_id == row["dataset_id"]
+        assert record.laminate_type == row["laminate_type"]
+        assert record.ply_count == int(row["ply_count"])
+        assert record.impactor == row["impactor"]
+        assert record.width_mm == size.width_mm
+        assert record.thickness_mm == size.thickness_mm
+
+    assert {field.name for field in fields(DesignMetadata)} == {
+        "specimen_id",
+        "domain_id",
+        "laminate_type",
+        "ply_count",
+        "impactor",
+        "width_mm",
+        "thickness_mm",
+    }
+    assert str(tmp_path) not in repr(records)
+
+
+def test_primary_design_metadata_uses_frozen_category_registries(
+    tmp_path: Path,
+) -> None:
+    identities = _primary_design_identities()
+    path = tmp_path / "design.csv"
+    expected_sha256 = _write_primary_design_csv(path, _primary_design_rows(identities))
+
+    records = read_primary_design_metadata(
+        path,
+        expected_sha256,
+        identities,
+        _size_records(identities),
+    )
+
+    assert LAMINATE_CATEGORIES == ("cross_ply", "quasi_isotropic")
+    assert IMPACTOR_CATEGORIES == (
+        "coni120",
+        "coni60",
+        "flat",
+        "hemia",
+        "hemib",
+        "hemic",
+    )
+    assert {record.laminate_type for record in records} == set(LAMINATE_CATEGORIES)
+    assert {record.impactor for record in records} == set(IMPACTOR_CATEGORIES)
+
+
+def test_primary_design_metadata_rejects_missing_primary_row(tmp_path: Path) -> None:
+    identities = _primary_design_identities()
+    path = tmp_path / "design.csv"
+    expected_sha256 = _write_primary_design_csv(
+        path, _primary_design_rows(identities)[:-1]
+    )
+
+    with pytest.raises(SourceError, match="missing"):
+        read_primary_design_metadata(
+            path,
+            expected_sha256,
+            identities,
+            _size_records(identities),
+        )
+
+
+def test_primary_design_metadata_rejects_domain_mismatch(tmp_path: Path) -> None:
+    identities = _primary_design_identities()
+    rows = _primary_design_rows(identities)
+    wrong_domain = next(
+        domain for domain in PRIMARY_COUNTS if domain != rows[0]["dataset_id"]
+    )
+    rows[0]["dataset_id"] = wrong_domain
+    path = tmp_path / "design.csv"
+    expected_sha256 = _write_primary_design_csv(path, rows)
+
+    with pytest.raises(SourceError, match="domain"):
+        read_primary_design_metadata(
+            path,
+            expected_sha256,
+            identities,
+            _size_records(identities),
+        )

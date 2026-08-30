@@ -31,6 +31,7 @@ class InputRole(Enum):
     IMPACT_ENERGY = ("impact_energy", False)
     IMPACTOR = ("impactor", False)
     TRUE_CAI_TRACE = ("true_cai_trace", False)
+    DERIVED_RESPONSE = ("derived_response", False)
     TRUE_PEAK_STRENGTH = ("true_peak_strength", False)
     POST_CAI_IMAGE = ("post_cai_image", False)
 
@@ -43,6 +44,7 @@ _ROLES_BY_NAME = {role.input_name: role for role in InputRole}
 _FORBIDDEN_ROLES = frozenset(
     {
         InputRole.TRUE_CAI_TRACE,
+        InputRole.DERIVED_RESPONSE,
         InputRole.TRUE_PEAK_STRENGTH,
         InputRole.POST_CAI_IMAGE,
     }

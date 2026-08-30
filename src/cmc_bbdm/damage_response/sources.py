@@ -6,7 +6,7 @@ import json
 import math
 import re
 from collections import Counter
-from collections.abc import Mapping
+from collections.abc import Iterable, Mapping
 from collections.abc import Set as AbstractSet
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
@@ -18,6 +18,8 @@ from cmc_bbdm.damage_response.authority import (
     FileSnapshot,
     snapshot_file,
 )
+from cmc_bbdm.damage_response.contracts import PRIMARY_COUNTS
+from cmc_bbdm.damage_response.pairing import FeatureIdentity
 from cmc_bbdm.damage_response.targets import (
     PublishedPeak,
     decimal_places_from_excel_format,
@@ -42,6 +44,8 @@ OFFICIAL_FOLDER_COUNTS: Mapping[str, int] = {
     "4_Compression after impact testing raw data": 446,
     "5_Compression after impact strength": 1,
 }
+LAMINATE_CATEGORIES = ("cross_ply", "quasi_isotropic")
+IMPACTOR_CATEGORIES = ("coni120", "coni60", "flat", "hemia", "hemib", "hemic")
 
 
 class SourceError(RuntimeError):
@@ -203,6 +207,17 @@ class PreCaiObservation:
     has_numeric_damage_observation: bool
     is_intact: bool
     included: bool
+
+
+@dataclass(frozen=True)
+class DesignMetadata:
+    specimen_id: str
+    domain_id: str
+    laminate_type: str
+    ply_count: int
+    impactor: str
+    width_mm: float
+    thickness_mm: float
 
 
 def _normal_specimen_id(value: object, *, row: int) -> str:
@@ -408,6 +423,123 @@ def read_lvi_observations(
     if not records:
         raise SourceError("LVI workbook contains no observations")
     return records
+
+
+def read_primary_design_metadata(
+    path: Path,
+    expected_sha256: str,
+    primary_identities: Iterable[FeatureIdentity],
+    specimen_sizes: Mapping[str, SpecimenSize],
+) -> tuple[DesignMetadata, ...]:
+    """Bind path-free design metadata to the frozen 276-specimen roster."""
+
+    snapshot = _bound_snapshot(
+        path,
+        expected_sha256=expected_sha256,
+        logical_source="legacy spatial-pair design metadata",
+        relative_path="hasebe/manifest/paired.csv",
+        max_bytes=32 * 1024 * 1024,
+    )
+    try:
+        payload = Path(path).read_bytes()
+    except OSError as error:
+        raise SourceError("legacy design metadata cannot be read") from error
+    if (
+        len(payload) != snapshot.size
+        or hashlib.sha256(payload).hexdigest() != snapshot.sha256
+    ):
+        raise SourceError("legacy design metadata changed during read")
+
+    identities = tuple(primary_identities)
+    expected_count = sum(PRIMARY_COUNTS.values())
+    observed_counts = Counter(identity.domain_id for identity in identities)
+    specimen_ids = tuple(identity.specimen_id for identity in identities)
+    if (
+        len(identities) != expected_count
+        or len(set(specimen_ids)) != expected_count
+        or dict(observed_counts) != dict(PRIMARY_COUNTS)
+    ):
+        raise SourceError("design metadata requires the frozen primary roster")
+
+    try:
+        reader = csv.DictReader(payload.decode("utf-8-sig").splitlines())
+    except UnicodeDecodeError as error:
+        raise SourceError("legacy design metadata is not UTF-8") from error
+    required = {
+        "sample_id",
+        "dataset_id",
+        "laminate_type",
+        "ply_count",
+        "impactor",
+    }
+    if reader.fieldnames is None or not required.issubset(reader.fieldnames):
+        raise SourceError("legacy design metadata schema drift")
+
+    manifest_rows: dict[str, tuple[str, str, int, str]] = {}
+    for row_number, row in enumerate(reader, start=2):
+        specimen_id = _normal_specimen_id(row["sample_id"], row=row_number)
+        if specimen_id in manifest_rows:
+            raise SourceError(f"duplicate legacy design specimen ID: {specimen_id}")
+        domain_id = str(row["dataset_id"] or "").strip().casefold()
+        laminate_type = str(row["laminate_type"] or "").strip().casefold()
+        impactor = str(row["impactor"] or "").strip().casefold()
+        try:
+            ply_count = int(str(row["ply_count"] or "").strip())
+        except ValueError as error:
+            raise SourceError(
+                f"invalid legacy design ply count at row {row_number}"
+            ) from error
+        if not domain_id:
+            raise SourceError(f"empty legacy design domain at row {row_number}")
+        if laminate_type not in LAMINATE_CATEGORIES:
+            raise SourceError(
+                f"unknown legacy laminate category at row {row_number}"
+            )
+        if impactor not in IMPACTOR_CATEGORIES:
+            raise SourceError(f"unknown legacy impactor category at row {row_number}")
+        if ply_count <= 0:
+            raise SourceError(f"invalid legacy design ply count at row {row_number}")
+        manifest_rows[specimen_id] = (
+            domain_id,
+            laminate_type,
+            ply_count,
+            impactor,
+        )
+
+    normalized_sizes = {
+        specimen_id.strip().casefold(): size
+        for specimen_id, size in specimen_sizes.items()
+    }
+    records: list[DesignMetadata] = []
+    for identity in identities:
+        specimen_id = identity.specimen_id.strip().casefold()
+        domain_id = identity.domain_id.strip().casefold()
+        manifest = manifest_rows.get(specimen_id)
+        if manifest is None:
+            raise SourceError(f"primary design metadata is missing: {specimen_id}")
+        if manifest[0] != domain_id:
+            raise SourceError(f"primary design domain differs: {specimen_id}")
+        size = normalized_sizes.get(specimen_id)
+        if size is None:
+            raise SourceError(f"primary specimen size is missing: {specimen_id}")
+        width = float(size.width_mm)
+        thickness = float(size.thickness_mm)
+        if not math.isfinite(width) or width <= 0.0:
+            raise SourceError(f"primary specimen width is invalid: {specimen_id}")
+        if not math.isfinite(thickness) or thickness <= 0.0:
+            raise SourceError(f"primary specimen thickness is invalid: {specimen_id}")
+        records.append(
+            DesignMetadata(
+                specimen_id=specimen_id,
+                domain_id=domain_id,
+                laminate_type=manifest[1],
+                ply_count=manifest[2],
+                impactor=manifest[3],
+                width_mm=width,
+                thickness_mm=thickness,
+            )
+        )
+    return tuple(records)
 
 
 @dataclass(frozen=True)

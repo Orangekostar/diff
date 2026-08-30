@@ -31,6 +31,15 @@ redundancy_model:
   ridge_alpha: 0.000001
   hyperparameter_search: false
 
+design_sensitivity:
+  numeric_fields: [ply_count, width_mm, thickness_mm]
+  categorical_fields:
+    laminate_type: [cross_ply, quasi_isotropic]
+    impactor: [coni120, coni60, flat, hemia, hemib, hemic]
+  privileged_only_fields: [impactor]
+  excluded_fields:
+    [height_mm, impact_energy, energy_per_thickness_j_per_mm, scan_angle]
+
 gate:
   minimum_coverage_fraction: 0.9
   required_domain_count: 6
