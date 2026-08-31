@@ -659,6 +659,19 @@ def _artifact_texts(summary: Mapping[str, object]) -> tuple[str, str]:
             f"[{float(value['lower']):.9g}, {float(value['upper']):.9g}] | "
             f"{value['improved_domains']}/6 |"
         )
+    if summary["go"] is False:
+        decision.extend(
+            [
+                "",
+                "## Downstream Authorization",
+                "",
+                "- P2: `NOT_RUN_NOT_AUTHORIZED`",
+                "- P3: `NOT_RUN_NOT_AUTHORIZED`",
+                "- P4: `NOT_RUN_NOT_AUTHORIZED`",
+                "",
+                "The preregistered existing-data route stops at P1; no result rescue was run.",
+            ]
+        )
     analysis = [
         "# P1 Spatial vs Global Context Analysis",
         "",

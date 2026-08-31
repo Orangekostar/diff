@@ -1,0 +1,55 @@
+{
+  "files": {
+    "REPORT.md": {
+      "sha256": "b70ab47ae2db4e205ae45eb9816dc6e5aaf1a24672b0285b1d7af8ba87f37afb",
+      "size": 1052
+    },
+    "acquisition_curves.csv": {
+      "sha256": "5fdb362ebd383ccd43b8804af50c2b8bdf3bb344f0f69d8b95b21f8bc73767f0",
+      "size": 7941939
+    },
+    "authorized_roster.csv": {
+      "sha256": "bdb2d84bddb6d79e3d0e9e04ac7b1a752b0e624ee1c9f2b866372abe84111247",
+      "size": 60254
+    },
+    "bootstrap.csv": {
+      "sha256": "22963d2ed67d5c3cfa92a64fca4e7c58f76c16358995bb145b27f865a14425fd",
+      "size": 3265
+    },
+    "config.yaml": {
+      "sha256": "00f3e0cf45d45dd64c20852513d9b23c69a3c29ad7e0d0d7220fb13f86bfe92e",
+      "size": 12733
+    },
+    "control_results.csv": {
+      "sha256": "c07ad9ee72c534c59eb4ee5e4f3db0e3122bf1e3def2bece10b87aa27de7780b",
+      "size": 2445
+    },
+    "domain_metrics.csv": {
+      "sha256": "5460d8e783e239c1b5210f609b8607952a9409a4f7173376ea72c178230014e4",
+      "size": 12420
+    },
+    "outer_model_selection.csv": {
+      "sha256": "1a7b9dadbb1881dea2ca6c6ad2b460156fd7987bac8b4fc3b21948cb15d70635",
+      "size": 278809
+    },
+    "per_specimen_metrics.csv": {
+      "sha256": "6896e222029f00fdbaf46c286178b319b4ddda0726295aa875f3111ce75022c9",
+      "size": 693017
+    },
+    "per_state_scores.parquet": {
+      "sha256": "ef5d3acc42963490be15220b5e1fcc4de3b38bc66b46a6e4d19daed5e44846b8",
+      "size": 615214
+    },
+    "summary.json": {
+      "sha256": "f312d1c7ab0f6096d56e3f9bc46107929ea83976701147e1ac3990cd29d976ea",
+      "size": 14164
+    },
+    "visual_feature_manifest.csv": {
+      "sha256": "aaf6827875812acef4bed7d10dbf4625decf2d25ec0f927d14901d40775e2f4e",
+      "size": 2689
+    }
+  },
+  "schema_version": 1,
+  "stage": "P1_VISUAL_OBSERVABILITY",
+  "status": "P1_SURFACE_VISUAL_OBSERVABILITY_NO_GO"
+}

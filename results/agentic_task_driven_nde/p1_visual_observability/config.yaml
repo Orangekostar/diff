@@ -1,0 +1,331 @@
+schema_version: 1
+stage: P1_VISUAL_OBSERVABILITY
+controlling_prompt_sha256: 37265bb06eef238dca2325b590d1353a8159514ac693e4b4d070a637fb3b8eb8
+repository_base_sha: 3cb63b544b6c13047773c0eda045558ff4466afa
+
+sources:
+  p0r_config:
+    path: paper_v3/configs/agentic_nde_p0r_author_registration.yaml
+    sha256: 34aa06b11d5bf12a292c9474416cdc94a0909bda6d9ab2d49b8721ff1407b2b3
+  p0r_checksums:
+    path: results/agentic_task_driven_nde/p0r_author_registration/CHECKSUMS.sha256
+    sha256: 470a1df4ff19930f5924493fb6a51c49084c76a37376fa266a6499baa9ffbb82
+  p0r_manifest:
+    path: results/agentic_task_driven_nde/p0r_author_registration/artifact_manifest.json
+    sha256: 3d92293c0a0ce8a2a299cc99e9bdd872dd1536921c80a9608329c96315fad888
+  p0r_summary:
+    path: results/agentic_task_driven_nde/p0r_author_registration/summary.json
+    sha256: a19cc2f0528da4842e04a521711d590f44bd226e92bc69e5f84de4fcb97cd02f
+  p0r_surface_manifest:
+    path: results/agentic_task_driven_nde/p0r_author_registration/surface_manifest.csv
+    sha256: e3274cacfb50b5b136e81ed3c107ac79d134e37d5d14ccc296b4e1ae2a51b44b
+  p0r_scan_provenance:
+    path: results/agentic_task_driven_nde/p0r_author_registration/scan_processing_provenance.csv
+    sha256: 553153aeac0532b8083d2d9bbfc86d598714198d62ed6d369a6918a195dfe9b0
+  p0r_registration:
+    path: results/agentic_task_driven_nde/p0r_author_registration/registration.csv
+    sha256: 43bafc8819a1bea0df7f7ea9fa2b1dc194591ef9a4b58e8dcf3e64c13622e265
+  p0r_grid_mapping:
+    path: results/agentic_task_driven_nde/p0r_author_registration/grid_mapping_qc.csv
+    sha256: fb076daefbb0b748184d10b777268dfd13777a3e78cb7fed104252e6d62afd35
+  p0_surface_authority_audit:
+    path: artifacts/agentic_task_driven_nde/P0_SURFACE_CSCAN_AUTHORITY_AUDIT.md
+    sha256: 95e58de7233058b3fa27bec033ebdf04ccb080cb6335cdc7cd72d58a2bb36171
+  mvd_protocol:
+    path: docs/MVD_M1_OBSERVABILITY_PROTOCOL.md
+    sha256: d55df4e04cd6eec62cf0e359e6750b597891002a52bc576238c1d3b854eb0d0f
+  mvd_config:
+    path: paper_v3/configs/mvd_feasibility.yaml
+    sha256: 01acc173b41a62b8cd1f23d903b5f7c8cd9fad7b8f4bc6362355f68c7b3ccbcf
+  mvd_checksums:
+    path: results/mvd/m1_observability/CHECKSUMS.sha256
+    sha256: f8c9761bdd673519a3daa6058891bd1f0aed31912ba941cf774ac84d69b6e229
+  mvd_summary:
+    path: results/mvd/m1_observability/summary.json
+    sha256: a13f69b8113c072cecb11c0d2d968ff7a7700f2cfef2ed2e827ae2b2b3e656cb
+  mvd_o2_predictions:
+    path: results/mvd/m1_observability/observability_predictions.parquet
+    sha256: 3164e5e6e6a293cdd1376fd4d58438c74d23e791a1c1378deff14c254d9903b3
+  candidate_bank_0p015625:
+    path: artifacts/mvd_authority/a4_candidate_bank_0p015625.npz
+    sha256: 42882df095ac2935bf7cf0efec5d17c3fee257ddee4f4735fbb64d6931976b08
+  candidate_bank_0p03125:
+    path: artifacts/mvd_authority/a4_candidate_bank_0p03125.npz
+    sha256: cfeff617df9208bdfbd8434474f63134661f8fb6f7b59676bced5054ac0d2443
+  observed_features_0p015625:
+    path: artifacts/mvd_authority/observed_candidate_features_0p015625.npz
+    sha256: 234be30caba568d80f0a5c488858d2d2f2ea1c68d85326e920a3a96ac35081b7
+  observed_features_0p03125:
+    path: artifacts/mvd_authority/observed_candidate_features_0p03125.npz
+    sha256: 7bda69e4e0e2ec0fb8c9cbd2eefb81cd4e42c5b26da5e382fbf279d77e119883
+  a2_oracle_values:
+    path: results/mva/a2_oracle_value/oracle_values.parquet
+    sha256: 6b289f2f6f74ac75dde47ea7cbfefcda1c49f025e74227bfb34ef269182ff963
+  resnet18_weights:
+    path: paper_v3/assets/resnet18-f37072fd.pth
+    sha256: f37072fd47e89c5e827621c5baffa7500819f7896bbacec160b1a16c560e07ec
+
+p0r_authority:
+  status: P0R_AUTHOR_REGISTRATION_GO
+  authorized_specimen_count: 276
+  authorized_roster_sha256: 4fd8c6076dd3fcdf908a73739251db215fcb01f570f1a930b7faf250fe6d285a
+  registration_authority_sha256: 38ab3cf32e866cda447a5edf2637fa502406c4c5c574bc966c13cc1cbbd2553a
+  grid_mapping_state_sha256: 40b9a2aa98a70ac1a5929e73b0b25b69e865ac80ae2035d625585b11dd85447c
+  orientation: ROT90
+  mapping_basis: AUTHOR_FULL_FRAME_PIXEL_CORRESPONDENCE
+  excluded_specimens: []
+  domain_order: [74t7kcdgkr, cgtnjyggtm, w68dtmpfyf, xcmzfsbd9t, yfxyg8jm46, ykhs7s2dck]
+  domain_counts:
+    74t7kcdgkr: 45
+    cgtnjyggtm: 49
+    w68dtmpfyf: 43
+    xcmzfsbd9t: 59
+    yfxyg8jm46: 42
+    ykhs7s2dck: 38
+
+target:
+  path: results/mva/a2_oracle_value/oracle_values.parquet
+  filters:
+    method: mechanical_oracle
+    step: 0
+    from_level: 0
+    to_level: 1
+    nominal_checkpoint: 0.0625
+  label_column: primary_value
+  deployable_input_column: current_prediction
+  predictor_state_column: p_a_predictor_state_sha256
+  expected_rows: 17664
+  expected_specimens: 276
+  expected_cells_per_specimen: 64
+  outer_target_labels: evaluation_only_after_score_freeze
+
+old_state:
+  dimensions:
+    initial_cscan_embedding: 512
+    current_oof_cai_prediction: 1
+    candidate_features: 8
+    total: 521
+  initial_budgets:
+    74t7kcdgkr: 0.03125
+    cgtnjyggtm: 0.015625
+    w68dtmpfyf: 0.015625
+    xcmzfsbd9t: 0.015625
+    yfxyg8jm46: 0.015625
+    ykhs7s2dck: 0.015625
+  candidate_bank_states:
+    "0.015625": 2b17097a85fdb41b4413fecfa7f5b141b2e132cc479adb127fceb28c2c444fc4
+    "0.03125": e44d7b8e1ef1b1f715eeddc3ab9af485d1a993e0acfd792d86086a282b2fa0c0
+  observed_feature_bank_states:
+    "0.015625": a91ade889bd87a941a58574d2d06278e908a961836686b984b9b6cf88c24580f
+    "0.03125": a0e9bc870b69b08041e1bbbae3900ebe2028c84fc5ad95b4a7f22857908e5cd5
+  c0:
+    method: o2_global_candidate
+    binding: exact_frozen_predictions_no_refit
+    expected_rows: 17664
+    historical_teacher_definition: mvd_outer_specific_initial_budget
+    p1_teacher_definition: a2_nominal_checkpoint_0p0625
+    definitions_must_not_be_equated: true
+
+surface_features:
+  logical_external_root: external_hasebe
+  image_paths_from: p0r_surface_manifest
+  verify_each_surface_sha256: true
+  encoder_roster: [resnet18_imagenet1k_v1_rgb]
+  optional_encoder_roster: []
+  excluded_optional_encoders:
+    dinov2: exact_asset_revision_license_not_pre_resolved
+    siglip_siglip2: exact_asset_revision_license_not_pre_resolved
+    qwen2p5_vl: exact_asset_revision_license_not_pre_resolved
+  encoder:
+    name: torchvision_resnet18
+    weights: ImageNet1K_V1
+    weights_sha256: f37072fd47e89c5e827621c5baffa7500819f7896bbacec160b1a16c560e07ec
+    frozen: true
+    train_encoder: false
+    output_dimension: 512
+    output_layer: post_avgpool_pre_fc
+  transform:
+    sha256: 2b275ebbc220e6a0376d305d0996f4ffe80509fc8b27223fd919331a100acbe5
+    spec:
+      schema_version: 1
+      input:
+        decoder: Pillow.Image.open_then_convert_RGB
+        dtype: uint8
+        channels: RGB
+        surface_frame: P0R_full_impacted_surface_frame
+      crop:
+        global: full_surface_frame
+        local: inverse_P0R_cell_box
+        coordinate_basis: pixel_center
+        interval: left_top_inclusive_right_bottom_exclusive
+        lower_bound: ceil(lower)
+        upper_bound: ceil(upper)_except_frame_max_maps_to_axis_length
+        clamp_to_frame: true
+        padding: none
+      resize:
+        implementation: torch.nn.functional.interpolate
+        device: cpu
+        dtype: float32
+        output_size: [224, 224]
+        mode: bilinear
+        align_corners: false
+        antialias: true
+      scale:
+        operation: divide
+        divisor: 255.0
+      normalize:
+        name: ImageNet1K_V1
+        mean: [0.485, 0.456, 0.406]
+        std: [0.229, 0.224, 0.225]
+      encoder_output:
+        layer: post_avgpool_pre_fc
+        dimension: 512
+        dtype: float32
+  formal_runtime:
+    device: cuda:0
+    batch_size: 128
+    torch: 2.12.1+cu130
+    torchvision: 0.27.1+cu130
+    pillow: 12.3.0
+    deterministic_algorithms: true
+    cudnn_benchmark: false
+    allow_tf32: false
+  feature_arrays:
+    global: global_surface_embeddings.npy
+    local_correct: local_correct_embeddings.npy
+    local_wrong_orientation: local_wrong_orientation_embeddings.npy
+    dtype: float32
+
+models:
+  representations: [OLD, GLOBAL, LOCAL, LOCAL_GLOBAL]
+  correctly_aligned_candidates: [LOCAL, LOCAL_GLOBAL]
+  global_control: GLOBAL
+  old_refit_diagnostic: OLD
+  ridge:
+    alphas: [0.1, 1.0, 10.0, 100.0]
+    solver: closed_form_symmetric_eigendecomposition
+    dtype: float64
+  mlp:
+    hidden_widths: [32, 16]
+    activation: relu
+    loss: smooth_l1
+    optimizer: adam
+    learning_rate: 0.001
+    weight_decay: 0.0001
+    epochs: 50
+    specimen_batch_size: 128
+    gradient_clip_norm: 5.0
+    dtype: float32
+    device: cuda:0
+    parameter_cap_exclusive: 100000
+  standardization: source_training_only_mean_std_zero_variance_to_one
+  specimen_weighting: equal_domain_then_equal_specimen
+  outer_split: leave_one_domain_out
+  inner_split: leave_one_source_domain_out
+  selection_order:
+    - equal_domain_mean_ndcg_10_desc
+    - equal_domain_mean_next_action_regret_asc
+    - parameter_count_asc
+    - config_id_lexicographic
+  target_scores_frozen_before_target_labels: true
+
+fusion:
+  space: stable_ordinal_within_state_percentile
+  tie_break: lower_cell_id_first
+  percentile: (63_minus_zero_based_descending_rank)/63
+  lambdas: [0.0, 0.25, 0.5, 0.75, 1.0]
+  old_score: exact_frozen_c0_mvd_m1_o2
+  selection: source_domains_only_same_inner_objective
+  controls_reuse_selected_lambda: true
+
+controls:
+  C0: exact_frozen_mvd_m1_o2
+  C1: negative_squared_distance_from_grid_center
+  C2: source_selected_GLOBAL
+  C3:
+    name: shuffled_surface_specimen
+    seed: agentic-nde-p1-shuffled-surface-v1
+    rule: domain_sorted_roster_cyclic_nonzero_hash_offset
+    donor_offset: 1_plus_sha256_seed_domain_first16_mod_domain_size_minus_1
+    no_self: true
+    cross_domain_donor: false
+  C4:
+    name: wrong_orientation
+    seed: agentic-nde-p1-wrong-orientation-v1
+    roster: [IDENTITY, ROT180, ROT270, FLIP_X, FLIP_Y, TRANSPOSE, ANTI_TRANSPOSE]
+    rule: sha256_seed_dataset_specimen_first16_mod_7
+    excludes_correct_ROT90: true
+  C5:
+    name: spatial_derangement
+    seed: agentic-nde-p1-spatial-derangement-v1
+    rule: hash_driven_sattolo_64_cycle
+    fixed_points: 0
+  control_training: refit_on_control_inputs_with_selected_correct_head_hyperparameters
+  control_fusion: reuse_selected_correct_lambda
+  oracle_diagnostic: mechanical_oracle_target_ranking_evaluation_only
+
+acquisition:
+  cell_shape: [8, 8]
+  checkpoints: [0.0625, 0.09375, 0.125, 0.1875, 0.25]
+  auebc_range: [0.0625, 0.25]
+  selection: exact_cost_frozen_ranking_skip_nonfitting
+  budget_unit: unique_native_raster_locations
+  scanner_time_claim: forbidden
+
+metrics:
+  primary_action: [next_action_regret, one_step_cai_utility]
+  secondary: [spearman, ndcg_10, recall_5, top_10_percent_overlap, top_1_oracle_match]
+  primary_engineering: cai_auebc
+  auebc: normalized_trapezoid_over_nominal_checkpoint
+  lower_is_better: [next_action_regret, cai_auebc]
+
+bootstrap:
+  seed: 20260831
+  resamples: 100000
+  quantiles: [0.025, 0.975]
+  first_unit: physical_specimen
+  within_domain: synchronized_paired_resample_with_replacement
+  second_unit: held_out_domain
+  aggregation: equal_domain_mean
+  independent_units_forbidden: [cells, patches, model_seeds, prompts, orientations]
+
+gates:
+  minimum_improved_domains: 4
+  minimum_oracle_gap_closure: 0.20
+  require_positive_paired_lower: true
+  status_order:
+    - P1_SPATIAL_VISUAL_OBSERVABILITY_GO
+    - P1_GLOBAL_VISUAL_CONTEXT_GO
+    - P1_DESCRIPTIVE_SPATIAL_SIGNAL_ONLY
+    - P1_SURFACE_VISUAL_OBSERVABILITY_NO_GO
+  spatial_go:
+    require_proposed_better_than_c0_auebc: true
+    require_c0_minus_proposed_lower_gt_zero: true
+    require_minimum_improved_domains: true
+    require_minimum_oracle_gap_closure: true
+    require_shuffled_minus_proposed_lower_gt_zero: true
+    require_wrong_orientation_minus_proposed_lower_gt_zero: true
+    require_deranged_minus_proposed_lower_gt_zero: true
+    require_global_minus_proposed_lower_gt_zero: true
+  global_go:
+    require_global_better_than_c0_auebc: true
+    require_c0_minus_global_lower_gt_zero: true
+    require_minimum_improved_domains: true
+    require_shuffled_global_minus_global_lower_gt_zero: true
+  descriptive:
+    require_ranking_point_improvement_over_c0: true
+    require_engineering_gate_failed: true
+
+random_seeds:
+  model: 20260831
+  bootstrap: 20260831
+  shuffled_surface: agentic-nde-p1-shuffled-surface-v1
+  wrong_orientation: agentic-nde-p1-wrong-orientation-v1
+  spatial_derangement: agentic-nde-p1-spatial-derangement-v1
+
+outputs:
+  work: results/agentic_task_driven_nde/.work/p1_visual_observability
+  result: results/agentic_task_driven_nde/p1_visual_observability
+  replay: results/agentic_task_driven_nde/replay/p1_visual_observability
+  decision: artifacts/agentic_task_driven_nde/P1_VISUAL_OBSERVABILITY_DECISION.md
+  spatial_analysis: artifacts/agentic_task_driven_nde/P1_SPATIAL_VS_GLOBAL_CONTEXT_ANALYSIS.md
