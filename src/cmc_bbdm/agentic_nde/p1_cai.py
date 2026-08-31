@@ -30,7 +30,11 @@ from cmc_bbdm.mvd.one_shot_oracle import (
 )
 
 from .p1 import P1Config
-from .p1_execution import P1OuterData, P1OuterScoreEvaluation
+from .p1_execution import (
+    P1OuterData,
+    P1OuterScoreEvaluation,
+    _identity_reindex,
+)
 from .visual_observability import P1Decision, decide_p1
 
 
@@ -127,11 +131,14 @@ def run_p1_cai_outer(
         ridge_alpha=mvd.ridge_alpha,
         tie_tolerance=1.0e-12,
     )
-    target_indices = [
-        index
-        for index, domain in enumerate(authority.dataset_ids)
-        if domain == outer_domain
-    ]
+    target_indices = list(
+        _identity_reindex(
+            source_specimen_ids=authority.specimen_ids,
+            source_dataset_ids=authority.dataset_ids,
+            target_specimen_ids=data.correct.inference.specimen_ids,
+            target_dataset_ids=data.correct.inference.dataset_ids,
+        )
+    )
     expected_ids = tuple(authority.specimen_ids[index] for index in target_indices)
     if (
         expected_ids != data.correct.inference.specimen_ids

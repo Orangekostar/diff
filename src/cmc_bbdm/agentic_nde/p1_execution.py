@@ -102,6 +102,40 @@ def _readonly(value: object, *, dtype: object, shape: tuple[int, ...]) -> np.nda
     return output
 
 
+def _identity_reindex(
+    *,
+    source_specimen_ids: tuple[str, ...],
+    source_dataset_ids: tuple[str, ...],
+    target_specimen_ids: tuple[str, ...],
+    target_dataset_ids: tuple[str, ...],
+) -> np.ndarray:
+    """Map a unique target identity order onto an authority source order."""
+
+    if (
+        not source_specimen_ids
+        or len(source_specimen_ids) != len(source_dataset_ids)
+        or not target_specimen_ids
+        or len(target_specimen_ids) != len(target_dataset_ids)
+    ):
+        raise P1PipelineError("P1 identity roster changed")
+    source_pairs = tuple(
+        zip(source_dataset_ids, source_specimen_ids, strict=True)
+    )
+    target_pairs = tuple(
+        zip(target_dataset_ids, target_specimen_ids, strict=True)
+    )
+    lookup = {identity: index for index, identity in enumerate(source_pairs)}
+    if (
+        len(lookup) != len(source_pairs)
+        or len(set(target_pairs)) != len(target_pairs)
+        or not set(target_pairs) <= set(lookup)
+    ):
+        raise P1PipelineError("P1 identity roster changed")
+    output = np.asarray([lookup[identity] for identity in target_pairs], dtype=np.int64)
+    output.setflags(write=False)
+    return output
+
+
 def load_p1_outer_data(
     config: P1Config,
     surface: SurfaceCellAuthority,
@@ -135,11 +169,15 @@ def load_p1_outer_data(
         project_root=config.project_root,
     )
     compact = load_compact_mvd_authority(mvd, project_root=config.project_root)
-    if (
-        compact.specimen_ids != surface.specimen_ids
-        or compact.dataset_ids != surface.dataset_ids
-        or compact.specimen_count != config.authorized_specimen_count
-    ):
+    if compact.specimen_count != config.authorized_specimen_count:
+        raise P1PipelineError("P1 MVD and P0R rosters differ")
+    authority_order = _identity_reindex(
+        source_specimen_ids=compact.specimen_ids,
+        source_dataset_ids=compact.dataset_ids,
+        target_specimen_ids=surface.specimen_ids,
+        target_dataset_ids=surface.dataset_ids,
+    )
+    if authority_order.size != surface.specimen_count:
         raise P1PipelineError("P1 MVD and P0R rosters differ")
     old_state = _mapping(config.raw.get("old_state"), "P1 old state")
     budgets = _mapping(old_state.get("initial_budgets"), "P1 initial budgets")
@@ -194,9 +232,9 @@ def load_p1_outer_data(
         "outer_domain": outer_domain,
         "specimen_ids": surface.specimen_ids,
         "dataset_ids": surface.dataset_ids,
-        "initial_embeddings": bank.initial_embeddings,
+        "initial_embeddings": bank.initial_embeddings[authority_order],
         "current_predictions": deployable.current_predictions,
-        "candidate_features": observed.candidate_features,
+        "candidate_features": observed.candidate_features[authority_order],
         "source_labels": source_labels,
     }
     correct = assemble_p1_outer_examples(
@@ -234,15 +272,17 @@ def load_p1_outer_data(
         c0.scores[target_indices], dtype="<f8", shape=(target_count, 64)
     )
     target_costs = _readonly(
-        observed.candidate_costs[target_indices],
+        observed.candidate_costs[authority_order[target_indices]],
         dtype="<i8",
         shape=(target_count, 64),
     )
     native_shapes = tuple(
-        tuple(int(value) for value in bank.native_shapes[index])
+        tuple(int(value) for value in bank.native_shapes[authority_order[index]])
         for index in target_indices
     )
-    grid_states = tuple(bank.grid_state_sha256[index] for index in target_indices)
+    grid_states = tuple(
+        bank.grid_state_sha256[authority_order[index]] for index in target_indices
+    )
     metadata = {
         "candidate_bank_state_sha256": bank.state_sha256,
         "control_example_states": {

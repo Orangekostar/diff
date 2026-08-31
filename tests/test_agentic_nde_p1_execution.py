@@ -6,6 +6,7 @@ import numpy as np
 
 from cmc_bbdm.agentic_nde.p1_execution import (
     P1OuterData,
+    _identity_reindex,
     evaluate_p1_outer_score_metrics,
     freeze_p1_outer_predictions,
 )
@@ -32,6 +33,18 @@ class _FixedModel:
             np.arange(64, dtype=np.float64)[None, :] + self.value,
             (examples.specimen_count, 1),
         )
+
+
+def test_identity_reindex_accepts_order_only_differences() -> None:
+    assert np.array_equal(
+        _identity_reindex(
+            source_specimen_ids=("s-2", "s-10", "s-1"),
+            source_dataset_ids=("a", "a", "b"),
+            target_specimen_ids=("s-10", "s-2", "s-1"),
+            target_dataset_ids=("a", "a", "b"),
+        ),
+        np.asarray((1, 0, 2), dtype=np.int64),
+    )
 
 
 def _examples(feature_control: str):
