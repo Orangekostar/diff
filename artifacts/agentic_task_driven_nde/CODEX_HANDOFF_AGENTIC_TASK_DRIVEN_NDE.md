@@ -54,6 +54,11 @@ P0 subsequently failed, so the empirical route was not executed beyond P0.
 
 ## P0
 
+- Frozen motivation audited: large privileged A2 headroom (35.43% at 12.5%
+  budget), failed old static observability (O2 Spearman `-0.0196`), limited A5
+  oracle-gap closure (7.79%), and final MAVIS worse than `mvd_m1_o2` with only
+  2/6 improving domains. These facts define a visual-observability hypothesis,
+  not a positive VLM conclusion.
 - Surface pair count: 276 exact identities and hashes.
 - Per-domain count: `45 / 49 / 43 / 59 / 42 / 38`.
 - Surface format: 276 RGB PNG files.

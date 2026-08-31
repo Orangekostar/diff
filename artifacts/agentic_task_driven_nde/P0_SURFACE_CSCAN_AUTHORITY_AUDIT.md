@@ -12,6 +12,31 @@ development. Machine-readable row authority is in
 `results/agentic_task_driven_nde/p0_registration/`. No image, target, or
 scientific endpoint was modified, and no model was trained.
 
+## Frozen evidence gap
+
+The new route was motivated by a specific four-stage gap, not by a generic VLM
+hypothesis:
+
+| Frozen stage | Exact evidence | Interpretation and boundary |
+| --- | --- | --- |
+| MVA A2 retrospective opportunity | at 12.5% budget, mechanical oracle improves CAI MAE over uniform by 35.43%, with direction 6/6; oracle AUEBC `0.010625` versus uniform `0.017363`, about 38.81% headroom | acquisition location matters in the privileged upper bound; this is not deployable evidence or scanner-time savings |
+| MVD M1 static observability | selected O2 equal-domain Spearman `-0.0196`, 95% interval `[-0.0591, 0.0195]`; Regret@1 `0.0200`; exact-budget set regret `0.0817` versus global `0.0799` and random `0.0798`; `MVD_OBSERVABILITY_NO_GO` | the old initial deployable representation did not reliably reveal specimen-specific mechanical value; this is not an information-theoretic impossibility claim |
+| MVA A5 learned imitation | imitation AUEBC `0.017092`, uniform `0.017363`, global mechanical `0.017639`, oracle `0.010625`; improved domains 3/6; oracle-gap closure 7.79%; `MVA_A5_POLICY_NO_GO` | the learned policy recovered only a small fraction of privileged headroom |
+| MAVIS P7 final closed loop | MAVIS CAI AUEBC `0.1250531822` versus strongest deployable static reference `mvd_m1_o2` at `0.1249920401`; MAVIS improves 2/6 domains | the final learned implementation did not outperform the strongest compatible frozen reference |
+
+Report SHA-256 identities are:
+
+- MVA A2: `6c92fcff56c893a30c1e6c6a763a85562bb10e6044b2403b712a4070410f6b65`
+- MVD M1: `43890bc11b965d8e11b8cb17ba77913619526bd8b341d32cd0378f13275162d9`
+- MVA A5: `74c4b88dc44d7b8cd6fcf2da1428e6a91e7986f0f2dd3bafe08cca3e773ab423`
+- MAVIS P7: `958ce80fd2681ccde6f28282dc0a58b09c069799874be1261fa86112720b3c62`
+
+The resulting hypothesis was whether raw spatial surface imagery supplies
+specimen-specific information discarded by the old `metadata13 +
+profile_stats21` initial representation, thereby improving action-value
+observability and later closed-loop acquisition. It was a hypothesis to test,
+not a conclusion. P0 failed before that hypothesis could be evaluated.
+
 ## 1. Exact 276-specimen surface roster
 
 **Answer: YES.** The compact frozen cohort selects exactly 276 unique primary
