@@ -6,6 +6,40 @@ from types import SimpleNamespace
 import scripts.run_agentic_nde as cli
 
 
+def test_materialize_p1_features_cli_reports_cache_state(monkeypatch, capsys) -> None:
+    observed: dict[str, object] = {}
+
+    def fake_materialize(config, **kwargs):
+        observed.update({"config": config, **kwargs})
+        return SimpleNamespace(state_sha256="f" * 64)
+
+    monkeypatch.setattr(cli, "materialize_p1_features", fake_materialize)
+    assert (
+        cli.main(
+            [
+                "materialize-p1-features",
+                "--config",
+                "p1.yaml",
+                "--surface-root",
+                "surface",
+                "--output",
+                "features",
+                "--project-root",
+                "project",
+            ]
+        )
+        == 0
+    )
+    assert observed == {
+        "config": "p1.yaml",
+        "project_root": "project",
+        "surface_root": "surface",
+        "output": "features",
+        "notify": builtins.print,
+    }
+    assert capsys.readouterr().out.splitlines()[-1] == "f" * 64
+
+
 def test_run_p1_cli_reports_formal_status(monkeypatch, capsys) -> None:
     observed: dict[str, object] = {}
 

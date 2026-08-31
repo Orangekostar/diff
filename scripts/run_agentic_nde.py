@@ -25,6 +25,7 @@ from cmc_bbdm.agentic_nde.p0r_qc import P0RQCError, render_p0r_qc
 from cmc_bbdm.agentic_nde.p1_artifacts import P1ArtifactError, replay_p1_science
 from cmc_bbdm.agentic_nde.p1_pipeline import (
     P1RunError,
+    materialize_p1_features,
     run_p1_visual_observability,
 )
 
@@ -60,6 +61,11 @@ def _parser() -> argparse.ArgumentParser:
     replay_p1_parser.add_argument("--project-root", default=str(_PROJECT_ROOT))
     replay_p1_parser.add_argument("--feature-root")
     replay_p1_parser.add_argument("--replay-output")
+    features_p1_parser = commands.add_parser("materialize-p1-features")
+    features_p1_parser.add_argument("--config", required=True)
+    features_p1_parser.add_argument("--surface-root", required=True)
+    features_p1_parser.add_argument("--output", required=True)
+    features_p1_parser.add_argument("--project-root", default=str(_PROJECT_ROOT))
     return parser
 
 
@@ -113,13 +119,23 @@ def main(argv: Sequence[str] | None = None) -> int:
                 notify=print,
             )
             summary = result.summary
-        else:
+        elif args.command == "replay-p1":
             summary = replay_p1_science(
                 args.path,
                 project_root=args.project_root,
                 feature_root=args.feature_root,
                 replay_output=args.replay_output,
             )
+        else:
+            features = materialize_p1_features(
+                args.config,
+                project_root=args.project_root,
+                surface_root=args.surface_root,
+                output=args.output,
+                notify=print,
+            )
+            print(features.state_sha256)
+            return 0
         print(summary["status"])
         return 0
     except (

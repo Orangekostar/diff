@@ -28,7 +28,12 @@ from .p1_execution import (
     load_p1_outer_data,
 )
 from .surface_cells import SurfaceCellAuthority, load_surface_cell_authority
-from .surface_encoder import SurfaceFeatureBank, load_surface_feature_bank
+from .surface_encoder import (
+    SurfaceFeatureBank,
+    build_surface_resnet18,
+    load_surface_feature_bank,
+    materialize_surface_feature_bank,
+)
 from .visual_observability import (
     FrozenOuterScores,
     VisualExamples,
@@ -442,6 +447,36 @@ def _load_authorities(
     return surface, features, deployable, c0
 
 
+def materialize_p1_features(
+    config_path: str | Path,
+    *,
+    project_root: str | Path,
+    surface_root: str | Path,
+    output: str | Path,
+    notify: Callable[[str], None] | None = None,
+) -> SurfaceFeatureBank:
+    """Reproduce the preregistered label-free P1 feature cache."""
+
+    config = load_p1_config(config_path, project_root=project_root)
+    root = config.project_root
+    surface = load_surface_cell_authority(
+        root / config.sources["p0r_surface_manifest"].path,
+        root / config.sources["p0r_registration"].path,
+        root / config.sources["p0r_grid_mapping"].path,
+    )
+    controls = _mapping(config.raw["controls"], "P1 controls")
+    wrong = _mapping(controls["C4"], "P1 wrong-orientation control")
+    encoder = build_surface_resnet18(config)
+    return materialize_surface_feature_bank(
+        surface,
+        external_root=surface_root,
+        output=output,
+        encoder=encoder,
+        wrong_orientation_seed=str(wrong["seed"]),
+        notify=notify,
+    )
+
+
 def _selection_summary(selection: pl.DataFrame) -> dict[str, dict[str, object]]:
     rows = selection.filter(
         (pl.col("stage") == "FINAL_FIT") & pl.col("selected")
@@ -824,6 +859,7 @@ __all__ = [
     "P1FormalResult",
     "P1RunError",
     "load_p1_score_freeze",
+    "materialize_p1_features",
     "run_p1_visual_observability",
     "write_p1_score_freeze",
 ]
