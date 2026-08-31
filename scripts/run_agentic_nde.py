@@ -16,6 +16,12 @@ if _LOCAL_PACKAGE not in cmc_bbdm.__path__:
 
 from cmc_bbdm.agentic_nde.artifacts import ArtifactError, replay_p0
 from cmc_bbdm.agentic_nde.p0 import PipelineError, audit_p0
+from cmc_bbdm.agentic_nde.p0r import P0RPipelineError, audit_p0r
+from cmc_bbdm.agentic_nde.p0r_artifacts import (
+    P0RArtifactError,
+    replay_p0r_package,
+)
+from cmc_bbdm.agentic_nde.p0r_qc import P0RQCError, render_p0r_qc
 
 
 def _parser() -> argparse.ArgumentParser:
@@ -29,6 +35,15 @@ def _parser() -> argparse.ArgumentParser:
     replay = commands.add_parser("replay-p0")
     replay.add_argument("--path", required=True)
     replay.add_argument("--surface-root")
+    audit_p0r_parser = commands.add_parser("audit-p0r")
+    audit_p0r_parser.add_argument("--config", required=True)
+    audit_p0r_parser.add_argument("--surface-root", required=True)
+    audit_p0r_parser.add_argument("--output", required=True)
+    audit_p0r_parser.add_argument("--project-root", default=str(_PROJECT_ROOT))
+    audit_p0r_parser.add_argument("--qc-output")
+    replay_p0r_parser = commands.add_parser("replay-p0r")
+    replay_p0r_parser.add_argument("--path", required=True)
+    replay_p0r_parser.add_argument("--surface-root")
     return parser
 
 
@@ -44,14 +59,45 @@ def main(argv: Sequence[str] | None = None) -> int:
             )
             print(result)
             return 0
-        summary = replay_p0(
-            args.path,
-            surface_root=args.surface_root,
-            project_root=_PROJECT_ROOT if args.surface_root else None,
-        )
+        if args.command == "replay-p0":
+            summary = replay_p0(
+                args.path,
+                surface_root=args.surface_root,
+                project_root=_PROJECT_ROOT if args.surface_root else None,
+            )
+        elif args.command == "audit-p0r":
+            result = audit_p0r(
+                config_path=args.config,
+                surface_root=args.surface_root,
+                output=args.output,
+                project_root=args.project_root,
+            )
+            if args.qc_output:
+                render_p0r_qc(
+                    package=result,
+                    surface_root=args.surface_root,
+                    output=args.qc_output,
+                )
+            summary = replay_p0r_package(result)
+        else:
+            replay_kwargs = {}
+            if args.surface_root:
+                replay_kwargs = {
+                    "surface_root": args.surface_root,
+                    "project_root": _PROJECT_ROOT,
+                }
+            summary = replay_p0r_package(args.path, **replay_kwargs)
         print(summary["status"])
         return 0
-    except (ArtifactError, PipelineError, OSError, ValueError) as error:
+    except (
+        ArtifactError,
+        PipelineError,
+        P0RArtifactError,
+        P0RPipelineError,
+        P0RQCError,
+        OSError,
+        ValueError,
+    ) as error:
         print(f"agentic NDE integrity error: {error}", file=sys.stderr)
         return 1
 
