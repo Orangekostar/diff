@@ -753,6 +753,17 @@ def replay_p1_science(
             check_dtypes=False,
         )
     decision = aggregate.decision
+    recorded_gap = summary.get("oracle_gap_closure")
+    gap_matches = (recorded_gap is None and decision.oracle_gap_closure is None) or (
+        recorded_gap is not None
+        and decision.oracle_gap_closure is not None
+        and np.isclose(
+            float(recorded_gap),
+            float(decision.oracle_gap_closure),
+            rtol=1.0e-12,
+            atol=1.0e-12,
+        )
+    )
     if (
         summary.get("status") != decision.status
         or summary.get("authorized_route") != decision.authorized_route
@@ -762,12 +773,7 @@ def replay_p1_science(
         or summary.get("spatial_conditions") != dict(decision.spatial_conditions)
         or summary.get("global_conditions") != dict(decision.global_conditions)
         or summary.get("ranking_improvement") != decision.ranking_improvement
-        or not np.isclose(
-            float(summary.get("oracle_gap_closure")),
-            float(decision.oracle_gap_closure),
-            rtol=1.0e-12,
-            atol=1.0e-12,
-        )
+        or not gap_matches
     ):
         raise P1ArtifactError("P1 decision gate changed")
     output = (
