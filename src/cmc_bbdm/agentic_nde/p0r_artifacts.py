@@ -312,8 +312,13 @@ def _load_csv(root: Path, name: str) -> list[dict[str, str]]:
     return rows
 
 
-def replay_p0r_package(path: str | Path) -> dict[str, Any]:
-    """Verify exact membership, hashes, schemas, authority, and P0R gate."""
+def replay_p0r_package(
+    path: str | Path,
+    *,
+    surface_root: str | Path | None = None,
+    project_root: str | Path | None = None,
+) -> dict[str, Any]:
+    """Verify package integrity and optionally recompute all bound sources."""
 
     root = Path(path)
     if root.is_symlink() or not root.is_dir():
@@ -367,7 +372,20 @@ def replay_p0r_package(path: str | Path) -> dict[str, Any]:
         or summary.get("status") != manifest_payload["status"]
     ):
         raise P0RArtifactError("P0R summary status is inconsistent")
-    return _validate_summary(summary)
+    verified = _validate_summary(summary)
+    if (surface_root is None) != (project_root is None):
+        raise P0RArtifactError(
+            "P0R source replay requires both surface and project roots"
+        )
+    if surface_root is not None and project_root is not None:
+        from .p0r import revalidate_p0r_sources
+
+        return revalidate_p0r_sources(
+            root,
+            surface_root=surface_root,
+            project_root=project_root,
+        )
+    return verified
 
 
 __all__ = [
