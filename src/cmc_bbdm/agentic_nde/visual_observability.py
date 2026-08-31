@@ -1733,15 +1733,15 @@ def fit_outer_visual_models(
     )
     correct_representation = route.candidate_id
     for row in route_rows:
+        route_representation = str(row["candidate_id"])
+        route_specification = specifications[route_representation][
+            selections[route_representation].candidate_id
+        ]
         audit_rows.append(
             {
-                "alpha": specifications[correct_representation][
-                    selections[correct_representation].candidate_id
-                ].alpha,
+                "alpha": route_specification.alpha,
                 "candidate_id": row["candidate_id"],
-                "family": specifications[row["candidate_id"]][
-                    selections[row["candidate_id"]].candidate_id
-                ].family,
+                "family": route_specification.family,
                 "feature_control": source.feature_control,
                 "fit_domains": "|".join(source_domains),
                 "lambda": None,
