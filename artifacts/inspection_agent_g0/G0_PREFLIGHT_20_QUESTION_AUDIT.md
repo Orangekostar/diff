@@ -79,8 +79,10 @@ Audit date: 2026-08-31. Repository base and remote branch both resolve to
 
 14. **How is the state bank label-independent?** Six fixed policies use geometry,
     a frozen surface-only score, or a specimen-seeded random permutation. No
-    policy reads CAI or C-scan outcomes. Each specimen contributes exactly three
-    snapshots per policy, 18 total, so row count cannot alter specimen weight.
+    policy reads CAI or C-scan outcomes. Each specimen contributes one zero anchor
+    plus exactly three action-count snapshots per policy, 19 total, so zero-state
+    prediction is trained rather than extrapolated and row count cannot alter
+    specimen weight.
 
 15. **Does CAI quality improve with real ultrasound evidence?** The new
     metadata-free zero-start claim is not established and is not assumed.

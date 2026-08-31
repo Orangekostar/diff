@@ -60,11 +60,14 @@ not accept a target full scan.
 
 Each state is represented by the frozen 512-D ResNet18 reconstruction embedding,
 effective budget, observed-cell fraction, and mean observed level. PCA dimension
-32 and Ridge alpha 10 are fixed. Training uses 18 label-independent states per
-source specimen: three snapshots from each of `UNIFORM_BROADEN`,
+32 and Ridge alpha 10 are fixed. Training uses one zero-state source anchor plus
+18 label-independent acquired states per source specimen: three action-count
+snapshots from each of `UNIFORM_BROADEN`,
 `CENTER_BROADEN`, `RANDOM_BROADEN`, `SURFACE_FOCUS`,
 `UNIFORM_THEN_REFINE`, and `ALTERNATE_BROADEN_REFINE`. Thus every specimen has
-equal total weight. CAI-oracle states are forbidden from assessor training.
+19 rows and equal total weight. The zero anchor prevents zero-budget performance
+from being an extrapolation artifact. CAI-oracle states are forbidden from
+assessor training.
 
 CAI planning is authorized only when the fixed 25% state improves over zero-state
 CAI MAE, the synchronized paired 95% CI lower bound is positive, at least four of

@@ -109,15 +109,17 @@ source_prior:
 state_bank:
   policies: [UNIFORM_BROADEN, CENTER_BROADEN, RANDOM_BROADEN, SURFACE_FOCUS,
              UNIFORM_THEN_REFINE, ALTERNATE_BROADEN_REFINE]
+  include_zero_anchor: true
   snapshots_per_policy: 3
   snapshot_fractions: [0.3333333333333333, 0.6666666666666666, 1.0]
+  snapshot_axis: action_count
   broadening_policy_endpoint: complete_level0_scout
   hierarchical_policy_endpoint: 0.25
   random_seed: 2026083101
   random_identity: sha256_seed_and_surface_sha256
   label_independent: true
   equal_states_per_specimen: true
-  expected_states_per_specimen: 18
+  expected_states_per_specimen: 19
 
 cai_assessor:
   representation: [frozen_resnet18_reconstruction_512d, effective_budget,

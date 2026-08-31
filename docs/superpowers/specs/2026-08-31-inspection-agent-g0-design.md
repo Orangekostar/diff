@@ -39,8 +39,9 @@ retains the private key to obtain teacher labels after an action sequence is
 frozen.
 
 For each outer fold, source full scans fit one background prior. Label-independent
-source policies create 18 states per specimen. Reconstructions are encoded by the
-frozen ResNet18; PCA-32/Ridge-10 fits repeated state rows with state-unique IDs.
+source policies create 19 rows per specimen: one zero anchor and 18 acquired-state
+snapshots. Reconstructions are encoded by the frozen ResNet18; PCA-32/Ridge-10
+fits repeated state rows with state-unique IDs.
 Target fixed-policy states are then predicted. Only a complete assessor gate can
 enable the CAI oracle.
 
