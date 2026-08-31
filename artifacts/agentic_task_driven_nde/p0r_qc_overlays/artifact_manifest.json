@@ -1,0 +1,63 @@
+{
+  "files": {
+    "74t7kcdgkr__c8-18.png": {
+      "sha256": "335d3cf59926ae7e53add0bd29990bb6317929952c64f4535758ff8cfdea0335",
+      "size": 1002228
+    },
+    "74t7kcdgkr__c8-26.png": {
+      "sha256": "8db4db47d0894a528864759dab3b13cbc5846f297642f148d6589e9e685c8016",
+      "size": 1083938
+    },
+    "cgtnjyggtm__q24-11.png": {
+      "sha256": "a00dec04593a7de154b0cfbaabdcaa772e7b0f9cc2e83e6dbb6d16a99d904678",
+      "size": 1104497
+    },
+    "cgtnjyggtm__q24-18.png": {
+      "sha256": "38828575b708c141a270cbcad63ea774aa503a480698afb2c5671af89e77385d",
+      "size": 1097060
+    },
+    "overlay_manifest.csv": {
+      "sha256": "651357d0b0ea4e4d3f0508ae93d7b22a810dba7e869c2e2a1b540ee6c9b55bdd",
+      "size": 5579
+    },
+    "w68dtmpfyf__q16-26.png": {
+      "sha256": "ebb21c69bed03dc11f5ef71ceebc8e898b2a583cfb136557f69995327912b045",
+      "size": 1112358
+    },
+    "w68dtmpfyf__q16-38.png": {
+      "sha256": "4d44d3ffaf0b8ef03cbc2ebfc658594adbaae3af01682c1838321a7ed836f7df",
+      "size": 1105094
+    },
+    "xcmzfsbd9t__c24-16.png": {
+      "sha256": "405ad5b4cc38784d9e6984e08dba262570a8f7a73de7f48cb0f6bc30be02bfb5",
+      "size": 993198
+    },
+    "xcmzfsbd9t__c24-47.png": {
+      "sha256": "5c0b01a7e246849c64ab3a73b34e517ff9841f7044f66bc22c13b078a60eba5f",
+      "size": 1156518
+    },
+    "yfxyg8jm46__c16-40.png": {
+      "sha256": "c39d19bcb3bba94c341619afdf9ae30016c1efdb3b60bad4feeb0de8d7497d15",
+      "size": 1108913
+    },
+    "yfxyg8jm46__c16-6.png": {
+      "sha256": "831be5f9eba9db1e4607fe81e585c0b0d96f75d279761db6ee7d5d5edec6984c",
+      "size": 1137835
+    },
+    "ykhs7s2dck__q8-32.png": {
+      "sha256": "50bacd67f4da529f0ffa5fceed92068399b0091f2a57a56a6601756ce93d8e9e",
+      "size": 1122395
+    },
+    "ykhs7s2dck__q8-39.png": {
+      "sha256": "f2c258e598e1ea4f66aed8c5925e0e3cdeeeda47e38a302dc40f4abd849398f9",
+      "size": 1098536
+    }
+  },
+  "p0r_checksums_sha256": "470a1df4ff19930f5924493fb6a51c49084c76a37376fa266a6499baa9ffbb82",
+  "panel_count": 4,
+  "panel_layout": "2x2",
+  "schema_version": 1,
+  "selection_seed": "p0r-author-registration-qc-v1",
+  "specimens_per_domain": 2,
+  "stage": "P0R_QC_DIAGNOSTIC_ONLY"
+}

@@ -1,0 +1,18 @@
+{
+  "evidence_roles": [
+    "AUTHOR_CORRESPONDENCE",
+    "DATASET_METADATA",
+    "SURFACE_METADATA"
+  ],
+  "example_scan": "Q24-7astm.jpg",
+  "example_surface": "Q24-7astm.png",
+  "mapping_basis": "AUTHOR_FULL_FRAME_PIXEL_CORRESPONDENCE",
+  "orientation": "ROT90",
+  "original_artifact_sha256": null,
+  "outer_frame_crop": "NONE_AT_SPECIMEN_FRAME",
+  "physical_mm_used_for_cross_modal_mapping": false,
+  "schema_version": 1,
+  "source_type": "USER_ATTESTED_PERSONAL_COMMUNICATION_WITH_DATASET_AUTHOR",
+  "statement_sha256": "3560662d4509ea3e059d597cedca15950cce02f706a992330b161381acfba6ba",
+  "verbatim_statement": "hasebe\u6240\u6709\u8868\u9762rgb\u7684png\u56fe\u50cf\u987a\u65f6\u9488\u65cb\u8f6c90\u5ea6\u5c31\u662f\u626b\u63cf\u56fe\u50cfjpg\uff0c\n\u6bd4\u5982Q24-7astm.png\u987a\u65f6\u9488\u65cb\u8f6c90\u5ea6\u5f97\u5230Q24-7astm.jpg\uff0c\n\u5176\u5916\u8fb9\u6846\u7684\u5927\u5c0f\u672a\u505a\u88c1\u5207\uff0c\u53ea\u662f\u6bd4\u4f8b\u4e0d\u540c"
+}

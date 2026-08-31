@@ -1,0 +1,109 @@
+schema_version: 1
+stage: P0R_AUTHOR_SURFACE_CSCAN_REGISTRATION
+controlling_prompt_sha256: 37265bb06eef238dca2325b590d1353a8159514ac693e4b4d070a637fb3b8eb8
+repository_base_sha: 3cb63b544b6c13047773c0eda045558ff4466afa
+
+historical_p0:
+  path: results/agentic_task_driven_nde/p0_registration
+  status: P0_SPATIAL_REGISTRATION_NO_GO
+  checksums_sha256: 2d6dcc9f09906379cae70cff1ba2e4ab79d421a36dda8b369d1923c0c35062db
+  artifact_manifest_sha256: 2ad59787b8c7c8726ce3d1dc0475540e7db56bfecb7dc0604f0b982557338523
+  surface_manifest_sha256: 31aaf123d6f7b684566ef19387d11a5ef2756e5bc51e666f8b1cdcc3b9ed5fe1
+  surface_qc_sha256: fe64077852ffea9af42e91f49b2aff03090ba9ba0900b5cacdc5454c95597b8c
+  summary_sha256: 9d0032828614c79c2ed9faaf0fcfdbbb2e7c39382fa7e4cb1fc1d28ec4a9a826
+
+author_authority:
+  artifact_path: artifacts/agentic_task_driven_nde/AUTHOR_SURFACE_CSCAN_REGISTRATION_AUTHORITY.md
+  artifact_sha256: 60a3aeb39256d1b88692439677a20f03f3b987fde3faa1c69224aea1c1f76bf8
+  source_type: USER_ATTESTED_PERSONAL_COMMUNICATION_WITH_DATASET_AUTHOR
+  evidence_status: USER_ATTESTED
+  statement_sha256: 3560662d4509ea3e059d597cedca15950cce02f706a992330b161381acfba6ba
+  original_artifact_sha256: null
+  original_archive_status: ORIGINAL_AUTHOR_COMMUNICATION_ARCHIVE_RECOMMENDED
+  orientation: ROT90
+  outer_frame_crop: NONE_AT_SPECIMEN_FRAME
+  mapping_basis: AUTHOR_FULL_FRAME_PIXEL_CORRESPONDENCE
+  physical_mm_used_for_cross_modal_mapping: false
+  example_surface: Q24-7astm.png
+  example_scan: Q24-7astm.jpg
+
+external_authorities:
+  paired_manifest:
+    logical_root: external_hasebe
+    path: data/public/hasebe/manifest/paired.csv
+    sha256: f81002981bf2f6aed84818b48da87cd57e6336f5f3da8d78df1a58d26dd8026f
+  historical_preprocessor:
+    logical_root: external_hasebe
+    path: src/cmc_bbdm/hasebe.py
+    sha256: 3bd0c56adb78b65cc09cec340b06c40c7ec6e73988e187067a76f1128ddf83f0
+    symbol: crop_cscan_panels
+    source_git_commit: UNAVAILABLE_NO_GIT_METADATA
+
+primary_counts:
+  74t7kcdgkr: 45
+  cgtnjyggtm: 49
+  w68dtmpfyf: 43
+  xcmzfsbd9t: 59
+  yfxyg8jm46: 42
+  ykhs7s2dck: 38
+
+processing_recipes:
+  single_normal:
+    screenshot_size: [891, 891]
+    panel_boxes:
+      - [31, 33, 706, 707]
+  single_astm:
+    screenshot_size: [669, 885]
+    panel_boxes:
+      - [39, 33, 469, 708]
+  dual:
+    screenshot_size: [996, 581]
+    panel_boxes:
+      - [30, 33, 370, 371]
+      - [464, 33, 816, 371]
+  decode_mode: RGB
+  operation: AXIS_ALIGNED_CROP
+  resize: NONE
+  interpolation: NONE
+  rotation: IDENTITY
+  reflection: NONE
+
+registration:
+  orientation: ROT90
+  mapping_basis: AUTHOR_FULL_FRAME_PIXEL_CORRESPONDENCE
+  normalized_edge_to_edge: true
+  offset_x: 0.0
+  offset_y: 0.0
+  physical_mm_used_for_cross_modal_mapping: false
+  action_grid_rows: 8
+  action_grid_columns: 8
+  minimum_per_domain_fraction: 0.90
+  minimum_total_registered: 240
+  forbidden_orientation_evidence:
+    - HIDDEN_CSCAN_PIXELS
+    - CSCAN_MASK
+    - DAMAGE_CENTROID
+    - CAI
+    - ORACLE_VALUE
+    - TARGET_DOMAIN_LABEL
+    - MANUAL_TARGET_ALIGNMENT
+
+q24_exemplar:
+  specimen_id: q24-7astm
+  dataset_id: 6zt73pcnxv
+  expected_in_frozen_276: false
+
+qc:
+  selection_seed: p0r-author-registration-qc-v1
+  specimens_per_domain: 2
+  panel_width_px: 480
+  panel_height_px: 480
+
+status_vocabulary:
+  go: P0R_AUTHOR_REGISTRATION_GO
+  no_go: P0R_AUTHOR_REGISTRATION_NO_GO
+  evidence_conflict: P0R_AUTHOR_EVIDENCE_CONFLICT
+  provenance_unresolved: P0R_PROCESSING_PROVENANCE_UNRESOLVED
+  downstream_go: P0_REGISTRATION_GO
+  downstream_no_go: P0_SPATIAL_REGISTRATION_NO_GO
+  downstream_blocked: NOT_RUN_NOT_AUTHORIZED
