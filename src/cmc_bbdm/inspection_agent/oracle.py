@@ -11,6 +11,7 @@ from typing import Protocol
 import numpy as np
 
 from cmc_bbdm.mva.acquisition_grid import AcquisitionGrid
+from cmc_bbdm.mva.interpolation import _interpolate_rectilinear
 
 from .cai_assessor import state_scalars
 from .contracts import InspectionDecision, InspectionObservation, InspectionTask
@@ -28,6 +29,7 @@ from .state import (
     GeneralizedMeasurementState,
     InspectionCellAction,
     action_added_positions,
+    action_added_positions_from_mask,
     apply_action,
     fitting_actions,
     measurement_mask,
@@ -138,11 +140,31 @@ def _candidate_observation(
     grid: AcquisitionGrid,
     action: InspectionCellAction,
     full_scan: np.ndarray,
+    *,
+    current_mask: np.ndarray | None = None,
 ) -> InspectionObservation:
     candidate = apply_action(grid, observation.measurement_state, action)
-    mask = measurement_mask(grid, candidate)
-    positions = np.argwhere(mask).astype("<i8", copy=False)
-    values = full_scan[positions[:, 0], positions[:, 1]]
+    visible = (
+        measurement_mask(grid, observation.measurement_state)
+        if current_mask is None
+        else current_mask
+    )
+    added_positions = action_added_positions_from_mask(
+        grid,
+        observation.measurement_state,
+        action,
+        visible,
+    )
+    positions = np.concatenate((observation.acquired_positions, added_positions))
+    values = np.concatenate(
+        (
+            observation.measurement_values,
+            full_scan[added_positions[:, 0], added_positions[:, 1]],
+        )
+    )
+    order = np.lexsort((positions[:, 1], positions[:, 0]))
+    positions = positions[order]
+    values = values[order]
     return InspectionObservation(
         surface_rgb=observation.surface_rgb,
         surface_sha256=observation.surface_sha256,
@@ -176,7 +198,12 @@ def choose_discovery_action(
     )
     rows = []
     for action in actions:
-        added_positions = action_added_positions(grid, state, action)
+        added_positions = action_added_positions_from_mask(
+            grid,
+            state,
+            action,
+            current_mask,
+        )
         added = len(added_positions)
         if added == 0:
             continue
@@ -190,7 +217,7 @@ def choose_discovery_action(
         )
         raw = 0.0 if saliency.total_mass == 0.0 else added_mass / saliency.total_mass
         candidate = apply_action(grid, state, action)
-        if np.any(current_mask & ~measurement_mask(grid, candidate)):
+        if np.any(current_mask[added_positions[:, 0], added_positions[:, 1]]):
             raise InspectionOracleError("discovery candidate removes evidence")
         rows.append(
             OracleCandidateScore(
@@ -217,23 +244,24 @@ def choose_field_action(
 ) -> OracleSelection:
     image = _full_scan(full_scan, grid.native_shape)
     current = reconstruct_observation(observation, grid, prior)
-    current_loss = field_loss(image, current.image)
+    current_mask = measurement_mask(grid, observation.measurement_state)
+    current_sse = _squared_error(image, current.image)
+    denominator = float(image.size * 255**2)
+    current_loss = current_sse / denominator
     rows = []
     for action in fitting_actions(grid, observation.measurement_state, checkpoint):
-        candidate_observation = _candidate_observation(
+        candidate, added, candidate_sse = _field_candidate_sse(
             observation,
             grid,
             action,
             image,
-        )
-        candidate = reconstruct_observation(candidate_observation, grid, prior)
-        candidate_loss = field_loss(image, candidate.image)
-        added = (
-            candidate_observation.exact_acquired_count
-            - observation.exact_acquired_count
+            current.image,
+            current_mask,
+            current_sse,
         )
         if added == 0:
             continue
+        candidate_loss = candidate_sse / denominator
         raw = current_loss - candidate_loss
         rows.append(
             OracleCandidateScore(
@@ -242,10 +270,86 @@ def choose_field_action(
                 raw_value=raw,
                 objective_value=raw / added,
                 task_loss_after=candidate_loss,
-                candidate_state_sha256=candidate_observation.state_sha256,
+                candidate_state_sha256=candidate.state_sha256,
             )
         )
     return _select(tuple(rows))
+
+
+def _squared_error(reference: np.ndarray, estimate: np.ndarray) -> int:
+    difference = reference.astype(np.int16) - estimate.astype(np.int16)
+    values = difference.astype(np.int64)
+    return int(np.sum(values * values, dtype=np.int64))
+
+
+def _field_candidate_sse(
+    observation: InspectionObservation,
+    grid: AcquisitionGrid,
+    action: InspectionCellAction,
+    full_scan: np.ndarray,
+    current_image: np.ndarray,
+    current_mask: np.ndarray,
+    current_sse: int,
+) -> tuple[GeneralizedMeasurementState, int, int]:
+    candidate = apply_action(grid, observation.measurement_state, action)
+    added_positions = action_added_positions_from_mask(
+        grid,
+        observation.measurement_state,
+        action,
+        current_mask,
+    )
+    cell = grid.cells[action.cell_index]
+    rows = cell.rows[action.to_level]
+    columns = cell.columns[action.to_level]
+    row_start, row_stop = cell.rows[2][0], cell.rows[2][-1]
+    column_start, column_stop = cell.columns[2][0], cell.columns[2][-1]
+    patch = _interpolate_rectilinear(
+        np.ascontiguousarray(full_scan[np.ix_(rows, columns)]),
+        rows,
+        columns,
+        np.arange(row_start, row_stop + 1, dtype=np.int64),
+        np.arange(column_start, column_stop + 1, dtype=np.int64),
+        "bilinear",
+    )
+    owned_row_stop = row_stop + 1 if cell.row == 7 else row_stop
+    owned_column_stop = column_stop + 1 if cell.column == 7 else column_stop
+    patch_row_stop = patch.shape[0] if cell.row == 7 else patch.shape[0] - 1
+    patch_column_stop = patch.shape[1] if cell.column == 7 else patch.shape[1] - 1
+    row_slice = slice(row_start, owned_row_stop)
+    column_slice = slice(column_start, owned_column_stop)
+    candidate_region = patch[:patch_row_stop, :patch_column_stop].copy()
+    observed_region = current_mask[row_slice, column_slice]
+    reference_region = full_scan[row_slice, column_slice]
+    candidate_region[observed_region] = reference_region[observed_region]
+
+    inside = (
+        (added_positions[:, 0] >= row_start)
+        & (added_positions[:, 0] < owned_row_stop)
+        & (added_positions[:, 1] >= column_start)
+        & (added_positions[:, 1] < owned_column_stop)
+    )
+    inside_positions = added_positions[inside]
+    if len(inside_positions):
+        local_rows = inside_positions[:, 0] - row_start
+        local_columns = inside_positions[:, 1] - column_start
+        candidate_region[local_rows, local_columns] = full_scan[
+            inside_positions[:, 0], inside_positions[:, 1]
+        ]
+
+    candidate_sse = (
+        current_sse
+        - _squared_error(reference_region, current_image[row_slice, column_slice])
+        + _squared_error(reference_region, candidate_region)
+    )
+    outside_positions = added_positions[~inside]
+    if len(outside_positions):
+        candidate_sse -= _squared_error(
+            full_scan[outside_positions[:, 0], outside_positions[:, 1]],
+            current_image[outside_positions[:, 0], outside_positions[:, 1]],
+        )
+    if candidate_sse < 0:
+        raise InspectionOracleError("FIELD candidate loss became negative")
+    return candidate, len(added_positions), candidate_sse
 
 
 def _encoded_predictions(
@@ -304,8 +408,15 @@ def choose_cai_action(
         raise InspectionOracleError("CAI oracle request is invalid")
     actions: list[InspectionCellAction] = []
     candidates: list[InspectionObservation] = []
+    current_mask = measurement_mask(grid, observation.measurement_state)
     for action in fitting_actions(grid, observation.measurement_state, checkpoint):
-        candidate = _candidate_observation(observation, grid, action, full_scan)
+        candidate = _candidate_observation(
+            observation,
+            grid,
+            action,
+            full_scan,
+            current_mask=current_mask,
+        )
         if candidate.exact_acquired_count == observation.exact_acquired_count:
             continue
         actions.append(action)

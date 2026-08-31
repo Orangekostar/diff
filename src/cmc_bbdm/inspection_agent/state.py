@@ -167,10 +167,45 @@ def action_added_positions(
     state: GeneralizedMeasurementState,
     action: InspectionCellAction,
 ) -> np.ndarray:
-    candidate = apply_action(grid, state, action)
     current_mask = _mutable_mask(grid, state)
-    candidate_mask = _mutable_mask(grid, candidate)
-    positions = np.argwhere(candidate_mask & ~current_mask).astype("<i8", copy=False)
+    return action_added_positions_from_mask(grid, state, action, current_mask)
+
+
+def _added_local_mask(
+    grid: AcquisitionGrid,
+    state: GeneralizedMeasurementState,
+    action: InspectionCellAction,
+    current_mask: np.ndarray,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    apply_action(grid, state, action)
+    mask = np.asarray(current_mask)
+    if mask.dtype != np.bool_ or mask.shape != grid.native_shape:
+        raise GeneralizedMeasurementStateError("current measurement mask is invalid")
+    cell = grid.cells[action.cell_index]
+    rows = np.asarray(cell.rows[action.to_level], dtype=np.int64)
+    columns = np.asarray(cell.columns[action.to_level], dtype=np.int64)
+    return rows, columns, ~mask[np.ix_(rows, columns)]
+
+
+def action_added_positions_from_mask(
+    grid: AcquisitionGrid,
+    state: GeneralizedMeasurementState,
+    action: InspectionCellAction,
+    current_mask: np.ndarray,
+) -> np.ndarray:
+    rows, columns, added_mask = _added_local_mask(
+        grid,
+        state,
+        action,
+        current_mask,
+    )
+    local_positions = np.argwhere(added_mask)
+    positions = np.column_stack(
+        (
+            rows[local_positions[:, 0]],
+            columns[local_positions[:, 1]],
+        )
+    ).astype("<i8", copy=False)
     output = np.frombuffer(
         np.ascontiguousarray(positions).tobytes(order="C"), dtype="<i8"
     ).reshape(positions.shape)
@@ -183,13 +218,20 @@ def candidate_budget_record(
     state: GeneralizedMeasurementState,
     action: InspectionCellAction,
 ) -> GeneralizedBudgetRecord:
-    current = budget_record(grid, state)
-    added = action_added_positions(grid, state, action).shape[0]
-    measured = current.measured_count + added
+    current_mask = _mutable_mask(grid, state)
+    current_count = int(np.count_nonzero(current_mask))
+    _rows, _columns, added_mask = _added_local_mask(
+        grid,
+        state,
+        action,
+        current_mask,
+    )
+    measured = current_count + int(np.count_nonzero(added_mask))
+    native_count = int(current_mask.size)
     return GeneralizedBudgetRecord(
         measured,
-        current.native_count,
-        float(measured / current.native_count),
+        native_count,
+        float(measured / native_count),
     )
 
 
@@ -203,12 +245,21 @@ def fitting_actions(
     cap = float(checkpoint)
     if not math.isfinite(cap) or not 0.0 < cap <= 1.0:
         raise GeneralizedMeasurementStateError("checkpoint is invalid")
-    return tuple(
-        action
-        for action in legal_actions(grid, state)
-        if candidate_budget_record(grid, state, action).effective_budget
-        <= cap + 1.0e-15
-    )
+    current_mask = _mutable_mask(grid, state)
+    current_count = int(np.count_nonzero(current_mask))
+    native_count = int(current_mask.size)
+    output = []
+    for action in legal_actions(grid, state):
+        _rows, _columns, added_mask = _added_local_mask(
+            grid,
+            state,
+            action,
+            current_mask,
+        )
+        measured = current_count + int(np.count_nonzero(added_mask))
+        if measured / native_count <= cap + 1.0e-15:
+            output.append(action)
+    return tuple(output)
 
 
 __all__ = [
@@ -217,6 +268,7 @@ __all__ = [
     "GeneralizedMeasurementStateError",
     "InspectionCellAction",
     "action_added_positions",
+    "action_added_positions_from_mask",
     "apply_action",
     "budget_record",
     "candidate_budget_record",

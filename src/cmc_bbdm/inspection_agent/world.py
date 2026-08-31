@@ -15,6 +15,7 @@ from .state import (
     GeneralizedMeasurementStateError,
     InspectionCellAction,
     action_added_positions,
+    action_added_positions_from_mask,
     apply_action,
     budget_record,
     fitting_actions,
@@ -92,6 +93,7 @@ class CausalInspectionWorld:
             endpoint_budget=self._endpoint_budget,
             action_history=history,
         )
+        self._surface_rgb = observation.surface_rgb
         self._current_observation_sha256 = observation.state_sha256
         return observation
 
@@ -174,6 +176,42 @@ class CausalInspectionWorld:
             values,
             (*observation.action_history, action),
         )
+
+    def replay(
+        self,
+        action_history: tuple[InspectionCellAction, ...],
+    ) -> InspectionObservation:
+        if type(action_history) is not tuple or any(
+            type(action) is not InspectionCellAction for action in action_history
+        ):
+            raise CausalInspectionWorldError("action history is invalid")
+        state = zero_state(self._grid)
+        mask = np.zeros(self._grid.native_shape, dtype=np.bool_)
+        measured_count = 0
+        try:
+            for action in action_history:
+                added_positions = action_added_positions_from_mask(
+                    self._grid,
+                    state,
+                    action,
+                    mask,
+                )
+                candidate_count = measured_count + len(added_positions)
+                if (
+                    candidate_count / mask.size
+                    > self._endpoint_budget + 1.0e-15
+                ):
+                    raise CausalInspectionWorldError(
+                        "action history exceeds the endpoint budget"
+                    )
+                state = apply_action(self._grid, state, action)
+                mask[added_positions[:, 0], added_positions[:, 1]] = True
+                measured_count = candidate_count
+            positions = np.argwhere(mask).astype("<i8", copy=False)
+            values = self._authority._reveal_values(self._specimen_key, positions)
+        except (GeneralizedMeasurementStateError, MAVISAuthorityError) as error:
+            raise CausalInspectionWorldError("action history cannot be replayed") from error
+        return self._materialize(state, positions, values, action_history)
 
 
 __all__ = ["CausalInspectionWorld", "CausalInspectionWorldError"]

@@ -17,8 +17,8 @@ from .contracts import InspectionObservation
 from .state import (
     GeneralizedMeasurementState,
     InspectionCellAction,
+    action_added_positions_from_mask,
     apply_action,
-    candidate_budget_record,
     zero_state,
 )
 from .surface_hypothesis import SurfaceHypothesis
@@ -90,14 +90,21 @@ def _append_if_fitting(
     action: InspectionCellAction,
     endpoint_budget: float,
     output: list[InspectionCellAction],
-) -> GeneralizedMeasurementState:
-    if (
-        candidate_budget_record(grid, state, action).effective_budget
-        > endpoint_budget + 1.0e-15
-    ):
-        return state
+    current_mask: np.ndarray,
+    measured_count: int,
+) -> tuple[GeneralizedMeasurementState, int]:
+    added_positions = action_added_positions_from_mask(
+        grid,
+        state,
+        action,
+        current_mask,
+    )
+    candidate_count = measured_count + len(added_positions)
+    if candidate_count / current_mask.size > endpoint_budget + 1.0e-15:
+        return state, measured_count
     output.append(action)
-    return apply_action(grid, state, action)
+    current_mask[added_positions[:, 0], added_positions[:, 1]] = True
+    return apply_action(grid, state, action), candidate_count
 
 
 def plan_policy_actions(
@@ -129,6 +136,8 @@ def plan_policy_actions(
         random_seed=random_seed,
     )
     state = zero_state(grid)
+    current_mask = np.zeros(grid.native_shape, dtype=np.bool_)
+    measured_count = 0
     actions: list[InspectionCellAction] = []
     if policy in {
         StateBankPolicy.UNIFORM_BROADEN,
@@ -137,12 +146,14 @@ def plan_policy_actions(
         StateBankPolicy.SURFACE_FOCUS,
     }:
         for cell in order:
-            state = _append_if_fitting(
+            state, measured_count = _append_if_fitting(
                 grid,
                 state,
                 InspectionCellAction(cell, -1, 0),
                 endpoint,
                 actions,
+                current_mask,
+                measured_count,
             )
         return tuple(actions)
     if policy is StateBankPolicy.UNIFORM_THEN_REFINE:
@@ -150,29 +161,35 @@ def plan_policy_actions(
             for cell in order:
                 if state.levels[cell] != source:
                     continue
-                state = _append_if_fitting(
+                state, measured_count = _append_if_fitting(
                     grid,
                     state,
                     InspectionCellAction(cell, source, target),
                     endpoint,
                     actions,
+                    current_mask,
+                    measured_count,
                 )
         return tuple(actions)
     for cell in order:
-        state = _append_if_fitting(
+        state, measured_count = _append_if_fitting(
             grid,
             state,
             InspectionCellAction(cell, -1, 0),
             endpoint,
             actions,
+            current_mask,
+            measured_count,
         )
         if state.levels[cell] == 0:
-            state = _append_if_fitting(
+            state, measured_count = _append_if_fitting(
                 grid,
                 state,
                 InspectionCellAction(cell, 0, 1),
                 endpoint,
                 actions,
+                current_mask,
+                measured_count,
             )
     return tuple(actions)
 
@@ -245,19 +262,16 @@ def materialize_state_bank(
         )
         if len(set(selected)) != len(selected):
             raise StateBankError("state-bank snapshot indices are not unique")
-        by_action = {action_index: snapshot for snapshot, action_index in enumerate(selected)}
-        for action_index, action in enumerate(actions):
-            current = world.step(current, action)
-            if action_index in by_action:
-                snapshot_index = by_action[action_index]
-                rows.append(
-                    _snapshot(
-                        policy.value,
-                        snapshot_index,
-                        float(snapshot_fractions[snapshot_index]),
-                        current,
-                    )
+        for snapshot_index, action_index in enumerate(selected):
+            current = world.replay(actions[: action_index + 1])
+            rows.append(
+                _snapshot(
+                    policy.value,
+                    snapshot_index,
+                    float(snapshot_fractions[snapshot_index]),
+                    current,
                 )
+            )
     if len(rows) != 19:
         raise StateBankError("state-bank row count changed")
     return tuple(rows)

@@ -97,3 +97,26 @@ def test_world_transition_preserves_all_previously_acquired_values() -> None:
     )
     assert not refined.acquired_positions.flags.writeable
     assert not refined.measurement_values.flags.writeable
+
+
+def test_action_history_replay_matches_sequential_causal_reveal() -> None:
+    first, _second = _world_pair()
+    actions = (
+        InspectionCellAction(0, -1, 0),
+        InspectionCellAction(7, -1, 0),
+        InspectionCellAction(0, 0, 1),
+    )
+    sequential = first.reset()
+    for action in actions:
+        sequential = first.step(sequential, action)
+    replayed = first.replay(actions)
+    assert replayed == sequential
+    np.testing.assert_array_equal(
+        replayed.acquired_positions,
+        sequential.acquired_positions,
+    )
+    np.testing.assert_array_equal(
+        replayed.measurement_values,
+        sequential.measurement_values,
+    )
+    assert replayed.surface_rgb is sequential.surface_rgb

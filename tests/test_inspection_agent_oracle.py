@@ -120,6 +120,7 @@ def test_field_oracle_matches_exhaustive_observed_only_reconstruction() -> None:
         image, reconstruct_observation(observation, grid, _prior()).image
     )
     exhaustive = []
+    exhaustive_losses = {}
     for action in fitting_actions(grid, observation.measurement_state, 0.25):
         candidate_world = _world(image, InspectionTask.FIELD, 0.25)
         candidate = candidate_world.step(candidate_world.reset(), action)
@@ -128,12 +129,52 @@ def test_field_oracle_matches_exhaustive_observed_only_reconstruction() -> None:
         )
         added = candidate.exact_acquired_count
         exhaustive.append(((current_loss - candidate_loss) / added, action))
+        exhaustive_losses[action] = candidate_loss
     expected = max(
         exhaustive,
         key=lambda item: (item[0], -item[1].cell_index, -item[1].to_level),
     )[1]
     assert selection.action == expected
     assert len(selection.candidates) == len(exhaustive)
+    for score in selection.candidates:
+        assert score.task_loss_after == pytest.approx(
+            exhaustive_losses[score.action], abs=1.0e-15
+        )
+        assert score.candidate_state_sha256 == apply_action(
+            grid,
+            observation.measurement_state,
+            score.action,
+        ).state_sha256
+
+
+def test_field_oracle_candidate_losses_match_exhaustive_mixed_state() -> None:
+    rows, columns = np.indices((41, 43))
+    image = np.stack((rows * 5, columns * 3, rows + columns), axis=2).astype(np.uint8)
+    world = _world(image, InspectionTask.FIELD, 0.25)
+    grid = build_acquisition_grid(41, 43, initial_budget=0.015625)
+    history = (
+        InspectionCellAction(0, -1, 0),
+        InspectionCellAction(1, -1, 0),
+        InspectionCellAction(0, 0, 1),
+        InspectionCellAction(9, -1, 0),
+    )
+    observation = world.replay(history)
+    selection = choose_field_action(
+        observation,
+        grid,
+        _prior(),
+        full_scan=image,
+        checkpoint=0.25,
+    )
+    for score in selection.candidates:
+        candidate_world = _world(image, InspectionTask.FIELD, 0.25)
+        candidate = candidate_world.replay((*history, score.action))
+        expected_loss = normalized_rgb_mse(
+            image,
+            reconstruct_observation(candidate, grid, _prior()).image,
+        )
+        assert score.task_loss_after == pytest.approx(expected_loss, abs=1.0e-15)
+        assert score.candidate_state_sha256 == candidate.measurement_state.state_sha256
 
 
 def test_discovery_trajectory_records_candidates_and_structured_decisions() -> None:

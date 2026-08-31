@@ -37,6 +37,15 @@ def _readonly(value: object, *, dtype: object, shape: tuple[int, ...]) -> np.nda
         raise InspectionContractError("observation array cannot be snapshotted") from error
     if array.shape != shape:
         raise InspectionContractError("observation array shape is invalid")
+    base: object = array
+    while isinstance(base, np.ndarray) and base.base is not None:
+        base = base.base
+    if (
+        not array.flags.writeable
+        and array.flags.c_contiguous
+        and isinstance(base, bytes)
+    ):
+        return array
     output = np.frombuffer(array.tobytes(order="C"), dtype=array.dtype).reshape(shape)
     output.setflags(write=False)
     return output
