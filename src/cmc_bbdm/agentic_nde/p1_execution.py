@@ -11,12 +11,6 @@ from types import MappingProxyType
 import numpy as np
 import polars as pl
 
-from cmc_bbdm.mvd.authority import load_compact_mvd_authority
-from cmc_bbdm.mvd.config import load_mvd_config
-from cmc_bbdm.mvd.observability_dataset import (
-    load_observed_candidate_feature_bank,
-)
-
 from .p1 import P1Config
 from .surface_cells import (
     SurfaceCellAuthority,
@@ -146,6 +140,12 @@ def load_p1_outer_data(
     outer_domain: str,
 ) -> P1OuterData:
     """Load one outer fold without reading its mechanical target labels."""
+
+    from cmc_bbdm.mvd.authority import load_compact_mvd_authority
+    from cmc_bbdm.mvd.config import load_mvd_config
+    from cmc_bbdm.mvd.observability_dataset import (
+        load_observed_candidate_feature_bank,
+    )
 
     if (
         type(config) is not P1Config

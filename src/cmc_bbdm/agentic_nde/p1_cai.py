@@ -10,25 +10,6 @@ from pathlib import Path
 
 import polars as pl
 
-from cmc_bbdm.mavis.task_specificity import normalized_auebc
-from cmc_bbdm.mva.a4_execution import (
-    _load_uniform_embeddings,
-    fit_outer_evaluation_models,
-)
-from cmc_bbdm.mva.acquisition_grid import build_acquisition_grid
-from cmc_bbdm.mva.encoder_session import MVAEncoderSession
-from cmc_bbdm.mva.interpolation import RefinementPatchCache
-from cmc_bbdm.mva.measurement_state import initial_state
-from cmc_bbdm.mva.oracle_execution import _encode_many, _materialize_control
-from cmc_bbdm.mva.oracle_trajectory import ControlTrajectory
-from cmc_bbdm.mva.pipeline import _encoder
-from cmc_bbdm.mvd.config import load_mvd_config
-from cmc_bbdm.mvd.evaluation import _validate_runtime
-from cmc_bbdm.mvd.one_shot_oracle import (
-    plan_frozen_ranking,
-    score_initial_ranking,
-)
-
 from .p1 import P1Config
 from .p1_execution import (
     P1OuterData,
@@ -76,6 +57,24 @@ def run_p1_cai_outer(
     notify: Callable[[str], None] | None = None,
 ) -> P1OuterCAIEvaluation:
     """Evaluate specimen-specific frozen rankings with the registered P-B head."""
+
+    from cmc_bbdm.mva.a4_execution import (
+        _load_uniform_embeddings,
+        fit_outer_evaluation_models,
+    )
+    from cmc_bbdm.mva.acquisition_grid import build_acquisition_grid
+    from cmc_bbdm.mva.encoder_session import MVAEncoderSession
+    from cmc_bbdm.mva.interpolation import RefinementPatchCache
+    from cmc_bbdm.mva.measurement_state import initial_state
+    from cmc_bbdm.mva.oracle_execution import _encode_many, _materialize_control
+    from cmc_bbdm.mva.oracle_trajectory import ControlTrajectory
+    from cmc_bbdm.mva.pipeline import _encoder
+    from cmc_bbdm.mvd.config import load_mvd_config
+    from cmc_bbdm.mvd.evaluation import _validate_runtime
+    from cmc_bbdm.mvd.one_shot_oracle import (
+        plan_frozen_ranking,
+        score_initial_ranking,
+    )
 
     if (
         type(config) is not P1Config
@@ -363,6 +362,8 @@ def aggregate_p1_evaluation(
     bootstrap_resamples: int,
 ) -> P1AggregateEvaluation:
     """Compute normalized specimen AUEBC, equal-domain effects, and P1 status."""
+
+    from cmc_bbdm.mavis.task_specificity import normalized_auebc
 
     methods, specimen_count = _validate_evaluation_tables(
         acquisition_curves,
