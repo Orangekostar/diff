@@ -182,6 +182,55 @@ class P1MechanicalLabels:
 
 
 @dataclass(frozen=True, slots=True)
+class P1OuterExamples:
+    source: VisualExamples
+    inference: VisualExamples
+    source_indices: tuple[int, ...]
+    target_indices: tuple[int, ...]
+    state_sha256: str
+
+
+@dataclass(frozen=True, slots=True)
+class SourceCandidateSelection:
+    candidate_id: str
+    ndcg_10: float
+    next_action_regret: float
+    parameter_count: int
+    aggregates: pl.DataFrame
+    state_sha256: str
+
+
+@dataclass(frozen=True, slots=True)
+class FusionSelection:
+    value: float
+    audit: pl.DataFrame
+    state_sha256: str
+
+
+@dataclass(frozen=True, slots=True)
+class OuterVisualModelFit:
+    outer_domain: str
+    correct_representation: str
+    correct_config_id: str
+    global_config_id: str
+    old_config_id: str
+    correct_lambda: float
+    global_lambda: float
+    models: Mapping[str, Any]
+    model_feature_controls: Mapping[str, str]
+    selection_audit: pl.DataFrame
+    selection_state_sha256: str
+
+
+@dataclass(frozen=True, slots=True)
+class _HeadSpecification:
+    family: str
+    config_id: str
+    alpha: float | None
+    parameter_count: int
+
+
+@dataclass(frozen=True, slots=True)
 class FrozenOuterScores:
     outer_domain: str
     specimen_ids: tuple[str, ...]
@@ -389,6 +438,99 @@ def load_p1_source_labels(
 
     return _load_label_subset(
         config, deployable, outer_domain=outer_domain, target=False
+    )
+
+
+def assemble_p1_outer_examples(
+    *,
+    outer_domain: str,
+    specimen_ids: tuple[str, ...],
+    dataset_ids: tuple[str, ...],
+    initial_embeddings: object,
+    current_predictions: object,
+    candidate_features: object,
+    global_embeddings: object,
+    local_embeddings: object,
+    source_labels: P1MechanicalLabels,
+    feature_control: str,
+) -> P1OuterExamples:
+    """Split deployable inputs while keeping outer labels outside inference."""
+
+    count = len(specimen_ids)
+    if (
+        not outer_domain
+        or count < 2
+        or len(dataset_ids) != count
+        or outer_domain not in dataset_ids
+        or type(source_labels) is not P1MechanicalLabels
+        or source_labels.outer_domain != outer_domain
+        or source_labels.role != "source_train"
+        or outer_domain in source_labels.dataset_ids
+        or not feature_control
+    ):
+        raise ValueError("P1 outer example authority changed")
+    source_indices = tuple(
+        index for index, domain in enumerate(dataset_ids) if domain != outer_domain
+    )
+    target_indices = tuple(
+        index for index, domain in enumerate(dataset_ids) if domain == outer_domain
+    )
+    expected_source_ids = tuple(specimen_ids[index] for index in source_indices)
+    expected_source_domains = tuple(dataset_ids[index] for index in source_indices)
+    if (
+        source_labels.specimen_ids != expected_source_ids
+        or source_labels.dataset_ids != expected_source_domains
+        or not source_indices
+        or not target_indices
+    ):
+        raise ValueError("P1 source label roster changed")
+    initial = np.asarray(initial_embeddings)
+    current = np.asarray(current_predictions)
+    candidates = np.asarray(candidate_features)
+    global_values = np.asarray(global_embeddings)
+    local_values = np.asarray(local_embeddings)
+    if (
+        initial.shape != (count, 512)
+        or current.shape != (count,)
+        or candidates.shape != (count, 64, 8)
+        or global_values.shape != (count, 512)
+        or local_values.shape != (count, 64, 512)
+    ):
+        raise ValueError("P1 deployable input shape changed")
+
+    def take(indices: tuple[int, ...], *, role: str) -> VisualExamples:
+        selection = np.asarray(indices, dtype=np.int64)
+        return VisualExamples.create(
+            outer_domain=outer_domain,
+            role=role,
+            specimen_ids=tuple(specimen_ids[index] for index in indices),
+            dataset_ids=tuple(dataset_ids[index] for index in indices),
+            initial_embeddings=initial[selection],
+            current_predictions=current[selection],
+            candidate_features=candidates[selection],
+            global_embeddings=global_values[selection],
+            local_embeddings=local_values[selection],
+            mechanical_values=(
+                source_labels.mechanical_values if role == "source_train" else None
+            ),
+            feature_control=feature_control,
+        )
+
+    source = take(source_indices, role="source_train")
+    inference = take(target_indices, role="outer_inference")
+    payload = {
+        "feature_control": feature_control,
+        "inference_state_sha256": inference.state_sha256,
+        "outer_domain": outer_domain,
+        "source_label_state_sha256": source_labels.state_sha256,
+        "source_state_sha256": source.state_sha256,
+    }
+    return P1OuterExamples(
+        source=source,
+        inference=inference,
+        source_indices=source_indices,
+        target_indices=target_indices,
+        state_sha256=hashlib.sha256(_canonical_json(payload)).hexdigest(),
     )
 
 
@@ -1082,7 +1224,12 @@ def evaluate_action_scores(mechanical_values: object, predicted_scores: object) 
     predicted = _order(scores)
     oracle = _order(truth)
     selected = predicted[0]
-    association = float(spearmanr(truth, scores).statistic)
+    association = (
+        0.0
+        if np.ptp(truth) <= np.finfo(np.float64).eps
+        or np.ptp(scores) <= np.finfo(np.float64).eps
+        else float(spearmanr(truth, scores).statistic)
+    )
     if not np.isfinite(association):
         association = 0.0
     relevance = truth - float(np.min(truth))
@@ -1105,6 +1252,679 @@ def evaluate_action_scores(mechanical_values: object, predicted_scores: object) 
             len(top10_percent & set(predicted[:7])) / len(top10_percent)
         ),
         top_1_oracle_match=float(selected == oracle[0]),
+    )
+
+
+def select_source_candidate(
+    metrics: pl.DataFrame, *, domain_order: tuple[str, ...]
+) -> SourceCandidateSelection:
+    """Apply the frozen source-only NDCG/regret/size/ID selection order."""
+
+    required = {
+        "candidate_id",
+        "validation_domain",
+        "ndcg_10",
+        "next_action_regret",
+        "parameter_count",
+    }
+    if (
+        type(metrics) is not pl.DataFrame
+        or not required <= set(metrics.columns)
+        or len(domain_order) != 5
+        or len(set(domain_order)) != 5
+        or set(metrics["validation_domain"]) != set(domain_order)
+        or metrics.unique(subset=["candidate_id", "validation_domain"]).height
+        != metrics.height
+        or not bool(
+            metrics.select(
+                pl.col("ndcg_10").is_finite().all()
+                & pl.col("next_action_regret").is_finite().all()
+            ).item()
+        )
+    ):
+        raise ValueError("P1 source selection metrics changed")
+    candidates = tuple(sorted(str(value) for value in metrics["candidate_id"].unique()))
+    if not candidates or any(not value for value in candidates):
+        raise ValueError("P1 source selection candidate identity changed")
+    aggregates: list[dict[str, object]] = []
+    for candidate_id in candidates:
+        selected = metrics.filter(pl.col("candidate_id") == candidate_id)
+        parameters = {int(value) for value in selected["parameter_count"]}
+        if selected.height != len(domain_order) or len(parameters) != 1:
+            raise ValueError("P1 source selection candidate coverage changed")
+        parameter_count = parameters.pop()
+        if parameter_count < 0:
+            raise ValueError("P1 source selection parameter count changed")
+        aggregates.append(
+            {
+                "candidate_id": candidate_id,
+                "ndcg_10": float(
+                    np.mean(selected["ndcg_10"].to_numpy(), dtype=np.float64)
+                ),
+                "next_action_regret": float(
+                    np.mean(
+                        selected["next_action_regret"].to_numpy(), dtype=np.float64
+                    )
+                ),
+                "parameter_count": parameter_count,
+            }
+        )
+    chosen = min(
+        aggregates,
+        key=lambda row: (
+            -float(row["ndcg_10"]),
+            float(row["next_action_regret"]),
+            int(row["parameter_count"]),
+            str(row["candidate_id"]),
+        ),
+    )
+    table = pl.DataFrame(
+        [
+            {
+                **row,
+                "selected": row["candidate_id"] == chosen["candidate_id"],
+            }
+            for row in aggregates
+        ]
+    ).sort("candidate_id")
+    payload = {
+        "aggregates": table.to_dicts(),
+        "domain_order": domain_order,
+        "selected_candidate_id": chosen["candidate_id"],
+    }
+    return SourceCandidateSelection(
+        candidate_id=str(chosen["candidate_id"]),
+        ndcg_10=float(chosen["ndcg_10"]),
+        next_action_regret=float(chosen["next_action_regret"]),
+        parameter_count=int(chosen["parameter_count"]),
+        aggregates=table,
+        state_sha256=hashlib.sha256(_canonical_json(payload)).hexdigest(),
+    )
+
+
+def select_fusion_lambda(
+    *,
+    mechanical_values: object,
+    dataset_ids: tuple[str, ...],
+    old_scores: object,
+    visual_scores: object,
+    values: tuple[float, ...],
+) -> FusionSelection:
+    """Select the rank-fusion coefficient from five source domains only."""
+
+    truth = np.asarray(mechanical_values, dtype=np.float64)
+    old = np.asarray(old_scores, dtype=np.float64)
+    visual = np.asarray(visual_scores, dtype=np.float64)
+    count = len(dataset_ids)
+    domain_order = tuple(dict.fromkeys(dataset_ids))
+    if (
+        truth.shape != (count, 64)
+        or old.shape != truth.shape
+        or visual.shape != truth.shape
+        or not np.all(np.isfinite(truth))
+        or not np.all(np.isfinite(old))
+        or not np.all(np.isfinite(visual))
+        or len(domain_order) != 5
+        or any(not value for value in dataset_ids)
+        or values != (0.0, 0.25, 0.5, 0.75, 1.0)
+    ):
+        raise ValueError("P1 fusion selection authority changed")
+    rows: list[dict[str, object]] = []
+    for value in values:
+        fused = fuse_rank_scores(old, visual, value)
+        metrics = [
+            evaluate_action_scores(truth[index], fused[index])
+            for index in range(count)
+        ]
+        for domain in domain_order:
+            indices = [index for index, item in enumerate(dataset_ids) if item == domain]
+            rows.append(
+                {
+                    "candidate_id": f"lambda_{value:g}",
+                    "validation_domain": domain,
+                    "ndcg_10": float(
+                        np.mean([metrics[index].ndcg_10 for index in indices])
+                    ),
+                    "next_action_regret": float(
+                        np.mean(
+                            [metrics[index].next_action_regret for index in indices]
+                        )
+                    ),
+                    "parameter_count": 0,
+                    "lambda": value,
+                }
+            )
+    audit = pl.DataFrame(rows).sort(["candidate_id", "validation_domain"])
+    selected = select_source_candidate(audit, domain_order=domain_order)
+    value_lookup = {
+        f"lambda_{value:g}": value for value in values
+    }
+    chosen = float(value_lookup[selected.candidate_id])
+    audit = audit.with_columns(
+        (pl.col("candidate_id") == selected.candidate_id).alias("selected")
+    )
+    payload = {
+        "audit": audit.to_dicts(),
+        "selection_state_sha256": selected.state_sha256,
+        "value": chosen,
+    }
+    return FusionSelection(
+        value=chosen,
+        audit=audit,
+        state_sha256=hashlib.sha256(_canonical_json(payload)).hexdigest(),
+    )
+
+
+def _head_specification(model: object) -> _HeadSpecification:
+    config_id = getattr(model, "config_id", None)
+    parameter_count = getattr(model, "parameter_count", None)
+    state = getattr(model, "state_sha256", None)
+    if (
+        type(config_id) is not str
+        or not config_id
+        or type(parameter_count) is not int
+        or parameter_count < 1
+        or not _valid_hash(state)
+    ):
+        raise ValueError("P1 fitted head identity changed")
+    if config_id.startswith("ridge_alpha_"):
+        try:
+            alpha = float(config_id.removeprefix("ridge_alpha_"))
+        except ValueError as error:
+            raise ValueError("P1 Ridge configuration identity changed") from error
+        family = "ridge"
+    elif config_id == "mlp_smooth_l1_32_16":
+        alpha = None
+        family = "mlp"
+    else:
+        raise ValueError("P1 head configuration is not preregistered")
+    return _HeadSpecification(
+        family=family,
+        config_id=config_id,
+        alpha=alpha,
+        parameter_count=parameter_count,
+    )
+
+
+def _fit_head_candidates(
+    examples: VisualExamples,
+    *,
+    representation: str,
+    ridge_alphas: tuple[float, ...],
+    model_seed: int,
+    epochs: int,
+    device: str,
+) -> tuple[tuple[object, _HeadSpecification], ...]:
+    ridge = fit_ridge_family(
+        examples, representation=representation, alphas=ridge_alphas
+    )
+    mlp = fit_mlp_scorer(
+        examples,
+        representation=representation,
+        seed=model_seed,
+        epochs=epochs,
+        device=device,
+    )
+    values = tuple((model, _head_specification(model)) for model in (*ridge, mlp))
+    ids = tuple(specification.config_id for _, specification in values)
+    if len(values) != 5 or len(set(ids)) != len(ids):
+        raise ValueError("P1 head candidate roster changed")
+    return values
+
+
+def _fit_selected_head(
+    examples: VisualExamples,
+    *,
+    representation: str,
+    specification: _HeadSpecification,
+    ridge_alphas: tuple[float, ...],
+    model_seed: int,
+    epochs: int,
+    device: str,
+) -> object:
+    if specification.family == "ridge":
+        models = fit_ridge_family(
+            examples, representation=representation, alphas=ridge_alphas
+        )
+        matches = [model for model in models if model.config_id == specification.config_id]
+        if len(matches) != 1:
+            raise ValueError("P1 selected Ridge head is unavailable")
+        return matches[0]
+    if specification.family != "mlp":
+        raise ValueError("P1 selected head family changed")
+    model = fit_mlp_scorer(
+        examples,
+        representation=representation,
+        seed=model_seed,
+        epochs=epochs,
+        device=device,
+    )
+    if model.config_id != specification.config_id:
+        raise ValueError("P1 selected MLP head is unavailable")
+    return model
+
+
+def _mean_action_metrics(
+    truth: np.ndarray, scores: np.ndarray
+) -> tuple[float, float]:
+    values = [
+        evaluate_action_scores(truth[index], scores[index])
+        for index in range(truth.shape[0])
+    ]
+    return (
+        float(np.mean([value.ndcg_10 for value in values], dtype=np.float64)),
+        float(
+            np.mean(
+                [value.next_action_regret for value in values], dtype=np.float64
+            )
+        ),
+    )
+
+
+def _validate_outer_example_controls(
+    correct: P1OuterExamples,
+    controls: tuple[P1OuterExamples, ...],
+    c0_source_scores: object,
+) -> np.ndarray:
+    if type(correct) is not P1OuterExamples or any(
+        type(value) is not P1OuterExamples for value in controls
+    ):
+        raise ValueError("P1 outer control examples changed")
+    for value in controls:
+        if (
+            value.source.outer_domain != correct.source.outer_domain
+            or value.source.specimen_ids != correct.source.specimen_ids
+            or value.source.dataset_ids != correct.source.dataset_ids
+            or value.inference.specimen_ids != correct.inference.specimen_ids
+            or value.inference.dataset_ids != correct.inference.dataset_ids
+            or value.source.mechanical_values is None
+            or value.inference.mechanical_values is not None
+        ):
+            raise ValueError("P1 outer control roster or label barrier changed")
+    scores = np.asarray(c0_source_scores, dtype=np.float64)
+    if (
+        correct.source.mechanical_values is None
+        or scores.shape != (correct.source.specimen_count, 64)
+        or not np.all(np.isfinite(scores))
+        or len(set(correct.source.dataset_ids)) != 5
+    ):
+        raise ValueError("P1 source-only C0 score authority changed")
+    return scores
+
+
+def fit_outer_visual_models(
+    *,
+    correct: P1OuterExamples,
+    shuffled: P1OuterExamples,
+    wrong_orientation: P1OuterExamples,
+    spatial_derangement: P1OuterExamples,
+    c0_source_scores: object,
+    ridge_alphas: tuple[float, ...],
+    fusion_values: tuple[float, ...],
+    model_seed: int,
+    epochs: int,
+    device: str,
+) -> OuterVisualModelFit:
+    """Select and refit P1 heads using labels from five source domains only."""
+
+    c0 = _validate_outer_example_controls(
+        correct,
+        (shuffled, wrong_orientation, spatial_derangement),
+        c0_source_scores,
+    )
+    if (
+        ridge_alphas != (0.1, 1.0, 10.0, 100.0)
+        or fusion_values != (0.0, 0.25, 0.5, 0.75, 1.0)
+        or type(model_seed) is not int
+        or epochs != 50
+        or device != "cuda:0"
+    ):
+        raise ValueError("P1 model-selection roster changed")
+    source = correct.source
+    truth = source.mechanical_values
+    assert truth is not None
+    source_domains = tuple(dict.fromkeys(source.dataset_ids))
+    source_positions = {
+        specimen: index for index, specimen in enumerate(source.specimen_ids)
+    }
+    audit_rows: list[dict[str, object]] = []
+    oof: dict[str, dict[str, np.ndarray]] = {}
+    specifications: dict[str, dict[str, _HeadSpecification]] = {}
+    selections: dict[str, SourceCandidateSelection] = {}
+    for representation in ("OLD", "GLOBAL", "LOCAL", "LOCAL_GLOBAL"):
+        representation_oof: dict[str, np.ndarray] = {}
+        representation_specs: dict[str, _HeadSpecification] = {}
+        for validation_domain in source_domains:
+            train_domains = tuple(
+                domain for domain in source_domains if domain != validation_domain
+            )
+            train = subset_visual_examples(
+                source, included_domains=train_domains, role="source_train"
+            )
+            validation = subset_visual_examples(
+                source,
+                included_domains=(validation_domain,),
+                role="source_validation",
+            )
+            fitted = _fit_head_candidates(
+                train,
+                representation=representation,
+                ridge_alphas=ridge_alphas,
+                model_seed=model_seed,
+                epochs=epochs,
+                device=device,
+            )
+            validation_indices = np.asarray(
+                [source_positions[value] for value in validation.specimen_ids],
+                dtype=np.int64,
+            )
+            validation_truth = validation.mechanical_values
+            assert validation_truth is not None
+            for model, specification in fitted:
+                previous = representation_specs.setdefault(
+                    specification.config_id, specification
+                )
+                if previous != specification:
+                    raise ValueError("P1 head specification changed across folds")
+                scores = np.asarray(model.predict(validation), dtype=np.float64)
+                if scores.shape != validation_truth.shape:
+                    raise ValueError("P1 inner prediction shape changed")
+                matrix = representation_oof.setdefault(
+                    specification.config_id,
+                    np.full((source.specimen_count, 64), np.nan, dtype=np.float64),
+                )
+                matrix[validation_indices] = scores
+                ndcg, regret = _mean_action_metrics(validation_truth, scores)
+                audit_rows.append(
+                    {
+                        "alpha": specification.alpha,
+                        "candidate_id": specification.config_id,
+                        "family": specification.family,
+                        "feature_control": source.feature_control,
+                        "fit_domains": "|".join(train_domains),
+                        "lambda": None,
+                        "method": None,
+                        "model_state_sha256": str(model.state_sha256),
+                        "ndcg_10": ndcg,
+                        "next_action_regret": regret,
+                        "outer_domain": source.outer_domain,
+                        "parameter_count": specification.parameter_count,
+                        "representation": representation,
+                        "role": "source_validation",
+                        "selected": False,
+                        "stage": "HEAD_INNER",
+                        "validation_domain": validation_domain,
+                        "validation_specimen_count": validation.specimen_count,
+                    }
+                )
+        if any(not np.all(np.isfinite(value)) for value in representation_oof.values()):
+            raise ValueError("P1 inner OOF prediction coverage changed")
+        candidate_metrics = pl.DataFrame(
+            [
+                {
+                    "candidate_id": row["candidate_id"],
+                    "validation_domain": row["validation_domain"],
+                    "ndcg_10": row["ndcg_10"],
+                    "next_action_regret": row["next_action_regret"],
+                    "parameter_count": row["parameter_count"],
+                }
+                for row in audit_rows
+                if row["stage"] == "HEAD_INNER"
+                and row["representation"] == representation
+            ]
+        )
+        selection = select_source_candidate(
+            candidate_metrics, domain_order=source_domains
+        )
+        for row in audit_rows:
+            if (
+                row["stage"] == "HEAD_INNER"
+                and row["representation"] == representation
+            ):
+                row["selected"] = row["candidate_id"] == selection.candidate_id
+        for row in selection.aggregates.iter_rows(named=True):
+            specification = representation_specs[str(row["candidate_id"])]
+            audit_rows.append(
+                {
+                    "alpha": specification.alpha,
+                    "candidate_id": row["candidate_id"],
+                    "family": specification.family,
+                    "feature_control": source.feature_control,
+                    "fit_domains": "|".join(source_domains),
+                    "lambda": None,
+                    "method": None,
+                    "model_state_sha256": None,
+                    "ndcg_10": row["ndcg_10"],
+                    "next_action_regret": row["next_action_regret"],
+                    "outer_domain": source.outer_domain,
+                    "parameter_count": row["parameter_count"],
+                    "representation": representation,
+                    "role": "source_validation",
+                    "selected": row["selected"],
+                    "stage": "HEAD_AGGREGATE",
+                    "validation_domain": "EQUAL_SOURCE_MEAN",
+                    "validation_specimen_count": source.specimen_count,
+                }
+            )
+        oof[representation] = representation_oof
+        specifications[representation] = representation_specs
+        selections[representation] = selection
+
+    route_rows: list[dict[str, object]] = []
+    for representation in ("LOCAL", "LOCAL_GLOBAL"):
+        chosen_id = selections[representation].candidate_id
+        for row in audit_rows:
+            if (
+                row["stage"] == "HEAD_INNER"
+                and row["representation"] == representation
+                and row["candidate_id"] == chosen_id
+            ):
+                route_rows.append(
+                    {
+                        "candidate_id": representation,
+                        "validation_domain": row["validation_domain"],
+                        "ndcg_10": row["ndcg_10"],
+                        "next_action_regret": row["next_action_regret"],
+                        "parameter_count": row["parameter_count"],
+                    }
+                )
+    route = select_source_candidate(
+        pl.DataFrame(route_rows), domain_order=source_domains
+    )
+    correct_representation = route.candidate_id
+    for row in route_rows:
+        audit_rows.append(
+            {
+                "alpha": specifications[correct_representation][
+                    selections[correct_representation].candidate_id
+                ].alpha,
+                "candidate_id": row["candidate_id"],
+                "family": specifications[row["candidate_id"]][
+                    selections[row["candidate_id"]].candidate_id
+                ].family,
+                "feature_control": source.feature_control,
+                "fit_domains": "|".join(source_domains),
+                "lambda": None,
+                "method": None,
+                "model_state_sha256": None,
+                "ndcg_10": row["ndcg_10"],
+                "next_action_regret": row["next_action_regret"],
+                "outer_domain": source.outer_domain,
+                "parameter_count": row["parameter_count"],
+                "representation": row["candidate_id"],
+                "role": "source_validation",
+                "selected": row["candidate_id"] == correct_representation,
+                "stage": "CORRECT_ROUTE",
+                "validation_domain": row["validation_domain"],
+                "validation_specimen_count": sum(
+                    domain == row["validation_domain"] for domain in source.dataset_ids
+                ),
+            }
+        )
+    correct_config_id = selections[correct_representation].candidate_id
+    global_config_id = selections["GLOBAL"].candidate_id
+    old_config_id = selections["OLD"].candidate_id
+    correct_fusion = select_fusion_lambda(
+        mechanical_values=truth,
+        dataset_ids=source.dataset_ids,
+        old_scores=c0,
+        visual_scores=oof[correct_representation][correct_config_id],
+        values=fusion_values,
+    )
+    global_fusion = select_fusion_lambda(
+        mechanical_values=truth,
+        dataset_ids=source.dataset_ids,
+        old_scores=c0,
+        visual_scores=oof["GLOBAL"][global_config_id],
+        values=fusion_values,
+    )
+    for stage, fusion in (
+        ("FUSION_CORRECT", correct_fusion),
+        ("FUSION_GLOBAL", global_fusion),
+    ):
+        representation = correct_representation if stage == "FUSION_CORRECT" else "GLOBAL"
+        for row in fusion.audit.iter_rows(named=True):
+            audit_rows.append(
+                {
+                    "alpha": None,
+                    "candidate_id": row["candidate_id"],
+                    "family": "rank_fusion",
+                    "feature_control": source.feature_control,
+                    "fit_domains": "|".join(source_domains),
+                    "lambda": row["lambda"],
+                    "method": None,
+                    "model_state_sha256": None,
+                    "ndcg_10": row["ndcg_10"],
+                    "next_action_regret": row["next_action_regret"],
+                    "outer_domain": source.outer_domain,
+                    "parameter_count": 0,
+                    "representation": representation,
+                    "role": "source_validation",
+                    "selected": row["selected"],
+                    "stage": stage,
+                    "validation_domain": row["validation_domain"],
+                    "validation_specimen_count": sum(
+                        domain == row["validation_domain"]
+                        for domain in source.dataset_ids
+                    ),
+                }
+            )
+
+    correct_spec = specifications[correct_representation][correct_config_id]
+    global_spec = specifications["GLOBAL"][global_config_id]
+    old_spec = specifications["OLD"][old_config_id]
+
+    def fit(examples: P1OuterExamples, representation: str, spec: _HeadSpecification):
+        return _fit_selected_head(
+            examples.source,
+            representation=representation,
+            specification=spec,
+            ridge_alphas=ridge_alphas,
+            model_seed=model_seed,
+            epochs=epochs,
+            device=device,
+        )
+
+    models = {
+        "old_refit_diagnostic": fit(correct, "OLD", old_spec),
+        "proposed": fit(correct, correct_representation, correct_spec),
+        "c2_global_context": fit(correct, "GLOBAL", global_spec),
+        "c3_shuffled_surface": fit(
+            shuffled, correct_representation, correct_spec
+        ),
+        "c4_wrong_orientation": fit(
+            wrong_orientation, correct_representation, correct_spec
+        ),
+        "c5_spatial_derangement": fit(
+            spatial_derangement, correct_representation, correct_spec
+        ),
+        "c3_shuffled_global": fit(shuffled, "GLOBAL", global_spec),
+    }
+    controls = {
+        "old_refit_diagnostic": correct.source.feature_control,
+        "proposed": correct.source.feature_control,
+        "c2_global_context": correct.source.feature_control,
+        "c3_shuffled_surface": shuffled.source.feature_control,
+        "c4_wrong_orientation": wrong_orientation.source.feature_control,
+        "c5_spatial_derangement": spatial_derangement.source.feature_control,
+        "c3_shuffled_global": shuffled.source.feature_control,
+    }
+    for method, model in models.items():
+        specification = _head_specification(model)
+        audit_rows.append(
+            {
+                "alpha": specification.alpha,
+                "candidate_id": specification.config_id,
+                "family": specification.family,
+                "feature_control": controls[method],
+                "fit_domains": "|".join(source_domains),
+                "lambda": (
+                    global_fusion.value
+                    if method in {"c2_global_context", "c3_shuffled_global"}
+                    else correct_fusion.value
+                    if method not in {"old_refit_diagnostic"}
+                    else None
+                ),
+                "method": method,
+                "model_state_sha256": str(model.state_sha256),
+                "ndcg_10": None,
+                "next_action_regret": None,
+                "outer_domain": source.outer_domain,
+                "parameter_count": specification.parameter_count,
+                "representation": str(model.representation),
+                "role": "source_train",
+                "selected": True,
+                "stage": "FINAL_FIT",
+                "validation_domain": None,
+                "validation_specimen_count": None,
+            }
+        )
+    audit = pl.DataFrame(audit_rows, infer_schema_length=None).sort(
+        [
+            "outer_domain",
+            "stage",
+            "representation",
+            "candidate_id",
+            "validation_domain",
+            "method",
+        ],
+        nulls_last=True,
+    )
+    selection_payload = {
+        "control_example_states": {
+            "correct": correct.state_sha256,
+            "shuffled": shuffled.state_sha256,
+            "spatial_derangement": spatial_derangement.state_sha256,
+            "wrong_orientation": wrong_orientation.state_sha256,
+        },
+        "correct_config_id": correct_config_id,
+        "correct_fusion_state_sha256": correct_fusion.state_sha256,
+        "correct_lambda": correct_fusion.value,
+        "correct_representation": correct_representation,
+        "global_config_id": global_config_id,
+        "global_fusion_state_sha256": global_fusion.state_sha256,
+        "global_lambda": global_fusion.value,
+        "head_selection_states": {
+            key: value.state_sha256 for key, value in sorted(selections.items())
+        },
+        "old_config_id": old_config_id,
+        "outer_domain": source.outer_domain,
+        "route_selection_state_sha256": route.state_sha256,
+    }
+    return OuterVisualModelFit(
+        outer_domain=source.outer_domain,
+        correct_representation=correct_representation,
+        correct_config_id=correct_config_id,
+        global_config_id=global_config_id,
+        old_config_id=old_config_id,
+        correct_lambda=correct_fusion.value,
+        global_lambda=global_fusion.value,
+        models=MappingProxyType(models),
+        model_feature_controls=MappingProxyType(controls),
+        selection_audit=audit,
+        selection_state_sha256=hashlib.sha256(
+            _canonical_json(selection_payload)
+        ).hexdigest(),
     )
 
 
@@ -1468,18 +2288,24 @@ __all__ = [
     "ActionMetrics",
     "FrozenC0Scores",
     "FrozenOuterScores",
+    "FusionSelection",
     "MLPVisualScorer",
+    "OuterVisualModelFit",
     "P1Decision",
     "P1DeployableAuthority",
     "P1MechanicalLabels",
+    "P1OuterExamples",
     "RidgeVisualScorer",
+    "SourceCandidateSelection",
     "SpecimenBootstrapEffect",
     "VisualExamples",
+    "assemble_p1_outer_examples",
     "attach_target_labels",
     "center_prior_scores",
     "decide_p1",
     "evaluate_action_scores",
     "fit_mlp_scorer",
+    "fit_outer_visual_models",
     "fit_ridge_family",
     "freeze_outer_scores",
     "fuse_rank_scores",
@@ -1490,6 +2316,8 @@ __all__ = [
     "paired_specimen_bootstrap",
     "replace_surface_features",
     "representation_matrix",
+    "select_fusion_lambda",
+    "select_source_candidate",
     "stable_rank_percentiles",
     "subset_visual_examples",
 ]
