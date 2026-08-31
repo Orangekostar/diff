@@ -22,6 +22,11 @@ from cmc_bbdm.agentic_nde.p0r_artifacts import (
     replay_p0r_package,
 )
 from cmc_bbdm.agentic_nde.p0r_qc import P0RQCError, render_p0r_qc
+from cmc_bbdm.agentic_nde.p1_artifacts import P1ArtifactError, replay_p1_science
+from cmc_bbdm.agentic_nde.p1_pipeline import (
+    P1RunError,
+    run_p1_visual_observability,
+)
 
 
 def _parser() -> argparse.ArgumentParser:
@@ -44,6 +49,17 @@ def _parser() -> argparse.ArgumentParser:
     replay_p0r_parser = commands.add_parser("replay-p0r")
     replay_p0r_parser.add_argument("--path", required=True)
     replay_p0r_parser.add_argument("--surface-root")
+    run_p1_parser = commands.add_parser("run-p1")
+    run_p1_parser.add_argument("--config", required=True)
+    run_p1_parser.add_argument("--research-root", required=True)
+    run_p1_parser.add_argument("--project-root", default=str(_PROJECT_ROOT))
+    run_p1_parser.add_argument("--feature-root")
+    run_p1_parser.add_argument("--device", default="cuda:0")
+    replay_p1_parser = commands.add_parser("replay-p1")
+    replay_p1_parser.add_argument("--path", required=True)
+    replay_p1_parser.add_argument("--project-root", default=str(_PROJECT_ROOT))
+    replay_p1_parser.add_argument("--feature-root")
+    replay_p1_parser.add_argument("--replay-output")
     return parser
 
 
@@ -79,7 +95,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                     output=args.qc_output,
                 )
             summary = replay_p0r_package(result)
-        else:
+        elif args.command == "replay-p0r":
             replay_kwargs = {}
             if args.surface_root:
                 replay_kwargs = {
@@ -87,6 +103,23 @@ def main(argv: Sequence[str] | None = None) -> int:
                     "project_root": _PROJECT_ROOT,
                 }
             summary = replay_p0r_package(args.path, **replay_kwargs)
+        elif args.command == "run-p1":
+            result = run_p1_visual_observability(
+                args.config,
+                project_root=args.project_root,
+                research_root=args.research_root,
+                feature_root=args.feature_root,
+                device=args.device,
+                notify=print,
+            )
+            summary = result.summary
+        else:
+            summary = replay_p1_science(
+                args.path,
+                project_root=args.project_root,
+                feature_root=args.feature_root,
+                replay_output=args.replay_output,
+            )
         print(summary["status"])
         return 0
     except (
@@ -95,6 +128,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         P0RArtifactError,
         P0RPipelineError,
         P0RQCError,
+        P1ArtifactError,
+        P1RunError,
         OSError,
         ValueError,
     ) as error:
