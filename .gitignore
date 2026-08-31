@@ -10,3 +10,4 @@ __pycache__/
 .DS_Store
 .worktrees/
 results/mavis/.work/
+results/agentic_task_driven_nde/.work/
