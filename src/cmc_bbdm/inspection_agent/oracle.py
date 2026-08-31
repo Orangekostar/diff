@@ -240,11 +240,16 @@ def choose_field_action(
     *,
     full_scan: np.ndarray,
     checkpoint: float,
+    _current_reconstruction: np.ndarray | None = None,
 ) -> OracleSelection:
     image = _full_scan(full_scan, grid.native_shape)
-    current = reconstruct_observation(observation, grid, prior)
+    current_image = (
+        reconstruct_observation(observation, grid, prior).image
+        if _current_reconstruction is None
+        else _full_scan(_current_reconstruction, grid.native_shape)
+    )
     current_mask = measurement_mask(grid, observation.measurement_state)
-    current_sse = _squared_error(image, current.image)
+    current_sse = _squared_error(image, current_image)
     denominator = float(image.size * 255**2)
     current_loss = current_sse / denominator
     rows = []
@@ -254,7 +259,7 @@ def choose_field_action(
             grid,
             action,
             image,
-            current.image,
+            current_image,
             current_mask,
             current_sse,
         )
@@ -351,12 +356,60 @@ def _field_candidate_sse(
     return candidate, len(added_positions), candidate_sse
 
 
+def _candidate_reconstruction_image(
+    observation: InspectionObservation,
+    grid: AcquisitionGrid,
+    action: InspectionCellAction,
+    full_scan: np.ndarray,
+    current_image: np.ndarray,
+    current_mask: np.ndarray,
+) -> np.ndarray:
+    apply_action(grid, observation.measurement_state, action)
+    added_positions = action_added_positions_from_mask(
+        grid,
+        observation.measurement_state,
+        action,
+        current_mask,
+    )
+    cell = grid.cells[action.cell_index]
+    rows = cell.rows[action.to_level]
+    columns = cell.columns[action.to_level]
+    row_start, row_stop = cell.rows[2][0], cell.rows[2][-1]
+    column_start, column_stop = cell.columns[2][0], cell.columns[2][-1]
+    patch = _interpolate_rectilinear(
+        np.ascontiguousarray(full_scan[np.ix_(rows, columns)]),
+        rows,
+        columns,
+        np.arange(row_start, row_stop + 1, dtype=np.int64),
+        np.arange(column_start, column_stop + 1, dtype=np.int64),
+        "bilinear",
+    )
+    owned_row_stop = row_stop + 1 if cell.row == 7 else row_stop
+    owned_column_stop = column_stop + 1 if cell.column == 7 else column_stop
+    patch_row_stop = patch.shape[0] if cell.row == 7 else patch.shape[0] - 1
+    patch_column_stop = patch.shape[1] if cell.column == 7 else patch.shape[1] - 1
+    row_slice = slice(row_start, owned_row_stop)
+    column_slice = slice(column_start, owned_column_stop)
+    output = np.array(current_image, copy=True)
+    output[row_slice, column_slice] = patch[:patch_row_stop, :patch_column_stop]
+    observed_region = current_mask[row_slice, column_slice]
+    output_region = output[row_slice, column_slice]
+    reference_region = full_scan[row_slice, column_slice]
+    output_region[observed_region] = reference_region[observed_region]
+    output[added_positions[:, 0], added_positions[:, 1]] = full_scan[
+        added_positions[:, 0], added_positions[:, 1]
+    ]
+    return output
+
+
 def _encoded_predictions(
     observations: tuple[InspectionObservation, ...],
     grid: AcquisitionGrid,
     prior: SourceBackgroundPrior,
     assessor: CAIStatePredictor,
     encoder: ReconstructionEncoder,
+    *,
+    reconstruction_images: tuple[np.ndarray, ...] | None = None,
 ) -> np.ndarray:
     if (
         not observations
@@ -366,10 +419,21 @@ def _encoded_predictions(
         or len(assessor.model_state_sha256) != 64
     ):
         raise InspectionOracleError("CAI oracle interfaces are invalid")
-    images = tuple(
-        reconstruct_observation(observation, grid, prior).image
-        for observation in observations
+    images = (
+        tuple(
+            reconstruct_observation(observation, grid, prior).image
+            for observation in observations
+        )
+        if reconstruction_images is None
+        else reconstruction_images
     )
+    if len(images) != len(observations) or any(
+        not isinstance(image, np.ndarray)
+        or image.dtype != np.uint8
+        or image.shape != (*grid.native_shape, 3)
+        for image in images
+    ):
+        raise InspectionOracleError("CAI oracle reconstruction batch is invalid")
     embeddings = np.asarray(encoder.encode(images), dtype=np.float64)
     scalars = np.asarray(
         [state_scalars(observation) for observation in observations],
@@ -408,6 +472,8 @@ def choose_cai_action(
     actions: list[InspectionCellAction] = []
     candidates: list[InspectionObservation] = []
     current_mask = measurement_mask(grid, observation.measurement_state)
+    current_reconstruction = reconstruct_observation(observation, grid, prior).image
+    candidate_images: list[np.ndarray] = []
     for action in fitting_actions(grid, observation.measurement_state, checkpoint):
         candidate = _candidate_observation(
             observation,
@@ -420,12 +486,23 @@ def choose_cai_action(
             continue
         actions.append(action)
         candidates.append(candidate)
+        candidate_images.append(
+            _candidate_reconstruction_image(
+                observation,
+                grid,
+                action,
+                full_scan,
+                current_reconstruction,
+                current_mask,
+            )
+        )
     predictions = _encoded_predictions(
         (observation, *candidates),
         grid,
         prior,
         assessor,
         encoder,
+        reconstruction_images=(current_reconstruction, *candidate_images),
     )
     current_error = abs(target - float(predictions[0]))
     rows = []
@@ -445,7 +522,7 @@ def choose_cai_action(
                 raw_value=raw,
                 objective_value=raw / added,
                 task_loss_after=candidate_error,
-                candidate_state_sha256=candidate.state_sha256,
+                candidate_state_sha256=candidate.measurement_state.state_sha256,
             )
         )
     return _select(tuple(rows))
@@ -621,23 +698,24 @@ def run_field_oracle(
     if current.task is not InspectionTask.FIELD:
         raise InspectionOracleError("FIELD oracle requires the FIELD task")
     steps: list[OracleTrajectoryStep] = []
+    current_reconstruction = reconstruct_observation(current, grid, prior).image
     while _has_positive_cost_action(grid, current):
-        before_loss = field_loss(
-            image,
-            reconstruct_observation(current, grid, prior).image,
-        )
+        before_loss = field_loss(image, current_reconstruction)
         selection = choose_field_action(
             current,
             grid,
             prior,
             full_scan=image,
             checkpoint=current.endpoint_budget,
+            _current_reconstruction=current_reconstruction,
         )
         next_observation = world.step(current, selection.action)
-        after_loss = field_loss(
-            image,
-            reconstruct_observation(next_observation, grid, prior).image,
-        )
+        next_reconstruction = reconstruct_observation(
+            next_observation,
+            grid,
+            prior,
+        ).image
+        after_loss = field_loss(image, next_reconstruction)
         if not math.isclose(
             after_loss,
             selection.task_loss_after,
@@ -666,6 +744,7 @@ def run_field_oracle(
             )
         )
         current = next_observation
+        current_reconstruction = next_reconstruction
         if len(steps) > 192:
             raise InspectionOracleError("FIELD oracle exceeded the finite state depth")
     frozen_steps = tuple(steps)
@@ -702,10 +781,6 @@ def run_cai_oracle(
     focus = frozenset(surface_hypothesis_cells)
     steps: list[OracleTrajectoryStep] = []
     while _has_positive_cost_action(grid, current):
-        before_prediction = float(
-            _encoded_predictions((current,), grid, prior, assessor, encoder)[0]
-        )
-        before_loss = abs(target - before_prediction)
         selection = choose_cai_action(
             current,
             grid,
@@ -716,6 +791,7 @@ def run_cai_oracle(
             encoder=encoder,
             checkpoint=current.endpoint_budget,
         )
+        before_loss = selection.raw_value + selection.task_loss_after
         next_observation = world.step(current, selection.action)
         steps.append(
             OracleTrajectoryStep(

@@ -15,6 +15,8 @@ from cmc_bbdm.inspection_agent.generalized_reconstruction import (
     reconstruct_observation,
 )
 from cmc_bbdm.inspection_agent.oracle import (
+    _candidate_observation,
+    _candidate_reconstruction_image,
     choose_cai_action,
     choose_discovery_action,
     choose_field_action,
@@ -175,6 +177,45 @@ def test_field_oracle_candidate_losses_match_exhaustive_mixed_state() -> None:
         )
         assert score.task_loss_after == pytest.approx(expected_loss, abs=1.0e-15)
         assert score.candidate_state_sha256 == candidate.measurement_state.state_sha256
+
+
+def test_local_candidate_reconstruction_matches_exhaustive_mixed_state() -> None:
+    rows, columns = np.indices((41, 43))
+    image = np.stack((rows * 5, columns * 3, rows + columns), axis=2).astype(np.uint8)
+    world = _world(image, InspectionTask.CAI, 0.25)
+    grid = build_acquisition_grid(41, 43, initial_budget=0.015625)
+    observation = world.replay(
+        (
+            InspectionCellAction(0, -1, 0),
+            InspectionCellAction(1, -1, 0),
+            InspectionCellAction(0, 0, 1),
+            InspectionCellAction(9, -1, 0),
+        )
+    )
+    current = reconstruct_observation(observation, grid, _prior()).image
+    current_mask = np.zeros(grid.native_shape, dtype=np.bool_)
+    current_mask[
+        observation.acquired_positions[:, 0],
+        observation.acquired_positions[:, 1],
+    ] = True
+    for action in fitting_actions(grid, observation.measurement_state, 0.25):
+        candidate = _candidate_observation(
+            observation,
+            grid,
+            action,
+            image,
+            current_mask=current_mask,
+        )
+        expected = reconstruct_observation(candidate, grid, _prior()).image
+        actual = _candidate_reconstruction_image(
+            observation,
+            grid,
+            action,
+            image,
+            current,
+            current_mask,
+        )
+        np.testing.assert_array_equal(actual, expected)
 
 
 def test_discovery_trajectory_records_candidates_and_structured_decisions() -> None:
