@@ -14,12 +14,10 @@ from .state import (
     GeneralizedMeasurementState,
     GeneralizedMeasurementStateError,
     InspectionCellAction,
-    action_added_positions,
     action_added_positions_from_mask,
     apply_action,
     budget_record,
     fitting_actions,
-    measurement_mask,
     zero_state,
 )
 
@@ -135,41 +133,32 @@ class CausalInspectionWorld:
         self._validate_current(observation)
         try:
             candidate = apply_action(self._grid, observation.measurement_state, action)
-            record = budget_record(self._grid, candidate)
-            if record.effective_budget > self._endpoint_budget + 1.0e-15:
-                raise CausalInspectionWorldError("action exceeds the endpoint budget")
-            added_positions = action_added_positions(
+            current_mask = np.zeros(self._grid.native_shape, dtype=np.bool_)
+            current_mask[
+                observation.acquired_positions[:, 0],
+                observation.acquired_positions[:, 1],
+            ] = True
+            added_positions = action_added_positions_from_mask(
                 self._grid,
                 observation.measurement_state,
                 action,
+                current_mask,
             )
+            candidate_count = observation.exact_acquired_count + len(added_positions)
+            if candidate_count / current_mask.size > self._endpoint_budget + 1.0e-15:
+                raise CausalInspectionWorldError("action exceeds the endpoint budget")
             added_values = self._authority._reveal_values(
                 self._specimen_key,
                 added_positions,
             )
         except (GeneralizedMeasurementStateError, MAVISAuthorityError) as error:
             raise CausalInspectionWorldError("action cannot be revealed") from error
-        candidate_positions = np.argwhere(
-            measurement_mask(self._grid, candidate)
-        ).astype("<i8", copy=False)
-        candidate_linear = (
-            candidate_positions[:, 0] * self._grid.native_shape[1]
-            + candidate_positions[:, 1]
+        candidate_positions = np.concatenate(
+            (observation.acquired_positions, added_positions)
         )
-        values = np.empty((len(candidate_positions), 3), dtype=np.uint8)
-        if observation.exact_acquired_count:
-            old_linear = (
-                observation.acquired_positions[:, 0] * self._grid.native_shape[1]
-                + observation.acquired_positions[:, 1]
-            )
-            old_indices = np.searchsorted(candidate_linear, old_linear)
-            values[old_indices] = observation.measurement_values
-        added_linear = (
-            added_positions[:, 0] * self._grid.native_shape[1]
-            + added_positions[:, 1]
-        )
-        added_indices = np.searchsorted(candidate_linear, added_linear)
-        values[added_indices] = added_values
+        order = np.lexsort((candidate_positions[:, 1], candidate_positions[:, 0]))
+        candidate_positions = candidate_positions[order]
+        values = np.concatenate((observation.measurement_values, added_values))[order]
         return self._materialize(
             candidate,
             candidate_positions,

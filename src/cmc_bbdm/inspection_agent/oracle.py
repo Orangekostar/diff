@@ -28,7 +28,6 @@ from .generalized_reconstruction import (
 from .state import (
     GeneralizedMeasurementState,
     InspectionCellAction,
-    action_added_positions,
     action_added_positions_from_mask,
     apply_action,
     fitting_actions,
@@ -589,8 +588,17 @@ def _has_positive_cost_action(
     grid: AcquisitionGrid,
     observation: InspectionObservation,
 ) -> bool:
+    current_mask = measurement_mask(grid, observation.measurement_state)
     return any(
-        len(action_added_positions(grid, observation.measurement_state, action)) > 0
+        len(
+            action_added_positions_from_mask(
+                grid,
+                observation.measurement_state,
+                action,
+                current_mask,
+            )
+        )
+        > 0
         for action in fitting_actions(
             grid,
             observation.measurement_state,
