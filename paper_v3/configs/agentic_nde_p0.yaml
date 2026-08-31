@@ -1,0 +1,84 @@
+schema_version: 1
+stage: P0_SURFACE_CSCAN_AUTHORITY_AND_REGISTRATION
+controlling_prompt_sha256: 44debf1e9d98e4dd56e77409a01790d2eb08da5c3cb9936ad006e2fd3143764e
+repository_base_sha: 15db6edad14ef36364fbda17945ccc924f600e47
+
+dataset:
+  authority: Hasebe et al. Data in Brief 43 (2022) 108462
+  doi: 10.1016/j.dib.2022.108462
+  article_url: https://pmc.ncbi.nlm.nih.gov/articles/PMC9294053/
+  article_fulltext_xml_sha256: 1994c62885ac9d2dc1a94b19e2e07c3ca0b9b895666d6cc547acc41070db010f
+  specimen_extent_mm: [80.0, 80.0]
+  published_cscan_extent_mm: [75.0, 75.0]
+  published_cscan_pitch_mm: [0.2, 0.2]
+  common_cross_instrument_frame_published: false
+
+primary_counts:
+  74t7kcdgkr: 45
+  cgtnjyggtm: 49
+  w68dtmpfyf: 43
+  xcmzfsbd9t: 59
+  yfxyg8jm46: 42
+  ykhs7s2dck: 38
+
+source_authorities:
+  external_p0_roster:
+    logical_root: external_hasebe
+    path: paper_v2/submission_review/p0_specimens.csv
+    sha256: 84617cb12012ac9acc1b756b59161738a2a0a1089bd3eb432b7d01a066e65f9f
+  external_paired_manifest:
+    logical_root: external_hasebe
+    path: data/public/hasebe/manifest/paired.csv
+    sha256: f81002981bf2f6aed84818b48da87cd57e6336f5f3da8d78df1a58d26dd8026f
+  compact_cohort:
+    logical_root: compact_repository
+    path: results/mva/a0_acquisition_audit/cohort.csv
+    sha256: d101fc7b9c762c8f650878c73a8666f824e07584f91f0aa4cc8e95fc88dfe9c4
+  compact_scan_manifest:
+    logical_root: compact_repository
+    path: artifacts/mavis_authority/scan_manifest.csv
+    sha256: 3b795fab0c5e5c35365df6ea4ac9aefa9dba6782da95008acac39c9e22440486
+  frozen_a2:
+    logical_root: compact_repository
+    path: results/mva/a2_oracle_value/oracle_values.parquet
+    sha256: 6b289f2f6f74ac75dde47ea7cbfefcda1c49f025e74227bfb34ef269182ff963
+  frozen_static_reference_claim:
+    logical_root: compact_repository
+    path: results/mavis/p7_final_frozen_eval/claim_evidence.csv
+    sha256: f37af43804d9c2b9a2021ca7f0fc43490257ca91bd8f6e917500a385480cf6e5
+  frozen_static_reference_summary:
+    logical_root: compact_repository
+    path: results/mavis/p7_final_frozen_eval/summary.json
+    sha256: 966305c29bb6d0b13e408858a1db273df2b6971833dd678881bcf9d803b45302
+
+surface_qc:
+  accepted_formats: [PNG, JPEG]
+  accepted_modes: [RGB]
+  preserve_native_geometry: true
+  apply_exif_autorotation: false
+  maximum_file_bytes: 100000000
+
+registration:
+  evidence_hierarchy:
+    - A_DIRECT_METADATA
+    - B_GEOMETRY_ONLY
+    - C_SOURCE_ONLY_LEARNED
+  forbidden_evidence:
+    - HIDDEN_CSCAN_PIXELS
+    - CSCAN_MASK
+    - DAMAGE_CENTROID
+    - CAI
+    - ORACLE_VALUE
+    - TARGET_DOMAIN_LABEL
+    - MANUAL_TARGET_ALIGNMENT
+  normalized_frame_equivalence_is_transform: false
+  action_grid_rows: 8
+  action_grid_columns: 8
+  minimum_per_domain_fraction: 0.90
+  minimum_total_registered: 240
+
+status_vocabulary:
+  go: P0_REGISTRATION_GO
+  identity_no_go: P0_IDENTITY_AUTHORITY_NO_GO
+  spatial_no_go: P0_SPATIAL_REGISTRATION_NO_GO
+  downstream_blocked: NOT_RUN_NOT_AUTHORIZED

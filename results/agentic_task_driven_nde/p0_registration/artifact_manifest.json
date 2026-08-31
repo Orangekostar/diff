@@ -1,0 +1,39 @@
+{
+  "files": {
+    "REPORT.md": {
+      "sha256": "fb5cc372b1a523db10d749d434f076936c8203ca88103e5b605e85bbf146577b",
+      "size": 829
+    },
+    "config.yaml": {
+      "sha256": "d117d01c4ffc113cf3bdc5b8ce46694e24f46a8e3b43395580dd65efbf113c0b",
+      "size": 2948
+    },
+    "registration.csv": {
+      "sha256": "fc7a3b9ceef28e371a6a340444db992f1bf8aa87596cb1155c8ab48957c61f96",
+      "size": 52727
+    },
+    "registration_qc.csv": {
+      "sha256": "36a43f4b3f57a279a6a9ce429da3d25a81929073eabb8c8b56ab9d737d8d7630",
+      "size": 47795
+    },
+    "source_hashes.csv": {
+      "sha256": "f31fbdd9494fb23124094102181305342498b1e32e6c33c3407de5e5b7436f2a",
+      "size": 210651
+    },
+    "summary.json": {
+      "sha256": "9d0032828614c79c2ed9faaf0fcfdbbb2e7c39382fa7e4cb1fc1d28ec4a9a826",
+      "size": 5213
+    },
+    "surface_manifest.csv": {
+      "sha256": "31aaf123d6f7b684566ef19387d11a5ef2756e5bc51e666f8b1cdcc3b9ed5fe1",
+      "size": 151078
+    },
+    "surface_qc.csv": {
+      "sha256": "fe64077852ffea9af42e91f49b2aff03090ba9ba0900b5cacdc5454c95597b8c",
+      "size": 76678
+    }
+  },
+  "schema_version": 1,
+  "stage": "P0",
+  "status": "P0_SPATIAL_REGISTRATION_NO_GO"
+}
