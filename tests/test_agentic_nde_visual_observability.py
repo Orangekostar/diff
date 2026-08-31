@@ -116,8 +116,10 @@ def test_ridge_family_recovers_registered_local_signal() -> None:
     assert np.mean(np.abs(models[0].predict(source) - source.mechanical_values)) < 0.03
 
 
-@pytest.mark.skipif(not __import__("torch").cuda.is_available(), reason="CUDA unavailable")
 def test_small_mlp_is_source_only_under_parameter_cap_and_deterministic() -> None:
+    torch = pytest.importorskip("torch")
+    if not torch.cuda.is_available():
+        pytest.skip("CUDA unavailable")
     source = _examples()
     left = fit_mlp_scorer(
         source,

@@ -56,8 +56,10 @@ def test_surface_rgb_preprocessing_is_exact_and_not_grayscale() -> None:
     assert len({float(value) for value in output[:, 0, 0]}) == 3
 
 
-@pytest.mark.skipif(not __import__("torch").cuda.is_available(), reason="CUDA unavailable")
 def test_formal_surface_resnet_is_frozen_and_deterministic() -> None:
+    torch = pytest.importorskip("torch")
+    if not torch.cuda.is_available():
+        pytest.skip("CUDA unavailable")
     config = load_p1_config(CONFIG, project_root=ROOT)
     encoder = build_surface_resnet18(config)
     first = Image.fromarray(np.arange(19 * 23 * 3, dtype=np.uint8).reshape(19, 23, 3))
