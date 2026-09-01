@@ -246,9 +246,11 @@ def _candidate_features(
                 observation.measurement_state,
                 action,
             )
-            row[6] = candidate.effective_budget - current_budget
-            row[8] = candidate.effective_budget / observation.endpoint_budget
-            mask[slot] = True
+            added_budget = candidate.effective_budget - current_budget
+            if added_budget > 0.0:
+                row[6] = added_budget
+                row[8] = candidate.effective_budget / observation.endpoint_budget
+                mask[slot] = True
     return features, mask
 
 

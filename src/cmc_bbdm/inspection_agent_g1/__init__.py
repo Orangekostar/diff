@@ -24,6 +24,11 @@ from .teacher import (
     cai_teacher_label,
     field_teacher_label,
 )
+from .teacher_bank import (
+    ContinuationPolicy,
+    materialize_label_independent_states,
+    materialize_oracle_checkpoint_states,
+)
 from .utility_distillation import (
     soft_utility_distillation_loss,
     teacher_distribution,
@@ -47,6 +52,7 @@ __all__ = [
     "PRIMARY_WARM_START_K",
     "SENSITIVITY_WARM_START_K",
     "CAIContextMode",
+    "ContinuationPolicy",
     "CrossfitCAIAssessorFit",
     "CrossfitPriorFit",
     "CrossfitRoster",
@@ -72,6 +78,8 @@ __all__ = [
     "fit_crossfit_cai_assessor",
     "fit_crossfit_source_prior",
     "hard_behavior_cloning_loss",
+    "materialize_label_independent_states",
+    "materialize_oracle_checkpoint_states",
     "soft_utility_distillation_loss",
     "teacher_distribution",
     "warm_start_audit",

@@ -12,6 +12,7 @@ from cmc_bbdm.inspection_agent_g1.crossfit import build_crossfit_roster
 from cmc_bbdm.inspection_agent_g1.features import canonical_action_from_slot
 from cmc_bbdm.inspection_agent_g1.teacher import (
     authorize_source_teacher,
+    cai_teacher_label,
     field_teacher_label,
 )
 from cmc_bbdm.inspection_agent_g1.warm_start import (
@@ -96,3 +97,69 @@ def test_field_teacher_retains_every_legal_candidate_and_selected_action() -> No
         InspectionDecision.REFINE,
     }
     assert all(candidate.exact_added_cost > 0 for candidate in label.candidates)
+
+
+class _FakeEncoder:
+    def encode(self, images: object) -> np.ndarray:
+        values = tuple(images)
+        output = np.zeros((len(values), 512), dtype=np.float64)
+        output[:, 0] = [np.mean(image, dtype=np.float64) / 255.0 for image in values]
+        return output
+
+
+class _CrossfitFakeAssessor:
+    outer_domain = "d6"
+    fit_domains = ("d2", "d3", "d4", "d5")
+    model_state_sha256 = "e" * 64
+
+    def predict(self, embeddings: object, scalars: object) -> np.ndarray:
+        values = np.asarray(embeddings)
+        state = np.asarray(scalars)
+        return values[:, 0] + state[:, 0]
+
+
+def test_cai_teacher_uses_the_authorized_crossfit_assessor_and_all_candidates() -> None:
+    image = np.zeros((41, 43, 3), dtype=np.uint8)
+    image[16:25, 18:29] = 255
+    authority = MAVISAuthority.from_arrays(
+        specimen_ids=("d1-sample",),
+        dataset_ids=("d1",),
+        images=(image,),
+        targets=np.asarray([1.0]),
+        metadata13=np.zeros((1, 13)),
+        profile_stats21=np.zeros((1, 21)),
+    )
+    surface = np.zeros((80, 80, 3), dtype=np.uint8)
+    grid = build_deployment_grid(image.shape[:2])
+    world = CausalInspectionWorld(
+        authority,
+        specimen_id="d1-sample",
+        task=InspectionTask.CAI,
+        surface_rgb=surface,
+        surface_sha256=hashlib.sha256(surface.tobytes()).hexdigest(),
+        grid=grid,
+        endpoint_budget=0.25,
+    )
+    observation = world.reset()
+    for cell in PRIMARY_WARM_START_CELLS:
+        observation = world.step(observation, canonical_action_from_slot(cell))
+    authorization = authorize_source_teacher(
+        build_crossfit_roster(DOMAINS, outer_target="d6", labeled_domain="d1"),
+        query_domain="d1",
+    )
+    label = cai_teacher_label(
+        observation,
+        grid,
+        _prior(),
+        _hypothesis(),
+        authorization,
+        full_scan=image,
+        true_cai=1.0,
+        assessor=_CrossfitFakeAssessor(),
+        encoder=_FakeEncoder(),
+        policy_state_sha256="c" * 64,
+    )
+    assert label.task is InspectionTask.CAI
+    assert len(label.candidates) == 64
+    assert all(candidate.exact_added_cost > 0 for candidate in label.candidates)
+    assert sum(candidate.selected for candidate in label.candidates) == 1
