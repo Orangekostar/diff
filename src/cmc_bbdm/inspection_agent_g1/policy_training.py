@@ -141,6 +141,69 @@ class G1PolicyTrainingExample:
         )
 
 
+def rebind_training_example_modes(
+    example: G1PolicyTrainingExample,
+    *,
+    cai_context_mode: CAIContextMode,
+    task_token_mode: TaskTokenMode,
+) -> G1PolicyTrainingExample:
+    """Derive registered actor controls from one maximal observable state."""
+
+    if (
+        type(example) is not G1PolicyTrainingExample
+        or type(cai_context_mode) is not CAIContextMode
+        or task_token_mode not in (TaskTokenMode.CORRECT, TaskTokenMode.NO_TASK)
+    ):
+        raise G1PolicyTrainingError("policy feature-mode rebinding is invalid")
+    source = example.policy_state
+    if (
+        cai_context_mode is CAIContextMode.SHARED_OBSERVABLE_STATE_CONTEXT
+        and source.global_scalars[13] != 1.0
+    ):
+        raise G1PolicyTrainingError("shared CAI context is absent from the source state")
+    global_scalars = np.array(source.global_scalars, dtype=np.float64, copy=True)
+    if (
+        cai_context_mode is CAIContextMode.TASK_SPECIFIC_MASKED
+        and source.task is InspectionTask.FIELD
+    ):
+        global_scalars[12:14] = 0.0
+    task_token = np.zeros(2, dtype=np.float64)
+    if task_token_mode is TaskTokenMode.CORRECT:
+        task_token[0 if source.task is InspectionTask.FIELD else 1] = 1.0
+    state = G1PolicyState(
+        task=source.task,
+        task_token_mode=task_token_mode,
+        cai_context_mode=cai_context_mode,
+        observation_sha256=source.observation_sha256,
+        reconstruction_sha256=source.reconstruction_sha256,
+        surface_hypothesis_sha256=source.surface_hypothesis_sha256,
+        grid_sha256=source.grid_sha256,
+        reconstruction_embedding=source.reconstruction_embedding,
+        global_scalars=global_scalars,
+        task_token=task_token,
+        cell_features=source.cell_features,
+        candidate_features=source.candidate_features,
+        legal_action_mask=source.legal_action_mask,
+    )
+    label = PrivilegedTeacherLabel(
+        task=example.teacher_label.task,
+        authorization_sha256=example.teacher_label.authorization_sha256,
+        observation_sha256=example.teacher_label.observation_sha256,
+        policy_state_sha256=state.state_sha256,
+        selected_slot=example.teacher_label.selected_slot,
+        candidates=example.teacher_label.candidates,
+    )
+    return G1PolicyTrainingExample(
+        outer_target=example.outer_target,
+        source_domain=example.source_domain,
+        specimen_sha256=example.specimen_sha256,
+        task=example.task,
+        dagger_iteration=example.dagger_iteration,
+        policy_state=state,
+        teacher_label=label,
+    )
+
+
 @dataclass(frozen=True, slots=True)
 class PolicyTrainingHyperparameters:
     model_name: PolicyModelName
@@ -1077,4 +1140,5 @@ __all__ = [
     "fit_inner_observable_policy",
     "fit_policy_normalizer",
     "hard_behavior_cloning_loss",
+    "rebind_training_example_modes",
 ]

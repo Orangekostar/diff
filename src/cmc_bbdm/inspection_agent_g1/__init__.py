@@ -35,12 +35,15 @@ from .features import (
 )
 from .g1 import (
     FINAL_G1_STATUSES,
+    G1ExecutionError,
+    G1Protocol,
     PolicyGateEvidence,
     StopGateEvidence,
     evaluate_final_g1_decision,
     evaluate_policy_gate,
     evaluate_stop_gate,
     evaluate_task_conditioning_gate,
+    load_g1_protocol,
 )
 from .metrics import build_engineering_curve, oracle_gap_closure
 from .policy_model import SharedActionMLP, StructuredInspectionPolicy
@@ -63,6 +66,7 @@ from .policy_training import (
     fit_inner_observable_policy,
     fit_policy_normalizer,
     hard_behavior_cloning_loss,
+    rebind_training_example_modes,
 )
 from .privileged_awr import (
     AAWRAuthorization,
@@ -95,8 +99,12 @@ from .teacher import (
 )
 from .teacher_bank import (
     ContinuationPolicy,
+    G1TeacherBankFile,
+    G1TeacherBankRecord,
     materialize_label_independent_states,
     materialize_oracle_checkpoint_states,
+    read_teacher_bank,
+    write_teacher_bank,
 )
 from .utility_distillation import (
     soft_utility_distillation_loss,
@@ -137,10 +145,14 @@ __all__ = [
     "G1ActorNormalizer",
     "G1ArtifactError",
     "G1CrossfitError",
+    "G1ExecutionError",
     "G1PackageValidation",
     "G1PolicyState",
     "G1PolicyTrainingExample",
+    "G1Protocol",
     "G1ReplayComparison",
+    "G1TeacherBankFile",
+    "G1TeacherBankRecord",
     "InnerPolicyEngineeringMetric",
     "ObservablePolicyScores",
     "OuterPolicySelection",
@@ -191,12 +203,15 @@ __all__ = [
     "fit_policy_normalizer",
     "formal_synchronized_bootstrap",
     "hard_behavior_cloning_loss",
+    "load_g1_protocol",
     "materialize_label_independent_states",
     "materialize_oracle_checkpoint_states",
     "observable_stop_loss",
     "oracle_gap_closure",
     "outer_selection_payload",
     "publish_g1_manifest",
+    "read_teacher_bank",
+    "rebind_training_example_modes",
     "run_closed_loop",
     "select_conservative_stop_threshold",
     "select_outer_policy",
@@ -206,4 +221,5 @@ __all__ = [
     "trajectory_quantile_indices",
     "validate_g1_package",
     "warm_start_audit",
+    "write_teacher_bank",
 ]

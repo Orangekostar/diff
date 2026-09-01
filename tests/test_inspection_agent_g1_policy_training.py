@@ -21,6 +21,7 @@ from cmc_bbdm.inspection_agent_g1.policy_training import (
     equal_policy_training_weights,
     fit_inner_observable_policy,
     fit_policy_normalizer,
+    rebind_training_example_modes,
 )
 from cmc_bbdm.inspection_agent_g1.teacher import (
     PrivilegedTeacherLabel,
@@ -196,3 +197,25 @@ def test_policy_training_rejects_an_outer_target_row() -> None:
             policy_state=row.policy_state,
             teacher_label=row.teacher_label,
         )
+
+
+def test_training_example_modes_rebind_only_observable_arrays_and_hashes() -> None:
+    original = _example("d1", "s1", InspectionTask.FIELD, 0, value=3.0)
+    rebound = rebind_training_example_modes(
+        original,
+        cai_context_mode=CAIContextMode.TASK_SPECIFIC_MASKED,
+        task_token_mode=TaskTokenMode.NO_TASK,
+    )
+    assert rebound.policy_state.cai_context_mode is CAIContextMode.TASK_SPECIFIC_MASKED
+    assert rebound.policy_state.task_token_mode is TaskTokenMode.NO_TASK
+    np.testing.assert_array_equal(rebound.policy_state.global_scalars[12:14], (0.0, 0.0))
+    np.testing.assert_array_equal(rebound.policy_state.task_token, (0.0, 0.0))
+    np.testing.assert_array_equal(
+        rebound.policy_state.reconstruction_embedding,
+        original.policy_state.reconstruction_embedding,
+    )
+    assert rebound.policy_state.state_sha256 != original.policy_state.state_sha256
+    assert rebound.teacher_label.policy_state_sha256 == rebound.policy_state.state_sha256
+    assert tuple(
+        candidate.objective_value for candidate in rebound.teacher_label.candidates
+    ) == tuple(candidate.objective_value for candidate in original.teacher_label.candidates)

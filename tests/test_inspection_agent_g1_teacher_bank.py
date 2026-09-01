@@ -1,19 +1,34 @@
 from __future__ import annotations
 
 import hashlib
+from pathlib import Path
 
 import numpy as np
+import pytest
 
 from cmc_bbdm.inspection_agent.contracts import InspectionTask
-from cmc_bbdm.inspection_agent.generalized_reconstruction import SourceBackgroundPrior
+from cmc_bbdm.inspection_agent.generalized_reconstruction import (
+    SourceBackgroundPrior,
+    reconstruct_observation,
+)
 from cmc_bbdm.inspection_agent.surface_hypothesis import SurfaceHypothesis
 from cmc_bbdm.inspection_agent.world import CausalInspectionWorld
+from cmc_bbdm.inspection_agent_g1.contracts import CAIContextMode, TaskTokenMode
 from cmc_bbdm.inspection_agent_g1.crossfit import build_crossfit_roster
-from cmc_bbdm.inspection_agent_g1.teacher import authorize_source_teacher
+from cmc_bbdm.inspection_agent_g1.features import build_policy_state
+from cmc_bbdm.inspection_agent_g1.policy_training import G1PolicyTrainingExample
+from cmc_bbdm.inspection_agent_g1.teacher import (
+    authorize_source_teacher,
+    field_teacher_label,
+)
 from cmc_bbdm.inspection_agent_g1.teacher_bank import (
     ContinuationPolicy,
+    G1TeacherBankError,
+    G1TeacherBankRecord,
     materialize_label_independent_states,
     materialize_oracle_checkpoint_states,
+    read_teacher_bank,
+    write_teacher_bank,
 )
 from cmc_bbdm.inspection_agent_g1.warm_start import (
     PRIMARY_WARM_START_CELLS,
@@ -134,3 +149,70 @@ def test_field_oracle_checkpoint_states_are_fold_safe_and_at_or_below_checkpoint
         assert tuple(
             action.cell_index for action in row.observation.action_history[:8]
         ) == PRIMARY_WARM_START_CELLS
+
+
+def test_teacher_bank_parquet_round_trip_revalidates_all_three_namespaces(
+    tmp_path: Path,
+) -> None:
+    world, grid, image = _world(invert=False)
+    source_state = materialize_label_independent_states(
+        world,
+        grid,
+        _hypothesis(),
+        outer_target="d6",
+        random_seed=2026090101,
+        snapshot_fractions=(1 / 3, 2 / 3, 1.0),
+    )[0]
+    authorization = authorize_source_teacher(
+        build_crossfit_roster(DOMAINS, outer_target="d6", labeled_domain="d1"),
+        query_domain="d1",
+    )
+    reconstruction = reconstruct_observation(source_state.observation, grid, _prior())
+    policy_state = build_policy_state(
+        source_state.observation,
+        _hypothesis(),
+        grid,
+        _prior(),
+        reconstruction,
+        reconstruction_embedding=np.linspace(0.0, 1.0, 512),
+        cai_estimate=0.4,
+        cai_context_mode=CAIContextMode.SHARED_OBSERVABLE_STATE_CONTEXT,
+        task_token_mode=TaskTokenMode.CORRECT,
+    )
+    label = field_teacher_label(
+        source_state.observation,
+        grid,
+        _prior(),
+        _hypothesis(),
+        authorization,
+        full_scan=image,
+        policy_state_sha256=policy_state.state_sha256,
+    )
+    example = G1PolicyTrainingExample(
+        outer_target="d6",
+        source_domain="d1",
+        specimen_sha256=hashlib.sha256(b"d1-sample").hexdigest(),
+        task=InspectionTask.FIELD,
+        dagger_iteration=0,
+        policy_state=policy_state,
+        teacher_label=label,
+    )
+    record = G1TeacherBankRecord(
+        example=example,
+        fit_domains=("d2", "d3", "d4", "d5"),
+        state_source="WARM_START",
+        source_state_sha256=source_state.state_sha256,
+        prior_sha256=_prior().state_sha256,
+        assessor_sha256="c" * 64,
+    )
+    path = tmp_path / "teacher.parquet"
+    identity = write_teacher_bank(path, (record,))
+    loaded_identity, loaded = read_teacher_bank(path)
+    assert loaded_identity == identity
+    assert loaded == (record,)
+    assert loaded[0].example.policy_state.state_sha256 == policy_state.state_sha256
+    assert loaded[0].example.teacher_label.state_sha256 == label.state_sha256
+
+    path.write_bytes(path.read_bytes() + b"tampered")
+    with pytest.raises(G1TeacherBankError, match="SHA-256"):
+        read_teacher_bank(path)
