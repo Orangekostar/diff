@@ -25,6 +25,16 @@ from .features import (
     canonical_slot,
     decision_type,
 )
+from .g1 import (
+    FINAL_G1_STATUSES,
+    PolicyGateEvidence,
+    StopGateEvidence,
+    evaluate_final_g1_decision,
+    evaluate_policy_gate,
+    evaluate_stop_gate,
+    evaluate_task_conditioning_gate,
+)
+from .metrics import build_engineering_curve, oracle_gap_closure
 from .policy_model import SharedActionMLP, StructuredInspectionPolicy
 from .policy_training import hard_behavior_cloning_loss
 from .privileged_awr import (
@@ -42,6 +52,7 @@ from .rollout import (
     controlled_surface_hypothesis,
     run_closed_loop,
 )
+from .statistics import formal_synchronized_bootstrap
 from .stopping_policy import (
     SourceStopLabel,
     StopThresholdSelection,
@@ -80,6 +91,7 @@ from .warm_start import (
 __all__ = [
     "DAGGER_MAX_NEW_STATES",
     "DEPLOYMENT_INITIAL_NOMINAL_BUDGET",
+    "FINAL_G1_STATUSES",
     "PRIMARY_WARM_START_CELLS",
     "PRIMARY_WARM_START_K",
     "REGISTERED_DAGGER_ITERATIONS",
@@ -98,10 +110,12 @@ __all__ = [
     "G1CrossfitError",
     "G1PolicyState",
     "ObservablePolicyScores",
+    "PolicyGateEvidence",
     "PrivilegedTeacherLabel",
     "PrivilegedValueNetwork",
     "SharedActionMLP",
     "SourceStopLabel",
+    "StopGateEvidence",
     "StopThresholdSelection",
     "StructuredInspectionPolicy",
     "SurfaceVariant",
@@ -115,6 +129,7 @@ __all__ = [
     "authorize_source_teacher",
     "build_crossfit_roster",
     "build_deployment_grid",
+    "build_engineering_curve",
     "build_policy_state",
     "build_source_stop_label",
     "cai_teacher_label",
@@ -123,13 +138,19 @@ __all__ = [
     "controlled_surface_hypothesis",
     "decision_type",
     "equal_specimen_task_weights",
+    "evaluate_final_g1_decision",
+    "evaluate_policy_gate",
+    "evaluate_stop_gate",
+    "evaluate_task_conditioning_gate",
     "field_teacher_label",
     "fit_crossfit_cai_assessor",
     "fit_crossfit_source_prior",
+    "formal_synchronized_bootstrap",
     "hard_behavior_cloning_loss",
     "materialize_label_independent_states",
     "materialize_oracle_checkpoint_states",
     "observable_stop_loss",
+    "oracle_gap_closure",
     "run_closed_loop",
     "select_conservative_stop_threshold",
     "select_source_relabels",
