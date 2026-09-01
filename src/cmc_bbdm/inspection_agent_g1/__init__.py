@@ -16,6 +16,7 @@ from .features import (
     canonical_slot,
     decision_type,
 )
+from .policy_model import SharedActionMLP, StructuredInspectionPolicy
 from .warm_start import (
     DEPLOYMENT_INITIAL_NOMINAL_BUDGET,
     PRIMARY_WARM_START_CELLS,
@@ -41,6 +42,8 @@ __all__ = [
     "DeploymentGeometryAudit",
     "G1CrossfitError",
     "G1PolicyState",
+    "SharedActionMLP",
+    "StructuredInspectionPolicy",
     "TaskTokenMode",
     "WarmStartAudit",
     "apply_warm_start",
