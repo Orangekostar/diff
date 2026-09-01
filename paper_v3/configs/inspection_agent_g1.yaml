@@ -160,7 +160,7 @@ privileged_awr:
 stopping:
   trained_separately: true
   source_teacher_tolerance_relative: 0.05
-  threshold_candidates: [0.50, 0.60, 0.70, 0.80, 0.90, 0.95, 0.975, 0.99]
+  threshold_candidates: [0.50, 0.70, 0.80, 0.90, 0.95, 0.975, 0.99]
   threshold_selection: source_only_maximum_saving_subject_to_premature_rate_at_most_0.05_and_loss_ratio_at_most_1.05
   fallback: fixed_endpoint_0.25
   minimum_saving: 0.10

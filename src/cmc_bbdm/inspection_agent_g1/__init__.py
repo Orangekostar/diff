@@ -34,6 +34,13 @@ from .privileged_awr import (
     advantage_weighted_actor_loss,
     authorize_conditional_aawr,
 )
+from .stopping_policy import (
+    SourceStopLabel,
+    StopThresholdSelection,
+    build_source_stop_label,
+    observable_stop_loss,
+    select_conservative_stop_threshold,
+)
 from .teacher import (
     PrivilegedTeacherLabel,
     authorize_source_teacher,
@@ -84,6 +91,8 @@ __all__ = [
     "PrivilegedTeacherLabel",
     "PrivilegedValueNetwork",
     "SharedActionMLP",
+    "SourceStopLabel",
+    "StopThresholdSelection",
     "StructuredInspectionPolicy",
     "TaskTokenMode",
     "WarmStartAudit",
@@ -95,6 +104,7 @@ __all__ = [
     "build_crossfit_roster",
     "build_deployment_grid",
     "build_policy_state",
+    "build_source_stop_label",
     "cai_teacher_label",
     "canonical_action_from_slot",
     "canonical_slot",
@@ -106,6 +116,8 @@ __all__ = [
     "hard_behavior_cloning_loss",
     "materialize_label_independent_states",
     "materialize_oracle_checkpoint_states",
+    "observable_stop_loss",
+    "select_conservative_stop_threshold",
     "select_source_relabels",
     "soft_utility_distillation_loss",
     "teacher_distribution",
