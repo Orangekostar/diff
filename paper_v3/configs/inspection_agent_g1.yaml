@@ -1,0 +1,207 @@
+schema_version: 1
+stage: INSPECTION_AGENT_G1
+mode: formal
+repository_base_sha: 7a10cd425de582fa158bf6639285731ccd8ff7a7
+controlling_prompt_sha256: 37b7e4b9860dd338589cf2d9dd8f2cc8d202451a84eeafbc4961b2c5a28fcda5
+configuration_frozen: true
+
+sources:
+  g0_manifest:
+    path: results/inspection_agent/g0/artifact_manifest.json
+    sha256: a85a62f14bd05d69c684deab1673e01a1a84d7ebf9c3e7805760c2898eacc179
+  g0_checksums:
+    path: results/inspection_agent/g0/CHECKSUMS.sha256
+    sha256: 30cf5b9c639b3017b90990a62d9ea6c162116cdf804bda80a30333f9bebe5e22
+  g0_decision:
+    path: artifacts/inspection_agent_g0/G0_DECISION.md
+    sha256: 41421833efe3a458c6f098a10dbd349d134519e5f21e134a422345585238f147
+  g0_protocol:
+    path: docs/INSPECTION_AGENT_G0_PROTOCOL.md
+    sha256: 0d59ea13060d573f92d1cdb46e90abf4ecd55170f4a8f1487a7ff2a11dd65193
+  g0_config:
+    path: paper_v3/configs/inspection_agent_g0.yaml
+    sha256: cb056637f88294876c27a4ae4094b4802a125f43b2d625dae93b28accb084cbc
+  resnet18_weights:
+    path: paper_v3/assets/resnet18-f37072fd.pth
+    sha256: f37072fd47e89c5e827621c5baffa7500819f7896bbacec160b1a16c560e07ec
+
+cohort:
+  specimen_count: 276
+  domain_order: [74t7kcdgkr, cgtnjyggtm, w68dtmpfyf, xcmzfsbd9t, yfxyg8jm46, ykhs7s2dck]
+  domain_counts:
+    74t7kcdgkr: 45
+    cgtnjyggtm: 49
+    w68dtmpfyf: 43
+    xcmzfsbd9t: 59
+    yfxyg8jm46: 42
+    ykhs7s2dck: 38
+  outer_split: leave_one_domain_out
+  inner_split: leave_one_source_domain_out
+  equal_domain_weight: true
+
+acquisition:
+  cell_shape: [8, 8]
+  levels: [-1, 0, 1, 2]
+  allowed_transitions: ["-1->0", "0->1", "1->2"]
+  canonical_action_slots: 192
+  action_slot_order: transition_major_then_cell
+  transition_order: ["-1->0", "0->1", "1->2"]
+  budget_unit: unique_native_raster_locations
+  endpoint_budget: 0.25
+  deployment_initial_nominal_budget: 0.015625
+  deployment_rule: smallest_registered_grid_valid_for_every_authorized_native_geometry
+  warm_start_order: mva.oracle.uniform_cell_order
+  warm_start_primary_k: 8
+  warm_start_sensitivity_k: [4, 16]
+  warm_start_primary_cells: [0, 63, 7, 56, 27, 38, 3, 24]
+  evaluation_checkpoints: [0.0, 0.0625, 0.125, 0.1875, 0.25]
+  nonfitting_action: skip_without_reordering
+
+crossfit:
+  source_teacher_dependency_rule: exclude_outer_target_and_teacher_labeled_domain
+  final_dependency_rule: fit_all_five_outer_source_domains
+  target_data_forbidden_from_fit: true
+  source_prior_statistic: equal_domain_mean_of_source_specimen_full_cscan_border_medians
+  source_prior_quantization: round_half_to_even_clip_uint8
+  cai_assessor_representation: [frozen_resnet18_reconstruction_512d, effective_budget, observed_cell_fraction, mean_observed_level]
+  cai_assessor_pca_dimension: 32
+  cai_assessor_ridge_alpha: 10.0
+  cai_assessor_fit_state_sources: [WARM_START, UNIFORM_CONTINUE, SURFACE_FOCUS_CONTINUE, RANDOM_CONTINUE, ALTERNATE_BROADEN_REFINE]
+  cai_assessor_oracle_states_forbidden: true
+
+teacher_bank:
+  tasks: [FIELD, CAI]
+  warm_start_states: 1
+  continuation_policies: [UNIFORM_CONTINUE, SURFACE_FOCUS_CONTINUE, RANDOM_CONTINUE, ALTERNATE_BROADEN_REFINE]
+  continuation_snapshot_fractions: [0.3333333333333333, 0.6666666666666666, 1.0]
+  continuation_snapshot_axis: action_count_to_0.25
+  oracle_checkpoints: [0.0625, 0.125, 0.1875, 0.25]
+  maximum_pre_dagger_states_per_specimen_task: 17
+  duplicate_checkpoint_policy: preserve_one_and_record_actual_count
+  random_seed: 2026090101
+  random_identity: sha256_seed_outer_fold_specimen_surface_task
+  equal_physical_specimen_weight: true
+  equal_task_weight: true
+  storage_format: parquet_zstd
+  work_path: results/inspection_agent/g1_work/teacher_banks
+
+features:
+  reconstruction_embedding_dimension: 512
+  global_scalar_dimension: 17
+  cell_count: 64
+  cell_feature_dimension: 18
+  candidate_feature_dimension: 12
+  cai_context_candidates: [TASK_SPECIFIC_MASKED, SHARED_OBSERVABLE_STATE_CONTEXT]
+  cai_context_selection: inner_source_validation_only
+  privileged_columns_rejected: [true_cai, full_scan, dataset_id, specimen_id, oracle_value, oracle_utility, future_measurement, true_task_loss]
+  scanner_geometry_features: [height_over_1024, width_over_1024, log_height_width_ratio]
+
+teacher_distribution:
+  utility: privileged_objective_value
+  regret: best_utility_minus_candidate_utility
+  scale: max_within_state_iqr_and_epsilon
+  epsilon: 1.0e-12
+  tie_tolerance: 1.0e-12
+  temperatures: [0.25, 0.5, 1.0, 2.0]
+  temperature_selection: inner_source_validation_only
+  all_tied_distribution: uniform_over_legal_actions
+
+models:
+  candidates: [SharedActionMLP, StructuredInspectionPolicy]
+  primary_parameter_cap: 1000000
+  structured:
+    reconstruction_projection: 128
+    task_embedding: 16
+    scalar_projection: 32
+    model_dimension: 128
+    transformer_layers: 2
+    attention_heads: 4
+    feedforward_dimension: 256
+    dropout: 0.1
+    cell_hidden_dimensions: [128, 128]
+    action_hidden_dimensions: [128, 64]
+    stop_hidden_dimension: 64
+  shared_action_mlp:
+    hidden_dimensions: [256, 128, 64]
+    dropout: 0.1
+  illegal_action_logit: negative_infinity
+
+training:
+  routes: [HARD_BC, SOFT_UTILITY_DISTILL]
+  dagger_iterations: [0, 1, 2]
+  dagger_max_new_states_per_specimen_task_iteration: 16
+  dagger_state_selection: deterministic_trajectory_quantiles
+  dagger_worlds: outer_source_only
+  epochs: 80
+  early_stopping_patience: 12
+  batch_specimens: 8
+  gradient_clip_norm: 1.0
+  learning_rates: [0.0001, 0.0003]
+  weight_decays: [0.0001, 0.001]
+  optimizer: AdamW
+  initialization_seed: 2026090102
+  selection_priority: [equal_domain_mean_engineering_auebc, oracle_gap_closure, improved_source_domains, simpler_model]
+  deterministic_algorithms: true
+  tf32: false
+  cudnn_benchmark: false
+
+privileged_awr:
+  status_before_source_selection: CONDITIONAL
+  authorization_rule: positive_source_action_observability_and_gap_closure_below_0.20_on_any_authorized_task
+  target_rescue_forbidden: true
+  copied_external_code_forbidden: true
+  actor_inputs: policy_visible_only
+  critic_hidden_dimensions: [256, 128]
+  expectile_candidates: [0.7, 0.8]
+  beta_candidates: [1.0, 3.0]
+  maximum_advantage_weight: 100.0
+  reward: task_loss_reduction
+
+stopping:
+  trained_separately: true
+  source_teacher_tolerance_relative: 0.05
+  threshold_candidates: [0.50, 0.60, 0.70, 0.80, 0.90, 0.95, 0.975, 0.99]
+  threshold_selection: source_only_maximum_saving_subject_to_premature_rate_at_most_0.05_and_loss_ratio_at_most_1.05
+  fallback: fixed_endpoint_0.25
+  minimum_saving: 0.10
+  maximum_task_loss_ratio: 1.05
+  maximum_premature_rate: 0.05
+
+controls:
+  task_variants: [TASK_CONDITIONED, NO_TASK, WRONG_TASK]
+  surface_variants: [CORRECT_SURFACE, NO_SURFACE, SHUFFLED_SURFACE]
+  shuffled_surface_seed: 2026090103
+  shuffled_surface_rule: deterministic_same_domain_nonself_donor
+  frozen_surface_strata: [AGREE, PARTIAL, MISLEADING]
+
+baselines:
+  gate_eligible_fixed: [RANDOM, ZERO_UNIFORM, CENTER_FIRST, SURFACE_FOCUS, SURVEY_THEN_REFINE_FIXED]
+  learned: [HARD_BC, SharedActionMLP, NO_TASK, NO_SURFACE, SHUFFLED_SURFACE, PROPOSED]
+  privileged: [ORACLE_FIELD, ORACLE_CAI]
+  historical_upper_bound: FIXED_UNIFORM_THEN_MAVIS
+  historical_gate_eligible: false
+
+statistics:
+  inferential_unit: physical_specimen_then_equal_weight_domain
+  bootstrap: synchronized_specimen_within_domain
+  bootstrap_replicates: 100000
+  bootstrap_seed: 2026090104
+  confidence_level: 0.95
+
+gates:
+  policy_ci_lower_strictly_positive: true
+  policy_improved_domains_minimum: 4
+  policy_oracle_gap_closure_minimum: 0.20
+  task_conditioning_ci_lower_strictly_positive: true
+  task_conditioning_improved_domains_minimum: 4
+  replay_required: true
+  no_target_leakage_required: true
+  final_statuses: [G1_TASK_CONDITIONED_POLICY_GO, G1_ACTIVE_POLICY_GO, G1_CAI_ONLY_POLICY_GO, G1_FIELD_ONLY_POLICY_GO, G1_POLICY_OBSERVABILITY_NO_GO, G1_DEPLOYMENT_BRIDGE_NO_GO]
+
+execution:
+  default_device: cuda:2
+  encoder_batch_size: 32
+  target_truth_access: only_after_trajectory_freeze
+  formal_output: results/inspection_agent/g1
+  replay_output: results/inspection_agent/replay/g1
+  work_output: results/inspection_agent/g1_work
