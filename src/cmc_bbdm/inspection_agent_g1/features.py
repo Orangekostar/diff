@@ -104,7 +104,6 @@ def _validate_surface(surface: SurfaceHypothesis) -> None:
         or np.asarray(surface.scores).shape != (CELL_COUNT,)
         or not np.all(np.isfinite(surface.scores))
         or type(surface.top_cells) is not tuple
-        or not surface.top_cells
         or len(set(surface.top_cells)) != len(surface.top_cells)
         or any(type(cell) is not int or not 0 <= cell < CELL_COUNT for cell in surface.top_cells)
         or type(surface.state_sha256) is not str
