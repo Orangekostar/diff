@@ -47,7 +47,7 @@ def _validate_inputs(
         candidate_features,
         legal_action_mask,
     )
-    if any(type(value) is not torch.Tensor for value in values):
+    if any(not isinstance(value, torch.Tensor) for value in values):
         raise G1PolicyModelError("G1 policy inputs must be tensors")
     batch = reconstruction_embedding.shape[0] if reconstruction_embedding.ndim == 2 else -1
     if (
@@ -77,8 +77,8 @@ def masked_action_probabilities(
     legal_action_mask: torch.Tensor,
 ) -> torch.Tensor:
     if (
-        type(action_logits) is not torch.Tensor
-        or type(legal_action_mask) is not torch.Tensor
+        not isinstance(action_logits, torch.Tensor)
+        or not isinstance(legal_action_mask, torch.Tensor)
         or action_logits.ndim != 2
         or action_logits.shape != legal_action_mask.shape
         or legal_action_mask.dtype is not torch.bool
