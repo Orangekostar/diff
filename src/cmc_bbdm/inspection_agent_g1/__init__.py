@@ -10,6 +10,15 @@ from .crossfit import (
     fit_crossfit_cai_assessor,
     fit_crossfit_source_prior,
 )
+from .dagger import (
+    DAGGER_MAX_NEW_STATES,
+    REGISTERED_DAGGER_ITERATIONS,
+    DaggerSourceError,
+    DaggerVisitedState,
+    equal_specimen_task_weights,
+    select_source_relabels,
+    trajectory_quantile_indices,
+)
 from .features import (
     build_policy_state,
     canonical_action_from_slot,
@@ -47,15 +56,19 @@ from .warm_start import (
 )
 
 __all__ = [
+    "DAGGER_MAX_NEW_STATES",
     "DEPLOYMENT_INITIAL_NOMINAL_BUDGET",
     "PRIMARY_WARM_START_CELLS",
     "PRIMARY_WARM_START_K",
+    "REGISTERED_DAGGER_ITERATIONS",
     "SENSITIVITY_WARM_START_K",
     "CAIContextMode",
     "ContinuationPolicy",
     "CrossfitCAIAssessorFit",
     "CrossfitPriorFit",
     "CrossfitRoster",
+    "DaggerSourceError",
+    "DaggerVisitedState",
     "DeploymentGeometryAudit",
     "G1CrossfitError",
     "G1PolicyState",
@@ -74,13 +87,16 @@ __all__ = [
     "canonical_action_from_slot",
     "canonical_slot",
     "decision_type",
+    "equal_specimen_task_weights",
     "field_teacher_label",
     "fit_crossfit_cai_assessor",
     "fit_crossfit_source_prior",
     "hard_behavior_cloning_loss",
     "materialize_label_independent_states",
     "materialize_oracle_checkpoint_states",
+    "select_source_relabels",
     "soft_utility_distillation_loss",
     "teacher_distribution",
+    "trajectory_quantile_indices",
     "warm_start_audit",
 ]
