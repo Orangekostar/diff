@@ -70,4 +70,3 @@ def test_g0_formal_and_replay_packages_compare_byte_for_byte(tmp_path: Path) -> 
     )
     assert comparison.byte_identical is True
     assert comparison.package_sha256 == comparison.replay_sha256
-

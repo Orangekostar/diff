@@ -53,7 +53,7 @@ candidate descriptor, or belief record:
 
 `FIXED_UNIFORM_THEN_MAVIS` replays the frozen `mavis_full` trajectory, whose old
 model used the 34-D context. It is explicitly labeled
-`METADATA_AUGMENTED_HISTORICAL_BASELINE`; it is not evidence that the primary
+`METADATA_AUGMENTED_UPPER_BOUND`; it is not evidence that the primary
 unknown-component interface is deployable.
 
 ## Enforcement

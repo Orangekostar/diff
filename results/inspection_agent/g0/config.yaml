@@ -1,0 +1,202 @@
+schema_version: 1
+stage: INSPECTION_AGENT_G0
+mode: formal
+repository_base_sha: 892d92ea4979d9ca8ceeafef3348cd43266ed1b8
+controlling_prompt_sha256: 5e5ad7bdf871f445b6cb60476540e01b267b42d4b3194c4463ca4a273e83f8bf
+configuration_frozen: true
+
+sources:
+  historical_handoff:
+    path: artifacts/agentic_task_driven_nde/CODEX_HANDOFF_AGENTIC_NDE_AUTHOR_REGISTRATION.md
+    sha256: b73f7c25a8bf410791f4d322ac47c31c4ebf3cadefd21416dedebe69d2de1db0
+  p1_decision:
+    path: artifacts/agentic_task_driven_nde/P1_VISUAL_OBSERVABILITY_DECISION.md
+    sha256: 919f85036cb3a1cada39b9c943255eb9fb12478137fa459d80d9a6abcff48764
+  p1_spatial_analysis:
+    path: artifacts/agentic_task_driven_nde/P1_SPATIAL_VS_GLOBAL_CONTEXT_ANALYSIS.md
+    sha256: 6cc15e40745443782c29425d64f4263838e29640ff120a390073c24b626ff9b4
+  p0r_checksums:
+    path: results/agentic_task_driven_nde/p0r_author_registration/CHECKSUMS.sha256
+    sha256: 470a1df4ff19930f5924493fb6a51c49084c76a37376fa266a6499baa9ffbb82
+  p0r_manifest:
+    path: results/agentic_task_driven_nde/p0r_author_registration/artifact_manifest.json
+    sha256: 3d92293c0a0ce8a2a299cc99e9bdd872dd1536921c80a9608329c96315fad888
+  p0r_surface_manifest:
+    path: results/agentic_task_driven_nde/p0r_author_registration/surface_manifest.csv
+    sha256: e3274cacfb50b5b136e81ed3c107ac79d134e37d5d14ccc296b4e1ae2a51b44b
+  p0r_registration:
+    path: results/agentic_task_driven_nde/p0r_author_registration/registration.csv
+    sha256: 43bafc8819a1bea0df7f7ea9fa2b1dc194591ef9a4b58e8dcf3e64c13622e265
+  p0r_grid_mapping:
+    path: results/agentic_task_driven_nde/p0r_author_registration/grid_mapping_qc.csv
+    sha256: fb076daefbb0b748184d10b777268dfd13777a3e78cb7fed104252e6d62afd35
+  p1_checksums:
+    path: results/agentic_task_driven_nde/p1_visual_observability/CHECKSUMS.sha256
+    sha256: 6d856b4630aaf06500273538e48f970e81c620d4c13548370eeaa9eea9eaf4fc
+  p1_summary:
+    path: results/agentic_task_driven_nde/p1_visual_observability/summary.json
+    sha256: f312d1c7ab0f6096d56e3f9bc46107929ea83976701147e1ac3990cd29d976ea
+  p1_outer_selection:
+    path: results/agentic_task_driven_nde/p1_visual_observability/outer_model_selection.csv
+    sha256: 1a7b9dadbb1881dea2ca6c6ad2b460156fd7987bac8b4fc3b21948cb15d70635
+  mavis_config:
+    path: paper_v3/configs/mavis_development.yaml
+    sha256: d35faaf7f1c2e86785acf6ee821db6cf783d9a38565e1e75ec9a282e266e729c
+  historical_mavis_trajectories:
+    path: results/mavis/p4_closed_loop/action_trajectories.parquet
+    sha256: 313be0a13c392b1fe9542f2a622c6487256b01ed1860ca6d853698ff83f0fc63
+  resnet18_weights:
+    path: paper_v3/assets/resnet18-f37072fd.pth
+    sha256: f37072fd47e89c5e827621c5baffa7500819f7896bbacec160b1a16c560e07ec
+
+cohort:
+  specimen_count: 276
+  domain_order: [74t7kcdgkr, cgtnjyggtm, w68dtmpfyf, xcmzfsbd9t, yfxyg8jm46, ykhs7s2dck]
+  domain_counts:
+    74t7kcdgkr: 45
+    cgtnjyggtm: 49
+    w68dtmpfyf: 43
+    xcmzfsbd9t: 59
+    yfxyg8jm46: 42
+    ykhs7s2dck: 38
+  outer_split: leave_one_domain_out
+  p0r_status: P0R_AUTHOR_REGISTRATION_GO
+  p0r_orientation: ROT90
+
+acquisition:
+  cell_shape: [8, 8]
+  levels: [-1, 0, 1, 2]
+  initial_levels: [-1, -1, -1, -1, -1, -1, -1, -1,
+                   -1, -1, -1, -1, -1, -1, -1, -1,
+                   -1, -1, -1, -1, -1, -1, -1, -1,
+                   -1, -1, -1, -1, -1, -1, -1, -1,
+                   -1, -1, -1, -1, -1, -1, -1, -1,
+                   -1, -1, -1, -1, -1, -1, -1, -1,
+                   -1, -1, -1, -1, -1, -1, -1, -1,
+                   -1, -1, -1, -1, -1, -1, -1, -1]
+  allowed_transitions: ["-1->0", "0->1", "1->2"]
+  budget_unit: unique_native_raster_locations
+  endpoint_budget: 0.25
+  initial_budget_by_domain:
+    74t7kcdgkr: 0.03125
+    cgtnjyggtm: 0.015625
+    w68dtmpfyf: 0.015625
+    xcmzfsbd9t: 0.015625
+    yfxyg8jm46: 0.015625
+    ykhs7s2dck: 0.015625
+  evaluation_checkpoints: [0.0, 0.03125, 0.0625, 0.09375, 0.125, 0.1875, 0.25]
+  uniform_order: mva.oracle.uniform_cell_order
+  center_order: squared_distance_to_grid_center_then_cell_id
+  nonfitting_action: skip_without_reordering
+
+surface_hypothesis:
+  score: mean_rgb_absolute_deviation_from_full_surface_border_median
+  normalization: within_specimen_minmax_zero_if_constant
+  top_k: 8
+  labels_forbidden: [full_cscan, true_cai, impact_metadata]
+  misleading_jaccard:
+    agree_at_least: 0.5
+    partial_at_least: 0.125
+
+source_prior:
+  statistic: equal_domain_mean_of_source_specimen_full_cscan_border_medians
+  quantization: round_half_to_even_clip_uint8
+  outer_target_forbidden: true
+  interpolation: bilinear
+  ownership: top_left_half_open_last_row_and_column_closed
+  restore_all_observed_pixels: true
+
+state_bank:
+  policies: [UNIFORM_BROADEN, CENTER_BROADEN, RANDOM_BROADEN, SURFACE_FOCUS,
+             UNIFORM_THEN_REFINE, ALTERNATE_BROADEN_REFINE]
+  include_zero_anchor: true
+  snapshots_per_policy: 3
+  snapshot_fractions: [0.3333333333333333, 0.6666666666666666, 1.0]
+  snapshot_axis: action_count
+  broadening_policy_endpoint: complete_level0_scout
+  hierarchical_policy_endpoint: 0.25
+  random_seed: 2026083101
+  random_identity: sha256_seed_and_surface_sha256
+  label_independent: true
+  equal_states_per_specimen: true
+  expected_states_per_specimen: 19
+
+cai_assessor:
+  representation: [frozen_resnet18_reconstruction_512d, effective_budget,
+                   observed_cell_fraction, mean_observed_level]
+  encoder: frozen_imagenet1k_v1_resnet18
+  embedding_dimension: 512
+  pca_dimension: 32
+  ridge_alpha: 10.0
+  metadata13_used: false
+  profile_stats21_used: false
+  target_fold_used_for_fit_normalization_selection: false
+  test_path: SURVEY_THEN_REFINE_FIXED
+  gate_comparison: zero_state_minus_25_percent_absolute_cai_error
+  gate_min_improved_domains: 4
+  gate_ci_lower_strictly_positive: true
+
+tasks:
+  discovery:
+    name: internal_signal_saliency
+    pixel_score: sum_rgb_absolute_deviation_from_full_cscan_border_median
+    primary: normalized_capture_auc_over_exact_scout_budget
+    capture_targets: [0.25, 0.5, 0.75]
+    high_saliency_quantile: 0.95
+  field:
+    loss: normalized_rgb_mse
+  cai:
+    loss: absolute_cai_error
+
+baselines:
+  deployable_or_geometry: [RANDOM, ZERO_UNIFORM, CENTER_FIRST, SURFACE_FOCUS,
+                           SURVEY_THEN_REFINE_FIXED]
+  historical_upper_bound: FIXED_UNIFORM_THEN_MAVIS
+  historical_method: mavis_full
+  privileged: [ORACLE_DISCOVERY, ORACLE_FIELD, ORACLE_CAI]
+
+oracle:
+  objective: task_value_per_exact_added_cost
+  tie_break: [objective_desc, raw_value_desc, cell_id_asc, to_level_asc]
+  candidate_scope: all_legal_fitting_one_level_actions
+  true_cai_policy_visible: false
+  full_cscan_policy_visible: false
+
+metrics:
+  auebc_interval: [0.0, 0.25]
+  auebc_curve: nominal_checkpoints_with_last_fitting_state_carried_forward
+  stopping_reference_candidates: [RANDOM, ZERO_UNIFORM, CENTER_FIRST,
+                                  SURFACE_FOCUS, SURVEY_THEN_REFINE_FIXED]
+  stopping_reference_selection: source_only_lowest_equal_domain_endpoint_loss
+  stopping_tolerance_relative: 0.05
+  scanner_time_claim: forbidden
+
+statistics:
+  inferential_unit: physical_specimen_then_equal_weight_domain
+  bootstrap: synchronized_specimen_within_domain
+  bootstrap_replicates: 100000
+  bootstrap_seed: 2026083102
+  confidence_level: 0.95
+
+gates:
+  relative_improvement: 0.10
+  improved_domains_minimum: 4
+  initialization_capture_target: 0.25
+  stopping_budget_saving: 0.10
+  stopping_noninferiority_relative: 0.05
+  statuses: [G0_TASK_CONDITIONED_AGENTIC_OPPORTUNITY_GO,
+             G0_ACTIVE_INSPECTION_OPPORTUNITY_GO,
+             G0_FIELD_ONLY_OPPORTUNITY_GO,
+             G0_NO_AGENTIC_HEADROOM_NO_GO,
+             G0_CAI_ASSESSOR_NO_GO]
+
+execution:
+  default_device: cuda:0
+  encoder_batch_size: 32
+  deterministic_algorithms: true
+  no_new_planner_training: true
+  allowed_learned_component: StateCAIAssessor
+
+outputs:
+  formal: results/inspection_agent/g0
+  replay: results/inspection_agent/replay/g0
