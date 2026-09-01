@@ -3067,6 +3067,12 @@ def _report(payload: Mapping[str, object]) -> str:
     )
 
 
+def _trajectory_frame(rows: tuple[dict[str, object], ...]) -> pl.DataFrame:
+    return pl.DataFrame(rows, infer_schema_length=None).sort(
+        ["task", "dataset_id", "specimen_id", "method", "step"]
+    )
+
+
 def _materialize_package(
     output: Path,
     *,
@@ -3102,9 +3108,7 @@ def _materialize_package(
         _write_csv(temporary / "state_bank_manifest.csv", assessor.state_bank_rows)
         _write_csv(temporary / "initialization_curves.csv", initialization.rows)
         trajectory_rows = (*hierarchy.trajectory_rows, *cai.trajectory_rows)
-        frame = pl.DataFrame(trajectory_rows).sort(
-            ["task", "dataset_id", "specimen_id", "method", "step"]
-        )
+        frame = _trajectory_frame(trajectory_rows)
         frame.write_parquet(
             temporary / "hierarchical_trajectories.parquet",
             compression="zstd",

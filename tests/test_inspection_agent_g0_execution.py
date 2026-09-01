@@ -4,6 +4,7 @@ from pathlib import Path
 
 from cmc_bbdm.inspection_agent.g0 import (
     _load_historical_mavis_trajectories,
+    _trajectory_frame,
     load_g0_protocol,
     plan_staged_actions,
 )
@@ -84,3 +85,31 @@ def test_frozen_mavis_upper_bound_loads_all_authorized_action_histories() -> Non
     )
     assert all(len(value.source_state_sha256_before) == len(value.actions) for value in trajectories.values())
     assert all(len(value.state_sha256) == 64 for value in trajectories.values())
+
+
+def test_trajectory_frame_infers_hash_columns_beyond_first_100_rows() -> None:
+    rows = [
+        {
+            "task": "FIELD",
+            "dataset_id": "source",
+            "specimen_id": f"specimen-{index:03d}",
+            "method": "FIXED",
+            "step": 0,
+            "trajectory_sha256": None,
+        }
+        for index in range(101)
+    ]
+    rows.append(
+        {
+            "task": "CAI",
+            "dataset_id": "target",
+            "specimen_id": "specimen-101",
+            "method": "ORACLE",
+            "step": 1,
+            "trajectory_sha256": "a" * 64,
+        }
+    )
+
+    frame = _trajectory_frame(tuple(rows))
+
+    assert frame.filter(frame["task"] == "CAI")["trajectory_sha256"].item() == "a" * 64
