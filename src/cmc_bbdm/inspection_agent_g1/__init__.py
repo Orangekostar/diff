@@ -44,6 +44,13 @@ from .g1 import (
 )
 from .metrics import build_engineering_curve, oracle_gap_closure
 from .policy_model import SharedActionMLP, StructuredInspectionPolicy
+from .policy_selection import (
+    InnerPolicyEngineeringMetric,
+    OuterPolicySelection,
+    PolicyCandidateEvaluation,
+    outer_selection_payload,
+    select_outer_policy,
+)
 from .policy_training import (
     G1ActorNormalizer,
     G1PolicyTrainingExample,
@@ -134,7 +141,10 @@ __all__ = [
     "G1PolicyState",
     "G1PolicyTrainingExample",
     "G1ReplayComparison",
+    "InnerPolicyEngineeringMetric",
     "ObservablePolicyScores",
+    "OuterPolicySelection",
+    "PolicyCandidateEvaluation",
     "PolicyGateEvidence",
     "PolicyModelName",
     "PolicyTrainingHyperparameters",
@@ -185,9 +195,11 @@ __all__ = [
     "materialize_oracle_checkpoint_states",
     "observable_stop_loss",
     "oracle_gap_closure",
+    "outer_selection_payload",
     "publish_g1_manifest",
     "run_closed_loop",
     "select_conservative_stop_threshold",
+    "select_outer_policy",
     "select_source_relabels",
     "soft_utility_distillation_loss",
     "teacher_distribution",
