@@ -1,5 +1,13 @@
 """Observable task-conditioned inspection policy research stage."""
 
+from .artifacts import (
+    G1ArtifactError,
+    G1PackageValidation,
+    G1ReplayComparison,
+    compare_g1_packages,
+    publish_g1_manifest,
+    validate_g1_package,
+)
 from .contracts import CAIContextMode, G1PolicyState, TaskTokenMode
 from .crossfit import (
     CrossfitCAIAssessorFit,
@@ -36,7 +44,19 @@ from .g1 import (
 )
 from .metrics import build_engineering_curve, oracle_gap_closure
 from .policy_model import SharedActionMLP, StructuredInspectionPolicy
-from .policy_training import hard_behavior_cloning_loss
+from .policy_training import (
+    G1ActorNormalizer,
+    G1PolicyTrainingExample,
+    PolicyModelName,
+    PolicyTrainingHyperparameters,
+    TrainedObservablePolicy,
+    TrainingRoute,
+    equal_policy_training_weights,
+    fit_final_observable_policy,
+    fit_inner_observable_policy,
+    fit_policy_normalizer,
+    hard_behavior_cloning_loss,
+)
 from .privileged_awr import (
     AAWRAuthorization,
     AAWRSourceEvidence,
@@ -107,10 +127,17 @@ __all__ = [
     "DaggerSourceError",
     "DaggerVisitedState",
     "DeploymentGeometryAudit",
+    "G1ActorNormalizer",
+    "G1ArtifactError",
     "G1CrossfitError",
+    "G1PackageValidation",
     "G1PolicyState",
+    "G1PolicyTrainingExample",
+    "G1ReplayComparison",
     "ObservablePolicyScores",
     "PolicyGateEvidence",
+    "PolicyModelName",
+    "PolicyTrainingHyperparameters",
     "PrivilegedTeacherLabel",
     "PrivilegedValueNetwork",
     "SharedActionMLP",
@@ -121,6 +148,8 @@ __all__ = [
     "SurfaceVariant",
     "TargetTruthVault",
     "TaskTokenMode",
+    "TrainedObservablePolicy",
+    "TrainingRoute",
     "WarmStartAudit",
     "advantage_weighted_actor_loss",
     "apply_warm_start",
@@ -135,8 +164,10 @@ __all__ = [
     "cai_teacher_label",
     "canonical_action_from_slot",
     "canonical_slot",
+    "compare_g1_packages",
     "controlled_surface_hypothesis",
     "decision_type",
+    "equal_policy_training_weights",
     "equal_specimen_task_weights",
     "evaluate_final_g1_decision",
     "evaluate_policy_gate",
@@ -145,17 +176,22 @@ __all__ = [
     "field_teacher_label",
     "fit_crossfit_cai_assessor",
     "fit_crossfit_source_prior",
+    "fit_final_observable_policy",
+    "fit_inner_observable_policy",
+    "fit_policy_normalizer",
     "formal_synchronized_bootstrap",
     "hard_behavior_cloning_loss",
     "materialize_label_independent_states",
     "materialize_oracle_checkpoint_states",
     "observable_stop_loss",
     "oracle_gap_closure",
+    "publish_g1_manifest",
     "run_closed_loop",
     "select_conservative_stop_threshold",
     "select_source_relabels",
     "soft_utility_distillation_loss",
     "teacher_distribution",
     "trajectory_quantile_indices",
+    "validate_g1_package",
     "warm_start_audit",
 ]
