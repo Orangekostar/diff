@@ -5,19 +5,55 @@ from __future__ import annotations
 import hashlib
 import json
 import math
-from dataclasses import dataclass
+from collections.abc import Callable, Mapping
+from dataclasses import dataclass, field
 from pathlib import Path
 from types import MappingProxyType
 
+import numpy as np
 import yaml
 
+from cmc_bbdm.inspection_agent.cai_assessor import StateFeatureRow, state_scalars
 from cmc_bbdm.inspection_agent.contracts import InspectionTask
+from cmc_bbdm.inspection_agent.generalized_reconstruction import (
+    reconstruct_observation,
+)
+from cmc_bbdm.inspection_agent.surface_hypothesis import SurfaceHypothesis
+from cmc_bbdm.inspection_agent.world import CausalInspectionWorld
+from cmc_bbdm.mavis.authority import MAVISAuthority
+from cmc_bbdm.mva.acquisition_grid import AcquisitionGrid
+from cmc_bbdm.mva.encoder_session import MVAEncoderSession
 
+from .contracts import CAIContextMode, TaskTokenMode
+from .crossfit import (
+    CrossfitCAIAssessorFit,
+    CrossfitPriorFit,
+    CrossfitRoster,
+    fit_crossfit_cai_assessor,
+    fit_crossfit_source_prior,
+)
+from .features import build_policy_state
+from .policy_training import G1PolicyTrainingExample
 from .statistics import (
     FORMAL_BOOTSTRAP_REPLICATES,
     FORMAL_BOOTSTRAP_SEED,
     G1PairedBootstrap,
 )
+from .teacher import (
+    SourceTeacherAuthorization,
+    authorize_source_teacher,
+    cai_teacher_label,
+    field_teacher_label,
+)
+from .teacher_bank import (
+    G1TeacherBankFile,
+    G1TeacherBankRecord,
+    materialize_label_independent_states,
+    materialize_oracle_checkpoint_states,
+    read_teacher_bank,
+    write_teacher_bank,
+)
+from .warm_start import build_deployment_grid
 
 _G1_CONFIG_SHA256 = "aaf216ab9033fffc390f123131bca29952b0d5ca34752434aa9686c1d7ff1f05"
 _G1_BASE_SHA = "7a10cd425de582fa158bf6639285731ccd8ff7a7"
@@ -227,6 +263,738 @@ def load_g1_protocol(
         work_output=str(execution["work_output"]),
         source_bindings=MappingProxyType(source_bindings),
     )
+
+
+def _valid_sha256(value: object) -> bool:
+    return (
+        type(value) is str
+        and len(value) == 64
+        and not (set(value) - set("0123456789abcdef"))
+    )
+
+
+def _readonly_image(value: object) -> np.ndarray:
+    image = np.asarray(value)
+    if image.dtype != np.uint8 or image.ndim != 3 or image.shape[2] != 3:
+        raise G1ExecutionError("G1 runtime surface image is invalid")
+    if image.flags.c_contiguous and not image.flags.writeable:
+        return image
+    output = np.frombuffer(
+        np.ascontiguousarray(image).tobytes(order="C"), dtype=np.uint8
+    ).reshape(image.shape)
+    output.setflags(write=False)
+    return output
+
+
+def _surface_carrier(hypothesis: SurfaceHypothesis) -> np.ndarray:
+    if type(hypothesis) is not SurfaceHypothesis:
+        raise G1ExecutionError("issued surface hypothesis is required")
+    value = np.rint(hypothesis.border_median_rgb).clip(0, 255).astype(np.uint8)
+    carrier = np.frombuffer(value.tobytes(order="C"), dtype=np.uint8).reshape(1, 1, 3)
+    carrier.setflags(write=False)
+    return carrier
+
+
+@dataclass(frozen=True, slots=True)
+class G1RuntimeSurface:
+    dataset_id: str
+    specimen_id: str
+    image: np.ndarray
+    surface_sha256: str
+    hypothesis: SurfaceHypothesis
+    state_sha256: str = field(init=False)
+
+    def __post_init__(self) -> None:
+        image = _readonly_image(self.image)
+        if (
+            type(self.dataset_id) is not str
+            or not self.dataset_id
+            or type(self.specimen_id) is not str
+            or not self.specimen_id
+            or not _valid_sha256(self.surface_sha256)
+            or type(self.hypothesis) is not SurfaceHypothesis
+            or not _valid_sha256(self.hypothesis.state_sha256)
+        ):
+            raise G1ExecutionError("G1 runtime surface identity is invalid")
+        object.__setattr__(self, "image", image)
+        object.__setattr__(
+            self,
+            "state_sha256",
+            _json_sha(
+                {
+                    "schema": 1,
+                    "kind": "g1-runtime-surface",
+                    "dataset_id": self.dataset_id,
+                    "specimen_id": self.specimen_id,
+                    "surface": self.surface_sha256,
+                    "hypothesis": self.hypothesis.state_sha256,
+                    "image_shape": image.shape,
+                    "image_sha256": hashlib.sha256(
+                        image.tobytes(order="C")
+                    ).hexdigest(),
+                }
+            ),
+        )
+
+
+@dataclass(frozen=True, slots=True)
+class G1Runtime:
+    mavis: MAVISAuthority
+    surfaces: Mapping[tuple[str, str], G1RuntimeSurface]
+    surface_authority_sha256: str
+    state_sha256: str = field(init=False)
+    _identity_index: MappingProxyType = field(init=False, repr=False)
+
+    def __post_init__(self) -> None:
+        if type(self.mavis) is not MAVISAuthority or not _valid_sha256(
+            self.surface_authority_sha256
+        ):
+            raise G1ExecutionError("G1 runtime authority is invalid")
+        values = dict(self.surfaces)
+        expected = tuple(
+            zip(self.mavis.dataset_ids, self.mavis.specimen_ids, strict=True)
+        )
+        if set(values) != set(expected) or any(
+            type(surface) is not G1RuntimeSurface
+            or key != (surface.dataset_id, surface.specimen_id)
+            for key, surface in values.items()
+        ):
+            raise G1ExecutionError("G1 C-scan and surface rosters differ")
+        index = {key: row_index for row_index, key in enumerate(expected)}
+        frozen = MappingProxyType(values)
+        object.__setattr__(self, "surfaces", frozen)
+        object.__setattr__(self, "_identity_index", MappingProxyType(index))
+        object.__setattr__(
+            self,
+            "state_sha256",
+            _json_sha(
+                {
+                    "schema": 1,
+                    "kind": "g1-runtime-authority",
+                    "mavis": self.mavis.state_sha256,
+                    "surface_authority": self.surface_authority_sha256,
+                    "surfaces": tuple(values[key].state_sha256 for key in expected),
+                }
+            ),
+        )
+
+    @property
+    def domain_order(self) -> tuple[str, ...]:
+        return tuple(dict.fromkeys(self.mavis.dataset_ids))
+
+    def surface(self, dataset_id: str, specimen_id: str) -> G1RuntimeSurface:
+        try:
+            return self.surfaces[(dataset_id, specimen_id)]
+        except (KeyError, TypeError) as error:
+            raise G1ExecutionError("G1 runtime specimen is unavailable") from error
+
+    def specimen_sha256(self, dataset_id: str, specimen_id: str) -> str:
+        try:
+            index = self._identity_index[(dataset_id, specimen_id)]
+        except (KeyError, TypeError) as error:
+            raise G1ExecutionError("G1 runtime specimen is unavailable") from error
+        surface = self.surface(dataset_id, specimen_id)
+        return specimen_integrity_sha256(
+            dataset_id=dataset_id,
+            specimen_id=specimen_id,
+            cscan_source_sha256=self.mavis.source_image_sha256[index],
+            cscan_decoded_sha256=self.mavis.decoded_image_sha256[index],
+            surface_sha256=surface.surface_sha256,
+        )
+
+
+@dataclass(frozen=True, slots=True)
+class G1SourceDependencies:
+    roster: CrossfitRoster
+    prior_fit: CrossfitPriorFit
+    assessor_fit: CrossfitCAIAssessorFit
+    authorization: SourceTeacherAuthorization
+    assessor_row_count: int
+    state_sha256: str = field(init=False)
+
+    def __post_init__(self) -> None:
+        if (
+            type(self.roster) is not CrossfitRoster
+            or type(self.prior_fit) is not CrossfitPriorFit
+            or type(self.assessor_fit) is not CrossfitCAIAssessorFit
+            or type(self.authorization) is not SourceTeacherAuthorization
+            or self.prior_fit.roster != self.roster
+            or self.assessor_fit.roster != self.roster
+            or self.authorization.roster_sha256 != self.roster.state_sha256
+            or self.prior_fit.prior.source_domains != self.roster.fit_domains
+            or self.assessor_fit.assessor.fit_domains != self.roster.fit_domains
+            or type(self.assessor_row_count) is not int
+            or self.assessor_row_count <= 0
+            or len(self.assessor_fit.assessor.fit_sample_ids) != self.assessor_row_count
+        ):
+            raise G1ExecutionError("G1 source dependency bundle is invalid")
+        object.__setattr__(
+            self,
+            "state_sha256",
+            _json_sha(
+                {
+                    "schema": 1,
+                    "kind": "g1-source-dependencies",
+                    "roster": self.roster.state_sha256,
+                    "prior": self.prior_fit.state_sha256,
+                    "assessor": self.assessor_fit.state_sha256,
+                    "authorization": self.authorization.state_sha256,
+                    "assessor_row_count": self.assessor_row_count,
+                }
+            ),
+        )
+
+
+@dataclass(frozen=True, slots=True)
+class G1TeacherBankBuild:
+    path: Path
+    outer_target: str
+    source_domain: str
+    specimen_count: int
+    dependency_sha256: str
+    bank: G1TeacherBankFile
+
+
+def specimen_integrity_sha256(
+    *,
+    dataset_id: str,
+    specimen_id: str,
+    cscan_source_sha256: str,
+    cscan_decoded_sha256: str,
+    surface_sha256: str,
+) -> str:
+    if (
+        type(dataset_id) is not str
+        or not dataset_id
+        or type(specimen_id) is not str
+        or not specimen_id
+        or not all(
+            _valid_sha256(value)
+            for value in (
+                cscan_source_sha256,
+                cscan_decoded_sha256,
+                surface_sha256,
+            )
+        )
+    ):
+        raise G1ExecutionError("G1 specimen integrity identity is invalid")
+    return _json_sha(
+        {
+            "schema": 1,
+            "kind": "g1-physical-specimen-integrity",
+            "dataset_id": dataset_id,
+            "specimen_id": specimen_id,
+            "cscan_source": cscan_source_sha256,
+            "cscan_decoded": cscan_decoded_sha256,
+            "surface": surface_sha256,
+        }
+    )
+
+
+def source_teacher_bank_path(
+    work_root: str | Path,
+    outer_target: str,
+    source_domain: str,
+) -> Path:
+    if (
+        type(outer_target) is not str
+        or not outer_target
+        or type(source_domain) is not str
+        or not source_domain
+        or outer_target == source_domain
+        or any(
+            "/" in value or "\\" in value or value in {".", ".."}
+            for value in (outer_target, source_domain)
+        )
+    ):
+        raise G1ExecutionError("teacher-bank fold identity is invalid")
+    return Path(work_root) / outer_target / f"{source_domain}.parquet"
+
+
+def _progress(callback: Callable[[str], None] | None, message: str) -> None:
+    if callback is not None:
+        callback(message)
+
+
+def load_g1_runtime(
+    protocol: G1Protocol,
+    *,
+    project_root: str | Path,
+    source_project_root: str | Path,
+    progress: Callable[[str], None] | None = None,
+) -> G1Runtime:
+    if type(protocol) is not G1Protocol:
+        raise G1ExecutionError("issued G1 protocol is required")
+    root = Path(project_root).resolve(strict=True)
+    source_root = Path(source_project_root).resolve(strict=True)
+    prompt = (
+        source_root.parent / "CODEX_INSPECTION_AGENT_G1_OBSERVABLE_POLICY_PROMPT.md"
+    )
+    try:
+        prompt_sha = hashlib.sha256(prompt.read_bytes()).hexdigest()
+    except OSError as error:
+        raise G1ExecutionError("controlling G1 prompt is unavailable") from error
+    if prompt_sha != _G1_PROMPT_SHA256:
+        raise G1ExecutionError("controlling G1 prompt SHA-256 changed")
+
+    from cmc_bbdm.inspection_agent.g0 import (
+        _load_runtime_authority,
+        load_g0_protocol,
+    )
+
+    g0_config = root / protocol.source_bindings["g0_config"][0]
+    g0_protocol = load_g0_protocol(g0_config, project_root=root)
+    runtime = _load_runtime_authority(
+        g0_protocol,
+        project_root=root,
+        source_project_root=source_root,
+        progress=progress,
+    )
+    surfaces = {
+        key: G1RuntimeSurface(
+            dataset_id=datum.record.dataset_id,
+            specimen_id=datum.record.specimen_id,
+            image=_surface_carrier(datum.hypothesis),
+            surface_sha256=datum.record.surface_sha256,
+            hypothesis=datum.hypothesis,
+        )
+        for key, datum in runtime.surfaces.items()
+    }
+    result = G1Runtime(
+        mavis=runtime.mavis,
+        surfaces=MappingProxyType(surfaces),
+        surface_authority_sha256=runtime.surface_authority_sha256,
+    )
+    counts = {
+        domain: result.mavis.dataset_ids.count(domain)
+        for domain in protocol.domain_order
+    }
+    if (
+        result.mavis.specimen_count != protocol.specimen_count
+        or result.domain_order != protocol.domain_order
+        or counts != dict(protocol.domain_counts)
+    ):
+        raise G1ExecutionError("formal G1 runtime roster changed")
+    return result
+
+
+def load_g1_encoder(
+    source_project_root: str | Path,
+    *,
+    device: str,
+) -> MVAEncoderSession:
+    source_root = Path(source_project_root).resolve(strict=True)
+    if type(device) is not str or not device:
+        raise G1ExecutionError("G1 encoder device is invalid")
+    from cmc_bbdm.inspection_agent.g0 import _registered_encoder
+
+    return _registered_encoder(source_root, device)
+
+
+def build_g1_world(
+    runtime: G1Runtime,
+    *,
+    dataset_id: str,
+    specimen_id: str,
+    task: InspectionTask,
+    endpoint_budget: float,
+) -> tuple[CausalInspectionWorld, AcquisitionGrid, G1RuntimeSurface]:
+    if type(runtime) is not G1Runtime or task not in (
+        InspectionTask.FIELD,
+        InspectionTask.CAI,
+    ):
+        raise G1ExecutionError("G1 world request is invalid")
+    surface = runtime.surface(dataset_id, specimen_id)
+    context = runtime.mavis.policy_context(specimen_id)
+    grid = build_deployment_grid(context.native_shape)
+    world = CausalInspectionWorld(
+        runtime.mavis,
+        specimen_id=specimen_id,
+        task=task,
+        surface_rgb=surface.image,
+        surface_sha256=surface.surface_sha256,
+        grid=grid,
+        endpoint_budget=endpoint_budget,
+    )
+    return world, grid, surface
+
+
+def _build_crossfit_assessor_rows(
+    runtime: G1Runtime,
+    protocol: G1Protocol,
+    prior_fit: CrossfitPriorFit,
+    *,
+    encoder: object,
+    progress: Callable[[str], None] | None,
+) -> tuple[StateFeatureRow, ...]:
+    if not callable(getattr(encoder, "encode", None)):
+        raise G1ExecutionError("G1 reconstruction encoder is invalid")
+    roster = prior_fit.roster
+    rows: list[StateFeatureRow] = []
+    selected = tuple(
+        (domain, specimen)
+        for specimen, domain in zip(
+            runtime.mavis.specimen_ids,
+            runtime.mavis.dataset_ids,
+            strict=True,
+        )
+        if domain in roster.fit_domains
+    )
+    for index, (domain, specimen) in enumerate(selected, start=1):
+        world, grid, surface = build_g1_world(
+            runtime,
+            dataset_id=domain,
+            specimen_id=specimen,
+            task=InspectionTask.CAI,
+            endpoint_budget=protocol.endpoint_budget,
+        )
+        states = materialize_label_independent_states(
+            world,
+            grid,
+            surface.hypothesis,
+            outer_target=roster.outer_target,
+            random_seed=protocol.teacher_bank_seed,
+            snapshot_fractions=protocol.snapshot_fractions,
+        )
+        if len(states) != 13:
+            raise G1ExecutionError("G1 assessor state roster changed")
+        reconstructions = tuple(
+            reconstruct_observation(
+                state.observation,
+                grid,
+                prior_fit.prior,
+            )
+            for state in states
+        )
+        embeddings = np.asarray(
+            encoder.encode(tuple(value.image for value in reconstructions)),
+            dtype=np.float64,
+        )
+        if embeddings.shape != (13, 512) or not np.all(np.isfinite(embeddings)):
+            raise G1ExecutionError("G1 assessor embeddings are invalid")
+        teacher_view = runtime.mavis.source_teacher_view(specimen)
+        for state_index, (state, embedding) in enumerate(
+            zip(states, embeddings, strict=True)
+        ):
+            scalars = state_scalars(state.observation)
+            rows.append(
+                StateFeatureRow(
+                    sample_id=_json_sha(
+                        {
+                            "schema": 1,
+                            "kind": "g1-crossfit-assessor-state",
+                            "outer_target": roster.outer_target,
+                            "labeled_domain": roster.labeled_domain,
+                            "dataset_id": domain,
+                            "specimen_id": specimen,
+                            "state_source": state.source,
+                            "state_index": state_index,
+                            "observation": state.observation.state_sha256,
+                        }
+                    ),
+                    specimen_id=specimen,
+                    dataset_id=domain,
+                    policy=state.source,
+                    observation_sha256=state.observation.state_sha256,
+                    embedding=embedding,
+                    effective_budget=float(scalars[0]),
+                    observed_cell_fraction=float(scalars[1]),
+                    mean_observed_level=float(scalars[2]),
+                    true_cai=teacher_view.true_cai,
+                )
+            )
+        if index % 25 == 0 or index == len(selected):
+            _progress(
+                progress,
+                "G1 crossfit assessor states "
+                f"{roster.outer_target}/{roster.labeled_domain}: "
+                f"{index}/{len(selected)} specimens",
+            )
+    return tuple(rows)
+
+
+def build_g1_source_dependencies(
+    runtime: G1Runtime,
+    protocol: G1Protocol,
+    *,
+    outer_target: str,
+    labeled_domain: str,
+    encoder: object,
+    progress: Callable[[str], None] | None = None,
+) -> G1SourceDependencies:
+    if (
+        type(runtime) is not G1Runtime
+        or type(protocol) is not G1Protocol
+        or runtime.domain_order != protocol.domain_order
+        or outer_target not in protocol.domain_order
+        or labeled_domain not in protocol.domain_order
+        or outer_target == labeled_domain
+    ):
+        raise G1ExecutionError("G1 source dependency request is invalid")
+    prior_fit = fit_crossfit_source_prior(
+        runtime.mavis,
+        outer_target=outer_target,
+        labeled_domain=labeled_domain,
+    )
+    rows = _build_crossfit_assessor_rows(
+        runtime,
+        protocol,
+        prior_fit,
+        encoder=encoder,
+        progress=progress,
+    )
+    assessor_fit = fit_crossfit_cai_assessor(
+        rows,
+        domain_order=protocol.domain_order,
+        outer_target=outer_target,
+        labeled_domain=labeled_domain,
+        pca_dimension=32,
+        ridge_alpha=10.0,
+    )
+    authorization = authorize_source_teacher(
+        prior_fit.roster,
+        query_domain=labeled_domain,
+    )
+    result = G1SourceDependencies(
+        roster=prior_fit.roster,
+        prior_fit=prior_fit,
+        assessor_fit=assessor_fit,
+        authorization=authorization,
+        assessor_row_count=len(rows),
+    )
+    _progress(
+        progress,
+        f"G1 dependencies complete {outer_target}/{labeled_domain}: "
+        f"{result.state_sha256}",
+    )
+    return result
+
+
+def materialize_g1_source_teacher_records(
+    runtime: G1Runtime,
+    protocol: G1Protocol,
+    dependencies: G1SourceDependencies,
+    *,
+    encoder: object,
+    specimen_ids: tuple[str, ...],
+    progress: Callable[[str], None] | None = None,
+) -> tuple[G1TeacherBankRecord, ...]:
+    if (
+        type(runtime) is not G1Runtime
+        or type(protocol) is not G1Protocol
+        or type(dependencies) is not G1SourceDependencies
+        or not callable(getattr(encoder, "encode", None))
+        or type(specimen_ids) is not tuple
+        or not specimen_ids
+        or len(set(specimen_ids)) != len(specimen_ids)
+    ):
+        raise G1ExecutionError("G1 source teacher-bank request is invalid")
+    roster = dependencies.roster
+    source_ids = {
+        specimen
+        for specimen, domain in zip(
+            runtime.mavis.specimen_ids,
+            runtime.mavis.dataset_ids,
+            strict=True,
+        )
+        if domain == roster.labeled_domain
+    }
+    if not set(specimen_ids) <= source_ids:
+        raise G1ExecutionError("teacher-bank specimen is outside the labeled source")
+    records: list[G1TeacherBankRecord] = []
+    assessor = dependencies.assessor_fit.assessor
+    prior = dependencies.prior_fit.prior
+    for specimen_index, specimen in enumerate(specimen_ids, start=1):
+        teacher_view = runtime.mavis.source_teacher_view(specimen)
+        specimen_sha = runtime.specimen_sha256(roster.labeled_domain, specimen)
+        for task in (InspectionTask.FIELD, InspectionTask.CAI):
+            world, grid, surface = build_g1_world(
+                runtime,
+                dataset_id=roster.labeled_domain,
+                specimen_id=specimen,
+                task=task,
+                endpoint_budget=protocol.endpoint_budget,
+            )
+            independent = materialize_label_independent_states(
+                world,
+                grid,
+                surface.hypothesis,
+                outer_target=roster.outer_target,
+                random_seed=protocol.teacher_bank_seed,
+                snapshot_fractions=protocol.snapshot_fractions,
+            )
+            oracle = materialize_oracle_checkpoint_states(
+                world,
+                grid,
+                surface.hypothesis,
+                prior,
+                dependencies.authorization,
+                full_scan=teacher_view.full_scan,
+                checkpoints=protocol.oracle_checkpoints,
+                true_cai=(
+                    teacher_view.true_cai if task is InspectionTask.CAI else None
+                ),
+                assessor=(assessor if task is InspectionTask.CAI else None),
+                encoder=(encoder if task is InspectionTask.CAI else None),
+            )
+            state_rows = (
+                *(
+                    (row.source, row.state_sha256, row.observation)
+                    for row in independent
+                ),
+                *(
+                    ("ORACLE_CHECKPOINT", row.state_sha256, row.observation)
+                    for row in oracle
+                ),
+            )
+            reconstructions = tuple(
+                reconstruct_observation(observation, grid, prior)
+                for _source, _state_sha, observation in state_rows
+            )
+            embeddings = np.asarray(
+                encoder.encode(tuple(value.image for value in reconstructions)),
+                dtype=np.float64,
+            )
+            if embeddings.shape != (len(state_rows), 512) or not np.all(
+                np.isfinite(embeddings)
+            ):
+                raise G1ExecutionError("G1 teacher-bank embeddings are invalid")
+            scalars = np.asarray(
+                [state_scalars(observation) for _, _, observation in state_rows],
+                dtype=np.float64,
+            )
+            estimates = assessor.predict(embeddings, scalars)
+            for (
+                state_source,
+                source_state_sha,
+                observation,
+            ), reconstruction, embedding, estimate in zip(
+                state_rows,
+                reconstructions,
+                embeddings,
+                estimates,
+                strict=True,
+            ):
+                policy_state = build_policy_state(
+                    observation,
+                    surface.hypothesis,
+                    grid,
+                    prior,
+                    reconstruction,
+                    reconstruction_embedding=embedding,
+                    cai_estimate=float(estimate),
+                    cai_context_mode=CAIContextMode.SHARED_OBSERVABLE_STATE_CONTEXT,
+                    task_token_mode=TaskTokenMode.CORRECT,
+                )
+                if task is InspectionTask.FIELD:
+                    label = field_teacher_label(
+                        observation,
+                        grid,
+                        prior,
+                        surface.hypothesis,
+                        dependencies.authorization,
+                        full_scan=teacher_view.full_scan,
+                        policy_state_sha256=policy_state.state_sha256,
+                    )
+                else:
+                    label = cai_teacher_label(
+                        observation,
+                        grid,
+                        prior,
+                        surface.hypothesis,
+                        dependencies.authorization,
+                        full_scan=teacher_view.full_scan,
+                        true_cai=teacher_view.true_cai,
+                        assessor=assessor,
+                        encoder=encoder,
+                        policy_state_sha256=policy_state.state_sha256,
+                    )
+                example = G1PolicyTrainingExample(
+                    outer_target=roster.outer_target,
+                    source_domain=roster.labeled_domain,
+                    specimen_sha256=specimen_sha,
+                    task=task,
+                    dagger_iteration=0,
+                    policy_state=policy_state,
+                    teacher_label=label,
+                )
+                records.append(
+                    G1TeacherBankRecord(
+                        example=example,
+                        fit_domains=roster.fit_domains,
+                        state_source=state_source,
+                        source_state_sha256=source_state_sha,
+                        prior_sha256=prior.state_sha256,
+                        assessor_sha256=assessor.model_state_sha256,
+                    )
+                )
+        _progress(
+            progress,
+            f"G1 teacher bank {roster.outer_target}/{roster.labeled_domain}: "
+            f"{specimen_index}/{len(specimen_ids)} specimens",
+        )
+    return tuple(records)
+
+
+def build_g1_source_teacher_bank(
+    runtime: G1Runtime,
+    protocol: G1Protocol,
+    dependencies: G1SourceDependencies,
+    *,
+    encoder: object,
+    work_root: str | Path,
+    progress: Callable[[str], None] | None = None,
+) -> G1TeacherBankBuild:
+    roster = dependencies.roster
+    specimen_ids = tuple(
+        specimen
+        for specimen, domain in zip(
+            runtime.mavis.specimen_ids,
+            runtime.mavis.dataset_ids,
+            strict=True,
+        )
+        if domain == roster.labeled_domain
+    )
+    if len(specimen_ids) != int(protocol.domain_counts[roster.labeled_domain]):
+        raise G1ExecutionError("formal source teacher-bank roster changed")
+    path = source_teacher_bank_path(
+        work_root,
+        roster.outer_target,
+        roster.labeled_domain,
+    )
+    if path.exists() or path.with_suffix(f"{path.suffix}.manifest.json").exists():
+        bank, existing = read_teacher_bank(path)
+        if {record.example.specimen_sha256 for record in existing} != {
+            runtime.specimen_sha256(roster.labeled_domain, specimen)
+            for specimen in specimen_ids
+        } or any(
+            record.prior_sha256 != dependencies.prior_fit.prior.state_sha256
+            or record.assessor_sha256
+            != dependencies.assessor_fit.assessor.model_state_sha256
+            or record.fit_domains != roster.fit_domains
+            for record in existing
+        ):
+            raise G1ExecutionError("existing G1 teacher bank has a stale dependency")
+        _progress(progress, f"G1 teacher bank reused: {path}")
+    else:
+        records = materialize_g1_source_teacher_records(
+            runtime,
+            protocol,
+            dependencies,
+            encoder=encoder,
+            specimen_ids=specimen_ids,
+            progress=progress,
+        )
+        bank = write_teacher_bank(path, records)
+    return G1TeacherBankBuild(
+        path=path,
+        outer_target=roster.outer_target,
+        source_domain=roster.labeled_domain,
+        specimen_count=len(specimen_ids),
+        dependency_sha256=dependencies.state_sha256,
+        bank=bank,
+    )
+
 
 POLICY_GAP_CLOSURE_MINIMUM = 0.20
 POLICY_IMPROVED_DOMAINS_MINIMUM = 4
@@ -551,14 +1319,26 @@ __all__ = [
     "G1FinalDecision",
     "G1GateError",
     "G1Protocol",
+    "G1Runtime",
+    "G1RuntimeSurface",
+    "G1SourceDependencies",
+    "G1TeacherBankBuild",
     "PolicyGateEvidence",
     "PolicyGateResult",
     "StopGateEvidence",
     "StopGateResult",
     "TaskConditioningGateResult",
+    "build_g1_source_dependencies",
+    "build_g1_source_teacher_bank",
+    "build_g1_world",
     "evaluate_final_g1_decision",
     "evaluate_policy_gate",
     "evaluate_stop_gate",
     "evaluate_task_conditioning_gate",
+    "load_g1_encoder",
     "load_g1_protocol",
+    "load_g1_runtime",
+    "materialize_g1_source_teacher_records",
+    "source_teacher_bank_path",
+    "specimen_integrity_sha256",
 ]

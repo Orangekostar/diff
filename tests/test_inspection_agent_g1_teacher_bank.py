@@ -11,8 +11,10 @@ from cmc_bbdm.inspection_agent.generalized_reconstruction import (
     SourceBackgroundPrior,
     reconstruct_observation,
 )
+from cmc_bbdm.inspection_agent.state import action_added_positions, fitting_actions
 from cmc_bbdm.inspection_agent.surface_hypothesis import SurfaceHypothesis
 from cmc_bbdm.inspection_agent.world import CausalInspectionWorld
+from cmc_bbdm.inspection_agent_g1 import teacher_bank as teacher_bank_module
 from cmc_bbdm.inspection_agent_g1.contracts import CAIContextMode, TaskTokenMode
 from cmc_bbdm.inspection_agent_g1.crossfit import build_crossfit_roster
 from cmc_bbdm.inspection_agent_g1.features import build_policy_state
@@ -25,6 +27,7 @@ from cmc_bbdm.inspection_agent_g1.teacher_bank import (
     ContinuationPolicy,
     G1TeacherBankError,
     G1TeacherBankRecord,
+    _positive_cost_actions,
     materialize_label_independent_states,
     materialize_oracle_checkpoint_states,
     read_teacher_bank,
@@ -97,9 +100,9 @@ def test_label_independent_bank_has_one_warm_and_twelve_continuation_states() ->
     )
     assert len(states) == 13
     assert states[0].source == "WARM_START"
-    assert tuple(action.cell_index for action in states[0].observation.action_history) == (
-        PRIMARY_WARM_START_CELLS
-    )
+    assert tuple(
+        action.cell_index for action in states[0].observation.action_history
+    ) == (PRIMARY_WARM_START_CELLS)
     for policy in ContinuationPolicy:
         selected = [state for state in states if state.source == policy.value]
         assert len(selected) == 3
@@ -108,6 +111,38 @@ def test_label_independent_bank_has_one_warm_and_twelve_continuation_states() ->
             len(state.observation.action_history) for state in selected
         )
         assert all(state.label_independent for state in selected)
+    for state in states:
+        assert any(
+            len(
+                action_added_positions(
+                    grid, state.observation.measurement_state, action
+                )
+            )
+            for action in fitting_actions(
+                grid,
+                state.observation.measurement_state,
+                state.observation.endpoint_budget,
+            )
+        )
+
+
+def test_fast_positive_cost_roster_matches_registered_state_semantics() -> None:
+    world, grid, _image = _world(invert=False)
+    state = materialize_label_independent_states(
+        world,
+        grid,
+        _hypothesis(),
+        outer_target="d6",
+        random_seed=2026090101,
+        snapshot_fractions=(1 / 3, 2 / 3, 1.0),
+    )[7].observation.measurement_state
+    expected = tuple(
+        action
+        for action in fitting_actions(grid, state, 0.25)
+        if len(action_added_positions(grid, state, action)) > 0
+    )
+    assert not hasattr(teacher_bank_module, "action_added_positions")
+    assert _positive_cost_actions(grid, state, 0.25) == expected
 
 
 def test_continuation_histories_do_not_depend_on_hidden_scan_or_cai() -> None:
@@ -118,14 +153,20 @@ def test_continuation_histories_do_not_depend_on_hidden_scan_or_cai() -> None:
         "random_seed": 2026090101,
         "snapshot_fractions": (1 / 3, 2 / 3, 1.0),
     }
-    first = materialize_label_independent_states(first_world, grid, _hypothesis(), **kwargs)
-    second = materialize_label_independent_states(second_world, grid, _hypothesis(), **kwargs)
+    first = materialize_label_independent_states(
+        first_world, grid, _hypothesis(), **kwargs
+    )
+    second = materialize_label_independent_states(
+        second_world, grid, _hypothesis(), **kwargs
+    )
     assert [(row.source, row.observation.action_history) for row in first] == [
         (row.source, row.observation.action_history) for row in second
     ]
 
 
-def test_field_oracle_checkpoint_states_are_fold_safe_and_at_or_below_checkpoints() -> None:
+def test_field_oracle_checkpoint_states_are_fold_safe_and_at_or_below_checkpoints() -> (
+    None
+):
     world, grid, image = _world(invert=False)
     authorization = authorize_source_teacher(
         build_crossfit_roster(DOMAINS, outer_target="d6", labeled_domain="d1"),
@@ -145,10 +186,22 @@ def test_field_oracle_checkpoint_states_are_fold_safe_and_at_or_below_checkpoint
     assert sum(len(row.checkpoints) for row in rows) == 4
     for row in rows:
         assert row.label_independent is False
-        assert all(row.observation.effective_budget <= checkpoint for checkpoint in row.checkpoints)
-        assert tuple(
-            action.cell_index for action in row.observation.action_history[:8]
-        ) == PRIMARY_WARM_START_CELLS
+        assert all(
+            row.observation.effective_budget <= checkpoint
+            for checkpoint in row.checkpoints
+        )
+        assert (
+            tuple(action.cell_index for action in row.observation.action_history[:8])
+            == PRIMARY_WARM_START_CELLS
+        )
+        assert any(
+            len(action_added_positions(grid, row.observation.measurement_state, action))
+            for action in fitting_actions(
+                grid,
+                row.observation.measurement_state,
+                row.observation.endpoint_budget,
+            )
+        )
 
 
 def test_teacher_bank_parquet_round_trip_revalidates_all_three_namespaces(

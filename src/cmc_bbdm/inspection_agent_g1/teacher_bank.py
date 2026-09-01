@@ -30,9 +30,10 @@ from cmc_bbdm.inspection_agent.oracle import (
 from cmc_bbdm.inspection_agent.state import (
     GeneralizedMeasurementState,
     InspectionCellAction,
-    action_added_positions,
+    action_added_positions_from_mask,
     apply_action,
-    fitting_actions,
+    legal_actions,
+    measurement_mask,
 )
 from cmc_bbdm.inspection_agent.surface_hypothesis import SurfaceHypothesis
 from cmc_bbdm.inspection_agent.world import CausalInspectionWorld
@@ -195,11 +196,23 @@ def _positive_cost_actions(
     state: GeneralizedMeasurementState,
     endpoint_budget: float,
 ) -> tuple[InspectionCellAction, ...]:
-    return tuple(
-        action
-        for action in fitting_actions(grid, state, endpoint_budget)
-        if len(action_added_positions(grid, state, action)) > 0
-    )
+    current_mask = measurement_mask(grid, state)
+    current_count = int(np.count_nonzero(current_mask))
+    native_count = int(current_mask.size)
+    output = []
+    for action in legal_actions(grid, state):
+        added = action_added_positions_from_mask(
+            grid,
+            state,
+            action,
+            current_mask,
+        )
+        if (
+            len(added) > 0
+            and (current_count + len(added)) / native_count <= endpoint_budget + 1.0e-15
+        ):
+            output.append(action)
+    return tuple(output)
 
 
 def plan_continuation_actions(
@@ -360,15 +373,15 @@ def materialize_label_independent_states(
             random_seed=random_seed,
             endpoint_budget=warm.endpoint_budget,
         )
-        indices = tuple(
-            min(len(actions) - 1, math.ceil(float(fraction) * len(actions)) - 1)
+        action_counts = tuple(
+            min(len(actions) - 1, math.ceil(float(fraction) * len(actions)))
             for fraction in snapshot_fractions
         )
-        if len(set(indices)) != 3:
+        if min(action_counts) < 1 or len(set(action_counts)) != 3:
             raise G1TeacherBankError("continuation snapshots are not unique")
-        for snapshot_index, action_index in enumerate(indices):
+        for snapshot_index, action_count in enumerate(action_counts):
             observation = world.replay(
-                (*warm_actions, *actions[: action_index + 1])
+                (*warm_actions, *actions[:action_count])
             )
             rows.append(
                 _bank_state(
@@ -463,6 +476,11 @@ def materialize_oracle_checkpoint_states(
             observation
             for observation in trajectory
             if observation.effective_budget <= float(checkpoint) + 1.0e-15
+            and _positive_cost_actions(
+                grid,
+                observation.measurement_state,
+                observation.endpoint_budget,
+            )
         ]
         if not eligible:
             raise G1TeacherBankError("no oracle state fits a checkpoint")
