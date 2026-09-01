@@ -996,6 +996,59 @@ def build_g1_source_teacher_bank(
     )
 
 
+def build_g1_all_source_teacher_banks(
+    runtime: G1Runtime,
+    protocol: G1Protocol,
+    *,
+    encoder: object,
+    work_root: str | Path,
+    progress: Callable[[str], None] | None = None,
+) -> tuple[G1TeacherBankBuild, ...]:
+    """Build the exact 30 directed outer-target/source-domain teacher banks."""
+
+    if (
+        type(runtime) is not G1Runtime
+        or type(protocol) is not G1Protocol
+        or runtime.domain_order != protocol.domain_order
+        or not callable(getattr(encoder, "encode", None))
+    ):
+        raise G1ExecutionError("G1 all-bank build request is invalid")
+    expected = tuple(
+        (outer, source)
+        for outer in protocol.domain_order
+        for source in protocol.domain_order
+        if source != outer
+    )
+    output: list[G1TeacherBankBuild] = []
+    for index, (outer, source) in enumerate(expected, start=1):
+        _progress(
+            progress,
+            f"G1 teacher-bank fold {index}/{len(expected)}: {outer}/{source}",
+        )
+        dependencies = build_g1_source_dependencies(
+            runtime,
+            protocol,
+            outer_target=outer,
+            labeled_domain=source,
+            encoder=encoder,
+            progress=progress,
+        )
+        result = build_g1_source_teacher_bank(
+            runtime,
+            protocol,
+            dependencies,
+            encoder=encoder,
+            work_root=work_root,
+            progress=progress,
+        )
+        if (result.outer_target, result.source_domain) != (outer, source):
+            raise G1ExecutionError("G1 all-bank fold identity changed")
+        output.append(result)
+    if tuple((row.outer_target, row.source_domain) for row in output) != expected:
+        raise G1ExecutionError("G1 all-bank directed roster changed")
+    return tuple(output)
+
+
 POLICY_GAP_CLOSURE_MINIMUM = 0.20
 POLICY_IMPROVED_DOMAINS_MINIMUM = 4
 STOPPING_SAVING_MINIMUM = 0.10
@@ -1328,6 +1381,7 @@ __all__ = [
     "StopGateEvidence",
     "StopGateResult",
     "TaskConditioningGateResult",
+    "build_g1_all_source_teacher_banks",
     "build_g1_source_dependencies",
     "build_g1_source_teacher_bank",
     "build_g1_world",

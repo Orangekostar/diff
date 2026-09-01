@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import hashlib
 from pathlib import Path
-from types import MappingProxyType
+from types import MappingProxyType, SimpleNamespace
 
 import numpy as np
 
@@ -12,11 +12,14 @@ from cmc_bbdm.inspection_agent_g1 import g1 as g1_module
 from cmc_bbdm.inspection_agent_g1.g1 import (
     G1Runtime,
     G1RuntimeSurface,
+    G1TeacherBankBuild,
+    build_g1_all_source_teacher_banks,
     build_g1_source_dependencies,
     load_g1_protocol,
     source_teacher_bank_path,
     specimen_integrity_sha256,
 )
+from cmc_bbdm.inspection_agent_g1.teacher_bank import G1TeacherBankFile
 from cmc_bbdm.mavis.authority import MAVISAuthority
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -161,7 +164,7 @@ def test_source_dependency_orchestration_excludes_outer_and_labeled_domains(
         protocol,
         outer_target=outer,
         labeled_domain=labeled,
-        encoder=object(),
+        encoder=SimpleNamespace(encode=lambda _images: None),
     )
 
     expected = tuple(
@@ -173,3 +176,76 @@ def test_source_dependency_orchestration_excludes_outer_and_labeled_domains(
     assert set(expected).isdisjoint({outer, labeled})
     assert dependencies.assessor_row_count == 4 * 2 * 13
     assert len(dependencies.state_sha256) == 64
+
+
+def test_all_source_teacher_banks_follow_the_exact_directed_fold_order(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    protocol = load_g1_protocol(CONFIG, project_root=ROOT)
+    runtime = _runtime(protocol.domain_order)
+    calls: list[tuple[str, str]] = []
+
+    def fake_dependencies(
+        _runtime: object,
+        _protocol: object,
+        *,
+        outer_target: str,
+        labeled_domain: str,
+        encoder: object,
+        progress: object,
+    ) -> object:
+        del _runtime, _protocol, encoder, progress
+        calls.append((outer_target, labeled_domain))
+        return SimpleNamespace(
+            roster=SimpleNamespace(
+                outer_target=outer_target,
+                labeled_domain=labeled_domain,
+            )
+        )
+
+    def fake_bank(
+        _runtime: object,
+        _protocol: object,
+        dependencies: object,
+        *,
+        encoder: object,
+        work_root: str | Path,
+        progress: object,
+    ) -> G1TeacherBankBuild:
+        del _runtime, _protocol, encoder, progress
+        outer = dependencies.roster.outer_target
+        source = dependencies.roster.labeled_domain
+        return G1TeacherBankBuild(
+            path=Path(work_root) / outer / f"{source}.parquet",
+            outer_target=outer,
+            source_domain=source,
+            specimen_count=int(protocol.domain_counts[source]),
+            dependency_sha256=_sha(f"dependency-{outer}-{source}"),
+            bank=G1TeacherBankFile(
+                row_count=int(protocol.domain_counts[source]) * 34,
+                parquet_sha256=_sha(f"parquet-{outer}-{source}"),
+                records_sha256=_sha(f"records-{outer}-{source}"),
+                manifest_sha256=_sha(f"manifest-{outer}-{source}"),
+            ),
+        )
+
+    monkeypatch.setattr(g1_module, "build_g1_source_dependencies", fake_dependencies)
+    monkeypatch.setattr(g1_module, "build_g1_source_teacher_bank", fake_bank)
+
+    builds = build_g1_all_source_teacher_banks(
+        runtime,
+        protocol,
+        encoder=SimpleNamespace(encode=lambda _images: None),
+        work_root=tmp_path,
+    )
+
+    expected = tuple(
+        (outer, source)
+        for outer in protocol.domain_order
+        for source in protocol.domain_order
+        if source != outer
+    )
+    assert tuple(calls) == expected
+    assert tuple((row.outer_target, row.source_domain) for row in builds) == expected
+    assert len(builds) == 30

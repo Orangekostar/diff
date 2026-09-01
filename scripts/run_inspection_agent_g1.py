@@ -18,6 +18,7 @@ if _LOCAL_PACKAGE not in cmc_bbdm.__path__:
 from cmc_bbdm.inspection_agent_g1 import (
     G1ArtifactError,
     G1ExecutionError,
+    build_g1_all_source_teacher_banks,
     build_g1_source_dependencies,
     build_g1_source_teacher_bank,
     compare_g1_packages,
@@ -40,6 +41,13 @@ def _parser() -> argparse.ArgumentParser:
     build_bank.add_argument("--project-root", default=str(_PROJECT_ROOT))
     build_bank.add_argument("--device", default=None)
     build_bank.add_argument("--work-root", default=None)
+
+    build_all = commands.add_parser("build-all-banks")
+    build_all.add_argument("--config", required=True)
+    build_all.add_argument("--source-project-root", required=True)
+    build_all.add_argument("--project-root", default=str(_PROJECT_ROOT))
+    build_all.add_argument("--device", default=None)
+    build_all.add_argument("--work-root", default=None)
 
     validate = commands.add_parser("validate")
     validate.add_argument("--config", required=True)
@@ -66,7 +74,7 @@ def _print_json(payload: object) -> None:
 def main(argv: Sequence[str] | None = None) -> int:
     args = _parser().parse_args(argv)
     try:
-        if args.command == "build-bank":
+        if args.command in {"build-bank", "build-all-banks"}:
             protocol = load_g1_protocol(
                 args.config,
                 project_root=args.project_root,
@@ -81,6 +89,37 @@ def main(argv: Sequence[str] | None = None) -> int:
                 args.source_project_root,
                 device=args.device or protocol.default_device,
             )
+            work_root = args.work_root or str(
+                Path(args.project_root) / protocol.work_output
+            )
+            if args.command == "build-all-banks":
+                results = build_g1_all_source_teacher_banks(
+                    runtime,
+                    protocol,
+                    encoder=encoder,
+                    work_root=work_root,
+                    progress=_progress,
+                )
+                _print_json(
+                    {
+                        "bank_count": len(results),
+                        "banks": [
+                            {
+                                "bank_path": str(result.path),
+                                "outer_target": result.outer_target,
+                                "source_domain": result.source_domain,
+                                "specimen_count": result.specimen_count,
+                                "dependency_sha256": result.dependency_sha256,
+                                "row_count": result.bank.row_count,
+                                "parquet_sha256": result.bank.parquet_sha256,
+                                "records_sha256": result.bank.records_sha256,
+                                "manifest_sha256": result.bank.manifest_sha256,
+                            }
+                            for result in results
+                        ],
+                    }
+                )
+                return 0
             dependencies = build_g1_source_dependencies(
                 runtime,
                 protocol,
@@ -94,8 +133,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 protocol,
                 dependencies,
                 encoder=encoder,
-                work_root=args.work_root
-                or str(Path(args.project_root) / protocol.work_output),
+                work_root=work_root,
                 progress=_progress,
             )
             _print_json(
