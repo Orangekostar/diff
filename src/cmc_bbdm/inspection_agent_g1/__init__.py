@@ -27,6 +27,13 @@ from .features import (
 )
 from .policy_model import SharedActionMLP, StructuredInspectionPolicy
 from .policy_training import hard_behavior_cloning_loss
+from .privileged_awr import (
+    AAWRAuthorization,
+    AAWRSourceEvidence,
+    PrivilegedValueNetwork,
+    advantage_weighted_actor_loss,
+    authorize_conditional_aawr,
+)
 from .teacher import (
     PrivilegedTeacherLabel,
     authorize_source_teacher,
@@ -62,6 +69,8 @@ __all__ = [
     "PRIMARY_WARM_START_K",
     "REGISTERED_DAGGER_ITERATIONS",
     "SENSITIVITY_WARM_START_K",
+    "AAWRAuthorization",
+    "AAWRSourceEvidence",
     "CAIContextMode",
     "ContinuationPolicy",
     "CrossfitCAIAssessorFit",
@@ -73,12 +82,15 @@ __all__ = [
     "G1CrossfitError",
     "G1PolicyState",
     "PrivilegedTeacherLabel",
+    "PrivilegedValueNetwork",
     "SharedActionMLP",
     "StructuredInspectionPolicy",
     "TaskTokenMode",
     "WarmStartAudit",
+    "advantage_weighted_actor_loss",
     "apply_warm_start",
     "audit_deployment_geometry",
+    "authorize_conditional_aawr",
     "authorize_source_teacher",
     "build_crossfit_roster",
     "build_deployment_grid",
