@@ -210,6 +210,10 @@ from .stop_execution import (
     stop_bank_path,
     write_fixed_endpoint_bank,
 )
+from .stop_selection_execution import (
+    G1StopSelectionExecutionError,
+    evaluate_source_stop_validation_trajectory,
+)
 from .stop_training import (
     G1StopTrainingError,
     G1StopTrainingExample,
@@ -325,6 +329,7 @@ __all__ = [
     "G1StopBankFile",
     "G1StopBankRecord",
     "G1StopExecutionError",
+    "G1StopSelectionExecutionError",
     "G1StopTrainingError",
     "G1StopTrainingExample",
     "G1TeacherBankBuild",
@@ -397,6 +402,7 @@ __all__ = [
     "evaluate_g1_action_history",
     "evaluate_inner_policy_bridge",
     "evaluate_policy_gate",
+    "evaluate_source_stop_validation_trajectory",
     "evaluate_stop_gate",
     "evaluate_task_conditioning_gate",
     "field_teacher_label",
