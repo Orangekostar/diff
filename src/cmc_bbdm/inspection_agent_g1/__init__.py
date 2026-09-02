@@ -27,6 +27,13 @@ from .dagger import (
     select_source_relabels,
     trajectory_quantile_indices,
 )
+from .engineering_selection_execution import (
+    G1EngineeringCandidateRun,
+    G1EngineeringSelectionExecutionError,
+    G1OuterEngineeringSelectionRun,
+    run_engineering_candidate,
+    run_outer_engineering_selection,
+)
 from .features import (
     build_policy_state,
     canonical_action_from_slot,
@@ -251,6 +258,8 @@ __all__ = [
     "G1ActorNormalizer",
     "G1ArtifactError",
     "G1CrossfitError",
+    "G1EngineeringCandidateRun",
+    "G1EngineeringSelectionExecutionError",
     "G1ExecutionError",
     "G1FinalDependencies",
     "G1FixedEndpointBankFile",
@@ -262,6 +271,7 @@ __all__ = [
     "G1LearnedSourceBuild",
     "G1LearnedSourceRecord",
     "G1ObservableStateBuilder",
+    "G1OuterEngineeringSelectionRun",
     "G1PackageValidation",
     "G1PolicyState",
     "G1PolicyTrainingExample",
@@ -390,7 +400,9 @@ __all__ = [
     "read_teacher_regret_candidate_result",
     "rebind_training_example_modes",
     "run_closed_loop",
+    "run_engineering_candidate",
     "run_g1_warm_started_oracle_actions",
+    "run_outer_engineering_selection",
     "run_outer_supervised_selection",
     "select_conservative_stop_threshold",
     "select_g1_source_fixed_reference",

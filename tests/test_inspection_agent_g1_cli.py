@@ -36,6 +36,7 @@ def test_g1_cli_help_lists_inspection_commands() -> None:
         "build-source-bridge",
         "build-all-source-bridges",
         "select-outer",
+        "select-outer-engineering",
         "validate",
         "compare",
     ):
@@ -93,6 +94,15 @@ def test_g1_cli_subcommand_help_lists_required_flags() -> None:
             "--start-fold",
         ),
         "select-outer": ("--config", "--outer-target"),
+        "select-outer-engineering": (
+            "--config",
+            "--source-project-root",
+            "--outer-target",
+            "--teacher-bank-root",
+            "--bridge-root",
+            "--supervised-root",
+            "--learned-root",
+        ),
         "validate": ("--config", "--path"),
         "compare": ("--config", "--formal", "--replay"),
     }
@@ -116,6 +126,7 @@ def test_g1_cli_missing_required_arguments_returns_code_two() -> None:
         "build-source-bridge",
         "build-all-source-bridges",
         "select-outer",
+        "select-outer-engineering",
         "validate",
         "compare",
     ):
