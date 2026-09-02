@@ -13,9 +13,16 @@ from types import MappingProxyType
 import numpy as np
 import yaml
 
-from cmc_bbdm.inspection_agent.cai_assessor import StateFeatureRow, state_scalars
+from cmc_bbdm.inspection_agent.cai_assessor import (
+    StateCAIAssessor,
+    StateFeatureRow,
+    fit_state_cai_assessor,
+    state_scalars,
+)
 from cmc_bbdm.inspection_agent.contracts import InspectionTask
 from cmc_bbdm.inspection_agent.generalized_reconstruction import (
+    SourceBackgroundPrior,
+    fit_source_background_prior,
     reconstruct_observation,
 )
 from cmc_bbdm.inspection_agent.surface_hypothesis import SurfaceHypothesis
@@ -446,6 +453,51 @@ class G1SourceDependencies:
 
 
 @dataclass(frozen=True, slots=True)
+class G1FinalDependencies:
+    outer_target: str
+    fit_domains: tuple[str, ...]
+    prior: SourceBackgroundPrior
+    assessor: StateCAIAssessor
+    assessor_row_count: int
+    state_sha256: str = field(init=False)
+
+    def __post_init__(self) -> None:
+        if (
+            type(self.outer_target) is not str
+            or not self.outer_target
+            or type(self.fit_domains) is not tuple
+            or len(self.fit_domains) != 5
+            or len(set(self.fit_domains)) != 5
+            or self.outer_target in self.fit_domains
+            or type(self.prior) is not SourceBackgroundPrior
+            or self.prior.outer_domain != self.outer_target
+            or self.prior.source_domains != self.fit_domains
+            or type(self.assessor) is not StateCAIAssessor
+            or self.assessor.outer_domain != self.outer_target
+            or self.assessor.fit_domains != self.fit_domains
+            or type(self.assessor_row_count) is not int
+            or self.assessor_row_count <= 0
+            or len(self.assessor.fit_sample_ids) != self.assessor_row_count
+        ):
+            raise G1ExecutionError("G1 final dependency bundle is invalid")
+        object.__setattr__(
+            self,
+            "state_sha256",
+            _json_sha(
+                {
+                    "schema": 1,
+                    "kind": "g1-final-dependencies",
+                    "outer_target": self.outer_target,
+                    "fit_domains": self.fit_domains,
+                    "prior": self.prior.state_sha256,
+                    "assessor": self.assessor.model_state_sha256,
+                    "assessor_row_count": self.assessor_row_count,
+                }
+            ),
+        )
+
+
+@dataclass(frozen=True, slots=True)
 class G1TeacherBankBuild:
     path: Path
     outer_target: str
@@ -766,6 +818,145 @@ def build_g1_source_dependencies(
         progress,
         f"G1 dependencies complete {outer_target}/{labeled_domain}: "
         f"{result.state_sha256}",
+    )
+    return result
+
+
+def _build_final_assessor_rows(
+    runtime: G1Runtime,
+    protocol: G1Protocol,
+    prior: SourceBackgroundPrior,
+    *,
+    outer_target: str,
+    encoder: object,
+    progress: Callable[[str], None] | None,
+) -> tuple[StateFeatureRow, ...]:
+    if not callable(getattr(encoder, "encode", None)):
+        raise G1ExecutionError("G1 reconstruction encoder is invalid")
+    fit_domains = tuple(
+        domain for domain in protocol.domain_order if domain != outer_target
+    )
+    selected = tuple(
+        (domain, specimen)
+        for specimen, domain in zip(
+            runtime.mavis.specimen_ids,
+            runtime.mavis.dataset_ids,
+            strict=True,
+        )
+        if domain in fit_domains
+    )
+    rows: list[StateFeatureRow] = []
+    for index, (domain, specimen) in enumerate(selected, start=1):
+        world, grid, surface = build_g1_world(
+            runtime,
+            dataset_id=domain,
+            specimen_id=specimen,
+            task=InspectionTask.CAI,
+            endpoint_budget=protocol.endpoint_budget,
+        )
+        states = materialize_label_independent_states(
+            world,
+            grid,
+            surface.hypothesis,
+            outer_target=outer_target,
+            random_seed=protocol.teacher_bank_seed,
+            snapshot_fractions=protocol.snapshot_fractions,
+        )
+        if len(states) != 13:
+            raise G1ExecutionError("G1 final assessor state roster changed")
+        reconstructions = tuple(
+            reconstruct_observation(state.observation, grid, prior) for state in states
+        )
+        embeddings = np.asarray(
+            encoder.encode(tuple(value.image for value in reconstructions)),
+            dtype=np.float64,
+        )
+        if embeddings.shape != (13, 512) or not np.all(np.isfinite(embeddings)):
+            raise G1ExecutionError("G1 final assessor embeddings are invalid")
+        teacher_view = runtime.mavis.source_teacher_view(specimen)
+        for state_index, (state, embedding) in enumerate(
+            zip(states, embeddings, strict=True)
+        ):
+            scalars = state_scalars(state.observation)
+            rows.append(
+                StateFeatureRow(
+                    sample_id=_json_sha(
+                        {
+                            "schema": 1,
+                            "kind": "g1-final-assessor-state",
+                            "outer_target": outer_target,
+                            "dataset_id": domain,
+                            "specimen_id": specimen,
+                            "state_source": state.source,
+                            "state_index": state_index,
+                            "observation": state.observation.state_sha256,
+                        }
+                    ),
+                    specimen_id=specimen,
+                    dataset_id=domain,
+                    policy=state.source,
+                    observation_sha256=state.observation.state_sha256,
+                    embedding=embedding,
+                    effective_budget=float(scalars[0]),
+                    observed_cell_fraction=float(scalars[1]),
+                    mean_observed_level=float(scalars[2]),
+                    true_cai=teacher_view.true_cai,
+                )
+            )
+        if index % 25 == 0 or index == len(selected):
+            _progress(
+                progress,
+                f"G1 final assessor states {outer_target}: "
+                f"{index}/{len(selected)} specimens",
+            )
+    return tuple(rows)
+
+
+def build_g1_final_dependencies(
+    runtime: G1Runtime,
+    protocol: G1Protocol,
+    *,
+    outer_target: str,
+    encoder: object,
+    progress: Callable[[str], None] | None = None,
+) -> G1FinalDependencies:
+    if (
+        type(runtime) is not G1Runtime
+        or type(protocol) is not G1Protocol
+        or runtime.domain_order != protocol.domain_order
+        or outer_target not in protocol.domain_order
+    ):
+        raise G1ExecutionError("G1 final dependency request is invalid")
+    prior = fit_source_background_prior(
+        runtime.mavis,
+        outer_domain=outer_target,
+    )
+    rows = _build_final_assessor_rows(
+        runtime,
+        protocol,
+        prior,
+        outer_target=outer_target,
+        encoder=encoder,
+        progress=progress,
+    )
+    assessor = fit_state_cai_assessor(
+        rows,
+        outer_domain=outer_target,
+        pca_dimension=32,
+        ridge_alpha=10.0,
+    )
+    result = G1FinalDependencies(
+        outer_target=outer_target,
+        fit_domains=tuple(
+            domain for domain in protocol.domain_order if domain != outer_target
+        ),
+        prior=prior,
+        assessor=assessor,
+        assessor_row_count=len(rows),
+    )
+    _progress(
+        progress,
+        f"G1 final dependencies complete {outer_target}: {result.state_sha256}",
     )
     return result
 
@@ -1370,6 +1561,7 @@ __all__ = [
     "STOPPING_TASK_LOSS_RATIO_MAXIMUM",
     "G1ExecutionError",
     "G1FinalDecision",
+    "G1FinalDependencies",
     "G1GateError",
     "G1Protocol",
     "G1Runtime",
@@ -1382,6 +1574,7 @@ __all__ = [
     "StopGateResult",
     "TaskConditioningGateResult",
     "build_g1_all_source_teacher_banks",
+    "build_g1_final_dependencies",
     "build_g1_source_dependencies",
     "build_g1_source_teacher_bank",
     "build_g1_world",

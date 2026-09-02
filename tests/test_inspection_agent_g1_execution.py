@@ -14,6 +14,7 @@ from cmc_bbdm.inspection_agent_g1.g1 import (
     G1RuntimeSurface,
     G1TeacherBankBuild,
     build_g1_all_source_teacher_banks,
+    build_g1_final_dependencies,
     build_g1_source_dependencies,
     load_g1_protocol,
     source_teacher_bank_path,
@@ -249,3 +250,37 @@ def test_all_source_teacher_banks_follow_the_exact_directed_fold_order(
     assert tuple(calls) == expected
     assert tuple((row.outer_target, row.source_domain) for row in builds) == expected
     assert len(builds) == 30
+
+
+def test_final_dependencies_fit_exactly_the_five_outer_source_domains(
+    monkeypatch,
+) -> None:
+    protocol = load_g1_protocol(CONFIG, project_root=ROOT)
+    runtime = _runtime(protocol.domain_order)
+    outer = protocol.domain_order[-1]
+    rows = _assessor_rows(
+        protocol.domain_order,
+        outer_target=outer,
+        labeled_domain="not-a-domain",
+    )
+    monkeypatch.setattr(
+        g1_module,
+        "_build_final_assessor_rows",
+        lambda *_args, **_kwargs: rows,
+    )
+
+    dependencies = build_g1_final_dependencies(
+        runtime,
+        protocol,
+        outer_target=outer,
+        encoder=SimpleNamespace(encode=lambda _images: None),
+    )
+
+    expected = tuple(domain for domain in protocol.domain_order if domain != outer)
+    assert dependencies.outer_target == outer
+    assert dependencies.fit_domains == expected
+    assert dependencies.prior.source_domains == expected
+    assert dependencies.assessor.fit_domains == expected
+    assert dependencies.assessor.outer_domain == outer
+    assert dependencies.assessor_row_count == 5 * 2 * 13
+    assert len(dependencies.state_sha256) == 64
