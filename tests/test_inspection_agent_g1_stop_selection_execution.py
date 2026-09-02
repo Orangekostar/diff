@@ -11,6 +11,9 @@ from cmc_bbdm.inspection_agent.surface_hypothesis import SurfaceHypothesis
 from cmc_bbdm.inspection_agent.world import CausalInspectionWorld
 from cmc_bbdm.inspection_agent_g1.contracts import CAIContextMode, TaskTokenMode
 from cmc_bbdm.inspection_agent_g1.crossfit import build_crossfit_roster
+from cmc_bbdm.inspection_agent_g1.dagger_selection_execution import (
+    G1OuterDaggerSelectionRun,
+)
 from cmc_bbdm.inspection_agent_g1.features import canonical_slot
 from cmc_bbdm.inspection_agent_g1.formal import plan_g1_fixed_actions
 from cmc_bbdm.inspection_agent_g1.g1 import (
@@ -34,8 +37,12 @@ from cmc_bbdm.inspection_agent_g1.stop_execution import G1FixedEndpointRecord
 from cmc_bbdm.inspection_agent_g1.stop_selection_execution import (
     evaluate_source_stop_validation_trajectory,
     materialize_g1_source_stop_validation_trajectories,
+    run_outer_stop_selection,
 )
 from cmc_bbdm.inspection_agent_g1.stop_training import TrainedObservableStopPolicy
+from cmc_bbdm.inspection_agent_g1.stopping_policy import (
+    SourceStopValidationTrajectory,
+)
 from cmc_bbdm.inspection_agent_g1.teacher import authorize_source_teacher
 from cmc_bbdm.inspection_agent_g1.warm_start import build_deployment_grid
 from cmc_bbdm.mavis.authority import MAVISAuthority
@@ -388,3 +395,275 @@ def test_source_stop_validation_materialization_is_crossfit_and_batched(
     }
     assert len({row.specimen_sha256 for row in results}) == 2
     assert all(row.reference_true_loss == 0.1 for row in results)
+
+
+def test_outer_stop_selection_freezes_all_five_sources_before_target(
+    monkeypatch,
+    tmp_path,
+) -> None:
+    from cmc_bbdm.inspection_agent_g1 import stop_selection_execution as module
+
+    hyperparameters = PolicyTrainingHyperparameters(
+        model_name=PolicyModelName.SHARED_ACTION_MLP,
+        route=TrainingRoute.HARD_BC,
+        cai_context_mode=CAIContextMode.SHARED_OBSERVABLE_STATE_CONTEXT,
+        task_token_mode=TaskTokenMode.CORRECT,
+        tau=None,
+        learning_rate=0.0003,
+        weight_decay=0.0001,
+        dagger_iterations=0,
+    )
+    selected_records = tuple(
+        SimpleNamespace(
+            example=SimpleNamespace(
+                outer_target="d6",
+                source_domain=source,
+                dagger_iteration=0,
+            )
+        )
+        for source in DOMAINS[:-1]
+    )
+    action_selection = object.__new__(G1OuterDaggerSelectionRun)
+    object.__setattr__(action_selection, "outer_target", "d6")
+    object.__setattr__(
+        action_selection,
+        "selection",
+        SimpleNamespace(
+            selected_hyperparameters_sha256=hyperparameters.state_sha256,
+            final_refit_epochs=2,
+            state_sha256=_sha("action-selection"),
+            source_validation_domains=DOMAINS[:-1],
+        ),
+    )
+    object.__setattr__(
+        action_selection,
+        "candidates",
+        (
+            SimpleNamespace(
+                candidate=SimpleNamespace(hyperparameters=hyperparameters)
+            ),
+        ),
+    )
+    object.__setattr__(
+        action_selection,
+        "dagger_build",
+        SimpleNamespace(records=selected_records),
+    )
+    object.__setattr__(
+        action_selection,
+        "aawr_authorization",
+        SimpleNamespace(
+            status="NOT_RUN_NOT_AUTHORIZED",
+            state_sha256=_sha("aawr"),
+        ),
+    )
+    protocol = object.__new__(G1Protocol)
+    object.__setattr__(protocol, "domain_order", DOMAINS)
+    object.__setattr__(protocol, "epochs", 80)
+    object.__setattr__(protocol, "patience", 12)
+    runtime = object.__new__(G1Runtime)
+    object.__setattr__(runtime, "mavis", SimpleNamespace(dataset_ids=DOMAINS))
+    object.__setattr__(runtime, "surfaces", MappingProxyType({}))
+    object.__setattr__(runtime, "surface_authority_sha256", _sha("surface"))
+    object.__setattr__(runtime, "state_sha256", _sha("runtime"))
+
+    monkeypatch.setattr(
+        module,
+        "read_teacher_bank",
+        lambda path: (
+            SimpleNamespace(manifest_sha256=_sha(f"teacher-{path.parent.name}-{path.stem}")),
+            (
+                SimpleNamespace(
+                    example=SimpleNamespace(
+                        outer_target=path.parent.name,
+                        source_domain=path.stem,
+                    )
+                ),
+            ),
+        ),
+    )
+    monkeypatch.setattr(
+        module,
+        "read_stop_bank",
+        lambda path: (
+            SimpleNamespace(manifest_sha256=_sha(f"stop-{path.parent.name}-{path.stem}")),
+            (
+                SimpleNamespace(
+                    outer_target=path.parent.name,
+                    source_domain=path.stem,
+                ),
+            ),
+        ),
+    )
+    monkeypatch.setattr(
+        module,
+        "read_g1_outer_fixed_endpoint_records",
+        lambda *_args, **_kwargs: (SimpleNamespace(),),
+    )
+    monkeypatch.setattr(
+        module,
+        "rebind_training_example_modes",
+        lambda example, **_kwargs: example,
+    )
+    inner_sources = []
+
+    def fake_action_fit(_examples, *, validation_domain, **_kwargs):
+        inner_sources.append(validation_domain)
+        actor = object.__new__(TrainedObservablePolicy)
+        object.__setattr__(actor, "hyperparameters", hyperparameters)
+        object.__setattr__(
+            actor,
+            "audit",
+            SimpleNamespace(
+                outer_target="d6",
+                validation_domain=validation_domain,
+                fit_domains=tuple(
+                    domain for domain in DOMAINS[:-1] if domain != validation_domain
+                ),
+            ),
+        )
+        object.__setattr__(actor, "model_state_sha256", _sha(f"action-{validation_domain}"))
+        return actor
+
+    monkeypatch.setattr(module, "fit_inner_observable_policy", fake_action_fit)
+    monkeypatch.setattr(
+        module,
+        "join_g1_stop_training_examples",
+        lambda *_args, **_kwargs: (SimpleNamespace(),),
+    )
+
+    def fake_stop_fit(action_policy, _examples, *, validation_domain, **_kwargs):
+        actor = object.__new__(TrainedObservableStopPolicy)
+        object.__setattr__(
+            actor,
+            "audit",
+            SimpleNamespace(
+                outer_target="d6",
+                validation_domain=validation_domain,
+                fit_domains=action_policy.audit.fit_domains,
+                selected_epoch=DOMAINS.index(validation_domain) + 1,
+                state_sha256=_sha(f"stop-audit-{validation_domain}"),
+            ),
+        )
+        object.__setattr__(
+            actor,
+            "base_action_model_sha256",
+            action_policy.model_state_sha256,
+        )
+        object.__setattr__(actor, "model_state_sha256", _sha(f"stop-{validation_domain}"))
+        return actor
+
+    monkeypatch.setattr(module, "fit_inner_observable_stop_head", fake_stop_fit)
+
+    def fake_dependencies(_runtime, _protocol, *, labeled_domain, **_kwargs):
+        value = object.__new__(G1SourceDependencies)
+        object.__setattr__(
+            value,
+            "roster",
+            build_crossfit_roster(
+                DOMAINS,
+                outer_target="d6",
+                labeled_domain=labeled_domain,
+            ),
+        )
+        return value
+
+    monkeypatch.setattr(module, "build_g1_source_dependencies", fake_dependencies)
+
+    def fake_trajectories(
+        _runtime,
+        _protocol,
+        dependencies,
+        **_kwargs,
+    ):
+        source = dependencies.roster.labeled_domain
+        return tuple(
+            SourceStopValidationTrajectory(
+                outer_target="d6",
+                source_domain=source,
+                specimen_sha256=_sha(f"specimen-{source}-{task.value}"),
+                task=task,
+                budgets=(0.05, 0.25),
+                stop_probabilities=(0.9, 0.0),
+                true_task_losses=(0.9, 1.0),
+                reference_true_loss=1.0,
+                endpoint_budget=0.25,
+            )
+            for task in (InspectionTask.FIELD, InspectionTask.CAI)
+        )
+
+    monkeypatch.setattr(
+        module,
+        "materialize_g1_source_stop_validation_trajectories",
+        fake_trajectories,
+    )
+    final_action = object.__new__(TrainedObservablePolicy)
+    object.__setattr__(final_action, "hyperparameters", hyperparameters)
+    object.__setattr__(
+        final_action,
+        "audit",
+        SimpleNamespace(
+            outer_target="d6",
+            validation_domain=None,
+            fit_domains=DOMAINS[:-1],
+            state_sha256=_sha("final-action-audit"),
+        ),
+    )
+    object.__setattr__(final_action, "model_state_sha256", _sha("final-action"))
+    monkeypatch.setattr(
+        module,
+        "fit_final_observable_policy",
+        lambda *_args, **_kwargs: final_action,
+    )
+    final_stop = object.__new__(TrainedObservableStopPolicy)
+    object.__setattr__(
+        final_stop,
+        "audit",
+        SimpleNamespace(
+            outer_target="d6",
+            validation_domain=None,
+            fit_domains=DOMAINS[:-1],
+            selected_epoch=3,
+            state_sha256=_sha("final-stop-audit"),
+        ),
+    )
+    object.__setattr__(
+        final_stop,
+        "base_action_model_sha256",
+        final_action.model_state_sha256,
+    )
+    object.__setattr__(final_stop, "model_state_sha256", _sha("final-stop"))
+    final_stop_epochs = []
+
+    def fake_final_stop(_action, _examples, *, selected_epochs, **_kwargs):
+        final_stop_epochs.append(selected_epochs)
+        return final_stop
+
+    monkeypatch.setattr(module, "fit_final_observable_stop_head", fake_final_stop)
+
+    result = run_outer_stop_selection(
+        runtime,
+        protocol,
+        outer_target="d6",
+        action_selection=action_selection,
+        encoder=_Encoder(),
+        teacher_bank_root=tmp_path / "teacher",
+        stop_bank_root=tmp_path / "stop",
+        fixed_endpoint_root=tmp_path / "fixed",
+        work_root=tmp_path / "selection",
+        device="cpu",
+    )
+
+    assert tuple(inner_sources) == DOMAINS[:-1]
+    assert final_stop_epochs == [3]
+    assert result.action_policy is final_action
+    assert result.stop_policy is final_stop
+    assert tuple(row.task for row in result.thresholds) == (
+        InspectionTask.FIELD,
+        InspectionTask.CAI,
+    )
+    assert tuple(row.threshold for row in result.thresholds) == (0.9, 0.9)
+    assert result.target_outcomes_opened is False
+    payload = result.path.read_text(encoding="ascii")
+    assert f'"state_sha256":"{result.state_sha256}"' in payload
+    assert payload.endswith("\n")

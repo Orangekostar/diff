@@ -36,6 +36,7 @@ from cmc_bbdm.inspection_agent_g1 import (
     load_g1_runtime,
     run_outer_dagger_selection,
     run_outer_engineering_selection,
+    run_outer_stop_selection,
     run_outer_supervised_selection,
     validate_g1_package,
 )
@@ -152,6 +153,23 @@ def _parser() -> argparse.ArgumentParser:
     select_dagger.add_argument("--dagger-bank-root", default=None)
     select_dagger.add_argument("--work-root", default=None)
 
+    select_stop = commands.add_parser("select-outer-stop")
+    select_stop.add_argument("--config", required=True)
+    select_stop.add_argument("--source-project-root", required=True)
+    select_stop.add_argument("--outer-target", required=True)
+    select_stop.add_argument("--project-root", default=str(_PROJECT_ROOT))
+    select_stop.add_argument("--device", default=None)
+    select_stop.add_argument("--teacher-bank-root", default=None)
+    select_stop.add_argument("--bridge-root", default=None)
+    select_stop.add_argument("--supervised-root", default=None)
+    select_stop.add_argument("--learned-root", default=None)
+    select_stop.add_argument("--base-work-root", default=None)
+    select_stop.add_argument("--dagger-bank-root", default=None)
+    select_stop.add_argument("--dagger-work-root", default=None)
+    select_stop.add_argument("--fixed-endpoint-root", default=None)
+    select_stop.add_argument("--stop-bank-root", default=None)
+    select_stop.add_argument("--work-root", default=None)
+
     validate = commands.add_parser("validate")
     validate.add_argument("--config", required=True)
     validate.add_argument("--path", required=True)
@@ -177,6 +195,81 @@ def _print_json(payload: object) -> None:
 def main(argv: Sequence[str] | None = None) -> int:
     args = _parser().parse_args(argv)
     try:
+        if args.command == "select-outer-stop":
+            protocol = load_g1_protocol(
+                args.config,
+                project_root=args.project_root,
+            )
+            runtime = load_g1_runtime(
+                protocol,
+                project_root=args.project_root,
+                source_project_root=args.source_project_root,
+                progress=_progress,
+            )
+            encoder = load_g1_encoder(
+                args.source_project_root,
+                device=args.device or protocol.default_device,
+            )
+            work_base = Path(args.project_root) / protocol.work_output
+            teacher_root = args.teacher_bank_root or str(
+                Path(args.project_root) / protocol.teacher_bank_work_path
+            )
+            action_selection = run_outer_dagger_selection(
+                runtime,
+                protocol,
+                outer_target=args.outer_target,
+                encoder=encoder,
+                teacher_bank_root=teacher_root,
+                bridge_root=args.bridge_root
+                or str(work_base / "source_bridges"),
+                supervised_root=args.supervised_root
+                or str(work_base / "model_selection"),
+                learned_root=args.learned_root
+                or str(work_base / "learned_source_curves"),
+                base_work_root=args.base_work_root
+                or str(work_base / "engineering_selection"),
+                dagger_bank_root=args.dagger_bank_root
+                or str(work_base / "dagger_banks"),
+                work_root=args.dagger_work_root
+                or str(work_base / "dagger_selection"),
+                device=args.device or protocol.default_device,
+                progress=_progress,
+            )
+            result = run_outer_stop_selection(
+                runtime,
+                protocol,
+                outer_target=args.outer_target,
+                action_selection=action_selection,
+                encoder=encoder,
+                teacher_bank_root=teacher_root,
+                stop_bank_root=args.stop_bank_root
+                or str(work_base / "stop_banks"),
+                fixed_endpoint_root=args.fixed_endpoint_root
+                or str(work_base / "fixed_endpoints"),
+                work_root=args.work_root or str(work_base / "stop_selection"),
+                device=args.device or protocol.default_device,
+                progress=_progress,
+            )
+            _print_json(
+                {
+                    "outer_target": result.outer_target,
+                    "action_model_sha256": result.action_policy.model_state_sha256,
+                    "stop_model_sha256": result.stop_policy.model_state_sha256,
+                    "selected_stop_epochs": result.selected_stop_epochs,
+                    "thresholds": {
+                        row.task.value: {
+                            "status": row.status,
+                            "threshold": row.threshold,
+                        }
+                        for row in result.thresholds
+                    },
+                    "target_outcomes_opened": result.target_outcomes_opened,
+                    "selection_path": str(result.path),
+                    "state_sha256": result.state_sha256,
+                }
+            )
+            return 0
+
         if args.command == "select-outer-dagger":
             protocol = load_g1_protocol(
                 args.config,

@@ -211,9 +211,11 @@ from .stop_execution import (
     write_fixed_endpoint_bank,
 )
 from .stop_selection_execution import (
+    G1OuterStopSelectionRun,
     G1StopSelectionExecutionError,
     evaluate_source_stop_validation_trajectory,
     materialize_g1_source_stop_validation_trajectories,
+    run_outer_stop_selection,
 )
 from .stop_training import (
     G1StopTrainingError,
@@ -311,6 +313,7 @@ __all__ = [
     "G1OuterDaggerBuild",
     "G1OuterDaggerSelectionRun",
     "G1OuterEngineeringSelectionRun",
+    "G1OuterStopSelectionRun",
     "G1PackageValidation",
     "G1PolicyState",
     "G1PolicyTrainingExample",
@@ -454,6 +457,7 @@ __all__ = [
     "run_g1_warm_started_oracle_actions",
     "run_outer_dagger_selection",
     "run_outer_engineering_selection",
+    "run_outer_stop_selection",
     "run_outer_supervised_selection",
     "select_conservative_stop_threshold",
     "select_g1_source_fixed_reference",
