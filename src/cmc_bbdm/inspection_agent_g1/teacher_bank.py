@@ -90,6 +90,7 @@ _STATE_SOURCES = frozenset(
         "RANDOM_CONTINUE",
         "ALTERNATE_BROADEN_REFINE",
         "ORACLE_CHECKPOINT",
+        "DAGGER_ACTOR_VISITED",
     )
 )
 
@@ -135,7 +136,14 @@ class G1TeacherBankRecord:
                     self.assessor_sha256,
                 )
             )
-            or self.example.dagger_iteration != 0
+            or (
+                self.example.dagger_iteration == 0
+                and self.state_source == "DAGGER_ACTOR_VISITED"
+            )
+            or (
+                self.example.dagger_iteration != 0
+                and self.state_source != "DAGGER_ACTOR_VISITED"
+            )
             or self.example.policy_state.cai_context_mode
             is not CAIContextMode.SHARED_OBSERVABLE_STATE_CONTEXT
             or self.example.policy_state.task_token_mode is not TaskTokenMode.CORRECT
@@ -514,7 +522,7 @@ def _record_row(record: G1TeacherBankRecord) -> dict[str, object]:
     state = example.policy_state
     label = example.teacher_label
     candidates = label.candidates
-    return {
+    row = {
         "integrity_outer_target": example.outer_target,
         "integrity_source_domain": example.source_domain,
         "integrity_specimen_sha256": example.specimen_sha256,
@@ -576,6 +584,9 @@ def _record_row(record: G1TeacherBankRecord) -> dict[str, object]:
             value.selected for value in candidates
         ],
     }
+    if example.dagger_iteration != 0:
+        row["integrity_dagger_iteration"] = example.dagger_iteration
+    return row
 
 
 def _ordered_records(
@@ -777,7 +788,7 @@ def _record_from_row(row: dict[str, object]) -> G1TeacherBankRecord:
             source_domain=str(row["integrity_source_domain"]),
             specimen_sha256=str(row["integrity_specimen_sha256"]),
             task=task,
-            dagger_iteration=0,
+            dagger_iteration=int(row.get("integrity_dagger_iteration", 0)),
             policy_state=state,
             teacher_label=label,
         )

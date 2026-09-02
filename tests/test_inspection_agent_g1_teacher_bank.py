@@ -269,3 +269,65 @@ def test_teacher_bank_parquet_round_trip_revalidates_all_three_namespaces(
     path.write_bytes(path.read_bytes() + b"tampered")
     with pytest.raises(G1TeacherBankError, match="SHA-256"):
         read_teacher_bank(path)
+
+
+def test_teacher_bank_round_trip_preserves_dagger_iteration(tmp_path: Path) -> None:
+    world, grid, image = _world(invert=False)
+    source_state = materialize_label_independent_states(
+        world,
+        grid,
+        _hypothesis(),
+        outer_target="d6",
+        random_seed=2026090101,
+        snapshot_fractions=(1 / 3, 2 / 3, 1.0),
+    )[0]
+    authorization = authorize_source_teacher(
+        build_crossfit_roster(DOMAINS, outer_target="d6", labeled_domain="d1"),
+        query_domain="d1",
+    )
+    reconstruction = reconstruct_observation(source_state.observation, grid, _prior())
+    policy_state = build_policy_state(
+        source_state.observation,
+        _hypothesis(),
+        grid,
+        _prior(),
+        reconstruction,
+        reconstruction_embedding=np.linspace(0.0, 1.0, 512),
+        cai_estimate=0.4,
+        cai_context_mode=CAIContextMode.SHARED_OBSERVABLE_STATE_CONTEXT,
+        task_token_mode=TaskTokenMode.CORRECT,
+    )
+    label = field_teacher_label(
+        source_state.observation,
+        grid,
+        _prior(),
+        _hypothesis(),
+        authorization,
+        full_scan=image,
+        policy_state_sha256=policy_state.state_sha256,
+    )
+    example = G1PolicyTrainingExample(
+        outer_target="d6",
+        source_domain="d1",
+        specimen_sha256=hashlib.sha256(b"d1-sample").hexdigest(),
+        task=InspectionTask.FIELD,
+        dagger_iteration=1,
+        policy_state=policy_state,
+        teacher_label=label,
+    )
+    record = G1TeacherBankRecord(
+        example=example,
+        fit_domains=("d2", "d3", "d4", "d5"),
+        state_source="DAGGER_ACTOR_VISITED",
+        source_state_sha256=source_state.state_sha256,
+        prior_sha256=_prior().state_sha256,
+        assessor_sha256="c" * 64,
+    )
+
+    path = tmp_path / "dagger.parquet"
+    identity = write_teacher_bank(path, (record,))
+    loaded_identity, loaded = read_teacher_bank(path)
+
+    assert loaded_identity == identity
+    assert loaded == (record,)
+    assert loaded[0].example.dagger_iteration == 1
