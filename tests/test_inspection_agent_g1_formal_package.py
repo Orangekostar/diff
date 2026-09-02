@@ -24,6 +24,11 @@ from cmc_bbdm.inspection_agent_g1.formal_selection import (
     G1FrozenStopThreshold,
     G1OuterFormalSelection,
 )
+from cmc_bbdm.inspection_agent_g1.surface_strata import (
+    G1SurfaceStratumAuthority,
+    G1SurfaceStratumRecord,
+    surface_stratum_records_sha256,
+)
 from cmc_bbdm.inspection_agent_g1.target_analysis import analyze_g1_target_curves
 from cmc_bbdm.inspection_agent_g1.target_execution import (
     G1TargetTrajectoryRecord,
@@ -54,6 +59,7 @@ def _package_evidence():
     teacher_banks = []
     diagnostic_banks = []
     diagnostics = []
+    surface_strata = []
     domains = tuple(sorted({row.outer_target for row in fixed}))
     for domain in domains:
         domain_fixed = tuple(
@@ -88,6 +94,13 @@ def _package_evidence():
             )
         )
         specimen = f"{domain}-specimen"
+        surface_strata.append(
+            G1SurfaceStratumRecord(
+                outer_target=domain,
+                specimen_id=specimen,
+                stratum="SURFACE_INTERNAL_MISLEADING",
+            )
+        )
         fake = object.__new__(G1TargetTrajectoryRecord)
         object.__setattr__(fake, "outer_target", domain)
         object.__setattr__(fake, "specimen_id", specimen)
@@ -173,6 +186,13 @@ def _package_evidence():
                 manifest_sha256=_sha(f"decision-diagnostics-{domain}"),
             )
         )
+    surface_authority = G1SurfaceStratumAuthority(
+        source="synthetic-test-authority.csv",
+        file_sha256=_sha("surface-authority-file"),
+        record_count=len(surface_strata),
+        stratum_counts=(("SURFACE_INTERNAL_MISLEADING", len(surface_strata)),),
+        records_sha256=surface_stratum_records_sha256(tuple(surface_strata)),
+    )
     return (
         tuple(selections),
         tuple(trajectories),
@@ -184,6 +204,8 @@ def _package_evidence():
         tuple(teacher_banks),
         tuple(diagnostic_banks),
         tuple(diagnostics),
+        surface_authority,
+        tuple(surface_strata),
     )
 
 
@@ -230,3 +252,7 @@ def test_formal_package_is_complete_and_byte_replayable(tmp_path) -> None:
         "TARGET_ENGINEERING_CHECKPOINT",
         "SOURCE_DECISION_DIAGNOSTIC",
     }
+    surface_rows = (formal / "surface_robustness.csv").read_text(
+        encoding="ascii"
+    )
+    assert "SURFACE_INTERNAL_MISLEADING" in surface_rows

@@ -40,6 +40,7 @@ from cmc_bbdm.inspection_agent_g1 import (
     compare_g1_packages,
     freeze_g1_outer_formal_selection,
     load_g1_encoder,
+    load_g1_frozen_surface_strata,
     load_g1_protocol,
     load_g1_runtime,
     materialize_g1_source_decision_diagnostics,
@@ -276,6 +277,10 @@ def main(argv: Sequence[str] | None = None) -> int:
                 source_project_root=args.source_project_root,
                 progress=_progress,
             )
+            surface_authority, surface_strata = load_g1_frozen_surface_strata(
+                Path(args.project_root)
+                / "results/inspection_agent/g0/initialization_curves.csv"
+            )
             work_base = Path(args.project_root) / protocol.work_output
             teacher_root = args.teacher_bank_root or str(
                 Path(args.project_root) / protocol.teacher_bank_work_path
@@ -405,6 +410,8 @@ def main(argv: Sequence[str] | None = None) -> int:
                 tuple(teacher_manifests),
                 tuple(diagnostic_banks),
                 tuple(decision_diagnostics),
+                surface_authority,
+                surface_strata,
                 project_root=args.project_root,
                 config_path=args.config,
             )

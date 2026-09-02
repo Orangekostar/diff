@@ -14,6 +14,8 @@ from pathlib import Path
 import numpy as np
 import polars as pl
 
+from cmc_bbdm.inspection_agent.contracts import InspectionTask
+
 from .artifacts import G1PackageValidation, publish_g1_manifest, validate_g1_package
 from .decision_diagnostics import (
     G1SourceDecisionDiagnosticBankFile,
@@ -22,7 +24,16 @@ from .decision_diagnostics import (
     summarize_g1_source_decision_diagnostics,
 )
 from .formal_selection import G1OuterFormalSelection
-from .statistics import G1PairedBootstrap
+from .statistics import (
+    FORMAL_BOOTSTRAP_SEED,
+    G1PairedBootstrap,
+    formal_synchronized_bootstrap,
+)
+from .surface_strata import (
+    G1SurfaceStratumAuthority,
+    G1SurfaceStratumRecord,
+    surface_stratum_records_sha256,
+)
 from .target_analysis import G1TargetCurveAnalysis
 from .target_evaluation import G1TargetCurveRecord
 from .target_execution import G1TargetTrajectoryRecord, TargetPolicyVariant
@@ -193,6 +204,7 @@ def _curve_records(
 def _bootstrap_map(
     curves: G1TargetCurveAnalysis,
     stopping: G1TargetStoppingAnalysis,
+    misleading: tuple[tuple[str, G1PairedBootstrap], ...],
 ) -> tuple[tuple[str, G1PairedBootstrap], ...]:
     return (
         ("field_policy", curves.field.baseline_minus_learned),
@@ -225,7 +237,69 @@ def _bootstrap_map(
         ),
         ("field_stopping_saving", stopping.field.saving_bootstrap),
         ("cai_stopping_saving", stopping.cai.saving_bootstrap),
+        *misleading,
     )
+
+
+def _misleading_surface_bootstraps(
+    learned: tuple[G1TargetCurveRecord, ...],
+    strata: tuple[G1SurfaceStratumRecord, ...],
+) -> tuple[tuple[str, G1PairedBootstrap], ...]:
+    stratum_by_key = {
+        (row.outer_target, row.specimen_id): row.stratum for row in strata
+    }
+    keys = tuple(
+        sorted(
+            key
+            for key, stratum in stratum_by_key.items()
+            if stratum == "SURFACE_INTERNAL_MISLEADING"
+        )
+    )
+    if len({domain for domain, _specimen in keys}) != 6:
+        raise G1FormalPackageError(
+            "misleading surface stratum does not span six domains"
+        )
+    values = {
+        (row.outer_target, row.specimen_id, row.task, row.variant): row.curve.auebc
+        for row in learned
+    }
+    output = []
+    for task in (InspectionTask.FIELD, InspectionTask.CAI):
+        for variant in ("NO_SURFACE", "SHUFFLED_SURFACE"):
+            variant_value = TargetPolicyVariant(variant)
+            try:
+                baseline = tuple(
+                    values[(domain, specimen, task, variant_value)]
+                    for domain, specimen in keys
+                )
+                correct = tuple(
+                    values[
+                        (
+                            domain,
+                            specimen,
+                            task,
+                            TargetPolicyVariant.PROPOSED,
+                        )
+                    ]
+                    for domain, specimen in keys
+                )
+            except KeyError as error:
+                raise G1FormalPackageError(
+                    "misleading surface curve roster is incomplete"
+                ) from error
+            output.append(
+                (
+                    f"{task.value.lower()}_{variant.lower()}_misleading",
+                    formal_synchronized_bootstrap(
+                        dataset_ids=tuple(domain for domain, _specimen in keys),
+                        specimen_ids=tuple(specimen for _domain, specimen in keys),
+                        baseline_values=baseline,
+                        learned_values=correct,
+                        seed=FORMAL_BOOTSTRAP_SEED,
+                    ),
+                )
+            )
+    return tuple(output)
 
 
 def _write_outer_selection(path: Path, selections: tuple[G1OuterFormalSelection, ...]) -> None:
@@ -247,8 +321,12 @@ def _write_curve_tables(
     learned: tuple[G1TargetCurveRecord, ...],
     references: tuple[G1TargetReferenceCurveRecord, ...],
     diagnostics: tuple[G1SourceDecisionDiagnosticRecord, ...],
+    strata: tuple[G1SurfaceStratumRecord, ...],
 ) -> None:
     records = _curve_records(learned, references)
+    stratum_by_key = {
+        (row.outer_target, row.specimen_id): row.stratum for row in strata
+    }
     state_rows = []
     specimen_rows = []
     by_domain: dict[tuple[str, str, str], list[float]] = {}
@@ -261,6 +339,7 @@ def _write_curve_tables(
                 curve.task.value,
                 source,
                 method,
+                stratum_by_key[(domain, specimen)],
                 curve.auebc,
                 float(curve.task_losses[-1]),
                 curve.state_sha256,
@@ -394,6 +473,7 @@ def _write_curve_tables(
             "task",
             "source",
             "method",
+            "surface_internal_stratum",
             "auebc",
             "endpoint_task_loss",
             "curve_sha256",
@@ -516,6 +596,7 @@ def _write_inference_tables(
     root: Path,
     curves: G1TargetCurveAnalysis,
     stopping: G1TargetStoppingAnalysis,
+    misleading: tuple[tuple[str, G1PairedBootstrap], ...],
 ) -> None:
     task_values = (
         ("field_wrong_task", curves.task_conditioning.field_wrong_minus_correct),
@@ -535,7 +616,7 @@ def _write_inference_tables(
             curves.surface_robustness.cai_shuffled_surface_minus_correct,
         ),
     )
-    header = (
+    task_header = (
         "comparison",
         "point_estimate",
         "ci_lower",
@@ -546,9 +627,24 @@ def _write_inference_tables(
         "distribution_sha256",
         "domain_effects_json",
     )
-    _write_csv(root / "task_conditioning.csv", header, _effect_rows(task_values))
-    _write_csv(root / "surface_robustness.csv", header, _effect_rows(surface_values))
-    bootstraps = _bootstrap_map(curves, stopping)
+    _write_csv(
+        root / "task_conditioning.csv",
+        task_header,
+        _effect_rows(task_values),
+    )
+    surface_rows = [
+        (row[0], "ALL", *row[1:]) for row in _effect_rows(surface_values)
+    ]
+    surface_rows.extend(
+        (row[0], "SURFACE_INTERNAL_MISLEADING", *row[1:])
+        for row in _effect_rows(misleading)
+    )
+    _write_csv(
+        root / "surface_robustness.csv",
+        ("comparison", "stratum", *task_header[1:]),
+        surface_rows,
+    )
+    bootstraps = _bootstrap_map(curves, stopping, misleading)
     replicate_count = bootstraps[0][1].replicates
     if any(value.replicates != replicate_count for _name, value in bootstraps):
         raise G1FormalPackageError("formal bootstrap replicate roster changed")
@@ -650,6 +746,8 @@ def _write_decision(
     curves: G1TargetCurveAnalysis,
     stopping: G1TargetStoppingAnalysis,
     diagnostics: G1SourceDecisionDiagnosticSummary,
+    surface_authority: G1SurfaceStratumAuthority,
+    misleading: tuple[tuple[str, G1PairedBootstrap], ...],
 ) -> None:
     path.write_text(
         _json_text(
@@ -676,6 +774,27 @@ def _write_decision(
                 "field_stopping_status": stopping.field.status,
                 "cai_stopping_status": stopping.cai.status,
                 "source_decision_diagnostics": _diagnostic_payload(diagnostics),
+                "surface_strata_authority": {
+                    "scope": "FROZEN_G0_DIAGNOSTIC_NOT_A_GATE",
+                    "source": surface_authority.source,
+                    "file_sha256": surface_authority.file_sha256,
+                    "record_count": surface_authority.record_count,
+                    "stratum_counts": [
+                        list(row) for row in surface_authority.stratum_counts
+                    ],
+                    "records_sha256": surface_authority.records_sha256,
+                    "state_sha256": surface_authority.state_sha256,
+                },
+                "misleading_surface_diagnostics": {
+                    name: {
+                        "point_estimate": value.point_estimate,
+                        "ci_lower": value.ci_lower,
+                        "ci_upper": value.ci_upper,
+                        "improved_domains": value.improved_domains,
+                        "distribution_sha256": value.distribution_sha256,
+                    }
+                    for name, value in misleading
+                },
                 "no_target_leakage": curves.no_target_leakage,
                 "deterministic_replay": curves.deterministic_replay,
                 "deployment_bridge_valid": curves.deployment_bridge_valid,
@@ -693,6 +812,8 @@ def _write_report(
     curves: G1TargetCurveAnalysis,
     stopping: G1TargetStoppingAnalysis,
     diagnostics: G1SourceDecisionDiagnosticSummary,
+    surface_authority: G1SurfaceStratumAuthority,
+    misleading: tuple[tuple[str, G1PairedBootstrap], ...],
 ) -> None:
     path.write_text(
         "\n".join(
@@ -752,6 +873,20 @@ def _write_report(
                     )
                 ),
                 "",
+                "## Frozen misleading-surface diagnostic",
+                "",
+                (
+                    f"- G0 authority SHA-256: `{surface_authority.file_sha256}`; "
+                    f"strata {surface_authority.stratum_counts!r}"
+                ),
+                *(
+                    f"- {name}: effect {value.point_estimate!r}, "
+                    f"95% CI [{value.ci_lower!r}, {value.ci_upper!r}], "
+                    f"domains {value.improved_domains}/6"
+                    for name, value in misleading
+                ),
+                "- This frozen subset is diagnostic only and does not alter the G1 gate.",
+                "",
                 "## Stopping",
                 "",
                 (
@@ -783,6 +918,8 @@ def _validate_evidence(
     teacher_banks: tuple[G1TeacherBankManifestRow, ...],
     diagnostic_banks: tuple[G1SourceDecisionDiagnosticBankFile, ...],
     diagnostics: tuple[G1SourceDecisionDiagnosticRecord, ...],
+    surface_authority: G1SurfaceStratumAuthority,
+    strata: tuple[G1SurfaceStratumRecord, ...],
 ) -> tuple[str, ...]:
     domains = tuple(sorted(row.outer_target for row in selections))
     if (
@@ -831,6 +968,23 @@ def _validate_evidence(
             for row in diagnostics
         )
         or {row.outer_target for row in diagnostics} != set(domains)
+        or type(surface_authority) is not G1SurfaceStratumAuthority
+        or type(strata) is not tuple
+        or not strata
+        or any(type(row) is not G1SurfaceStratumRecord for row in strata)
+        or len({(row.outer_target, row.specimen_id) for row in strata})
+        != len(strata)
+        or len(strata) != surface_authority.record_count
+        or surface_stratum_records_sha256(strata)
+        != surface_authority.records_sha256
+        or tuple(
+            (
+                name,
+                sum(row.stratum == name for row in strata),
+            )
+            for name, _count in surface_authority.stratum_counts
+        )
+        != surface_authority.stratum_counts
     ):
         raise G1FormalPackageError("formal package evidence roster changed")
     selections_by_domain = {row.outer_target: row for row in selections}
@@ -852,6 +1006,13 @@ def _validate_evidence(
         for bank in (banks_by_domain[domain],)
     ):
         raise G1FormalPackageError("formal decision diagnostics changed after freeze")
+    proposed_roster = {
+        (row.outer_target, row.specimen_id)
+        for row in learned
+        if row.variant is TargetPolicyVariant.PROPOSED
+    }
+    if {(row.outer_target, row.specimen_id) for row in strata} != proposed_roster:
+        raise G1FormalPackageError("frozen surface-stratum roster changed")
     return domains
 
 
@@ -867,6 +1028,8 @@ def _write_package_files(
     teacher_banks: tuple[G1TeacherBankManifestRow, ...],
     diagnostic_banks: tuple[G1SourceDecisionDiagnosticBankFile, ...],
     diagnostics: tuple[G1SourceDecisionDiagnosticRecord, ...],
+    surface_authority: G1SurfaceStratumAuthority,
+    strata: tuple[G1SurfaceStratumRecord, ...],
     config_path: Path,
 ) -> None:
     root.mkdir(parents=True, exist_ok=True)
@@ -976,18 +1139,28 @@ def _write_package_files(
             for row in selections
         ],
     )
-    _write_curve_tables(root, learned, references, diagnostics)
+    misleading = _misleading_surface_bootstraps(learned, strata)
+    _write_curve_tables(root, learned, references, diagnostics, strata)
     _write_trajectory_tables(root, trajectories)
     _write_stopping(root / "stopping_results.csv", outcomes)
-    _write_inference_tables(root, curves, stopping)
+    _write_inference_tables(root, curves, stopping, misleading)
     diagnostic_summary = summarize_g1_source_decision_diagnostics(diagnostics)
     _write_decision(
         root / "decision_summary.json",
         curves,
         stopping,
         diagnostic_summary,
+        surface_authority,
+        misleading,
     )
-    _write_report(root / "REPORT.md", curves, stopping, diagnostic_summary)
+    _write_report(
+        root / "REPORT.md",
+        curves,
+        stopping,
+        diagnostic_summary,
+        surface_authority,
+        misleading,
+    )
 
 
 def write_g1_formal_package(
@@ -1002,6 +1175,8 @@ def write_g1_formal_package(
     teacher_banks: tuple[G1TeacherBankManifestRow, ...],
     diagnostic_banks: tuple[G1SourceDecisionDiagnosticBankFile, ...],
     diagnostics: tuple[G1SourceDecisionDiagnosticRecord, ...],
+    surface_authority: G1SurfaceStratumAuthority,
+    strata: tuple[G1SurfaceStratumRecord, ...],
     *,
     project_root: str | Path,
     config_path: str | Path,
@@ -1017,6 +1192,8 @@ def write_g1_formal_package(
         teacher_banks,
         diagnostic_banks,
         diagnostics,
+        surface_authority,
+        strata,
     )
     destination = Path(output_dir)
     if destination.exists():
@@ -1038,6 +1215,8 @@ def write_g1_formal_package(
             teacher_banks,
             diagnostic_banks,
             diagnostics,
+            surface_authority,
+            strata,
             Path(config_path),
         )
         publish_g1_manifest(
