@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import math
+from collections.abc import Callable
 
 import numpy as np
 
@@ -16,7 +17,22 @@ from cmc_bbdm.inspection_agent.generalized_reconstruction import (
 from cmc_bbdm.inspection_agent.world import CausalInspectionWorld
 from cmc_bbdm.mva.acquisition_grid import AcquisitionGrid
 
+from .batch_rollout import G1BatchRolloutRequest, run_g1_closed_loop_batch
+from .contracts import TaskTokenMode
+from .formal import G1ObservableStateBuilder
+from .g1 import (
+    G1Protocol,
+    G1Runtime,
+    G1SourceDependencies,
+    build_g1_world,
+)
+from .policy_training import TrainedObservablePolicy
 from .rollout import ClosedLoopTrajectory
+from .stop_execution import (
+    G1FixedEndpointRecord,
+    select_g1_source_fixed_reference,
+)
+from .stop_training import TrainedObservableStopPolicy
 from .stopping_policy import SourceStopValidationTrajectory
 
 
@@ -141,7 +157,188 @@ def evaluate_source_stop_validation_trajectory(
     )
 
 
+def materialize_g1_source_stop_validation_trajectories(
+    runtime: G1Runtime,
+    protocol: G1Protocol,
+    dependencies: G1SourceDependencies,
+    *,
+    encoder: object,
+    action_policy: TrainedObservablePolicy,
+    stop_policy: TrainedObservableStopPolicy,
+    fixed_endpoint_records: tuple[G1FixedEndpointRecord, ...],
+    progress: Callable[[str], None] | None = None,
+) -> tuple[SourceStopValidationTrajectory, ...]:
+    roster = getattr(dependencies, "roster", None)
+    action_audit = getattr(action_policy, "audit", None)
+    stop_audit = getattr(stop_policy, "audit", None)
+    hyperparameters = getattr(action_policy, "hyperparameters", None)
+    if (
+        type(runtime) is not G1Runtime
+        or type(protocol) is not G1Protocol
+        or runtime.domain_order != protocol.domain_order
+        or type(dependencies) is not G1SourceDependencies
+        or not callable(getattr(encoder, "encode", None))
+        or type(action_policy) is not TrainedObservablePolicy
+        or type(stop_policy) is not TrainedObservableStopPolicy
+        or not callable(getattr(stop_policy, "score_batch", None))
+        or type(fixed_endpoint_records) is not tuple
+        or not fixed_endpoint_records
+        or any(
+            type(row) is not G1FixedEndpointRecord
+            or row.outer_target != getattr(roster, "outer_target", None)
+            for row in fixed_endpoint_records
+        )
+        or getattr(action_audit, "outer_target", None)
+        != getattr(roster, "outer_target", None)
+        or getattr(action_audit, "validation_domain", None)
+        != getattr(roster, "labeled_domain", None)
+        or tuple(getattr(action_audit, "fit_domains", ()))
+        != tuple(getattr(roster, "fit_domains", ()))
+        or getattr(stop_audit, "outer_target", None)
+        != getattr(roster, "outer_target", None)
+        or getattr(stop_audit, "validation_domain", None)
+        != getattr(roster, "labeled_domain", None)
+        or tuple(getattr(stop_audit, "fit_domains", ()))
+        != tuple(getattr(roster, "fit_domains", ()))
+        or getattr(stop_policy, "base_action_model_sha256", None)
+        != action_policy.model_state_sha256
+        or getattr(hyperparameters, "task_token_mode", None)
+        is not TaskTokenMode.CORRECT
+        or (progress is not None and not callable(progress))
+    ):
+        raise G1StopSelectionExecutionError(
+            "source STOP validation materialization request is invalid"
+        )
+    outer_target = roster.outer_target
+    source_domain = roster.labeled_domain
+    specimen_ids = tuple(
+        specimen
+        for specimen, domain in zip(
+            runtime.mavis.specimen_ids,
+            runtime.mavis.dataset_ids,
+            strict=True,
+        )
+        if domain == source_domain
+    )
+    if len(specimen_ids) != int(protocol.domain_counts[source_domain]):
+        raise G1StopSelectionExecutionError(
+            "source STOP validation specimen roster changed"
+        )
+    references = {
+        task: select_g1_source_fixed_reference(
+            dependencies.authorization,
+            fixed_endpoint_records,
+            task=task,
+        )
+        for task in (InspectionTask.FIELD, InspectionTask.CAI)
+    }
+    expected_sha = {
+        runtime.specimen_sha256(source_domain, specimen) for specimen in specimen_ids
+    }
+    endpoint_map = {
+        (row.specimen_sha256, row.task): row
+        for row in fixed_endpoint_records
+        if row.source_domain == source_domain
+        and row.method == references[row.task].method
+    }
+    if (
+        len(endpoint_map) != 2 * len(specimen_ids)
+        or {key[0] for key in endpoint_map} != expected_sha
+        or any(
+            row.dependency_sha256 != dependencies.state_sha256
+            or row.fit_domains != roster.fit_domains
+            for row in endpoint_map.values()
+        )
+    ):
+        raise G1StopSelectionExecutionError(
+            "source STOP fixed endpoint bridge changed"
+        )
+    requests = []
+    contexts = []
+    prior = dependencies.prior_fit.prior
+    assessor = dependencies.assessor_fit.assessor
+    for specimen in specimen_ids:
+        specimen_sha = runtime.specimen_sha256(source_domain, specimen)
+        truth = runtime.mavis.source_teacher_view(specimen)
+        for task in (InspectionTask.FIELD, InspectionTask.CAI):
+            world, grid, surface = build_g1_world(
+                runtime,
+                dataset_id=source_domain,
+                specimen_id=specimen,
+                task=task,
+                endpoint_budget=protocol.endpoint_budget,
+            )
+            builder = G1ObservableStateBuilder(
+                grid=grid,
+                surface_hypothesis=surface.hypothesis,
+                prior=prior,
+                assessor=assessor,
+                encoder=encoder,
+                cai_context_mode=hyperparameters.cai_context_mode,
+                task_token_mode=hyperparameters.task_token_mode,
+            )
+            requests.append(
+                G1BatchRolloutRequest(
+                    world=world,
+                    grid=grid,
+                    target_domain=source_domain,
+                    specimen_sha256=specimen_sha,
+                    state_builder=builder,
+                )
+            )
+            contexts.append(
+                (
+                    world,
+                    grid,
+                    truth,
+                    endpoint_map[(specimen_sha, task)].task_loss,
+                )
+            )
+    if progress is not None:
+        progress(f"G1 source STOP rollout {outer_target}/{source_domain}")
+    trajectories = run_g1_closed_loop_batch(
+        tuple(requests),
+        actor=stop_policy,
+        stop_threshold=None,
+    )
+    if (
+        type(trajectories) is not tuple
+        or len(trajectories) != len(contexts)
+        or any(type(row) is not ClosedLoopTrajectory for row in trajectories)
+    ):
+        raise G1StopSelectionExecutionError(
+            "source STOP rollout result roster changed"
+        )
+    output = tuple(
+        evaluate_source_stop_validation_trajectory(
+            world,
+            grid,
+            trajectory,
+            prior,
+            assessor=assessor,
+            encoder=encoder,
+            outer_target=outer_target,
+            source_domain=source_domain,
+            full_scan=truth.full_scan,
+            true_cai=truth.true_cai,
+            reference_true_loss=reference_loss,
+        )
+        for trajectory, (world, grid, truth, reference_loss) in zip(
+            trajectories,
+            contexts,
+            strict=True,
+        )
+    )
+    if progress is not None:
+        progress(
+            f"G1 source STOP validation complete {outer_target}/{source_domain}: "
+            f"{len(output)} trajectories"
+        )
+    return output
+
+
 __all__ = [
     "G1StopSelectionExecutionError",
     "evaluate_source_stop_validation_trajectory",
+    "materialize_g1_source_stop_validation_trajectories",
 ]

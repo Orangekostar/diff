@@ -213,6 +213,7 @@ from .stop_execution import (
 from .stop_selection_execution import (
     G1StopSelectionExecutionError,
     evaluate_source_stop_validation_trajectory,
+    materialize_g1_source_stop_validation_trajectories,
 )
 from .stop_training import (
     G1StopTrainingError,
@@ -427,6 +428,7 @@ __all__ = [
     "materialize_g1_source_bridge_records",
     "materialize_g1_source_fixed_endpoint_records",
     "materialize_g1_source_stop_records",
+    "materialize_g1_source_stop_validation_trajectories",
     "materialize_g1_source_teacher_records",
     "materialize_label_independent_states",
     "materialize_learned_source_for_world",
