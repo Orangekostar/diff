@@ -25,6 +25,7 @@ from cmc_bbdm.inspection_agent_g1 import (
     load_g1_encoder,
     load_g1_protocol,
     load_g1_runtime,
+    run_outer_supervised_selection,
     validate_g1_package,
 )
 
@@ -49,6 +50,14 @@ def _parser() -> argparse.ArgumentParser:
     build_all.add_argument("--device", default=None)
     build_all.add_argument("--work-root", default=None)
     build_all.add_argument("--start-fold", type=int, default=1)
+
+    select_outer = commands.add_parser("select-outer")
+    select_outer.add_argument("--config", required=True)
+    select_outer.add_argument("--outer-target", required=True)
+    select_outer.add_argument("--project-root", default=str(_PROJECT_ROOT))
+    select_outer.add_argument("--bank-root", default=None)
+    select_outer.add_argument("--work-root", default=None)
+    select_outer.add_argument("--device", default=None)
 
     validate = commands.add_parser("validate")
     validate.add_argument("--config", required=True)
@@ -75,6 +84,43 @@ def _print_json(payload: object) -> None:
 def main(argv: Sequence[str] | None = None) -> int:
     args = _parser().parse_args(argv)
     try:
+        if args.command == "select-outer":
+            protocol = load_g1_protocol(
+                args.config,
+                project_root=args.project_root,
+            )
+            result = run_outer_supervised_selection(
+                protocol,
+                outer_target=args.outer_target,
+                bank_root=args.bank_root
+                or str(Path(args.project_root) / protocol.teacher_bank_work_path),
+                work_root=args.work_root
+                or str(
+                    Path(args.project_root)
+                    / protocol.work_output
+                    / "model_selection"
+                ),
+                device=args.device or protocol.default_device,
+                progress=_progress,
+            )
+            _print_json(
+                {
+                    "outer_target": result.outer_target,
+                    "example_count": result.example_count,
+                    "candidate_count": len(result.core_results)
+                    + len(result.tuning_results),
+                    "selected_hyperparameters_sha256": (
+                        result.selection.selected_hyperparameters_sha256
+                    ),
+                    "equal_domain_mean_regret": (
+                        result.selection.equal_domain_mean_regret
+                    ),
+                    "final_refit_epochs": result.selection.final_refit_epochs,
+                    "selection_path": str(result.path),
+                }
+            )
+            return 0
+
         if args.command in {"build-bank", "build-all-banks"}:
             protocol = load_g1_protocol(
                 args.config,

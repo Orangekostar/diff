@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+from pathlib import Path
 from types import SimpleNamespace
 
 from cmc_bbdm.inspection_agent_g1 import selection_execution as module
@@ -14,8 +15,10 @@ from cmc_bbdm.inspection_agent_g1.selection_execution import (
     TeacherRegretCandidateResult,
     core_policy_candidates,
     fit_teacher_regret_candidate,
+    read_teacher_regret_candidate_result,
     select_teacher_regret_candidate,
     tuning_policy_candidates,
+    write_teacher_regret_candidate_result,
 )
 
 
@@ -139,3 +142,19 @@ def test_candidate_fit_visits_each_source_validation_domain_once(monkeypatch) ->
     assert tuple(calls) == ("d1", "d2", "d3", "d4", "d5")
     assert result.validation_regrets == (1.0, 2.0, 3.0, 4.0, 5.0)
     assert result.equal_domain_mean_regret == 3.0
+
+
+def test_candidate_result_cache_round_trips_exactly(tmp_path: Path) -> None:
+    result = _result(
+        _hp(
+            PolicyModelName.STRUCTURED_INSPECTION_POLICY,
+            TrainingRoute.SOFT_UTILITY_DISTILL,
+            tau=0.5,
+        ),
+        0.125,
+    )
+    path = tmp_path / "candidate.json"
+    write_teacher_regret_candidate_result(path, result)
+    replay = read_teacher_regret_candidate_result(path)
+    assert replay == result
+    assert path.read_bytes().endswith(b"\n")

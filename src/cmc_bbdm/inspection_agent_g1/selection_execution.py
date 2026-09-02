@@ -5,7 +5,11 @@ from __future__ import annotations
 import hashlib
 import json
 import math
+import os
+import tempfile
+from collections.abc import Callable
 from dataclasses import dataclass, field
+from pathlib import Path
 from statistics import median
 
 import numpy as np
@@ -20,6 +24,7 @@ from .policy_training import (
     fit_inner_observable_policy,
     rebind_training_example_modes,
 )
+from .teacher_bank import read_teacher_bank
 
 
 class G1SelectionExecutionError(ValueError):
@@ -315,12 +320,262 @@ def fit_teacher_regret_candidate(
     )
 
 
+def _hyperparameters_payload(
+    value: PolicyTrainingHyperparameters,
+) -> dict[str, object]:
+    return {
+        "model_name": value.model_name.value,
+        "route": value.route.value,
+        "cai_context_mode": value.cai_context_mode.value,
+        "task_token_mode": value.task_token_mode.value,
+        "tau": value.tau,
+        "learning_rate": value.learning_rate,
+        "weight_decay": value.weight_decay,
+        "dagger_iterations": value.dagger_iterations,
+        "state_sha256": value.state_sha256,
+    }
+
+
+def teacher_regret_candidate_payload(
+    result: TeacherRegretCandidateResult,
+) -> dict[str, object]:
+    if type(result) is not TeacherRegretCandidateResult:
+        raise G1SelectionExecutionError("issued candidate result is required")
+    return {
+        "schema_version": 1,
+        "scope": "inspection_agent_g1_teacher_regret_candidate",
+        "outer_target": result.outer_target,
+        "hyperparameters": _hyperparameters_payload(result.hyperparameters),
+        "validation_domains": list(result.validation_domains),
+        "validation_regrets": list(result.validation_regrets),
+        "selected_epochs": list(result.selected_epochs),
+        "model_state_sha256s": list(result.model_state_sha256s),
+        "equal_domain_mean_regret": result.equal_domain_mean_regret,
+        "final_refit_epochs": result.final_refit_epochs,
+        "state_sha256": result.state_sha256,
+        "target_outcomes_opened": False,
+    }
+
+
+def _atomic_json(path: Path, payload: object) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    descriptor, name = tempfile.mkstemp(
+        prefix=f".{path.name}.",
+        suffix=".tmp",
+        dir=path.parent,
+    )
+    os.close(descriptor)
+    temporary = Path(name)
+    try:
+        temporary.write_bytes(
+            (
+                json.dumps(
+                    payload,
+                    sort_keys=True,
+                    separators=(",", ":"),
+                    ensure_ascii=True,
+                    allow_nan=False,
+                )
+                + "\n"
+            ).encode("ascii")
+        )
+        os.replace(temporary, path)
+    except Exception:
+        temporary.unlink(missing_ok=True)
+        raise
+
+
+def write_teacher_regret_candidate_result(
+    path: str | Path,
+    result: TeacherRegretCandidateResult,
+) -> None:
+    _atomic_json(Path(path), teacher_regret_candidate_payload(result))
+
+
+def read_teacher_regret_candidate_result(
+    path: str | Path,
+) -> TeacherRegretCandidateResult:
+    try:
+        payload = json.loads(Path(path).read_bytes())
+        hp = payload["hyperparameters"]
+        if not isinstance(payload, dict) or not isinstance(hp, dict):
+            raise TypeError
+        hyperparameters = PolicyTrainingHyperparameters(
+            model_name=PolicyModelName(str(hp["model_name"])),
+            route=TrainingRoute(str(hp["route"])),
+            cai_context_mode=CAIContextMode(str(hp["cai_context_mode"])),
+            task_token_mode=TaskTokenMode(str(hp["task_token_mode"])),
+            tau=None if hp["tau"] is None else float(hp["tau"]),
+            learning_rate=float(hp["learning_rate"]),
+            weight_decay=float(hp["weight_decay"]),
+            dagger_iterations=int(hp["dagger_iterations"]),
+        )
+        result = TeacherRegretCandidateResult(
+            outer_target=str(payload["outer_target"]),
+            hyperparameters=hyperparameters,
+            validation_domains=tuple(str(value) for value in payload["validation_domains"]),
+            validation_regrets=tuple(
+                float(value) for value in payload["validation_regrets"]
+            ),
+            selected_epochs=tuple(int(value) for value in payload["selected_epochs"]),
+            model_state_sha256s=tuple(
+                str(value) for value in payload["model_state_sha256s"]
+            ),
+        )
+    except (KeyError, OSError, TypeError, ValueError, json.JSONDecodeError) as error:
+        raise G1SelectionExecutionError("candidate result cache is invalid") from error
+    if (
+        payload != teacher_regret_candidate_payload(result)
+        or hp.get("state_sha256") != hyperparameters.state_sha256
+    ):
+        raise G1SelectionExecutionError("candidate result cache identity changed")
+    return result
+
+
+def teacher_regret_selection_payload(
+    selection: TeacherRegretSelection,
+) -> dict[str, object]:
+    if type(selection) is not TeacherRegretSelection:
+        raise G1SelectionExecutionError("issued teacher-regret selection is required")
+    return {
+        "outer_target": selection.outer_target,
+        "selected_hyperparameters": _hyperparameters_payload(
+            selection.selected_hyperparameters
+        ),
+        "selected_hyperparameters_sha256": (
+            selection.selected_hyperparameters_sha256
+        ),
+        "equal_domain_mean_regret": selection.equal_domain_mean_regret,
+        "final_refit_epochs": selection.final_refit_epochs,
+        "candidate_state_sha256s": list(selection.candidate_state_sha256s),
+        "target_outcomes_opened": selection.target_outcomes_opened,
+        "state_sha256": selection.state_sha256,
+    }
+
+
+@dataclass(frozen=True, slots=True)
+class OuterSupervisedSelectionRun:
+    outer_target: str
+    example_count: int
+    core_results: tuple[TeacherRegretCandidateResult, ...]
+    tuning_results: tuple[TeacherRegretCandidateResult, ...]
+    selection: TeacherRegretSelection
+    path: Path
+
+
+def run_outer_supervised_selection(
+    protocol: object,
+    *,
+    outer_target: str,
+    bank_root: str | Path,
+    work_root: str | Path,
+    device: str,
+    progress: Callable[[str], None] | None = None,
+) -> OuterSupervisedSelectionRun:
+    domain_order = tuple(getattr(protocol, "domain_order", ()))
+    if (
+        len(domain_order) != 6
+        or outer_target not in domain_order
+        or type(device) is not str
+        or not device
+    ):
+        raise G1SelectionExecutionError("outer supervised selection request is invalid")
+    source_domains = tuple(domain for domain in domain_order if domain != outer_target)
+    banks = Path(bank_root)
+    examples: list[G1PolicyTrainingExample] = []
+    for source in source_domains:
+        _identity, records = read_teacher_bank(banks / outer_target / f"{source}.parquet")
+        if (
+            not records
+            or any(
+                row.example.outer_target != outer_target
+                or row.example.source_domain != source
+                for row in records
+            )
+        ):
+            raise G1SelectionExecutionError("outer teacher-bank identity changed")
+        examples.extend(row.example for row in records)
+    example_tuple = tuple(examples)
+    destination = Path(work_root) / outer_target
+
+    def load_or_fit(hp: PolicyTrainingHyperparameters) -> TeacherRegretCandidateResult:
+        path = destination / f"{hp.state_sha256}.json"
+        if path.exists():
+            result = read_teacher_regret_candidate_result(path)
+            if (
+                result.outer_target != outer_target
+                or result.hyperparameters != hp
+            ):
+                raise G1SelectionExecutionError("cached candidate request changed")
+            if progress is not None:
+                progress(f"G1 source candidate reused {outer_target}: {hp.state_sha256}")
+            return result
+        if progress is not None:
+            progress(f"G1 source candidate fitting {outer_target}: {hp.state_sha256}")
+        result = fit_teacher_regret_candidate(
+            example_tuple,
+            hp,
+            max_epochs=int(protocol.epochs),
+            patience=int(protocol.patience),
+            device=device,
+        )
+        write_teacher_regret_candidate_result(path, result)
+        if progress is not None:
+            progress(
+                f"G1 source candidate complete {outer_target}: "
+                f"{result.equal_domain_mean_regret:.17g}"
+            )
+        return result
+
+    core_results = tuple(load_or_fit(hp) for hp in core_policy_candidates())
+    core_selection = select_teacher_regret_candidate(core_results)
+    tuning_hyperparameters = tuning_policy_candidates(
+        core_selection.selected_hyperparameters
+    )
+    existing = {row.hyperparameters.state_sha256 for row in core_results}
+    tuning_results = tuple(
+        load_or_fit(hp)
+        for hp in tuning_hyperparameters
+        if hp.state_sha256 not in existing
+    )
+    selection = select_teacher_regret_candidate((*core_results, *tuning_results))
+    selection_path = destination / "selection.json"
+    _atomic_json(
+        selection_path,
+        {
+            "schema_version": 1,
+            "scope": "inspection_agent_g1_outer_supervised_selection",
+            "example_count": len(example_tuple),
+            "core_candidate_sha256s": [row.state_sha256 for row in core_results],
+            "core_winner_sha256": core_selection.state_sha256,
+            "tuning_candidate_sha256s": [
+                row.state_sha256 for row in tuning_results
+            ],
+            "selection": teacher_regret_selection_payload(selection),
+        },
+    )
+    return OuterSupervisedSelectionRun(
+        outer_target=outer_target,
+        example_count=len(example_tuple),
+        core_results=core_results,
+        tuning_results=tuning_results,
+        selection=selection,
+        path=selection_path,
+    )
+
+
 __all__ = [
     "G1SelectionExecutionError",
+    "OuterSupervisedSelectionRun",
     "TeacherRegretCandidateResult",
     "TeacherRegretSelection",
     "core_policy_candidates",
     "fit_teacher_regret_candidate",
+    "read_teacher_regret_candidate_result",
+    "run_outer_supervised_selection",
     "select_teacher_regret_candidate",
+    "teacher_regret_candidate_payload",
+    "teacher_regret_selection_payload",
     "tuning_policy_candidates",
+    "write_teacher_regret_candidate_result",
 ]

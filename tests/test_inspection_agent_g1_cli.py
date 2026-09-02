@@ -26,7 +26,13 @@ def test_g1_cli_help_lists_inspection_commands() -> None:
     completed = _run("--help")
 
     assert completed.returncode == 0
-    for command in ("build-bank", "build-all-banks", "validate", "compare"):
+    for command in (
+        "build-bank",
+        "build-all-banks",
+        "select-outer",
+        "validate",
+        "compare",
+    ):
         assert command in completed.stdout
 
 
@@ -43,6 +49,7 @@ def test_g1_cli_subcommand_help_lists_required_flags() -> None:
             "--source-project-root",
             "--start-fold",
         ),
+        "select-outer": ("--config", "--outer-target"),
         "validate": ("--config", "--path"),
         "compare": ("--config", "--formal", "--replay"),
     }
@@ -56,7 +63,13 @@ def test_g1_cli_subcommand_help_lists_required_flags() -> None:
 
 
 def test_g1_cli_missing_required_arguments_returns_code_two() -> None:
-    for command in ("build-bank", "build-all-banks", "validate", "compare"):
+    for command in (
+        "build-bank",
+        "build-all-banks",
+        "select-outer",
+        "validate",
+        "compare",
+    ):
         completed = _run(command)
 
         assert completed.returncode == 2

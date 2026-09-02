@@ -107,12 +107,16 @@ from .rollout import (
 )
 from .selection_execution import (
     G1SelectionExecutionError,
+    OuterSupervisedSelectionRun,
     TeacherRegretCandidateResult,
     TeacherRegretSelection,
     core_policy_candidates,
     fit_teacher_regret_candidate,
+    read_teacher_regret_candidate_result,
+    run_outer_supervised_selection,
     select_teacher_regret_candidate,
     tuning_policy_candidates,
+    write_teacher_regret_candidate_result,
 )
 from .statistics import formal_synchronized_bootstrap
 from .stopping_policy import (
@@ -196,6 +200,7 @@ __all__ = [
     "InnerPolicyEngineeringMetric",
     "ObservablePolicyScores",
     "OuterPolicySelection",
+    "OuterSupervisedSelectionRun",
     "PolicyCandidateEvaluation",
     "PolicyGateEvidence",
     "PolicyModelName",
@@ -265,8 +270,10 @@ __all__ = [
     "plan_g1_fixed_actions",
     "publish_g1_manifest",
     "read_teacher_bank",
+    "read_teacher_regret_candidate_result",
     "rebind_training_example_modes",
     "run_closed_loop",
+    "run_outer_supervised_selection",
     "select_conservative_stop_threshold",
     "select_outer_policy",
     "select_source_relabels",
@@ -280,4 +287,5 @@ __all__ = [
     "validate_g1_package",
     "warm_start_audit",
     "write_teacher_bank",
+    "write_teacher_regret_candidate_result",
 ]
