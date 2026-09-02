@@ -20,9 +20,11 @@ from cmc_bbdm.inspection_agent_g1 import (
     G1ExecutionError,
     G1StopExecutionError,
     build_g1_all_source_fixed_endpoint_banks,
+    build_g1_all_source_stop_banks,
     build_g1_all_source_teacher_banks,
     build_g1_source_dependencies,
     build_g1_source_fixed_endpoint_bank,
+    build_g1_source_stop_bank,
     build_g1_source_teacher_bank,
     compare_g1_packages,
     load_g1_encoder,
@@ -71,6 +73,27 @@ def _parser() -> argparse.ArgumentParser:
     build_all_fixed.add_argument("--work-root", default=None)
     build_all_fixed.add_argument("--start-fold", type=int, default=1)
 
+    build_stop = commands.add_parser("build-stop-bank")
+    build_stop.add_argument("--config", required=True)
+    build_stop.add_argument("--source-project-root", required=True)
+    build_stop.add_argument("--outer-target", required=True)
+    build_stop.add_argument("--source-domain", required=True)
+    build_stop.add_argument("--project-root", default=str(_PROJECT_ROOT))
+    build_stop.add_argument("--device", default=None)
+    build_stop.add_argument("--teacher-bank-root", default=None)
+    build_stop.add_argument("--fixed-endpoint-root", default=None)
+    build_stop.add_argument("--work-root", default=None)
+
+    build_all_stop = commands.add_parser("build-all-stop-banks")
+    build_all_stop.add_argument("--config", required=True)
+    build_all_stop.add_argument("--source-project-root", required=True)
+    build_all_stop.add_argument("--project-root", default=str(_PROJECT_ROOT))
+    build_all_stop.add_argument("--device", default=None)
+    build_all_stop.add_argument("--teacher-bank-root", default=None)
+    build_all_stop.add_argument("--fixed-endpoint-root", default=None)
+    build_all_stop.add_argument("--work-root", default=None)
+    build_all_stop.add_argument("--start-fold", type=int, default=1)
+
     select_outer = commands.add_parser("select-outer")
     select_outer.add_argument("--config", required=True)
     select_outer.add_argument("--outer-target", required=True)
@@ -104,6 +127,96 @@ def _print_json(payload: object) -> None:
 def main(argv: Sequence[str] | None = None) -> int:
     args = _parser().parse_args(argv)
     try:
+        if args.command in {"build-stop-bank", "build-all-stop-banks"}:
+            protocol = load_g1_protocol(
+                args.config,
+                project_root=args.project_root,
+            )
+            runtime = load_g1_runtime(
+                protocol,
+                project_root=args.project_root,
+                source_project_root=args.source_project_root,
+                progress=_progress,
+            )
+            encoder = load_g1_encoder(
+                args.source_project_root,
+                device=args.device or protocol.default_device,
+            )
+            teacher_root = args.teacher_bank_root or str(
+                Path(args.project_root) / protocol.teacher_bank_work_path
+            )
+            fixed_root = args.fixed_endpoint_root or str(
+                Path(args.project_root)
+                / protocol.work_output
+                / "fixed_endpoints"
+            )
+            work_root = args.work_root or str(
+                Path(args.project_root) / protocol.work_output / "stop_banks"
+            )
+            if args.command == "build-all-stop-banks":
+                results = build_g1_all_source_stop_banks(
+                    runtime,
+                    protocol,
+                    encoder=encoder,
+                    teacher_bank_root=teacher_root,
+                    fixed_endpoint_root=fixed_root,
+                    work_root=work_root,
+                    start_fold=args.start_fold,
+                    progress=_progress,
+                )
+                _print_json(
+                    {
+                        "bank_count": len(results),
+                        "banks": [
+                            {
+                                "bank_path": str(result.path),
+                                "outer_target": result.outer_target,
+                                "source_domain": result.source_domain,
+                                "specimen_count": result.specimen_count,
+                                "dependency_sha256": result.dependency_sha256,
+                                "row_count": result.bank.row_count,
+                                "parquet_sha256": result.bank.parquet_sha256,
+                                "records_sha256": result.bank.records_sha256,
+                                "manifest_sha256": result.bank.manifest_sha256,
+                            }
+                            for result in results
+                        ],
+                    }
+                )
+                return 0
+            dependencies = build_g1_source_dependencies(
+                runtime,
+                protocol,
+                outer_target=args.outer_target,
+                labeled_domain=args.source_domain,
+                encoder=encoder,
+                progress=_progress,
+            )
+            result = build_g1_source_stop_bank(
+                runtime,
+                protocol,
+                dependencies,
+                encoder=encoder,
+                teacher_bank_root=teacher_root,
+                fixed_endpoint_root=fixed_root,
+                work_root=work_root,
+                progress=_progress,
+            )
+            _print_json(
+                {
+                    "bank_path": str(result.path),
+                    "outer_target": result.outer_target,
+                    "source_domain": result.source_domain,
+                    "specimen_count": result.specimen_count,
+                    "dependency_sha256": result.dependency_sha256,
+                    "row_count": result.bank.row_count,
+                    "parquet_sha256": result.bank.parquet_sha256,
+                    "records_sha256": result.bank.records_sha256,
+                    "manifest_sha256": result.bank.manifest_sha256,
+                }
+            )
+            return 0
+
         if args.command == "select-outer":
             protocol = load_g1_protocol(
                 args.config,

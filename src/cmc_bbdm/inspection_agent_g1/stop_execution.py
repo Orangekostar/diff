@@ -7,6 +7,7 @@ import json
 import math
 import os
 import tempfile
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -19,6 +20,8 @@ from cmc_bbdm.inspection_agent.field_task import field_loss
 from cmc_bbdm.inspection_agent.generalized_reconstruction import reconstruct_observation
 from cmc_bbdm.inspection_agent.stopping import ReferenceEndpoint
 
+from .contracts import CAIContextMode, TaskTokenMode
+from .features import build_policy_state
 from .formal import FIXED_BASELINE_METHODS, plan_g1_fixed_actions
 from .g1 import (
     G1ExecutionError,
@@ -27,9 +30,25 @@ from .g1 import (
     G1SourceDependencies,
     build_g1_source_dependencies,
     build_g1_world,
+    source_teacher_bank_path,
 )
-from .stopping_policy import SourceFixedReference, select_source_fixed_reference
+from .stop_bank import (
+    G1StopBankFile,
+    G1StopBankRecord,
+    write_stop_bank,
+)
+from .stopping_policy import (
+    SourceFixedReference,
+    build_source_stop_label,
+    select_source_fixed_reference,
+)
 from .teacher import SourceTeacherAuthorization
+from .teacher_bank import (
+    G1TeacherBankRecord,
+    materialize_label_independent_states,
+    materialize_oracle_checkpoint_states,
+    read_teacher_bank,
+)
 
 
 class G1StopExecutionError(ValueError):
@@ -159,6 +178,16 @@ class G1FixedEndpointBuild:
     specimen_count: int
     dependency_sha256: str
     bank: G1FixedEndpointBankFile
+
+
+@dataclass(frozen=True, slots=True)
+class G1StopBankBuild:
+    path: Path
+    outer_target: str
+    source_domain: str
+    specimen_count: int
+    dependency_sha256: str
+    bank: G1StopBankFile
 
 
 def _ordered_records(
@@ -644,16 +673,398 @@ def build_g1_all_source_fixed_endpoint_banks(
     return tuple(results)
 
 
+def stop_bank_path(
+    work_root: str | Path,
+    outer_target: str,
+    source_domain: str,
+) -> Path:
+    if (
+        type(outer_target) is not str
+        or not outer_target
+        or type(source_domain) is not str
+        or not source_domain
+        or outer_target == source_domain
+        or any(
+            "/" in value or "\\" in value or value in {".", ".."}
+            for value in (outer_target, source_domain)
+        )
+    ):
+        raise G1StopExecutionError("STOP-bank fold identity is invalid")
+    return Path(work_root) / outer_target / f"{source_domain}.parquet"
+
+
+def read_g1_outer_fixed_endpoint_records(
+    protocol: G1Protocol,
+    *,
+    outer_target: str,
+    work_root: str | Path,
+) -> tuple[G1FixedEndpointRecord, ...]:
+    if type(protocol) is not G1Protocol or outer_target not in protocol.domain_order:
+        raise G1StopExecutionError("outer fixed-endpoint request is invalid")
+    records = []
+    for source in protocol.domain_order:
+        if source == outer_target:
+            continue
+        _identity, rows = read_fixed_endpoint_bank(
+            fixed_endpoint_bank_path(work_root, outer_target, source)
+        )
+        expected = int(protocol.domain_counts[source]) * len(FIXED_BASELINE_METHODS) * 2
+        if (
+            len(rows) != expected
+            or any(
+                row.outer_target != outer_target or row.source_domain != source
+                for row in rows
+            )
+        ):
+            raise G1StopExecutionError("outer fixed-endpoint roster changed")
+        records.extend(rows)
+    return tuple(records)
+
+
+def _checked_action_record_map(
+    records: tuple[G1TeacherBankRecord, ...],
+    dependencies: G1SourceDependencies,
+) -> dict[tuple[str, InspectionTask, str, str], G1TeacherBankRecord]:
+    roster = dependencies.roster
+    if (
+        type(records) is not tuple
+        or not records
+        or any(type(row) is not G1TeacherBankRecord for row in records)
+        or any(
+            row.example.outer_target != roster.outer_target
+            or row.example.source_domain != roster.labeled_domain
+            or row.fit_domains != roster.fit_domains
+            or row.prior_sha256 != dependencies.prior_fit.prior.state_sha256
+            or row.assessor_sha256
+            != dependencies.assessor_fit.assessor.model_state_sha256
+            for row in records
+        )
+    ):
+        raise G1StopExecutionError("action teacher bank does not match STOP dependencies")
+    output = {
+        (
+            row.example.specimen_sha256,
+            row.example.task,
+            row.state_source,
+            row.source_state_sha256,
+        ): row
+        for row in records
+    }
+    if len(output) != len(records):
+        raise G1StopExecutionError("action teacher-bank STOP join key is duplicated")
+    return output
+
+
+def _reference_endpoint_map(
+    dependencies: G1SourceDependencies,
+    records: tuple[G1FixedEndpointRecord, ...],
+) -> tuple[
+    dict[InspectionTask, SourceFixedReference],
+    dict[tuple[str, InspectionTask], G1FixedEndpointRecord],
+]:
+    roster = dependencies.roster
+    references = {
+        task: select_g1_source_fixed_reference(
+            dependencies.authorization,
+            records,
+            task=task,
+        )
+        for task in (InspectionTask.FIELD, InspectionTask.CAI)
+    }
+    selected: dict[tuple[str, InspectionTask], G1FixedEndpointRecord] = {}
+    for row in records:
+        if (
+            row.outer_target == roster.outer_target
+            and row.source_domain == roster.labeled_domain
+            and row.method == references[row.task].method
+        ):
+            if row.dependency_sha256 != dependencies.state_sha256:
+                raise G1StopExecutionError("labeled-source fixed endpoint uses other dependencies")
+            key = (row.specimen_id, row.task)
+            if key in selected:
+                raise G1StopExecutionError("labeled-source fixed endpoint is duplicated")
+            selected[key] = row
+    return references, selected
+
+
+def materialize_g1_source_stop_records(
+    runtime: G1Runtime,
+    protocol: G1Protocol,
+    dependencies: G1SourceDependencies,
+    *,
+    encoder: object,
+    action_records: tuple[G1TeacherBankRecord, ...],
+    fixed_endpoint_records: tuple[G1FixedEndpointRecord, ...],
+    progress: Callable[[str], None] | None = None,
+) -> tuple[G1StopBankRecord, ...]:
+    if (
+        type(runtime) is not G1Runtime
+        or type(protocol) is not G1Protocol
+        or type(dependencies) is not G1SourceDependencies
+        or not callable(getattr(encoder, "encode", None))
+        or (progress is not None and not callable(progress))
+    ):
+        raise G1StopExecutionError("source STOP materialization request is invalid")
+    roster = dependencies.roster
+    actions = _checked_action_record_map(action_records, dependencies)
+    references, endpoints = _reference_endpoint_map(
+        dependencies,
+        fixed_endpoint_records,
+    )
+    specimen_ids = tuple(
+        specimen
+        for specimen, domain in zip(
+            runtime.mavis.specimen_ids,
+            runtime.mavis.dataset_ids,
+            strict=True,
+        )
+        if domain == roster.labeled_domain
+    )
+    output: list[G1StopBankRecord] = []
+    consumed: set[str] = set()
+    prior = dependencies.prior_fit.prior
+    assessor = dependencies.assessor_fit.assessor
+    for specimen_index, specimen in enumerate(specimen_ids, start=1):
+        teacher_view = runtime.mavis.source_teacher_view(specimen)
+        specimen_sha = runtime.specimen_sha256(roster.labeled_domain, specimen)
+        for task in (InspectionTask.FIELD, InspectionTask.CAI):
+            world, grid, surface = build_g1_world(
+                runtime,
+                dataset_id=roster.labeled_domain,
+                specimen_id=specimen,
+                task=task,
+                endpoint_budget=protocol.endpoint_budget,
+            )
+            independent = materialize_label_independent_states(
+                world,
+                grid,
+                surface.hypothesis,
+                outer_target=roster.outer_target,
+                random_seed=protocol.teacher_bank_seed,
+                snapshot_fractions=protocol.snapshot_fractions,
+            )
+            oracle = materialize_oracle_checkpoint_states(
+                world,
+                grid,
+                surface.hypothesis,
+                prior,
+                dependencies.authorization,
+                full_scan=teacher_view.full_scan,
+                checkpoints=protocol.oracle_checkpoints,
+                true_cai=teacher_view.true_cai if task is InspectionTask.CAI else None,
+                assessor=assessor if task is InspectionTask.CAI else None,
+                encoder=encoder if task is InspectionTask.CAI else None,
+            )
+            state_rows = (
+                *((row.source, row.state_sha256, row.observation) for row in independent),
+                *(("ORACLE_CHECKPOINT", row.state_sha256, row.observation) for row in oracle),
+            )
+            reconstructions = tuple(
+                reconstruct_observation(observation, grid, prior)
+                for _source, _state_sha, observation in state_rows
+            )
+            embeddings = np.asarray(
+                encoder.encode(tuple(value.image for value in reconstructions)),
+                dtype=np.float64,
+            )
+            scalars = np.asarray(
+                [state_scalars(observation) for _, _, observation in state_rows],
+                dtype=np.float64,
+            )
+            estimates = np.asarray(assessor.predict(embeddings, scalars), dtype=np.float64)
+            if (
+                embeddings.shape != (len(state_rows), 512)
+                or estimates.shape != (len(state_rows),)
+                or not np.all(np.isfinite(embeddings))
+                or not np.all(np.isfinite(estimates))
+            ):
+                raise G1StopExecutionError("source STOP observable features are invalid")
+            try:
+                reference_endpoint = endpoints[(specimen, task)]
+            except KeyError as error:
+                raise G1StopExecutionError("source STOP reference endpoint is missing") from error
+            if reference_endpoint.specimen_sha256 != specimen_sha:
+                raise G1StopExecutionError("source STOP specimen identity changed")
+            for (
+                state_source,
+                source_state_sha,
+                observation,
+            ), reconstruction, embedding, estimate in zip(
+                state_rows,
+                reconstructions,
+                embeddings,
+                estimates,
+                strict=True,
+            ):
+                policy_state = build_policy_state(
+                    observation,
+                    surface.hypothesis,
+                    grid,
+                    prior,
+                    reconstruction,
+                    reconstruction_embedding=embedding,
+                    cai_estimate=float(estimate),
+                    cai_context_mode=CAIContextMode.SHARED_OBSERVABLE_STATE_CONTEXT,
+                    task_token_mode=TaskTokenMode.CORRECT,
+                )
+                key = (specimen_sha, task, state_source, source_state_sha)
+                try:
+                    action_record = actions[key]
+                except KeyError as error:
+                    raise G1StopExecutionError("source STOP state is absent from action bank") from error
+                if action_record.example.policy_state.state_sha256 != policy_state.state_sha256:
+                    raise G1StopExecutionError("source STOP observable state hash changed")
+                current_loss = (
+                    float(field_loss(teacher_view.full_scan, reconstruction.image))
+                    if task is InspectionTask.FIELD
+                    else abs(teacher_view.true_cai - float(estimate))
+                )
+                label = build_source_stop_label(
+                    dependencies.authorization,
+                    references[task],
+                    source_domain=roster.labeled_domain,
+                    specimen_sha256=specimen_sha,
+                    task=task,
+                    policy_state_sha256=policy_state.state_sha256,
+                    current_true_loss=current_loss,
+                    reference_true_loss=reference_endpoint.task_loss,
+                )
+                output.append(
+                    G1StopBankRecord(
+                        outer_target=roster.outer_target,
+                        source_domain=roster.labeled_domain,
+                        specimen_sha256=specimen_sha,
+                        task=task,
+                        fit_domains=roster.fit_domains,
+                        state_source=state_source,
+                        source_state_sha256=source_state_sha,
+                        action_example_sha256=action_record.example.state_sha256,
+                        policy_state_sha256=policy_state.state_sha256,
+                        label=label,
+                    )
+                )
+                consumed.add(action_record.example.state_sha256)
+        if progress is not None and (
+            specimen_index % 10 == 0 or specimen_index == len(specimen_ids)
+        ):
+            progress(
+                f"G1 STOP bank {roster.outer_target}/{roster.labeled_domain}: "
+                f"{specimen_index}/{len(specimen_ids)} specimens"
+            )
+    if consumed != {row.example.state_sha256 for row in action_records}:
+        raise G1StopExecutionError("source STOP and action-bank state rosters differ")
+    return tuple(output)
+
+
+def build_g1_source_stop_bank(
+    runtime: G1Runtime,
+    protocol: G1Protocol,
+    dependencies: G1SourceDependencies,
+    *,
+    encoder: object,
+    teacher_bank_root: str | Path,
+    fixed_endpoint_root: str | Path,
+    work_root: str | Path,
+    progress: Callable[[str], None] | None = None,
+) -> G1StopBankBuild:
+    outer = dependencies.roster.outer_target
+    source = dependencies.roster.labeled_domain
+    _identity, action_records = read_teacher_bank(
+        source_teacher_bank_path(teacher_bank_root, outer, source)
+    )
+    fixed_records = read_g1_outer_fixed_endpoint_records(
+        protocol,
+        outer_target=outer,
+        work_root=fixed_endpoint_root,
+    )
+    records = materialize_g1_source_stop_records(
+        runtime,
+        protocol,
+        dependencies,
+        encoder=encoder,
+        action_records=action_records,
+        fixed_endpoint_records=fixed_records,
+        progress=progress,
+    )
+    path = stop_bank_path(work_root, outer, source)
+    bank = write_stop_bank(path, records)
+    return G1StopBankBuild(
+        path=path,
+        outer_target=outer,
+        source_domain=source,
+        specimen_count=int(protocol.domain_counts[source]),
+        dependency_sha256=dependencies.state_sha256,
+        bank=bank,
+    )
+
+
+def build_g1_all_source_stop_banks(
+    runtime: G1Runtime,
+    protocol: G1Protocol,
+    *,
+    encoder: object,
+    teacher_bank_root: str | Path,
+    fixed_endpoint_root: str | Path,
+    work_root: str | Path,
+    start_fold: int = 1,
+    progress: Callable[[str], None] | None = None,
+) -> tuple[G1StopBankBuild, ...]:
+    pairs = tuple(
+        (outer, source)
+        for outer in protocol.domain_order
+        for source in protocol.domain_order
+        if source != outer
+    )
+    if type(start_fold) is not int or not 1 <= start_fold <= len(pairs):
+        raise G1StopExecutionError("STOP-bank start fold is invalid")
+    results = []
+    for fold_index, (outer, source) in enumerate(
+        pairs[start_fold - 1 :], start=start_fold
+    ):
+        if progress is not None:
+            progress(f"G1 STOP-bank fold {fold_index}/{len(pairs)}: {outer}/{source}")
+        try:
+            dependencies = build_g1_source_dependencies(
+                runtime,
+                protocol,
+                outer_target=outer,
+                labeled_domain=source,
+                encoder=encoder,
+                progress=progress,
+            )
+        except G1ExecutionError as error:
+            raise G1StopExecutionError("STOP-bank dependency fit failed") from error
+        results.append(
+            build_g1_source_stop_bank(
+                runtime,
+                protocol,
+                dependencies,
+                encoder=encoder,
+                teacher_bank_root=teacher_bank_root,
+                fixed_endpoint_root=fixed_endpoint_root,
+                work_root=work_root,
+                progress=progress,
+            )
+        )
+    return tuple(results)
+
+
 __all__ = [
     "G1FixedEndpointBankFile",
     "G1FixedEndpointBuild",
     "G1FixedEndpointRecord",
+    "G1StopBankBuild",
     "G1StopExecutionError",
     "build_g1_all_source_fixed_endpoint_banks",
+    "build_g1_all_source_stop_banks",
     "build_g1_source_fixed_endpoint_bank",
+    "build_g1_source_stop_bank",
     "fixed_endpoint_bank_path",
     "materialize_g1_source_fixed_endpoint_records",
+    "materialize_g1_source_stop_records",
     "read_fixed_endpoint_bank",
+    "read_g1_outer_fixed_endpoint_records",
     "select_g1_source_fixed_reference",
+    "stop_bank_path",
     "write_fixed_endpoint_bank",
 ]

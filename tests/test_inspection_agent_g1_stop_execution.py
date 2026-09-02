@@ -13,8 +13,10 @@ from cmc_bbdm.inspection_agent_g1.stop_execution import (
     G1FixedEndpointBuild,
     G1FixedEndpointRecord,
     build_g1_all_source_fixed_endpoint_banks,
+    build_g1_all_source_stop_banks,
     read_fixed_endpoint_bank,
     select_g1_source_fixed_reference,
+    stop_bank_path,
     write_fixed_endpoint_bank,
 )
 from cmc_bbdm.inspection_agent_g1.teacher import authorize_source_teacher
@@ -156,3 +158,64 @@ def test_fixed_endpoint_batch_resume_follows_directed_fold_order(
     )
     assert tuple(calls) == pairs[2:]
     assert tuple((row.outer_target, row.source_domain) for row in results) == pairs[2:]
+
+
+def test_stop_bank_path_is_bound_to_outer_and_source() -> None:
+    assert stop_bank_path("stop", "outer", "source").as_posix() == (
+        "stop/outer/source.parquet"
+    )
+
+
+def test_stop_bank_batch_resume_uses_the_same_directed_fold_order(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    calls: list[tuple[str, str]] = []
+    protocol = SimpleNamespace(domain_order=DOMAINS)
+
+    def fake_dependencies(
+        _runtime: object,
+        _protocol: object,
+        *,
+        outer_target: str,
+        labeled_domain: str,
+        **_kwargs: object,
+    ) -> object:
+        calls.append((outer_target, labeled_domain))
+        return SimpleNamespace(
+            roster=SimpleNamespace(
+                outer_target=outer_target,
+                labeled_domain=labeled_domain,
+            )
+        )
+
+    monkeypatch.setattr(stop_module, "build_g1_source_dependencies", fake_dependencies)
+    def fake_stop_bank(
+        _runtime: object,
+        _protocol: object,
+        dependencies: object,
+        **_kwargs: object,
+    ) -> object:
+        return SimpleNamespace(
+            outer_target=dependencies.roster.outer_target,
+            source_domain=dependencies.roster.labeled_domain,
+        )
+
+    monkeypatch.setattr(stop_module, "build_g1_source_stop_bank", fake_stop_bank)
+    results = build_g1_all_source_stop_banks(
+        object(),
+        protocol,
+        encoder=object(),
+        teacher_bank_root=tmp_path / "teacher",
+        fixed_endpoint_root=tmp_path / "fixed",
+        work_root=tmp_path / "stop",
+        start_fold=4,
+    )
+    pairs = tuple(
+        (outer, source)
+        for outer in DOMAINS
+        for source in DOMAINS
+        if source != outer
+    )
+    assert tuple(calls) == pairs[3:]
+    assert tuple((row.outer_target, row.source_domain) for row in results) == pairs[3:]
