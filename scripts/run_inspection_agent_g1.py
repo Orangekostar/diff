@@ -21,6 +21,9 @@ from cmc_bbdm.inspection_agent_g1 import (
     G1ExecutionError,
     G1SourceBridgeError,
     G1StopExecutionError,
+    G1TeacherBankManifestRow,
+    analyze_g1_target_curves,
+    analyze_g1_target_stopping,
     build_g1_all_source_bridge_banks,
     build_g1_all_source_fixed_endpoint_banks,
     build_g1_all_source_stop_banks,
@@ -35,17 +38,29 @@ from cmc_bbdm.inspection_agent_g1 import (
     build_g1_source_stop_bank,
     build_g1_source_teacher_bank,
     compare_g1_packages,
+    freeze_g1_outer_formal_selection,
     load_g1_encoder,
     load_g1_protocol,
     load_g1_runtime,
+    materialize_g1_target_stop_outcomes,
+    outer_formal_selection_path,
+    read_g1_outer_formal_selection,
+    read_g1_target_curve_bank,
+    read_g1_target_reference_bank,
     read_g1_target_trajectory_bank,
+    read_source_bridge_bank,
+    read_teacher_bank,
     run_outer_dagger_selection,
     run_outer_engineering_selection,
     run_outer_stop_selection,
     run_outer_supervised_selection,
     seal_g1_target_trajectory_bank,
+    source_bridge_bank_path,
+    target_curve_bank_path,
+    target_reference_bank_path,
     target_trajectory_bank_path,
     validate_g1_package,
+    write_g1_formal_package,
 )
 
 
@@ -193,6 +208,7 @@ def _parser() -> argparse.ArgumentParser:
     build_target.add_argument("--fixed-endpoint-root", default=None)
     build_target.add_argument("--stop-bank-root", default=None)
     build_target.add_argument("--stop-selection-root", default=None)
+    build_target.add_argument("--formal-selection-root", default=None)
     build_target.add_argument("--work-root", default=None)
 
     evaluate_target = commands.add_parser("evaluate-target")
@@ -202,8 +218,20 @@ def _parser() -> argparse.ArgumentParser:
     evaluate_target.add_argument("--project-root", default=str(_PROJECT_ROOT))
     evaluate_target.add_argument("--device", default=None)
     evaluate_target.add_argument("--trajectory-root", default=None)
+    evaluate_target.add_argument("--formal-selection-root", default=None)
     evaluate_target.add_argument("--curve-root", default=None)
     evaluate_target.add_argument("--reference-root", default=None)
+
+    build_formal = commands.add_parser("build-formal-package")
+    build_formal.add_argument("--config", required=True)
+    build_formal.add_argument("--source-project-root", required=True)
+    build_formal.add_argument("--project-root", default=str(_PROJECT_ROOT))
+    build_formal.add_argument("--teacher-bank-root", default=None)
+    build_formal.add_argument("--trajectory-root", default=None)
+    build_formal.add_argument("--curve-root", default=None)
+    build_formal.add_argument("--reference-root", default=None)
+    build_formal.add_argument("--formal-selection-root", default=None)
+    build_formal.add_argument("--output", default=None)
 
     validate = commands.add_parser("validate")
     validate.add_argument("--config", required=True)
@@ -230,6 +258,139 @@ def _print_json(payload: object) -> None:
 def main(argv: Sequence[str] | None = None) -> int:
     args = _parser().parse_args(argv)
     try:
+        if args.command == "build-formal-package":
+            protocol = load_g1_protocol(
+                args.config,
+                project_root=args.project_root,
+            )
+            runtime = load_g1_runtime(
+                protocol,
+                project_root=args.project_root,
+                source_project_root=args.source_project_root,
+                progress=_progress,
+            )
+            work_base = Path(args.project_root) / protocol.work_output
+            teacher_root = args.teacher_bank_root or str(
+                Path(args.project_root) / protocol.teacher_bank_work_path
+            )
+            trajectory_root = args.trajectory_root or str(
+                work_base / "target_trajectories"
+            )
+            curve_root = args.curve_root or str(work_base / "target_curves")
+            reference_root = args.reference_root or str(
+                work_base / "target_references"
+            )
+            selection_root = args.formal_selection_root or str(
+                work_base / "formal_selection"
+            )
+            selections = []
+            trajectories = []
+            learned_curves = []
+            reference_curves = []
+            teacher_manifests = []
+            for outer_target in protocol.domain_order:
+                selection = read_g1_outer_formal_selection(
+                    outer_formal_selection_path(selection_root, outer_target)
+                )
+                trajectory_bank, target_rows = read_g1_target_trajectory_bank(
+                    target_trajectory_bank_path(trajectory_root, outer_target)
+                )
+                seal = seal_g1_target_trajectory_bank(
+                    runtime,
+                    trajectory_bank,
+                    target_rows,
+                )
+                curve_bank, curve_rows = read_g1_target_curve_bank(
+                    target_curve_bank_path(curve_root, outer_target)
+                )
+                reference_bank, reference_rows = read_g1_target_reference_bank(
+                    target_reference_bank_path(reference_root, outer_target)
+                )
+                if (
+                    selection.outer_target != outer_target
+                    or {row.action_selection_sha256 for row in target_rows}
+                    != {selection.action_selection_sha256}
+                    or {row.action_model_sha256 for row in target_rows}
+                    != {selection.action_model_sha256}
+                    or {row.stop_model_sha256 for row in target_rows}
+                    != {selection.stop_model_sha256}
+                    or curve_bank.trajectory_bank_seal_sha256
+                    != seal.state_sha256
+                    or reference_bank.trajectory_bank_seal_sha256
+                    != seal.state_sha256
+                    or {row.bank_seal_sha256 for row in curve_rows}
+                    != {seal.state_sha256}
+                    or {row.bank_seal_sha256 for row in reference_rows}
+                    != {seal.state_sha256}
+                ):
+                    raise G1ExecutionError(
+                        "formal target evidence differs from its frozen selection"
+                    )
+                selections.append(selection)
+                trajectories.extend(target_rows)
+                learned_curves.extend(curve_rows)
+                reference_curves.extend(reference_rows)
+                for source_domain in selection.source_domains:
+                    teacher_bank, _teacher_rows = read_teacher_bank(
+                        Path(teacher_root)
+                        / outer_target
+                        / f"{source_domain}.parquet"
+                    )
+                    teacher_manifests.append(
+                        G1TeacherBankManifestRow(
+                            outer_target=outer_target,
+                            source_domain=source_domain,
+                            row_count=teacher_bank.row_count,
+                            parquet_sha256=teacher_bank.parquet_sha256,
+                            records_sha256=teacher_bank.records_sha256,
+                            manifest_sha256=teacher_bank.manifest_sha256,
+                        )
+                    )
+            fixed_selections = tuple(
+                fixed
+                for selection in selections
+                for fixed in selection.fixed_selections
+            )
+            stop_outcomes = materialize_g1_target_stop_outcomes(
+                tuple(trajectories),
+                tuple(learned_curves),
+                tuple(reference_curves),
+                fixed_selections,
+            )
+            curve_analysis = analyze_g1_target_curves(
+                tuple(learned_curves),
+                tuple(reference_curves),
+                fixed_selections,
+                no_target_leakage=True,
+                deterministic_replay=True,
+                deployment_bridge_valid=True,
+            )
+            stopping_analysis = analyze_g1_target_stopping(stop_outcomes)
+            result = write_g1_formal_package(
+                args.output
+                or str(Path(args.project_root) / protocol.formal_output),
+                tuple(selections),
+                tuple(trajectories),
+                tuple(learned_curves),
+                tuple(reference_curves),
+                stop_outcomes,
+                curve_analysis,
+                stopping_analysis,
+                tuple(teacher_manifests),
+                project_root=args.project_root,
+                config_path=args.config,
+            )
+            _print_json(
+                {
+                    "status": result.status,
+                    "output_tree_sha256": result.output_tree_sha256,
+                    "manifest_sha256": result.manifest_sha256,
+                    "output": args.output
+                    or str(Path(args.project_root) / protocol.formal_output),
+                }
+            )
+            return 0
+
         if args.command == "evaluate-target":
             protocol = load_g1_protocol(
                 args.config,
@@ -252,6 +413,25 @@ def main(argv: Sequence[str] | None = None) -> int:
             trajectory_bank, trajectories = read_g1_target_trajectory_bank(
                 target_trajectory_bank_path(trajectory_root, args.outer_target)
             )
+            formal_selection = read_g1_outer_formal_selection(
+                outer_formal_selection_path(
+                    args.formal_selection_root
+                    or str(work_base / "formal_selection"),
+                    args.outer_target,
+                )
+            )
+            if (
+                formal_selection.outer_target != args.outer_target
+                or {row.action_selection_sha256 for row in trajectories}
+                != {formal_selection.action_selection_sha256}
+                or {row.action_model_sha256 for row in trajectories}
+                != {formal_selection.action_model_sha256}
+                or {row.stop_model_sha256 for row in trajectories}
+                != {formal_selection.stop_model_sha256}
+            ):
+                raise G1ExecutionError(
+                    "target trajectory differs from frozen formal selection"
+                )
             seal = seal_g1_target_trajectory_bank(
                 runtime,
                 trajectory_bank,
@@ -300,6 +480,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                         trajectory_bank.manifest_sha256
                     ),
                     "trajectory_bank_seal_sha256": seal.state_sha256,
+                    "formal_selection_sha256": formal_selection.state_sha256,
                     "target_outcomes_opened": True,
                     "curve_bank_path": str(curves.path),
                     "curve_record_count": curves.record_count,
@@ -332,14 +513,14 @@ def main(argv: Sequence[str] | None = None) -> int:
             teacher_root = args.teacher_bank_root or str(
                 Path(args.project_root) / protocol.teacher_bank_work_path
             )
+            bridge_root = args.bridge_root or str(work_base / "source_bridges")
             action_selection = run_outer_dagger_selection(
                 runtime,
                 protocol,
                 outer_target=args.outer_target,
                 encoder=encoder,
                 teacher_bank_root=teacher_root,
-                bridge_root=args.bridge_root
-                or str(work_base / "source_bridges"),
+                bridge_root=bridge_root,
                 supervised_root=args.supervised_root
                 or str(work_base / "model_selection"),
                 learned_root=args.learned_root
@@ -369,6 +550,36 @@ def main(argv: Sequence[str] | None = None) -> int:
                 device=args.device or protocol.default_device,
                 progress=_progress,
             )
+            source_domains = tuple(
+                domain
+                for domain in protocol.domain_order
+                if domain != args.outer_target
+            )
+            bridge_records = []
+            for source_domain in source_domains:
+                _bridge_bank, source_rows = read_source_bridge_bank(
+                    source_bridge_bank_path(
+                        bridge_root,
+                        args.outer_target,
+                        source_domain,
+                    )
+                )
+                bridge_records.extend(source_rows)
+            formal_selection = freeze_g1_outer_formal_selection(
+                tuple(bridge_records),
+                stop_selection.thresholds,
+                outer_target=args.outer_target,
+                action_selection_sha256=stop_selection.state_sha256,
+                action_model_sha256=(
+                    stop_selection.action_policy.model_state_sha256
+                ),
+                stop_model_sha256=stop_selection.stop_policy.model_state_sha256,
+                path=outer_formal_selection_path(
+                    args.formal_selection_root
+                    or str(work_base / "formal_selection"),
+                    args.outer_target,
+                ),
+            )
             dependencies = build_g1_final_dependencies(
                 runtime,
                 protocol,
@@ -394,6 +605,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                     "target_outcomes_opened": result.target_outcomes_opened,
                     "final_dependency_sha256": result.final_dependency_sha256,
                     "outer_selection_sha256": result.outer_selection_sha256,
+                    "formal_selection_sha256": formal_selection.state_sha256,
                     "bank_path": str(result.path),
                     "parquet_sha256": result.bank.parquet_sha256,
                     "records_sha256": result.bank.records_sha256,

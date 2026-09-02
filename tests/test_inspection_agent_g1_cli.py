@@ -41,6 +41,7 @@ def test_g1_cli_help_lists_inspection_commands() -> None:
         "select-outer-stop",
         "build-target-trajectories",
         "evaluate-target",
+        "build-formal-package",
         "validate",
         "compare",
     ):
@@ -141,6 +142,7 @@ def test_g1_cli_subcommand_help_lists_required_flags() -> None:
             "--stop-bank-root",
             "--dagger-work-root",
             "--stop-selection-root",
+            "--formal-selection-root",
             "--work-root",
         ),
         "evaluate-target": (
@@ -148,8 +150,19 @@ def test_g1_cli_subcommand_help_lists_required_flags() -> None:
             "--source-project-root",
             "--outer-target",
             "--trajectory-root",
+            "--formal-selection-root",
             "--curve-root",
             "--reference-root",
+        ),
+        "build-formal-package": (
+            "--config",
+            "--source-project-root",
+            "--teacher-bank-root",
+            "--trajectory-root",
+            "--curve-root",
+            "--reference-root",
+            "--formal-selection-root",
+            "--output",
         ),
         "validate": ("--config", "--path"),
         "compare": ("--config", "--formal", "--replay"),
@@ -179,6 +192,7 @@ def test_g1_cli_missing_required_arguments_returns_code_two() -> None:
         "select-outer-stop",
         "build-target-trajectories",
         "evaluate-target",
+        "build-formal-package",
         "validate",
         "compare",
     ):
