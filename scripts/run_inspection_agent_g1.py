@@ -18,10 +18,13 @@ if _LOCAL_PACKAGE not in cmc_bbdm.__path__:
 from cmc_bbdm.inspection_agent_g1 import (
     G1ArtifactError,
     G1ExecutionError,
+    G1SourceBridgeError,
     G1StopExecutionError,
+    build_g1_all_source_bridge_banks,
     build_g1_all_source_fixed_endpoint_banks,
     build_g1_all_source_stop_banks,
     build_g1_all_source_teacher_banks,
+    build_g1_source_bridge_bank,
     build_g1_source_dependencies,
     build_g1_source_fixed_endpoint_bank,
     build_g1_source_stop_bank,
@@ -93,6 +96,23 @@ def _parser() -> argparse.ArgumentParser:
     build_all_stop.add_argument("--fixed-endpoint-root", default=None)
     build_all_stop.add_argument("--work-root", default=None)
     build_all_stop.add_argument("--start-fold", type=int, default=1)
+
+    build_bridge = commands.add_parser("build-source-bridge")
+    build_bridge.add_argument("--config", required=True)
+    build_bridge.add_argument("--source-project-root", required=True)
+    build_bridge.add_argument("--outer-target", required=True)
+    build_bridge.add_argument("--source-domain", required=True)
+    build_bridge.add_argument("--project-root", default=str(_PROJECT_ROOT))
+    build_bridge.add_argument("--device", default=None)
+    build_bridge.add_argument("--work-root", default=None)
+
+    build_all_bridges = commands.add_parser("build-all-source-bridges")
+    build_all_bridges.add_argument("--config", required=True)
+    build_all_bridges.add_argument("--source-project-root", required=True)
+    build_all_bridges.add_argument("--project-root", default=str(_PROJECT_ROOT))
+    build_all_bridges.add_argument("--device", default=None)
+    build_all_bridges.add_argument("--work-root", default=None)
+    build_all_bridges.add_argument("--start-fold", type=int, default=1)
 
     select_outer = commands.add_parser("select-outer")
     select_outer.add_argument("--config", required=True)
@@ -259,6 +279,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             "build-all-banks",
             "build-fixed-endpoints",
             "build-all-fixed-endpoints",
+            "build-source-bridge",
+            "build-all-source-bridges",
         }:
             protocol = load_g1_protocol(
                 args.config,
@@ -278,14 +300,51 @@ def main(argv: Sequence[str] | None = None) -> int:
                 "build-fixed-endpoints",
                 "build-all-fixed-endpoints",
             }
+            source_bridges = args.command in {
+                "build-source-bridge",
+                "build-all-source-bridges",
+            }
             work_root = args.work_root or str(
                 Path(args.project_root)
                 / (
                     Path(protocol.work_output) / "fixed_endpoints"
                     if fixed_endpoints
-                    else Path(protocol.teacher_bank_work_path)
+                    else (
+                        Path(protocol.work_output) / "source_bridges"
+                        if source_bridges
+                        else Path(protocol.teacher_bank_work_path)
+                    )
                 )
             )
+            if args.command == "build-all-source-bridges":
+                results = build_g1_all_source_bridge_banks(
+                    runtime,
+                    protocol,
+                    encoder=encoder,
+                    work_root=work_root,
+                    start_fold=args.start_fold,
+                    progress=_progress,
+                )
+                _print_json(
+                    {
+                        "bank_count": len(results),
+                        "banks": [
+                            {
+                                "bank_path": str(result.path),
+                                "outer_target": result.outer_target,
+                                "source_domain": result.source_domain,
+                                "specimen_count": result.specimen_count,
+                                "dependency_sha256": result.dependency_sha256,
+                                "row_count": result.bank.row_count,
+                                "parquet_sha256": result.bank.parquet_sha256,
+                                "records_sha256": result.bank.records_sha256,
+                                "manifest_sha256": result.bank.manifest_sha256,
+                            }
+                            for result in results
+                        ],
+                    }
+                )
+                return 0
             if args.command == "build-all-fixed-endpoints":
                 results = build_g1_all_source_fixed_endpoint_banks(
                     runtime,
@@ -375,6 +434,29 @@ def main(argv: Sequence[str] | None = None) -> int:
                     }
                 )
                 return 0
+            if args.command == "build-source-bridge":
+                result = build_g1_source_bridge_bank(
+                    runtime,
+                    protocol,
+                    dependencies,
+                    encoder=encoder,
+                    work_root=work_root,
+                    progress=_progress,
+                )
+                _print_json(
+                    {
+                        "bank_path": str(result.path),
+                        "outer_target": result.outer_target,
+                        "source_domain": result.source_domain,
+                        "specimen_count": result.specimen_count,
+                        "dependency_sha256": result.dependency_sha256,
+                        "row_count": result.bank.row_count,
+                        "parquet_sha256": result.bank.parquet_sha256,
+                        "records_sha256": result.bank.records_sha256,
+                        "manifest_sha256": result.bank.manifest_sha256,
+                    }
+                )
+                return 0
             result = build_g1_source_teacher_bank(
                 runtime,
                 protocol,
@@ -429,6 +511,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         return 0
     except (
         G1ExecutionError,
+        G1SourceBridgeError,
         G1StopExecutionError,
         G1ArtifactError,
         OSError,

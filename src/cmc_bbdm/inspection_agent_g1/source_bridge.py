@@ -7,6 +7,7 @@ import json
 import math
 import os
 import tempfile
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from itertools import pairwise
 from pathlib import Path
@@ -26,6 +27,13 @@ from .formal import (
     evaluate_g1_action_history,
     plan_g1_fixed_actions,
     run_g1_warm_started_oracle_actions,
+)
+from .g1 import (
+    G1Protocol,
+    G1Runtime,
+    G1SourceDependencies,
+    build_g1_source_dependencies,
+    build_g1_world,
 )
 from .metrics import NOMINAL_CHECKPOINTS, EngineeringCurve
 from .teacher import (
@@ -177,6 +185,16 @@ class G1SourceBridgeBankFile:
     parquet_sha256: str
     records_sha256: str
     manifest_sha256: str
+
+
+@dataclass(frozen=True, slots=True)
+class G1SourceBridgeBuild:
+    path: Path
+    outer_target: str
+    source_domain: str
+    specimen_count: int
+    dependency_sha256: str
+    bank: G1SourceBridgeBankFile
 
 
 @dataclass(frozen=True, slots=True)
@@ -390,6 +408,232 @@ def materialize_source_bridge_for_world(
             curve=oracle_curve,
         )
     )
+    return tuple(output)
+
+
+def source_bridge_bank_path(
+    work_root: str | Path,
+    outer_target: str,
+    source_domain: str,
+) -> Path:
+    if (
+        type(outer_target) is not str
+        or not outer_target
+        or type(source_domain) is not str
+        or not source_domain
+        or outer_target == source_domain
+        or any(
+            "/" in value or "\\" in value or value in {".", ".."}
+            for value in (outer_target, source_domain)
+        )
+    ):
+        raise G1SourceBridgeError("source bridge fold identity is invalid")
+    return Path(work_root) / outer_target / f"{source_domain}.parquet"
+
+
+def materialize_g1_source_bridge_records(
+    runtime: G1Runtime,
+    protocol: G1Protocol,
+    dependencies: G1SourceDependencies,
+    *,
+    encoder: object,
+    specimen_ids: tuple[str, ...],
+    progress: Callable[[str], None] | None = None,
+) -> tuple[G1SourceBridgeRecord, ...]:
+    if (
+        type(runtime) is not G1Runtime
+        or type(protocol) is not G1Protocol
+        or type(dependencies) is not G1SourceDependencies
+        or not callable(getattr(encoder, "encode", None))
+        or type(specimen_ids) is not tuple
+        or not specimen_ids
+        or len(set(specimen_ids)) != len(specimen_ids)
+        or (progress is not None and not callable(progress))
+    ):
+        raise G1SourceBridgeError("source bridge materialization request is invalid")
+    roster = dependencies.roster
+    available = {
+        specimen
+        for specimen, domain in zip(
+            runtime.mavis.specimen_ids,
+            runtime.mavis.dataset_ids,
+            strict=True,
+        )
+        if domain == roster.labeled_domain
+    }
+    if not set(specimen_ids) <= available:
+        raise G1SourceBridgeError("source bridge specimen is outside its source fold")
+    output = []
+    prior = dependencies.prior_fit.prior
+    assessor = dependencies.assessor_fit.assessor
+    for specimen_index, specimen in enumerate(specimen_ids, start=1):
+        teacher_view = runtime.mavis.source_teacher_view(specimen)
+        specimen_sha = runtime.specimen_sha256(roster.labeled_domain, specimen)
+        for task in (InspectionTask.FIELD, InspectionTask.CAI):
+            world, grid, surface = build_g1_world(
+                runtime,
+                dataset_id=roster.labeled_domain,
+                specimen_id=specimen,
+                task=task,
+                endpoint_budget=protocol.endpoint_budget,
+            )
+            output.extend(
+                materialize_source_bridge_for_world(
+                    world,
+                    grid,
+                    surface.hypothesis,
+                    prior,
+                    dependencies.authorization,
+                    assessor=assessor,
+                    encoder=encoder,
+                    outer_target=roster.outer_target,
+                    source_domain=roster.labeled_domain,
+                    specimen_id=specimen,
+                    specimen_sha256=specimen_sha,
+                    dependency_sha256=dependencies.state_sha256,
+                    full_scan=teacher_view.full_scan,
+                    true_cai=teacher_view.true_cai,
+                    random_seed=protocol.teacher_bank_seed,
+                )
+            )
+        if progress is not None and (
+            specimen_index % 10 == 0 or specimen_index == len(specimen_ids)
+        ):
+            progress(
+                f"G1 source bridge {roster.outer_target}/{roster.labeled_domain}: "
+                f"{specimen_index}/{len(specimen_ids)} specimens"
+            )
+    records = tuple(output)
+    if len(records) != 12 * len(specimen_ids):
+        raise G1SourceBridgeError("source bridge row count changed")
+    return records
+
+
+def build_g1_source_bridge_bank(
+    runtime: G1Runtime,
+    protocol: G1Protocol,
+    dependencies: G1SourceDependencies,
+    *,
+    encoder: object,
+    work_root: str | Path,
+    progress: Callable[[str], None] | None = None,
+) -> G1SourceBridgeBuild:
+    if (
+        type(runtime) is not G1Runtime
+        or type(protocol) is not G1Protocol
+        or type(dependencies) is not G1SourceDependencies
+        or not callable(getattr(encoder, "encode", None))
+    ):
+        raise G1SourceBridgeError("source bridge build request is invalid")
+    roster = dependencies.roster
+    specimen_ids = tuple(
+        specimen
+        for specimen, domain in zip(
+            runtime.mavis.specimen_ids,
+            runtime.mavis.dataset_ids,
+            strict=True,
+        )
+        if domain == roster.labeled_domain
+    )
+    if len(specimen_ids) != int(protocol.domain_counts[roster.labeled_domain]):
+        raise G1SourceBridgeError("formal source bridge specimen roster changed")
+    path = source_bridge_bank_path(
+        work_root,
+        roster.outer_target,
+        roster.labeled_domain,
+    )
+    manifest_path = _manifest_path(path)
+    if path.exists() or manifest_path.exists():
+        bank, records = read_source_bridge_bank(path)
+        expected_specimens = {
+            runtime.specimen_sha256(roster.labeled_domain, specimen)
+            for specimen in specimen_ids
+        }
+        if (
+            {row.curve.specimen_sha256 for row in records} != expected_specimens
+            or len(records) != 12 * len(specimen_ids)
+            or any(
+                row.fit_domains != roster.fit_domains
+                or row.dependency_sha256 != dependencies.state_sha256
+                for row in records
+            )
+        ):
+            raise G1SourceBridgeError("existing source bridge has stale evidence")
+        if progress is not None:
+            progress(f"G1 source bridge reused: {path}")
+    else:
+        records = materialize_g1_source_bridge_records(
+            runtime,
+            protocol,
+            dependencies,
+            encoder=encoder,
+            specimen_ids=specimen_ids,
+            progress=progress,
+        )
+        bank = write_source_bridge_bank(path, records)
+    return G1SourceBridgeBuild(
+        path=path,
+        outer_target=roster.outer_target,
+        source_domain=roster.labeled_domain,
+        specimen_count=len(specimen_ids),
+        dependency_sha256=dependencies.state_sha256,
+        bank=bank,
+    )
+
+
+def build_g1_all_source_bridge_banks(
+    runtime: G1Runtime,
+    protocol: G1Protocol,
+    *,
+    encoder: object,
+    work_root: str | Path,
+    start_fold: int = 1,
+    progress: Callable[[str], None] | None = None,
+) -> tuple[G1SourceBridgeBuild, ...]:
+    pairs = tuple(
+        (outer, source)
+        for outer in protocol.domain_order
+        for source in protocol.domain_order
+        if source != outer
+    )
+    if (
+        type(runtime) is not G1Runtime
+        or type(protocol) is not G1Protocol
+        or runtime.domain_order != protocol.domain_order
+        or not callable(getattr(encoder, "encode", None))
+        or type(start_fold) is not int
+        or not 1 <= start_fold <= len(pairs)
+        or (progress is not None and not callable(progress))
+    ):
+        raise G1SourceBridgeError("all-source bridge build request is invalid")
+    selected = pairs[start_fold - 1 :]
+    output = []
+    for fold_index, (outer, source) in enumerate(selected, start=start_fold):
+        if progress is not None:
+            progress(
+                f"G1 source bridge fold {fold_index}/{len(pairs)}: {outer}/{source}"
+            )
+        dependencies = build_g1_source_dependencies(
+            runtime,
+            protocol,
+            outer_target=outer,
+            labeled_domain=source,
+            encoder=encoder,
+            progress=progress,
+        )
+        result = build_g1_source_bridge_bank(
+            runtime,
+            protocol,
+            dependencies,
+            encoder=encoder,
+            work_root=work_root,
+            progress=progress,
+        )
+        if (result.outer_target, result.source_domain) != (outer, source):
+            raise G1SourceBridgeError("source bridge fold identity changed")
+        output.append(result)
+    if tuple((row.outer_target, row.source_domain) for row in output) != selected:
+        raise G1SourceBridgeError("source bridge directed roster changed")
     return tuple(output)
 
 
@@ -741,11 +985,16 @@ def select_source_fixed_bridge(
 __all__ = [
     "SOURCE_ORACLE_METHODS",
     "G1SourceBridgeBankFile",
+    "G1SourceBridgeBuild",
     "G1SourceBridgeError",
     "G1SourceBridgeRecord",
     "SourceFixedBridgeSelection",
+    "build_g1_all_source_bridge_banks",
+    "build_g1_source_bridge_bank",
+    "materialize_g1_source_bridge_records",
     "materialize_source_bridge_for_world",
     "read_source_bridge_bank",
     "select_source_fixed_bridge",
+    "source_bridge_bank_path",
     "write_source_bridge_bank",
 ]
