@@ -63,7 +63,11 @@ def test_core_then_winner_conditioned_tuning_covers_every_registered_axis() -> N
     core = core_policy_candidates()
     assert len(core) == 4
     assert {row.model_name for row in core} == set(PolicyModelName)
-    assert {row.route for row in core} == set(TrainingRoute)
+    assert {row.route for row in core} == {
+        TrainingRoute.HARD_BC,
+        TrainingRoute.SOFT_UTILITY_DISTILL,
+    }
+    assert all(row.route is not TrainingRoute.PRIVILEGED_AAWR for row in core)
     soft = next(
         row
         for row in core

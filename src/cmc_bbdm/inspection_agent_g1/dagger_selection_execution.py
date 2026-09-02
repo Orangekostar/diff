@@ -11,6 +11,10 @@ from pathlib import Path
 
 from cmc_bbdm.inspection_agent.contracts import InspectionTask
 
+from .aawr_selection_execution import (
+    G1OuterAAWRSelectionRun,
+    run_outer_aawr_selection,
+)
 from .dagger_orchestration import (
     G1OuterDaggerBuild,
     build_g1_outer_dagger_banks,
@@ -62,6 +66,7 @@ class G1OuterDaggerSelectionRun:
     candidates: tuple[G1EngineeringCandidateRun, ...]
     selection: OuterPolicySelection
     aawr_authorization: AAWRAuthorization
+    aawr_selection: G1OuterAAWRSelectionRun | None
     path: Path
     target_outcomes_opened: bool = False
 
@@ -98,12 +103,56 @@ class G1OuterDaggerSelectionRun:
             )
             or type(self.aawr_authorization) is not AAWRAuthorization
             or self.aawr_authorization.outer_target != self.outer_target
+            or (
+                self.aawr_authorization.status == "AUTHORIZED_SOURCE_ONLY"
+                and (
+                    type(self.aawr_selection) is not G1OuterAAWRSelectionRun
+                    or self.aawr_selection.outer_target != self.outer_target
+                    or self.aawr_selection.authorization.state_sha256
+                    != self.aawr_authorization.state_sha256
+                    or self.aawr_selection.base_candidate.state_sha256
+                    != next(
+                        row.state_sha256
+                        for row in self.candidates
+                        if row.candidate.hyperparameters.state_sha256
+                        == self.selection.selected_hyperparameters_sha256
+                    )
+                )
+            )
+            or (
+                self.aawr_authorization.status == "NOT_RUN_NOT_AUTHORIZED"
+                and self.aawr_selection is not None
+            )
             or not isinstance(self.path, Path)
             or self.target_outcomes_opened
         ):
             raise G1DaggerSelectionExecutionError(
                 "outer DAgger selection run is invalid"
             )
+
+    @property
+    def final_selection(self) -> OuterPolicySelection:
+        aawr = self.aawr_selection
+        return self.selection if aawr is None else aawr.selection
+
+    @property
+    def final_candidates(self) -> tuple[G1EngineeringCandidateRun, ...]:
+        aawr = self.aawr_selection
+        return self.candidates if aawr is None else (*self.candidates, *aawr.candidates)
+
+    @property
+    def selected_candidate_run(self) -> G1EngineeringCandidateRun:
+        selected_sha256 = self.final_selection.selected_hyperparameters_sha256
+        matches = tuple(
+            row
+            for row in self.final_candidates
+            if row.candidate.hyperparameters.state_sha256 == selected_sha256
+        )
+        if len(matches) != 1:
+            raise G1DaggerSelectionExecutionError(
+                "final action selection has no unique candidate"
+            )
+        return matches[0]
 
 
 def _atomic_json(path: Path, payload: object) -> None:
@@ -356,11 +405,29 @@ def run_outer_dagger_selection(
             and selected_hyperparameters.dagger_iterations > 0
         ),
     )
+    aawr_selection = None
+    if authorization.status == "AUTHORIZED_SOURCE_ONLY":
+        aawr_selection = run_outer_aawr_selection(
+            runtime,
+            protocol,
+            outer_target=outer_target,
+            authorization=authorization,
+            base_candidate=selected,
+            teacher_records=dagger_build.records,
+            bridge_records=tuple(bridge_records),
+            dependency_factory=dependency_factory,
+            encoder=encoder,
+            learned_root=learned_root,
+            work_root=Path(work_root).parent / "aawr_selection",
+            device=device,
+            progress=progress,
+        )
+    final_selection = selection if aawr_selection is None else aawr_selection.selection
     destination = Path(work_root) / outer_target / "selection.json"
     _atomic_json(
         destination,
         {
-            "schema_version": 1,
+            "schema_version": 2,
             "scope": "inspection_agent_g1_outer_dagger_selection",
             "outer_target": outer_target,
             "base_engineering_selection_sha256": base_run.selection.state_sha256,
@@ -378,6 +445,10 @@ def run_outer_dagger_selection(
                 selected.candidate.hyperparameters.dagger_iterations
             ),
             "aawr_authorization": _aawr_payload(authorization),
+            "aawr_selection_path": (
+                None if aawr_selection is None else str(aawr_selection.path)
+            ),
+            "final_action_selection": outer_selection_payload(final_selection),
             "target_outcomes_opened": False,
         },
     )
@@ -388,6 +459,7 @@ def run_outer_dagger_selection(
         candidates=candidates,
         selection=selection,
         aawr_authorization=authorization,
+        aawr_selection=aawr_selection,
         path=destination,
         target_outcomes_opened=False,
     )

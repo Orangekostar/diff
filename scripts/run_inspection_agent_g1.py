@@ -795,17 +795,12 @@ def main(argv: Sequence[str] | None = None) -> int:
                 device=args.device or protocol.default_device,
                 progress=_progress,
             )
-            selected = next(
-                row
-                for row in result.candidates
-                if row.candidate.hyperparameters.state_sha256
-                == result.selection.selected_hyperparameters_sha256
-            )
+            selected = result.selected_candidate_run
             _print_json(
                 {
                     "outer_target": result.outer_target,
                     "selected_hyperparameters_sha256": (
-                        result.selection.selected_hyperparameters_sha256
+                        result.final_selection.selected_hyperparameters_sha256
                     ),
                     "selected_dagger_iterations": (
                         selected.candidate.hyperparameters.dagger_iterations
@@ -815,6 +810,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                         task.value
                         for task in result.aawr_authorization.authorized_tasks
                     ],
+                    "selected_route": selected.candidate.hyperparameters.route.value,
                     "target_outcomes_opened": result.target_outcomes_opened,
                     "selection_path": str(result.path),
                 }

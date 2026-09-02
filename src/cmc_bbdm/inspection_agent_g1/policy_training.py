@@ -44,6 +44,8 @@ REGISTERED_MAX_EPOCHS = 80
 REGISTERED_EARLY_STOPPING_PATIENCE = 12
 REGISTERED_BATCH_SPECIMENS = 8
 REGISTERED_GRADIENT_CLIP_NORM = 1.0
+REGISTERED_AAWR_EXPECTILES = (0.7, 0.8)
+REGISTERED_AAWR_BETAS = (1.0, 3.0)
 
 
 class G1PolicyTrainingError(ValueError):
@@ -76,6 +78,7 @@ def _readonly(value: object, shape: tuple[int, ...]) -> np.ndarray:
 class TrainingRoute(str, Enum):
     HARD_BC = "HARD_BC"
     SOFT_UTILITY_DISTILL = "SOFT_UTILITY_DISTILL"
+    PRIVILEGED_AAWR = "PRIVILEGED_AAWR"
 
 
 class PolicyModelName(str, Enum):
@@ -214,12 +217,46 @@ class PolicyTrainingHyperparameters:
     learning_rate: float
     weight_decay: float
     dagger_iterations: int
+    aawr_expectile: float | None = None
+    aawr_beta: float | None = None
+    aawr_authorized_tasks: tuple[InspectionTask, ...] = ()
+    aawr_authorization_sha256: str | None = None
+    base_hyperparameters_sha256: str | None = None
     state_sha256: str = field(init=False)
 
     def __post_init__(self) -> None:
         temperature = None if self.tau is None else float(self.tau)
         learning_rate = float(self.learning_rate)
         weight_decay = float(self.weight_decay)
+        expectile = (
+            None if self.aawr_expectile is None else float(self.aawr_expectile)
+        )
+        beta = None if self.aawr_beta is None else float(self.aawr_beta)
+        authorized_tasks = self.aawr_authorized_tasks
+        aawr_fields_absent = (
+            expectile is None
+            and beta is None
+            and authorized_tasks == ()
+            and self.aawr_authorization_sha256 is None
+            and self.base_hyperparameters_sha256 is None
+        )
+        aawr_fields_valid = (
+            expectile in REGISTERED_AAWR_EXPECTILES
+            and beta in REGISTERED_AAWR_BETAS
+            and type(authorized_tasks) is tuple
+            and 1 <= len(authorized_tasks) <= 2
+            and authorized_tasks
+            == tuple(
+                task
+                for task in (InspectionTask.FIELD, InspectionTask.CAI)
+                if task in authorized_tasks
+            )
+            and len(set(authorized_tasks)) == len(authorized_tasks)
+            and _valid_sha256(self.aawr_authorization_sha256)
+            and _valid_sha256(self.base_hyperparameters_sha256)
+            and self.dagger_iterations > 0
+            and temperature in REGISTERED_TEMPERATURES
+        )
         if (
             type(self.model_name) is not PolicyModelName
             or type(self.route) is not TrainingRoute
@@ -239,29 +276,46 @@ class PolicyTrainingHyperparameters:
                 self.route is TrainingRoute.SOFT_UTILITY_DISTILL
                 and temperature not in REGISTERED_TEMPERATURES
             )
+            or (
+                self.route is not TrainingRoute.PRIVILEGED_AAWR
+                and not aawr_fields_absent
+            )
+            or (
+                self.route is TrainingRoute.PRIVILEGED_AAWR
+                and not aawr_fields_valid
+            )
         ):
             raise G1PolicyTrainingError("policy hyperparameters leave the registered roster")
         object.__setattr__(self, "tau", temperature)
         object.__setattr__(self, "learning_rate", learning_rate)
         object.__setattr__(self, "weight_decay", weight_decay)
-        object.__setattr__(
-            self,
-            "state_sha256",
-            _json_sha(
+        object.__setattr__(self, "aawr_expectile", expectile)
+        object.__setattr__(self, "aawr_beta", beta)
+        payload = {
+            "schema": 1,
+            "kind": "g1-policy-hyperparameters",
+            "model_name": self.model_name.value,
+            "route": self.route.value,
+            "cai_context_mode": self.cai_context_mode.value,
+            "task_token_mode": self.task_token_mode.value,
+            "tau": temperature,
+            "learning_rate": learning_rate,
+            "weight_decay": weight_decay,
+            "dagger_iterations": self.dagger_iterations,
+        }
+        if self.route is TrainingRoute.PRIVILEGED_AAWR:
+            payload.update(
                 {
-                    "schema": 1,
-                    "kind": "g1-policy-hyperparameters",
-                    "model_name": self.model_name.value,
-                    "route": self.route.value,
-                    "cai_context_mode": self.cai_context_mode.value,
-                    "task_token_mode": self.task_token_mode.value,
-                    "tau": temperature,
-                    "learning_rate": learning_rate,
-                    "weight_decay": weight_decay,
-                    "dagger_iterations": self.dagger_iterations,
+                    "aawr_expectile": expectile,
+                    "aawr_beta": beta,
+                    "aawr_authorized_tasks": tuple(
+                        task.value for task in authorized_tasks
+                    ),
+                    "aawr_authorization": self.aawr_authorization_sha256,
+                    "base_hyperparameters": self.base_hyperparameters_sha256,
                 }
-            ),
-        )
+            )
+        object.__setattr__(self, "state_sha256", _json_sha(payload))
 
 
 @dataclass(frozen=True, slots=True)
@@ -900,6 +954,7 @@ def _validate_fit_request(
     source_domains = tuple(sorted({row.source_domain for row in checked}))
     if (
         type(hyperparameters) is not PolicyTrainingHyperparameters
+        or hyperparameters.route is TrainingRoute.PRIVILEGED_AAWR
         or len(source_domains) != 5
         or checked[0].outer_target in source_domains
         or (
@@ -1161,6 +1216,8 @@ def fit_final_observable_policy(
 
 
 __all__ = [
+    "REGISTERED_AAWR_BETAS",
+    "REGISTERED_AAWR_EXPECTILES",
     "REGISTERED_BATCH_SPECIMENS",
     "REGISTERED_EARLY_STOPPING_PATIENCE",
     "REGISTERED_GRADIENT_CLIP_NORM",

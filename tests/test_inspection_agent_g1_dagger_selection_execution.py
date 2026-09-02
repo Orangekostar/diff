@@ -7,6 +7,9 @@ from types import SimpleNamespace
 
 from cmc_bbdm.inspection_agent.contracts import InspectionTask
 from cmc_bbdm.inspection_agent_g1 import dagger_selection_execution as module
+from cmc_bbdm.inspection_agent_g1.aawr_selection_execution import (
+    G1OuterAAWRSelectionRun,
+)
 from cmc_bbdm.inspection_agent_g1.contracts import CAIContextMode, TaskTokenMode
 from cmc_bbdm.inspection_agent_g1.dagger_orchestration import G1OuterDaggerBuild
 from cmc_bbdm.inspection_agent_g1.engineering_selection_execution import (
@@ -177,6 +180,24 @@ def test_dagger_selection_compares_zero_one_two_and_authorizes_aawr_source_only(
         return _candidate(hyperparameters.dagger_iterations)
 
     monkeypatch.setattr(module, "run_engineering_candidate", fake_candidate)
+    aawr_calls = []
+
+    def fake_aawr_selection(*_args, authorization, base_candidate, **_kwargs):
+        aawr_calls.append((authorization.state_sha256, base_candidate.state_sha256))
+        result = object.__new__(G1OuterAAWRSelectionRun)
+        object.__setattr__(result, "outer_target", "d6")
+        object.__setattr__(result, "authorization", authorization)
+        object.__setattr__(result, "base_candidate", base_candidate)
+        object.__setattr__(result, "candidates", ())
+        object.__setattr__(
+            result,
+            "selection",
+            select_outer_policy((base_candidate.candidate,)),
+        )
+        object.__setattr__(result, "path", tmp_path / "aawr" / "selection.json")
+        return result
+
+    monkeypatch.setattr(module, "run_outer_aawr_selection", fake_aawr_selection)
 
     result = module.run_outer_dagger_selection(
         runtime,
@@ -200,6 +221,12 @@ def test_dagger_selection_compares_zero_one_two_and_authorizes_aawr_source_only(
     ).state_sha256
     assert result.aawr_authorization.status == "AUTHORIZED_SOURCE_ONLY"
     assert result.aawr_authorization.authorized_tasks == (InspectionTask.FIELD,)
+    assert len(aawr_calls) == 1
+    assert result.aawr_selection is not None
+    assert (
+        result.final_selection.selected_hyperparameters_sha256
+        == result.selection.selected_hyperparameters_sha256
+    )
     assert result.target_outcomes_opened is False
     payload = json.loads(result.path.read_bytes())
     assert payload["target_outcomes_opened"] is False

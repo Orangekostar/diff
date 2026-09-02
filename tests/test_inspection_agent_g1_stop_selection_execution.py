@@ -4,6 +4,7 @@ import hashlib
 from types import MappingProxyType, SimpleNamespace
 
 import numpy as np
+import pytest
 
 from cmc_bbdm.inspection_agent.contracts import InspectionTask
 from cmc_bbdm.inspection_agent.generalized_reconstruction import SourceBackgroundPrior
@@ -28,6 +29,9 @@ from cmc_bbdm.inspection_agent_g1.policy_training import (
     TrainedObservablePolicy,
     TrainingRoute,
 )
+from cmc_bbdm.inspection_agent_g1.privileged_awr import (
+    aawr_policy_hyperparameters,
+)
 from cmc_bbdm.inspection_agent_g1.rollout import (
     ClosedLoopTrajectory,
     ObservablePolicyScores,
@@ -35,6 +39,7 @@ from cmc_bbdm.inspection_agent_g1.rollout import (
 )
 from cmc_bbdm.inspection_agent_g1.stop_execution import G1FixedEndpointRecord
 from cmc_bbdm.inspection_agent_g1.stop_selection_execution import (
+    G1StopSelectionExecutionError,
     evaluate_source_stop_validation_trajectory,
     materialize_g1_source_stop_validation_trajectories,
     run_outer_stop_selection,
@@ -52,6 +57,37 @@ DOMAINS = ("d1", "d2", "d3", "d4", "d5", "d6")
 
 def _sha(value: str) -> str:
     return hashlib.sha256(value.encode("ascii")).hexdigest()
+
+
+def test_outer_stop_selection_rejects_authorized_but_unresolved_aawr(
+    tmp_path,
+) -> None:
+    protocol = object.__new__(G1Protocol)
+    object.__setattr__(protocol, "domain_order", DOMAINS)
+    runtime = object.__new__(G1Runtime)
+    object.__setattr__(runtime, "mavis", SimpleNamespace(dataset_ids=DOMAINS))
+    action_selection = object.__new__(G1OuterDaggerSelectionRun)
+    object.__setattr__(action_selection, "outer_target", "d6")
+    object.__setattr__(action_selection, "target_outcomes_opened", False)
+    object.__setattr__(
+        action_selection,
+        "aawr_authorization",
+        SimpleNamespace(status="AUTHORIZED_SOURCE_ONLY"),
+    )
+
+    with pytest.raises(G1StopSelectionExecutionError, match="AAWR is unresolved"):
+        run_outer_stop_selection(
+            runtime,
+            protocol,
+            outer_target="d6",
+            action_selection=action_selection,
+            encoder=_Encoder(),
+            teacher_bank_root=tmp_path,
+            stop_bank_root=tmp_path,
+            fixed_endpoint_root=tmp_path,
+            work_root=tmp_path,
+            device="cpu",
+        )
 
 
 class _Encoder:
@@ -397,21 +433,38 @@ def test_source_stop_validation_materialization_is_crossfit_and_batched(
     assert all(row.reference_true_loss == 0.1 for row in results)
 
 
+@pytest.mark.parametrize("use_aawr", (False, True))
 def test_outer_stop_selection_freezes_all_five_sources_before_target(
     monkeypatch,
     tmp_path,
+    use_aawr,
 ) -> None:
     from cmc_bbdm.inspection_agent_g1 import stop_selection_execution as module
 
-    hyperparameters = PolicyTrainingHyperparameters(
+    base_hyperparameters = PolicyTrainingHyperparameters(
         model_name=PolicyModelName.SHARED_ACTION_MLP,
-        route=TrainingRoute.HARD_BC,
+        route=(
+            TrainingRoute.SOFT_UTILITY_DISTILL
+            if use_aawr
+            else TrainingRoute.HARD_BC
+        ),
         cai_context_mode=CAIContextMode.SHARED_OBSERVABLE_STATE_CONTEXT,
         task_token_mode=TaskTokenMode.CORRECT,
-        tau=None,
+        tau=0.5 if use_aawr else None,
         learning_rate=0.0003,
         weight_decay=0.0001,
-        dagger_iterations=0,
+        dagger_iterations=1 if use_aawr else 0,
+    )
+    hyperparameters = (
+        aawr_policy_hyperparameters(
+            base_hyperparameters,
+            authorization_sha256=_sha("aawr"),
+            authorized_tasks=(InspectionTask.FIELD,),
+            expectile=0.7,
+            beta=1.0,
+        )
+        if use_aawr
+        else base_hyperparameters
     )
     selected_records = tuple(
         SimpleNamespace(
@@ -440,7 +493,7 @@ def test_outer_stop_selection_freezes_all_five_sources_before_target(
         "candidates",
         (
             SimpleNamespace(
-                candidate=SimpleNamespace(hyperparameters=hyperparameters)
+                candidate=SimpleNamespace(hyperparameters=base_hyperparameters)
             ),
         ),
     )
@@ -457,6 +510,44 @@ def test_outer_stop_selection_freezes_all_five_sources_before_target(
             state_sha256=_sha("aawr"),
         ),
     )
+    if use_aawr:
+        object.__setattr__(
+            action_selection,
+            "aawr_authorization",
+            SimpleNamespace(
+                status="AUTHORIZED_SOURCE_ONLY",
+                state_sha256=_sha("aawr"),
+            ),
+        )
+        object.__setattr__(
+            action_selection,
+            "selection",
+            SimpleNamespace(
+                selected_hyperparameters_sha256=base_hyperparameters.state_sha256,
+                final_refit_epochs=2,
+                state_sha256=_sha("action-selection"),
+                source_validation_domains=DOMAINS[:-1],
+            ),
+        )
+        object.__setattr__(
+            action_selection,
+            "aawr_selection",
+            SimpleNamespace(
+                selection=SimpleNamespace(
+                    selected_hyperparameters_sha256=hyperparameters.state_sha256,
+                    final_refit_epochs=2,
+                    state_sha256=_sha("aawr-selection"),
+                    source_validation_domains=DOMAINS[:-1],
+                ),
+                candidates=(
+                    SimpleNamespace(
+                        candidate=SimpleNamespace(hyperparameters=hyperparameters)
+                    ),
+                ),
+            ),
+        )
+    else:
+        object.__setattr__(action_selection, "aawr_selection", None)
     protocol = object.__new__(G1Protocol)
     object.__setattr__(protocol, "domain_order", DOMAINS)
     object.__setattr__(protocol, "epochs", 80)
@@ -510,7 +601,7 @@ def test_outer_stop_selection_freezes_all_five_sources_before_target(
     def fake_action_fit(_examples, *, validation_domain, **_kwargs):
         inner_sources.append(validation_domain)
         actor = object.__new__(TrainedObservablePolicy)
-        object.__setattr__(actor, "hyperparameters", hyperparameters)
+        object.__setattr__(actor, "hyperparameters", base_hyperparameters)
         object.__setattr__(
             actor,
             "audit",
@@ -526,6 +617,26 @@ def test_outer_stop_selection_freezes_all_five_sources_before_target(
         return actor
 
     monkeypatch.setattr(module, "fit_inner_observable_policy", fake_action_fit)
+    monkeypatch.setattr(
+        module,
+        "materialize_g1_aawr_training_records",
+        lambda *_args, **_kwargs: (SimpleNamespace(),),
+    )
+
+    def fake_inner_aawr(_records, *, base_actor, validation_domain, **_kwargs):
+        actor = object.__new__(TrainedObservablePolicy)
+        object.__setattr__(actor, "hyperparameters", hyperparameters)
+        object.__setattr__(actor, "audit", base_actor.audit)
+        object.__setattr__(
+            actor,
+            "model_state_sha256",
+            _sha(f"aawr-action-{validation_domain}"),
+        )
+        return actor, SimpleNamespace(
+            state_sha256=_sha(f"aawr-evidence-{validation_domain}")
+        )
+
+    monkeypatch.setattr(module, "fit_inner_aawr_policy", fake_inner_aawr)
     monkeypatch.setattr(
         module,
         "join_g1_stop_training_examples",
@@ -597,10 +708,10 @@ def test_outer_stop_selection_freezes_all_five_sources_before_target(
         "materialize_g1_source_stop_validation_trajectories",
         fake_trajectories,
     )
-    final_action = object.__new__(TrainedObservablePolicy)
-    object.__setattr__(final_action, "hyperparameters", hyperparameters)
+    base_final_action = object.__new__(TrainedObservablePolicy)
+    object.__setattr__(base_final_action, "hyperparameters", base_hyperparameters)
     object.__setattr__(
-        final_action,
+        base_final_action,
         "audit",
         SimpleNamespace(
             outer_target="d6",
@@ -609,11 +720,31 @@ def test_outer_stop_selection_freezes_all_five_sources_before_target(
             state_sha256=_sha("final-action-audit"),
         ),
     )
-    object.__setattr__(final_action, "model_state_sha256", _sha("final-action"))
+    object.__setattr__(
+        base_final_action,
+        "model_state_sha256",
+        _sha("base-final-action"),
+    )
     monkeypatch.setattr(
         module,
         "fit_final_observable_policy",
-        lambda *_args, **_kwargs: final_action,
+        lambda *_args, **_kwargs: base_final_action,
+    )
+    if use_aawr:
+        final_action = object.__new__(TrainedObservablePolicy)
+        object.__setattr__(final_action, "hyperparameters", hyperparameters)
+        object.__setattr__(final_action, "audit", base_final_action.audit)
+        object.__setattr__(final_action, "model_state_sha256", _sha("final-action"))
+    else:
+        final_action = base_final_action
+
+    monkeypatch.setattr(
+        module,
+        "fit_final_aawr_policy",
+        lambda *_args, **_kwargs: (
+            final_action,
+            SimpleNamespace(state_sha256=_sha("aawr-evidence-final")),
+        ),
     )
     final_stop = object.__new__(TrainedObservableStopPolicy)
     object.__setattr__(
@@ -658,6 +789,7 @@ def test_outer_stop_selection_freezes_all_five_sources_before_target(
     assert final_stop_epochs == [3]
     assert result.action_policy is final_action
     assert result.stop_policy is final_stop
+    assert len(result.aawr_fit_evidence_sha256s) == (6 if use_aawr else 0)
     assert tuple(row.task for row in result.thresholds) == (
         InspectionTask.FIELD,
         InspectionTask.CAI,

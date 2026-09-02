@@ -238,13 +238,18 @@ class OuterPolicySelection:
 
 def _complexity(candidate: PolicyCandidateEvaluation) -> tuple[int, ...]:
     hyperparameters = candidate.hyperparameters
+    route_stages = {
+        TrainingRoute.HARD_BC: 0,
+        TrainingRoute.SOFT_UTILITY_DISTILL: 1,
+        TrainingRoute.PRIVILEGED_AAWR: 2,
+    }
     return (
         int(
             hyperparameters.model_name
             is PolicyModelName.STRUCTURED_INSPECTION_POLICY
         ),
         hyperparameters.dagger_iterations,
-        int(hyperparameters.route is TrainingRoute.SOFT_UTILITY_DISTILL),
+        route_stages[hyperparameters.route],
         int(
             hyperparameters.cai_context_mode
             is CAIContextMode.SHARED_OBSERVABLE_STATE_CONTEXT
@@ -353,6 +358,18 @@ def outer_selection_payload(selection: OuterPolicySelection) -> dict[str, object
                     "learning_rate": candidate.hyperparameters.learning_rate,
                     "weight_decay": candidate.hyperparameters.weight_decay,
                     "dagger_iterations": candidate.hyperparameters.dagger_iterations,
+                    "aawr_expectile": candidate.hyperparameters.aawr_expectile,
+                    "aawr_beta": candidate.hyperparameters.aawr_beta,
+                    "aawr_authorized_tasks": [
+                        task.value
+                        for task in candidate.hyperparameters.aawr_authorized_tasks
+                    ],
+                    "aawr_authorization_sha256": (
+                        candidate.hyperparameters.aawr_authorization_sha256
+                    ),
+                    "base_hyperparameters_sha256": (
+                        candidate.hyperparameters.base_hyperparameters_sha256
+                    ),
                     "state_sha256": candidate.hyperparameters.state_sha256,
                 },
                 "equal_domain_mean_relative_auebc": candidate.equal_domain_mean_relative_auebc,

@@ -24,6 +24,7 @@ from cmc_bbdm.inspection_agent.generalized_reconstruction import (
 from cmc_bbdm.inspection_agent.world import CausalInspectionWorld
 from cmc_bbdm.mva.acquisition_grid import AcquisitionGrid
 
+from .aawr_selection_execution import materialize_g1_aawr_training_records
 from .batch_rollout import G1BatchRolloutRequest, run_g1_closed_loop_batch
 from .contracts import TaskTokenMode
 from .dagger_selection_execution import G1OuterDaggerSelectionRun
@@ -37,10 +38,12 @@ from .g1 import (
 )
 from .policy_training import (
     TrainedObservablePolicy,
+    TrainingRoute,
     fit_final_observable_policy,
     fit_inner_observable_policy,
     rebind_training_example_modes,
 )
+from .privileged_awr import fit_final_aawr_policy, fit_inner_aawr_policy
 from .rollout import ClosedLoopTrajectory
 from .stop_bank import read_stop_bank
 from .stop_execution import (
@@ -139,14 +142,21 @@ class G1OuterStopSelectionRun:
     teacher_bank_manifest_sha256s: tuple[str, ...]
     stop_bank_manifest_sha256s: tuple[str, ...]
     fixed_endpoint_record_count: int
+    aawr_fit_evidence_sha256s: tuple[str, ...]
     path: Path
     target_outcomes_opened: bool = False
     state_sha256: str = field(init=False)
 
     def __post_init__(self) -> None:
+        aawr_selection = getattr(self.action_selection, "aawr_selection", None)
+        final_selection = (
+            self.action_selection.selection
+            if aawr_selection is None
+            else aawr_selection.selection
+        )
         sources = tuple(
             domain
-            for domain in self.action_selection.selection.source_validation_domains
+            for domain in final_selection.source_validation_domains
         )
         if (
             type(self.outer_target) is not str
@@ -186,6 +196,23 @@ class G1OuterStopSelectionRun:
             )
             or type(self.fixed_endpoint_record_count) is not int
             or self.fixed_endpoint_record_count <= 0
+            or type(self.aawr_fit_evidence_sha256s) is not tuple
+            or (
+                self.action_policy.hyperparameters.route
+                is TrainingRoute.PRIVILEGED_AAWR
+                and (
+                    len(self.aawr_fit_evidence_sha256s) != 6
+                    or not all(
+                        _valid_sha256(value)
+                        for value in self.aawr_fit_evidence_sha256s
+                    )
+                )
+            )
+            or (
+                self.action_policy.hyperparameters.route
+                is not TrainingRoute.PRIVILEGED_AAWR
+                and self.aawr_fit_evidence_sha256s
+            )
             or not isinstance(self.path, Path)
             or self.target_outcomes_opened
         ):
@@ -200,7 +227,7 @@ class G1OuterStopSelectionRun:
                     "schema": 1,
                     "kind": "g1-outer-stop-selection-run",
                     "outer_target": self.outer_target,
-                    "action_selection": self.action_selection.selection.state_sha256,
+                    "action_selection": final_selection.state_sha256,
                     "action_model": self.action_policy.model_state_sha256,
                     "stop_model": self.stop_policy.model_state_sha256,
                     "selected_stop_epochs": self.selected_stop_epochs,
@@ -212,6 +239,7 @@ class G1OuterStopSelectionRun:
                     "teacher_banks": self.teacher_bank_manifest_sha256s,
                     "stop_banks": self.stop_bank_manifest_sha256s,
                     "fixed_endpoint_record_count": self.fixed_endpoint_record_count,
+                    "aawr_fit_evidence": self.aawr_fit_evidence_sha256s,
                     "target_outcomes_opened": False,
                 }
             ),
@@ -540,7 +568,12 @@ def run_outer_stop_selection(
         or action_selection.outer_target != outer_target
         or getattr(action_selection, "target_outcomes_opened", False)
         or action_selection.aawr_authorization.status
-        != "NOT_RUN_NOT_AUTHORIZED"
+        not in {"NOT_RUN_NOT_AUTHORIZED", "AUTHORIZED_SOURCE_ONLY"}
+        or (
+            action_selection.aawr_authorization.status
+            == "AUTHORIZED_SOURCE_ONLY"
+            and getattr(action_selection, "aawr_selection", None) is None
+        )
         or not callable(getattr(encoder, "encode", None))
         or type(device) is not str
         or not device
@@ -549,22 +582,46 @@ def run_outer_stop_selection(
         raise G1StopSelectionExecutionError(
             "outer STOP selection request is invalid or AAWR is unresolved"
         )
+    aawr_selection = getattr(action_selection, "aawr_selection", None)
+    final_selection = (
+        action_selection.selection
+        if aawr_selection is None
+        else aawr_selection.selection
+    )
+    final_candidates = (
+        action_selection.candidates
+        if aawr_selection is None
+        else (*action_selection.candidates, *aawr_selection.candidates)
+    )
     selected_candidates = tuple(
         row
-        for row in action_selection.candidates
+        for row in final_candidates
         if row.candidate.hyperparameters.state_sha256
-        == action_selection.selection.selected_hyperparameters_sha256
+        == final_selection.selected_hyperparameters_sha256
     )
     if len(selected_candidates) != 1:
         raise G1StopSelectionExecutionError(
             "outer STOP selection has no unique action policy"
         )
     hyperparameters = selected_candidates[0].candidate.hyperparameters
+    base_hyperparameters = hyperparameters
+    if hyperparameters.route is TrainingRoute.PRIVILEGED_AAWR:
+        base_candidates = tuple(
+            row
+            for row in action_selection.candidates
+            if row.candidate.hyperparameters.state_sha256
+            == hyperparameters.base_hyperparameters_sha256
+        )
+        if len(base_candidates) != 1:
+            raise G1StopSelectionExecutionError(
+                "AAWR has no unique source-selected base policy"
+            )
+        base_hyperparameters = base_candidates[0].candidate.hyperparameters
     source_domains = tuple(domain for domain in domain_order if domain != outer_target)
     selected_records = tuple(
         row
         for row in action_selection.dagger_build.records
-        if row.example.dagger_iteration <= hyperparameters.dagger_iterations
+            if row.example.dagger_iteration <= base_hyperparameters.dagger_iterations
     )
     if (
         not selected_records
@@ -578,11 +635,21 @@ def run_outer_stop_selection(
     selected_examples = tuple(
         rebind_training_example_modes(
             row.example,
-            cai_context_mode=hyperparameters.cai_context_mode,
-            task_token_mode=hyperparameters.task_token_mode,
+            cai_context_mode=base_hyperparameters.cai_context_mode,
+            task_token_mode=base_hyperparameters.task_token_mode,
         )
         for row in selected_records
     )
+    aawr_transitions = None
+    if hyperparameters.route is TrainingRoute.PRIVILEGED_AAWR:
+        aawr_transitions = materialize_g1_aawr_training_records(
+            runtime,
+            protocol,
+            action_selection.dagger_build.records,
+            encoder=encoder,
+            base_hyperparameters=base_hyperparameters,
+            authorization=action_selection.aawr_authorization,
+        )
     base_records = []
     stop_records = []
     teacher_manifests = []
@@ -623,17 +690,32 @@ def run_outer_stop_selection(
     )
     source_trajectories = []
     inner_stop_epochs = []
+    aawr_fit_evidence_sha256s = []
     for source in source_domains:
         if progress is not None:
             progress(f"G1 STOP inner validation {outer_target}/{source}")
-        action_policy = fit_inner_observable_policy(
+        base_action_policy = fit_inner_observable_policy(
             selected_examples,
             validation_domain=source,
-            hyperparameters=hyperparameters,
+            hyperparameters=base_hyperparameters,
             max_epochs=int(protocol.epochs),
             patience=int(protocol.patience),
             device=device,
         )
+        if hyperparameters.route is TrainingRoute.PRIVILEGED_AAWR:
+            assert aawr_transitions is not None
+            action_policy, aawr_fit_evidence = fit_inner_aawr_policy(
+                aawr_transitions,
+                base_actor=base_action_policy,
+                hyperparameters=hyperparameters,
+                validation_domain=source,
+                max_epochs=int(protocol.epochs),
+                patience=int(protocol.patience),
+                device=device,
+            )
+            aawr_fit_evidence_sha256s.append(aawr_fit_evidence.state_sha256)
+        else:
+            action_policy = base_action_policy
         stop_examples = join_g1_stop_training_examples(
             tuple(base_records),
             tuple(stop_records),
@@ -675,12 +757,24 @@ def run_outer_stop_selection(
         )
         for task in (InspectionTask.FIELD, InspectionTask.CAI)
     )
-    action_policy = fit_final_observable_policy(
+    base_action_policy = fit_final_observable_policy(
         selected_examples,
-        hyperparameters=hyperparameters,
+        hyperparameters=base_hyperparameters,
         selected_epochs=action_selection.selection.final_refit_epochs,
         device=device,
     )
+    if hyperparameters.route is TrainingRoute.PRIVILEGED_AAWR:
+        assert aawr_transitions is not None
+        action_policy, aawr_fit_evidence = fit_final_aawr_policy(
+            aawr_transitions,
+            base_actor=base_action_policy,
+            hyperparameters=hyperparameters,
+            selected_epochs=final_selection.final_refit_epochs,
+            device=device,
+        )
+        aawr_fit_evidence_sha256s.append(aawr_fit_evidence.state_sha256)
+    else:
+        action_policy = base_action_policy
     final_stop_examples = join_g1_stop_training_examples(
         tuple(base_records),
         tuple(stop_records),
@@ -705,6 +799,7 @@ def run_outer_stop_selection(
         teacher_bank_manifest_sha256s=tuple(teacher_manifests),
         stop_bank_manifest_sha256s=tuple(stop_manifests),
         fixed_endpoint_record_count=len(fixed_records),
+        aawr_fit_evidence_sha256s=tuple(aawr_fit_evidence_sha256s),
         path=destination,
         target_outcomes_opened=False,
     )
@@ -713,18 +808,19 @@ def run_outer_stop_selection(
         "scope": "inspection_agent_g1_outer_stop_selection",
         "outer_target": outer_target,
         "source_domains": list(source_domains),
-        "action_selection_sha256": action_selection.selection.state_sha256,
+        "action_selection_sha256": final_selection.state_sha256,
         "aawr_status": action_selection.aawr_authorization.status,
         "aawr_authorization_sha256": (
             action_selection.aawr_authorization.state_sha256
         ),
         "selected_hyperparameters_sha256": hyperparameters.state_sha256,
-        "selected_action_epochs": action_selection.selection.final_refit_epochs,
+        "selected_action_epochs": final_selection.final_refit_epochs,
         "inner_stop_epochs": inner_stop_epochs,
         "selected_stop_epochs": selected_stop_epochs,
         "teacher_bank_manifest_sha256s": teacher_manifests,
         "stop_bank_manifest_sha256s": stop_manifests,
         "fixed_endpoint_record_count": len(fixed_records),
+        "aawr_fit_evidence_sha256s": aawr_fit_evidence_sha256s,
         "source_validation_trajectory_sha256s": [
             row.state_sha256 for row in trajectories
         ],
