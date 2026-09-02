@@ -15,6 +15,12 @@ import numpy as np
 import polars as pl
 
 from .artifacts import G1PackageValidation, publish_g1_manifest, validate_g1_package
+from .decision_diagnostics import (
+    G1SourceDecisionDiagnosticBankFile,
+    G1SourceDecisionDiagnosticRecord,
+    G1SourceDecisionDiagnosticSummary,
+    summarize_g1_source_decision_diagnostics,
+)
 from .formal_selection import G1OuterFormalSelection
 from .statistics import G1PairedBootstrap
 from .target_analysis import G1TargetCurveAnalysis
@@ -147,6 +153,9 @@ def _selection_payload(selection: G1OuterFormalSelection) -> dict[str, object]:
         "action_selection_sha256": selection.action_selection_sha256,
         "action_model_sha256": selection.action_model_sha256,
         "stop_model_sha256": selection.stop_model_sha256,
+        "decision_diagnostic_manifest_sha256": (
+            selection.decision_diagnostic_manifest_sha256
+        ),
         "target_outcomes_opened": False,
         "state_sha256": selection.state_sha256,
     }
@@ -237,6 +246,7 @@ def _write_curve_tables(
     root: Path,
     learned: tuple[G1TargetCurveRecord, ...],
     references: tuple[G1TargetReferenceCurveRecord, ...],
+    diagnostics: tuple[G1SourceDecisionDiagnosticRecord, ...],
 ) -> None:
     records = _curve_records(learned, references)
     state_rows = []
@@ -269,8 +279,11 @@ def _write_curve_tables(
         ):
             state_rows.append(
                 (
+                    "TARGET_ENGINEERING_CHECKPOINT",
                     domain,
+                    "",
                     specimen,
+                    curve.specimen_sha256,
                     curve.task.value,
                     source,
                     method,
@@ -280,13 +293,69 @@ def _write_curve_tables(
                     float(loss),
                     state_sha,
                     curve.state_sha256,
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    record_sha,
                 )
             )
+    state_rows.extend(
+        (
+            "SOURCE_DECISION_DIAGNOSTIC",
+            row.outer_target,
+            row.source_domain,
+            "",
+            row.specimen_sha256,
+            row.task.value,
+            "SOURCE",
+            "PROPOSED",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            row.dagger_iteration,
+            row.state_origin,
+            row.policy_state_sha256,
+            row.teacher_label_sha256,
+            row.action_model_sha256,
+            row.score_sha256,
+            row.candidate_count,
+            row.teacher_selected_slot,
+            row.predicted_selected_slot,
+            row.teacher_decision.value,
+            row.predicted_decision.value,
+            row.high_level_decision_accuracy,
+            row.primitive_top1_match,
+            row.top5_utility_recall,
+            row.expected_teacher_regret,
+            row.candidate_utility_ndcg,
+            row.state_sha256,
+        )
+        for row in diagnostics
+    )
     _write_csv(
         root / "state_level_metrics.csv",
         (
+            "record_type",
             "outer_target",
+            "source_domain",
             "specimen_id",
+            "specimen_sha256",
             "task",
             "source",
             "method",
@@ -296,6 +365,23 @@ def _write_curve_tables(
             "task_loss",
             "projected_state_sha256",
             "curve_sha256",
+            "dagger_iteration",
+            "state_origin",
+            "policy_state_sha256",
+            "teacher_label_sha256",
+            "action_model_sha256",
+            "score_sha256",
+            "candidate_count",
+            "teacher_selected_slot",
+            "predicted_selected_slot",
+            "teacher_decision",
+            "predicted_decision",
+            "high_level_decision_accuracy",
+            "primitive_top1_match",
+            "top5_utility_recall",
+            "expected_teacher_regret",
+            "candidate_utility_ndcg",
+            "record_sha256",
         ),
         state_rows,
     )
@@ -532,10 +618,38 @@ def _write_stopping(
     )
 
 
+def _diagnostic_payload(
+    value: G1SourceDecisionDiagnosticSummary,
+) -> dict[str, object]:
+    return {
+        "scope": "SOURCE_ONLY_DIAGNOSTIC_NOT_A_GATE",
+        "record_count": value.record_count,
+        "high_level_decision_accuracy": value.high_level_decision_accuracy,
+        "primitive_top1_match": value.primitive_top1_match,
+        "top5_utility_recall": value.top5_utility_recall,
+        "expected_teacher_regret": value.expected_teacher_regret,
+        "candidate_utility_ndcg": value.candidate_utility_ndcg,
+        "predicted_decision_proportions": [
+            {"decision": decision, "proportion": proportion}
+            for decision, proportion in value.predicted_decision_proportions
+        ],
+        "teacher_to_predicted_transition_proportions": [
+            {
+                "teacher_decision": teacher,
+                "predicted_decision": predicted,
+                "proportion": proportion,
+            }
+            for teacher, predicted, proportion in value.transition_proportions
+        ],
+        "state_sha256": value.state_sha256,
+    }
+
+
 def _write_decision(
     path: Path,
     curves: G1TargetCurveAnalysis,
     stopping: G1TargetStoppingAnalysis,
+    diagnostics: G1SourceDecisionDiagnosticSummary,
 ) -> None:
     path.write_text(
         _json_text(
@@ -561,6 +675,7 @@ def _write_decision(
                 "task_conditioning_status": curves.task_conditioning.gate.status,
                 "field_stopping_status": stopping.field.status,
                 "cai_stopping_status": stopping.cai.status,
+                "source_decision_diagnostics": _diagnostic_payload(diagnostics),
                 "no_target_leakage": curves.no_target_leakage,
                 "deterministic_replay": curves.deterministic_replay,
                 "deployment_bridge_valid": curves.deployment_bridge_valid,
@@ -577,6 +692,7 @@ def _write_report(
     path: Path,
     curves: G1TargetCurveAnalysis,
     stopping: G1TargetStoppingAnalysis,
+    diagnostics: G1SourceDecisionDiagnosticSummary,
 ) -> None:
     path.write_text(
         "\n".join(
@@ -596,6 +712,45 @@ def _write_report(
                     f"oracle-gap closure {curves.cai.oracle_gap_closure!r}"
                 ),
                 f"- Task conditioning: `{curves.task_conditioning.gate.status}`",
+                "",
+                "## Source-only decision diagnostics",
+                "",
+                (
+                    "- High-level decision accuracy: "
+                    f"{diagnostics.high_level_decision_accuracy!r}"
+                ),
+                (
+                    "- Primitive top-1 match: "
+                    f"{diagnostics.primitive_top1_match!r}"
+                ),
+                (
+                    "- Top-5 utility recall: "
+                    f"{diagnostics.top5_utility_recall!r}"
+                ),
+                (
+                    "- Expected teacher regret: "
+                    f"{diagnostics.expected_teacher_regret!r}"
+                ),
+                (
+                    "- Candidate-utility NDCG: "
+                    f"{diagnostics.candidate_utility_ndcg!r}"
+                ),
+                (
+                    "- FOCUS/BROADEN/REFINE proportions: "
+                    + ", ".join(
+                        f"{name}={value!r}"
+                        for name, value in (
+                            diagnostics.predicted_decision_proportions
+                        )
+                    )
+                ),
+                "- Teacher-to-predicted transition matrix:",
+                *(
+                    f"  - {teacher}->{predicted}: {value!r}"
+                    for teacher, predicted, value in (
+                        diagnostics.transition_proportions
+                    )
+                ),
                 "",
                 "## Stopping",
                 "",
@@ -626,6 +781,8 @@ def _validate_evidence(
     curves: G1TargetCurveAnalysis,
     stopping: G1TargetStoppingAnalysis,
     teacher_banks: tuple[G1TeacherBankManifestRow, ...],
+    diagnostic_banks: tuple[G1SourceDecisionDiagnosticBankFile, ...],
+    diagnostics: tuple[G1SourceDecisionDiagnosticRecord, ...],
 ) -> tuple[str, ...]:
     domains = tuple(sorted(row.outer_target for row in selections))
     if (
@@ -660,8 +817,41 @@ def _validate_evidence(
         != {
             (outer, source) for outer in domains for source in domains if source != outer
         }
+        or type(diagnostic_banks) is not tuple
+        or len(diagnostic_banks) != 6
+        or any(
+            type(row) is not G1SourceDecisionDiagnosticBankFile
+            for row in diagnostic_banks
+        )
+        or {row.outer_target for row in diagnostic_banks} != set(domains)
+        or type(diagnostics) is not tuple
+        or not diagnostics
+        or any(
+            type(row) is not G1SourceDecisionDiagnosticRecord
+            for row in diagnostics
+        )
+        or {row.outer_target for row in diagnostics} != set(domains)
     ):
         raise G1FormalPackageError("formal package evidence roster changed")
+    selections_by_domain = {row.outer_target: row for row in selections}
+    banks_by_domain = {row.outer_target: row for row in diagnostic_banks}
+    if any(
+        bank.source_domains != tuple(sorted(selection.source_domains))
+        or bank.action_model_sha256 != selection.action_model_sha256
+        or bank.manifest_sha256
+        != selection.decision_diagnostic_manifest_sha256
+        or bank.row_count
+        != sum(row.outer_target == domain for row in diagnostics)
+        or any(
+            row.action_model_sha256 != selection.action_model_sha256
+            or row.source_domain not in selection.source_domains
+            for row in diagnostics
+            if row.outer_target == domain
+        )
+        for domain, selection in selections_by_domain.items()
+        for bank in (banks_by_domain[domain],)
+    ):
+        raise G1FormalPackageError("formal decision diagnostics changed after freeze")
     return domains
 
 
@@ -675,6 +865,8 @@ def _write_package_files(
     curves: G1TargetCurveAnalysis,
     stopping: G1TargetStoppingAnalysis,
     teacher_banks: tuple[G1TeacherBankManifestRow, ...],
+    diagnostic_banks: tuple[G1SourceDecisionDiagnosticBankFile, ...],
+    diagnostics: tuple[G1SourceDecisionDiagnosticRecord, ...],
     config_path: Path,
 ) -> None:
     root.mkdir(parents=True, exist_ok=True)
@@ -768,6 +960,7 @@ def _write_package_files(
             "action_selection_sha256",
             "action_model_sha256",
             "stop_model_sha256",
+            "decision_diagnostic_manifest_sha256",
             "final_dependency_sha256",
         ),
         [
@@ -777,17 +970,24 @@ def _write_package_files(
                 row.action_selection_sha256,
                 row.action_model_sha256,
                 row.stop_model_sha256,
+                row.decision_diagnostic_manifest_sha256,
                 dependencies[row.outer_target],
             )
             for row in selections
         ],
     )
-    _write_curve_tables(root, learned, references)
+    _write_curve_tables(root, learned, references, diagnostics)
     _write_trajectory_tables(root, trajectories)
     _write_stopping(root / "stopping_results.csv", outcomes)
     _write_inference_tables(root, curves, stopping)
-    _write_decision(root / "decision_summary.json", curves, stopping)
-    _write_report(root / "REPORT.md", curves, stopping)
+    diagnostic_summary = summarize_g1_source_decision_diagnostics(diagnostics)
+    _write_decision(
+        root / "decision_summary.json",
+        curves,
+        stopping,
+        diagnostic_summary,
+    )
+    _write_report(root / "REPORT.md", curves, stopping, diagnostic_summary)
 
 
 def write_g1_formal_package(
@@ -800,6 +1000,8 @@ def write_g1_formal_package(
     curves: G1TargetCurveAnalysis,
     stopping: G1TargetStoppingAnalysis,
     teacher_banks: tuple[G1TeacherBankManifestRow, ...],
+    diagnostic_banks: tuple[G1SourceDecisionDiagnosticBankFile, ...],
+    diagnostics: tuple[G1SourceDecisionDiagnosticRecord, ...],
     *,
     project_root: str | Path,
     config_path: str | Path,
@@ -813,6 +1015,8 @@ def write_g1_formal_package(
         curves,
         stopping,
         teacher_banks,
+        diagnostic_banks,
+        diagnostics,
     )
     destination = Path(output_dir)
     if destination.exists():
@@ -832,6 +1036,8 @@ def write_g1_formal_package(
             curves,
             stopping,
             teacher_banks,
+            diagnostic_banks,
+            diagnostics,
             Path(config_path),
         )
         publish_g1_manifest(

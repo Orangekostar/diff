@@ -42,25 +42,30 @@ from cmc_bbdm.inspection_agent_g1 import (
     load_g1_encoder,
     load_g1_protocol,
     load_g1_runtime,
+    materialize_g1_source_decision_diagnostics,
     materialize_g1_target_stop_outcomes,
     outer_formal_selection_path,
     read_g1_outer_formal_selection,
+    read_g1_source_decision_diagnostic_bank,
     read_g1_target_curve_bank,
     read_g1_target_reference_bank,
     read_g1_target_trajectory_bank,
     read_source_bridge_bank,
     read_teacher_bank,
+    rebind_training_example_modes,
     run_outer_dagger_selection,
     run_outer_engineering_selection,
     run_outer_stop_selection,
     run_outer_supervised_selection,
     seal_g1_target_trajectory_bank,
     source_bridge_bank_path,
+    source_decision_diagnostic_bank_path,
     target_curve_bank_path,
     target_reference_bank_path,
     target_trajectory_bank_path,
     validate_g1_package,
     write_g1_formal_package,
+    write_g1_source_decision_diagnostic_bank,
 )
 
 
@@ -209,6 +214,7 @@ def _parser() -> argparse.ArgumentParser:
     build_target.add_argument("--stop-bank-root", default=None)
     build_target.add_argument("--stop-selection-root", default=None)
     build_target.add_argument("--formal-selection-root", default=None)
+    build_target.add_argument("--decision-diagnostic-root", default=None)
     build_target.add_argument("--work-root", default=None)
 
     evaluate_target = commands.add_parser("evaluate-target")
@@ -231,6 +237,7 @@ def _parser() -> argparse.ArgumentParser:
     build_formal.add_argument("--curve-root", default=None)
     build_formal.add_argument("--reference-root", default=None)
     build_formal.add_argument("--formal-selection-root", default=None)
+    build_formal.add_argument("--decision-diagnostic-root", default=None)
     build_formal.add_argument("--output", default=None)
 
     validate = commands.add_parser("validate")
@@ -283,11 +290,16 @@ def main(argv: Sequence[str] | None = None) -> int:
             selection_root = args.formal_selection_root or str(
                 work_base / "formal_selection"
             )
+            diagnostic_root = args.decision_diagnostic_root or str(
+                work_base / "source_decision_diagnostics"
+            )
             selections = []
             trajectories = []
             learned_curves = []
             reference_curves = []
             teacher_manifests = []
+            diagnostic_banks = []
+            decision_diagnostics = []
             for outer_target in protocol.domain_order:
                 selection = read_g1_outer_formal_selection(
                     outer_formal_selection_path(selection_root, outer_target)
@@ -306,6 +318,14 @@ def main(argv: Sequence[str] | None = None) -> int:
                 reference_bank, reference_rows = read_g1_target_reference_bank(
                     target_reference_bank_path(reference_root, outer_target)
                 )
+                diagnostic_bank, diagnostic_rows = (
+                    read_g1_source_decision_diagnostic_bank(
+                        source_decision_diagnostic_bank_path(
+                            diagnostic_root,
+                            outer_target,
+                        )
+                    )
+                )
                 if (
                     selection.outer_target != outer_target
                     or {row.action_selection_sha256 for row in target_rows}
@@ -322,6 +342,10 @@ def main(argv: Sequence[str] | None = None) -> int:
                     != {seal.state_sha256}
                     or {row.bank_seal_sha256 for row in reference_rows}
                     != {seal.state_sha256}
+                    or diagnostic_bank.manifest_sha256
+                    != selection.decision_diagnostic_manifest_sha256
+                    or diagnostic_bank.action_model_sha256
+                    != selection.action_model_sha256
                 ):
                     raise G1ExecutionError(
                         "formal target evidence differs from its frozen selection"
@@ -330,6 +354,8 @@ def main(argv: Sequence[str] | None = None) -> int:
                 trajectories.extend(target_rows)
                 learned_curves.extend(curve_rows)
                 reference_curves.extend(reference_rows)
+                diagnostic_banks.append(diagnostic_bank)
+                decision_diagnostics.extend(diagnostic_rows)
                 for source_domain in selection.source_domains:
                     teacher_bank, _teacher_rows = read_teacher_bank(
                         Path(teacher_root)
@@ -377,6 +403,8 @@ def main(argv: Sequence[str] | None = None) -> int:
                 curve_analysis,
                 stopping_analysis,
                 tuple(teacher_manifests),
+                tuple(diagnostic_banks),
+                tuple(decision_diagnostics),
                 project_root=args.project_root,
                 config_path=args.config,
             )
@@ -550,6 +578,34 @@ def main(argv: Sequence[str] | None = None) -> int:
                 device=args.device or protocol.default_device,
                 progress=_progress,
             )
+            selected_dagger_iterations = (
+                stop_selection.action_policy.hyperparameters.dagger_iterations
+            )
+            diagnostic_examples = tuple(
+                rebind_training_example_modes(
+                    row.example,
+                    cai_context_mode=(
+                        stop_selection.action_policy.hyperparameters.cai_context_mode
+                    ),
+                    task_token_mode=(
+                        stop_selection.action_policy.hyperparameters.task_token_mode
+                    ),
+                )
+                for row in stop_selection.action_selection.dagger_build.records
+                if row.example.dagger_iteration <= selected_dagger_iterations
+            )
+            diagnostic_rows = materialize_g1_source_decision_diagnostics(
+                diagnostic_examples,
+                stop_selection.action_policy,
+            )
+            diagnostic_bank = write_g1_source_decision_diagnostic_bank(
+                source_decision_diagnostic_bank_path(
+                    args.decision_diagnostic_root
+                    or str(work_base / "source_decision_diagnostics"),
+                    args.outer_target,
+                ),
+                diagnostic_rows,
+            )
             source_domains = tuple(
                 domain
                 for domain in protocol.domain_order
@@ -574,6 +630,9 @@ def main(argv: Sequence[str] | None = None) -> int:
                     stop_selection.action_policy.model_state_sha256
                 ),
                 stop_model_sha256=stop_selection.stop_policy.model_state_sha256,
+                decision_diagnostic_manifest_sha256=(
+                    diagnostic_bank.manifest_sha256
+                ),
                 path=outer_formal_selection_path(
                     args.formal_selection_root
                     or str(work_base / "formal_selection"),
@@ -606,6 +665,9 @@ def main(argv: Sequence[str] | None = None) -> int:
                     "final_dependency_sha256": result.final_dependency_sha256,
                     "outer_selection_sha256": result.outer_selection_sha256,
                     "formal_selection_sha256": formal_selection.state_sha256,
+                    "decision_diagnostic_manifest_sha256": (
+                        diagnostic_bank.manifest_sha256
+                    ),
                     "bank_path": str(result.path),
                     "parquet_sha256": result.bank.parquet_sha256,
                     "records_sha256": result.bank.records_sha256,

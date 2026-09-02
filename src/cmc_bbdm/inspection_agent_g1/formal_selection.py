@@ -91,6 +91,7 @@ class G1OuterFormalSelection:
     action_selection_sha256: str
     action_model_sha256: str
     stop_model_sha256: str
+    decision_diagnostic_manifest_sha256: str
     target_outcomes_opened: bool = False
     state_sha256: str = field(init=False)
 
@@ -125,6 +126,7 @@ class G1OuterFormalSelection:
                     self.action_selection_sha256,
                     self.action_model_sha256,
                     self.stop_model_sha256,
+                    self.decision_diagnostic_manifest_sha256,
                 )
             )
             or type(self.target_outcomes_opened) is not bool
@@ -136,7 +138,7 @@ class G1OuterFormalSelection:
             "state_sha256",
             _json_sha(
                 {
-                    "schema": 1,
+                    "schema": 2,
                     "kind": "g1-outer-formal-selection",
                     "outer_target": self.outer_target,
                     "source_domains": self.source_domains,
@@ -149,6 +151,9 @@ class G1OuterFormalSelection:
                     "action_selection": self.action_selection_sha256,
                     "action_model": self.action_model_sha256,
                     "stop_model": self.stop_model_sha256,
+                    "decision_diagnostics": (
+                        self.decision_diagnostic_manifest_sha256
+                    ),
                     "target_outcomes_opened": False,
                 }
             ),
@@ -179,7 +184,7 @@ def _stop_payload(row: G1FrozenStopThreshold) -> dict[str, object]:
 
 def _payload(selection: G1OuterFormalSelection) -> dict[str, object]:
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "scope": "inspection_agent_g1_outer_formal_selection",
         "outer_target": selection.outer_target,
         "source_domains": list(selection.source_domains),
@@ -192,6 +197,9 @@ def _payload(selection: G1OuterFormalSelection) -> dict[str, object]:
         "action_selection_sha256": selection.action_selection_sha256,
         "action_model_sha256": selection.action_model_sha256,
         "stop_model_sha256": selection.stop_model_sha256,
+        "decision_diagnostic_manifest_sha256": (
+            selection.decision_diagnostic_manifest_sha256
+        ),
         "target_outcomes_opened": False,
         "state_sha256": selection.state_sha256,
     }
@@ -246,6 +254,7 @@ def freeze_g1_outer_formal_selection(
     action_selection_sha256: str,
     action_model_sha256: str,
     stop_model_sha256: str,
+    decision_diagnostic_manifest_sha256: str,
     path: str | Path,
 ) -> G1OuterFormalSelection:
     if (
@@ -287,6 +296,9 @@ def freeze_g1_outer_formal_selection(
         action_selection_sha256=action_selection_sha256,
         action_model_sha256=action_model_sha256,
         stop_model_sha256=stop_model_sha256,
+        decision_diagnostic_manifest_sha256=(
+            decision_diagnostic_manifest_sha256
+        ),
     )
     destination = Path(path)
     if destination.exists():
@@ -316,6 +328,7 @@ def read_g1_outer_formal_selection(path: str | Path) -> G1OuterFormalSelection:
         "action_selection_sha256",
         "action_model_sha256",
         "stop_model_sha256",
+        "decision_diagnostic_manifest_sha256",
         "target_outcomes_opened",
         "state_sha256",
     }
@@ -323,7 +336,7 @@ def read_g1_outer_formal_selection(path: str | Path) -> G1OuterFormalSelection:
         if (
             not isinstance(payload, dict)
             or set(payload) != expected_keys
-            or payload["schema_version"] != 1
+            or payload["schema_version"] != 2
             or payload["scope"] != "inspection_agent_g1_outer_formal_selection"
             or payload["target_outcomes_opened"] is not False
             or not isinstance(payload["fixed_selections"], list)
@@ -378,6 +391,9 @@ def read_g1_outer_formal_selection(path: str | Path) -> G1OuterFormalSelection:
             action_selection_sha256=str(payload["action_selection_sha256"]),
             action_model_sha256=str(payload["action_model_sha256"]),
             stop_model_sha256=str(payload["stop_model_sha256"]),
+            decision_diagnostic_manifest_sha256=str(
+                payload["decision_diagnostic_manifest_sha256"]
+            ),
         )
         if selection.state_sha256 != str(payload["state_sha256"]):
             raise G1FormalSelectionError("outer formal selection state changed")

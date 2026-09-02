@@ -143,6 +143,7 @@ def test_g1_cli_subcommand_help_lists_required_flags() -> None:
             "--dagger-work-root",
             "--stop-selection-root",
             "--formal-selection-root",
+            "--decision-diagnostic-root",
             "--work-root",
         ),
         "evaluate-target": (
@@ -162,6 +163,7 @@ def test_g1_cli_subcommand_help_lists_required_flags() -> None:
             "--curve-root",
             "--reference-root",
             "--formal-selection-root",
+            "--decision-diagnostic-root",
             "--output",
         ),
         "validate": ("--config", "--path"),

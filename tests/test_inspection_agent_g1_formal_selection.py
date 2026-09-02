@@ -54,6 +54,7 @@ def test_outer_formal_selection_freezes_only_source_evidence(tmp_path) -> None:
         action_selection_sha256=_sha("action-selection"),
         action_model_sha256=_sha("action-model"),
         stop_model_sha256=_sha("stop-model"),
+        decision_diagnostic_manifest_sha256=_sha("decision-diagnostics"),
         path=path,
     )
     replay = freeze_g1_outer_formal_selection(
@@ -63,6 +64,7 @@ def test_outer_formal_selection_freezes_only_source_evidence(tmp_path) -> None:
         action_selection_sha256=_sha("action-selection"),
         action_model_sha256=_sha("action-model"),
         stop_model_sha256=_sha("stop-model"),
+        decision_diagnostic_manifest_sha256=_sha("decision-diagnostics"),
         path=path,
     )
 
@@ -72,6 +74,9 @@ def test_outer_formal_selection_freezes_only_source_evidence(tmp_path) -> None:
         "RANDOM",
     )
     assert first.target_outcomes_opened is False
+    assert first.decision_diagnostic_manifest_sha256 == _sha(
+        "decision-diagnostics"
+    )
 
 
 def test_outer_formal_selection_rejects_tampering(tmp_path) -> None:
@@ -83,6 +88,7 @@ def test_outer_formal_selection_rejects_tampering(tmp_path) -> None:
         action_selection_sha256=_sha("action-selection"),
         action_model_sha256=_sha("action-model"),
         stop_model_sha256=_sha("stop-model"),
+        decision_diagnostic_manifest_sha256=_sha("decision-diagnostics"),
         path=path,
     )
     payload = json.loads(path.read_text(encoding="ascii"))
