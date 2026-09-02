@@ -9,14 +9,12 @@ import os
 import tempfile
 from collections.abc import Callable
 from dataclasses import dataclass, field
-from itertools import pairwise
 from pathlib import Path
 
 import numpy as np
 import polars as pl
 
 from cmc_bbdm.inspection_agent.contracts import InspectionTask
-from cmc_bbdm.inspection_agent.evaluation import zero_inclusive_auebc
 from cmc_bbdm.inspection_agent.generalized_reconstruction import SourceBackgroundPrior
 from cmc_bbdm.inspection_agent.surface_hypothesis import SurfaceHypothesis
 from cmc_bbdm.inspection_agent.world import CausalInspectionWorld
@@ -35,7 +33,12 @@ from .g1 import (
     build_g1_source_dependencies,
     build_g1_world,
 )
-from .metrics import NOMINAL_CHECKPOINTS, EngineeringCurve
+from .metrics import (
+    EngineeringCurve,
+    G1MetricError,
+    replay_engineering_curve,
+    validate_engineering_curve,
+)
 from .teacher import (
     SourceTeacherAuthorization,
     validate_source_teacher_dependencies,
@@ -65,65 +68,6 @@ def _json_sha(value: object) -> str:
     ).hexdigest()
 
 
-def _curve_payload(curve: EngineeringCurve) -> dict[str, object]:
-    return {
-        "schema": 1,
-        "kind": "g1-engineering-curve",
-        "method": curve.method,
-        "target_domain": curve.target_domain,
-        "specimen_sha256": curve.specimen_sha256,
-        "task": curve.task.value,
-        "grid_sha256": curve.grid_sha256,
-        "evaluator_sha256": curve.evaluator_sha256,
-        "warm_start_sha256": curve.warm_start_sha256,
-        "nominal_budgets": tuple(float(value) for value in curve.nominal_budgets),
-        "exact_budgets": tuple(float(value) for value in curve.exact_budgets),
-        "task_losses": tuple(float(value) for value in curve.task_losses),
-        "projected_state_sha256": curve.projected_state_sha256,
-        "auebc": float(curve.auebc),
-    }
-
-
-def _validate_curve(curve: EngineeringCurve) -> None:
-    if type(curve) is not EngineeringCurve:
-        raise G1SourceBridgeError("issued engineering curve is required")
-    nominal = np.asarray(curve.nominal_budgets, dtype=np.float64)
-    exact = np.asarray(curve.exact_budgets, dtype=np.float64)
-    losses = np.asarray(curve.task_losses, dtype=np.float64)
-    if (
-        nominal.shape != (5,)
-        or exact.shape != nominal.shape
-        or losses.shape != nominal.shape
-        or tuple(float(value) for value in nominal) != NOMINAL_CHECKPOINTS
-        or not np.all(np.isfinite(exact))
-        or not np.all(np.isfinite(losses))
-        or np.any(exact < 0.0)
-        or np.any(exact - nominal > 1.0e-15)
-        or any(float(right) < float(left) for left, right in pairwise(exact))
-        or np.any(losses < 0.0)
-        or len(curve.projected_state_sha256) != 5
-        or not all(_valid_sha256(value) for value in curve.projected_state_sha256)
-        or not all(
-            _valid_sha256(value)
-            for value in (
-                curve.specimen_sha256,
-                curve.grid_sha256,
-                curve.evaluator_sha256,
-                curve.warm_start_sha256,
-                curve.state_sha256,
-            )
-        )
-        or not math.isclose(
-            float(curve.auebc),
-            zero_inclusive_auebc(nominal, losses),
-            rel_tol=0.0,
-            abs_tol=0.0,
-        )
-        or curve.state_sha256 != _json_sha(_curve_payload(curve))
-    ):
-        raise G1SourceBridgeError("source engineering curve identity changed")
-
-
 @dataclass(frozen=True, slots=True)
 class G1SourceBridgeRecord:
     outer_target: str
@@ -136,7 +80,12 @@ class G1SourceBridgeRecord:
     state_sha256: str = field(init=False)
 
     def __post_init__(self) -> None:
-        _validate_curve(self.curve)
+        try:
+            validate_engineering_curve(self.curve)
+        except G1MetricError as error:
+            raise G1SourceBridgeError(
+                "source engineering curve identity changed"
+            ) from error
         allowed_methods = (
             *FIXED_BASELINE_METHODS,
             SOURCE_ORACLE_METHODS[self.curve.task],
@@ -774,15 +723,10 @@ def write_source_bridge_bank(
 
 def _curve_from_row(row: dict[str, object]) -> EngineeringCurve:
     try:
-        nominal = np.asarray(row["nominal_budgets"], dtype="<f8")
-        exact = np.asarray(row["exact_budgets"], dtype="<f8")
-        losses = np.asarray(row["task_losses"], dtype="<f8")
         projected_raw = json.loads(str(row["projected_state_sha256_json"]))
         if not isinstance(projected_raw, list):
             raise TypeError
-        for value in (nominal, exact, losses):
-            value.setflags(write=False)
-        return EngineeringCurve(
+        curve = replay_engineering_curve(
             method=str(row["method"]),
             target_domain=str(row["source_domain"]),
             specimen_sha256=str(row["specimen_sha256"]),
@@ -790,14 +734,21 @@ def _curve_from_row(row: dict[str, object]) -> EngineeringCurve:
             grid_sha256=str(row["grid_sha256"]),
             evaluator_sha256=str(row["evaluator_sha256"]),
             warm_start_sha256=str(row["warm_start_sha256"]),
-            nominal_budgets=nominal,
-            exact_budgets=exact,
-            task_losses=losses,
+            exact_budgets=row["exact_budgets"],
+            task_losses=row["task_losses"],
             projected_state_sha256=tuple(str(value) for value in projected_raw),
-            auebc=float(row["auebc"]),
             state_sha256=str(row["curve_sha256"]),
         )
+        nominal = tuple(float(value) for value in row["nominal_budgets"])
+        if (
+            nominal != tuple(float(value) for value in curve.nominal_budgets)
+            or float(row["auebc"]) != curve.auebc
+        ):
+            raise G1SourceBridgeError("source bridge curve summary changed")
+        return curve
     except (KeyError, TypeError, ValueError, json.JSONDecodeError) as error:
+        if isinstance(error, G1SourceBridgeError):
+            raise
         raise G1SourceBridgeError("source bridge curve cannot be decoded") from error
 
 

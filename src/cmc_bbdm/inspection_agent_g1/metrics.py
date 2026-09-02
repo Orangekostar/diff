@@ -60,6 +60,127 @@ class EngineeringCurve:
     state_sha256: str
 
 
+def engineering_curve_payload(curve: EngineeringCurve) -> dict[str, object]:
+    if type(curve) is not EngineeringCurve:
+        raise G1MetricError("issued engineering curve is required")
+    return {
+        "schema": 1,
+        "kind": "g1-engineering-curve",
+        "method": curve.method,
+        "target_domain": curve.target_domain,
+        "specimen_sha256": curve.specimen_sha256,
+        "task": curve.task.value,
+        "grid_sha256": curve.grid_sha256,
+        "evaluator_sha256": curve.evaluator_sha256,
+        "warm_start_sha256": curve.warm_start_sha256,
+        "nominal_budgets": tuple(float(value) for value in curve.nominal_budgets),
+        "exact_budgets": tuple(float(value) for value in curve.exact_budgets),
+        "task_losses": tuple(float(value) for value in curve.task_losses),
+        "projected_state_sha256": curve.projected_state_sha256,
+        "auebc": float(curve.auebc),
+    }
+
+
+def validate_engineering_curve(curve: EngineeringCurve) -> None:
+    if type(curve) is not EngineeringCurve:
+        raise G1MetricError("issued engineering curve is required")
+    nominal = np.asarray(curve.nominal_budgets, dtype=np.float64)
+    exact = np.asarray(curve.exact_budgets, dtype=np.float64)
+    losses = np.asarray(curve.task_losses, dtype=np.float64)
+    if (
+        type(curve.method) is not str
+        or not curve.method
+        or type(curve.target_domain) is not str
+        or not curve.target_domain
+        or curve.task not in (InspectionTask.FIELD, InspectionTask.CAI)
+        or nominal.shape != (5,)
+        or exact.shape != nominal.shape
+        or losses.shape != nominal.shape
+        or tuple(float(value) for value in nominal) != NOMINAL_CHECKPOINTS
+        or not np.all(np.isfinite(exact))
+        or not np.all(np.isfinite(losses))
+        or np.any(exact < 0.0)
+        or np.any(exact - nominal > 1.0e-15)
+        or any(float(right) < float(left) for left, right in pairwise(exact))
+        or np.any(losses < 0.0)
+        or len(curve.projected_state_sha256) != 5
+        or not all(_valid_sha256(value) for value in curve.projected_state_sha256)
+        or not all(
+            _valid_sha256(value)
+            for value in (
+                curve.specimen_sha256,
+                curve.grid_sha256,
+                curve.evaluator_sha256,
+                curve.warm_start_sha256,
+                curve.state_sha256,
+            )
+        )
+        or not math.isclose(
+            float(curve.auebc),
+            zero_inclusive_auebc(nominal, losses),
+            rel_tol=0.0,
+            abs_tol=0.0,
+        )
+        or curve.state_sha256 != _json_sha(engineering_curve_payload(curve))
+    ):
+        raise G1MetricError("engineering curve identity changed")
+
+
+def replay_engineering_curve(
+    *,
+    method: str,
+    target_domain: str,
+    specimen_sha256: str,
+    task: InspectionTask,
+    grid_sha256: str,
+    evaluator_sha256: str,
+    warm_start_sha256: str,
+    exact_budgets: object,
+    task_losses: object,
+    projected_state_sha256: tuple[str, ...],
+    state_sha256: str | None = None,
+) -> EngineeringCurve:
+    nominal = _readonly(NOMINAL_CHECKPOINTS, (len(NOMINAL_CHECKPOINTS),))
+    exact = _readonly(exact_budgets, nominal.shape)
+    losses = _readonly(task_losses, nominal.shape)
+    projected = tuple(projected_state_sha256)
+    area = zero_inclusive_auebc(nominal, losses)
+    curve = EngineeringCurve(
+        method=method,
+        target_domain=target_domain,
+        specimen_sha256=specimen_sha256,
+        task=task,
+        grid_sha256=grid_sha256,
+        evaluator_sha256=evaluator_sha256,
+        warm_start_sha256=warm_start_sha256,
+        nominal_budgets=nominal,
+        exact_budgets=exact,
+        task_losses=losses,
+        projected_state_sha256=projected,
+        auebc=area,
+        state_sha256="",
+    )
+    issued = EngineeringCurve(
+        method=curve.method,
+        target_domain=curve.target_domain,
+        specimen_sha256=curve.specimen_sha256,
+        task=curve.task,
+        grid_sha256=curve.grid_sha256,
+        evaluator_sha256=curve.evaluator_sha256,
+        warm_start_sha256=curve.warm_start_sha256,
+        nominal_budgets=curve.nominal_budgets,
+        exact_budgets=curve.exact_budgets,
+        task_losses=curve.task_losses,
+        projected_state_sha256=curve.projected_state_sha256,
+        auebc=curve.auebc,
+        state_sha256=_json_sha(engineering_curve_payload(curve)),
+    )
+    if state_sha256 is not None and state_sha256 != issued.state_sha256:
+        raise G1MetricError("replayed engineering curve hash changed")
+    validate_engineering_curve(issued)
+    return issued
+
+
 def build_engineering_curve(
     *,
     method: str,
@@ -112,27 +233,7 @@ def build_engineering_curve(
         projected_budget.append(budgets[index])
         projected_loss.append(losses[index])
         projected_state.append(state_sha256[index])
-    nominal = _readonly(NOMINAL_CHECKPOINTS, (len(NOMINAL_CHECKPOINTS),))
-    exact = _readonly(projected_budget, nominal.shape)
-    task_values = _readonly(projected_loss, nominal.shape)
-    area = zero_inclusive_auebc(nominal, task_values)
-    payload = {
-        "schema": 1,
-        "kind": "g1-engineering-curve",
-        "method": method,
-        "target_domain": target_domain,
-        "specimen_sha256": specimen_sha256,
-        "task": task.value,
-        "grid_sha256": grid_sha256,
-        "evaluator_sha256": evaluator_sha256,
-        "warm_start_sha256": warm_start_sha256,
-        "nominal_budgets": tuple(float(value) for value in nominal),
-        "exact_budgets": tuple(float(value) for value in exact),
-        "task_losses": tuple(float(value) for value in task_values),
-        "projected_state_sha256": tuple(projected_state),
-        "auebc": area,
-    }
-    return EngineeringCurve(
+    return replay_engineering_curve(
         method=method,
         target_domain=target_domain,
         specimen_sha256=specimen_sha256,
@@ -140,12 +241,9 @@ def build_engineering_curve(
         grid_sha256=grid_sha256,
         evaluator_sha256=evaluator_sha256,
         warm_start_sha256=warm_start_sha256,
-        nominal_budgets=nominal,
-        exact_budgets=exact,
-        task_losses=task_values,
+        exact_budgets=projected_budget,
+        task_losses=projected_loss,
         projected_state_sha256=tuple(projected_state),
-        auebc=area,
-        state_sha256=_json_sha(payload),
     )
 
 
@@ -216,5 +314,8 @@ __all__ = [
     "G1MetricError",
     "OracleGapClosure",
     "build_engineering_curve",
+    "engineering_curve_payload",
     "oracle_gap_closure",
+    "replay_engineering_curve",
+    "validate_engineering_curve",
 ]
