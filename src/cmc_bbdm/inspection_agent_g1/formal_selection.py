@@ -11,6 +11,12 @@ from pathlib import Path
 
 from cmc_bbdm.inspection_agent.contracts import InspectionTask
 
+from .contracts import CAIContextMode, TaskTokenMode
+from .policy_training import (
+    PolicyModelName,
+    PolicyTrainingHyperparameters,
+    TrainingRoute,
+)
 from .source_bridge import (
     G1SourceBridgeRecord,
     OuterFixedBridgeSelection,
@@ -88,6 +94,7 @@ class G1OuterFormalSelection:
     source_domains: tuple[str, ...]
     fixed_selections: tuple[OuterFixedBridgeSelection, ...]
     stop_thresholds: tuple[G1FrozenStopThreshold, ...]
+    action_hyperparameters: PolicyTrainingHyperparameters
     action_selection_sha256: str
     action_model_sha256: str
     stop_model_sha256: str
@@ -120,6 +127,8 @@ class G1OuterFormalSelection:
                 or row.outer_target != self.outer_target
                 for row in self.stop_thresholds
             )
+            or type(self.action_hyperparameters)
+            is not PolicyTrainingHyperparameters
             or not all(
                 _valid_sha256(value)
                 for value in (
@@ -138,7 +147,7 @@ class G1OuterFormalSelection:
             "state_sha256",
             _json_sha(
                 {
-                    "schema": 2,
+                    "schema": 3,
                     "kind": "g1-outer-formal-selection",
                     "outer_target": self.outer_target,
                     "source_domains": self.source_domains,
@@ -147,6 +156,9 @@ class G1OuterFormalSelection:
                     ),
                     "stop_thresholds": tuple(
                         row.state_sha256 for row in self.stop_thresholds
+                    ),
+                    "action_hyperparameters": (
+                        self.action_hyperparameters.state_sha256
                     ),
                     "action_selection": self.action_selection_sha256,
                     "action_model": self.action_model_sha256,
@@ -182,9 +194,88 @@ def _stop_payload(row: G1FrozenStopThreshold) -> dict[str, object]:
     }
 
 
+def _hyperparameter_payload(
+    value: PolicyTrainingHyperparameters,
+) -> dict[str, object]:
+    return {
+        "model_name": value.model_name.value,
+        "route": value.route.value,
+        "cai_context_mode": value.cai_context_mode.value,
+        "task_token_mode": value.task_token_mode.value,
+        "tau": value.tau,
+        "learning_rate": value.learning_rate,
+        "weight_decay": value.weight_decay,
+        "dagger_iterations": value.dagger_iterations,
+        "aawr_expectile": value.aawr_expectile,
+        "aawr_beta": value.aawr_beta,
+        "aawr_authorized_tasks": [
+            task.value for task in value.aawr_authorized_tasks
+        ],
+        "aawr_authorization_sha256": value.aawr_authorization_sha256,
+        "base_hyperparameters_sha256": value.base_hyperparameters_sha256,
+        "state_sha256": value.state_sha256,
+    }
+
+
+def _read_hyperparameters(payload: object) -> PolicyTrainingHyperparameters:
+    expected_keys = {
+        "model_name",
+        "route",
+        "cai_context_mode",
+        "task_token_mode",
+        "tau",
+        "learning_rate",
+        "weight_decay",
+        "dagger_iterations",
+        "aawr_expectile",
+        "aawr_beta",
+        "aawr_authorized_tasks",
+        "aawr_authorization_sha256",
+        "base_hyperparameters_sha256",
+        "state_sha256",
+    }
+    if not isinstance(payload, dict) or set(payload) != expected_keys:
+        raise G1FormalSelectionError("action hyperparameter schema changed")
+    value = PolicyTrainingHyperparameters(
+        model_name=PolicyModelName(str(payload["model_name"])),
+        route=TrainingRoute(str(payload["route"])),
+        cai_context_mode=CAIContextMode(str(payload["cai_context_mode"])),
+        task_token_mode=TaskTokenMode(str(payload["task_token_mode"])),
+        tau=None if payload["tau"] is None else float(payload["tau"]),
+        learning_rate=float(payload["learning_rate"]),
+        weight_decay=float(payload["weight_decay"]),
+        dagger_iterations=int(payload["dagger_iterations"]),
+        aawr_expectile=(
+            None
+            if payload["aawr_expectile"] is None
+            else float(payload["aawr_expectile"])
+        ),
+        aawr_beta=(
+            None if payload["aawr_beta"] is None else float(payload["aawr_beta"])
+        ),
+        aawr_authorized_tasks=tuple(
+            InspectionTask(str(task))
+            for task in payload["aawr_authorized_tasks"]
+        ),
+        aawr_authorization_sha256=(
+            None
+            if payload["aawr_authorization_sha256"] is None
+            else str(payload["aawr_authorization_sha256"])
+        ),
+        base_hyperparameters_sha256=(
+            None
+            if payload["base_hyperparameters_sha256"] is None
+            else str(payload["base_hyperparameters_sha256"])
+        ),
+    )
+    if value.state_sha256 != str(payload["state_sha256"]):
+        raise G1FormalSelectionError("action hyperparameters changed")
+    return value
+
+
 def _payload(selection: G1OuterFormalSelection) -> dict[str, object]:
     return {
-        "schema_version": 2,
+        "schema_version": 3,
         "scope": "inspection_agent_g1_outer_formal_selection",
         "outer_target": selection.outer_target,
         "source_domains": list(selection.source_domains),
@@ -194,6 +285,9 @@ def _payload(selection: G1OuterFormalSelection) -> dict[str, object]:
         "stop_thresholds": [
             _stop_payload(row) for row in selection.stop_thresholds
         ],
+        "action_hyperparameters": _hyperparameter_payload(
+            selection.action_hyperparameters
+        ),
         "action_selection_sha256": selection.action_selection_sha256,
         "action_model_sha256": selection.action_model_sha256,
         "stop_model_sha256": selection.stop_model_sha256,
@@ -251,6 +345,7 @@ def freeze_g1_outer_formal_selection(
     stop_thresholds: tuple[StopThresholdSelection, ...],
     *,
     outer_target: str,
+    action_hyperparameters: PolicyTrainingHyperparameters,
     action_selection_sha256: str,
     action_model_sha256: str,
     stop_model_sha256: str,
@@ -293,6 +388,7 @@ def freeze_g1_outer_formal_selection(
         source_domains=sources,
         fixed_selections=fixed,
         stop_thresholds=frozen_stop,
+        action_hyperparameters=action_hyperparameters,
         action_selection_sha256=action_selection_sha256,
         action_model_sha256=action_model_sha256,
         stop_model_sha256=stop_model_sha256,
@@ -325,6 +421,7 @@ def read_g1_outer_formal_selection(path: str | Path) -> G1OuterFormalSelection:
         "source_domains",
         "fixed_selections",
         "stop_thresholds",
+        "action_hyperparameters",
         "action_selection_sha256",
         "action_model_sha256",
         "stop_model_sha256",
@@ -336,7 +433,7 @@ def read_g1_outer_formal_selection(path: str | Path) -> G1OuterFormalSelection:
         if (
             not isinstance(payload, dict)
             or set(payload) != expected_keys
-            or payload["schema_version"] != 2
+            or payload["schema_version"] != 3
             or payload["scope"] != "inspection_agent_g1_outer_formal_selection"
             or payload["target_outcomes_opened"] is not False
             or not isinstance(payload["fixed_selections"], list)
@@ -388,6 +485,9 @@ def read_g1_outer_formal_selection(path: str | Path) -> G1OuterFormalSelection:
             source_domains=tuple(str(value) for value in payload["source_domains"]),
             fixed_selections=fixed,
             stop_thresholds=frozen_stop,
+            action_hyperparameters=_read_hyperparameters(
+                payload["action_hyperparameters"]
+            ),
             action_selection_sha256=str(payload["action_selection_sha256"]),
             action_model_sha256=str(payload["action_model_sha256"]),
             stop_model_sha256=str(payload["stop_model_sha256"]),

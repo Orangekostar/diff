@@ -34,13 +34,14 @@ from .surface_strata import (
     G1SurfaceStratumRecord,
     surface_stratum_records_sha256,
 )
-from .target_analysis import G1TargetCurveAnalysis
+from .target_analysis import G1TargetCurveAnalysis, G1TaskCurveAnalysis
 from .target_evaluation import G1TargetCurveRecord
 from .target_execution import G1TargetTrajectoryRecord, TargetPolicyVariant
 from .target_reference import G1TargetReferenceCurveRecord
 from .target_stopping import (
     G1TargetStopOutcome,
     G1TargetStoppingAnalysis,
+    G1TaskStopAnalysis,
 )
 
 
@@ -137,6 +138,7 @@ def _write_parquet(
 
 
 def _selection_payload(selection: G1OuterFormalSelection) -> dict[str, object]:
+    hyperparameters = selection.action_hyperparameters
     return {
         "outer_target": selection.outer_target,
         "source_domains": list(selection.source_domains),
@@ -161,6 +163,28 @@ def _selection_payload(selection: G1OuterFormalSelection) -> dict[str, object]:
             }
             for row in selection.stop_thresholds
         ],
+        "action_hyperparameters": {
+            "model_name": hyperparameters.model_name.value,
+            "route": hyperparameters.route.value,
+            "cai_context_mode": hyperparameters.cai_context_mode.value,
+            "task_token_mode": hyperparameters.task_token_mode.value,
+            "tau": hyperparameters.tau,
+            "learning_rate": hyperparameters.learning_rate,
+            "weight_decay": hyperparameters.weight_decay,
+            "dagger_iterations": hyperparameters.dagger_iterations,
+            "aawr_expectile": hyperparameters.aawr_expectile,
+            "aawr_beta": hyperparameters.aawr_beta,
+            "aawr_authorized_tasks": [
+                task.value for task in hyperparameters.aawr_authorized_tasks
+            ],
+            "aawr_authorization_sha256": (
+                hyperparameters.aawr_authorization_sha256
+            ),
+            "base_hyperparameters_sha256": (
+                hyperparameters.base_hyperparameters_sha256
+            ),
+            "state_sha256": hyperparameters.state_sha256,
+        },
         "action_selection_sha256": selection.action_selection_sha256,
         "action_model_sha256": selection.action_model_sha256,
         "stop_model_sha256": selection.stop_model_sha256,
@@ -741,6 +765,51 @@ def _diagnostic_payload(
     }
 
 
+def _bootstrap_payload(value: G1PairedBootstrap) -> dict[str, object]:
+    return {
+        "point_estimate": value.point_estimate,
+        "ci_lower": value.ci_lower,
+        "ci_upper": value.ci_upper,
+        "improved_domains": value.improved_domains,
+        "replicates": value.replicates,
+        "seed": value.seed,
+        "distribution_sha256": value.distribution_sha256,
+        "domain_effects": [list(row) for row in value.domain_effects],
+    }
+
+
+def _policy_payload(value: G1TaskCurveAnalysis) -> dict[str, object]:
+    return {
+        "status": value.policy_gate.status,
+        "fixed_methods": [list(row) for row in value.fixed_methods],
+        "fixed_auebc": value.fixed_auebc,
+        "learned_auebc": value.learned_auebc,
+        "oracle_auebc": value.oracle_auebc,
+        "oracle_gap_closure": value.oracle_gap_closure,
+        "baseline_minus_learned": _bootstrap_payload(
+            value.baseline_minus_learned
+        ),
+        "gate_sha256": value.policy_gate.state_sha256,
+        "state_sha256": value.state_sha256,
+    }
+
+
+def _stop_analysis_payload(value: G1TaskStopAnalysis) -> dict[str, object]:
+    return {
+        "status": value.status,
+        "authorized_domains": value.authorized_domains,
+        "normalized_measurement_saving": value.normalized_measurement_saving,
+        "task_loss_ratio": value.task_loss_ratio,
+        "premature_stop_rate": value.premature_stop_rate,
+        "false_continue_rate": value.false_continue_rate,
+        "fraction_stopped": value.fraction_stopped,
+        "fraction_never_stopped": value.fraction_never_stopped,
+        "saving_bootstrap": _bootstrap_payload(value.saving_bootstrap),
+        "gate_sha256": None if value.gate is None else value.gate.state_sha256,
+        "state_sha256": value.state_sha256,
+    }
+
+
 def _write_decision(
     path: Path,
     curves: G1TargetCurveAnalysis,
@@ -752,27 +821,48 @@ def _write_decision(
     path.write_text(
         _json_text(
             {
-                "schema_version": 1,
+                "schema_version": 2,
                 "scope": "inspection_agent_g1_final_decision",
                 "status": curves.final_decision.status,
                 "g2_authorized": curves.final_decision.g2_authorized,
-                "field_policy": {
-                    "status": curves.field.policy_gate.status,
-                    "fixed_auebc": curves.field.fixed_auebc,
-                    "learned_auebc": curves.field.learned_auebc,
-                    "oracle_auebc": curves.field.oracle_auebc,
-                    "oracle_gap_closure": curves.field.oracle_gap_closure,
+                "field_policy": _policy_payload(curves.field),
+                "cai_policy": _policy_payload(curves.cai),
+                "task_conditioning": {
+                    "status": curves.task_conditioning.gate.status,
+                    "field_wrong_task": _bootstrap_payload(
+                        curves.task_conditioning.field_wrong_minus_correct
+                    ),
+                    "field_no_task": _bootstrap_payload(
+                        curves.task_conditioning.field_no_task_minus_correct
+                    ),
+                    "cai_wrong_task": _bootstrap_payload(
+                        curves.task_conditioning.cai_wrong_minus_correct
+                    ),
+                    "cai_no_task": _bootstrap_payload(
+                        curves.task_conditioning.cai_no_task_minus_correct
+                    ),
+                    "gate_sha256": curves.task_conditioning.gate.state_sha256,
+                    "state_sha256": curves.task_conditioning.state_sha256,
                 },
-                "cai_policy": {
-                    "status": curves.cai.policy_gate.status,
-                    "fixed_auebc": curves.cai.fixed_auebc,
-                    "learned_auebc": curves.cai.learned_auebc,
-                    "oracle_auebc": curves.cai.oracle_auebc,
-                    "oracle_gap_closure": curves.cai.oracle_gap_closure,
+                "surface_robustness": {
+                    "field_no_surface": _bootstrap_payload(
+                        curves.surface_robustness.field_no_surface_minus_correct
+                    ),
+                    "field_shuffled_surface": _bootstrap_payload(
+                        curves.surface_robustness.field_shuffled_surface_minus_correct
+                    ),
+                    "cai_no_surface": _bootstrap_payload(
+                        curves.surface_robustness.cai_no_surface_minus_correct
+                    ),
+                    "cai_shuffled_surface": _bootstrap_payload(
+                        curves.surface_robustness.cai_shuffled_surface_minus_correct
+                    ),
+                    "state_sha256": curves.surface_robustness.state_sha256,
                 },
-                "task_conditioning_status": curves.task_conditioning.gate.status,
-                "field_stopping_status": stopping.field.status,
-                "cai_stopping_status": stopping.cai.status,
+                "stopping": {
+                    "field": _stop_analysis_payload(stopping.field),
+                    "cai": _stop_analysis_payload(stopping.cai),
+                },
                 "source_decision_diagnostics": _diagnostic_payload(diagnostics),
                 "surface_strata_authority": {
                     "scope": "FROZEN_G0_DIAGNOSTIC_NOT_A_GATE",
@@ -786,13 +876,7 @@ def _write_decision(
                     "state_sha256": surface_authority.state_sha256,
                 },
                 "misleading_surface_diagnostics": {
-                    name: {
-                        "point_estimate": value.point_estimate,
-                        "ci_lower": value.ci_lower,
-                        "ci_upper": value.ci_upper,
-                        "improved_domains": value.improved_domains,
-                        "distribution_sha256": value.distribution_sha256,
-                    }
+                    name: _bootstrap_payload(value)
                     for name, value in misleading
                 },
                 "no_target_leakage": curves.no_target_leakage,
@@ -826,13 +910,71 @@ def _write_report(
                 "",
                 (
                     f"- FIELD: `{curves.field.policy_gate.status}`; "
+                    f"fixed/learned/oracle AUEBC "
+                    f"{curves.field.fixed_auebc!r}/"
+                    f"{curves.field.learned_auebc!r}/"
+                    f"{curves.field.oracle_auebc!r}; effect "
+                    f"{curves.field.baseline_minus_learned.point_estimate!r}, "
+                    f"95% CI [{curves.field.baseline_minus_learned.ci_lower!r}, "
+                    f"{curves.field.baseline_minus_learned.ci_upper!r}], "
+                    f"domains {curves.field.baseline_minus_learned.improved_domains}/6; "
                     f"oracle-gap closure {curves.field.oracle_gap_closure!r}"
                 ),
                 (
                     f"- CAI: `{curves.cai.policy_gate.status}`; "
+                    f"fixed/learned/oracle AUEBC "
+                    f"{curves.cai.fixed_auebc!r}/"
+                    f"{curves.cai.learned_auebc!r}/"
+                    f"{curves.cai.oracle_auebc!r}; effect "
+                    f"{curves.cai.baseline_minus_learned.point_estimate!r}, "
+                    f"95% CI [{curves.cai.baseline_minus_learned.ci_lower!r}, "
+                    f"{curves.cai.baseline_minus_learned.ci_upper!r}], "
+                    f"domains {curves.cai.baseline_minus_learned.improved_domains}/6; "
                     f"oracle-gap closure {curves.cai.oracle_gap_closure!r}"
                 ),
                 f"- Task conditioning: `{curves.task_conditioning.gate.status}`",
+                "",
+                "## Task and surface controls",
+                "",
+                *(
+                    f"- {name}: effect {value.point_estimate!r}, "
+                    f"95% CI [{value.ci_lower!r}, {value.ci_upper!r}], "
+                    f"domains {value.improved_domains}/6"
+                    for name, value in (
+                        (
+                            "FIELD WRONG_TASK minus correct",
+                            curves.task_conditioning.field_wrong_minus_correct,
+                        ),
+                        (
+                            "FIELD NO_TASK minus correct",
+                            curves.task_conditioning.field_no_task_minus_correct,
+                        ),
+                        (
+                            "CAI WRONG_TASK minus correct",
+                            curves.task_conditioning.cai_wrong_minus_correct,
+                        ),
+                        (
+                            "CAI NO_TASK minus correct",
+                            curves.task_conditioning.cai_no_task_minus_correct,
+                        ),
+                        (
+                            "FIELD NO_SURFACE minus correct",
+                            curves.surface_robustness.field_no_surface_minus_correct,
+                        ),
+                        (
+                            "FIELD SHUFFLED_SURFACE minus correct",
+                            curves.surface_robustness.field_shuffled_surface_minus_correct,
+                        ),
+                        (
+                            "CAI NO_SURFACE minus correct",
+                            curves.surface_robustness.cai_no_surface_minus_correct,
+                        ),
+                        (
+                            "CAI SHUFFLED_SURFACE minus correct",
+                            curves.surface_robustness.cai_shuffled_surface_minus_correct,
+                        ),
+                    )
+                ),
                 "",
                 "## Source-only decision diagnostics",
                 "",
@@ -891,11 +1033,23 @@ def _write_report(
                 "",
                 (
                     f"- FIELD: `{stopping.field.status}`; normalized saving "
-                    f"{stopping.field.normalized_measurement_saving!r}"
+                    f"{stopping.field.normalized_measurement_saving!r}, "
+                    f"95% CI [{stopping.field.saving_bootstrap.ci_lower!r}, "
+                    f"{stopping.field.saving_bootstrap.ci_upper!r}], "
+                    f"domains {stopping.field.saving_bootstrap.improved_domains}/6; "
+                    f"loss ratio {stopping.field.task_loss_ratio!r}; premature "
+                    f"rate {stopping.field.premature_stop_rate!r}; authorized "
+                    f"domains {stopping.field.authorized_domains}/6"
                 ),
                 (
                     f"- CAI: `{stopping.cai.status}`; normalized saving "
-                    f"{stopping.cai.normalized_measurement_saving!r}"
+                    f"{stopping.cai.normalized_measurement_saving!r}, "
+                    f"95% CI [{stopping.cai.saving_bootstrap.ci_lower!r}, "
+                    f"{stopping.cai.saving_bootstrap.ci_upper!r}], "
+                    f"domains {stopping.cai.saving_bootstrap.improved_domains}/6; "
+                    f"loss ratio {stopping.cai.task_loss_ratio!r}; premature "
+                    f"rate {stopping.cai.premature_stop_rate!r}; authorized "
+                    f"domains {stopping.cai.authorized_domains}/6"
                 ),
                 "",
                 "All target policy trajectories were frozen before hidden target truth was opened.",
@@ -1120,6 +1274,20 @@ def _write_package_files(
         (
             "outer_target",
             "formal_selection_sha256",
+            "selected_hyperparameters_sha256",
+            "training_route",
+            "model_name",
+            "cai_context_mode",
+            "task_token_mode",
+            "tau",
+            "learning_rate",
+            "weight_decay",
+            "dagger_iterations",
+            "aawr_expectile",
+            "aawr_beta",
+            "aawr_authorized_tasks_json",
+            "aawr_authorization_sha256",
+            "base_hyperparameters_sha256",
             "action_selection_sha256",
             "action_model_sha256",
             "stop_model_sha256",
@@ -1130,6 +1298,26 @@ def _write_package_files(
             (
                 row.outer_target,
                 row.state_sha256,
+                row.action_hyperparameters.state_sha256,
+                row.action_hyperparameters.route.value,
+                row.action_hyperparameters.model_name.value,
+                row.action_hyperparameters.cai_context_mode.value,
+                row.action_hyperparameters.task_token_mode.value,
+                row.action_hyperparameters.tau,
+                row.action_hyperparameters.learning_rate,
+                row.action_hyperparameters.weight_decay,
+                row.action_hyperparameters.dagger_iterations,
+                row.action_hyperparameters.aawr_expectile,
+                row.action_hyperparameters.aawr_beta,
+                json.dumps(
+                    [
+                        task.value
+                        for task in row.action_hyperparameters.aawr_authorized_tasks
+                    ],
+                    separators=(",", ":"),
+                ),
+                row.action_hyperparameters.aawr_authorization_sha256,
+                row.action_hyperparameters.base_hyperparameters_sha256,
                 row.action_selection_sha256,
                 row.action_model_sha256,
                 row.stop_model_sha256,

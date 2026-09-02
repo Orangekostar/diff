@@ -632,6 +632,9 @@ def main(argv: Sequence[str] | None = None) -> int:
                 tuple(bridge_records),
                 stop_selection.thresholds,
                 outer_target=args.outer_target,
+                action_hyperparameters=(
+                    stop_selection.action_policy.hyperparameters
+                ),
                 action_selection_sha256=stop_selection.state_sha256,
                 action_model_sha256=(
                     stop_selection.action_policy.model_state_sha256

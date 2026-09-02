@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import csv
+import json
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -12,6 +13,7 @@ from cmc_bbdm.inspection_agent_g1.artifacts import (
     REQUIRED_G1_OUTPUTS,
     compare_g1_packages,
 )
+from cmc_bbdm.inspection_agent_g1.contracts import CAIContextMode, TaskTokenMode
 from cmc_bbdm.inspection_agent_g1.decision_diagnostics import (
     G1SourceDecisionDiagnosticBankFile,
     G1SourceDecisionDiagnosticRecord,
@@ -23,6 +25,11 @@ from cmc_bbdm.inspection_agent_g1.formal_package import (
 from cmc_bbdm.inspection_agent_g1.formal_selection import (
     G1FrozenStopThreshold,
     G1OuterFormalSelection,
+)
+from cmc_bbdm.inspection_agent_g1.policy_training import (
+    PolicyModelName,
+    PolicyTrainingHyperparameters,
+    TrainingRoute,
 )
 from cmc_bbdm.inspection_agent_g1.surface_strata import (
     G1SurfaceStratumAuthority,
@@ -84,6 +91,18 @@ def _package_evidence():
                         ),
                     )
                     for task in (InspectionTask.FIELD, InspectionTask.CAI)
+                ),
+                action_hyperparameters=PolicyTrainingHyperparameters(
+                    model_name=PolicyModelName.STRUCTURED_INSPECTION_POLICY,
+                    route=TrainingRoute.HARD_BC,
+                    cai_context_mode=(
+                        CAIContextMode.SHARED_OBSERVABLE_STATE_CONTEXT
+                    ),
+                    task_token_mode=TaskTokenMode.CORRECT,
+                    tau=None,
+                    learning_rate=0.0003,
+                    weight_decay=0.0001,
+                    dagger_iterations=0,
                 ),
                 action_selection_sha256=_sha(f"selection-{domain}"),
                 action_model_sha256=_sha(f"action-model-{domain}"),
@@ -252,6 +271,48 @@ def test_formal_package_is_complete_and_byte_replayable(tmp_path) -> None:
         "TARGET_ENGINEERING_CHECKPOINT",
         "SOURCE_DECISION_DIAGNOSTIC",
     }
+    with (formal / "model_manifest.csv").open(
+        encoding="ascii", newline=""
+    ) as handle:
+        model_rows = tuple(csv.DictReader(handle))
+    assert {row["training_route"] for row in model_rows} == {"HARD_BC"}
+    assert {row["selected_hyperparameters_sha256"] for row in model_rows} == {
+        row.action_hyperparameters.state_sha256 for row in evidence[0]
+    }
+    decision = json.loads(
+        (formal / "decision_summary.json").read_text(encoding="ascii")
+    )
+    curve_analysis = evidence[5]
+    stopping_analysis = evidence[6]
+    assert decision["schema_version"] == 2
+    assert decision["field_policy"]["baseline_minus_learned"] == {
+        "point_estimate": curve_analysis.field.baseline_minus_learned.point_estimate,
+        "ci_lower": curve_analysis.field.baseline_minus_learned.ci_lower,
+        "ci_upper": curve_analysis.field.baseline_minus_learned.ci_upper,
+        "improved_domains": (
+            curve_analysis.field.baseline_minus_learned.improved_domains
+        ),
+        "replicates": curve_analysis.field.baseline_minus_learned.replicates,
+        "seed": curve_analysis.field.baseline_minus_learned.seed,
+        "distribution_sha256": (
+            curve_analysis.field.baseline_minus_learned.distribution_sha256
+        ),
+        "domain_effects": [
+            list(row) for row in curve_analysis.field.baseline_minus_learned.domain_effects
+        ],
+    }
+    assert decision["task_conditioning"]["status"] == (
+        curve_analysis.task_conditioning.gate.status
+    )
+    assert decision["surface_robustness"]["cai_no_surface"][
+        "point_estimate"
+    ] == curve_analysis.surface_robustness.cai_no_surface_minus_correct.point_estimate
+    assert decision["stopping"]["field"]["normalized_measurement_saving"] == (
+        stopping_analysis.field.normalized_measurement_saving
+    )
+    assert decision["stopping"]["field"]["saving_bootstrap"]["ci_upper"] == (
+        stopping_analysis.field.saving_bootstrap.ci_upper
+    )
     surface_rows = (formal / "surface_robustness.csv").read_text(
         encoding="ascii"
     )
