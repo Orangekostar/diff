@@ -234,6 +234,14 @@ from .stopping_policy import (
     observable_stop_loss,
     select_conservative_stop_threshold,
 )
+from .target_execution import (
+    G1TargetExecutionError,
+    G1TargetTrajectoryBankFile,
+    G1TargetTrajectoryRecord,
+    TargetPolicyVariant,
+    read_g1_target_trajectory_bank,
+    write_g1_target_trajectory_bank,
+)
 from .teacher import (
     PrivilegedTeacherLabel,
     authorize_source_teacher,
@@ -336,6 +344,9 @@ __all__ = [
     "G1StopSelectionExecutionError",
     "G1StopTrainingError",
     "G1StopTrainingExample",
+    "G1TargetExecutionError",
+    "G1TargetTrajectoryBankFile",
+    "G1TargetTrajectoryRecord",
     "G1TeacherBankBuild",
     "G1TeacherBankFile",
     "G1TeacherBankRecord",
@@ -357,6 +368,7 @@ __all__ = [
     "StopThresholdSelection",
     "StructuredInspectionPolicy",
     "SurfaceVariant",
+    "TargetPolicyVariant",
     "TargetTruthVault",
     "TaskTokenMode",
     "TeacherRegretCandidateResult",
@@ -445,6 +457,7 @@ __all__ = [
     "read_fixed_endpoint_bank",
     "read_g1_dagger_source_bank",
     "read_g1_outer_fixed_endpoint_records",
+    "read_g1_target_trajectory_bank",
     "read_learned_source_bank",
     "read_source_bridge_bank",
     "read_stop_bank",
@@ -479,6 +492,7 @@ __all__ = [
     "with_dagger_iterations",
     "write_fixed_endpoint_bank",
     "write_g1_dagger_source_bank",
+    "write_g1_target_trajectory_bank",
     "write_learned_source_bank",
     "write_source_bridge_bank",
     "write_stop_bank",
