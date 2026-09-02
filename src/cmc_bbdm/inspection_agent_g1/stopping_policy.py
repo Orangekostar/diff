@@ -112,7 +112,53 @@ class SourceStopLabel:
     reference_true_loss: float
     tolerance: float
     is_sufficient: bool
-    state_sha256: str
+    state_sha256: str = ""
+
+    def __post_init__(self) -> None:
+        current = float(self.current_true_loss)
+        reference = float(self.reference_true_loss)
+        tolerance = float(self.tolerance)
+        sufficient = current <= (1.0 + tolerance) * reference
+        if (
+            not _valid_sha256(self.authorization_sha256)
+            or not _valid_sha256(self.fixed_reference_sha256)
+            or type(self.source_domain) is not str
+            or not self.source_domain
+            or not _valid_sha256(self.specimen_sha256)
+            or self.task not in (InspectionTask.FIELD, InspectionTask.CAI)
+            or not _valid_sha256(self.policy_state_sha256)
+            or self.reference_method not in GATE_ELIGIBLE_FIXED_METHODS
+            or not math.isfinite(current)
+            or current < 0.0
+            or not math.isfinite(reference)
+            or reference < 0.0
+            or tolerance != STOP_TEACHER_TOLERANCE
+            or type(self.is_sufficient) is not bool
+            or self.is_sufficient != sufficient
+        ):
+            raise G1StoppingError("source STOP label is invalid")
+        payload = {
+            "schema": 1,
+            "kind": "g1-source-stop-label",
+            "authorization": self.authorization_sha256,
+            "fixed_reference": self.fixed_reference_sha256,
+            "source_domain": self.source_domain,
+            "specimen_sha256": self.specimen_sha256,
+            "task": self.task.value,
+            "policy_state_sha256": self.policy_state_sha256,
+            "reference_method": self.reference_method,
+            "current_true_loss": current,
+            "reference_true_loss": reference,
+            "tolerance": tolerance,
+            "is_sufficient": sufficient,
+        }
+        state = _json_sha(payload)
+        if self.state_sha256 not in ("", state):
+            raise G1StoppingError("source STOP label hash changed")
+        object.__setattr__(self, "current_true_loss", current)
+        object.__setattr__(self, "reference_true_loss", reference)
+        object.__setattr__(self, "tolerance", tolerance)
+        object.__setattr__(self, "state_sha256", state)
 
 
 def build_source_stop_label(
