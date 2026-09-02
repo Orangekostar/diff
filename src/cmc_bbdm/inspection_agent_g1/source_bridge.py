@@ -380,6 +380,23 @@ def source_bridge_bank_path(
     return Path(work_root) / outer_target / f"{source_domain}.parquet"
 
 
+def source_bridge_specimen_checkpoint_path(
+    checkpoint_root: str | Path,
+    outer_target: str,
+    source_domain: str,
+    specimen_sha256: str,
+) -> Path:
+    source_bridge_bank_path(checkpoint_root, outer_target, source_domain)
+    if not _valid_sha256(specimen_sha256):
+        raise G1SourceBridgeError("source bridge checkpoint identity is invalid")
+    return (
+        Path(checkpoint_root)
+        / outer_target
+        / source_domain
+        / f"{specimen_sha256}.parquet"
+    )
+
+
 def materialize_g1_source_bridge_records(
     runtime: G1Runtime,
     protocol: G1Protocol,
@@ -387,6 +404,7 @@ def materialize_g1_source_bridge_records(
     *,
     encoder: object,
     specimen_ids: tuple[str, ...],
+    checkpoint_root: str | Path | None = None,
     progress: Callable[[str], None] | None = None,
 ) -> tuple[G1SourceBridgeRecord, ...]:
     if (
@@ -397,6 +415,10 @@ def materialize_g1_source_bridge_records(
         or type(specimen_ids) is not tuple
         or not specimen_ids
         or len(set(specimen_ids)) != len(specimen_ids)
+        or (
+            checkpoint_root is not None
+            and not isinstance(checkpoint_root, (str, Path))
+        )
         or (progress is not None and not callable(progress))
     ):
         raise G1SourceBridgeError("source bridge materialization request is invalid")
@@ -416,8 +438,51 @@ def materialize_g1_source_bridge_records(
     prior = dependencies.prior_fit.prior
     assessor = dependencies.assessor_fit.assessor
     for specimen_index, specimen in enumerate(specimen_ids, start=1):
-        teacher_view = runtime.mavis.source_teacher_view(specimen)
         specimen_sha = runtime.specimen_sha256(roster.labeled_domain, specimen)
+        checkpoint = (
+            None
+            if checkpoint_root is None
+            else source_bridge_specimen_checkpoint_path(
+                checkpoint_root,
+                roster.outer_target,
+                roster.labeled_domain,
+                specimen_sha,
+            )
+        )
+        if checkpoint is not None:
+            present = (checkpoint.exists(), _manifest_path(checkpoint).exists())
+            if any(present) and not all(present):
+                raise G1SourceBridgeError(
+                    "partial source bridge specimen checkpoint exists"
+                )
+            if all(present):
+                _identity, specimen_records = read_source_bridge_bank(checkpoint)
+                if (
+                    len(specimen_records) != 12
+                    or {row.specimen_id for row in specimen_records} != {specimen}
+                    or {row.curve.specimen_sha256 for row in specimen_records}
+                    != {specimen_sha}
+                    or any(
+                        row.outer_target != roster.outer_target
+                        or row.source_domain != roster.labeled_domain
+                        or row.fit_domains != roster.fit_domains
+                        or row.dependency_sha256 != dependencies.state_sha256
+                        for row in specimen_records
+                    )
+                ):
+                    raise G1SourceBridgeError(
+                        "source bridge specimen checkpoint is stale"
+                    )
+                output.extend(specimen_records)
+                if progress is not None:
+                    progress(
+                        f"G1 source bridge checkpoint reused "
+                        f"{roster.outer_target}/{roster.labeled_domain}: "
+                        f"{specimen_index}/{len(specimen_ids)} specimens"
+                    )
+                continue
+        teacher_view = runtime.mavis.source_teacher_view(specimen)
+        specimen_records_list = []
         for task in (InspectionTask.FIELD, InspectionTask.CAI):
             world, grid, surface = build_g1_world(
                 runtime,
@@ -426,7 +491,7 @@ def materialize_g1_source_bridge_records(
                 task=task,
                 endpoint_budget=protocol.endpoint_budget,
             )
-            output.extend(
+            specimen_records_list.extend(
                 materialize_source_bridge_for_world(
                     world,
                     grid,
@@ -445,6 +510,17 @@ def materialize_g1_source_bridge_records(
                     random_seed=protocol.teacher_bank_seed,
                 )
             )
+        specimen_records = _ordered_records(tuple(specimen_records_list))
+        if (
+            len(specimen_records) != 12
+            or {row.specimen_id for row in specimen_records} != {specimen}
+            or {row.curve.specimen_sha256 for row in specimen_records}
+            != {specimen_sha}
+        ):
+            raise G1SourceBridgeError("source bridge specimen rows changed")
+        if checkpoint is not None:
+            write_source_bridge_bank(checkpoint, specimen_records)
+        output.extend(specimen_records)
         if progress is not None and (
             specimen_index % 10 == 0 or specimen_index == len(specimen_ids)
         ):
@@ -517,6 +593,7 @@ def build_g1_source_bridge_bank(
             dependencies,
             encoder=encoder,
             specimen_ids=specimen_ids,
+            checkpoint_root=Path(work_root) / ".specimen_checkpoints",
             progress=progress,
         )
         bank = write_source_bridge_bank(path, records)
@@ -537,6 +614,7 @@ def build_g1_all_source_bridge_banks(
     encoder: object,
     work_root: str | Path,
     start_fold: int = 1,
+    end_fold: int | None = None,
     progress: Callable[[str], None] | None = None,
 ) -> tuple[G1SourceBridgeBuild, ...]:
     pairs = tuple(
@@ -545,6 +623,7 @@ def build_g1_all_source_bridge_banks(
         for source in protocol.domain_order
         if source != outer
     )
+    resolved_end = len(pairs) if end_fold is None else end_fold
     if (
         type(runtime) is not G1Runtime
         or type(protocol) is not G1Protocol
@@ -552,10 +631,12 @@ def build_g1_all_source_bridge_banks(
         or not callable(getattr(encoder, "encode", None))
         or type(start_fold) is not int
         or not 1 <= start_fold <= len(pairs)
+        or type(resolved_end) is not int
+        or not start_fold <= resolved_end <= len(pairs)
         or (progress is not None and not callable(progress))
     ):
         raise G1SourceBridgeError("all-source bridge build request is invalid")
-    selected = pairs[start_fold - 1 :]
+    selected = pairs[start_fold - 1 : resolved_end]
     output = []
     for fold_index, (outer, source) in enumerate(selected, start=start_fold):
         if progress is not None:

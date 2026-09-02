@@ -116,6 +116,7 @@ def _parser() -> argparse.ArgumentParser:
     build_all_bridges.add_argument("--device", default=None)
     build_all_bridges.add_argument("--work-root", default=None)
     build_all_bridges.add_argument("--start-fold", type=int, default=1)
+    build_all_bridges.add_argument("--end-fold", type=int, default=None)
 
     select_outer = commands.add_parser("select-outer")
     select_outer.add_argument("--config", required=True)
@@ -465,6 +466,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                     encoder=encoder,
                     work_root=work_root,
                     start_fold=args.start_fold,
+                    end_fold=args.end_fold,
                     progress=_progress,
                 )
                 _print_json(

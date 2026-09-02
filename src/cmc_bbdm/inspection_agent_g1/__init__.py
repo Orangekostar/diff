@@ -165,6 +165,7 @@ from .source_bridge import (
     read_source_bridge_bank,
     select_source_fixed_bridge,
     source_bridge_bank_path,
+    source_bridge_specimen_checkpoint_path,
     write_source_bridge_bank,
 )
 from .source_policy_evaluation import (
@@ -454,6 +455,7 @@ __all__ = [
     "select_teacher_regret_candidate",
     "soft_utility_distillation_loss",
     "source_bridge_bank_path",
+    "source_bridge_specimen_checkpoint_path",
     "source_teacher_bank_path",
     "specimen_integrity_sha256",
     "stop_bank_path",

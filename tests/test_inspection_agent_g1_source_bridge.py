@@ -12,13 +12,16 @@ from cmc_bbdm.inspection_agent.surface_hypothesis import SurfaceHypothesis
 from cmc_bbdm.inspection_agent.world import CausalInspectionWorld
 from cmc_bbdm.inspection_agent_g1.crossfit import build_crossfit_roster
 from cmc_bbdm.inspection_agent_g1.formal import FIXED_BASELINE_METHODS
+from cmc_bbdm.inspection_agent_g1.g1 import G1Protocol, G1Runtime, G1SourceDependencies
 from cmc_bbdm.inspection_agent_g1.metrics import build_engineering_curve
 from cmc_bbdm.inspection_agent_g1.source_bridge import (
     G1SourceBridgeError,
     G1SourceBridgeRecord,
+    materialize_g1_source_bridge_records,
     materialize_source_bridge_for_world,
     read_source_bridge_bank,
     select_source_fixed_bridge,
+    source_bridge_specimen_checkpoint_path,
     write_source_bridge_bank,
 )
 from cmc_bbdm.inspection_agent_g1.teacher import authorize_source_teacher
@@ -152,6 +155,153 @@ def test_source_bridge_bank_rejects_cross_method_specimen_mixing(
 
     with pytest.raises(G1SourceBridgeError, match="specimen identity"):
         write_source_bridge_bank(tmp_path / "mixed.parquet", tuple(records))
+
+
+def _checkpoint_records(
+    specimen_id: str,
+    task: InspectionTask,
+) -> tuple[G1SourceBridgeRecord, ...]:
+    methods = (*FIXED_BASELINE_METHODS, f"ORACLE_{task.value}")
+    return tuple(
+        G1SourceBridgeRecord(
+            outer_target="d6",
+            source_domain="d1",
+            specimen_id=specimen_id,
+            fit_domains=("d2", "d3", "d4", "d5"),
+            dependency_sha256=_sha("dependencies"),
+            action_history_sha256=_sha(
+                f"actions-{specimen_id}-{task.value}-{method}"
+            ),
+            curve=build_engineering_curve(
+                method=method,
+                target_domain="d1",
+                specimen_sha256=_sha(specimen_id),
+                task=task,
+                grid_sha256=_sha(f"grid-{specimen_id}"),
+                evaluator_sha256=_sha(f"evaluator-{task.value}"),
+                warm_start_sha256=_sha(f"warm-{specimen_id}-{task.value}"),
+                state_budgets=(0.0, 0.05, 0.1, 0.18, 0.24),
+                state_losses=(1.0,) * 5,
+                state_sha256=tuple(
+                    _sha(f"state-{specimen_id}-{task.value}-{method}-{index}")
+                    for index in range(5)
+                ),
+            ),
+        )
+        for method in methods
+    )
+
+
+def test_source_bridge_materialization_reuses_completed_specimen_checkpoints(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    runtime = object.__new__(G1Runtime)
+    object.__setattr__(
+        runtime,
+        "mavis",
+        type(
+            "Mavis",
+            (),
+            {
+                "specimen_ids": ("s1", "s2"),
+                "dataset_ids": ("d1", "d1"),
+                "source_teacher_view": staticmethod(
+                    lambda _specimen: type(
+                        "View",
+                        (),
+                        {
+                            "full_scan": np.zeros((2, 2, 3), dtype=np.uint8),
+                            "true_cai": 0.4,
+                        },
+                    )()
+                ),
+            },
+        )(),
+    )
+    protocol = object.__new__(G1Protocol)
+    object.__setattr__(protocol, "endpoint_budget", 0.25)
+    object.__setattr__(protocol, "teacher_bank_seed", 2026090101)
+    dependencies = object.__new__(G1SourceDependencies)
+    object.__setattr__(
+        dependencies,
+        "roster",
+        type(
+            "Roster",
+            (),
+            {
+                "outer_target": "d6",
+                "labeled_domain": "d1",
+                "fit_domains": ("d2", "d3", "d4", "d5"),
+            },
+        )(),
+    )
+    object.__setattr__(
+        dependencies,
+        "prior_fit",
+        type("PriorFit", (), {"prior": object()})(),
+    )
+    object.__setattr__(
+        dependencies,
+        "assessor_fit",
+        type("AssessorFit", (), {"assessor": object()})(),
+    )
+    object.__setattr__(dependencies, "authorization", object())
+    object.__setattr__(dependencies, "state_sha256", _sha("dependencies"))
+    monkeypatch.setattr(
+        G1Runtime,
+        "specimen_sha256",
+        lambda _runtime, _domain, specimen: _sha(specimen),
+    )
+    monkeypatch.setattr(
+        "cmc_bbdm.inspection_agent_g1.source_bridge.build_g1_world",
+        lambda _runtime, *, task, **_kwargs: (
+            type("World", (), {"task": task})(),
+            object(),
+            type("Surface", (), {"hypothesis": object()})(),
+        ),
+    )
+    calls: list[tuple[str, InspectionTask]] = []
+
+    def fake_materialize(world, *_args, specimen_id, **_kwargs):
+        calls.append((specimen_id, world.task))
+        return _checkpoint_records(specimen_id, world.task)
+
+    monkeypatch.setattr(
+        "cmc_bbdm.inspection_agent_g1.source_bridge.materialize_source_bridge_for_world",
+        fake_materialize,
+    )
+    checkpoint_root = tmp_path / "parts"
+    encoder = type("Encoder", (), {"encode": staticmethod(lambda _images: None)})()
+
+    first = materialize_g1_source_bridge_records(
+        runtime,
+        protocol,
+        dependencies,
+        encoder=encoder,
+        specimen_ids=("s1", "s2"),
+        checkpoint_root=checkpoint_root,
+    )
+    assert len(first) == 24
+    assert len(calls) == 4
+    assert source_bridge_specimen_checkpoint_path(
+        checkpoint_root, "d6", "d1", _sha("s1")
+    ).exists()
+
+    calls.clear()
+    replay = materialize_g1_source_bridge_records(
+        runtime,
+        protocol,
+        dependencies,
+        encoder=encoder,
+        specimen_ids=("s1", "s2"),
+        checkpoint_root=checkpoint_root,
+    )
+
+    assert calls == []
+    assert tuple(row.state_sha256 for row in replay) == tuple(
+        row.state_sha256 for row in first
+    )
 
 
 class _Assessor:

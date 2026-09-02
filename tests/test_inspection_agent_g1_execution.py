@@ -379,6 +379,7 @@ def test_all_source_bridge_banks_follow_resumed_directed_fold_order(
         encoder=SimpleNamespace(encode=lambda _images: None),
         work_root=tmp_path,
         start_fold=29,
+        end_fold=29,
     )
     full = tuple(
         (outer, source)
@@ -387,8 +388,8 @@ def test_all_source_bridge_banks_follow_resumed_directed_fold_order(
         if source != outer
     )
 
-    assert tuple(calls) == full[28:]
-    assert tuple((row.outer_target, row.source_domain) for row in builds) == full[28:]
+    assert tuple(calls) == full[28:29]
+    assert tuple((row.outer_target, row.source_domain) for row in builds) == full[28:29]
 
 
 def test_final_dependencies_fit_exactly_the_five_outer_source_domains(

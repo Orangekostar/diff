@@ -93,6 +93,7 @@ def test_g1_cli_subcommand_help_lists_required_flags() -> None:
             "--config",
             "--source-project-root",
             "--start-fold",
+            "--end-fold",
         ),
         "select-outer": ("--config", "--outer-target"),
         "select-outer-engineering": (
