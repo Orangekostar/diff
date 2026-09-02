@@ -101,6 +101,7 @@ class G1Protocol:
     bootstrap_seed: int
     default_device: str
     encoder_batch_size: int
+    teacher_bank_work_path: str
     formal_output: str
     replay_output: str
     work_output: str
@@ -208,6 +209,8 @@ def load_g1_protocol(
         or weight_decays != (0.0001, 0.001)
         or dagger_iterations != (0, 1, 2)
         or stop_thresholds != (0.5, 0.7, 0.8, 0.9, 0.95, 0.975, 0.99)
+        or teacher_bank.get("work_path")
+        != "results/inspection_agent/g1_work/teacher_banks"
     ):
         raise G1ExecutionError("G1 protocol roster changed")
 
@@ -265,6 +268,7 @@ def load_g1_protocol(
         bootstrap_seed=int(statistics["bootstrap_seed"]),
         default_device=str(execution["default_device"]),
         encoder_batch_size=int(execution["encoder_batch_size"]),
+        teacher_bank_work_path=str(teacher_bank["work_path"]),
         formal_output=str(execution["formal_output"]),
         replay_output=str(execution["replay_output"]),
         work_output=str(execution["work_output"]),

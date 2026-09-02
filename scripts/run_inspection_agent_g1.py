@@ -90,7 +90,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 device=args.device or protocol.default_device,
             )
             work_root = args.work_root or str(
-                Path(args.project_root) / protocol.work_output
+                Path(args.project_root) / protocol.teacher_bank_work_path
             )
             if args.command == "build-all-banks":
                 results = build_g1_all_source_teacher_banks(

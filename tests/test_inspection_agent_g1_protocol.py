@@ -31,6 +31,9 @@ def test_g1_protocol_is_hash_bound_and_exact() -> None:
     assert protocol.bootstrap_replicates == 100_000
     assert protocol.bootstrap_seed == 2026090104
     assert protocol.default_device == "cuda:2"
+    assert protocol.teacher_bank_work_path == (
+        "results/inspection_agent/g1_work/teacher_banks"
+    )
 
 
 def test_g1_protocol_rejects_any_config_byte_change(tmp_path: Path) -> None:
