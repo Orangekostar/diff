@@ -20,6 +20,7 @@ from cmc_bbdm.inspection_agent_g1.source_bridge import (
     materialize_g1_source_bridge_records,
     materialize_source_bridge_for_world,
     read_source_bridge_bank,
+    select_outer_fixed_bridge,
     select_source_fixed_bridge,
     source_bridge_specimen_checkpoint_path,
     write_source_bridge_bank,
@@ -95,6 +96,27 @@ def test_source_fixed_bridge_selection_excludes_validation_domain() -> None:
         "d5",
     )
     assert selection.equal_domain_auebc == 0.125
+
+
+def test_outer_fixed_bridge_selection_uses_all_five_source_domains_equally() -> None:
+    records = []
+    for source in DOMAINS[:-1]:
+        for method_index, method in enumerate(FIXED_BASELINE_METHODS):
+            loss = 1.0 + method_index
+            if method == "SURFACE_FOCUS":
+                loss = 0.5 if source != "d1" else 100.0
+            records.append(_record(source, method, loss))
+
+    selection = select_outer_fixed_bridge(
+        tuple(records),
+        outer_target="d6",
+        task=InspectionTask.FIELD,
+    )
+
+    assert selection.method == "RANDOM"
+    assert selection.source_domains == DOMAINS[:-1]
+    assert selection.equal_domain_auebc == 0.25
+    assert tuple(domain for domain, _value in selection.domain_auebc) == DOMAINS[:-1]
 
 
 def test_source_bridge_bank_round_trips_curve_evidence(tmp_path: Path) -> None:

@@ -212,6 +212,68 @@ class SourceFixedBridgeSelection:
         )
 
 
+@dataclass(frozen=True, slots=True)
+class OuterFixedBridgeSelection:
+    outer_target: str
+    task: InspectionTask
+    method: str
+    source_domains: tuple[str, ...]
+    equal_domain_auebc: float
+    domain_auebc: tuple[tuple[str, float], ...]
+    evidence_sha256: str
+    state_sha256: str = field(init=False)
+
+    def __post_init__(self) -> None:
+        domain_values = tuple(
+            (str(domain), float(value)) for domain, value in self.domain_auebc
+        )
+        mean = float(self.equal_domain_auebc)
+        if (
+            type(self.outer_target) is not str
+            or not self.outer_target
+            or self.task not in (InspectionTask.FIELD, InspectionTask.CAI)
+            or self.method not in FIXED_BASELINE_METHODS
+            or type(self.source_domains) is not tuple
+            or len(self.source_domains) != 5
+            or len(set(self.source_domains)) != 5
+            or self.outer_target in self.source_domains
+            or type(self.domain_auebc) is not tuple
+            or tuple(domain for domain, _value in domain_values)
+            != self.source_domains
+            or any(not math.isfinite(value) or value < 0.0 for _, value in domain_values)
+            or not math.isfinite(mean)
+            or mean < 0.0
+            or not math.isclose(
+                mean,
+                float(np.mean([value for _domain, value in domain_values])),
+                rel_tol=0.0,
+                abs_tol=0.0,
+            )
+            or not _valid_sha256(self.evidence_sha256)
+        ):
+            raise G1SourceBridgeError("outer fixed bridge selection is invalid")
+        object.__setattr__(self, "domain_auebc", domain_values)
+        object.__setattr__(self, "equal_domain_auebc", mean)
+        object.__setattr__(
+            self,
+            "state_sha256",
+            _json_sha(
+                {
+                    "schema": 1,
+                    "kind": "g1-outer-fixed-bridge-selection",
+                    "outer_target": self.outer_target,
+                    "task": self.task.value,
+                    "method": self.method,
+                    "source_domains": self.source_domains,
+                    "equal_domain_auebc": mean,
+                    "domain_auebc": domain_values,
+                    "evidence": self.evidence_sha256,
+                    "target_outcomes_opened": False,
+                }
+            ),
+        )
+
+
 def _record_key(record: G1SourceBridgeRecord) -> tuple[object, ...]:
     return (
         record.outer_target,
@@ -1014,18 +1076,108 @@ def select_source_fixed_bridge(
     )
 
 
+def select_outer_fixed_bridge(
+    records: tuple[G1SourceBridgeRecord, ...],
+    *,
+    outer_target: str,
+    task: InspectionTask,
+) -> OuterFixedBridgeSelection:
+    if (
+        type(records) is not tuple
+        or not records
+        or any(type(row) is not G1SourceBridgeRecord for row in records)
+        or type(outer_target) is not str
+        or not outer_target
+        or task not in (InspectionTask.FIELD, InspectionTask.CAI)
+        or {row.outer_target for row in records} != {outer_target}
+    ):
+        raise G1SourceBridgeError("outer fixed bridge request is invalid")
+    fixed = tuple(
+        row
+        for row in records
+        if row.curve.task is task and row.curve.method in FIXED_BASELINE_METHODS
+    )
+    sources = tuple(sorted({row.source_domain for row in fixed}))
+    if (
+        len(sources) != 5
+        or outer_target in sources
+        or any(set(row.fit_domains) != set(sources) - {row.source_domain} for row in fixed)
+    ):
+        raise G1SourceBridgeError("outer fixed bridge source roster changed")
+    for source in sources:
+        by_method = {
+            method: tuple(
+                row
+                for row in fixed
+                if row.source_domain == source and row.curve.method == method
+            )
+            for method in FIXED_BASELINE_METHODS
+        }
+        specimen_sets = {
+            tuple(row.curve.specimen_sha256 for row in values)
+            for values in by_method.values()
+        }
+        if (
+            any(not values for values in by_method.values())
+            or len(specimen_sets) != 1
+            or len(next(iter(specimen_sets))) != len(set(next(iter(specimen_sets))))
+        ):
+            raise G1SourceBridgeError("outer fixed bridge method roster changed")
+    means = {
+        method: tuple(
+            (
+                source,
+                float(
+                    np.mean(
+                        [
+                            row.curve.auebc
+                            for row in fixed
+                            if row.source_domain == source
+                            and row.curve.method == method
+                        ],
+                        dtype=np.float64,
+                    )
+                ),
+            )
+            for source in sources
+        )
+        for method in FIXED_BASELINE_METHODS
+    }
+    selected = min(
+        FIXED_BASELINE_METHODS,
+        key=lambda method: (
+            float(np.mean([value for _domain, value in means[method]])),
+            FIXED_BASELINE_METHODS.index(method),
+        ),
+    )
+    evidence = _json_sha(tuple(row.state_sha256 for row in sorted(fixed, key=_record_key)))
+    return OuterFixedBridgeSelection(
+        outer_target=outer_target,
+        task=task,
+        method=selected,
+        source_domains=sources,
+        equal_domain_auebc=float(
+            np.mean([value for _domain, value in means[selected]], dtype=np.float64)
+        ),
+        domain_auebc=means[selected],
+        evidence_sha256=evidence,
+    )
+
+
 __all__ = [
     "SOURCE_ORACLE_METHODS",
     "G1SourceBridgeBankFile",
     "G1SourceBridgeBuild",
     "G1SourceBridgeError",
     "G1SourceBridgeRecord",
+    "OuterFixedBridgeSelection",
     "SourceFixedBridgeSelection",
     "build_g1_all_source_bridge_banks",
     "build_g1_source_bridge_bank",
     "materialize_g1_source_bridge_records",
     "materialize_source_bridge_for_world",
     "read_source_bridge_bank",
+    "select_outer_fixed_bridge",
     "select_source_fixed_bridge",
     "source_bridge_bank_path",
     "write_source_bridge_bank",
