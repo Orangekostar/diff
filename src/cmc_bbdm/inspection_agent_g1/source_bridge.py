@@ -16,9 +16,22 @@ import polars as pl
 
 from cmc_bbdm.inspection_agent.contracts import InspectionTask
 from cmc_bbdm.inspection_agent.evaluation import zero_inclusive_auebc
+from cmc_bbdm.inspection_agent.generalized_reconstruction import SourceBackgroundPrior
+from cmc_bbdm.inspection_agent.surface_hypothesis import SurfaceHypothesis
+from cmc_bbdm.inspection_agent.world import CausalInspectionWorld
+from cmc_bbdm.mva.acquisition_grid import AcquisitionGrid
 
-from .formal import FIXED_BASELINE_METHODS
+from .formal import (
+    FIXED_BASELINE_METHODS,
+    evaluate_g1_action_history,
+    plan_g1_fixed_actions,
+    run_g1_warm_started_oracle_actions,
+)
 from .metrics import NOMINAL_CHECKPOINTS, EngineeringCurve
+from .teacher import (
+    SourceTeacherAuthorization,
+    validate_source_teacher_dependencies,
+)
 
 SOURCE_ORACLE_METHODS = {
     InspectionTask.FIELD: "ORACLE_FIELD",
@@ -240,6 +253,144 @@ def _record_key(record: G1SourceBridgeRecord) -> tuple[object, ...]:
         record.curve.task.value,
         record.curve.method,
     )
+
+
+def _action_history_sha(actions: tuple[object, ...]) -> str:
+    try:
+        tokens = tuple(
+            (action.cell_index, action.from_level, action.to_level)
+            for action in actions
+        )
+    except AttributeError as error:
+        raise G1SourceBridgeError("source bridge action history is invalid") from error
+    if type(actions) is not tuple or not actions:
+        raise G1SourceBridgeError("source bridge action history is invalid")
+    return _json_sha(
+        {
+            "schema": 1,
+            "kind": "g1-source-bridge-action-history",
+            "actions": tokens,
+        }
+    )
+
+
+def materialize_source_bridge_for_world(
+    world: CausalInspectionWorld,
+    grid: AcquisitionGrid,
+    surface_hypothesis: SurfaceHypothesis,
+    prior: SourceBackgroundPrior,
+    authorization: SourceTeacherAuthorization,
+    *,
+    assessor: object,
+    encoder: object,
+    outer_target: str,
+    source_domain: str,
+    specimen_id: str,
+    specimen_sha256: str,
+    dependency_sha256: str,
+    full_scan: np.ndarray,
+    true_cai: float,
+    random_seed: int,
+) -> tuple[G1SourceBridgeRecord, ...]:
+    if (
+        type(world) is not CausalInspectionWorld
+        or type(grid) is not AcquisitionGrid
+        or type(surface_hypothesis) is not SurfaceHypothesis
+        or type(prior) is not SourceBackgroundPrior
+        or type(authorization) is not SourceTeacherAuthorization
+        or not callable(getattr(assessor, "predict", None))
+        or not _valid_sha256(getattr(assessor, "model_state_sha256", None))
+        or not callable(getattr(encoder, "encode", None))
+        or outer_target != authorization.outer_target
+        or source_domain != authorization.labeled_domain
+        or source_domain == outer_target
+        or type(specimen_id) is not str
+        or not specimen_id
+        or not _valid_sha256(specimen_sha256)
+        or not _valid_sha256(dependency_sha256)
+        or type(random_seed) is not int
+    ):
+        raise G1SourceBridgeError("source bridge world request is invalid")
+    validate_source_teacher_dependencies(
+        authorization,
+        prior,
+        assessor=assessor,
+    )
+    initial = world.reset()
+    if initial.grid_sha256 != grid.state_sha256:
+        raise G1SourceBridgeError("source bridge world grid changed")
+    task = initial.task
+    output = []
+    for method in FIXED_BASELINE_METHODS:
+        actions = plan_g1_fixed_actions(
+            grid,
+            surface_hypothesis,
+            surface_sha256=initial.surface_sha256,
+            specimen_sha256=specimen_sha256,
+            method=method,
+            random_seed=random_seed,
+            endpoint_budget=initial.endpoint_budget,
+        )
+        curve = evaluate_g1_action_history(
+            world,
+            grid,
+            prior,
+            assessor=assessor,
+            encoder=encoder,
+            method=method,
+            target_domain=source_domain,
+            specimen_sha256=specimen_sha256,
+            actions=actions,
+            full_scan=full_scan,
+            true_cai=true_cai,
+        )
+        output.append(
+            G1SourceBridgeRecord(
+                outer_target=outer_target,
+                source_domain=source_domain,
+                specimen_id=specimen_id,
+                fit_domains=authorization.fit_domains,
+                dependency_sha256=dependency_sha256,
+                action_history_sha256=_action_history_sha(actions),
+                curve=curve,
+            )
+        )
+    oracle_actions = run_g1_warm_started_oracle_actions(
+        world,
+        grid,
+        prior,
+        surface_hypothesis=surface_hypothesis,
+        full_scan=full_scan,
+        true_cai=true_cai,
+        assessor=assessor,
+        encoder=encoder,
+    )
+    oracle_method = SOURCE_ORACLE_METHODS[task]
+    oracle_curve = evaluate_g1_action_history(
+        world,
+        grid,
+        prior,
+        assessor=assessor,
+        encoder=encoder,
+        method=oracle_method,
+        target_domain=source_domain,
+        specimen_sha256=specimen_sha256,
+        actions=oracle_actions,
+        full_scan=full_scan,
+        true_cai=true_cai,
+    )
+    output.append(
+        G1SourceBridgeRecord(
+            outer_target=outer_target,
+            source_domain=source_domain,
+            specimen_id=specimen_id,
+            fit_domains=authorization.fit_domains,
+            dependency_sha256=dependency_sha256,
+            action_history_sha256=_action_history_sha(oracle_actions),
+            curve=oracle_curve,
+        )
+    )
+    return tuple(output)
 
 
 def _ordered_records(
@@ -593,6 +744,7 @@ __all__ = [
     "G1SourceBridgeError",
     "G1SourceBridgeRecord",
     "SourceFixedBridgeSelection",
+    "materialize_source_bridge_for_world",
     "read_source_bridge_bank",
     "select_source_fixed_bridge",
     "write_source_bridge_bank",

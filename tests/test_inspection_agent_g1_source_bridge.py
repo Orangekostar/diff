@@ -7,15 +7,23 @@ import numpy as np
 import pytest
 
 from cmc_bbdm.inspection_agent.contracts import InspectionTask
+from cmc_bbdm.inspection_agent.generalized_reconstruction import SourceBackgroundPrior
+from cmc_bbdm.inspection_agent.surface_hypothesis import SurfaceHypothesis
+from cmc_bbdm.inspection_agent.world import CausalInspectionWorld
+from cmc_bbdm.inspection_agent_g1.crossfit import build_crossfit_roster
 from cmc_bbdm.inspection_agent_g1.formal import FIXED_BASELINE_METHODS
 from cmc_bbdm.inspection_agent_g1.metrics import build_engineering_curve
 from cmc_bbdm.inspection_agent_g1.source_bridge import (
     G1SourceBridgeError,
     G1SourceBridgeRecord,
+    materialize_source_bridge_for_world,
     read_source_bridge_bank,
     select_source_fixed_bridge,
     write_source_bridge_bank,
 )
+from cmc_bbdm.inspection_agent_g1.teacher import authorize_source_teacher
+from cmc_bbdm.inspection_agent_g1.warm_start import build_deployment_grid
+from cmc_bbdm.mavis.authority import MAVISAuthority
 
 DOMAINS = ("d1", "d2", "d3", "d4", "d5", "d6")
 
@@ -144,3 +152,96 @@ def test_source_bridge_bank_rejects_cross_method_specimen_mixing(
 
     with pytest.raises(G1SourceBridgeError, match="specimen identity"):
         write_source_bridge_bank(tmp_path / "mixed.parquet", tuple(records))
+
+
+class _Assessor:
+    outer_domain = "d6"
+    fit_domains = ("d2", "d3", "d4", "d5")
+    model_state_sha256 = _sha("assessor")
+
+    def predict(self, embeddings: object, scalars: object) -> np.ndarray:
+        del scalars
+        return np.full(len(np.asarray(embeddings)), 0.4, dtype=np.float64)
+
+
+class _Encoder:
+    def encode(self, images: object) -> np.ndarray:
+        return np.zeros((len(tuple(images)), 512), dtype=np.float64)
+
+
+def _world_fixture(task: InspectionTask):
+    rows, columns = np.indices((41, 43))
+    full_scan = np.stack((3 * rows, 4 * columns, rows + columns), axis=2).astype(
+        np.uint8
+    )
+    authority = MAVISAuthority.from_arrays(
+        specimen_ids=("d1-sample",),
+        dataset_ids=("d1",),
+        images=(full_scan,),
+        targets=np.asarray([0.4]),
+        metadata13=np.zeros((1, 13)),
+        profile_stats21=np.zeros((1, 21)),
+    )
+    grid = build_deployment_grid(full_scan.shape[:2])
+    surface_rgb = np.zeros((1, 1, 3), dtype=np.uint8)
+    world = CausalInspectionWorld(
+        authority,
+        specimen_id="d1-sample",
+        task=task,
+        surface_rgb=surface_rgb,
+        surface_sha256=_sha("surface"),
+        grid=grid,
+        endpoint_budget=0.25,
+    )
+    hypothesis = SurfaceHypothesis(
+        scores=np.linspace(0.0, 1.0, 64),
+        top_cells=tuple(range(63, 55, -1)),
+        border_median_rgb=np.zeros(3),
+        state_sha256=_sha("hypothesis"),
+    )
+    prior = SourceBackgroundPrior(
+        outer_domain="d6",
+        source_domains=("d2", "d3", "d4", "d5"),
+        fit_specimen_ids=("s2", "s3", "s4", "s5"),
+        source_authority_sha256=_sha("source-authority"),
+        domain_border_medians=np.zeros((4, 3)),
+        background_rgb=np.zeros(3, dtype=np.uint8),
+    )
+    authorization = authorize_source_teacher(
+        build_crossfit_roster(DOMAINS, outer_target="d6", labeled_domain="d1"),
+        query_domain="d1",
+    )
+    return world, grid, hypothesis, prior, authorization, full_scan
+
+
+@pytest.mark.parametrize("task", (InspectionTask.FIELD, InspectionTask.CAI))
+def test_source_world_materializes_fixed_and_task_oracle_bridge(
+    task: InspectionTask,
+) -> None:
+    world, grid, hypothesis, prior, authorization, full_scan = _world_fixture(task)
+
+    records = materialize_source_bridge_for_world(
+        world,
+        grid,
+        hypothesis,
+        prior,
+        authorization,
+        assessor=_Assessor(),
+        encoder=_Encoder(),
+        outer_target="d6",
+        source_domain="d1",
+        specimen_id="d1-sample",
+        specimen_sha256=_sha("d1-sample"),
+        dependency_sha256=_sha("dependencies"),
+        full_scan=full_scan,
+        true_cai=0.4,
+        random_seed=2026090101,
+    )
+
+    assert {row.curve.method for row in records} == {
+        *FIXED_BASELINE_METHODS,
+        f"ORACLE_{task.value}",
+    }
+    assert all(row.curve.task is task for row in records)
+    assert all(row.fit_domains == ("d2", "d3", "d4", "d5") for row in records)
+    assert all(np.isfinite(row.curve.auebc) for row in records)
