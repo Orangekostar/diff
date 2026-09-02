@@ -626,6 +626,7 @@ def build_g1_outer_dagger_banks(
     teacher_bank_root: str | Path,
     work_root: str | Path,
     device: str,
+    dependency_factory: Callable[[str], G1SourceDependencies] | None = None,
     progress: Callable[[str], None] | None = None,
 ) -> G1OuterDaggerBuild:
     domain_order = tuple(getattr(protocol, "domain_order", ()))
@@ -639,6 +640,7 @@ def build_g1_outer_dagger_banks(
         or not callable(getattr(encoder, "encode", None))
         or type(device) is not str
         or not device
+        or (dependency_factory is not None and not callable(dependency_factory))
         or (progress is not None and not callable(progress))
     ):
         raise G1DaggerOrchestrationError("outer DAgger request is invalid")
@@ -660,6 +662,33 @@ def build_g1_outer_dagger_banks(
         base_manifests.append(bank.manifest_sha256)
     builds: list[G1DaggerSourceBankBuild] = []
     dependency_cache: dict[str, G1SourceDependencies] = {}
+
+    def dependencies_for(source: str) -> G1SourceDependencies:
+        if source not in dependency_cache:
+            dependency_cache[source] = (
+                build_g1_source_dependencies(
+                    runtime,
+                    protocol,
+                    outer_target=outer_target,
+                    labeled_domain=source,
+                    encoder=encoder,
+                    progress=progress,
+                )
+                if dependency_factory is None
+                else dependency_factory(source)
+            )
+        result = dependency_cache[source]
+        roster = getattr(result, "roster", None)
+        if (
+            type(result) is not G1SourceDependencies
+            or getattr(roster, "outer_target", None) != outer_target
+            or getattr(roster, "labeled_domain", None) != source
+            or tuple(getattr(roster, "fit_domains", ()))
+            != tuple(domain for domain in source_domains if domain != source)
+        ):
+            raise G1DaggerOrchestrationError("DAgger dependency fold changed")
+        return result
+
     for iteration in REGISTERED_DAGGER_ITERATIONS[1:]:
         generation_hyperparameters = with_dagger_iterations(
             base_hyperparameters, iteration - 1
@@ -719,19 +748,10 @@ def build_g1_outer_dagger_banks(
                     patience=int(protocol.patience),
                     device=device,
                 )
-                if source not in dependency_cache:
-                    dependency_cache[source] = build_g1_source_dependencies(
-                        runtime,
-                        protocol,
-                        outer_target=outer_target,
-                        labeled_domain=source,
-                        encoder=encoder,
-                        progress=progress,
-                    )
                 build = build_g1_dagger_source_bank(
                     runtime,
                     protocol,
-                    dependency_cache[source],
+                    dependencies_for(source),
                     encoder=encoder,
                     actor=actor,
                     iteration=iteration,

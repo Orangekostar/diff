@@ -113,6 +113,7 @@ class AAWRSourceEvidence:
 class AAWRAuthorization:
     outer_target: str
     status: str
+    prerequisite_satisfied: bool
     authorized_tasks: tuple[InspectionTask, ...]
     evidence: tuple[AAWRSourceEvidence, ...]
     state_sha256: str
@@ -120,6 +121,8 @@ class AAWRAuthorization:
 
 def authorize_conditional_aawr(
     evidence: tuple[AAWRSourceEvidence, ...],
+    *,
+    soft_distillation_with_dagger: bool = True,
 ) -> AAWRAuthorization:
     if (
         type(evidence) is not tuple
@@ -127,6 +130,7 @@ def authorize_conditional_aawr(
         or any(type(row) is not AAWRSourceEvidence for row in evidence)
         or len({row.task for row in evidence}) != len(evidence)
         or len({row.outer_target for row in evidence}) != 1
+        or type(soft_distillation_with_dagger) is not bool
     ):
         raise PrivilegedAWRError("AAWR authorization evidence is invalid")
     evidence = tuple(
@@ -138,7 +142,8 @@ def authorize_conditional_aawr(
     authorized = tuple(
         row.task
         for row in evidence
-        if row.positive_action_observability
+        if soft_distillation_with_dagger
+        and row.positive_action_observability
         and row.oracle_gap_closure is not None
         and 0.0 < row.oracle_gap_closure < AAWR_GAP_CLOSURE_LIMIT
     )
@@ -149,12 +154,14 @@ def authorize_conditional_aawr(
         "kind": "g1-aawr-authorization",
         "outer_target": outer_target,
         "status": status,
+        "prerequisite_satisfied": soft_distillation_with_dagger,
         "authorized_tasks": tuple(task.value for task in authorized),
         "evidence": tuple(row.state_sha256 for row in evidence),
     }
     return AAWRAuthorization(
         outer_target=outer_target,
         status=status,
+        prerequisite_satisfied=soft_distillation_with_dagger,
         authorized_tasks=authorized,
         evidence=evidence,
         state_sha256=_json_sha(payload),

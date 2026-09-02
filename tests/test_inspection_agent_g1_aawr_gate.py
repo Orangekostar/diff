@@ -41,6 +41,14 @@ def test_aawr_is_authorized_only_for_positive_low_gap_source_signal() -> None:
     assert high_closure.status == "NOT_RUN_NOT_AUTHORIZED"
     assert no_signal.status == "NOT_RUN_NOT_AUTHORIZED"
 
+    missing_training_route = authorize_conditional_aawr(
+        (_evidence(0.9),),
+        soft_distillation_with_dagger=False,
+    )
+    assert missing_training_route.status == "NOT_RUN_NOT_AUTHORIZED"
+    assert missing_training_route.authorized_tasks == ()
+    assert missing_training_route.prerequisite_satisfied is False
+
 
 def test_aawr_rejects_outer_target_in_source_validation_evidence() -> None:
     with pytest.raises(PrivilegedAWRError, match="outer target"):

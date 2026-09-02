@@ -34,6 +34,7 @@ from cmc_bbdm.inspection_agent_g1 import (
     load_g1_encoder,
     load_g1_protocol,
     load_g1_runtime,
+    run_outer_dagger_selection,
     run_outer_engineering_selection,
     run_outer_supervised_selection,
     validate_g1_package,
@@ -136,6 +137,20 @@ def _parser() -> argparse.ArgumentParser:
     select_engineering.add_argument("--learned-root", default=None)
     select_engineering.add_argument("--work-root", default=None)
 
+    select_dagger = commands.add_parser("select-outer-dagger")
+    select_dagger.add_argument("--config", required=True)
+    select_dagger.add_argument("--source-project-root", required=True)
+    select_dagger.add_argument("--outer-target", required=True)
+    select_dagger.add_argument("--project-root", default=str(_PROJECT_ROOT))
+    select_dagger.add_argument("--device", default=None)
+    select_dagger.add_argument("--teacher-bank-root", default=None)
+    select_dagger.add_argument("--bridge-root", default=None)
+    select_dagger.add_argument("--supervised-root", default=None)
+    select_dagger.add_argument("--learned-root", default=None)
+    select_dagger.add_argument("--base-work-root", default=None)
+    select_dagger.add_argument("--dagger-bank-root", default=None)
+    select_dagger.add_argument("--work-root", default=None)
+
     validate = commands.add_parser("validate")
     validate.add_argument("--config", required=True)
     validate.add_argument("--path", required=True)
@@ -161,6 +176,68 @@ def _print_json(payload: object) -> None:
 def main(argv: Sequence[str] | None = None) -> int:
     args = _parser().parse_args(argv)
     try:
+        if args.command == "select-outer-dagger":
+            protocol = load_g1_protocol(
+                args.config,
+                project_root=args.project_root,
+            )
+            runtime = load_g1_runtime(
+                protocol,
+                project_root=args.project_root,
+                source_project_root=args.source_project_root,
+                progress=_progress,
+            )
+            encoder = load_g1_encoder(
+                args.source_project_root,
+                device=args.device or protocol.default_device,
+            )
+            work_base = Path(args.project_root) / protocol.work_output
+            result = run_outer_dagger_selection(
+                runtime,
+                protocol,
+                outer_target=args.outer_target,
+                encoder=encoder,
+                teacher_bank_root=args.teacher_bank_root
+                or str(Path(args.project_root) / protocol.teacher_bank_work_path),
+                bridge_root=args.bridge_root or str(work_base / "source_bridges"),
+                supervised_root=args.supervised_root
+                or str(work_base / "model_selection"),
+                learned_root=args.learned_root
+                or str(work_base / "learned_source_curves"),
+                base_work_root=args.base_work_root
+                or str(work_base / "engineering_selection"),
+                dagger_bank_root=args.dagger_bank_root
+                or str(work_base / "dagger_banks"),
+                work_root=args.work_root or str(work_base / "dagger_selection"),
+                device=args.device or protocol.default_device,
+                progress=_progress,
+            )
+            selected = next(
+                row
+                for row in result.candidates
+                if row.candidate.hyperparameters.state_sha256
+                == result.selection.selected_hyperparameters_sha256
+            )
+            _print_json(
+                {
+                    "outer_target": result.outer_target,
+                    "selected_hyperparameters_sha256": (
+                        result.selection.selected_hyperparameters_sha256
+                    ),
+                    "selected_dagger_iterations": (
+                        selected.candidate.hyperparameters.dagger_iterations
+                    ),
+                    "aawr_status": result.aawr_authorization.status,
+                    "aawr_authorized_tasks": [
+                        task.value
+                        for task in result.aawr_authorization.authorized_tasks
+                    ],
+                    "target_outcomes_opened": result.target_outcomes_opened,
+                    "selection_path": str(result.path),
+                }
+            )
+            return 0
+
         if args.command == "select-outer-engineering":
             protocol = load_g1_protocol(
                 args.config,

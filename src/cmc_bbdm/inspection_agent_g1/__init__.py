@@ -46,6 +46,11 @@ from .dagger_orchestration import (
     with_dagger_iterations,
     write_g1_dagger_source_bank,
 )
+from .dagger_selection_execution import (
+    G1DaggerSelectionExecutionError,
+    G1OuterDaggerSelectionRun,
+    run_outer_dagger_selection,
+)
 from .engineering_selection_execution import (
     G1EngineeringCandidateRun,
     G1EngineeringSelectionExecutionError,
@@ -281,6 +286,7 @@ __all__ = [
     "G1BatchRolloutRequest",
     "G1CrossfitError",
     "G1DaggerOrchestrationError",
+    "G1DaggerSelectionExecutionError",
     "G1DaggerSourceBankBuild",
     "G1DaggerSourceBankFile",
     "G1EngineeringCandidateRun",
@@ -297,6 +303,7 @@ __all__ = [
     "G1LearnedSourceRecord",
     "G1ObservableStateBuilder",
     "G1OuterDaggerBuild",
+    "G1OuterDaggerSelectionRun",
     "G1OuterEngineeringSelectionRun",
     "G1PackageValidation",
     "G1PolicyState",
@@ -436,6 +443,7 @@ __all__ = [
     "run_engineering_candidate",
     "run_g1_closed_loop_batch",
     "run_g1_warm_started_oracle_actions",
+    "run_outer_dagger_selection",
     "run_outer_engineering_selection",
     "run_outer_supervised_selection",
     "select_conservative_stop_threshold",

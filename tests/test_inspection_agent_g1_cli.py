@@ -37,6 +37,7 @@ def test_g1_cli_help_lists_inspection_commands() -> None:
         "build-all-source-bridges",
         "select-outer",
         "select-outer-engineering",
+        "select-outer-dagger",
         "validate",
         "compare",
     ):
@@ -103,6 +104,18 @@ def test_g1_cli_subcommand_help_lists_required_flags() -> None:
             "--supervised-root",
             "--learned-root",
         ),
+        "select-outer-dagger": (
+            "--config",
+            "--source-project-root",
+            "--outer-target",
+            "--teacher-bank-root",
+            "--bridge-root",
+            "--supervised-root",
+            "--learned-root",
+            "--base-work-root",
+            "--dagger-bank-root",
+            "--work-root",
+        ),
         "validate": ("--config", "--path"),
         "compare": ("--config", "--formal", "--replay"),
     }
@@ -127,6 +140,7 @@ def test_g1_cli_missing_required_arguments_returns_code_two() -> None:
         "build-all-source-bridges",
         "select-outer",
         "select-outer-engineering",
+        "select-outer-dagger",
         "validate",
         "compare",
     ):
