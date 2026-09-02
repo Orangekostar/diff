@@ -6,6 +6,7 @@ import hashlib
 import json
 import os
 import tempfile
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -19,6 +20,12 @@ from cmc_bbdm.inspection_agent.world import CausalInspectionWorld
 from cmc_bbdm.mva.acquisition_grid import AcquisitionGrid
 
 from .formal import G1ObservableStateBuilder, evaluate_g1_action_history
+from .g1 import (
+    G1Protocol,
+    G1Runtime,
+    G1SourceDependencies,
+    build_g1_world,
+)
 from .metrics import (
     EngineeringCurve,
     G1MetricError,
@@ -146,6 +153,18 @@ class G1LearnedSourceBankFile:
     parquet_sha256: str
     records_sha256: str
     manifest_sha256: str
+
+
+@dataclass(frozen=True, slots=True)
+class G1LearnedSourceBuild:
+    path: Path
+    outer_target: str
+    source_domain: str
+    specimen_count: int
+    dependency_sha256: str
+    hyperparameters_sha256: str
+    model_state_sha256: str
+    bank: G1LearnedSourceBankFile
 
 
 @dataclass(frozen=True, slots=True)
@@ -352,6 +371,144 @@ def materialize_learned_source_for_world(
         action_history_sha256=_action_history_sha(trajectory.action_history),
         curve=curve,
     )
+
+
+def learned_source_bank_path(
+    work_root: str | Path,
+    outer_target: str,
+    hyperparameters_sha256: str,
+    source_domain: str,
+) -> Path:
+    if (
+        type(outer_target) is not str
+        or not outer_target
+        or type(source_domain) is not str
+        or not source_domain
+        or outer_target == source_domain
+        or not _valid_sha256(hyperparameters_sha256)
+        or any(
+            "/" in value or "\\" in value or value in {".", ".."}
+            for value in (outer_target, source_domain)
+        )
+    ):
+        raise G1SourcePolicyEvaluationError(
+            "learned source bank identity is invalid"
+        )
+    return (
+        Path(work_root)
+        / outer_target
+        / hyperparameters_sha256
+        / f"{source_domain}.parquet"
+    )
+
+
+def materialize_g1_learned_source_records(
+    runtime: G1Runtime,
+    protocol: G1Protocol,
+    dependencies: G1SourceDependencies,
+    *,
+    encoder: object,
+    actor: object,
+    specimen_ids: tuple[str, ...],
+    progress: Callable[[str], None] | None = None,
+) -> tuple[G1LearnedSourceRecord, ...]:
+    audit = getattr(actor, "audit", None)
+    hyperparameters = getattr(actor, "hyperparameters", None)
+    if (
+        type(runtime) is not G1Runtime
+        or type(protocol) is not G1Protocol
+        or type(dependencies) is not G1SourceDependencies
+        or not callable(getattr(encoder, "encode", None))
+        or not callable(actor)
+        or not _valid_sha256(getattr(actor, "model_state_sha256", None))
+        or type(hyperparameters) is not PolicyTrainingHyperparameters
+        or type(specimen_ids) is not tuple
+        or not specimen_ids
+        or len(set(specimen_ids)) != len(specimen_ids)
+        or (progress is not None and not callable(progress))
+    ):
+        raise G1SourcePolicyEvaluationError(
+            "learned source materialization request is invalid"
+        )
+    roster = dependencies.roster
+    if (
+        getattr(audit, "outer_target", None) != roster.outer_target
+        or getattr(audit, "validation_domain", None) != roster.labeled_domain
+        or tuple(getattr(audit, "fit_domains", ())) != roster.fit_domains
+        or not _valid_sha256(getattr(audit, "state_sha256", None))
+    ):
+        raise G1SourcePolicyEvaluationError("learned source actor fold changed")
+    available = {
+        specimen
+        for specimen, domain in zip(
+            runtime.mavis.specimen_ids,
+            runtime.mavis.dataset_ids,
+            strict=True,
+        )
+        if domain == roster.labeled_domain
+    }
+    if not set(specimen_ids) <= available:
+        raise G1SourcePolicyEvaluationError(
+            "learned source specimen is outside its validation fold"
+        )
+    prior = dependencies.prior_fit.prior
+    assessor = dependencies.assessor_fit.assessor
+    output = []
+    for specimen_index, specimen in enumerate(specimen_ids, start=1):
+        teacher_view = runtime.mavis.source_teacher_view(specimen)
+        specimen_sha = runtime.specimen_sha256(roster.labeled_domain, specimen)
+        for task in (InspectionTask.FIELD, InspectionTask.CAI):
+            world, grid, surface = build_g1_world(
+                runtime,
+                dataset_id=roster.labeled_domain,
+                specimen_id=specimen,
+                task=task,
+                endpoint_budget=protocol.endpoint_budget,
+            )
+            output.append(
+                materialize_learned_source_for_world(
+                    world,
+                    grid,
+                    surface.hypothesis,
+                    prior,
+                    dependencies.authorization,
+                    assessor=assessor,
+                    encoder=encoder,
+                    actor=actor,
+                    outer_target=roster.outer_target,
+                    source_domain=roster.labeled_domain,
+                    specimen_id=specimen,
+                    specimen_sha256=specimen_sha,
+                    dependency_sha256=dependencies.state_sha256,
+                    full_scan=teacher_view.full_scan,
+                    true_cai=teacher_view.true_cai,
+                )
+            )
+        if progress is not None and (
+            specimen_index % 10 == 0 or specimen_index == len(specimen_ids)
+        ):
+            progress(
+                f"G1 learned source {roster.outer_target}/"
+                f"{roster.labeled_domain}: {specimen_index}/"
+                f"{len(specimen_ids)} specimens"
+            )
+    records = tuple(output)
+    _ordered_records(records)
+    if (
+        len(records) != 2 * len(specimen_ids)
+        or {row.specimen_id for row in records} != set(specimen_ids)
+        or any(
+            row.dependency_sha256 != dependencies.state_sha256
+            or row.hyperparameters_sha256 != hyperparameters.state_sha256
+            or row.model_state_sha256 != actor.model_state_sha256
+            or row.fit_audit_sha256 != audit.state_sha256
+            for row in records
+        )
+    ):
+        raise G1SourcePolicyEvaluationError(
+            "learned source materialization evidence changed"
+        )
+    return records
 
 
 def _ordered_records(
@@ -619,6 +776,105 @@ def read_learned_source_bank(
     )
 
 
+def build_g1_learned_source_bank(
+    runtime: G1Runtime,
+    protocol: G1Protocol,
+    dependencies: G1SourceDependencies,
+    *,
+    encoder: object,
+    actor: object,
+    work_root: str | Path,
+    progress: Callable[[str], None] | None = None,
+) -> G1LearnedSourceBuild:
+    hyperparameters = getattr(actor, "hyperparameters", None)
+    audit = getattr(actor, "audit", None)
+    if (
+        type(runtime) is not G1Runtime
+        or type(protocol) is not G1Protocol
+        or type(dependencies) is not G1SourceDependencies
+        or not callable(getattr(encoder, "encode", None))
+        or not callable(actor)
+        or not _valid_sha256(getattr(actor, "model_state_sha256", None))
+        or type(hyperparameters) is not PolicyTrainingHyperparameters
+        or not _valid_sha256(getattr(audit, "state_sha256", None))
+        or (progress is not None and not callable(progress))
+    ):
+        raise G1SourcePolicyEvaluationError(
+            "learned source bank build request is invalid"
+        )
+    roster = dependencies.roster
+    if (
+        getattr(audit, "outer_target", None) != roster.outer_target
+        or getattr(audit, "validation_domain", None) != roster.labeled_domain
+        or tuple(getattr(audit, "fit_domains", ())) != roster.fit_domains
+    ):
+        raise G1SourcePolicyEvaluationError("learned source actor fold changed")
+    specimen_ids = tuple(
+        specimen
+        for specimen, domain in zip(
+            runtime.mavis.specimen_ids,
+            runtime.mavis.dataset_ids,
+            strict=True,
+        )
+        if domain == roster.labeled_domain
+    )
+    if len(specimen_ids) != int(protocol.domain_counts[roster.labeled_domain]):
+        raise G1SourcePolicyEvaluationError(
+            "formal learned source specimen roster changed"
+        )
+    path = learned_source_bank_path(
+        work_root,
+        roster.outer_target,
+        hyperparameters.state_sha256,
+        roster.labeled_domain,
+    )
+    manifest_path = _manifest_path(path)
+    if path.exists() or manifest_path.exists():
+        bank, records = read_learned_source_bank(path)
+        expected_specimens = {
+            runtime.specimen_sha256(roster.labeled_domain, specimen)
+            for specimen in specimen_ids
+        }
+        if (
+            {row.curve.specimen_sha256 for row in records} != expected_specimens
+            or len(records) != 2 * len(specimen_ids)
+            or any(
+                row.fit_domains != roster.fit_domains
+                or row.dependency_sha256 != dependencies.state_sha256
+                or row.hyperparameters_sha256 != hyperparameters.state_sha256
+                or row.model_state_sha256 != actor.model_state_sha256
+                or row.fit_audit_sha256 != audit.state_sha256
+                for row in records
+            )
+        ):
+            raise G1SourcePolicyEvaluationError(
+                "existing learned source bank has stale evidence"
+            )
+        if progress is not None:
+            progress(f"G1 learned source bank reused: {path}")
+    else:
+        records = materialize_g1_learned_source_records(
+            runtime,
+            protocol,
+            dependencies,
+            encoder=encoder,
+            actor=actor,
+            specimen_ids=specimen_ids,
+            progress=progress,
+        )
+        bank = write_learned_source_bank(path, records)
+    return G1LearnedSourceBuild(
+        path=path,
+        outer_target=roster.outer_target,
+        source_domain=roster.labeled_domain,
+        specimen_count=len(specimen_ids),
+        dependency_sha256=dependencies.state_sha256,
+        hyperparameters_sha256=hyperparameters.state_sha256,
+        model_state_sha256=actor.model_state_sha256,
+        bank=bank,
+    )
+
+
 def _curve_geometry(curve: EngineeringCurve) -> tuple[object, ...]:
     return (
         curve.target_domain,
@@ -762,9 +1018,13 @@ __all__ = [
     "LEARNED_POLICY_METHOD",
     "G1InnerPolicyBridgeEvaluation",
     "G1LearnedSourceBankFile",
+    "G1LearnedSourceBuild",
     "G1LearnedSourceRecord",
     "G1SourcePolicyEvaluationError",
+    "build_g1_learned_source_bank",
     "evaluate_inner_policy_bridge",
+    "learned_source_bank_path",
+    "materialize_g1_learned_source_records",
     "materialize_learned_source_for_world",
     "read_learned_source_bank",
     "write_learned_source_bank",

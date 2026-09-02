@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 from dataclasses import replace
 from pathlib import Path
+from types import MappingProxyType, SimpleNamespace
 
 import numpy as np
 import pytest
@@ -14,6 +15,12 @@ from cmc_bbdm.inspection_agent.world import CausalInspectionWorld
 from cmc_bbdm.inspection_agent_g1.contracts import CAIContextMode, TaskTokenMode
 from cmc_bbdm.inspection_agent_g1.crossfit import build_crossfit_roster
 from cmc_bbdm.inspection_agent_g1.formal import FIXED_BASELINE_METHODS
+from cmc_bbdm.inspection_agent_g1.g1 import (
+    G1Protocol,
+    G1Runtime,
+    G1RuntimeSurface,
+    G1SourceDependencies,
+)
 from cmc_bbdm.inspection_agent_g1.metrics import build_engineering_curve
 from cmc_bbdm.inspection_agent_g1.policy_training import (
     PolicyModelName,
@@ -26,6 +33,8 @@ from cmc_bbdm.inspection_agent_g1.source_policy_evaluation import (
     G1LearnedSourceRecord,
     G1SourcePolicyEvaluationError,
     evaluate_inner_policy_bridge,
+    learned_source_bank_path,
+    materialize_g1_learned_source_records,
     materialize_learned_source_for_world,
     read_learned_source_bank,
     write_learned_source_bank,
@@ -302,3 +311,121 @@ def test_learned_source_world_rolls_out_observable_actor_before_evaluation(
     assert record.hyperparameters_sha256 == _hyperparameters().state_sha256
     assert record.model_state_sha256 == _sha("actor")
     assert np.isfinite(record.curve.auebc)
+
+
+def test_learned_source_bank_path_is_candidate_and_fold_bound() -> None:
+    assert learned_source_bank_path(
+        "learned",
+        "d6",
+        _hyperparameters().state_sha256,
+        "d1",
+    ).as_posix() == (
+        f"learned/d6/{_hyperparameters().state_sha256}/d1.parquet"
+    )
+
+
+def test_learned_source_materializer_runs_both_tasks_for_each_specimen(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    full_scan = np.zeros((41, 43, 3), dtype=np.uint8)
+    authority = MAVISAuthority.from_arrays(
+        specimen_ids=("d1-specimen",),
+        dataset_ids=("d1",),
+        images=(full_scan,),
+        targets=np.asarray([0.4]),
+        metadata13=np.zeros((1, 13)),
+        profile_stats21=np.zeros((1, 21)),
+        source_image_sha256=(_sha("cscan-source"),),
+    )
+    hypothesis = SurfaceHypothesis(
+        scores=np.linspace(0.0, 1.0, 64),
+        top_cells=tuple(range(63, 55, -1)),
+        border_median_rgb=np.zeros(3),
+        state_sha256=_sha("runtime-hypothesis"),
+    )
+    surface = G1RuntimeSurface(
+        dataset_id="d1",
+        specimen_id="d1-specimen",
+        image=np.zeros((1, 1, 3), dtype=np.uint8),
+        surface_sha256=_sha("runtime-surface"),
+        hypothesis=hypothesis,
+    )
+    runtime = G1Runtime(
+        mavis=authority,
+        surfaces=MappingProxyType({("d1", "d1-specimen"): surface}),
+        surface_authority_sha256=_sha("surface-authority"),
+    )
+    protocol = object.__new__(G1Protocol)
+    object.__setattr__(protocol, "endpoint_budget", 0.25)
+    prior = _world(InspectionTask.FIELD)[3]
+    roster = build_crossfit_roster(
+        DOMAINS,
+        outer_target="d6",
+        labeled_domain="d1",
+    )
+    authorization = authorize_source_teacher(roster, query_domain="d1")
+    dependencies = object.__new__(G1SourceDependencies)
+    object.__setattr__(dependencies, "roster", roster)
+    object.__setattr__(dependencies, "prior_fit", SimpleNamespace(prior=prior))
+    object.__setattr__(
+        dependencies,
+        "assessor_fit",
+        SimpleNamespace(assessor=_Assessor()),
+    )
+    object.__setattr__(dependencies, "authorization", authorization)
+    object.__setattr__(dependencies, "state_sha256", _sha("dependencies-d1"))
+    calls: list[InspectionTask] = []
+
+    def fake_materialize(world, grid, _surface, _prior, _authorization, **kwargs):
+        task = world.reset().task
+        calls.append(task)
+        curve = build_engineering_curve(
+            method="LEARNED_POLICY",
+            target_domain="d1",
+            specimen_sha256=kwargs["specimen_sha256"],
+            task=task,
+            grid_sha256=grid.state_sha256,
+            evaluator_sha256=_sha(f"evaluator-{task.value}"),
+            warm_start_sha256=_sha(f"warm-{task.value}"),
+            state_budgets=(0.0, 0.05, 0.1, 0.18, 0.24),
+            state_losses=(0.5,) * 5,
+            state_sha256=tuple(
+                _sha(f"learned-{task.value}-{index}") for index in range(5)
+            ),
+        )
+        return G1LearnedSourceRecord(
+            outer_target="d6",
+            source_domain="d1",
+            specimen_id="d1-specimen",
+            fit_domains=("d2", "d3", "d4", "d5"),
+            dependency_sha256=_sha("dependencies-d1"),
+            hyperparameters_sha256=_hyperparameters().state_sha256,
+            model_state_sha256=_sha("actor"),
+            fit_audit_sha256=_sha("actor-fit-audit"),
+            selected_epoch=7,
+            trajectory_sha256=_sha(f"trajectory-{task.value}"),
+            action_history_sha256=_sha(f"actions-{task.value}"),
+            curve=curve,
+        )
+
+    monkeypatch.setattr(
+        "cmc_bbdm.inspection_agent_g1.source_policy_evaluation."
+        "materialize_learned_source_for_world",
+        fake_materialize,
+    )
+
+    records = materialize_g1_learned_source_records(
+        runtime,
+        protocol,
+        dependencies,
+        encoder=_Encoder(),
+        actor=_Actor(),
+        specimen_ids=("d1-specimen",),
+    )
+
+    assert calls == [InspectionTask.FIELD, InspectionTask.CAI]
+    assert len(records) == 2
+    assert {row.curve.task for row in records} == {
+        InspectionTask.FIELD,
+        InspectionTask.CAI,
+    }
