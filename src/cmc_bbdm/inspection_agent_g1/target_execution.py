@@ -14,15 +14,26 @@ import numpy as np
 import polars as pl
 
 from cmc_bbdm.inspection_agent.contracts import InspectionTask
+from cmc_bbdm.inspection_agent.generalized_reconstruction import SourceBackgroundPrior
 from cmc_bbdm.inspection_agent.state import InspectionCellAction
 
-from .contracts import ACTION_SLOT_COUNT, TaskTokenMode
+from .batch_rollout import G1BatchRolloutRequest, run_g1_closed_loop_batch
+from .contracts import ACTION_SLOT_COUNT, CAIContextMode, TaskTokenMode
+from .features import canonical_action_from_slot
+from .formal import G1ObservableStateBuilder
+from .g1 import G1FinalDependencies, G1Protocol, G1Runtime, build_g1_world
 from .rollout import (
     ClosedLoopTrajectory,
     ObservablePolicyScores,
     RolloutStep,
     SurfaceVariant,
+    controlled_surface_hypothesis,
+    shuffled_surface_donors,
 )
+from .stop_selection_execution import G1OuterStopSelectionRun
+from .stopping_policy import REGISTERED_STOP_THRESHOLDS, StopThresholdSelection
+
+SHUFFLED_SURFACE_SEED = 2026090103
 
 
 class G1TargetExecutionError(ValueError):
@@ -36,6 +47,15 @@ class TargetPolicyVariant(str, Enum):
     WRONG_TASK = "WRONG_TASK"
     NO_SURFACE = "NO_SURFACE"
     SHUFFLED_SURFACE = "SHUFFLED_SURFACE"
+
+
+TARGET_ACTION_VARIANTS = (
+    TargetPolicyVariant.PROPOSED,
+    TargetPolicyVariant.NO_TASK,
+    TargetPolicyVariant.WRONG_TASK,
+    TargetPolicyVariant.NO_SURFACE,
+    TargetPolicyVariant.SHUFFLED_SURFACE,
+)
 
 
 def _valid_sha256(value: object) -> bool:
@@ -187,6 +207,640 @@ class G1TargetTrajectoryBankFile:
             )
         ):
             raise G1TargetExecutionError("target trajectory bank identity is invalid")
+
+
+@dataclass(frozen=True, slots=True)
+class G1OuterTargetTrajectoryBuild:
+    path: Path
+    outer_target: str
+    specimen_count: int
+    record_count: int
+    final_dependency_sha256: str
+    outer_selection_sha256: str
+    fragment_manifest_sha256s: tuple[str, ...]
+    bank: G1TargetTrajectoryBankFile
+    target_outcomes_opened: bool = False
+    state_sha256: str = field(init=False)
+
+    def __post_init__(self) -> None:
+        if (
+            not isinstance(self.path, Path)
+            or type(self.outer_target) is not str
+            or not self.outer_target
+            or type(self.specimen_count) is not int
+            or self.specimen_count <= 0
+            or type(self.record_count) is not int
+            or self.record_count < 10 * self.specimen_count
+            or not _valid_sha256(self.final_dependency_sha256)
+            or not _valid_sha256(self.outer_selection_sha256)
+            or type(self.fragment_manifest_sha256s) is not tuple
+            or not self.fragment_manifest_sha256s
+            or not all(
+                _valid_sha256(value) for value in self.fragment_manifest_sha256s
+            )
+            or type(self.bank) is not G1TargetTrajectoryBankFile
+            or self.bank.outer_target != self.outer_target
+            or self.bank.row_count != self.record_count
+            or type(self.target_outcomes_opened) is not bool
+            or self.target_outcomes_opened
+        ):
+            raise G1TargetExecutionError("outer target trajectory build is invalid")
+        object.__setattr__(
+            self,
+            "state_sha256",
+            _json_sha(
+                {
+                    "schema": 1,
+                    "kind": "g1-outer-target-trajectory-build",
+                    "path": self.path.as_posix(),
+                    "outer_target": self.outer_target,
+                    "specimen_count": self.specimen_count,
+                    "record_count": self.record_count,
+                    "final_dependency": self.final_dependency_sha256,
+                    "outer_selection": self.outer_selection_sha256,
+                    "fragments": self.fragment_manifest_sha256s,
+                    "bank": self.bank.manifest_sha256,
+                    "target_outcomes_opened": False,
+                }
+            ),
+        )
+
+
+@dataclass(frozen=True, slots=True)
+class G1TargetTrajectoryBankSeal:
+    outer_target: str
+    record_count: int
+    bank_manifest_sha256: str
+    records_sha256: str
+    trajectory_sha256s: tuple[str, ...]
+    acquired_positions_sha256s: tuple[str, ...]
+    acquired_values_sha256s: tuple[str, ...]
+    state_sha256: str
+
+    def __post_init__(self) -> None:
+        if (
+            type(self.outer_target) is not str
+            or not self.outer_target
+            or type(self.record_count) is not int
+            or self.record_count <= 0
+            or not all(
+                _valid_sha256(value)
+                for value in (self.bank_manifest_sha256, self.records_sha256)
+            )
+            or any(
+                type(values) is not tuple
+                or len(values) != self.record_count
+                or not all(_valid_sha256(value) for value in values)
+                for values in (
+                    self.trajectory_sha256s,
+                    self.acquired_positions_sha256s,
+                    self.acquired_values_sha256s,
+                )
+            )
+            or not _valid_sha256(self.state_sha256)
+        ):
+            raise G1TargetExecutionError("target trajectory bank seal is invalid")
+
+
+def target_trajectory_bank_path(work_root: str | Path, outer_target: str) -> Path:
+    if (
+        type(outer_target) is not str
+        or not outer_target
+        or "/" in outer_target
+        or "\\" in outer_target
+        or outer_target in {".", ".."}
+    ):
+        raise G1TargetExecutionError("target trajectory path identity is invalid")
+    return Path(work_root) / outer_target / "target_trajectories.parquet"
+
+
+def target_trajectory_fragment_path(
+    work_root: str | Path,
+    outer_target: str,
+    task: InspectionTask,
+    variant: TargetPolicyVariant,
+) -> Path:
+    if task not in (InspectionTask.FIELD, InspectionTask.CAI) or type(
+        variant
+    ) is not TargetPolicyVariant:
+        raise G1TargetExecutionError("target trajectory fragment identity is invalid")
+    return (
+        target_trajectory_bank_path(work_root, outer_target).parent
+        / "fragments"
+        / f"{task.value.lower()}_{variant.value.lower()}.parquet"
+    )
+
+
+def plan_g1_target_variants(
+    outer_target: str,
+    thresholds: tuple[StopThresholdSelection, ...],
+) -> tuple[tuple[InspectionTask, TargetPolicyVariant, float | None], ...]:
+    if (
+        type(outer_target) is not str
+        or not outer_target
+        or type(thresholds) is not tuple
+        or len(thresholds) != 2
+        or any(type(value) is not StopThresholdSelection for value in thresholds)
+        or tuple(value.task for value in thresholds)
+        != (InspectionTask.FIELD, InspectionTask.CAI)
+        or any(value.outer_target != outer_target for value in thresholds)
+        or any(not _valid_sha256(value.state_sha256) for value in thresholds)
+    ):
+        raise G1TargetExecutionError("target STOP threshold plan is invalid")
+    plan = []
+    for selection in thresholds:
+        if selection.status == "STOP_AUTHORIZED_SOURCE_ONLY":
+            if selection.threshold not in REGISTERED_STOP_THRESHOLDS:
+                raise G1TargetExecutionError("authorized target STOP threshold is invalid")
+            stop_threshold = float(selection.threshold)
+        elif selection.status == "STOP_NOT_AUTHORIZED":
+            if selection.threshold is not None:
+                raise G1TargetExecutionError("unauthorized target STOP threshold is present")
+            stop_threshold = None
+        else:
+            raise G1TargetExecutionError("target STOP authorization status is invalid")
+        plan.extend((selection.task, variant, None) for variant in TARGET_ACTION_VARIANTS)
+        if stop_threshold is not None:
+            plan.append(
+                (
+                    selection.task,
+                    TargetPolicyVariant.PROPOSED_STOP,
+                    stop_threshold,
+                )
+            )
+    return tuple(plan)
+
+
+def materialize_g1_target_variant_records(
+    runtime: G1Runtime,
+    *,
+    outer_target: str,
+    specimen_ids: tuple[str, ...],
+    task: InspectionTask,
+    variant: TargetPolicyVariant,
+    prior: SourceBackgroundPrior,
+    assessor: object,
+    encoder: object,
+    actor: object,
+    cai_context_mode: CAIContextMode,
+    endpoint_budget: float,
+    final_dependency_sha256: str,
+    action_selection_sha256: str,
+    action_model_sha256: str,
+    stop_model_sha256: str,
+    stop_threshold: float | None,
+    progress: object | None = None,
+) -> tuple[G1TargetTrajectoryRecord, ...]:
+    if type(runtime) is not G1Runtime:
+        raise G1TargetExecutionError("target variant materialization is invalid")
+    try:
+        endpoint = float(endpoint_budget)
+    except (TypeError, ValueError, OverflowError) as error:
+        raise G1TargetExecutionError(
+            "target variant materialization is invalid"
+        ) from error
+    expected = _VARIANT_MODES.get(variant)
+    available = tuple(
+        specimen_id
+        for specimen_id, domain in zip(
+            getattr(getattr(runtime, "mavis", None), "specimen_ids", ()),
+            getattr(getattr(runtime, "mavis", None), "dataset_ids", ()),
+            strict=True,
+        )
+        if domain == outer_target
+    )
+    if (
+        type(outer_target) is not str
+        or not outer_target
+        or type(specimen_ids) is not tuple
+        or not specimen_ids
+        or len(set(specimen_ids)) != len(specimen_ids)
+        or any(type(value) is not str or not value for value in specimen_ids)
+        or not set(specimen_ids) <= set(available)
+        or task not in (InspectionTask.FIELD, InspectionTask.CAI)
+        or type(variant) is not TargetPolicyVariant
+        or expected is None
+        or type(prior) is not SourceBackgroundPrior
+        or prior.outer_domain != outer_target
+        or outer_target in prior.source_domains
+        or not callable(getattr(assessor, "predict", None))
+        or not _valid_sha256(getattr(assessor, "model_state_sha256", None))
+        or not callable(getattr(encoder, "encode", None))
+        or not callable(actor)
+        or not callable(getattr(actor, "score_batch", None))
+        or getattr(actor, "model_state_sha256", None) != stop_model_sha256
+        or type(cai_context_mode) is not CAIContextMode
+        or endpoint != 0.25
+        or not all(
+            _valid_sha256(value)
+            for value in (
+                final_dependency_sha256,
+                action_selection_sha256,
+                action_model_sha256,
+                stop_model_sha256,
+            )
+        )
+        or (stop_threshold is not None) != expected[2]
+        or (progress is not None and not callable(progress))
+    ):
+        raise G1TargetExecutionError("target variant materialization is invalid")
+    task_token_mode, surface_variant, _uses_stop = expected
+    donor_by_recipient: dict[str, str] = {}
+    if surface_variant is SurfaceVariant.SHUFFLED_SURFACE:
+        donors = shuffled_surface_donors(
+            available,
+            (outer_target,) * len(available),
+            seed=SHUFFLED_SURFACE_SEED,
+        )
+        donor_by_recipient = dict(zip(available, donors, strict=True))
+    requests = []
+    donor_shas = []
+    specimen_shas = []
+    for specimen_id in specimen_ids:
+        world, grid, surface = build_g1_world(
+            runtime,
+            dataset_id=outer_target,
+            specimen_id=specimen_id,
+            task=task,
+            endpoint_budget=endpoint_budget,
+        )
+        donor_id = donor_by_recipient.get(specimen_id)
+        donor = (
+            None
+            if donor_id is None
+            else runtime.surface(outer_target, donor_id).hypothesis
+        )
+        controlled = controlled_surface_hypothesis(
+            surface.hypothesis,
+            surface_variant,
+            donor=donor,
+        )
+        specimen_sha = runtime.specimen_sha256(outer_target, specimen_id)
+        requests.append(
+            G1BatchRolloutRequest(
+                world=world,
+                grid=grid,
+                target_domain=outer_target,
+                specimen_sha256=specimen_sha,
+                state_builder=G1ObservableStateBuilder(
+                    grid=grid,
+                    surface_hypothesis=controlled,
+                    prior=prior,
+                    assessor=assessor,
+                    encoder=encoder,
+                    cai_context_mode=cai_context_mode,
+                    task_token_mode=task_token_mode,
+                ),
+            )
+        )
+        donor_shas.append(None if donor is None else donor.state_sha256)
+        specimen_shas.append(specimen_sha)
+    trajectories = run_g1_closed_loop_batch(
+        tuple(requests),
+        actor=actor,
+        stop_threshold=stop_threshold,
+    )
+    output = tuple(
+        G1TargetTrajectoryRecord(
+            outer_target=outer_target,
+            specimen_id=specimen_id,
+            specimen_sha256=specimen_sha,
+            task=task,
+            variant=variant,
+            task_token_mode=task_token_mode,
+            surface_variant=surface_variant,
+            donor_surface_sha256=donor_sha,
+            final_dependency_sha256=final_dependency_sha256,
+            action_selection_sha256=action_selection_sha256,
+            action_model_sha256=action_model_sha256,
+            stop_model_sha256=stop_model_sha256,
+            trajectory=trajectory,
+        )
+        for specimen_id, specimen_sha, donor_sha, trajectory in zip(
+            specimen_ids,
+            specimen_shas,
+            donor_shas,
+            trajectories,
+            strict=True,
+        )
+    )
+    if progress is not None:
+        progress(
+            f"G1 target trajectories {outer_target}/{task.value}/{variant.value}: "
+            f"{len(output)} specimens"
+        )
+    return output
+
+
+def _validate_target_fragment(
+    records: tuple[G1TargetTrajectoryRecord, ...],
+    *,
+    outer_target: str,
+    specimen_ids: tuple[str, ...],
+    task: InspectionTask,
+    variant: TargetPolicyVariant,
+    stop_threshold: float | None,
+    final_dependency_sha256: str,
+    outer_selection_sha256: str,
+    action_model_sha256: str,
+    stop_model_sha256: str,
+) -> None:
+    if (
+        len(records) != len(specimen_ids)
+        or {row.specimen_id for row in records} != set(specimen_ids)
+        or any(
+            row.outer_target != outer_target
+            or row.task is not task
+            or row.variant is not variant
+            or row.trajectory.stop_threshold != stop_threshold
+            or row.final_dependency_sha256 != final_dependency_sha256
+            or row.action_selection_sha256 != outer_selection_sha256
+            or row.action_model_sha256 != action_model_sha256
+            or row.stop_model_sha256 != stop_model_sha256
+            for row in records
+        )
+    ):
+        raise G1TargetExecutionError("target trajectory fragment changed")
+
+
+def build_g1_outer_target_trajectory_bank(
+    runtime: G1Runtime,
+    protocol: G1Protocol,
+    final_dependencies: G1FinalDependencies,
+    stop_selection: G1OuterStopSelectionRun,
+    *,
+    encoder: object,
+    work_root: str | Path,
+    progress: object | None = None,
+) -> G1OuterTargetTrajectoryBuild:
+    outer_target = getattr(stop_selection, "outer_target", None)
+    source_domains = tuple(
+        domain for domain in getattr(protocol, "domain_order", ()) if domain != outer_target
+    )
+    if (
+        type(runtime) is not G1Runtime
+        or type(protocol) is not G1Protocol
+        or runtime.domain_order != protocol.domain_order
+        or type(final_dependencies) is not G1FinalDependencies
+        or type(stop_selection) is not G1OuterStopSelectionRun
+        or outer_target not in protocol.domain_order
+        or stop_selection.target_outcomes_opened
+        or final_dependencies.outer_target != outer_target
+        or final_dependencies.fit_domains != source_domains
+        or stop_selection.action_policy.audit.fit_domains != source_domains
+        or stop_selection.stop_policy.audit.fit_domains != source_domains
+        or stop_selection.action_policy.audit.validation_domain is not None
+        or stop_selection.stop_policy.audit.validation_domain is not None
+        or stop_selection.stop_policy.base_action_model_sha256
+        != stop_selection.action_policy.model_state_sha256
+        or stop_selection.action_policy.hyperparameters.task_token_mode
+        is not TaskTokenMode.CORRECT
+        or not callable(getattr(encoder, "encode", None))
+        or (progress is not None and not callable(progress))
+    ):
+        raise G1TargetExecutionError("outer target trajectory request is invalid")
+    specimen_ids = tuple(
+        specimen_id
+        for specimen_id, domain in zip(
+            runtime.mavis.specimen_ids,
+            runtime.mavis.dataset_ids,
+            strict=True,
+        )
+        if domain == outer_target
+    )
+    if len(specimen_ids) != int(protocol.domain_counts[outer_target]):
+        raise G1TargetExecutionError("outer target specimen roster changed")
+    plan = plan_g1_target_variants(outer_target, stop_selection.thresholds)
+    action_model_sha = stop_selection.action_policy.model_state_sha256
+    stop_model_sha = stop_selection.stop_policy.model_state_sha256
+    outer_selection_sha = stop_selection.state_sha256
+    fragments: list[G1TargetTrajectoryRecord] = []
+    fragment_manifests = []
+    for task, variant, threshold in plan:
+        path = target_trajectory_fragment_path(
+            work_root,
+            outer_target,
+            task,
+            variant,
+        )
+        present = path.exists(), _manifest_path(path).exists()
+        if present == (True, True):
+            fragment_bank, records = read_g1_target_trajectory_bank(path)
+            if progress is not None:
+                progress(
+                    f"G1 target fragment replay {outer_target}/{task.value}/"
+                    f"{variant.value}: {len(records)} specimens"
+                )
+        elif present == (False, False):
+            records = materialize_g1_target_variant_records(
+                runtime,
+                outer_target=outer_target,
+                specimen_ids=specimen_ids,
+                task=task,
+                variant=variant,
+                prior=final_dependencies.prior,
+                assessor=final_dependencies.assessor,
+                encoder=encoder,
+                actor=stop_selection.stop_policy,
+                cai_context_mode=(
+                    stop_selection.action_policy.hyperparameters.cai_context_mode
+                ),
+                endpoint_budget=protocol.endpoint_budget,
+                final_dependency_sha256=final_dependencies.state_sha256,
+                action_selection_sha256=outer_selection_sha,
+                action_model_sha256=action_model_sha,
+                stop_model_sha256=stop_model_sha,
+                stop_threshold=threshold,
+                progress=progress,
+            )
+            fragment_bank = write_g1_target_trajectory_bank(path, records)
+        else:
+            raise G1TargetExecutionError("target trajectory fragment is incomplete")
+        _validate_target_fragment(
+            records,
+            outer_target=outer_target,
+            specimen_ids=specimen_ids,
+            task=task,
+            variant=variant,
+            stop_threshold=threshold,
+            final_dependency_sha256=final_dependencies.state_sha256,
+            outer_selection_sha256=outer_selection_sha,
+            action_model_sha256=action_model_sha,
+            stop_model_sha256=stop_model_sha,
+        )
+        fragments.extend(records)
+        fragment_manifests.append(fragment_bank.manifest_sha256)
+    ordered = _ordered_records(tuple(fragments))
+    destination = target_trajectory_bank_path(work_root, outer_target)
+    present = destination.exists(), _manifest_path(destination).exists()
+    if present == (True, True):
+        bank, replay = read_g1_target_trajectory_bank(destination)
+        if tuple(row.state_sha256 for row in replay) != tuple(
+            row.state_sha256 for row in ordered
+        ):
+            raise G1TargetExecutionError("outer target trajectory bank changed")
+    elif present == (False, False):
+        bank = write_g1_target_trajectory_bank(destination, ordered)
+    else:
+        raise G1TargetExecutionError("outer target trajectory bank is incomplete")
+    result = G1OuterTargetTrajectoryBuild(
+        path=destination,
+        outer_target=outer_target,
+        specimen_count=len(specimen_ids),
+        record_count=len(ordered),
+        final_dependency_sha256=final_dependencies.state_sha256,
+        outer_selection_sha256=outer_selection_sha,
+        fragment_manifest_sha256s=tuple(fragment_manifests),
+        bank=bank,
+    )
+    if progress is not None:
+        progress(
+            f"G1 target bank complete {outer_target}: {len(ordered)} trajectories"
+        )
+    return result
+
+
+def _replay_target_record_causally(
+    runtime: G1Runtime,
+    record: G1TargetTrajectoryRecord,
+) -> None:
+    trajectory = record.trajectory
+    world, _grid, _surface = build_g1_world(
+        runtime,
+        dataset_id=record.outer_target,
+        specimen_id=record.specimen_id,
+        task=record.task,
+        endpoint_budget=0.25,
+    )
+    current = world.replay(trajectory.action_history[:8])
+    action_index = 8
+    for step_index, step in enumerate(trajectory.steps):
+        if step.observation_sha256 != current.state_sha256:
+            raise G1TargetExecutionError(
+                "target trajectory observation changed during causal replay"
+            )
+        if step.selected_slot is None:
+            if step_index != len(trajectory.steps) - 1:
+                raise G1TargetExecutionError("target STOP step is not terminal")
+            continue
+        action = canonical_action_from_slot(step.selected_slot)
+        if (
+            action_index >= len(trajectory.action_history)
+            or trajectory.action_history[action_index] != action
+        ):
+            raise G1TargetExecutionError("target trajectory action history changed")
+        current = world.step(current, action)
+        action_index += 1
+    if (
+        action_index != len(trajectory.action_history)
+        or current.action_history != trajectory.action_history
+        or current.state_sha256 != trajectory.final_observation_sha256
+        or current.native_count != trajectory.native_count
+        or current.effective_budget != trajectory.effective_budget
+        or not np.array_equal(
+            current.acquired_positions,
+            trajectory.acquired_positions,
+        )
+        or not np.array_equal(
+            current.measurement_values,
+            trajectory.acquired_values,
+        )
+    ):
+        raise G1TargetExecutionError("target trajectory final causal state changed")
+
+
+def seal_g1_target_trajectory_bank(
+    runtime: G1Runtime,
+    bank: G1TargetTrajectoryBankFile,
+    records: tuple[G1TargetTrajectoryRecord, ...],
+) -> G1TargetTrajectoryBankSeal:
+    if type(runtime) is not G1Runtime or type(bank) is not G1TargetTrajectoryBankFile:
+        raise G1TargetExecutionError("target trajectory seal request is invalid")
+    ordered = _ordered_records(records)
+    records_sha = _records_sha(ordered)
+    if (
+        bank.row_count != len(ordered)
+        or bank.outer_target != ordered[0].outer_target
+        or bank.records_sha256 != records_sha
+    ):
+        raise G1TargetExecutionError("target trajectory bank identity changed before seal")
+    for record in ordered:
+        _replay_target_record_causally(runtime, record)
+    trajectory_shas = tuple(row.trajectory.state_sha256 for row in ordered)
+    position_shas = tuple(
+        row.trajectory.acquired_positions_sha256 for row in ordered
+    )
+    value_shas = tuple(row.trajectory.acquired_values_sha256 for row in ordered)
+    state_sha = _json_sha(
+        {
+            "schema": 1,
+            "kind": "g1-target-trajectory-bank-seal",
+            "outer_target": bank.outer_target,
+            "record_count": len(ordered),
+            "bank_manifest": bank.manifest_sha256,
+            "records": records_sha,
+            "trajectories": trajectory_shas,
+            "acquired_positions": position_shas,
+            "acquired_values": value_shas,
+        }
+    )
+    seal = G1TargetTrajectoryBankSeal(
+        outer_target=bank.outer_target,
+        record_count=len(ordered),
+        bank_manifest_sha256=bank.manifest_sha256,
+        records_sha256=records_sha,
+        trajectory_sha256s=trajectory_shas,
+        acquired_positions_sha256s=position_shas,
+        acquired_values_sha256s=value_shas,
+        state_sha256=state_sha,
+    )
+    validate_g1_target_trajectory_bank_seal(bank, ordered, seal)
+    return seal
+
+
+def validate_g1_target_trajectory_bank_seal(
+    bank: G1TargetTrajectoryBankFile,
+    records: tuple[G1TargetTrajectoryRecord, ...],
+    seal: G1TargetTrajectoryBankSeal,
+) -> None:
+    if (
+        type(bank) is not G1TargetTrajectoryBankFile
+        or type(seal) is not G1TargetTrajectoryBankSeal
+    ):
+        raise G1TargetExecutionError("target trajectory bank seal is invalid")
+    ordered = _ordered_records(records)
+    records_sha = _records_sha(ordered)
+    trajectory_shas = tuple(row.trajectory.state_sha256 for row in ordered)
+    position_shas = tuple(
+        row.trajectory.acquired_positions_sha256 for row in ordered
+    )
+    value_shas = tuple(row.trajectory.acquired_values_sha256 for row in ordered)
+    expected_state = _json_sha(
+        {
+            "schema": 1,
+            "kind": "g1-target-trajectory-bank-seal",
+            "outer_target": bank.outer_target,
+            "record_count": len(ordered),
+            "bank_manifest": bank.manifest_sha256,
+            "records": records_sha,
+            "trajectories": trajectory_shas,
+            "acquired_positions": position_shas,
+            "acquired_values": value_shas,
+        }
+    )
+    if (
+        bank.row_count != len(ordered)
+        or bank.records_sha256 != records_sha
+        or seal.outer_target != bank.outer_target
+        or seal.record_count != len(ordered)
+        or seal.bank_manifest_sha256 != bank.manifest_sha256
+        or seal.records_sha256 != records_sha
+        or seal.trajectory_sha256s != trajectory_shas
+        or seal.acquired_positions_sha256s != position_shas
+        or seal.acquired_values_sha256s != value_shas
+        or seal.state_sha256 != expected_state
+    ):
+        raise G1TargetExecutionError("target trajectory bank seal changed")
 
 
 def _record_key(record: G1TargetTrajectoryRecord) -> tuple[str, str, str]:
@@ -535,10 +1189,19 @@ def read_g1_target_trajectory_bank(
 
 
 __all__ = [
+    "G1OuterTargetTrajectoryBuild",
     "G1TargetExecutionError",
     "G1TargetTrajectoryBankFile",
+    "G1TargetTrajectoryBankSeal",
     "G1TargetTrajectoryRecord",
     "TargetPolicyVariant",
+    "build_g1_outer_target_trajectory_bank",
+    "materialize_g1_target_variant_records",
+    "plan_g1_target_variants",
     "read_g1_target_trajectory_bank",
+    "seal_g1_target_trajectory_bank",
+    "target_trajectory_bank_path",
+    "target_trajectory_fragment_path",
+    "validate_g1_target_trajectory_bank_seal",
     "write_g1_target_trajectory_bank",
 ]

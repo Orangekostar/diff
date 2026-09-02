@@ -25,6 +25,10 @@ from cmc_bbdm.inspection_agent_g1 import (
     build_g1_all_source_fixed_endpoint_banks,
     build_g1_all_source_stop_banks,
     build_g1_all_source_teacher_banks,
+    build_g1_final_dependencies,
+    build_g1_outer_target_curve_bank,
+    build_g1_outer_target_reference_bank,
+    build_g1_outer_target_trajectory_bank,
     build_g1_source_bridge_bank,
     build_g1_source_dependencies,
     build_g1_source_fixed_endpoint_bank,
@@ -34,10 +38,13 @@ from cmc_bbdm.inspection_agent_g1 import (
     load_g1_encoder,
     load_g1_protocol,
     load_g1_runtime,
+    read_g1_target_trajectory_bank,
     run_outer_dagger_selection,
     run_outer_engineering_selection,
     run_outer_stop_selection,
     run_outer_supervised_selection,
+    seal_g1_target_trajectory_bank,
+    target_trajectory_bank_path,
     validate_g1_package,
 )
 
@@ -170,6 +177,34 @@ def _parser() -> argparse.ArgumentParser:
     select_stop.add_argument("--stop-bank-root", default=None)
     select_stop.add_argument("--work-root", default=None)
 
+    build_target = commands.add_parser("build-target-trajectories")
+    build_target.add_argument("--config", required=True)
+    build_target.add_argument("--source-project-root", required=True)
+    build_target.add_argument("--outer-target", required=True)
+    build_target.add_argument("--project-root", default=str(_PROJECT_ROOT))
+    build_target.add_argument("--device", default=None)
+    build_target.add_argument("--teacher-bank-root", default=None)
+    build_target.add_argument("--bridge-root", default=None)
+    build_target.add_argument("--supervised-root", default=None)
+    build_target.add_argument("--learned-root", default=None)
+    build_target.add_argument("--base-work-root", default=None)
+    build_target.add_argument("--dagger-bank-root", default=None)
+    build_target.add_argument("--dagger-work-root", default=None)
+    build_target.add_argument("--fixed-endpoint-root", default=None)
+    build_target.add_argument("--stop-bank-root", default=None)
+    build_target.add_argument("--stop-selection-root", default=None)
+    build_target.add_argument("--work-root", default=None)
+
+    evaluate_target = commands.add_parser("evaluate-target")
+    evaluate_target.add_argument("--config", required=True)
+    evaluate_target.add_argument("--source-project-root", required=True)
+    evaluate_target.add_argument("--outer-target", required=True)
+    evaluate_target.add_argument("--project-root", default=str(_PROJECT_ROOT))
+    evaluate_target.add_argument("--device", default=None)
+    evaluate_target.add_argument("--trajectory-root", default=None)
+    evaluate_target.add_argument("--curve-root", default=None)
+    evaluate_target.add_argument("--reference-root", default=None)
+
     validate = commands.add_parser("validate")
     validate.add_argument("--config", required=True)
     validate.add_argument("--path", required=True)
@@ -195,6 +230,179 @@ def _print_json(payload: object) -> None:
 def main(argv: Sequence[str] | None = None) -> int:
     args = _parser().parse_args(argv)
     try:
+        if args.command == "evaluate-target":
+            protocol = load_g1_protocol(
+                args.config,
+                project_root=args.project_root,
+            )
+            runtime = load_g1_runtime(
+                protocol,
+                project_root=args.project_root,
+                source_project_root=args.source_project_root,
+                progress=_progress,
+            )
+            encoder = load_g1_encoder(
+                args.source_project_root,
+                device=args.device or protocol.default_device,
+            )
+            work_base = Path(args.project_root) / protocol.work_output
+            trajectory_root = args.trajectory_root or str(
+                work_base / "target_trajectories"
+            )
+            trajectory_bank, trajectories = read_g1_target_trajectory_bank(
+                target_trajectory_bank_path(trajectory_root, args.outer_target)
+            )
+            seal = seal_g1_target_trajectory_bank(
+                runtime,
+                trajectory_bank,
+                trajectories,
+            )
+            dependencies = build_g1_final_dependencies(
+                runtime,
+                protocol,
+                outer_target=args.outer_target,
+                encoder=encoder,
+                progress=_progress,
+            )
+            dependency_shas = {row.final_dependency_sha256 for row in trajectories}
+            if dependency_shas != {dependencies.state_sha256}:
+                raise G1ExecutionError(
+                    "target trajectory final dependency changed before evaluation"
+                )
+            curves = build_g1_outer_target_curve_bank(
+                runtime,
+                trajectory_bank,
+                trajectories,
+                seal,
+                prior=dependencies.prior,
+                assessor=dependencies.assessor,
+                encoder=encoder,
+                work_root=args.curve_root or str(work_base / "target_curves"),
+                progress=_progress,
+            )
+            references = build_g1_outer_target_reference_bank(
+                runtime,
+                trajectory_bank,
+                trajectories,
+                seal,
+                prior=dependencies.prior,
+                assessor=dependencies.assessor,
+                encoder=encoder,
+                random_seed=protocol.teacher_bank_seed,
+                work_root=args.reference_root
+                or str(work_base / "target_references"),
+                progress=_progress,
+            )
+            _print_json(
+                {
+                    "outer_target": args.outer_target,
+                    "trajectory_bank_manifest_sha256": (
+                        trajectory_bank.manifest_sha256
+                    ),
+                    "trajectory_bank_seal_sha256": seal.state_sha256,
+                    "target_outcomes_opened": True,
+                    "curve_bank_path": str(curves.path),
+                    "curve_record_count": curves.record_count,
+                    "curve_parquet_sha256": curves.bank.parquet_sha256,
+                    "curve_manifest_sha256": curves.bank.manifest_sha256,
+                    "reference_bank_path": str(references.path),
+                    "reference_record_count": references.record_count,
+                    "reference_parquet_sha256": references.bank.parquet_sha256,
+                    "reference_manifest_sha256": references.bank.manifest_sha256,
+                }
+            )
+            return 0
+
+        if args.command == "build-target-trajectories":
+            protocol = load_g1_protocol(
+                args.config,
+                project_root=args.project_root,
+            )
+            runtime = load_g1_runtime(
+                protocol,
+                project_root=args.project_root,
+                source_project_root=args.source_project_root,
+                progress=_progress,
+            )
+            encoder = load_g1_encoder(
+                args.source_project_root,
+                device=args.device or protocol.default_device,
+            )
+            work_base = Path(args.project_root) / protocol.work_output
+            teacher_root = args.teacher_bank_root or str(
+                Path(args.project_root) / protocol.teacher_bank_work_path
+            )
+            action_selection = run_outer_dagger_selection(
+                runtime,
+                protocol,
+                outer_target=args.outer_target,
+                encoder=encoder,
+                teacher_bank_root=teacher_root,
+                bridge_root=args.bridge_root
+                or str(work_base / "source_bridges"),
+                supervised_root=args.supervised_root
+                or str(work_base / "model_selection"),
+                learned_root=args.learned_root
+                or str(work_base / "learned_source_curves"),
+                base_work_root=args.base_work_root
+                or str(work_base / "engineering_selection"),
+                dagger_bank_root=args.dagger_bank_root
+                or str(work_base / "dagger_banks"),
+                work_root=args.dagger_work_root
+                or str(work_base / "dagger_selection"),
+                device=args.device or protocol.default_device,
+                progress=_progress,
+            )
+            stop_selection = run_outer_stop_selection(
+                runtime,
+                protocol,
+                outer_target=args.outer_target,
+                action_selection=action_selection,
+                encoder=encoder,
+                teacher_bank_root=teacher_root,
+                stop_bank_root=args.stop_bank_root
+                or str(work_base / "stop_banks"),
+                fixed_endpoint_root=args.fixed_endpoint_root
+                or str(work_base / "fixed_endpoints"),
+                work_root=args.stop_selection_root
+                or str(work_base / "stop_selection"),
+                device=args.device or protocol.default_device,
+                progress=_progress,
+            )
+            dependencies = build_g1_final_dependencies(
+                runtime,
+                protocol,
+                outer_target=args.outer_target,
+                encoder=encoder,
+                progress=_progress,
+            )
+            result = build_g1_outer_target_trajectory_bank(
+                runtime,
+                protocol,
+                dependencies,
+                stop_selection,
+                encoder=encoder,
+                work_root=args.work_root
+                or str(work_base / "target_trajectories"),
+                progress=_progress,
+            )
+            _print_json(
+                {
+                    "outer_target": result.outer_target,
+                    "specimen_count": result.specimen_count,
+                    "record_count": result.record_count,
+                    "target_outcomes_opened": result.target_outcomes_opened,
+                    "final_dependency_sha256": result.final_dependency_sha256,
+                    "outer_selection_sha256": result.outer_selection_sha256,
+                    "bank_path": str(result.path),
+                    "parquet_sha256": result.bank.parquet_sha256,
+                    "records_sha256": result.bank.records_sha256,
+                    "manifest_sha256": result.bank.manifest_sha256,
+                    "state_sha256": result.state_sha256,
+                }
+            )
+            return 0
+
         if args.command == "select-outer-stop":
             protocol = load_g1_protocol(
                 args.config,
