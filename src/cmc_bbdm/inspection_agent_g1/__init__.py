@@ -33,6 +33,13 @@ from .features import (
     canonical_slot,
     decision_type,
 )
+from .formal import (
+    FIXED_BASELINE_METHODS,
+    G1FormalExecutionError,
+    G1ObservableStateBuilder,
+    evaluate_g1_action_history,
+    plan_g1_fixed_actions,
+)
 from .g1 import (
     FINAL_G1_STATUSES,
     G1ExecutionError,
@@ -142,6 +149,7 @@ __all__ = [
     "DAGGER_MAX_NEW_STATES",
     "DEPLOYMENT_INITIAL_NOMINAL_BUDGET",
     "FINAL_G1_STATUSES",
+    "FIXED_BASELINE_METHODS",
     "PRIMARY_WARM_START_CELLS",
     "PRIMARY_WARM_START_K",
     "REGISTERED_DAGGER_ITERATIONS",
@@ -162,6 +170,8 @@ __all__ = [
     "G1CrossfitError",
     "G1ExecutionError",
     "G1FinalDependencies",
+    "G1FormalExecutionError",
+    "G1ObservableStateBuilder",
     "G1PackageValidation",
     "G1PolicyState",
     "G1PolicyTrainingExample",
@@ -217,6 +227,7 @@ __all__ = [
     "equal_policy_training_weights",
     "equal_specimen_task_weights",
     "evaluate_final_g1_decision",
+    "evaluate_g1_action_history",
     "evaluate_policy_gate",
     "evaluate_stop_gate",
     "evaluate_task_conditioning_gate",
@@ -237,6 +248,7 @@ __all__ = [
     "observable_stop_loss",
     "oracle_gap_closure",
     "outer_selection_payload",
+    "plan_g1_fixed_actions",
     "publish_g1_manifest",
     "read_teacher_bank",
     "rebind_training_example_modes",
