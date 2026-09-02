@@ -18,8 +18,11 @@ if _LOCAL_PACKAGE not in cmc_bbdm.__path__:
 from cmc_bbdm.inspection_agent_g1 import (
     G1ArtifactError,
     G1ExecutionError,
+    G1StopExecutionError,
+    build_g1_all_source_fixed_endpoint_banks,
     build_g1_all_source_teacher_banks,
     build_g1_source_dependencies,
+    build_g1_source_fixed_endpoint_bank,
     build_g1_source_teacher_bank,
     compare_g1_packages,
     load_g1_encoder,
@@ -50,6 +53,23 @@ def _parser() -> argparse.ArgumentParser:
     build_all.add_argument("--device", default=None)
     build_all.add_argument("--work-root", default=None)
     build_all.add_argument("--start-fold", type=int, default=1)
+
+    build_fixed = commands.add_parser("build-fixed-endpoints")
+    build_fixed.add_argument("--config", required=True)
+    build_fixed.add_argument("--source-project-root", required=True)
+    build_fixed.add_argument("--outer-target", required=True)
+    build_fixed.add_argument("--source-domain", required=True)
+    build_fixed.add_argument("--project-root", default=str(_PROJECT_ROOT))
+    build_fixed.add_argument("--device", default=None)
+    build_fixed.add_argument("--work-root", default=None)
+
+    build_all_fixed = commands.add_parser("build-all-fixed-endpoints")
+    build_all_fixed.add_argument("--config", required=True)
+    build_all_fixed.add_argument("--source-project-root", required=True)
+    build_all_fixed.add_argument("--project-root", default=str(_PROJECT_ROOT))
+    build_all_fixed.add_argument("--device", default=None)
+    build_all_fixed.add_argument("--work-root", default=None)
+    build_all_fixed.add_argument("--start-fold", type=int, default=1)
 
     select_outer = commands.add_parser("select-outer")
     select_outer.add_argument("--config", required=True)
@@ -121,7 +141,12 @@ def main(argv: Sequence[str] | None = None) -> int:
             )
             return 0
 
-        if args.command in {"build-bank", "build-all-banks"}:
+        if args.command in {
+            "build-bank",
+            "build-all-banks",
+            "build-fixed-endpoints",
+            "build-all-fixed-endpoints",
+        }:
             protocol = load_g1_protocol(
                 args.config,
                 project_root=args.project_root,
@@ -136,9 +161,47 @@ def main(argv: Sequence[str] | None = None) -> int:
                 args.source_project_root,
                 device=args.device or protocol.default_device,
             )
+            fixed_endpoints = args.command in {
+                "build-fixed-endpoints",
+                "build-all-fixed-endpoints",
+            }
             work_root = args.work_root or str(
-                Path(args.project_root) / protocol.teacher_bank_work_path
+                Path(args.project_root)
+                / (
+                    Path(protocol.work_output) / "fixed_endpoints"
+                    if fixed_endpoints
+                    else Path(protocol.teacher_bank_work_path)
+                )
             )
+            if args.command == "build-all-fixed-endpoints":
+                results = build_g1_all_source_fixed_endpoint_banks(
+                    runtime,
+                    protocol,
+                    encoder=encoder,
+                    work_root=work_root,
+                    start_fold=args.start_fold,
+                    progress=_progress,
+                )
+                _print_json(
+                    {
+                        "bank_count": len(results),
+                        "banks": [
+                            {
+                                "bank_path": str(result.path),
+                                "outer_target": result.outer_target,
+                                "source_domain": result.source_domain,
+                                "specimen_count": result.specimen_count,
+                                "dependency_sha256": result.dependency_sha256,
+                                "row_count": result.bank.row_count,
+                                "parquet_sha256": result.bank.parquet_sha256,
+                                "records_sha256": result.bank.records_sha256,
+                                "manifest_sha256": result.bank.manifest_sha256,
+                            }
+                            for result in results
+                        ],
+                    }
+                )
+                return 0
             if args.command == "build-all-banks":
                 results = build_g1_all_source_teacher_banks(
                     runtime,
@@ -176,6 +239,29 @@ def main(argv: Sequence[str] | None = None) -> int:
                 encoder=encoder,
                 progress=_progress,
             )
+            if args.command == "build-fixed-endpoints":
+                result = build_g1_source_fixed_endpoint_bank(
+                    runtime,
+                    protocol,
+                    dependencies,
+                    encoder=encoder,
+                    work_root=work_root,
+                    progress=_progress,
+                )
+                _print_json(
+                    {
+                        "bank_path": str(result.path),
+                        "outer_target": result.outer_target,
+                        "source_domain": result.source_domain,
+                        "specimen_count": result.specimen_count,
+                        "dependency_sha256": result.dependency_sha256,
+                        "row_count": result.bank.row_count,
+                        "parquet_sha256": result.bank.parquet_sha256,
+                        "records_sha256": result.bank.records_sha256,
+                        "manifest_sha256": result.bank.manifest_sha256,
+                    }
+                )
+                return 0
             result = build_g1_source_teacher_bank(
                 runtime,
                 protocol,
@@ -230,6 +316,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         return 0
     except (
         G1ExecutionError,
+        G1StopExecutionError,
         G1ArtifactError,
         OSError,
         ValueError,

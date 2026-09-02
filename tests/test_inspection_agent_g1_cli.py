@@ -29,6 +29,8 @@ def test_g1_cli_help_lists_inspection_commands() -> None:
     for command in (
         "build-bank",
         "build-all-banks",
+        "build-fixed-endpoints",
+        "build-all-fixed-endpoints",
         "select-outer",
         "validate",
         "compare",
@@ -45,6 +47,17 @@ def test_g1_cli_subcommand_help_lists_required_flags() -> None:
             "--source-domain",
         ),
         "build-all-banks": (
+            "--config",
+            "--source-project-root",
+            "--start-fold",
+        ),
+        "build-fixed-endpoints": (
+            "--config",
+            "--source-project-root",
+            "--outer-target",
+            "--source-domain",
+        ),
+        "build-all-fixed-endpoints": (
             "--config",
             "--source-project-root",
             "--start-fold",
@@ -66,6 +79,8 @@ def test_g1_cli_missing_required_arguments_returns_code_two() -> None:
     for command in (
         "build-bank",
         "build-all-banks",
+        "build-fixed-endpoints",
+        "build-all-fixed-endpoints",
         "select-outer",
         "validate",
         "compare",
