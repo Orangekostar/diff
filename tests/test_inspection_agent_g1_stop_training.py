@@ -188,7 +188,20 @@ def test_stop_head_fit_is_deterministic_source_only_and_action_invariant() -> No
     state = stops[0].policy_state
     before = action_policy(state)
     after = first(state)
+    batched = first.score_batch((stops[0].policy_state, stops[1].policy_state))
     np.testing.assert_array_equal(after.action_logits, before.action_logits)
+    np.testing.assert_allclose(
+        batched[0].action_logits,
+        after.action_logits,
+        rtol=0.0,
+        atol=1.0e-7,
+    )
+    assert batched[0].model_sha256 == after.model_sha256
+    assert np.argmax(batched[0].action_logits) == np.argmax(after.action_logits)
+    assert tuple(row.policy_state_sha256 for row in batched) == (
+        stops[0].policy_state.state_sha256,
+        stops[1].policy_state.state_sha256,
+    )
     assert first.action_backbone_sha256 == second.action_backbone_sha256
     assert first.model_state_sha256 == second.model_state_sha256
     assert first.audit.fit_domains == ("d1", "d2", "d3", "d4")
