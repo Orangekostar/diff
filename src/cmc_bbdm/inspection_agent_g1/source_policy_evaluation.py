@@ -13,7 +13,12 @@ import numpy as np
 import polars as pl
 
 from cmc_bbdm.inspection_agent.contracts import InspectionTask
+from cmc_bbdm.inspection_agent.generalized_reconstruction import SourceBackgroundPrior
+from cmc_bbdm.inspection_agent.surface_hypothesis import SurfaceHypothesis
+from cmc_bbdm.inspection_agent.world import CausalInspectionWorld
+from cmc_bbdm.mva.acquisition_grid import AcquisitionGrid
 
+from .formal import G1ObservableStateBuilder, evaluate_g1_action_history
 from .metrics import (
     EngineeringCurve,
     G1MetricError,
@@ -25,11 +30,16 @@ from .policy_training import (
     REGISTERED_MAX_EPOCHS,
     PolicyTrainingHyperparameters,
 )
+from .rollout import run_closed_loop
 from .source_bridge import (
     SOURCE_ORACLE_METHODS,
     G1SourceBridgeRecord,
     SourceFixedBridgeSelection,
     select_source_fixed_bridge,
+)
+from .teacher import (
+    SourceTeacherAuthorization,
+    validate_source_teacher_dependencies,
 )
 
 LEARNED_POLICY_METHOD = "LEARNED_POLICY"
@@ -214,6 +224,133 @@ def _record_key(record: G1LearnedSourceRecord) -> tuple[object, ...]:
         record.source_domain,
         record.specimen_id,
         record.curve.task.value,
+    )
+
+
+def _action_history_sha(actions: tuple[object, ...]) -> str:
+    try:
+        tokens = tuple(
+            (action.cell_index, action.from_level, action.to_level)
+            for action in actions
+        )
+    except AttributeError as error:
+        raise G1SourcePolicyEvaluationError(
+            "learned source action history is invalid"
+        ) from error
+    if type(actions) is not tuple or not actions:
+        raise G1SourcePolicyEvaluationError(
+            "learned source action history is invalid"
+        )
+    return _json_sha(
+        {
+            "schema": 1,
+            "kind": "g1-learned-source-action-history",
+            "actions": tokens,
+        }
+    )
+
+
+def materialize_learned_source_for_world(
+    world: CausalInspectionWorld,
+    grid: AcquisitionGrid,
+    surface_hypothesis: SurfaceHypothesis,
+    prior: SourceBackgroundPrior,
+    authorization: SourceTeacherAuthorization,
+    *,
+    assessor: object,
+    encoder: object,
+    actor: object,
+    outer_target: str,
+    source_domain: str,
+    specimen_id: str,
+    specimen_sha256: str,
+    dependency_sha256: str,
+    full_scan: np.ndarray,
+    true_cai: float,
+) -> G1LearnedSourceRecord:
+    audit = getattr(actor, "audit", None)
+    hyperparameters = getattr(actor, "hyperparameters", None)
+    if (
+        type(world) is not CausalInspectionWorld
+        or type(grid) is not AcquisitionGrid
+        or type(surface_hypothesis) is not SurfaceHypothesis
+        or type(prior) is not SourceBackgroundPrior
+        or type(authorization) is not SourceTeacherAuthorization
+        or not callable(getattr(assessor, "predict", None))
+        or not _valid_sha256(getattr(assessor, "model_state_sha256", None))
+        or not callable(getattr(encoder, "encode", None))
+        or not callable(actor)
+        or not _valid_sha256(getattr(actor, "model_state_sha256", None))
+        or type(hyperparameters) is not PolicyTrainingHyperparameters
+        or outer_target != authorization.outer_target
+        or source_domain != authorization.labeled_domain
+        or source_domain == outer_target
+        or type(specimen_id) is not str
+        or not specimen_id
+        or not _valid_sha256(specimen_sha256)
+        or not _valid_sha256(dependency_sha256)
+        or getattr(audit, "outer_target", None) != outer_target
+        or getattr(audit, "validation_domain", None) != source_domain
+        or tuple(getattr(audit, "fit_domains", ())) != authorization.fit_domains
+        or not _valid_sha256(getattr(audit, "state_sha256", None))
+        or type(getattr(audit, "selected_epoch", None)) is not int
+    ):
+        raise G1SourcePolicyEvaluationError(
+            "learned source world request is invalid"
+        )
+    validate_source_teacher_dependencies(
+        authorization,
+        prior,
+        assessor=assessor,
+    )
+    state_builder = G1ObservableStateBuilder(
+        grid=grid,
+        surface_hypothesis=surface_hypothesis,
+        prior=prior,
+        assessor=assessor,
+        encoder=encoder,
+        cai_context_mode=hyperparameters.cai_context_mode,
+        task_token_mode=hyperparameters.task_token_mode,
+    )
+    trajectory = run_closed_loop(
+        world,
+        grid,
+        target_domain=source_domain,
+        specimen_sha256=specimen_sha256,
+        state_builder=state_builder,
+        actor=actor,
+        stop_threshold=None,
+    )
+    if trajectory.stopped or trajectory.model_sha256 != actor.model_state_sha256:
+        raise G1SourcePolicyEvaluationError(
+            "learned source trajectory identity changed"
+        )
+    curve = evaluate_g1_action_history(
+        world,
+        grid,
+        prior,
+        assessor=assessor,
+        encoder=encoder,
+        method=LEARNED_POLICY_METHOD,
+        target_domain=source_domain,
+        specimen_sha256=specimen_sha256,
+        actions=trajectory.action_history,
+        full_scan=full_scan,
+        true_cai=true_cai,
+    )
+    return G1LearnedSourceRecord(
+        outer_target=outer_target,
+        source_domain=source_domain,
+        specimen_id=specimen_id,
+        fit_domains=authorization.fit_domains,
+        dependency_sha256=dependency_sha256,
+        hyperparameters_sha256=hyperparameters.state_sha256,
+        model_state_sha256=actor.model_state_sha256,
+        fit_audit_sha256=audit.state_sha256,
+        selected_epoch=audit.selected_epoch,
+        trajectory_sha256=trajectory.state_sha256,
+        action_history_sha256=_action_history_sha(trajectory.action_history),
+        curve=curve,
     )
 
 
@@ -628,6 +765,7 @@ __all__ = [
     "G1LearnedSourceRecord",
     "G1SourcePolicyEvaluationError",
     "evaluate_inner_policy_bridge",
+    "materialize_learned_source_for_world",
     "read_learned_source_bank",
     "write_learned_source_bank",
 ]
