@@ -1197,6 +1197,7 @@ def build_g1_all_source_teacher_banks(
     *,
     encoder: object,
     work_root: str | Path,
+    start_fold: int = 1,
     progress: Callable[[str], None] | None = None,
 ) -> tuple[G1TeacherBankBuild, ...]:
     """Build the exact 30 directed outer-target/source-domain teacher banks."""
@@ -1206,6 +1207,8 @@ def build_g1_all_source_teacher_banks(
         or type(protocol) is not G1Protocol
         or runtime.domain_order != protocol.domain_order
         or not callable(getattr(encoder, "encode", None))
+        or type(start_fold) is not int
+        or not 1 <= start_fold <= 30
     ):
         raise G1ExecutionError("G1 all-bank build request is invalid")
     expected = tuple(
@@ -1214,8 +1217,9 @@ def build_g1_all_source_teacher_banks(
         for source in protocol.domain_order
         if source != outer
     )
+    selected = expected[start_fold - 1 :]
     output: list[G1TeacherBankBuild] = []
-    for index, (outer, source) in enumerate(expected, start=1):
+    for index, (outer, source) in enumerate(selected, start=start_fold):
         _progress(
             progress,
             f"G1 teacher-bank fold {index}/{len(expected)}: {outer}/{source}",
@@ -1239,7 +1243,7 @@ def build_g1_all_source_teacher_banks(
         if (result.outer_target, result.source_domain) != (outer, source):
             raise G1ExecutionError("G1 all-bank fold identity changed")
         output.append(result)
-    if tuple((row.outer_target, row.source_domain) for row in output) != expected:
+    if tuple((row.outer_target, row.source_domain) for row in output) != selected:
         raise G1ExecutionError("G1 all-bank directed roster changed")
     return tuple(output)
 

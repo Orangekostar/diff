@@ -252,6 +252,68 @@ def test_all_source_teacher_banks_follow_the_exact_directed_fold_order(
     assert len(builds) == 30
 
 
+def test_all_source_teacher_banks_can_resume_from_a_completed_prefix(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    protocol = load_g1_protocol(CONFIG, project_root=ROOT)
+    runtime = _runtime(protocol.domain_order)
+    calls: list[tuple[str, str]] = []
+
+    def fake_dependencies(
+        _runtime: object,
+        _protocol: object,
+        *,
+        outer_target: str,
+        labeled_domain: str,
+        **_kwargs: object,
+    ) -> object:
+        del _runtime, _protocol
+        calls.append((outer_target, labeled_domain))
+        return SimpleNamespace(
+            roster=SimpleNamespace(
+                outer_target=outer_target,
+                labeled_domain=labeled_domain,
+            )
+        )
+
+    def fake_bank(
+        _runtime: object,
+        _protocol: object,
+        dependencies: object,
+        **_kwargs: object,
+    ) -> G1TeacherBankBuild:
+        del _runtime, _protocol
+        outer = dependencies.roster.outer_target
+        source = dependencies.roster.labeled_domain
+        return G1TeacherBankBuild(
+            path=tmp_path / outer / f"{source}.parquet",
+            outer_target=outer,
+            source_domain=source,
+            specimen_count=int(protocol.domain_counts[source]),
+            dependency_sha256=_sha(f"dependency-{outer}-{source}"),
+            bank=G1TeacherBankFile(1, _sha("p"), _sha("r"), _sha("m")),
+        )
+
+    monkeypatch.setattr(g1_module, "build_g1_source_dependencies", fake_dependencies)
+    monkeypatch.setattr(g1_module, "build_g1_source_teacher_bank", fake_bank)
+    builds = build_g1_all_source_teacher_banks(
+        runtime,
+        protocol,
+        encoder=SimpleNamespace(encode=lambda _images: None),
+        work_root=tmp_path,
+        start_fold=8,
+    )
+    full = tuple(
+        (outer, source)
+        for outer in protocol.domain_order
+        for source in protocol.domain_order
+        if source != outer
+    )
+    assert tuple(calls) == full[7:]
+    assert tuple((row.outer_target, row.source_domain) for row in builds) == full[7:]
+
+
 def test_final_dependencies_fit_exactly_the_five_outer_source_domains(
     monkeypatch,
 ) -> None:

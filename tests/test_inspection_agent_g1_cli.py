@@ -38,7 +38,11 @@ def test_g1_cli_subcommand_help_lists_required_flags() -> None:
             "--outer-target",
             "--source-domain",
         ),
-        "build-all-banks": ("--config", "--source-project-root"),
+        "build-all-banks": (
+            "--config",
+            "--source-project-root",
+            "--start-fold",
+        ),
         "validate": ("--config", "--path"),
         "compare": ("--config", "--formal", "--replay"),
     }

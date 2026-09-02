@@ -48,6 +48,7 @@ def _parser() -> argparse.ArgumentParser:
     build_all.add_argument("--project-root", default=str(_PROJECT_ROOT))
     build_all.add_argument("--device", default=None)
     build_all.add_argument("--work-root", default=None)
+    build_all.add_argument("--start-fold", type=int, default=1)
 
     validate = commands.add_parser("validate")
     validate.add_argument("--config", required=True)
@@ -98,6 +99,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                     protocol,
                     encoder=encoder,
                     work_root=work_root,
+                    start_fold=args.start_fold,
                     progress=_progress,
                 )
                 _print_json(
