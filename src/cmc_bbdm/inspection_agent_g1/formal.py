@@ -200,39 +200,74 @@ class G1ObservableStateBuilder:
             raise G1FormalExecutionError("observable state builder is invalid")
 
     def __call__(self, observation: InspectionObservation) -> G1PolicyState:
-        if (
-            type(observation) is not InspectionObservation
-            or observation.grid_sha256 != self.grid.state_sha256
-        ):
-            raise G1FormalExecutionError("observable state request is invalid")
-        reconstruction = reconstruct_observation(observation, self.grid, self.prior)
-        embeddings = np.asarray(
-            self.encoder.encode((reconstruction.image,)),
-            dtype=np.float64,
+        return build_g1_observable_states((self,), (observation,))[0]
+
+
+def build_g1_observable_states(
+    builders: tuple[G1ObservableStateBuilder, ...],
+    observations: tuple[InspectionObservation, ...],
+) -> tuple[G1PolicyState, ...]:
+    if (
+        type(builders) is not tuple
+        or not builders
+        or any(type(builder) is not G1ObservableStateBuilder for builder in builders)
+        or type(observations) is not tuple
+        or len(observations) != len(builders)
+        or any(type(value) is not InspectionObservation for value in observations)
+        or any(
+            observation.grid_sha256 != builder.grid.state_sha256
+            for builder, observation in zip(builders, observations, strict=True)
         )
-        scalars = state_scalars(observation)[None]
-        estimates = np.asarray(
-            self.assessor.predict(embeddings, scalars),
-            dtype=np.float64,
-        )
-        if (
-            embeddings.shape != (1, 512)
-            or estimates.shape != (1,)
-            or not np.all(np.isfinite(embeddings))
-            or not np.all(np.isfinite(estimates))
-        ):
-            raise G1FormalExecutionError("observable state dependencies are invalid")
-        return build_policy_state(
+        or any(builder.encoder is not builders[0].encoder for builder in builders)
+        or any(builder.assessor is not builders[0].assessor for builder in builders)
+    ):
+        raise G1FormalExecutionError("observable state batch request is invalid")
+    reconstructions = tuple(
+        reconstruct_observation(observation, builder.grid, builder.prior)
+        for builder, observation in zip(builders, observations, strict=True)
+    )
+    embeddings = np.asarray(
+        builders[0].encoder.encode(
+            tuple(reconstruction.image for reconstruction in reconstructions)
+        ),
+        dtype=np.float64,
+    )
+    scalars = np.asarray(
+        [state_scalars(observation) for observation in observations],
+        dtype=np.float64,
+    )
+    estimates = np.asarray(
+        builders[0].assessor.predict(embeddings, scalars),
+        dtype=np.float64,
+    )
+    if (
+        embeddings.shape != (len(builders), 512)
+        or estimates.shape != (len(builders),)
+        or not np.all(np.isfinite(embeddings))
+        or not np.all(np.isfinite(estimates))
+    ):
+        raise G1FormalExecutionError("observable state dependencies are invalid")
+    return tuple(
+        build_policy_state(
             observation,
-            self.surface_hypothesis,
-            self.grid,
-            self.prior,
+            builder.surface_hypothesis,
+            builder.grid,
+            builder.prior,
             reconstruction,
-            reconstruction_embedding=embeddings[0],
-            cai_estimate=float(estimates[0]),
-            cai_context_mode=self.cai_context_mode,
-            task_token_mode=self.task_token_mode,
+            reconstruction_embedding=embedding,
+            cai_estimate=float(estimate),
+            cai_context_mode=builder.cai_context_mode,
+            task_token_mode=builder.task_token_mode,
         )
+        for builder, observation, reconstruction, embedding, estimate in zip(
+            builders,
+            observations,
+            reconstructions,
+            embeddings,
+            estimates,
+            strict=True,
+        )
+    )
 
 
 def _checkpoint_observations(
@@ -418,6 +453,7 @@ __all__ = [
     "FIXED_BASELINE_METHODS",
     "G1FormalExecutionError",
     "G1ObservableStateBuilder",
+    "build_g1_observable_states",
     "evaluate_g1_action_history",
     "plan_g1_fixed_actions",
     "run_g1_warm_started_oracle_actions",

@@ -616,27 +616,69 @@ class TrainedObservablePolicy:
     model_state_sha256: str
 
     def __call__(self, state: G1PolicyState) -> ObservablePolicyScores:
-        tensors = self.normalizer.transform(state)
+        return self.score_batch((state,))[0]
+
+    def score_batch(
+        self,
+        states: tuple[G1PolicyState, ...],
+    ) -> tuple[ObservablePolicyScores, ...]:
+        if (
+            type(states) is not tuple
+            or not states
+            or any(type(state) is not G1PolicyState for state in states)
+        ):
+            raise G1PolicyTrainingError("observable actor batch is invalid")
+        transformed = tuple(self.normalizer.transform(state) for state in states)
         device = next(self.model.parameters()).device
         self.model.eval()
         with torch.inference_mode():
             output = self.model(
-                torch.from_numpy(tensors.reconstruction_embedding[None]).to(device),
-                torch.from_numpy(tensors.global_scalars[None]).to(device),
-                torch.from_numpy(tensors.task_token[None]).to(device),
-                torch.from_numpy(tensors.cell_features[None]).to(device),
-                torch.from_numpy(tensors.candidate_features[None]).to(device),
-                torch.from_numpy(tensors.legal_action_mask[None]).to(device),
+                torch.from_numpy(
+                    np.stack(
+                        [value.reconstruction_embedding for value in transformed]
+                    )
+                ).to(device),
+                torch.from_numpy(
+                    np.stack([value.global_scalars for value in transformed])
+                ).to(device),
+                torch.from_numpy(
+                    np.stack([value.task_token for value in transformed])
+                ).to(device),
+                torch.from_numpy(
+                    np.stack([value.cell_features for value in transformed])
+                ).to(device),
+                torch.from_numpy(
+                    np.stack([value.candidate_features for value in transformed])
+                ).to(device),
+                torch.from_numpy(
+                    np.stack([value.legal_action_mask for value in transformed])
+                ).to(device),
             )
             logits = np.asarray(
-                output.action_logits[0].detach().cpu().numpy(), dtype=np.float64
+                output.action_logits.detach().cpu().numpy(), dtype=np.float64
             )
-            stop_probability = float(torch.sigmoid(output.stop_logits[0]).cpu())
-        return ObservablePolicyScores(
-            policy_state_sha256=state.state_sha256,
-            model_sha256=self.model_state_sha256,
-            action_logits=logits,
-            stop_probability=stop_probability,
+            stop_probabilities = np.asarray(
+                torch.sigmoid(output.stop_logits).detach().cpu().numpy(),
+                dtype=np.float64,
+            )
+        if (
+            logits.shape != (len(states), ACTION_SLOT_COUNT)
+            or stop_probabilities.shape != (len(states),)
+        ):
+            raise G1PolicyTrainingError("observable actor batch output is invalid")
+        return tuple(
+            ObservablePolicyScores(
+                policy_state_sha256=state.state_sha256,
+                model_sha256=self.model_state_sha256,
+                action_logits=row_logits,
+                stop_probability=float(stop_probability),
+            )
+            for state, row_logits, stop_probability in zip(
+                states,
+                logits,
+                stop_probabilities,
+                strict=True,
+            )
         )
 
 

@@ -19,6 +19,7 @@ from cmc_bbdm.inspection_agent.surface_hypothesis import SurfaceHypothesis
 from cmc_bbdm.inspection_agent.world import CausalInspectionWorld
 from cmc_bbdm.mva.acquisition_grid import AcquisitionGrid
 
+from .batch_rollout import G1BatchRolloutRequest, run_g1_closed_loop_batch
 from .formal import G1ObservableStateBuilder, evaluate_g1_action_history
 from .g1 import (
     G1Protocol,
@@ -37,7 +38,7 @@ from .policy_training import (
     REGISTERED_MAX_EPOCHS,
     PolicyTrainingHyperparameters,
 )
-from .rollout import run_closed_loop
+from .rollout import ClosedLoopTrajectory, run_closed_loop
 from .source_bridge import (
     SOURCE_ORACLE_METHODS,
     G1SourceBridgeRecord,
@@ -269,6 +270,63 @@ def _action_history_sha(actions: tuple[object, ...]) -> str:
     )
 
 
+def _learned_source_record_from_trajectory(
+    trajectory: ClosedLoopTrajectory,
+    world: CausalInspectionWorld,
+    grid: AcquisitionGrid,
+    prior: SourceBackgroundPrior,
+    *,
+    assessor: object,
+    encoder: object,
+    actor: object,
+    outer_target: str,
+    source_domain: str,
+    specimen_id: str,
+    dependency_sha256: str,
+    full_scan: np.ndarray,
+    true_cai: float,
+) -> G1LearnedSourceRecord:
+    audit = getattr(actor, "audit", None)
+    hyperparameters = getattr(actor, "hyperparameters", None)
+    if (
+        type(trajectory) is not ClosedLoopTrajectory
+        or trajectory.stopped
+        or trajectory.model_sha256 != getattr(actor, "model_state_sha256", None)
+        or type(hyperparameters) is not PolicyTrainingHyperparameters
+        or not _valid_sha256(getattr(audit, "state_sha256", None))
+    ):
+        raise G1SourcePolicyEvaluationError(
+            "learned source trajectory identity changed"
+        )
+    curve = evaluate_g1_action_history(
+        world,
+        grid,
+        prior,
+        assessor=assessor,
+        encoder=encoder,
+        method=LEARNED_POLICY_METHOD,
+        target_domain=source_domain,
+        specimen_sha256=trajectory.specimen_sha256,
+        actions=trajectory.action_history,
+        full_scan=full_scan,
+        true_cai=true_cai,
+    )
+    return G1LearnedSourceRecord(
+        outer_target=outer_target,
+        source_domain=source_domain,
+        specimen_id=specimen_id,
+        fit_domains=tuple(audit.fit_domains),
+        dependency_sha256=dependency_sha256,
+        hyperparameters_sha256=hyperparameters.state_sha256,
+        model_state_sha256=actor.model_state_sha256,
+        fit_audit_sha256=audit.state_sha256,
+        selected_epoch=audit.selected_epoch,
+        trajectory_sha256=trajectory.state_sha256,
+        action_history_sha256=_action_history_sha(trajectory.action_history),
+        curve=curve,
+    )
+
+
 def materialize_learned_source_for_world(
     world: CausalInspectionWorld,
     grid: AcquisitionGrid,
@@ -340,36 +398,20 @@ def materialize_learned_source_for_world(
         actor=actor,
         stop_threshold=None,
     )
-    if trajectory.stopped or trajectory.model_sha256 != actor.model_state_sha256:
-        raise G1SourcePolicyEvaluationError(
-            "learned source trajectory identity changed"
-        )
-    curve = evaluate_g1_action_history(
+    return _learned_source_record_from_trajectory(
+        trajectory,
         world,
         grid,
         prior,
         assessor=assessor,
         encoder=encoder,
-        method=LEARNED_POLICY_METHOD,
-        target_domain=source_domain,
-        specimen_sha256=specimen_sha256,
-        actions=trajectory.action_history,
-        full_scan=full_scan,
-        true_cai=true_cai,
-    )
-    return G1LearnedSourceRecord(
+        actor=actor,
         outer_target=outer_target,
         source_domain=source_domain,
         specimen_id=specimen_id,
-        fit_domains=authorization.fit_domains,
         dependency_sha256=dependency_sha256,
-        hyperparameters_sha256=hyperparameters.state_sha256,
-        model_state_sha256=actor.model_state_sha256,
-        fit_audit_sha256=audit.state_sha256,
-        selected_epoch=audit.selected_epoch,
-        trajectory_sha256=trajectory.state_sha256,
-        action_history_sha256=_action_history_sha(trajectory.action_history),
-        curve=curve,
+        full_scan=full_scan,
+        true_cai=true_cai,
     )
 
 
@@ -400,6 +442,98 @@ def learned_source_bank_path(
         / hyperparameters_sha256
         / f"{source_domain}.parquet"
     )
+
+
+def _materialize_g1_learned_source_records_batched(
+    runtime: G1Runtime,
+    protocol: G1Protocol,
+    dependencies: G1SourceDependencies,
+    *,
+    encoder: object,
+    actor: object,
+    specimen_ids: tuple[str, ...],
+    progress: Callable[[str], None] | None,
+) -> tuple[G1LearnedSourceRecord, ...]:
+    roster = dependencies.roster
+    prior = dependencies.prior_fit.prior
+    assessor = dependencies.assessor_fit.assessor
+    hyperparameters = actor.hyperparameters
+    batch_specimens = max(1, int(protocol.encoder_batch_size) // 2)
+    output = []
+    for start in range(0, len(specimen_ids), batch_specimens):
+        selected = specimen_ids[start : start + batch_specimens]
+        requests = []
+        payloads = []
+        for specimen in selected:
+            teacher_view = runtime.mavis.source_teacher_view(specimen)
+            specimen_sha = runtime.specimen_sha256(roster.labeled_domain, specimen)
+            for task in (InspectionTask.FIELD, InspectionTask.CAI):
+                world, grid, surface = build_g1_world(
+                    runtime,
+                    dataset_id=roster.labeled_domain,
+                    specimen_id=specimen,
+                    task=task,
+                    endpoint_budget=protocol.endpoint_budget,
+                )
+                builder = G1ObservableStateBuilder(
+                    grid=grid,
+                    surface_hypothesis=surface.hypothesis,
+                    prior=prior,
+                    assessor=assessor,
+                    encoder=encoder,
+                    cai_context_mode=hyperparameters.cai_context_mode,
+                    task_token_mode=hyperparameters.task_token_mode,
+                )
+                requests.append(
+                    G1BatchRolloutRequest(
+                        world=world,
+                        grid=grid,
+                        target_domain=roster.labeled_domain,
+                        specimen_sha256=specimen_sha,
+                        state_builder=builder,
+                    )
+                )
+                payloads.append(
+                    (
+                        world,
+                        grid,
+                        specimen,
+                        teacher_view.full_scan,
+                        teacher_view.true_cai,
+                    )
+                )
+        trajectories = run_g1_closed_loop_batch(
+            tuple(requests),
+            actor=actor,
+            stop_threshold=None,
+        )
+        for trajectory, payload in zip(trajectories, payloads, strict=True):
+            world, grid, specimen, full_scan, true_cai = payload
+            output.append(
+                _learned_source_record_from_trajectory(
+                    trajectory,
+                    world,
+                    grid,
+                    prior,
+                    assessor=assessor,
+                    encoder=encoder,
+                    actor=actor,
+                    outer_target=roster.outer_target,
+                    source_domain=roster.labeled_domain,
+                    specimen_id=specimen,
+                    dependency_sha256=dependencies.state_sha256,
+                    full_scan=full_scan,
+                    true_cai=true_cai,
+                )
+            )
+        completed = start + len(selected)
+        if progress is not None:
+            progress(
+                f"G1 learned source {roster.outer_target}/"
+                f"{roster.labeled_domain}: {completed}/"
+                f"{len(specimen_ids)} specimens"
+            )
+    return tuple(output)
 
 
 def materialize_g1_learned_source_records(
@@ -451,6 +585,32 @@ def materialize_g1_learned_source_records(
         raise G1SourcePolicyEvaluationError(
             "learned source specimen is outside its validation fold"
         )
+    if callable(getattr(actor, "score_batch", None)):
+        records = _materialize_g1_learned_source_records_batched(
+            runtime,
+            protocol,
+            dependencies,
+            encoder=encoder,
+            actor=actor,
+            specimen_ids=specimen_ids,
+            progress=progress,
+        )
+        _ordered_records(records)
+        if (
+            len(records) != 2 * len(specimen_ids)
+            or {row.specimen_id for row in records} != set(specimen_ids)
+            or any(
+                row.dependency_sha256 != dependencies.state_sha256
+                or row.hyperparameters_sha256 != hyperparameters.state_sha256
+                or row.model_state_sha256 != actor.model_state_sha256
+                or row.fit_audit_sha256 != audit.state_sha256
+                for row in records
+            )
+        ):
+            raise G1SourcePolicyEvaluationError(
+                "learned source materialization evidence changed"
+            )
+        return records
     prior = dependencies.prior_fit.prior
     assessor = dependencies.assessor_fit.assessor
     output = []

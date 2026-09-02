@@ -8,6 +8,11 @@ from .artifacts import (
     publish_g1_manifest,
     validate_g1_package,
 )
+from .batch_rollout import (
+    G1BatchRolloutError,
+    G1BatchRolloutRequest,
+    run_g1_closed_loop_batch,
+)
 from .contracts import CAIContextMode, G1PolicyState, TaskTokenMode
 from .crossfit import (
     CrossfitCAIAssessorFit,
@@ -44,6 +49,7 @@ from .formal import (
     FIXED_BASELINE_METHODS,
     G1FormalExecutionError,
     G1ObservableStateBuilder,
+    build_g1_observable_states,
     evaluate_g1_action_history,
     plan_g1_fixed_actions,
     run_g1_warm_started_oracle_actions,
@@ -257,6 +263,8 @@ __all__ = [
     "DeploymentGeometryAudit",
     "G1ActorNormalizer",
     "G1ArtifactError",
+    "G1BatchRolloutError",
+    "G1BatchRolloutRequest",
     "G1CrossfitError",
     "G1EngineeringCandidateRun",
     "G1EngineeringSelectionExecutionError",
@@ -336,6 +344,7 @@ __all__ = [
     "build_g1_all_source_teacher_banks",
     "build_g1_final_dependencies",
     "build_g1_learned_source_bank",
+    "build_g1_observable_states",
     "build_g1_source_bridge_bank",
     "build_g1_source_dependencies",
     "build_g1_source_fixed_endpoint_bank",
@@ -401,6 +410,7 @@ __all__ = [
     "rebind_training_example_modes",
     "run_closed_loop",
     "run_engineering_candidate",
+    "run_g1_closed_loop_batch",
     "run_g1_warm_started_oracle_actions",
     "run_outer_engineering_selection",
     "run_outer_supervised_selection",

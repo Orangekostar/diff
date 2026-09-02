@@ -183,6 +183,24 @@ def test_inner_policy_fit_excludes_validation_and_outer_target_and_replays() -> 
     assert scores.model_sha256 == first.model_state_sha256
     assert np.all(np.isfinite(scores.action_logits[target_state.legal_action_mask]))
     assert np.all(np.isneginf(scores.action_logits[~target_state.legal_action_mask]))
+    cai_state = _state(InspectionTask.CAI, "unseen-target-cai", 24.0)
+    batch_scores = first.score_batch((target_state, cai_state))
+    scalar_scores = (first(target_state), first(cai_state))
+    assert tuple(row.policy_state_sha256 for row in batch_scores) == (
+        target_state.state_sha256,
+        cai_state.state_sha256,
+    )
+    for batch, scalar in zip(batch_scores, scalar_scores, strict=True):
+        np.testing.assert_allclose(
+            batch.action_logits,
+            scalar.action_logits,
+            rtol=1.0e-6,
+            atol=1.0e-7,
+        )
+        assert batch.stop_probability == pytest.approx(scalar.stop_probability)
+        assert int(np.argmax(batch.action_logits)) == int(
+            np.argmax(scalar.action_logits)
+        )
 
 
 def test_policy_training_rejects_an_outer_target_row() -> None:
