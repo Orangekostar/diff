@@ -39,6 +39,7 @@ from .formal import (
     G1ObservableStateBuilder,
     evaluate_g1_action_history,
     plan_g1_fixed_actions,
+    run_g1_warm_started_oracle_actions,
 )
 from .g1 import (
     FINAL_G1_STATUSES,
@@ -273,6 +274,7 @@ __all__ = [
     "read_teacher_regret_candidate_result",
     "rebind_training_example_modes",
     "run_closed_loop",
+    "run_g1_warm_started_oracle_actions",
     "run_outer_supervised_selection",
     "select_conservative_stop_threshold",
     "select_outer_policy",

@@ -20,6 +20,7 @@ from cmc_bbdm.inspection_agent_g1.formal import (
     G1ObservableStateBuilder,
     evaluate_g1_action_history,
     plan_g1_fixed_actions,
+    run_g1_warm_started_oracle_actions,
 )
 from cmc_bbdm.inspection_agent_g1.warm_start import (
     PRIMARY_WARM_START_CELLS,
@@ -172,3 +173,27 @@ def test_action_history_evaluation_builds_same_geometry_field_and_cai_curves() -
         assert np.all(np.diff(curve.exact_budgets) >= 0.0)
         assert np.isfinite(curve.auebc)
         assert curve.warm_start_sha256 == world.replay(actions[:8]).state_sha256
+
+
+def test_evaluation_oracles_start_from_k8_and_reach_the_same_endpoint() -> None:
+    for task in (InspectionTask.FIELD, InspectionTask.CAI):
+        world, grid, hypothesis, prior, full_scan = _fixture(task)
+        actions = run_g1_warm_started_oracle_actions(
+            world,
+            grid,
+            prior,
+            surface_hypothesis=hypothesis,
+            full_scan=full_scan,
+            true_cai=0.4,
+            assessor=_Assessor(),
+            encoder=_Encoder(),
+        )
+        assert tuple(action.cell_index for action in actions[:8]) == (
+            PRIMARY_WARM_START_CELLS
+        )
+        final = world.replay(actions)
+        assert not any(
+            len(action_added_positions(grid, final.measurement_state, action)) > 0
+            for action in fitting_actions(grid, final.measurement_state, 0.25)
+        )
+        assert final.effective_budget <= 0.25

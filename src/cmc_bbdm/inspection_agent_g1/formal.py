@@ -16,11 +16,13 @@ from cmc_bbdm.inspection_agent.generalized_reconstruction import (
     SourceBackgroundPrior,
     reconstruct_observation,
 )
+from cmc_bbdm.inspection_agent.oracle import choose_cai_action, choose_field_action
 from cmc_bbdm.inspection_agent.state import (
     InspectionCellAction,
     action_added_positions_from_mask,
     apply_action,
     fitting_actions,
+    measurement_mask,
     zero_state,
 )
 from cmc_bbdm.inspection_agent.surface_hypothesis import SurfaceHypothesis
@@ -338,10 +340,85 @@ def evaluate_g1_action_history(
     )
 
 
+def run_g1_warm_started_oracle_actions(
+    world: CausalInspectionWorld,
+    grid: AcquisitionGrid,
+    prior: SourceBackgroundPrior,
+    *,
+    surface_hypothesis: SurfaceHypothesis,
+    full_scan: np.ndarray,
+    true_cai: float,
+    assessor: object,
+    encoder: object,
+) -> tuple[InspectionCellAction, ...]:
+    if (
+        type(world) is not CausalInspectionWorld
+        or type(grid) is not AcquisitionGrid
+        or type(prior) is not SourceBackgroundPrior
+        or type(surface_hypothesis) is not SurfaceHypothesis
+        or not callable(getattr(assessor, "predict", None))
+        or not _valid_sha256(getattr(assessor, "model_state_sha256", None))
+        or not callable(getattr(encoder, "encode", None))
+    ):
+        raise G1FormalExecutionError("warm-started oracle request is invalid")
+    output = [canonical_action_from_slot(cell) for cell in PRIMARY_WARM_START_CELLS]
+    current = world.replay(tuple(output))
+    for _step in range(192):
+        current_mask = measurement_mask(grid, current.measurement_state)
+        positive = tuple(
+            action
+            for action in fitting_actions(
+                grid,
+                current.measurement_state,
+                current.endpoint_budget,
+            )
+            if len(
+                action_added_positions_from_mask(
+                    grid,
+                    current.measurement_state,
+                    action,
+                    current_mask,
+                )
+            )
+            > 0
+        )
+        if not positive:
+            break
+        if current.task is InspectionTask.FIELD:
+            selection = choose_field_action(
+                current,
+                grid,
+                prior,
+                full_scan=full_scan,
+                checkpoint=current.endpoint_budget,
+            )
+        elif current.task is InspectionTask.CAI:
+            selection = choose_cai_action(
+                current,
+                grid,
+                prior,
+                full_scan=full_scan,
+                true_cai=true_cai,
+                assessor=assessor,
+                encoder=encoder,
+                checkpoint=current.endpoint_budget,
+            )
+        else:
+            raise G1FormalExecutionError("oracle task is invalid")
+        if selection.action not in positive:
+            raise G1FormalExecutionError("oracle selected a nonpositive action")
+        output.append(selection.action)
+        current = world.step(current, selection.action)
+    else:
+        raise G1FormalExecutionError("oracle exceeded the finite action roster")
+    return tuple(output)
+
+
 __all__ = [
     "FIXED_BASELINE_METHODS",
     "G1FormalExecutionError",
     "G1ObservableStateBuilder",
     "evaluate_g1_action_history",
     "plan_g1_fixed_actions",
+    "run_g1_warm_started_oracle_actions",
 ]
