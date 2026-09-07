@@ -1,0 +1,81 @@
+schema_version: 1
+stage: LEARNED_CSCAN_SAME_PERCEPTION
+mode: pilot
+repository_base_sha: 59a67511c0ee6395b68220c6a1644f40c383dfa2
+controlling_prompt_sha256: 2b9a1812b16c232564dfc9bde3847d2732495706e32532a4c82ed36b6418315d
+configuration_frozen: true
+
+legacy_runtime:
+  config_path: paper_v3/configs/vlm_cscan_efficiency.yaml
+  config_sha256: 394861a851e9076898a70bbff154d657786327ada93b289f6bbe5a5483c790c2
+
+cohort:
+  evidence_scope: INTERNAL_REUSED_COHORT_NEW_PROTOCOL
+  roster: VLM_CSCAN_PILOT_60
+  domain_order: [74t7kcdgkr, cgtnjyggtm, w68dtmpfyf, xcmzfsbd9t, yfxyg8jm46, ykhs7s2dck]
+  split_seed: learned-cscan-same-perception-pilot-v1
+  train_per_domain: 4
+  valid_per_domain: 2
+  test_per_domain: 4
+
+surface_model:
+  repository: Qwen/Qwen2.5-VL-7B-Instruct
+  revision: cc594898137f460bfe9f0759e9844b3ce807cfb5
+  local_path: /mnt/shared/ww/models/huggingface/Qwen--Qwen2.5-VL-7B-Instruct/cc594898137f460bfe9f0759e9844b3ce807cfb5
+  device: cuda:0
+  dtype: bfloat16
+  do_sample: false
+  max_new_tokens: 500
+  format_retries: 1
+  main_new_call_cap: 60
+  diagnostic_extra_call_cap: 24
+
+reader:
+  version: READER_V2_CELL_LOCAL
+  distance_threshold: 0.18
+  background_fit_split: TRAIN
+  subblocks_per_axis: 4
+
+actor:
+  token_width: 128
+  encoder_layers: 2
+  attention_heads: 4
+  recent_history: 4
+  max_parameters: 1000000
+
+training:
+  seed: 1
+  optimizer: AdamW
+  learning_rate: 0.0003
+  weight_decay: 0.0001
+  gradient_clip: 1.0
+  max_optimizer_steps: 4000
+  validation_interval: 250
+  validation_patience: 4
+  cost_temperature: 0.10
+  auxiliary_loss_weight: 0.05
+  base_state_costs: [0.0, 0.025, 0.10, 0.40]
+  max_candidates_per_state: 6
+  aggregation_rounds: 1
+  aggregation_states_per_specimen_task: 2
+  logical_transition_cap: 400000
+  cpu_workers: 4
+  gpu_count: 1
+
+rules:
+  behavior_policy: R_BALANCED
+  behavior_coverage_period: 4
+  validation_coverage_periods: [4, 8]
+
+stopping:
+  learned_thresholds: [0.90, 0.95, 0.99]
+
+evaluation:
+  tasks: [LOCATE, CHARACTERIZE]
+  display_costs: [0.025, 0.05, 0.10, 0.20, 0.40, 0.60, 0.80, 1.00]
+  bootstrap_replicates: 5000
+  bootstrap_seed: 2026090701
+
+outputs:
+  root: results/learned_cscan_same_perception
+  artifacts: artifacts/learned_cscan_same_perception

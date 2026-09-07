@@ -22,16 +22,16 @@
 - Create: `tests/test_learned_cscan_runtime.py`
 - Create: `paper_v3/configs/learned_cscan_same_perception.yaml`
 
-- [ ] Write three failing tests:
+- [x] Write three failing tests:
   - deterministic 24/12/24 split with 4/2/4 specimens per domain and no specimen overlap, plus split permissions that reject fitting on VALID or TEST;
   - `ReferenceStatus.ALGORITHM_DERIVED_NOT_REVIEWED` yields formal success `None` and proxy scope `SAME_READER_SELF_CONSISTENCY`;
   - real surface input is not 1x1 and its declared clockwise rotation occurs exactly once.
-- [ ] Run `PYTHONPATH=src python -m pytest -q -p no:cacheprovider tests/test_learned_cscan_runtime.py` and confirm import/contract failures.
-- [ ] Define string enums `Split`, `Task`, `ReferenceStatus`, and frozen dataclasses for specimen identity and reference provenance. Keep identity outside actor features.
-- [ ] Implement `hash_split(records, seed)` using SHA-256 of `<seed>|<specimen_key>` within each domain. Implement `require_fit_split(split)` and explicit formal/proxy result fields.
-- [ ] Implement a thin runtime adapter over the frozen VLM inventory/load/render functions. It must preserve the prior 60-specimen roster and expose a one-time rotation marker.
-- [ ] Add one YAML configuration with base SHA, source root, prior VLM config path, seed, split counts, model revision, threshold 0.18, compute caps, and output root.
-- [ ] Re-run the test file and Ruff on the new files until green.
+- [x] Run `PYTHONPATH=src python -m pytest -q -p no:cacheprovider tests/test_learned_cscan_runtime.py` and confirm import/contract failures.
+- [x] Define string enums `Split`, `Task`, `ReferenceStatus`, and frozen dataclasses for specimen identity and reference provenance. Keep identity outside actor features.
+- [x] Implement `hash_split(records, seed)` using SHA-256 of `<seed>|<specimen_key>` within each domain. Implement `require_fit_split(split)` and explicit formal/proxy result fields.
+- [x] Implement a thin runtime adapter over the frozen VLM inventory/load/render functions. It must preserve the prior 60-specimen roster and expose a one-time rotation marker.
+- [x] Add one YAML configuration with base SHA, source root, prior VLM config path, seed, split counts, model revision, threshold 0.18, compute caps, and output root.
+- [x] Re-run the test file and Ruff on the new files until green.
 
 ## Task 2: Define the action-free surface percept and versioned cache
 
@@ -40,14 +40,14 @@
 - Create: `src/cmc_bbdm/learned_cscan/perception.py`
 - Create: `tests/test_learned_cscan_perception_readout.py`
 
-- [ ] Write two failing perception tests:
+- [x] Write two failing perception tests:
   - prompt/schema/parser accept only bounded cell sets, cue type, alternative explanation, ordinal confidence, and `no_reliable_cue`; they reject action fields and contain no filled cell 27, indentation answer, or `m1` token;
   - cache key changes with model revision, image digest, render version, prompt, or schema version and stays task-independent.
-- [ ] Run only those two tests and confirm missing-module failures.
-- [ ] Define frozen `SurfaceRegion` and `SurfacePercept` dataclasses, JSON schema, strict parser, neutral prompt, deterministic display-label permutation, and inverse mapping.
-- [ ] Implement cache read/write around `QwenVLBackend.infer` without modifying the backend. Count new calls, cache hits, parse failures, and single repairs.
-- [ ] Make the parser return an explicit parse error rather than fabricating a percept. Permit at most one formatting repair per main image in orchestration.
-- [ ] Re-run tests and Ruff until green.
+- [x] Run only those two tests and confirm missing-module failures.
+- [x] Define frozen `SurfaceRegion` and `SurfacePercept` dataclasses, JSON schema, strict parser, neutral prompt, deterministic display-label permutation, and inverse mapping.
+- [x] Implement cache read/write around `QwenVLBackend.infer` without modifying the backend. Count new calls, cache hits, parse failures, and single repairs.
+- [x] Make the parser return an explicit parse error rather than fabricating a percept. Permit at most one formatting repair per main image in orchestration.
+- [x] Re-run tests and Ruff until green.
 
 ## Task 3: Implement Reader v2 and the immutable common packet
 
@@ -57,14 +57,14 @@
 - Create: `src/cmc_bbdm/learned_cscan/observation.py`
 - Modify: `tests/test_learned_cscan_perception_readout.py`
 
-- [ ] Add two failing tests:
+- [x] Add two failing tests:
   - an entirely unmeasured cell stays UNKNOWN and cannot be a candidate; measured points remain exact, and singleton/line interpolation stays inside valid in-cell support;
   - identical visible history and percept produce byte-equivalent packet arrays, while changing an unmeasured hidden pixel does not change the packet.
-- [ ] Run the file and confirm failures identify missing Reader v2/packet behavior.
-- [ ] Implement TRAIN-only `BackgroundPrior`, observed-only RGB distance, `CellReadout`, `TaskReport`, and 0.18 proxy threshold. Keep candidate, signal estimate, support, validity, spacing, and unverified boundary separate.
-- [ ] Implement per-cell and 4x4 sub-block observed-only aggregates with explicit counts and missing flags. Preserve exact measured values and masks.
-- [ ] Implement frozen `ObservationPacket` with tensor conversion. Include recent four actions and public geometry/cost fields; assert that forbidden identity/reference/full-scan keys cannot enter tensor features.
-- [ ] Re-run tests and Ruff until green.
+- [x] Run the file and confirm failures identify missing Reader v2/packet behavior.
+- [x] Implement TRAIN-only `BackgroundPrior`, observed-only RGB distance, `CellReadout`, `TaskReport`, and 0.18 proxy threshold. Keep candidate, signal estimate, support, validity, spacing, and unverified boundary separate.
+- [x] Implement per-cell and 4x4 sub-block observed-only aggregates with explicit counts and missing flags. Preserve exact measured values and masks.
+- [x] Implement frozen `ObservationPacket` with tensor conversion. Include recent four actions and public geometry/cost fields; assert that forbidden identity/reference/full-scan keys cannot enter tensor features.
+- [x] Re-run tests and Ruff until green.
 
 ## Task 4: Implement fair rule planners and relevant-update stopping
 
@@ -74,14 +74,14 @@
 - Create: `src/cmc_bbdm/learned_cscan/stopping.py`
 - Create: `tests/test_learned_cscan_controls.py`
 
-- [ ] Write two failing tests:
+- [x] Write two failing tests:
   - every rule emits a progressive legal primitive with correct unique cost, and `R_BALANCED(period=4)` emits coverage no later than every fourth primitive;
   - two unrelated updates do not increase `S_rule` stability, while two relevant stable updates satisfy the stability component without equating signal confidence to completion probability.
-- [ ] Run the file and confirm expected failures.
-- [ ] Implement deterministic `R_GEOM`, `R_CENTER`, `R_VLM_OPEN`, `R_LEGACY`, and `R_BALANCED`, with public-cost tie breaking. Implement `mu` as frozen `R_BALANCED(period=4)`.
-- [ ] Implement neighboring-ring and candidate-support calculations plus task-specific LOCATE/CHARACTERIZE stop requirements from the design authority.
-- [ ] Keep STOP separate from action selection. Return structured stop reason and unmet conditions.
-- [ ] Re-run tests and Ruff until green.
+- [x] Run the file and confirm expected failures.
+- [x] Implement deterministic `R_GEOM`, `R_CENTER`, `R_VLM_OPEN`, `R_LEGACY`, and `R_BALANCED`, with public-cost tie breaking. Implement `mu` as frozen `R_BALANCED(period=4)`.
+- [x] Implement neighboring-ring and candidate-support calculations plus task-specific LOCATE/CHARACTERIZE stop requirements from the design authority.
+- [x] Keep STOP separate from action selection. Return structured stop reason and unmet conditions.
+- [x] Re-run tests and Ruff until green.
 
 ## Task 5: Implement the compact masked actor and real mini-batch learning
 
