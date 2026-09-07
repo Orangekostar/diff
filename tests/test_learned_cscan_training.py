@@ -52,6 +52,16 @@ def test_compact_actor_masks_illegal_cells_and_stays_under_parameter_cap() -> No
     assert model.attention_heads == 4
     assert model.parameter_count < 1_000_000
 
+    without_vlm = LearnedCellActor(use_surface_features=False)
+    without_vlm.load_state_dict(model.state_dict())
+    surface_inputs = list(_actor_batch())
+    surface_inputs[0][:, :, 15:] = 1.0
+    surface_inputs[2][:, 6] = 1.0
+    ablated_inputs = [value.clone() for value in surface_inputs]
+    ablated_inputs[0][:, :, 15:] = 0.0
+    ablated_inputs[2][:, 6] = 0.0
+    assert torch.equal(without_vlm(*surface_inputs), without_vlm(*ablated_inputs))
+
 
 def test_fixed_small_bank_updates_each_minibatch_and_reduces_loss() -> None:
     legal = np.zeros(64, dtype=np.bool_)

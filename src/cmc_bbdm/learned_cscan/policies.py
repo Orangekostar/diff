@@ -33,8 +33,11 @@ class LearnedCellActor(nn.Module):
     encoder_layers = 2
     attention_heads = 4
 
-    def __init__(self) -> None:
+    def __init__(self, *, use_surface_features: bool = True) -> None:
         super().__init__()
+        if type(use_surface_features) is not bool:
+            raise LearnedPolicyError("surface-feature flag must be boolean")
+        self.use_surface_features = use_surface_features
         self.subblock_encoder = nn.Sequential(
             nn.Linear(10, 32),
             nn.GELU(),
@@ -100,6 +103,11 @@ class LearnedCellActor(nn.Module):
             history_features,
             legal_mask,
         )
+        if not self.use_surface_features:
+            cell_features = cell_features.clone()
+            cell_features[:, :, 15:17] = 0.0
+            global_features = global_features.clone()
+            global_features[:, 6] = 0.0
         subblocks = self.subblock_encoder(subblock_features).mean(dim=2)
         cells = self.cell_encoder(torch.cat((cell_features, subblocks), dim=2))
         history = self.history_encoder(history_features).mean(dim=1)

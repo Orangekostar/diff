@@ -787,6 +787,116 @@ def train_models(
     }
 
 
+def _train_validation_confirmations(
+    *,
+    config: StudyConfig,
+    output: Path,
+    selected_method: str,
+    device: str,
+) -> list[tuple[str, LearnedCellActor, int, int]]:
+    bank = torch.load(
+        output / "_work/training_bank.pt", map_location="cpu", weights_only=False
+    )
+    rows = list(bank["base_ctg"])
+    if selected_method == "L_CTG_1":
+        rows.extend(bank.get("aggregate_ctg", ()))
+    elif selected_method != "L_CTG_0":
+        raise RuntimeError("selected learned checkpoint is invalid")
+    examples = tuple(_policy_example(row) for row in rows)
+    fit_examples, valid_examples = _internal_fit_split(examples)
+    training = config.values["training"]
+    trained: list[tuple[str, LearnedCellActor, int, int]] = []
+    model_rows = []
+    log_rows = []
+    specifications = (
+        (selected_method, 2, True),
+        (selected_method, 3, True),
+        ("L_NO_VLM", 1, False),
+    )
+    for method, seed, use_surface_features in specifications:
+        torch.manual_seed(seed)
+        model = LearnedCellActor(use_surface_features=use_surface_features)
+        fit = fit_actor(
+            model,
+            fit_examples,
+            route=TrainingRoute.COST_TO_GO,
+            max_steps=int(training["max_optimizer_steps"]),
+            batch_size=min(32, len(fit_examples)),
+            learning_rate=float(training["learning_rate"]),
+            weight_decay=float(training["weight_decay"]),
+            gradient_clip=float(training["gradient_clip"]),
+            seed=seed,
+            device=device,
+            validation_examples=valid_examples,
+            validation_interval=int(training["validation_interval"]),
+            patience=int(training["validation_patience"]),
+        )
+        filename = (
+            f"{selected_method.lower()}_seed{seed}.pt"
+            if use_surface_features
+            else "l_no_vlm.pt"
+        )
+        path = output / "models" / filename
+        _save_model(
+            model,
+            path,
+            method=method,
+            seed=seed,
+            config_sha256=config.config_sha256,
+        )
+        model_rows.append(
+            {
+                "method": method,
+                "seed": seed,
+                "path": path.relative_to(output).as_posix(),
+                "sha256": _file_sha256(path),
+                "parameter_count": model.parameter_count,
+                "optimizer_steps": fit.optimizer_steps,
+                "initial_loss": fit.initial_loss,
+                "final_loss": fit.final_loss,
+                "best_valid_loss": fit.best_valid_loss,
+                "stopped_early": fit.stopped_early,
+                "use_surface_features": use_surface_features,
+            }
+        )
+        log_rows.extend(_fit_log_rows(method, seed, fit))
+        trained.append((method, model, 4, seed))
+        print(
+            f"trained validation-triggered {method} seed={seed} "
+            f"steps={fit.optimizer_steps} loss={fit.initial_loss:.6f}->"
+            f"{fit.final_loss:.6f}",
+            flush=True,
+        )
+    log_fields = (
+        "schema_version",
+        "method",
+        "seed",
+        "optimizer_step",
+        "train_loss",
+        "valid_loss",
+    )
+    with (output / "training_log.csv").open(
+        "r", encoding="utf-8", newline=""
+    ) as handle:
+        existing_logs = list(csv.DictReader(handle))
+    write_csv_atomic(
+        output / "training_log.csv", (*existing_logs, *log_rows), log_fields
+    )
+    manifest_path = output / "model_manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    new_paths = {row["path"] for row in model_rows}
+    manifest["models"] = [
+        row for row in manifest["models"] if row["path"] not in new_paths
+    ] + model_rows
+    manifest["validation_triggered_training"] = {
+        "selected_checkpoint": selected_method,
+        "confirmation_seeds": [2, 3],
+        "no_vlm_seed": 1,
+    }
+    write_json_atomic(manifest_path, manifest)
+    return trained
+
+
 def validate_models(
     *, config_path: Path, project_root: Path, source_root: Path
 ) -> dict[str, object]:
@@ -864,6 +974,54 @@ def validate_models(
     rule_score = _mean_metric(episode_rows, rule_selected, "ausc_any")
     learned_score = _mean_metric(episode_rows, learned_selected, "ausc_any")
     positive = learned_score > rule_score + 1e-12
+    confirmation_seed_scores = {"1": learned_score}
+    if positive:
+        confirmation_methods = _train_validation_confirmations(
+            config=config,
+            output=output,
+            selected_method=learned_selected,
+            device=device,
+        )
+        methods.extend(confirmation_methods)
+        for specimen_index, assignment in enumerate(assignments, start=1):
+            runtime = open_study_specimen(context, assignment.record)
+            percept = percepts[assignment.record.specimen_key]
+            for task in Task:
+                reference = _full_reference(context, runtime, task)
+                for method_name, planner, period, seed in confirmation_methods:
+                    result, _trajectory, stop_rows = _run_planner_episode(
+                        runtime,
+                        percept=percept,
+                        task=task,
+                        reference=reference,
+                        context=context,
+                        method_name=method_name,
+                        planner=planner,
+                        coverage_period=period,
+                        seed=seed,
+                        device=device,
+                        stop_model=stop_model,
+                        learned_threshold=None,
+                        store_trajectory=False,
+                    )
+                    episode_rows.append(result)
+                    stop_rows_by_method.setdefault(method_name, []).extend(stop_rows)
+            print(
+                f"validation confirmation {specimen_index}/{len(assignments)} "
+                f"episodes={len(episode_rows)}",
+                flush=True,
+            )
+        confirmation_seed_scores.update(
+            {
+                str(seed): _mean_metric(
+                    [row for row in episode_rows if int(row["seed"]) == seed],
+                    learned_selected,
+                    "ausc_any",
+                )
+                for seed in (2, 3)
+            }
+        )
+        learned_score = _mean_metric(episode_rows, learned_selected, "ausc_any")
     summaries = {
         name: {
             task.value: _mean_metric(
@@ -872,7 +1030,7 @@ def validate_models(
             for task in Task
         }
         | {"overall": _mean_metric(episode_rows, name, "ausc_any")}
-        for name, _planner, _period, _seed in methods
+        for name in dict.fromkeys(row[0] for row in methods)
     }
     selected_rule_spec = next(row for row in methods if row[0] == rule_selected)
     selection = {
@@ -888,30 +1046,38 @@ def validate_models(
         },
         "selected_learned": {
             "method": learned_selected,
-            "seed": 1,
+            "seeds": [1, 2, 3] if positive else [1],
             "mean_ausc_any": learned_score,
         },
         "validation_action_signal": {
             "difference": learned_score - rule_score,
-            "positive": positive,
+            "positive_initial_seed": positive,
+            "positive_after_confirmation": learned_score > rule_score + 1e-12,
         },
         "method_metrics": summaries,
         "learned_stop": _authorization_payload(authorization),
         "confirmation_seeds": {
-            "run": False,
+            "run": positive,
             "reason": (
-                "PENDING_REQUIRED_POSITIVE_SIGNAL_CONFIRMATION"
+                "RUN_VALID_POSITIVE_SIGNAL"
                 if positive
                 else "NOT_RUN_VALID_SIGNAL_NOT_POSITIVE"
             ),
-            "seeds": [1],
+            "seeds": [1, 2, 3] if positive else [1],
+            "mean_ausc_any_by_seed": confirmation_seed_scores,
         },
         "l_no_vlm": {
-            "run": False,
+            "run": positive,
             "reason": (
-                "PENDING_REQUIRED_POSITIVE_SIGNAL_ABLATION"
+                "RUN_VALID_POSITIVE_SIGNAL"
                 if positive
                 else "NOT_RUN_VALID_SIGNAL_NOT_POSITIVE"
+            ),
+            "seed": 1 if positive else None,
+            "mean_ausc_any": (
+                _mean_metric(episode_rows, "L_NO_VLM", "ausc_any")
+                if positive
+                else None
             ),
         },
         "formal_effect": None,
@@ -919,8 +1085,6 @@ def validate_models(
         "test_opened": False,
         "elapsed_seconds": time.perf_counter() - started,
     }
-    if positive:
-        selection["state"] = "VALID_POSITIVE_SIGNAL_REQUIRES_CONFIRMATION"
     selection["selection_sha256"] = _json_sha(selection)
     write_json_atomic(output / "validation_selection.json", selection)
     return {
@@ -969,8 +1133,23 @@ def evaluate_study(
     device = "cuda:0" if torch.cuda.is_available() else "cpu"
     bc_actor = _load_actor(output / "models/l_bc.pt", config, device)
     selected_learned = selection["selected_learned"]["method"]
-    ctg_actor = _load_actor(
-        output / f"models/{selected_learned.lower()}.pt", config, device
+    selected_seeds = tuple(int(seed) for seed in selection["selected_learned"]["seeds"])
+    ctg_actors = tuple(
+        (
+            seed,
+            _load_actor(
+                output
+                / "models"
+                / (
+                    f"{selected_learned.lower()}.pt"
+                    if seed == 1
+                    else f"{selected_learned.lower()}_seed{seed}.pt"
+                ),
+                config,
+                device,
+            ),
+        )
+        for seed in selected_seeds
     )
     stop_model = _load_stop(output / "models/s_learn.pt", config, device)
     stop_threshold = (
@@ -991,8 +1170,17 @@ def evaluate_study(
         ("R_LEGACY", RuleMethod.R_LEGACY, 4, 1),
         ("R_BALANCED", RuleMethod.R_BALANCED, balanced_period, 1),
         ("L_BC", bc_actor, 4, 1),
-        ("L_CTG", ctg_actor, 4, 1),
     ]
+    methods.extend(("L_CTG", actor, 4, seed) for seed, actor in ctg_actors)
+    if selection["l_no_vlm"]["run"]:
+        methods.append(
+            (
+                "L_NO_VLM",
+                _load_actor(output / "models/l_no_vlm.pt", config, device),
+                4,
+                int(selection["l_no_vlm"]["seed"]),
+            )
+        )
     assignments = tuple(
         row for row in context.roster.assignments if row.split is Split.TEST
     )
@@ -1040,7 +1228,12 @@ def evaluate_study(
     comparisons = _comparison_rows(
         episode_rows,
         treatment="L_CTG",
-        comparators=(selected_rule, "R_BALANCED", "L_BC"),
+        comparators=(
+            selected_rule,
+            "R_BALANCED",
+            "L_BC",
+            *(("L_NO_VLM",) if selection["l_no_vlm"]["run"] else ()),
+        ),
         replicates=int(config.values["evaluation"]["bootstrap_replicates"]),
         seed=int(config.values["evaluation"]["bootstrap_seed"]),
     )
@@ -1079,9 +1272,10 @@ def evaluate_study(
         "test_physical_specimens": len(assignments),
         "episode_count": len(episode_rows),
         "trajectory_row_count": len(trajectory_rows),
-        "method_count": len(methods),
+        "method_count": len({row[0] for row in methods}),
         "selected_rule": selected_rule,
         "selected_learned_checkpoint": selected_learned,
+        "selected_learned_seeds": list(selected_seeds),
         "learned_stop_status": selection["learned_stop"]["status"],
         "elapsed_seconds": time.perf_counter() - started,
         "selection_sha256": stored_selection_sha,
@@ -1181,6 +1375,31 @@ def summarize_study(
         len(primary) == len(Task)
         and all(float(row["ci_lower"]) > 0.0 for row in primary)
     )
+    vlm_rows = [
+        row
+        for row in comparisons
+        if row["treatment"] == "L_CTG"
+        and row["comparator"] == "L_NO_VLM"
+        and row["metric"] == "ausc_any"
+    ]
+    if not vlm_rows:
+        vlm_increment = "NOT_TESTED"
+    elif all(float(row["ci_lower"]) > 0.0 for row in vlm_rows):
+        vlm_increment = "SUPPORTED"
+    elif all(float(row["ci_upper"]) < 0.0 for row in vlm_rows):
+        vlm_increment = "NOT_SUPPORTED"
+    else:
+        vlm_increment = "INCONCLUSIVE"
+    not_run = {
+        "all_276": "RESOURCE_SCOPED_PILOT",
+        "leave_domain_out": "RESOURCE_SCOPED_PILOT",
+        "new_vlm_models": "FROZEN_SINGLE_BACKEND",
+        "l_open_init": "NOT_RUN_RESOURCE_SCOPED",
+    }
+    if not selection["l_no_vlm"]["run"]:
+        not_run["l_no_vlm"] = selection["l_no_vlm"]["reason"]
+    if not selection["confirmation_seeds"]["run"]:
+        not_run["extra_policy_seeds"] = selection["confirmation_seeds"]["reason"]
     summary = {
         "schema_version": 1,
         "execution": "TRAINED_AND_EVALUATED",
@@ -1194,7 +1413,7 @@ def summarize_study(
             == LearnedStopStatus.NOT_AUTHORIZED.value
             else "INCONCLUSIVE"
         ),
-        "vlm_increment": "NOT_TESTED",
+        "vlm_increment": vlm_increment,
         "repository_base_sha": config.values["repository_base_sha"],
         "branch": "research/learned-cscan-same-perception",
         "evidence_scope": config.values["cohort"]["evidence_scope"],
@@ -1222,7 +1441,11 @@ def summarize_study(
         "claims": {
             "learned_planning_supported_proxy": proxy_supported,
             "learned_planning_supported_formal": None,
-            "vlm_increment_supported": None,
+            "vlm_increment_supported": (
+                True
+                if vlm_increment == "SUPPORTED"
+                else False if vlm_increment == "NOT_SUPPORTED" else None
+            ),
             "stop_increment_supported": None,
         },
         "limitations": [
@@ -1231,13 +1454,7 @@ def summarize_study(
             "The pilot TEST split has 24 physical specimens and does not support new-material transfer claims.",
             "Route values are normalized image-plane diagnostics, not physical travel time or path optimality.",
         ],
-        "not_run": {
-            "all_276": "RESOURCE_SCOPED_PILOT",
-            "leave_domain_out": "RESOURCE_SCOPED_PILOT",
-            "new_vlm_models": "FROZEN_SINGLE_BACKEND",
-            "l_no_vlm": selection["l_no_vlm"]["reason"],
-            "extra_policy_seeds": selection["confirmation_seeds"]["reason"],
-        },
+        "not_run": not_run,
     }
     write_json_atomic(output / "summary.json", summary)
     write_checksums(output, output / "CHECKSUMS.sha256")
@@ -2318,6 +2535,9 @@ def _save_model(
             "method": method,
             "seed": seed,
             "config_sha256": config_sha256,
+            "use_surface_features": bool(
+                getattr(model, "use_surface_features", True)
+            ),
             "state_dict": model.state_dict(),
         },
         path,
@@ -2333,7 +2553,9 @@ def _load_actor(
         or payload.get("method") not in {"L_BC", "L_CTG_0", "L_CTG_1", "L_NO_VLM"}
     ):
         raise RuntimeError("learned actor model identity changed")
-    model = LearnedCellActor()
+    model = LearnedCellActor(
+        use_surface_features=bool(payload.get("use_surface_features", True))
+    )
     model.load_state_dict(payload["state_dict"])
     model.to(device)
     model.eval()
