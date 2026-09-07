@@ -44,6 +44,7 @@ def initial_cell_order(
     *,
     surface_plan: SurfacePlan,
     saliency_scores: np.ndarray,
+    exploration_period: int,
 ) -> tuple[int, ...]:
     if type(method) is not MethodId or type(surface_plan) is not SurfacePlan:
         raise TypeError("typed method and surface plan are required")
@@ -52,9 +53,9 @@ def initial_cell_order(
         raise ValueError("saliency scores are invalid")
     geometry = geometry_cell_order()
     if method in {MethodId.B0, MethodId.B4, MethodId.B7}:
-        return geometry
-    if method is MethodId.B1:
-        return tuple(
+        preferred = geometry
+    elif method is MethodId.B1:
+        preferred = tuple(
             sorted(
                 range(64),
                 key=lambda cell: (
@@ -63,10 +64,14 @@ def initial_cell_order(
                 ),
             )
         )
-    if method is MethodId.B2:
-        return tuple(sorted(range(64), key=lambda cell: (-scores[cell], cell)))
-    priority = surface_plan.priority_cells
-    return (*priority, *(cell for cell in geometry if cell not in priority))
+    elif method is MethodId.B2:
+        preferred = tuple(
+            sorted(range(64), key=lambda cell: (-scores[cell], cell))
+        )
+    else:
+        priority = surface_plan.priority_cells
+        preferred = (*priority, *(cell for cell in geometry if cell not in priority))
+    return exploration_interleaved_order(preferred, period=exploration_period)
 
 
 def exploration_interleaved_order(

@@ -58,13 +58,22 @@ def test_vlm_open_and_feedback_methods_share_exact_initial_order() -> None:
     saliency = np.linspace(0.0, 1.0, 64, dtype=np.float64)
 
     orders = {
-        method: initial_cell_order(method, surface_plan=plan, saliency_scores=saliency)
-        for method in (MethodId.B3, MethodId.B5, MethodId.B6)
+        method: initial_cell_order(
+            method,
+            surface_plan=plan,
+            saliency_scores=saliency,
+            exploration_period=4,
+        )
+        for method in MethodId
     }
 
     assert orders[MethodId.B3] == orders[MethodId.B5] == orders[MethodId.B6]
     assert orders[MethodId.B3][:2] == (27, 28)
     assert len(orders[MethodId.B3]) == len(set(orders[MethodId.B3])) == 64
+    assert orders[MethodId.B0] == geometry_cell_order()
+    assert orders[MethodId.B1][:4] == (27, 28, 35, 0)
+    assert orders[MethodId.B2][:4] == (63, 62, 61, 0)
+    assert orders[MethodId.B3][:4] == (27, 28, 0, 63)
     abstention = SurfacePlan(
         regions=(),
         priority_cells=(),
@@ -75,6 +84,7 @@ def test_vlm_open_and_feedback_methods_share_exact_initial_order() -> None:
         MethodId.B3,
         surface_plan=abstention,
         saliency_scores=saliency,
+        exploration_period=4,
     ) == geometry_cell_order()
 
 

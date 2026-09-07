@@ -92,6 +92,7 @@ def run_method_trajectory(
         method,
         surface_plan=surface_plan,
         saliency_scores=runtime.saliency_scores,
+        exploration_period=exploration_period,
     )
     observation = runtime.world.reset()
     trackers = {task: PublicStopTracker(task) for task in tasks}
