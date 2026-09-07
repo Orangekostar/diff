@@ -6,6 +6,7 @@ import csv
 import hashlib
 import io
 import json
+import math
 import os
 import platform
 import shutil
@@ -18,6 +19,7 @@ from pathlib import Path
 from typing import Any
 
 import numpy as np
+import polars as pl
 import torch
 from PIL import Image, ImageDraw
 from scipy import ndimage
@@ -230,7 +232,9 @@ def prepare_study(
             "numpy": np.__version__,
         },
         "elapsed_seconds": time.perf_counter() - started,
-        "no_new_training": True,
+        "new_learned_training_state": "NOT_STARTED_AT_W0",
+        "historical_models_retrained": False,
+        "surface_model_trained": False,
         "test_opened": False,
     }
     write_json_atomic(output / "inventory.json", inventory)
@@ -332,6 +336,7 @@ def run_perception(
         "reader_v2": {
             "record_count": len(readout_rows),
             "nondegenerate_count": nondegenerate,
+            "evaluation_splits": [Split.TRAIN.value, Split.VALID.value],
             "status": (
                 "FUNCTIONAL" if nondegenerate == len(readout_rows) else "READOUT_LIMITED"
             ),
@@ -788,6 +793,7 @@ def train_models(
     bank_manifest_path = output / "training_bank_manifest.json"
     bank_manifest = json.loads(bank_manifest_path.read_text(encoding="utf-8"))
     bank_manifest["aggregation_rounds_complete"] = 1
+    bank_manifest["state"] = "TRAIN_BANK_AND_AGGREGATION_COMPLETE"
     bank_manifest["aggregation_state_count"] = len(aggregate_rows)
     bank_manifest["aggregation_candidate_suffix_count"] = (
         aggregate_candidate_suffixes
@@ -1379,7 +1385,207 @@ def evaluate_study(
         "formal_effect": None,
     }
     write_json_atomic(output / "_work/test_evaluation_complete.json", metadata)
+    write_json_atomic(output / "test_evaluation_manifest.json", metadata)
     return metadata
+
+
+def run_representative_replay_audit(
+    *, config_path: Path, project_root: Path, source_root: Path
+) -> dict[str, object]:
+    config, context = _load(config_path, project_root, source_root)
+    output = _output_root(config)
+    _require_files(
+        output,
+        (
+            "validation_selection.json",
+            "model_manifest.json",
+            "surface_percepts.jsonl",
+            "per_episode_metrics.csv",
+            "trajectories.parquet",
+        ),
+    )
+    marker_path = output / "_work/test_evaluation_complete.json"
+    public_manifest_path = output / "test_evaluation_manifest.json"
+    manifest_path = marker_path if marker_path.is_file() else public_manifest_path
+    if not manifest_path.is_file():
+        raise RuntimeError("representative replay requires completed TEST evaluation")
+    test_manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    selection = json.loads(
+        (output / "validation_selection.json").read_text(encoding="utf-8")
+    )
+    stored_selection_sha = selection.pop("selection_sha256")
+    if (
+        stored_selection_sha != _json_sha(selection)
+        or stored_selection_sha != test_manifest.get("selection_sha256")
+    ):
+        raise RuntimeError("representative replay selection identity changed")
+    selection["selection_sha256"] = stored_selection_sha
+    selected_method = str(selection["selected_learned"]["method"])
+    selected_seeds = tuple(int(seed) for seed in selection["selected_learned"]["seeds"])
+    if selected_seeds != (1,):
+        raise RuntimeError("representative replay currently requires the gated seed-1 run")
+    model_manifest = json.loads(
+        (output / "model_manifest.json").read_text(encoding="utf-8")
+    )
+    replay_device = str(model_manifest["device"])
+    if replay_device.startswith("cuda") and not torch.cuda.is_available():
+        raise RuntimeError("representative replay requires the recorded CUDA device")
+    stop_threshold = (
+        float(selection["learned_stop"]["threshold"])
+        if selection["learned_stop"]["status"]
+        == LearnedStopStatus.AUTHORIZED.value
+        else None
+    )
+    representatives = tuple(
+        min(
+            (
+                assignment
+                for assignment in context.roster.assignments
+                if assignment.split is Split.TEST
+                and assignment.record.dataset_id == domain
+            ),
+            key=lambda assignment: (
+                assignment.domain_rank,
+                assignment.record.specimen_key,
+            ),
+        )
+        for domain in config.domain_order
+    )
+    _episodes, replay_rows, _stop_rows = _evaluate_assignments_parallel(
+        config=config,
+        context=context,
+        assignments=representatives,
+        planner_specs=(
+            (
+                "L_CTG",
+                "ACTOR",
+                f"models/{selected_method.lower()}.pt",
+                4,
+                1,
+            ),
+        ),
+        learned_threshold=stop_threshold,
+        store_trajectory=True,
+        label="representative replay",
+    )
+    frozen_rows = pl.read_parquet(output / "trajectories.parquet").to_dicts()
+    representative_keys = {
+        assignment.record.specimen_key for assignment in representatives
+    }
+    frozen_selected = [
+        row
+        for row in frozen_rows
+        if row["specimen_key"] in representative_keys
+        and row["method"] == "L_CTG"
+        and int(row["seed"]) == 1
+    ]
+    comparison_fields = (
+        "schema_version",
+        "dataset_id",
+        "specimen_id",
+        "specimen_key",
+        "task",
+        "method",
+        "seed",
+        "step",
+        "cost",
+        "success",
+        "task_loss",
+        "iou",
+        "recall",
+        "relative_area_error",
+        "report_sha256",
+        "packet_sha256",
+        "candidate_cell_count",
+        "support_count",
+        "action_cell",
+        "action_from_level",
+        "action_to_level",
+        "rule_stop",
+        "learned_stop_probability",
+        "learned_stop_eligible",
+        "cumulative_route_cost",
+        "cumulative_route_turns",
+    )
+    frozen_by_key = {
+        _trajectory_row_key(row): row for row in frozen_selected
+    }
+    replay_by_key = {_trajectory_row_key(row): row for row in replay_rows}
+    if set(frozen_by_key) != set(replay_by_key):
+        raise RuntimeError("representative replay trajectory rows changed")
+    mismatch_count = 0
+    mismatch_by_field = {field: 0 for field in comparison_fields}
+    mismatch_samples: list[dict[str, object]] = []
+    for key in sorted(frozen_by_key):
+        frozen = frozen_by_key[key]
+        replayed = replay_by_key[key]
+        for field in comparison_fields:
+            if _replay_value_equal(frozen[field], replayed[field]):
+                continue
+            mismatch_count += 1
+            mismatch_by_field[field] += 1
+            if len(mismatch_samples) < 20:
+                mismatch_samples.append(
+                    {
+                        "row_key": list(key),
+                        "field": field,
+                        "frozen": frozen[field],
+                        "replayed": replayed[field],
+                    }
+                )
+    if mismatch_count:
+        write_json_atomic(
+            output / "_work/replay_mismatch_diagnostics.json",
+            {
+                "mismatch_count": mismatch_count,
+                "mismatch_by_field": mismatch_by_field,
+                "samples": mismatch_samples,
+            },
+        )
+        raise RuntimeError(
+            f"representative replay differs from frozen TEST: {mismatch_count} fields"
+        )
+    stable_rows = tuple(
+        {
+            key: value
+            for key, value in row.items()
+            if key != "action_inference_seconds"
+        }
+        for row in replay_rows
+    )
+    replay_path = output / "representative_replay.parquet"
+    write_parquet_atomic(replay_path, stable_rows)
+    selected_model = next(
+        row for row in model_manifest["models"] if row["method"] == selected_method
+    )
+    replay_manifest = {
+        "schema_version": 1,
+        "stage": "W6_REPRESENTATIVE_REPLAY_VERIFIED",
+        "post_evaluation_audit": True,
+        "device": replay_device,
+        "selection_sha256": stored_selection_sha,
+        "selected_method": selected_method,
+        "selected_model_sha256": selected_model["sha256"],
+        "domains": list(config.domain_order),
+        "representative_specimens": [
+            assignment.record.specimen_key for assignment in representatives
+        ],
+        "tasks": [task.value for task in Task],
+        "episode_count": len(representatives) * len(Task),
+        "trajectory_row_count": len(stable_rows),
+        "compared_field_count": len(comparison_fields),
+        "mismatch_count": mismatch_count,
+        "all_frozen_fields_match": mismatch_count == 0,
+        "decision_record": {
+            "top_candidate_count": 5,
+            "candidate_score_kind": "LEARNED_LOGIT",
+            "evidence_deltas_recorded": True,
+            "route_start_and_end_recorded": True,
+        },
+        "representative_replay_sha256": _file_sha256(replay_path),
+    }
+    write_json_atomic(output / "replay_validation.json", replay_manifest)
+    return replay_manifest
 
 
 def summarize_study(
@@ -1409,6 +1615,7 @@ def summarize_study(
         "r", encoding="utf-8", newline=""
     ) as handle:
         comparisons = tuple(csv.DictReader(handle))
+    trajectory_rows = pl.read_parquet(output / "trajectories.parquet").to_dicts()
     inventory = json.loads((output / "inventory.json").read_text(encoding="utf-8"))
     perception = json.loads(
         (output / "perception_manifest.json").read_text(encoding="utf-8")
@@ -1422,6 +1629,33 @@ def summarize_study(
     selection = json.loads(
         (output / "validation_selection.json").read_text(encoding="utf-8")
     )
+    test_manifest_path = output / "test_evaluation_manifest.json"
+    test_marker_path = output / "_work/test_evaluation_complete.json"
+    if test_marker_path.is_file():
+        test_manifest = json.loads(test_marker_path.read_text(encoding="utf-8"))
+        write_json_atomic(test_manifest_path, test_manifest)
+    elif test_manifest_path.is_file():
+        test_manifest = json.loads(test_manifest_path.read_text(encoding="utf-8"))
+    else:
+        raise RuntimeError("TEST evaluation completion manifest is missing")
+    if (
+        test_manifest.get("selection_sha256")
+        != selection.get("selection_sha256")
+        or test_manifest.get("episode_count") != len(episodes)
+        or test_manifest.get("trajectory_row_count") != len(trajectory_rows)
+    ):
+        raise RuntimeError("TEST evaluation manifest does not match frozen results")
+    replay_manifest_path = output / "replay_validation.json"
+    replay_manifest = (
+        json.loads(replay_manifest_path.read_text(encoding="utf-8"))
+        if replay_manifest_path.is_file()
+        else None
+    )
+    if replay_manifest is not None and (
+        replay_manifest.get("selection_sha256") != selection.get("selection_sha256")
+        or replay_manifest.get("all_frozen_fields_match") is not True
+    ):
+        raise RuntimeError("representative replay validation changed")
     method_metrics = {}
     for method in sorted({row["method"] for row in episodes}):
         method_metrics[method] = {}
@@ -1429,6 +1663,11 @@ def summarize_study(
             rows = [
                 row
                 for row in episodes
+                if row["method"] == method and row["task"] == task.value
+            ]
+            task_trajectories = [
+                row
+                for row in trajectory_rows
                 if row["method"] == method and row["task"] == task.value
             ]
             method_metrics[method][task.value] = {
@@ -1443,6 +1682,37 @@ def summarize_study(
                 "full_input_success": float(
                     np.mean([_csv_bool(row["success_c100"]) for row in rows])
                 ),
+                "full_input_task_loss": float(
+                    np.mean([float(row["full_input_task_loss"]) for row in rows])
+                ),
+                "success_at_cost": {
+                    label: float(
+                        np.mean([_csv_bool(row[field]) for row in rows])
+                    )
+                    for label, field in (
+                        ("0.025", "success_c0025"),
+                        ("0.05", "success_c005"),
+                        ("0.10", "success_c010"),
+                        ("0.20", "success_c020"),
+                        ("0.40", "success_c040"),
+                        ("0.60", "success_c060"),
+                        ("0.80", "success_c080"),
+                        ("1.00", "success_c100"),
+                    )
+                },
+                "cost_at_success_rate": {
+                    str(target): (
+                        value
+                        if (
+                            value := _cost_at_success_rate(
+                                task_trajectories, target=target
+                            )
+                        )
+                        is not None
+                        else "NOT_REACHED"
+                    )
+                    for target in (0.8, 0.9)
+                },
                 "rule_stop_success": float(
                     np.mean([_csv_bool(row["rule_stop_success"]) for row in rows])
                 ),
@@ -1452,9 +1722,16 @@ def summarize_study(
                 "mean_route_cost": float(
                     np.mean([float(row["route_cost"]) for row in rows])
                 ),
+                "mean_route_turns": float(
+                    np.mean([float(row["route_turns"]) for row in rows])
+                ),
                 "mean_inference_seconds": float(
                     np.mean([float(row["inference_seconds"]) for row in rows])
                 ),
+                "autonomous": {
+                    "S_RULE": _autonomous_metrics(rows, prefix="rule"),
+                    "S_LEARN": _autonomous_metrics(rows, prefix="learned"),
+                },
             }
     primary = [
         row
@@ -1502,6 +1779,12 @@ def summarize_study(
         "execution": "TRAINED_AND_EVALUATED",
         "model_trained": True,
         "reference": "PROXY_ONLY",
+        "reference_coverage": {
+            "reviewed": inventory["reference"]["reviewed_count"],
+            "pilot": inventory["pilot_specimens"],
+            "formal_success_available": 0,
+            "proxy_scope": inventory["reference"]["proxy_scope"],
+        },
         "formal_planner_effect": "INCONCLUSIVE",
         "formal_effect": None,
         "proxy_planner_effect": "SUPPORTED" if proxy_supported else "NOT_SUPPORTED",
@@ -1528,6 +1811,7 @@ def summarize_study(
         },
         "surface_perception": perception["execution"],
         "reader_status": perception["reader_v2"]["status"],
+        "reader_validation": perception["reader_v2"],
         "training": {
             "models": models["models"],
             "base_bank_states": bank["base_state_count"],
@@ -1543,9 +1827,11 @@ def summarize_study(
         "test": {
             "physical_specimens": len({row["specimen_key"] for row in episodes}),
             "episode_count": len(episodes),
+            "evaluation_manifest": test_manifest,
             "method_metrics": method_metrics,
             "primary_proxy_comparisons": primary,
         },
+        "representative_replay": replay_manifest,
         "proxy_effect": primary,
         "resource_use": {
             "training_logical_transitions": bank["logical_transition_count"],
@@ -1576,7 +1862,20 @@ def summarize_study(
             "The retrospective 60-specimen cohort is reused and is not a prospective scanner or robot experiment.",
             "The pilot TEST split has 24 physical specimens and does not support new-material transfer claims.",
             "Route values are normalized image-plane diagnostics, not physical travel time or path optimality.",
+            "The first W1 export computed non-outcome full-input Reader v2 diagnostics on TEST before the VALID lock; those rows were not used for fitting or selection and the corrected diagnostic artifact is TRAIN/VALID-only.",
         ],
+        "protocol_deviations": {
+            "preselection_test_reader_diagnostics": {
+                "occurred": True,
+                "scope": "NON_OUTCOME_READER_DIAGNOSTICS_ONLY",
+                "used_for_fit_or_selection": False,
+                "corrected_artifact_splits": [Split.TRAIN.value, Split.VALID.value],
+            },
+            "surface_functional_checks": {
+                "blank_and_display_permutation_completed": False,
+                "reason": "DIAGNOSTIC_CALL_CAP_EXHAUSTED_BY_PREFLIGHT_SCHEMA_DEBUG",
+            },
+        },
         "not_run": not_run,
     }
     write_json_atomic(output / "summary.json", summary)
@@ -1752,14 +2051,14 @@ def _perception_diagnostics(
     rows.append(
         {
             "kind": "BLANK_SURFACE_NOT_RUN",
-            "reason": "DIAGNOSTIC_CALL_CAP_RESERVED_FOR_FINAL_MAIN_DEPLOYMENT",
+            "reason": "DIAGNOSTIC_CALL_CAP_EXHAUSTED_BY_PREFLIGHT_SCHEMA_DEBUG",
         }
     )
     rows.extend(
         {
             "kind": "DISPLAY_NUMBER_PERMUTATION_NOT_RUN",
             "domain": domain,
-            "reason": "DIAGNOSTIC_CALL_CAP_RESERVED_FOR_FINAL_MAIN_DEPLOYMENT",
+            "reason": "DIAGNOSTIC_CALL_CAP_EXHAUSTED_BY_PREFLIGHT_SCHEMA_DEBUG",
         }
         for domain in config.domain_order
         if domain not in checked_domains
@@ -1809,7 +2108,12 @@ def _full_input_readout_validation(
         row.record.specimen_key: row.split for row in context.roster.assignments
     }
     threshold = float(context.config.values["reader"]["distance_threshold"])
-    for record in sorted(context.roster.pilot_records, key=lambda row: row.specimen_key):
+    eligible_records = tuple(
+        assignment.record
+        for assignment in context.roster.assignments
+        if assignment.split in {Split.TRAIN, Split.VALID}
+    )
+    for record in sorted(eligible_records, key=lambda row: row.specimen_key):
         runtime = open_study_specimen(context, record)
         full_scan = context.authority.source_teacher_view(record.specimen_id).full_scan
         positions = np.argwhere(np.ones(record.native_shape, dtype=np.bool_))
@@ -2638,9 +2942,21 @@ def _actor_action(
     runtime: StudySpecimenRuntime,
     device: str,
 ) -> InspectionCellAction:
-    cell = actor.select_cell(packet, device=device)
+    action, _scores = _actor_action_and_scores(actor, packet, runtime, device)
+    return action
+
+
+def _actor_action_and_scores(
+    actor: LearnedCellActor,
+    packet: ObservationPacket,
+    runtime: StudySpecimenRuntime,
+    device: str,
+) -> tuple[InspectionCellAction, np.ndarray]:
+    del runtime
+    scores = actor.score_cells(packet, device=device)
+    cell = int(np.argmax(scores))
     level = packet.cell_levels[cell]
-    return InspectionCellAction(cell, level, level + 1)
+    return InspectionCellAction(cell, level, level + 1), scores
 
 
 def _save_model(
@@ -2728,6 +3044,9 @@ def _run_planner_episode(
     learned_stop: tuple[float, bool] | None = None
     inference_total = 0.0
     step = 0
+    previous_candidate_count: int | None = None
+    previous_support_count: int | None = None
+    previous_task_loss: float | None = None
     while True:
         packet = _packet(
             observation,
@@ -2768,6 +3087,7 @@ def _run_planner_episode(
             learned_stop = (observation.effective_budget, bool(score["success"]))
         terminal = all(level == 2 for level in packet.cell_levels)
         action: InspectionCellAction | None = None
+        candidate_scores: np.ndarray | None = None
         inference_seconds = 0.0
         if not terminal:
             before = time.perf_counter()
@@ -2779,9 +3099,26 @@ def _run_planner_episode(
                     coverage_period=coverage_period,
                 )
             else:
-                action = _actor_action(planner, packet, runtime, device)
+                action, candidate_scores = _actor_action_and_scores(
+                    planner, packet, runtime, device
+                )
             inference_seconds = time.perf_counter() - before
             inference_total += inference_seconds
+        if candidate_scores is None:
+            ranked_cells: tuple[int, ...] = ()
+            ranked_scores: tuple[float, ...] = ()
+        else:
+            legal_cells = np.flatnonzero(packet.legal_mask)
+            ranked_cells = tuple(
+                sorted(
+                    (int(cell) for cell in legal_cells),
+                    key=lambda cell: (-float(candidate_scores[cell]), cell),
+                )[:5]
+            )
+            ranked_scores = tuple(float(candidate_scores[cell]) for cell in ranked_cells)
+        candidate_count = len(packet.report.candidate_cells)
+        support_count = len(packet.report.support_positions)
+        task_loss = float(score["task_loss"])
         if store_trajectory:
             trajectory.append(
                 {
@@ -2795,31 +3132,72 @@ def _run_planner_episode(
                     "step": step,
                     "cost": observation.effective_budget,
                     "success": bool(score["success"]),
-                    "task_loss": float(score["task_loss"]),
+                    "task_loss": task_loss,
                     "iou": float(score["iou"]),
                     "recall": float(score["recall"]),
                     "relative_area_error": float(score["relative_area_error"]),
                     "report_sha256": snapshot.report_digest,
                     "packet_sha256": packet.feature_sha256,
-                    "candidate_cell_count": len(packet.report.candidate_cells),
-                    "support_count": len(packet.report.support_positions),
+                    "candidate_cell_count": candidate_count,
+                    "support_count": support_count,
+                    "evidence_candidate_cell_delta": (
+                        0
+                        if previous_candidate_count is None
+                        else candidate_count - previous_candidate_count
+                    ),
+                    "evidence_support_delta": (
+                        0
+                        if previous_support_count is None
+                        else support_count - previous_support_count
+                    ),
+                    "evidence_task_loss_delta": (
+                        0.0
+                        if previous_task_loss is None
+                        else task_loss - previous_task_loss
+                    ),
                     "action_cell": -1 if action is None else action.cell_index,
                     "action_from_level": -2 if action is None else action.from_level,
                     "action_to_level": -2 if action is None else action.to_level,
+                    "candidate_score_kind": (
+                        "NO_ACTION"
+                        if action is None
+                        else (
+                            "RULE_PRIORITY_NOT_NUMERIC"
+                            if isinstance(planner, RuleMethod)
+                            else "LEARNED_LOGIT"
+                        )
+                    ),
+                    "top_candidate_cells": json.dumps(ranked_cells),
+                    "top_candidate_scores": json.dumps(ranked_scores),
+                    "selected_action_score": (
+                        None
+                        if action is None or candidate_scores is None
+                        else float(candidate_scores[action.cell_index])
+                    ),
                     "rule_stop": rule_decision.should_stop,
                     "learned_stop_probability": stop_probability,
                     "learned_stop_eligible": eligible,
                     "cumulative_route_cost": route_cost,
                     "cumulative_route_turns": route_turns,
+                    "route_start_row": float(probe[0]),
+                    "route_start_column": float(probe[1]),
+                    "route_end_row": float(probe[0]),
+                    "route_end_column": float(probe[1]),
                     "action_inference_seconds": inference_seconds,
                 }
             )
+        previous_candidate_count = candidate_count
+        previous_support_count = support_count
+        previous_task_loss = task_loss
         if terminal:
             break
         assert action is not None
         observation, probe, route_cost, turns = _advance_detailed(
             runtime, observation, action, probe, route_cost
         )
+        if store_trajectory:
+            trajectory[-1]["route_end_row"] = float(probe[0])
+            trajectory[-1]["route_end_column"] = float(probe[1])
         route_turns += turns
         last_action = action
         step += 1
@@ -2906,6 +3284,118 @@ def _mechanically_stop_eligible(packet: ObservationPacket) -> bool:
         and len({int(value) for value in supports[:, 0]}) >= 2
         and len({int(value) for value in supports[:, 1]}) >= 2
     )
+
+
+def _cost_at_success_rate(
+    rows: list[dict[str, object]], *, target: float
+) -> float | None:
+    threshold = float(target)
+    if (
+        not rows
+        or isinstance(target, bool)
+        or not math.isfinite(threshold)
+        or not 0.0 < threshold <= 1.0
+    ):
+        raise ValueError("cost-at-success-rate request is invalid")
+    required = {"dataset_id", "specimen_key", "seed", "step", "cost", "success"}
+    if any(not required <= set(row) for row in rows):
+        raise ValueError("cost-at-success-rate rows are invalid")
+    domain_by_specimen: dict[str, str] = {}
+    seeds_by_specimen: dict[str, set[int]] = {}
+    events: dict[float, dict[tuple[str, int], bool]] = {}
+    for row in sorted(rows, key=lambda item: (float(item["cost"]), int(item["step"]))):
+        specimen = str(row["specimen_key"])
+        domain = str(row["dataset_id"])
+        seed = int(row["seed"])
+        cost = float(row["cost"])
+        success = row["success"]
+        if (
+            not specimen
+            or not domain
+            or domain_by_specimen.setdefault(specimen, domain) != domain
+            or not math.isfinite(cost)
+            or not 0.0 <= cost <= 1.0
+            or type(success) is not bool
+        ):
+            raise ValueError("cost-at-success-rate rows are invalid")
+        seeds_by_specimen.setdefault(specimen, set()).add(seed)
+        events.setdefault(cost, {})[(specimen, seed)] = success
+    states = {
+        (specimen, seed): False
+        for specimen, seeds in seeds_by_specimen.items()
+        for seed in seeds
+    }
+    domains = tuple(sorted(set(domain_by_specimen.values())))
+    for cost in sorted(events):
+        states.update(events[cost])
+        domain_rates = []
+        for domain in domains:
+            specimen_rates = []
+            for specimen in sorted(
+                key for key, value in domain_by_specimen.items() if value == domain
+            ):
+                specimen_rates.append(
+                    float(
+                        np.mean(
+                            [
+                                states[(specimen, seed)]
+                                for seed in sorted(seeds_by_specimen[specimen])
+                            ]
+                        )
+                    )
+                )
+            domain_rates.append(float(np.mean(specimen_rates)))
+        if float(np.mean(domain_rates)) + 1e-15 >= threshold:
+            return cost
+    return None
+
+
+def _autonomous_metrics(
+    rows: list[dict[str, str]], *, prefix: str
+) -> dict[str, float | None]:
+    if not rows or prefix not in {"rule", "learned"}:
+        raise ValueError("autonomous metric request is invalid")
+    stopped_costs = [
+        float(row[f"{prefix}_stop_cost"])
+        for row in rows
+        if row[f"{prefix}_stop_cost"] != ""
+    ]
+    successful_costs = [
+        float(row[f"{prefix}_stop_cost"])
+        for row in rows
+        if _csv_bool(row[f"{prefix}_stop_success"])
+    ]
+    autonomous_ausc = float(
+        np.mean([float(row[f"{prefix}_autonomous_ausc"]) for row in rows])
+    )
+    penalized_cost = float(
+        np.mean(
+            [float(row[f"{prefix}_failure_penalized_cost"]) for row in rows]
+        )
+    )
+    if not math.isclose(autonomous_ausc + penalized_cost, 1.0, abs_tol=1e-12):
+        raise RuntimeError("autonomous AUSC and failure cost are inconsistent")
+    return {
+        "completion_rate": float(
+            np.mean([_csv_bool(row[f"{prefix}_stop_success"]) for row in rows])
+        ),
+        "false_stop_rate": float(
+            np.mean([_csv_bool(row[f"{prefix}_false_stop"]) for row in rows])
+        ),
+        "resource_exhaustion_rate": float(
+            np.mean(
+                [_csv_bool(row[f"{prefix}_resource_exhausted"]) for row in rows]
+            )
+        ),
+        "autonomous_ausc": autonomous_ausc,
+        "failure_penalized_cost": penalized_cost,
+        "mean_stop_cost_when_stopped": (
+            float(np.mean(stopped_costs)) if stopped_costs else None
+        ),
+        "mean_successful_stop_cost": (
+            float(np.mean(successful_costs)) if successful_costs else None
+        ),
+    }
 
 
 def _mean_metric(
@@ -3040,6 +3530,27 @@ def _csv_bool(value: str) -> bool:
     return value == "True"
 
 
+def _trajectory_row_key(row: dict[str, object]) -> tuple[str, str, str, int, int]:
+    return (
+        str(row["specimen_key"]),
+        str(row["task"]),
+        str(row["method"]),
+        int(row["seed"]),
+        int(row["step"]),
+    )
+
+
+def _replay_value_equal(left: object, right: object) -> bool:
+    if isinstance(left, float) or isinstance(right, float):
+        try:
+            return math.isclose(
+                float(left), float(right), rel_tol=1e-6, abs_tol=1e-8
+            )
+        except (TypeError, ValueError):
+            return False
+    return left == right
+
+
 def _file_sha256(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as handle:
@@ -3076,6 +3587,7 @@ __all__ = [
     "evaluate_study",
     "prepare_study",
     "run_perception",
+    "run_representative_replay_audit",
     "summarize_study",
     "train_models",
     "validate_models",

@@ -19,8 +19,11 @@ REQUIRED_RESULTS = {
     "validation_selection.json",
     "model_manifest.json",
     "models",
+    "test_evaluation_manifest.json",
     "per_episode_metrics.csv",
     "trajectories.parquet",
+    "representative_replay.parquet",
+    "replay_validation.json",
     "comparisons.csv",
     "failure_cases.csv",
     "summary.json",
@@ -73,6 +76,17 @@ def test_cli_runs_recoverable_stages_and_requires_explicit_test_evaluation(
     monkeypatch.setattr(module, "validate_models", stage("validate"))
     monkeypatch.setattr(module, "evaluate_study", stage("evaluate"))
 
+    def replay(**kwargs):
+        stage("replay-audit")(**kwargs)
+        output.mkdir(exist_ok=True)
+        (output / "representative_replay.parquet").write_bytes(
+            b"PAR1syntheticPAR1"
+        )
+        (output / "replay_validation.json").write_text("{}\n", encoding="utf-8")
+        return {"stage": "replay-audit"}
+
+    monkeypatch.setattr(module, "run_representative_replay_audit", replay)
+
     def summarize(**kwargs):
         stage("summarize")(**kwargs)
         output.mkdir(exist_ok=True)
@@ -96,6 +110,7 @@ def test_cli_runs_recoverable_stages_and_requires_explicit_test_evaluation(
     ):
         assert module.main([command, *common]) == 0
     assert module.main(["evaluate", *common, "--split", "test"]) == 0
+    assert module.main(["replay-audit", *common]) == 0
     assert module.main(["summarize", *common]) == 0
 
     assert calls == [
@@ -105,6 +120,7 @@ def test_cli_runs_recoverable_stages_and_requires_explicit_test_evaluation(
         ("train", None),
         ("validate", None),
         ("evaluate", "test"),
+        ("replay-audit", None),
         ("summarize", None),
     ]
     assert REQUIRED_RESULTS <= {path.name for path in output.iterdir()}

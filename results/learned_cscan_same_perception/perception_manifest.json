@@ -14,54 +14,58 @@
       },
       {
         "kind": "BLANK_SURFACE_NOT_RUN",
-        "reason": "DIAGNOSTIC_CALL_CAP_RESERVED_FOR_FINAL_MAIN_DEPLOYMENT"
+        "reason": "DIAGNOSTIC_CALL_CAP_EXHAUSTED_BY_PREFLIGHT_SCHEMA_DEBUG"
       },
       {
         "domain": "74t7kcdgkr",
         "kind": "DISPLAY_NUMBER_PERMUTATION_NOT_RUN",
-        "reason": "DIAGNOSTIC_CALL_CAP_RESERVED_FOR_FINAL_MAIN_DEPLOYMENT"
+        "reason": "DIAGNOSTIC_CALL_CAP_EXHAUSTED_BY_PREFLIGHT_SCHEMA_DEBUG"
       },
       {
         "domain": "cgtnjyggtm",
         "kind": "DISPLAY_NUMBER_PERMUTATION_NOT_RUN",
-        "reason": "DIAGNOSTIC_CALL_CAP_RESERVED_FOR_FINAL_MAIN_DEPLOYMENT"
+        "reason": "DIAGNOSTIC_CALL_CAP_EXHAUSTED_BY_PREFLIGHT_SCHEMA_DEBUG"
       },
       {
         "domain": "w68dtmpfyf",
         "kind": "DISPLAY_NUMBER_PERMUTATION_NOT_RUN",
-        "reason": "DIAGNOSTIC_CALL_CAP_RESERVED_FOR_FINAL_MAIN_DEPLOYMENT"
+        "reason": "DIAGNOSTIC_CALL_CAP_EXHAUSTED_BY_PREFLIGHT_SCHEMA_DEBUG"
       },
       {
         "domain": "xcmzfsbd9t",
         "kind": "DISPLAY_NUMBER_PERMUTATION_NOT_RUN",
-        "reason": "DIAGNOSTIC_CALL_CAP_RESERVED_FOR_FINAL_MAIN_DEPLOYMENT"
+        "reason": "DIAGNOSTIC_CALL_CAP_EXHAUSTED_BY_PREFLIGHT_SCHEMA_DEBUG"
       },
       {
         "domain": "yfxyg8jm46",
         "kind": "DISPLAY_NUMBER_PERMUTATION_NOT_RUN",
-        "reason": "DIAGNOSTIC_CALL_CAP_RESERVED_FOR_FINAL_MAIN_DEPLOYMENT"
+        "reason": "DIAGNOSTIC_CALL_CAP_EXHAUSTED_BY_PREFLIGHT_SCHEMA_DEBUG"
       },
       {
         "domain": "ykhs7s2dck",
         "kind": "DISPLAY_NUMBER_PERMUTATION_NOT_RUN",
-        "reason": "DIAGNOSTIC_CALL_CAP_RESERVED_FOR_FINAL_MAIN_DEPLOYMENT"
+        "reason": "DIAGNOSTIC_CALL_CAP_EXHAUSTED_BY_PREFLIGHT_SCHEMA_DEBUG"
       }
     ]
   },
   "execution": {
-    "actual_calls_this_command": 33,
-    "cache_hits_this_command": 28,
+    "actual_calls_this_command": 0,
+    "cache_hits_this_command": 60,
     "cumulative_deployment_calls": 62,
-    "elapsed_seconds": 545.5659797340631,
+    "elapsed_seconds": 162.52544519398361,
     "main_call_cap": 60,
-    "repair_calls_this_command": 1
+    "repair_calls_this_command": 0
   },
   "model_repository": "Qwen/Qwen2.5-VL-7B-Instruct",
   "model_revision": "cc594898137f460bfe9f0759e9844b3ce807cfb5",
   "prompt_sha256": "07ba97c242f8f8ab4ec0b742d64aec231dace2455bb275e285174381c1e79ce0",
   "reader_v2": {
-    "nondegenerate_count": 120,
-    "record_count": 120,
+    "evaluation_splits": [
+      "TRAIN",
+      "VALID"
+    ],
+    "nondegenerate_count": 72,
+    "record_count": 72,
     "status": "FUNCTIONAL"
   },
   "records": [
@@ -430,7 +434,7 @@
       "split": "VALID"
     },
     {
-      "cache_hit": false,
+      "cache_hit": true,
       "cache_key": "597f8ff0266da68bb54be91457b7b8e0b7d902792c368d89425a5d4c79779d6f",
       "call_count": 1,
       "cell_count": 4,
@@ -443,7 +447,7 @@
       "split": "TEST"
     },
     {
-      "cache_hit": false,
+      "cache_hit": true,
       "cache_key": "2b39e7353112de5e8b54aff0cc55cacc42ba7296f62ce673104f1de753a8ac0e",
       "call_count": 1,
       "cell_count": 8,
@@ -456,7 +460,7 @@
       "split": "TRAIN"
     },
     {
-      "cache_hit": false,
+      "cache_hit": true,
       "cache_key": "aabd5db1c2019cf0ed76ccd27e76996995a7485fd5d119e6c5624b8fbef7a70c",
       "call_count": 1,
       "cell_count": 6,
@@ -469,7 +473,7 @@
       "split": "TRAIN"
     },
     {
-      "cache_hit": false,
+      "cache_hit": true,
       "cache_key": "37980e3b55198e41f86d3a160adbc1591fcc6dd85ea77fb7d516c8ee799354c8",
       "call_count": 1,
       "cell_count": 4,
@@ -482,7 +486,7 @@
       "split": "TEST"
     },
     {
-      "cache_hit": false,
+      "cache_hit": true,
       "cache_key": "cd5ebfba88edb63c2bd8db90705cf9deb7440d66b96b4d4f0dab4b7685d0a4dd",
       "call_count": 1,
       "cell_count": 4,
@@ -495,7 +499,7 @@
       "split": "VALID"
     },
     {
-      "cache_hit": false,
+      "cache_hit": true,
       "cache_key": "bda5958a8f7c57c5defb3da18980d661c44db233ad6954684f8e160ce02e50af",
       "call_count": 1,
       "cell_count": 4,
@@ -508,7 +512,7 @@
       "split": "TRAIN"
     },
     {
-      "cache_hit": false,
+      "cache_hit": true,
       "cache_key": "fb0cf2a8f67f3245298c60cc02a6361b23794ac198f3d7f981c5b20687e28e5a",
       "call_count": 1,
       "cell_count": 4,
@@ -521,7 +525,7 @@
       "split": "TRAIN"
     },
     {
-      "cache_hit": false,
+      "cache_hit": true,
       "cache_key": "873342d64182db699f695ce43d06b8c70ed5a8eba8d0379166b0b9c80955860c",
       "call_count": 1,
       "cell_count": 4,
@@ -534,7 +538,7 @@
       "split": "TEST"
     },
     {
-      "cache_hit": false,
+      "cache_hit": true,
       "cache_key": "3c485cdf3818348965713de9c374200335f7721b556c8667e44661b8fe010e37",
       "call_count": 1,
       "cell_count": 4,
@@ -547,7 +551,7 @@
       "split": "TRAIN"
     },
     {
-      "cache_hit": false,
+      "cache_hit": true,
       "cache_key": "015e036cb05ab6747918444659b565b8d6c4b80df2ef7a9c6c3402a25289a33f",
       "call_count": 1,
       "cell_count": 4,
@@ -560,7 +564,7 @@
       "split": "TEST"
     },
     {
-      "cache_hit": false,
+      "cache_hit": true,
       "cache_key": "2d1d9094597ef07bf3f9bf3457ff7657906a6bcb5c43a0f30dfb56038e46c09e",
       "call_count": 1,
       "cell_count": 6,
@@ -573,7 +577,7 @@
       "split": "TEST"
     },
     {
-      "cache_hit": false,
+      "cache_hit": true,
       "cache_key": "64ee84c7a429b557ee3ac66037f903a2cb298d1ea7fa63e120f2fbd64e9eee89",
       "call_count": 1,
       "cell_count": 4,
@@ -586,7 +590,7 @@
       "split": "VALID"
     },
     {
-      "cache_hit": false,
+      "cache_hit": true,
       "cache_key": "6f8c2211b6e605cd76c488f4a30481aa09b826a059f7e4290f7cec48174d2417",
       "call_count": 1,
       "cell_count": 4,
@@ -599,7 +603,7 @@
       "split": "TRAIN"
     },
     {
-      "cache_hit": false,
+      "cache_hit": true,
       "cache_key": "21f2cda7a78a54983d20b58af9478dbf847a7aa2ab95237d1055c787182b40b9",
       "call_count": 1,
       "cell_count": 2,
@@ -612,7 +616,7 @@
       "split": "TEST"
     },
     {
-      "cache_hit": false,
+      "cache_hit": true,
       "cache_key": "2e564fae3915940a891bd90d5a84f0849f885490fe0b5a7789c43ee48188bbf3",
       "call_count": 1,
       "cell_count": 4,
@@ -625,7 +629,7 @@
       "split": "VALID"
     },
     {
-      "cache_hit": false,
+      "cache_hit": true,
       "cache_key": "5e6ebcbd11f8bfddf58bd19daef5dc6af5e61476d23be11a41da20df35282143",
       "call_count": 1,
       "cell_count": 4,
@@ -638,7 +642,7 @@
       "split": "TRAIN"
     },
     {
-      "cache_hit": false,
+      "cache_hit": true,
       "cache_key": "38c9d7a65ffe9d8ddbcf7b6bbbadb1b774a439fe76451b4ae67eda25c9646a10",
       "call_count": 1,
       "cell_count": 6,
@@ -651,7 +655,7 @@
       "split": "TEST"
     },
     {
-      "cache_hit": false,
+      "cache_hit": true,
       "cache_key": "fa174a71224cb6646f999bcf77f215a538b5c183971fb406f8d944fe526788f8",
       "call_count": 2,
       "cell_count": 3,
@@ -664,7 +668,7 @@
       "split": "TRAIN"
     },
     {
-      "cache_hit": false,
+      "cache_hit": true,
       "cache_key": "8a07f86ded7f97b6071a8c0888cae7b45a1d60503035120342636522ce6ac1ef",
       "call_count": 1,
       "cell_count": 2,
@@ -677,7 +681,7 @@
       "split": "VALID"
     },
     {
-      "cache_hit": false,
+      "cache_hit": true,
       "cache_key": "943e6f8173bf098f0725a11c37454f1939f50e908732897ceff42866c0f839bf",
       "call_count": 1,
       "cell_count": 4,
@@ -690,7 +694,7 @@
       "split": "TEST"
     },
     {
-      "cache_hit": false,
+      "cache_hit": true,
       "cache_key": "9ae2962cbde0a82b7b138359e2c2db4b12b530d233af0a3ab5752c514609e782",
       "call_count": 1,
       "cell_count": 4,
@@ -703,7 +707,7 @@
       "split": "TEST"
     },
     {
-      "cache_hit": false,
+      "cache_hit": true,
       "cache_key": "c872c261d120d0a3c6385d131287f2795a6e7bbb9d6e3a8c9095db132436f6f6",
       "call_count": 1,
       "cell_count": 3,
@@ -716,7 +720,7 @@
       "split": "TRAIN"
     },
     {
-      "cache_hit": false,
+      "cache_hit": true,
       "cache_key": "4f1cdca411cdf0f1a48537af110eaec2c16750f8e5118f585839dc9ab657ffdd",
       "call_count": 1,
       "cell_count": 3,
@@ -729,7 +733,7 @@
       "split": "TRAIN"
     },
     {
-      "cache_hit": false,
+      "cache_hit": true,
       "cache_key": "3fa67a12af3cb2f95abcf2c96d1f0986f38b5d1d4680e3331ad90a96ed4b425b",
       "call_count": 1,
       "cell_count": 5,
@@ -742,7 +746,7 @@
       "split": "VALID"
     },
     {
-      "cache_hit": false,
+      "cache_hit": true,
       "cache_key": "379d6e7dc9c21feed42325e695d200581d32c12631c3d5ef49738e75f3e00183",
       "call_count": 1,
       "cell_count": 4,
@@ -755,7 +759,7 @@
       "split": "TEST"
     },
     {
-      "cache_hit": false,
+      "cache_hit": true,
       "cache_key": "2d821bba46bd6c3b65458a2e73fd0ec6c10ca133aa55aefd2d47f8a089ef7a3b",
       "call_count": 1,
       "cell_count": 4,
@@ -768,7 +772,7 @@
       "split": "TRAIN"
     },
     {
-      "cache_hit": false,
+      "cache_hit": true,
       "cache_key": "f9e19381ffaa9b649ed4f7d94072620456a1122b560cc1634be00a017dcd5bd4",
       "call_count": 1,
       "cell_count": 3,
@@ -781,7 +785,7 @@
       "split": "VALID"
     },
     {
-      "cache_hit": false,
+      "cache_hit": true,
       "cache_key": "c0559f356875856f1a8e0c1cc1e3e786b34bd1104593261f784119040c644447",
       "call_count": 1,
       "cell_count": 8,
@@ -794,7 +798,7 @@
       "split": "TEST"
     },
     {
-      "cache_hit": false,
+      "cache_hit": true,
       "cache_key": "838877b6aaab778228aaa97d498d2fff938fac5c4ece57a98c6b01e30a8c3c03",
       "call_count": 1,
       "cell_count": 4,
@@ -807,7 +811,7 @@
       "split": "TEST"
     },
     {
-      "cache_hit": false,
+      "cache_hit": true,
       "cache_key": "04c11630f7f11834870271d8218520bcb1fb35854bcbcdf0a320f6ff727e3350",
       "call_count": 1,
       "cell_count": 4,
@@ -820,7 +824,7 @@
       "split": "TEST"
     },
     {
-      "cache_hit": false,
+      "cache_hit": true,
       "cache_key": "1c2c3c0a6e3a5451baa5f839f3c2e35fb72357f2da1e1c6132cb64cc783bf447",
       "call_count": 1,
       "cell_count": 4,
@@ -833,7 +837,7 @@
       "split": "TRAIN"
     },
     {
-      "cache_hit": false,
+      "cache_hit": true,
       "cache_key": "9b310f35f0347f703161fe75839c975841dfe37d22c47fa1de5407d5dc2dcfae",
       "call_count": 1,
       "cell_count": 4,

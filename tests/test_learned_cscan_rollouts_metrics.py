@@ -4,6 +4,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
+from cmc_bbdm.learned_cscan.benchmark import _cost_at_success_rate
 from cmc_bbdm.learned_cscan.contracts import (
     ReferenceEvidence,
     ReferenceStatus,
@@ -47,6 +48,24 @@ def test_exact_step_integral_handles_endpoint_duplicates_and_regression() -> Non
     assert np.isclose(failure_area, 0.8)
     assert np.isclose(success_area + failure_area, 1.0)
     assert np.isclose(loss_area, 0.72)
+
+    success_rows = [
+        {
+            "dataset_id": domain,
+            "specimen_key": specimen,
+            "seed": seed,
+            "step": step,
+            "cost": cost,
+            "success": success,
+        }
+        for domain, specimen, seed, values in (
+            ("d0", "d0:a", 1, ((0.0, False), (0.2, True))),
+            ("d0", "d0:a", 2, ((0.0, False), (0.4, True))),
+            ("d1", "d1:a", 1, ((0.0, False), (0.3, True), (0.5, False))),
+        )
+        for step, (cost, success) in enumerate(values)
+    ]
+    assert np.isclose(_cost_at_success_rate(success_rows, target=0.8), 0.4)
 
 
 class _BranchWorld:

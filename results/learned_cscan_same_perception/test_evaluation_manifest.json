@@ -1,0 +1,16 @@
+{
+  "elapsed_seconds": 3459.771114589181,
+  "episode_count": 336,
+  "formal_effect": null,
+  "learned_stop_status": "LEARNED_STOP_AUTHORIZED",
+  "method_count": 7,
+  "selected_learned_checkpoint": "L_CTG_1",
+  "selected_learned_seeds": [
+    1
+  ],
+  "selected_rule": "R_BALANCED",
+  "selection_sha256": "8fb4210ba96612333418ab74d7ca6640301b53db792c25ef76f96d63039d5441",
+  "stage": "W5_TEST_EVALUATION_COMPLETE",
+  "test_physical_specimens": 24,
+  "trajectory_row_count": 64848
+}

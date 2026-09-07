@@ -3050,7 +3050,7 @@
     }
   ],
   "schema_version": 1,
-  "state": "TRAIN_BASE_BANK_COMPLETE",
+  "state": "TRAIN_BANK_AND_AGGREGATION_COMPLETE",
   "stop_state_count": 192,
   "tasks": [
     "LOCATE",

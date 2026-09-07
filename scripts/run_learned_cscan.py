@@ -20,6 +20,7 @@ from cmc_bbdm.learned_cscan.benchmark import (
     evaluate_study,
     prepare_study,
     run_perception,
+    run_representative_replay_audit,
     summarize_study,
     train_models,
     validate_models,
@@ -38,6 +39,7 @@ def build_parser() -> argparse.ArgumentParser:
         "build-train-bank",
         "train",
         "validate",
+        "replay-audit",
         "summarize",
     ):
         command = commands.add_parser(name)
@@ -72,6 +74,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         result = validate_models(**common)
     elif arguments.command == "evaluate":
         result = evaluate_study(**common, split=arguments.split)
+    elif arguments.command == "replay-audit":
+        result = run_representative_replay_audit(**common)
     else:
         result = summarize_study(**common)
     print(json.dumps(result, indent=2, sort_keys=True))

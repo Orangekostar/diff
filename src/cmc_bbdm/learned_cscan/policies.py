@@ -126,6 +126,12 @@ class LearnedCellActor(nn.Module):
         return logits.masked_fill(~legal_mask, -torch.inf)
 
     def select_cell(self, packet: ObservationPacket, *, device: str = "cpu") -> int:
+        scores = self.score_cells(packet, device=device)
+        return int(np.argmax(scores))
+
+    def score_cells(
+        self, packet: ObservationPacket, *, device: str = "cpu"
+    ) -> np.ndarray:
         if type(packet) is not ObservationPacket:
             raise TypeError("typed observation packet is required")
         tensors = packet.actor_tensors()
@@ -144,7 +150,9 @@ class LearnedCellActor(nn.Module):
                 .to(target),
                 torch.tensor(tensors["legal_mask"]).unsqueeze(0).to(target),
             )
-        return int(torch.argmax(logits[0]).item())
+        scores = logits[0].detach().cpu().numpy().astype(np.float64, copy=True)
+        scores.setflags(write=False)
+        return scores
 
 
 def _validate_actor_tensors(

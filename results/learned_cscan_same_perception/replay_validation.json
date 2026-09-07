@@ -1,0 +1,41 @@
+{
+  "all_frozen_fields_match": true,
+  "compared_field_count": 26,
+  "decision_record": {
+    "candidate_score_kind": "LEARNED_LOGIT",
+    "evidence_deltas_recorded": true,
+    "route_start_and_end_recorded": true,
+    "top_candidate_count": 5
+  },
+  "device": "cuda:0",
+  "domains": [
+    "74t7kcdgkr",
+    "cgtnjyggtm",
+    "w68dtmpfyf",
+    "xcmzfsbd9t",
+    "yfxyg8jm46",
+    "ykhs7s2dck"
+  ],
+  "episode_count": 12,
+  "mismatch_count": 0,
+  "post_evaluation_audit": true,
+  "representative_replay_sha256": "14ba9485d2a3c5ae90775fb3e8b07d8b718884ee1b5d39d1b14a1360bbf752c3",
+  "representative_specimens": [
+    "74t7kcdgkr:c8-24",
+    "cgtnjyggtm:q24-40",
+    "w68dtmpfyf:q16-3",
+    "xcmzfsbd9t:c24-20",
+    "yfxyg8jm46:c16-4",
+    "ykhs7s2dck:q8-31"
+  ],
+  "schema_version": 1,
+  "selected_method": "L_CTG_1",
+  "selected_model_sha256": "bec1b9a1625d61d1888d17876545867c156b607bc5be4a3dfd4856ebd8aec2bf",
+  "selection_sha256": "8fb4210ba96612333418ab74d7ca6640301b53db792c25ef76f96d63039d5441",
+  "stage": "W6_REPRESENTATIVE_REPLAY_VERIFIED",
+  "tasks": [
+    "LOCATE",
+    "CHARACTERIZE"
+  ],
+  "trajectory_row_count": 2316
+}
