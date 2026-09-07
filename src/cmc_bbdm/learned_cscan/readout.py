@@ -7,6 +7,7 @@ from dataclasses import dataclass
 
 import numpy as np
 from scipy import ndimage
+from scipy.interpolate import interpn
 
 from cmc_bbdm.mva.acquisition_grid import AcquisitionGrid, CellLattices
 
@@ -149,6 +150,13 @@ def read_visible_evidence(
         raise ValueError("Reader v2 request is invalid")
     coordinates = np.asarray(positions)
     samples = np.asarray(values)
+    linear_positions = (
+        coordinates[:, 0] * grid.native_shape[1] + coordinates[:, 1]
+        if coordinates.dtype.kind in "iu"
+        and coordinates.ndim == 2
+        and coordinates.shape[1:] == (2,)
+        else np.empty(0, dtype=np.int64)
+    )
     if (
         coordinates.dtype.kind not in "iu"
         or coordinates.ndim != 2
@@ -161,7 +169,13 @@ def read_visible_evidence(
                 np.any(coordinates < 0)
                 or np.any(coordinates[:, 0] >= grid.native_shape[0])
                 or np.any(coordinates[:, 1] >= grid.native_shape[1])
-                or len(np.unique(coordinates, axis=0)) != len(coordinates)
+                or (
+                    len(linear_positions) > 1
+                    and (
+                        np.any(np.diff(linear_positions) <= 0)
+                        and len(np.unique(linear_positions)) != len(coordinates)
+                    )
+                )
             )
         )
     ):
@@ -185,6 +199,7 @@ def read_visible_evidence(
             _interpolate_cell(
                 cell,
                 grid,
+                level=level,
                 measured_mask=measured_mask,
                 measured_rgb=measured_rgb,
                 estimated_rgb=estimated_rgb,
@@ -272,26 +287,30 @@ def _interpolate_cell(
     cell: CellLattices,
     grid: AcquisitionGrid,
     *,
+    level: int,
     measured_mask: np.ndarray,
     measured_rgb: np.ndarray,
     estimated_rgb: np.ndarray,
     estimate_valid: np.ndarray,
 ) -> None:
+    if level == 2:
+        return
     row_lower, row_upper = grid.row_boundaries[cell.row : cell.row + 2]
     column_lower, column_upper = grid.column_boundaries[cell.column : cell.column + 2]
-    support = np.argwhere(
-        measured_mask[
-            row_lower : row_upper + 1, column_lower : column_upper + 1
-        ]
+    local_support = measured_mask[
+        row_lower : row_upper + 1, column_lower : column_upper + 1
+    ]
+    support_rows = (
+        np.flatnonzero(np.any(local_support, axis=1)).astype(np.int64) + row_lower
     )
-    if not len(support):
+    support_columns = (
+        np.flatnonzero(np.any(local_support, axis=0)).astype(np.int64)
+        + column_lower
+    )
+    if not len(support_rows) or not len(support_columns):
         return
-    support[:, 0] += row_lower
-    support[:, 1] += column_lower
-    support_rows = np.unique(support[:, 0])
-    support_columns = np.unique(support[:, 1])
     expected = len(support_rows) * len(support_columns)
-    if len(support) != expected:
+    if np.count_nonzero(local_support) != expected:
         return
     row_slice, column_slice = owned_cell_slices(grid, cell)
     target_rows = np.arange(row_slice.start, row_slice.stop, dtype=np.int64)
@@ -307,26 +326,15 @@ def _interpolate_cell(
         return
     lattice = measured_rgb[np.ix_(support_rows, support_columns)].astype(np.float64)
     if len(support_rows) >= 2 and len(support_columns) >= 2:
-        column_interpolated = np.empty(
-            (len(support_rows), len(target_columns), 3), dtype=np.float64
+        target_row_grid, target_column_grid = np.meshgrid(
+            target_rows, target_columns, indexing="ij"
         )
-        for row_index in range(len(support_rows)):
-            for channel in range(3):
-                column_interpolated[row_index, :, channel] = np.interp(
-                    target_columns,
-                    support_columns,
-                    lattice[row_index, :, channel],
-                )
-        result = np.empty(
-            (len(target_rows), len(target_columns), 3), dtype=np.float64
+        points = np.column_stack(
+            (target_row_grid.ravel(), target_column_grid.ravel())
         )
-        for column_index in range(len(target_columns)):
-            for channel in range(3):
-                result[:, column_index, channel] = np.interp(
-                    target_rows,
-                    support_rows,
-                    column_interpolated[:, column_index, channel],
-                )
+        result = interpn(
+            (support_rows, support_columns), lattice, points, method="linear"
+        ).reshape(len(target_rows), len(target_columns), 3)
         estimated_rgb[np.ix_(target_rows, target_columns)] = result
         estimate_valid[np.ix_(target_rows, target_columns)] = True
     elif len(support_rows) == 1 and len(support_columns) >= 2:
@@ -374,10 +382,8 @@ def _summarize_cell(
         if count
         else (0.0, 0.0, 0.0)
     )
-    support_rows = np.unique(np.argwhere(observed)[:, 0]) if count else np.asarray([])
-    support_columns = (
-        np.unique(np.argwhere(observed)[:, 1]) if count else np.asarray([])
-    )
+    support_rows = np.flatnonzero(np.any(observed, axis=1))
+    support_columns = np.flatnonzero(np.any(observed, axis=0))
     row_spacing = _maximum_spacing(support_rows, max(observed.shape[0] - 1, 1))
     column_spacing = _maximum_spacing(
         support_columns, max(observed.shape[1] - 1, 1)

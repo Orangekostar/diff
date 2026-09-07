@@ -18,7 +18,7 @@ SURFACE_PERCEPT_SCHEMA = {
     "properties": {
         "regions": {
             "type": "array",
-            "maxItems": 3,
+            "maxItems": 2,
             "items": {
                 "type": "object",
                 "additionalProperties": False,
@@ -26,10 +26,15 @@ SURFACE_PERCEPT_SCHEMA = {
                 "properties": {
                     "cells": {
                         "type": "array",
+                        "maxItems": 4,
                         "items": {"type": "integer", "minimum": 0, "maximum": 63},
                     },
-                    "cue": {"type": "string"},
-                    "alternative": {"type": "string"},
+                    "cue": {"type": "string", "minLength": 1, "maxLength": 120},
+                    "alternative": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200,
+                    },
                     "confidence": {
                         "type": "string",
                         "enum": ["low", "medium", "high", "unknown"],
@@ -44,14 +49,17 @@ SURFACE_PERCEPT_SCHEMA = {
 SURFACE_PERCEPT_PROMPT = """你是材料试样的表面观察模块。输入是同一张真实表面图和带有 8x8 编号网格的版本。
 仅描述图像中可见的表面线索，不推断内部超声结果、损伤深度、材料铺层或任务完成情况。
 每个候选区域给出 0 到 63 范围内的网格编号集合、可见线索类型、一个合理的非损伤替代解释和序数置信等级。
-允许没有可靠线索；线索类型可以是 unknown 或 none。最多三个区域，所有区域合计最多八个不重复网格。
+允许没有可靠线索；线索类型可以是 unknown 或 none。最多两个区域，每个区域最多四个网格，所有区域合计最多八个不重复网格。
 不要推荐扫描、工具、策略或后续操作。只返回符合所附 JSON schema 的一个对象。
 JSON schema:
 """ + json.dumps(SURFACE_PERCEPT_SCHEMA, sort_keys=True, separators=(",", ":"))
 
 FORMAT_REPAIR_PROMPT = """上一响应不符合所附 JSON schema。不要解释，也不要增加字段；只重新返回一个合法 JSON 对象。
+所有 regions 的 cells 合计不得超过 8，cell 不得重复；如果原响应超过 8 个，删除最低置信区域末尾的多余 cell。
 JSON schema:
 """ + json.dumps(SURFACE_PERCEPT_SCHEMA, sort_keys=True, separators=(",", ":"))
+FORMAT_REPAIR_CONTEXT_PREFIX = "需要修复的原响应如下：\n<invalid_response>\n"
+FORMAT_REPAIR_CONTEXT_SUFFIX = "\n</invalid_response>"
 
 
 @dataclass(frozen=True, slots=True)
@@ -65,6 +73,7 @@ class SurfaceRegion:
         if (
             type(self.cells) is not tuple
             or not self.cells
+            or len(self.cells) > 4
             or len(set(self.cells)) != len(self.cells)
             or any(type(cell) is not int or not 0 <= cell < 64 for cell in self.cells)
             or type(self.cue) is not str
@@ -87,10 +96,9 @@ class SurfacePercept:
         cells = tuple(cell for region in self.regions for cell in region.cells)
         if (
             type(self.regions) is not tuple
-            or len(self.regions) > 3
+            or len(self.regions) > 2
             or any(type(region) is not SurfaceRegion for region in self.regions)
             or len(cells) > 8
-            or len(set(cells)) != len(cells)
             or type(self.no_reliable_cue) is not bool
             or (self.no_reliable_cue and bool(self.regions))
         ):
@@ -234,21 +242,27 @@ class SurfacePerceptCache:
         cached = self.get(request)
         if cached is not None:
             return cached
-        calls: list[VLMRawResponse] = []
-        percept: SurfacePercept | None = None
-        parse_error: ValueError | None = None
-        for prompt in (SURFACE_PERCEPT_PROMPT, FORMAT_REPAIR_PROMPT):
-            response = infer(prompt)
-            if type(response) is not VLMRawResponse:
+        first = infer(SURFACE_PERCEPT_PROMPT)
+        if type(first) is not VLMRawResponse:
+            raise TypeError("VLM backend returned an invalid response")
+        calls = [first]
+        try:
+            percept = parse_surface_percept(first.text)
+        except ValueError:
+            repair_prompt = (
+                f"{FORMAT_REPAIR_PROMPT}\n{FORMAT_REPAIR_CONTEXT_PREFIX}"
+                f"{first.text}{FORMAT_REPAIR_CONTEXT_SUFFIX}"
+            )
+            repaired = infer(repair_prompt)
+            if type(repaired) is not VLMRawResponse:
                 raise TypeError("VLM backend returned an invalid response")
-            calls.append(response)
+            calls.append(repaired)
             try:
-                percept = parse_surface_percept(response.text)
-                break
-            except ValueError as error:
-                parse_error = error
-        if percept is None:
-            raise ValueError("surface percept remained invalid after one repair") from parse_error
+                percept = parse_surface_percept(repaired.text)
+            except ValueError as repair_error:
+                raise ValueError(
+                    "surface percept remained invalid after one repair"
+                ) from repair_error
         row = {
             "schema_version": 2,
             "record_type": "surface_percept",

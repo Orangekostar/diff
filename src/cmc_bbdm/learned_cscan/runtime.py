@@ -8,19 +8,28 @@ from pathlib import Path
 from types import MappingProxyType
 from typing import Any
 
+import numpy as np
 import yaml
 from PIL import Image
 
+from cmc_bbdm.inspection_agent.contracts import InspectionObservation, InspectionTask
+from cmc_bbdm.inspection_agent.world import CausalInspectionWorld
+from cmc_bbdm.mavis.authority import MAVISAuthority, load_mavis_authority
+from cmc_bbdm.mavis.config import load_mavis_config
+from cmc_bbdm.mva.acquisition_grid import AcquisitionGrid, build_acquisition_grid
 from cmc_bbdm.vlm_cscan.runtime import (
+    BenchmarkConfig,
     InputSpecimen,
     RuntimeRoster,
     SurfaceRender,
+    _inner_border_median,
     load_benchmark_config,
     load_input_records,
     render_surface_inputs,
 )
 
 from .contracts import Split
+from .readout import BackgroundPrior
 
 STUDY_SPLIT_SEED = "learned-cscan-same-perception-pilot-v1"
 STUDY_BASE_SHA = "59a67511c0ee6395b68220c6a1644f40c383dfa2"
@@ -39,6 +48,7 @@ class StudyConfig:
     project_root: Path
     config_sha256: str
     prior_config_path: Path
+    legacy_config: BenchmarkConfig
     domain_order: tuple[str, ...]
     split_seed: str
     values: MappingProxyType[str, Any]
@@ -56,6 +66,24 @@ class StudyRoster:
 class RegisteredSurface:
     render: SurfaceRender
     clockwise_quarter_turns: int
+
+
+@dataclass(frozen=True, slots=True)
+class StudyContext:
+    config: StudyConfig
+    roster: StudyRoster
+    authority: MAVISAuthority
+    background_prior: BackgroundPrior
+    source_root: Path
+
+
+@dataclass(frozen=True, slots=True)
+class StudySpecimenRuntime:
+    record: InputSpecimen
+    render: SurfaceRender
+    grid: AcquisitionGrid
+    world: CausalInspectionWorld
+    observation: InspectionObservation
 
 
 def hash_split(
@@ -158,12 +186,13 @@ def load_study_config(
     prior_path = (root / relative).resolve(strict=True)
     if _file_sha256(prior_path) != expected:
         raise ValueError("legacy runtime config hash changed")
-    load_benchmark_config(prior_path, project_root=root)
+    legacy_config = load_benchmark_config(prior_path, project_root=root)
     return StudyConfig(
         path=source,
         project_root=root,
         config_sha256=hashlib.sha256(raw).hexdigest(),
         prior_config_path=prior_path,
+        legacy_config=legacy_config,
         domain_order=tuple(domains),
         split_seed=cohort["split_seed"],
         values=MappingProxyType(payload),
@@ -178,11 +207,8 @@ def load_study_roster(
 ) -> StudyRoster:
     if type(config) is not StudyConfig:
         raise TypeError("issued study config is required")
-    legacy_config = load_benchmark_config(
-        config.prior_config_path, project_root=config.project_root
-    )
     legacy_roster = load_input_records(
-        legacy_config,
+        config.legacy_config,
         source_root=source_root,
         verify_pilot_hashes=verify_pilot_hashes,
     )
@@ -216,6 +242,98 @@ def render_registered_surface(
     return RegisteredSurface(render=render, clockwise_quarter_turns=1)
 
 
+def load_study_context(
+    config: StudyConfig,
+    *,
+    source_root: str | Path,
+    verify_pilot_hashes: bool = True,
+) -> StudyContext:
+    if type(config) is not StudyConfig:
+        raise TypeError("issued study config is required")
+    external = Path(source_root).resolve(strict=True)
+    roster = load_study_roster(
+        config,
+        source_root=external,
+        verify_pilot_hashes=verify_pilot_hashes,
+    )
+    binding = config.legacy_config.values["sources"]["mavis_config"]
+    mavis_config = load_mavis_config(
+        config.project_root / binding["path"],
+        project_root=config.project_root,
+    )
+    authority = load_mavis_authority(mavis_config, source_project_root=external)
+    authority_keys = set(
+        zip(authority.dataset_ids, authority.specimen_ids, strict=True)
+    )
+    roster_keys = {
+        (record.dataset_id, record.specimen_id) for record in roster.records
+    }
+    if authority_keys != roster_keys:
+        raise ValueError("MAVIS and P0R rosters differ")
+    train_records = tuple(
+        assignment.record
+        for assignment in roster.assignments
+        if assignment.split is Split.TRAIN
+    )
+    medians = np.asarray(
+        [
+            _inner_border_median(
+                authority.source_teacher_view(record.specimen_id).full_scan,
+                border_fraction=0.02,
+            )
+            for record in train_records
+        ],
+        dtype=np.float64,
+    )
+    background = np.rint(np.mean(medians, axis=0)).clip(0, 255).astype(np.uint8)
+    prior = BackgroundPrior(
+        rgb=background,
+        fit_specimen_keys=tuple(record.specimen_key for record in train_records),
+        fit_split=Split.TRAIN.value,
+    )
+    return StudyContext(config, roster, authority, prior, external)
+
+
+def open_study_specimen(
+    context: StudyContext, record: InputSpecimen
+) -> StudySpecimenRuntime:
+    if (
+        type(context) is not StudyContext
+        or type(record) is not InputSpecimen
+        or record not in context.roster.pilot_records
+    ):
+        raise ValueError("study specimen runtime request is invalid")
+    registered = render_registered_surface(
+        record,
+        max_edge=int(context.config.legacy_config.values["surface"]["max_edge"]),
+    )
+    grid = build_acquisition_grid(
+        *record.native_shape,
+        initial_budget=float(
+            context.config.legacy_config.values["acquisition"][
+                "initial_nominal_budget"
+            ]
+        ),
+    )
+    world = CausalInspectionWorld(
+        context.authority,
+        specimen_id=record.specimen_id,
+        task=InspectionTask.FIELD,
+        surface_rgb=np.asarray(registered.render.clean, dtype=np.uint8),
+        surface_sha256=registered.render.clean_sha256,
+        grid=grid,
+        endpoint_budget=1.0,
+    )
+    observation = world.reset()
+    return StudySpecimenRuntime(
+        record=record,
+        render=registered.render,
+        grid=grid,
+        world=world,
+        observation=observation,
+    )
+
+
 def _file_sha256(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as handle:
@@ -230,10 +348,14 @@ __all__ = [
     "RegisteredSurface",
     "SplitAssignment",
     "StudyConfig",
+    "StudyContext",
     "StudyRoster",
+    "StudySpecimenRuntime",
     "hash_split",
     "load_study_config",
+    "load_study_context",
     "load_study_roster",
+    "open_study_specimen",
     "render_registered_surface",
     "require_fit_split",
 ]

@@ -128,6 +128,7 @@ def build_observation_packet(
     distance_threshold: float,
     probe_position: tuple[float, float],
     route_cost: float,
+    include_actor_subblocks: bool = True,
 ) -> ObservationPacket:
     if (
         type(observation) is not InspectionObservation
@@ -137,6 +138,7 @@ def build_observation_packet(
         or type(percept) is not SurfacePercept
         or type(task) is not Task
         or type(prior) is not BackgroundPrior
+        or type(include_actor_subblocks) is not bool
         or type(probe_position) is not tuple
         or len(probe_position) != 2
         or any(
@@ -189,7 +191,11 @@ def build_observation_packet(
             ],
             dtype=np.float32,
         )
-    subblocks = _subblock_features(grid, readout)
+    subblocks = (
+        _subblock_features(grid, readout)
+        if include_actor_subblocks
+        else np.zeros((64, 16, SUBBLOCK_FEATURE_COUNT), dtype=np.float32)
+    )
     task_locate = float(task is Task.LOCATE)
     global_features = np.asarray(
         [
@@ -237,11 +243,14 @@ def _subblock_features(
     output = np.zeros((64, 16, SUBBLOCK_FEATURE_COUNT), dtype=np.float32)
     for cell in grid.cells:
         row_slice, column_slice = owned_cell_slices(grid, cell)
+        cell_mask = readout.measured_mask[row_slice, column_slice]
+        cell_rgb = readout.measured_rgb[row_slice, column_slice]
+        cell_scores = readout.measured_scores[row_slice, column_slice]
         row_groups = np.array_split(
-            np.arange(row_slice.start, row_slice.stop, dtype=np.int64), 4
+            np.arange(cell_mask.shape[0], dtype=np.int64), 4
         )
         column_groups = np.array_split(
-            np.arange(column_slice.start, column_slice.stop, dtype=np.int64), 4
+            np.arange(cell_mask.shape[1], dtype=np.int64), 4
         )
         for subrow, rows in enumerate(row_groups):
             for subcolumn, columns in enumerate(column_groups):
@@ -249,15 +258,17 @@ def _subblock_features(
                 if not len(rows) or not len(columns):
                     output[cell.index, index, 1] = 1.0
                     continue
-                mask = readout.measured_mask[np.ix_(rows, columns)]
+                row_group = slice(int(rows[0]), int(rows[-1]) + 1)
+                column_group = slice(int(columns[0]), int(columns[-1]) + 1)
+                mask = cell_mask[row_group, column_group]
                 count = int(np.count_nonzero(mask))
                 total = int(mask.size)
                 output[cell.index, index, 0] = count / total
                 output[cell.index, index, 1] = float(count == 0)
                 if not count:
                     continue
-                rgb = readout.measured_rgb[np.ix_(rows, columns)][mask]
-                scores = readout.measured_scores[np.ix_(rows, columns)][mask]
+                rgb = cell_rgb[row_group, column_group][mask]
+                scores = cell_scores[row_group, column_group][mask]
                 output[cell.index, index, 2:5] = rgb.mean(axis=0) / 255.0
                 output[cell.index, index, 5:8] = rgb.std(axis=0) / 255.0
                 output[cell.index, index, 8] = scores.mean()

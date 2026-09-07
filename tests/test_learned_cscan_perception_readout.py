@@ -16,12 +16,14 @@ from cmc_bbdm.inspection_agent.state import (
 from cmc_bbdm.learned_cscan.contracts import Task
 from cmc_bbdm.learned_cscan.observation import build_observation_packet
 from cmc_bbdm.learned_cscan.perception import (
+    FORMAT_REPAIR_PROMPT,
     SURFACE_PERCEPT_PROMPT,
     SURFACE_PERCEPT_SCHEMA,
     SurfacePerceptCache,
     SurfacePerceptRequest,
     parse_surface_percept,
 )
+from cmc_bbdm.learned_cscan.policies import RuleMethod, select_rule_action
 from cmc_bbdm.learned_cscan.readout import BackgroundPrior, read_visible_evidence
 from cmc_bbdm.mva.acquisition_grid import build_acquisition_grid
 from cmc_bbdm.vlm_cscan.vlm import VLMRawResponse
@@ -61,6 +63,29 @@ def test_surface_percept_contract_is_action_free_and_strict() -> None:
     assert percept.regions[0].cells == (3, 4)
     assert percept.regions[0].confidence == "medium"
     assert percept.no_reliable_cue is False
+    overlapping = parse_surface_percept(
+        json.dumps(
+            {
+                "regions": [
+                    {
+                        "cells": [35, 36, 37],
+                        "cue": "circle_with_lines",
+                        "alternative": "scratch_or_tool_mark",
+                        "confidence": "medium",
+                    },
+                    {
+                        "cells": [36],
+                        "cue": "circle_with_lines",
+                        "alternative": "scratch_or_tool_mark",
+                        "confidence": "medium",
+                    },
+                ],
+                "no_reliable_cue": False,
+            }
+        )
+    )
+    assert overlapping.regions[0].cells == (35, 36, 37)
+    assert overlapping.regions[1].cells == (36,)
     with pytest.raises(ValueError, match="schema"):
         parse_surface_percept(
             '{"regions":[],"no_reliable_cue":true,"next_action":"scan"}'
@@ -109,6 +134,43 @@ def test_surface_percept_cache_identity_is_complete_and_task_independent(
     assert second.cache_hit is True
     assert second.actual_call_count == 0
     assert second.percept == first.percept
+
+    repair_prompts: list[str] = []
+    responses = iter(
+        (
+            VLMRawResponse(
+                text=(
+                    '{"regions":[{"cells":[1],"cue":"x",'
+                    '"alternative":"y","confidence":"low"}],'
+                    '"no_reliable_cue":true}'
+                ),
+                latency_seconds=0.1,
+                input_tokens=5,
+                output_tokens=5,
+            ),
+            response,
+        )
+    )
+
+    def infer_repair(prompt: str) -> VLMRawResponse:
+        repair_prompts.append(prompt)
+        return next(responses)
+
+    repaired = SurfacePerceptCache(tmp_path / "repair.jsonl").resolve(
+        replace(request, prompt_sha256="f" * 64), infer_repair
+    )
+    assert repaired.repaired is True
+    assert len(repair_prompts) == 2
+    assert '"no_reliable_cue":true' in repair_prompts[1]
+
+
+def test_surface_percept_repair_prompt_restates_the_cross_region_cell_cap() -> None:
+    assert "所有 regions 的 cells 合计不得超过 8" in FORMAT_REPAIR_PROMPT
+    region = SURFACE_PERCEPT_SCHEMA["properties"]["regions"]["items"]
+    assert SURFACE_PERCEPT_SCHEMA["properties"]["regions"]["maxItems"] == 2
+    assert region["properties"]["cells"]["maxItems"] == 4
+    assert region["properties"]["cue"]["minLength"] == 1
+    assert region["properties"]["alternative"]["minLength"] == 1
 
 
 def test_reader_v2_preserves_measurements_without_filling_unmeasured_cells() -> None:
@@ -204,6 +266,23 @@ def test_packet_depends_only_on_visible_history_and_perception() -> None:
     assert first.feature_sha256 == second.feature_sha256
     assert first.cell_features.tobytes() == second.cell_features.tobytes()
     assert first.subblock_features.tobytes() == second.subblock_features.tobytes()
+    rule_only = build_observation_packet(
+        observation(first_hidden),
+        grid=grid,
+        percept=percept,
+        task=Task.LOCATE,
+        prior=prior,
+        distance_threshold=0.18,
+        probe_position=(0.0, 0.0),
+        route_cost=0.0,
+        include_actor_subblocks=False,
+    )
+    assert not np.any(rule_only.subblock_features)
+    assert select_rule_action(
+        RuleMethod.R_BALANCED, rule_only, grid=grid, coverage_period=4
+    ) == select_rule_action(
+        RuleMethod.R_BALANCED, first, grid=grid, coverage_period=4
+    )
     assert set(first.actor_tensors()) == {
         "cell_features",
         "subblock_features",

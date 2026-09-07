@@ -11,6 +11,7 @@ from cmc_bbdm.inspection_agent.state import (
     legal_actions,
     zero_state,
 )
+from cmc_bbdm.learned_cscan import rollouts
 from cmc_bbdm.learned_cscan.contracts import Task
 from cmc_bbdm.learned_cscan.observation import build_observation_packet
 from cmc_bbdm.learned_cscan.perception import SurfacePercept, SurfaceRegion
@@ -18,6 +19,7 @@ from cmc_bbdm.learned_cscan.policies import RuleMethod, select_rule_action
 from cmc_bbdm.learned_cscan.readout import BackgroundPrior, TaskReportV2
 from cmc_bbdm.learned_cscan.stopping import RuleStopController
 from cmc_bbdm.mva.acquisition_grid import build_acquisition_grid
+from cmc_bbdm.vlm_cscan.route import compile_route
 
 
 def _observation(
@@ -87,6 +89,21 @@ def test_rules_emit_progressive_legal_actions_and_balanced_forces_coverage() -> 
         candidate = candidate_budget_record(grid, observation.measurement_state, action)
         assert candidate.measured_count > observation.exact_acquired_count
         assert candidate.effective_budget > observation.effective_budget
+        positions = action_added_positions(
+            grid, observation.measurement_state, action
+        )
+        full_route = compile_route(
+            positions,
+            native_shape=grid.native_shape,
+            start_position=(0.0, 0.0),
+        )
+        route_cost, route_end = rollouts.compile_route_cost(
+            positions,
+            native_shape=grid.native_shape,
+            start_position=(0.0, 0.0),
+        )
+        assert route_cost == full_route.total_length
+        assert route_end == full_route.end_position
 
     cue_history = (
         InspectionCellAction(0, -1, 0),
