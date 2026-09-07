@@ -10,9 +10,10 @@ import os
 import platform
 import shutil
 import time
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ProcessPoolExecutor
 from dataclasses import asdict
 from functools import lru_cache
+from multiprocessing import get_context
 from pathlib import Path
 from typing import Any
 
@@ -58,8 +59,18 @@ from .perception import (
     display_cell_id,
     map_percept_to_physical,
 )
-from .policies import LearnedCellActor, RuleMethod, select_rule_action
-from .readout import TaskReportV2, build_task_report_v2, read_visible_evidence
+from .policies import (
+    LearnedCellActor,
+    RuleMethod,
+    select_balanced_visible_action,
+    select_rule_action,
+)
+from .readout import (
+    TaskReportV2,
+    build_task_report_v2,
+    read_visible_evidence,
+    read_visible_task_report,
+)
 from .rollouts import compile_route_cost, cost_to_go_targets
 from .runtime import (
     SplitAssignment,
@@ -83,6 +94,7 @@ from .training import (
     PolicyTrainingExample,
     StopTrainingExample,
     TrainingRoute,
+    behavior_cloning_targets,
     fit_actor,
     fit_stop_head,
 )
@@ -137,6 +149,7 @@ RULE_CONFIGS = (
     ("R_BALANCED_P4", RuleMethod.R_BALANCED, 4),
     ("R_BALANCED_P8", RuleMethod.R_BALANCED, 8),
 )
+_BRANCH_WORKER_CONTEXT: StudyContext | None = None
 
 
 def prepare_study(
@@ -353,19 +366,20 @@ def build_training_bank(
     assignments = tuple(
         row for row in context.roster.assignments if row.split is Split.TRAIN
     )
+    branch_executor = _new_branch_executor(config, context)
     for specimen_index, assignment in enumerate(assignments, start=1):
         runtime = open_study_specimen(context, assignment.record)
         percept = percepts[assignment.record.specimen_key]
+        states, trajectory_transitions = _behavior_states(
+            runtime,
+            percept=percept,
+            task=Task.LOCATE,
+            prior=context.background_prior,
+            distance_threshold=float(config.values["reader"]["distance_threshold"]),
+            target_costs=targets,
+        )
         for task in Task:
             reference = _full_reference(context, runtime, task)
-            states, trajectory_transitions = _behavior_states(
-                runtime,
-                percept=percept,
-                task=task,
-                prior=context.background_prior,
-                distance_threshold=float(config.values["reader"]["distance_threshold"]),
-                target_costs=targets,
-            )
             transition_count += trajectory_transitions
             if transition_count > cap:
                 raise RuntimeError("training transition cap exceeded")
@@ -405,7 +419,7 @@ def build_training_bank(
                     task=task,
                     reference=reference,
                     context=context,
-                    workers=int(training["cpu_workers"]),
+                    executor=branch_executor,
                 )
                 transition_count += branch_transitions
                 if transition_count > cap:
@@ -429,17 +443,24 @@ def build_training_bank(
                         auxiliary_costs=labels.auxiliary_costs,
                     )
                 )
+                bc_cells, bc_targets = behavior_cloning_targets(
+                    packet.legal_mask, mu_action.cell_index
+                )
                 bc_rows.append(
                     _policy_row(
                         packet,
                         specimen_key=assignment.record.specimen_key,
                         task=task,
-                        queried_cells=(mu_action.cell_index,),
-                        target_probabilities=np.ones(1, dtype=np.float64),
+                        queried_cells=bc_cells,
+                        target_probabilities=bc_targets,
                         state_origin="BEHAVIOR_BASE",
                         state_cost=observation.effective_budget,
-                        main_costs=np.zeros(1, dtype=np.float64),
-                        auxiliary_costs=np.zeros(1, dtype=np.float64),
+                        main_costs=np.zeros(
+                            np.count_nonzero(packet.legal_mask), dtype=np.float64
+                        ),
+                        auxiliary_costs=np.zeros(
+                            np.count_nonzero(packet.legal_mask), dtype=np.float64
+                        ),
                     )
                 )
                 score = _proxy_score(packet.report, reference)
@@ -468,6 +489,7 @@ def build_training_bank(
             f"states={len(base_rows)} transitions={transition_count}",
             flush=True,
         )
+    branch_executor.shutdown(wait=True)
     work = output / "_work"
     work.mkdir(parents=True, exist_ok=True)
     bank_path = work / "training_bank.pt"
@@ -489,6 +511,7 @@ def build_training_bank(
         "tasks": [task.value for task in Task],
         "base_state_count": len(base_rows),
         "bc_state_count": len(bc_rows),
+        "bc_target_space": "ALL_LEGAL_CELLS",
         "stop_state_count": len(stop_rows),
         "candidate_suffix_count": sum(row["candidate_count"] for row in manifest_rows),
         "logical_transition_count": transition_count,
@@ -524,12 +547,52 @@ def train_models(
     bank = torch.load(bank_path, map_location="cpu", weights_only=False)
     if bank.get("config_sha256") != config.config_sha256:
         raise RuntimeError("training bank config identity changed")
+    original_bank_sha256 = _file_sha256(bank_path)
+    normalized_bc_rows = []
+    bc_targets_changed = False
+    for row in bank["base_bc"]:
+        queried_cells = tuple(int(cell) for cell in row["queried_cells"])
+        probabilities = np.asarray(row["target_probabilities"], dtype=np.float32)
+        if (
+            probabilities.shape != (len(queried_cells),)
+            or np.count_nonzero(probabilities > 1e-8) != 1
+        ):
+            raise RuntimeError("stored behavior-cloning target is invalid")
+        chosen_cell = queried_cells[int(np.argmax(probabilities))]
+        complete_cells, complete_probabilities = behavior_cloning_targets(
+            np.asarray(row["legal_mask"], dtype=np.bool_), chosen_cell
+        )
+        normalized = dict(row)
+        normalized["queried_cells"] = complete_cells
+        normalized["target_probabilities"] = complete_probabilities
+        normalized["main_costs"] = np.zeros(len(complete_cells), dtype=np.float64)
+        normalized["auxiliary_costs"] = np.zeros(
+            len(complete_cells), dtype=np.float64
+        )
+        normalized_bc_rows.append(normalized)
+        bc_targets_changed |= queried_cells != complete_cells or not np.array_equal(
+            probabilities, complete_probabilities
+        )
+    bank["base_bc"] = normalized_bc_rows
+    if bc_targets_changed:
+        _torch_save_atomic(bank, bank_path)
+        bank_manifest_path = output / "training_bank_manifest.json"
+        bank_manifest = json.loads(bank_manifest_path.read_text(encoding="utf-8"))
+        bank_manifest["bc_target_space"] = "ALL_LEGAL_CELLS"
+        bank_manifest["bc_target_migration"] = {
+            "source": "RECORDED_RULE_ACTION_AND_LEGAL_MASK",
+            "row_count": len(normalized_bc_rows),
+            "pre_migration_bank_sha256": original_bank_sha256,
+        }
+        bank_manifest["bank_sha256"] = _file_sha256(bank_path)
+        write_json_atomic(bank_manifest_path, bank_manifest)
     bc_examples = tuple(_policy_example(row) for row in bank["base_bc"])
     ctg_examples = tuple(_policy_example(row) for row in bank["base_ctg"])
     training = config.values["training"]
     device = "cuda:0" if torch.cuda.is_available() else "cpu"
     if device == "cuda:0":
-        torch.cuda.reset_peak_memory_stats(device)
+        torch.empty(0, device=device)
+        torch.cuda.reset_peak_memory_stats(0)
     overfit_subset = ctg_examples[: min(32, len(ctg_examples))]
     torch.manual_seed(int(training["seed"]))
     overfit_model = LearnedCellActor()
@@ -676,7 +739,9 @@ def train_models(
     )
     write_csv_atomic(output / "training_log.csv", tuple(logs), log_fields)
     peak_memory = (
-        int(torch.cuda.max_memory_allocated(device)) if device == "cuda:0" else 0
+        int(torch.cuda.max_memory_allocated(0))
+        if device == "cuda:0"
+        else 0
     )
     manifest = {
         "schema_version": 1,
@@ -1537,6 +1602,7 @@ def _behavior_states(
             distance_threshold=distance_threshold,
             probe_position=probe,
             route_cost=route_cost,
+            include_actor_subblocks=False,
         )
         action = select_rule_action(
             RuleMethod.R_BALANCED,
@@ -1615,46 +1681,57 @@ def _candidate_suffix(
     task: Task,
     reference: TaskReportV2,
     context: StudyContext,
+    route_normalizer: float | None = None,
 ) -> tuple[tuple[StepSnapshot, ...], int]:
     observation = runtime.world.replay(base_history)
     probe = base_probe
     route_cost = base_route_cost
-    packet = _packet(
-        observation,
-        runtime=runtime,
-        percept=percept,
+    visible = read_visible_task_report(
+        grid=runtime.grid,
+        positions=observation.acquired_positions,
+        values=observation.measurement_values,
+        cell_levels=observation.measurement_state.levels,
+        prior=context.background_prior,
+        distance_threshold=float(context.config.values["reader"]["distance_threshold"]),
         task=task,
-        context=context,
-        probe_position=probe,
-        route_cost=route_cost,
-        include_actor_subblocks=False,
     )
-    score = _proxy_score(packet.report, reference)
-    snapshots = [_snapshot(observation.effective_budget, packet.report, score)]
+    score = _proxy_score(visible.report, reference)
+    snapshots = [_snapshot(observation.effective_budget, visible.report, score)]
     transitions = 0
     action = first_action
     while True:
         observation, probe, route_cost = _advance(
-            runtime, observation, action, probe, route_cost
+            runtime,
+            observation,
+            action,
+            probe,
+            route_cost,
+            route_normalizer=route_normalizer,
         )
         transitions += 1
-        packet = _packet(
-            observation,
-            runtime=runtime,
-            percept=percept,
+        visible = read_visible_task_report(
+            grid=runtime.grid,
+            positions=observation.acquired_positions,
+            values=observation.measurement_values,
+            cell_levels=observation.measurement_state.levels,
+            prior=context.background_prior,
+            distance_threshold=float(
+                context.config.values["reader"]["distance_threshold"]
+            ),
             task=task,
-            context=context,
-            probe_position=probe,
-            route_cost=route_cost,
-            include_actor_subblocks=False,
         )
-        score = _proxy_score(packet.report, reference)
-        snapshots.append(_snapshot(observation.effective_budget, packet.report, score))
+        score = _proxy_score(visible.report, reference)
+        snapshots.append(
+            _snapshot(observation.effective_budget, visible.report, score)
+        )
         if all(level == 2 for level in observation.measurement_state.levels):
             break
-        action = select_rule_action(
-            RuleMethod.R_BALANCED,
-            packet,
+        action = select_balanced_visible_action(
+            cell_levels=observation.measurement_state.levels,
+            candidate_cells=visible.report.candidate_cells,
+            percept=percept,
+            measured_mask=visible.measured_mask,
+            probe_position=probe,
             grid=runtime.grid,
             coverage_period=4,
         )
@@ -1672,32 +1749,26 @@ def _candidate_branches(
     task: Task,
     reference: TaskReportV2,
     context: StudyContext,
-    workers: int,
+    executor: ProcessPoolExecutor,
 ) -> tuple[dict[int, tuple[StepSnapshot, ...]], int]:
-    if type(workers) is not int or workers < 1:
-        raise ValueError("candidate branch worker count is invalid")
-    branch_runtimes = tuple(
-        open_study_specimen(context, runtime.record) for _action in candidates
-    )
-    with ThreadPoolExecutor(max_workers=min(workers, len(candidates))) as executor:
-        futures = tuple(
-            executor.submit(
-                _candidate_suffix,
-                branch_runtime,
-                base_history=base_history,
-                base_probe=base_probe,
-                base_route_cost=base_route_cost,
-                first_action=action,
-                percept=percept,
-                task=task,
-                reference=reference,
-                context=context,
-            )
-            for action, branch_runtime in zip(
-                candidates, branch_runtimes, strict=True
-            )
+    if not isinstance(executor, ProcessPoolExecutor):
+        raise TypeError("candidate branch executor is invalid")
+    futures = tuple(
+        executor.submit(
+            _candidate_suffix_worker,
+            runtime.record.specimen_key,
+            base_history=base_history,
+            base_probe=base_probe,
+            base_route_cost=base_route_cost,
+            first_action=action,
+            percept=percept,
+            task=task,
+            reference=reference,
+            route_normalizer=_full_route_length(runtime.grid.native_shape),
         )
-        results = tuple(future.result() for future in futures)
+        for action in candidates
+    )
+    results = tuple(future.result() for future in futures)
     return (
         {
             action.cell_index: snapshots
@@ -1709,12 +1780,67 @@ def _candidate_branches(
     )
 
 
+def _new_branch_executor(
+    config: StudyConfig, context: StudyContext
+) -> ProcessPoolExecutor:
+    return ProcessPoolExecutor(
+        max_workers=int(config.values["training"]["cpu_workers"]),
+        mp_context=get_context("spawn"),
+        initializer=_initialize_branch_worker,
+        initargs=(str(config.path), str(config.project_root), str(context.source_root)),
+    )
+
+
+def _initialize_branch_worker(
+    config_path: str, project_root: str, source_root: str
+) -> None:
+    global _BRANCH_WORKER_CONTEXT
+    _config, _BRANCH_WORKER_CONTEXT = _load(
+        Path(config_path), Path(project_root), Path(source_root)
+    )
+
+
+def _candidate_suffix_worker(
+    specimen_key: str,
+    *,
+    base_history: tuple[InspectionCellAction, ...],
+    base_probe: tuple[float, float],
+    base_route_cost: float,
+    first_action: InspectionCellAction,
+    percept: SurfacePercept,
+    task: Task,
+    reference: TaskReportV2,
+    route_normalizer: float,
+) -> tuple[tuple[StepSnapshot, ...], int]:
+    if _BRANCH_WORKER_CONTEXT is None:
+        raise RuntimeError("candidate branch worker is not initialized")
+    record = next(
+        row
+        for row in _BRANCH_WORKER_CONTEXT.roster.pilot_records
+        if row.specimen_key == specimen_key
+    )
+    return _candidate_suffix(
+        open_study_specimen(_BRANCH_WORKER_CONTEXT, record),
+        base_history=base_history,
+        base_probe=base_probe,
+        base_route_cost=base_route_cost,
+        first_action=first_action,
+        percept=percept,
+        task=task,
+        reference=reference,
+        context=_BRANCH_WORKER_CONTEXT,
+        route_normalizer=route_normalizer,
+    )
+
+
 def _advance(
     runtime: StudySpecimenRuntime,
     observation: Any,
     action: InspectionCellAction,
     probe: tuple[float, float],
     route_cost: float,
+    *,
+    route_normalizer: float | None = None,
 ) -> tuple[Any, tuple[float, float], float]:
     mask = np.zeros(runtime.grid.native_shape, dtype=np.bool_)
     if len(observation.acquired_positions):
@@ -1728,7 +1854,12 @@ def _advance(
         added, native_shape=runtime.grid.native_shape, start_position=probe
     )
     next_observation = runtime.world.step(observation, action)
-    normalized = route_length / _full_route_length(runtime.grid.native_shape)
+    denominator = (
+        _full_route_length(runtime.grid.native_shape)
+        if route_normalizer is None
+        else float(route_normalizer)
+    )
+    normalized = route_length / denominator
     return next_observation, next_probe, route_cost + normalized
 
 
@@ -2023,6 +2154,7 @@ def _aggregate_states(
     assignments = tuple(
         row for row in context.roster.assignments if row.split is Split.TRAIN
     )
+    branch_executor = _new_branch_executor(config, context)
     for specimen_index, assignment in enumerate(assignments, start=1):
         runtime = open_study_specimen(context, assignment.record)
         percept = percepts[assignment.record.specimen_key]
@@ -2075,7 +2207,7 @@ def _aggregate_states(
                     task=task,
                     reference=reference,
                     context=context,
-                    workers=int(training["cpu_workers"]),
+                    executor=branch_executor,
                 )
                 transitions += branch_used
                 labels = cost_to_go_targets(
@@ -2111,6 +2243,7 @@ def _aggregate_states(
             f"states={len(ctg_rows)} transitions={transitions}",
             flush=True,
         )
+    branch_executor.shutdown(wait=True)
     return ctg_rows, stop_rows, transitions
 
 

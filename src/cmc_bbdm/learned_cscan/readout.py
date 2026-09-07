@@ -101,6 +101,18 @@ class ReaderV2Result:
 
 
 @dataclass(frozen=True, slots=True, eq=False)
+class VisibleTaskReadout:
+    measured_mask: np.ndarray
+    report: TaskReportV2
+
+    def __post_init__(self) -> None:
+        mask = _readonly(self.measured_mask, dtype=np.bool_)
+        if mask.ndim != 2 or not mask.size or self.report.predicted_mask.shape != mask.shape:
+            raise ValueError("visible task readout is invalid")
+        object.__setattr__(self, "measured_mask", mask)
+
+
+@dataclass(frozen=True, slots=True, eq=False)
 class TaskReportV2:
     task: Task
     predicted_mask: np.ndarray
@@ -272,6 +284,123 @@ def build_task_report_v2(readout: ReaderV2Result, *, task: Task) -> TaskReportV2
     )
 
 
+def read_visible_task_report(
+    *,
+    grid: AcquisitionGrid,
+    positions: np.ndarray,
+    values: np.ndarray,
+    cell_levels: tuple[int, ...],
+    prior: BackgroundPrior,
+    distance_threshold: float,
+    task: Task,
+) -> VisibleTaskReadout:
+    """Build the exact public task report without actor-only dense features."""
+    if (
+        type(grid) is not AcquisitionGrid
+        or type(cell_levels) is not tuple
+        or len(cell_levels) != 64
+        or any(
+            type(level) is not int or level not in (-1, 0, 1, 2)
+            for level in cell_levels
+        )
+        or type(prior) is not BackgroundPrior
+        or type(task) is not Task
+        or isinstance(distance_threshold, bool)
+        or not 0.0 < float(distance_threshold) < 1.0
+    ):
+        raise ValueError("visible task report request is invalid")
+    coordinates = np.asarray(positions)
+    samples = np.asarray(values)
+    if (
+        coordinates.dtype.kind not in "iu"
+        or coordinates.ndim != 2
+        or coordinates.shape[1:] != (2,)
+        or samples.dtype != np.uint8
+        or samples.shape != (len(coordinates), 3)
+        or (
+            coordinates.size
+            and (
+                np.any(coordinates < 0)
+                or np.any(coordinates[:, 0] >= grid.native_shape[0])
+                or np.any(coordinates[:, 1] >= grid.native_shape[1])
+            )
+        )
+    ):
+        raise ValueError("visible task report observations are invalid")
+    linear = (
+        coordinates[:, 0] * grid.native_shape[1] + coordinates[:, 1]
+    )
+    if (
+        len(linear) > 1
+        and np.any(np.diff(linear) <= 0)
+        and len(np.unique(linear)) != len(coordinates)
+    ):
+        raise ValueError("visible task report observations are invalid")
+    measured_mask = np.zeros(grid.native_shape, dtype=np.bool_)
+    measured_rgb = np.zeros((*grid.native_shape, 3), dtype=np.uint8)
+    measured_scores = _distance(samples, prior.rgb)
+    if len(coordinates):
+        rows, columns = coordinates.T
+        measured_mask[rows, columns] = True
+        measured_rgb[rows, columns] = samples
+    estimate_valid = np.array(measured_mask, copy=True)
+    candidate_mask = np.zeros(grid.native_shape, dtype=np.bool_)
+    if len(coordinates):
+        candidate_mask[rows, columns] = measured_scores >= float(distance_threshold)
+    for cell, level in zip(grid.cells, cell_levels, strict=True):
+        if 0 <= level < 2:
+            _interpolate_cell_candidates(
+                cell,
+                grid,
+                measured_mask=measured_mask,
+                measured_rgb=measured_rgb,
+                estimate_valid=estimate_valid,
+                candidate_mask=candidate_mask,
+                prior=prior,
+                distance_threshold=float(distance_threshold),
+            )
+    if len(coordinates):
+        candidate_mask[rows, columns] = measured_scores >= float(distance_threshold)
+    candidate_cells = []
+    unverified = []
+    for cell, level in zip(grid.cells, cell_levels, strict=True):
+        row_slice, column_slice = owned_cell_slices(grid, cell)
+        is_candidate = bool(
+            level >= 0 and np.any(candidate_mask[row_slice, column_slice])
+        )
+        if is_candidate:
+            candidate_cells.append(cell.index)
+            if np.any(~estimate_valid[row_slice, column_slice]):
+                unverified.append(cell.index)
+    prediction = np.array(candidate_mask, copy=True)
+    if task is Task.LOCATE and np.any(prediction):
+        labels, count = ndimage.label(prediction)
+        sizes = np.bincount(labels.ravel(), minlength=count + 1)
+        sizes[0] = 0
+        prediction = labels == int(np.argmax(sizes))
+    support = np.argwhere(prediction & measured_mask).astype(np.int64, copy=False)
+    if len(support):
+        support_linear = support[:, 0] * grid.native_shape[1] + support[:, 1]
+        order = np.argsort(linear, kind="stable")
+        sorted_linear = linear[order]
+        score_indices = np.searchsorted(sorted_linear, support_linear)
+        signal = float(np.mean(measured_scores[order][score_indices]))
+    else:
+        signal = 0.0
+    report = TaskReportV2(
+        task=task,
+        predicted_mask=prediction,
+        support_positions=support,
+        candidate_cells=tuple(candidate_cells),
+        unverified_boundary_cells=tuple(unverified),
+        signal_strength=float(np.clip(signal, 0.0, 1.0)),
+        reason_code=(
+            "VISIBLE_CANDIDATE" if candidate_cells else "NO_VISIBLE_CANDIDATE"
+        ),
+    )
+    return VisibleTaskReadout(measured_mask=measured_mask, report=report)
+
+
 def owned_cell_slices(
     grid: AcquisitionGrid, cell: CellLattices
 ) -> tuple[slice, slice]:
@@ -351,6 +480,79 @@ def _interpolate_cell(
                 target_rows, support_rows, lattice[:, 0, channel]
             )
         estimate_valid[target_rows, column] = True
+
+
+def _interpolate_cell_candidates(
+    cell: CellLattices,
+    grid: AcquisitionGrid,
+    *,
+    measured_mask: np.ndarray,
+    measured_rgb: np.ndarray,
+    estimate_valid: np.ndarray,
+    candidate_mask: np.ndarray,
+    prior: BackgroundPrior,
+    distance_threshold: float,
+) -> None:
+    row_lower, row_upper = grid.row_boundaries[cell.row : cell.row + 2]
+    column_lower, column_upper = grid.column_boundaries[cell.column : cell.column + 2]
+    local_support = measured_mask[
+        row_lower : row_upper + 1, column_lower : column_upper + 1
+    ]
+    support_rows = (
+        np.flatnonzero(np.any(local_support, axis=1)).astype(np.int64) + row_lower
+    )
+    support_columns = (
+        np.flatnonzero(np.any(local_support, axis=0)).astype(np.int64)
+        + column_lower
+    )
+    if not len(support_rows) or not len(support_columns):
+        return
+    if np.count_nonzero(local_support) != len(support_rows) * len(support_columns):
+        return
+    row_slice, column_slice = owned_cell_slices(grid, cell)
+    target_rows = np.arange(row_slice.start, row_slice.stop, dtype=np.int64)
+    target_columns = np.arange(column_slice.start, column_slice.stop, dtype=np.int64)
+    target_rows = target_rows[
+        (target_rows >= support_rows[0]) & (target_rows <= support_rows[-1])
+    ]
+    target_columns = target_columns[
+        (target_columns >= support_columns[0])
+        & (target_columns <= support_columns[-1])
+    ]
+    if not len(target_rows) or not len(target_columns):
+        return
+    lattice = measured_rgb[np.ix_(support_rows, support_columns)].astype(np.float64)
+    result: np.ndarray | None = None
+    if len(support_rows) >= 2 and len(support_columns) >= 2:
+        target_row_grid, target_column_grid = np.meshgrid(
+            target_rows, target_columns, indexing="ij"
+        )
+        points = np.column_stack(
+            (target_row_grid.ravel(), target_column_grid.ravel())
+        )
+        result = interpn(
+            (support_rows, support_columns), lattice, points, method="linear"
+        ).reshape(len(target_rows), len(target_columns), 3)
+    elif len(support_rows) == 1 and len(support_columns) >= 2:
+        result = np.column_stack(
+            [
+                np.interp(target_columns, support_columns, lattice[0, :, channel])
+                for channel in range(3)
+            ]
+        )[None, :, :]
+    elif len(support_rows) >= 2 and len(support_columns) == 1:
+        result = np.column_stack(
+            [
+                np.interp(target_rows, support_rows, lattice[:, 0, channel])
+                for channel in range(3)
+            ]
+        )[:, None, :]
+    if result is None:
+        return
+    estimate_valid[np.ix_(target_rows, target_columns)] = True
+    candidate_mask[np.ix_(target_rows, target_columns)] = (
+        _distance(result, prior.rgb) >= distance_threshold
+    )
 
 
 def _summarize_cell(
@@ -438,7 +640,9 @@ __all__ = [
     "CellReadout",
     "ReaderV2Result",
     "TaskReportV2",
+    "VisibleTaskReadout",
     "build_task_report_v2",
     "owned_cell_slices",
     "read_visible_evidence",
+    "read_visible_task_report",
 ]

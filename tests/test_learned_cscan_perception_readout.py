@@ -13,6 +13,7 @@ from cmc_bbdm.inspection_agent.state import (
     apply_action,
     zero_state,
 )
+from cmc_bbdm.learned_cscan import readout as readout_module
 from cmc_bbdm.learned_cscan.contracts import Task
 from cmc_bbdm.learned_cscan.observation import build_observation_packet
 from cmc_bbdm.learned_cscan.perception import (
@@ -200,6 +201,57 @@ def test_reader_v2_preserves_measurements_without_filling_unmeasured_cells() -> 
     assert readout.cells[1].measured_count == 0
     assert readout.cells[1].estimate_valid is False
     assert readout.cells[1].candidate is False
+
+    initial = zero_state(grid)
+    action = InspectionCellAction(0, -1, 0)
+    lattice_positions = action_added_positions(grid, initial, action)
+    lattice_values = np.asarray(
+        [
+            ((17 * row) % 256, (11 * column) % 256, (row + column) % 256)
+            for row, column in lattice_positions
+        ],
+        dtype=np.uint8,
+    )
+    action_levels = apply_action(grid, initial, action).levels
+    dense = read_visible_evidence(
+        grid=grid,
+        positions=lattice_positions,
+        values=lattice_values,
+        cell_levels=action_levels,
+        prior=BackgroundPrior(
+            rgb=np.asarray([0, 0, 0], dtype=np.uint8),
+            fit_specimen_keys=("train:one",),
+            fit_split="TRAIN",
+        ),
+        distance_threshold=0.18,
+    )
+    for task in Task:
+        expected = readout_module.build_task_report_v2(dense, task=task)
+        visible = readout_module.read_visible_task_report(
+            grid=grid,
+            positions=lattice_positions,
+            values=lattice_values,
+            cell_levels=action_levels,
+            prior=BackgroundPrior(
+                rgb=np.asarray([0, 0, 0], dtype=np.uint8),
+                fit_specimen_keys=("train:one",),
+                fit_split="TRAIN",
+            ),
+            distance_threshold=0.18,
+            task=task,
+        )
+        assert np.array_equal(visible.report.predicted_mask, expected.predicted_mask)
+        assert np.array_equal(
+            visible.report.support_positions, expected.support_positions
+        )
+        assert visible.report.candidate_cells == expected.candidate_cells
+        assert (
+            visible.report.unverified_boundary_cells
+            == expected.unverified_boundary_cells
+        )
+        assert visible.report.signal_strength == expected.signal_strength
+        assert visible.report.reason_code == expected.reason_code
+        assert np.array_equal(visible.measured_mask, dense.measured_mask)
 
 
 def test_packet_depends_only_on_visible_history_and_perception() -> None:

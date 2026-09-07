@@ -11,6 +11,7 @@ from cmc_bbdm.inspection_agent.state import (
     legal_actions,
     zero_state,
 )
+from cmc_bbdm.learned_cscan import policies as policy_module
 from cmc_bbdm.learned_cscan import rollouts
 from cmc_bbdm.learned_cscan.contracts import Task
 from cmc_bbdm.learned_cscan.observation import build_observation_packet
@@ -104,6 +105,27 @@ def test_rules_emit_progressive_legal_actions_and_balanced_forces_coverage() -> 
         )
         assert route_cost == full_route.total_length
         assert route_end == full_route.end_position
+
+    visible_balanced = policy_module.select_balanced_visible_action(
+        cell_levels=packet.cell_levels,
+        candidate_cells=packet.report.candidate_cells,
+        percept=SurfacePercept(
+            regions=(
+                SurfaceRegion((27,), "shape_change", "lighting", "medium"),
+            ),
+            no_reliable_cue=False,
+        ),
+        measured_mask=packet.measured_mask,
+        probe_position=(
+            float(packet.global_features[4]),
+            float(packet.global_features[5]),
+        ),
+        grid=grid,
+        coverage_period=4,
+    )
+    assert visible_balanced == select_rule_action(
+        RuleMethod.R_BALANCED, packet, grid=grid, coverage_period=4
+    )
 
     cue_history = (
         InspectionCellAction(0, -1, 0),

@@ -27,6 +27,24 @@ class TrainingRoute(StrEnum):
     COST_TO_GO = "COST_TO_GO"
 
 
+def behavior_cloning_targets(
+    legal_mask: np.ndarray, chosen_cell: int
+) -> tuple[tuple[int, ...], np.ndarray]:
+    legal = np.asarray(legal_mask, dtype=np.bool_)
+    if (
+        legal.shape != (64,)
+        or type(chosen_cell) is not int
+        or not 0 <= chosen_cell < 64
+        or not legal[chosen_cell]
+    ):
+        raise ValueError("behavior-cloning action is not legal")
+    queried_cells = tuple(int(cell) for cell in np.flatnonzero(legal))
+    targets = np.zeros(len(queried_cells), dtype=np.float32)
+    targets[queried_cells.index(chosen_cell)] = 1.0
+    targets.setflags(write=False)
+    return queried_cells, targets
+
+
 @dataclass(frozen=True, slots=True, eq=False)
 class PolicyTrainingExample:
     specimen_key: str
@@ -455,11 +473,16 @@ def _validate_fit_request(
         or patience < 1
     ):
         raise ValueError("actor fit request is invalid")
-    if route is TrainingRoute.BEHAVIOR_CLONING and any(
-        np.count_nonzero(example.target_probabilities > 1e-8) != 1
-        for example in examples
-    ):
-        raise ValueError("behavior-cloning targets must be one-hot")
+    if route is TrainingRoute.BEHAVIOR_CLONING:
+        for example in examples:
+            legal_cells = tuple(int(cell) for cell in np.flatnonzero(example.legal_mask))
+            if (
+                example.queried_cells != legal_cells
+                or np.count_nonzero(example.target_probabilities > 1e-8) != 1
+            ):
+                raise ValueError(
+                    "behavior-cloning targets must be one-hot over all legal cells"
+                )
 
 
 def _readonly(value: object, dtype: object, shape: tuple[int, ...]) -> np.ndarray:
@@ -478,6 +501,7 @@ __all__ = [
     "StopTrainingExample",
     "TrainingLogRow",
     "TrainingRoute",
+    "behavior_cloning_targets",
     "fit_actor",
     "fit_stop_head",
 ]

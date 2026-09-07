@@ -21,6 +21,7 @@ from cmc_bbdm.learned_cscan.stopping import (
 from cmc_bbdm.learned_cscan.training import (
     PolicyTrainingExample,
     TrainingRoute,
+    behavior_cloning_targets,
     fit_actor,
 )
 
@@ -53,6 +54,12 @@ def test_compact_actor_masks_illegal_cells_and_stays_under_parameter_cap() -> No
 
 
 def test_fixed_small_bank_updates_each_minibatch_and_reduces_loss() -> None:
+    legal = np.zeros(64, dtype=np.bool_)
+    legal[[2, 5, 11]] = True
+    queried_cells, target_probabilities = behavior_cloning_targets(legal, 5)
+    assert queried_cells == (2, 5, 11)
+    np.testing.assert_array_equal(target_probabilities, [0.0, 1.0, 0.0])
+
     rng = np.random.default_rng(11)
     examples = []
     for index in range(8):
