@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import numpy as np
+import pytest
 
 from cmc_bbdm.vlm_cscan.contracts import (
     BenchmarkTask,
@@ -15,7 +16,12 @@ from cmc_bbdm.vlm_cscan.metrics import (
     paired_domain_bootstrap,
     success_curve,
 )
-from cmc_bbdm.vlm_cscan.references import evaluate_task_report
+from cmc_bbdm.vlm_cscan.references import (
+    derive_proxy_reference,
+    evaluate_task_report,
+    reference_from_payload,
+)
+from cmc_bbdm.vlm_cscan.reporting import PublicStopTracker
 
 
 def _reference(
@@ -157,3 +163,82 @@ def test_paired_bootstrap_weights_domains_equally() -> None:
     assert result.estimate == 0.0
     assert result.ci_lower == 0.0
     assert result.ci_upper == 0.0
+
+
+def test_polygon_import_requires_real_human_review_provenance() -> None:
+    """Catches relabeling an automatic proposal as a reviewed reference."""
+
+    payload = {
+        "specimen_key": "domain:sample",
+        "frame": "registered_cscan",
+        "source_image_sha256": "a" * 64,
+        "reference_type": "EXPERT_REVIEWED",
+        "review_state": "reviewed",
+        "reviewer_alias": "R1",
+        "regions": [
+            {
+                "id": "r1",
+                "polygon": [[0.2, 0.2], [0.6, 0.2], [0.6, 0.6], [0.2, 0.6]],
+                "certainty": "certain",
+            }
+        ],
+        "uncertain_regions": [],
+        "notes": "independent review",
+    }
+
+    reference = reference_from_payload(payload, native_shape=(10, 10))
+    assert reference.formal_eligible is True
+    assert reference.certain_mask[4, 4]
+
+    payload["reference_type"] = "ALGORITHM_DERIVED_NOT_REVIEWED"
+    with pytest.raises(ValueError, match="review"):
+        reference_from_payload(payload, native_shape=(10, 10))
+
+
+def test_public_locate_stop_requires_two_stable_measured_updates() -> None:
+    """Catches authorizing STOP from one report or without new measurements."""
+
+    prediction = np.zeros((8, 8), dtype=np.bool_)
+    prediction[2:4, 3:5] = True
+    base = TaskReport(
+        task=BenchmarkTask.LOCATE,
+        predicted_mask=prediction,
+        support_positions=np.asarray([[2, 3], [2, 4], [3, 3]], dtype=np.int64),
+        confidence=0.9,
+        public_complete=False,
+        reason_code="EVIDENCE_PRESENT",
+    )
+    tracker = PublicStopTracker(BenchmarkTask.LOCATE)
+
+    first = tracker.update(base, measured_count=3, cell_levels=(-1,) * 64)
+    unchanged = tracker.update(base, measured_count=3, cell_levels=(-1,) * 64)
+    second = tracker.update(base, measured_count=4, cell_levels=(-1,) * 64)
+    third = tracker.update(base, measured_count=5, cell_levels=(-1,) * 64)
+
+    assert first.public_complete is False
+    assert unchanged.public_complete is False
+    assert second.public_complete is False
+    assert third.public_complete is True
+
+
+def test_proxy_background_uses_inner_ring_not_rendered_outer_frame() -> None:
+    """Catches a bright plotting frame turning the whole C-scan into a proposal."""
+
+    image = np.full((40, 40, 3), (80, 80, 160), dtype=np.uint8)
+    image[[0, -1], :, :] = 255
+    image[:, [0, -1], :] = 255
+    image[16:24, 17:23] = (240, 40, 30)
+
+    reference = derive_proxy_reference(
+        specimen_key="domain:sample",
+        source_image_sha256="a" * 64,
+        full_scan=image,
+        distance_threshold=0.18,
+        minimum_component_pixels=9,
+        uncertainty_band=0.02,
+        border_exclusion_fraction=0.10,
+    )
+
+    assert reference.certain_mask[20, 20]
+    assert not reference.certain_mask[10, 10]
+    assert np.count_nonzero(reference.certain_mask) < 100

@@ -38,6 +38,76 @@ class ReviewState(str, Enum):
     REVIEWED = "reviewed"
 
 
+class MethodId(str, Enum):
+    B0 = "B0"
+    B1 = "B1"
+    B2 = "B2"
+    B3 = "B3"
+    B4 = "B4"
+    B5 = "B5"
+    B6 = "B6"
+    B7 = "B7"
+
+
+@dataclass(frozen=True, slots=True)
+class SurfaceRegion:
+    cells: tuple[int, ...]
+    visible_cue: str
+    alternative: str
+    confidence: str
+
+    def __post_init__(self) -> None:
+        if (
+            type(self.cells) is not tuple
+            or not self.cells
+            or len(set(self.cells)) != len(self.cells)
+            or any(type(cell) is not int or not 0 <= cell < 64 for cell in self.cells)
+            or type(self.visible_cue) is not str
+            or not self.visible_cue
+            or type(self.alternative) is not str
+            or not self.alternative
+            or self.confidence not in {"low", "medium", "high"}
+        ):
+            raise ValueError("surface region is invalid")
+
+
+@dataclass(frozen=True, slots=True)
+class SurfacePlan:
+    regions: tuple[SurfaceRegion, ...]
+    priority_cells: tuple[int, ...]
+    initial_skill: str
+    no_reliable_surface_cue: bool
+
+    def __post_init__(self) -> None:
+        cells = tuple(cell for region in self.regions for cell in region.cells)
+        if (
+            type(self.regions) is not tuple
+            or len(self.regions) > 3
+            or any(type(region) is not SurfaceRegion for region in self.regions)
+            or type(self.priority_cells) is not tuple
+            or len(self.priority_cells) > 8
+            or len(set(self.priority_cells)) != len(self.priority_cells)
+            or any(
+                type(cell) is not int or not 0 <= cell < 64
+                for cell in self.priority_cells
+            )
+            or len(set(cells)) != len(cells)
+            or len(cells) > 8
+            or not set(cells).issubset(self.priority_cells)
+            or self.initial_skill not in {"SURVEY_ROI", "BROADEN_SEARCH"}
+            or type(self.no_reliable_surface_cue) is not bool
+            or (
+                self.no_reliable_surface_cue
+                and (self.regions or self.priority_cells or self.initial_skill != "BROADEN_SEARCH")
+            )
+            or (
+                not self.priority_cells
+                and self.initial_skill != "BROADEN_SEARCH"
+            )
+        ):
+            raise ValueError("surface plan is invalid")
+
+
 @dataclass(frozen=True, slots=True)
 class EvidenceMap:
     states: np.ndarray
@@ -225,9 +295,12 @@ __all__ = [
     "EvaluationMode",
     "EvidenceMap",
     "EvidenceState",
+    "MethodId",
     "ReferenceType",
     "ReviewState",
     "RoutePlan",
+    "SurfacePlan",
+    "SurfaceRegion",
     "TaskReport",
     "TaskScore",
 ]

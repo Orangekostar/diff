@@ -12,6 +12,7 @@ from cmc_bbdm.vlm_cscan.reader import read_sparse_evidence
 from cmc_bbdm.vlm_cscan.route import compile_route, reference_full_raster_length
 from cmc_bbdm.vlm_cscan.runtime import (
     InputSpecimen,
+    _inner_border_median,
     load_benchmark_config,
     load_input_records,
     render_surface_inputs,
@@ -165,3 +166,13 @@ def test_real_roster_resolves_six_domain_hash_fixed_pilot() -> None:
     ]
     assert all(record.surface_path.is_file() for record in roster.pilot_records)
     assert all(record.cscan_path.is_file() for record in roster.pilot_records)
+
+
+def test_inner_border_median_excludes_rendered_frame() -> None:
+    image = np.full((40, 50, 3), (70, 80, 150), dtype=np.uint8)
+    image[[0, -1], :, :] = 255
+    image[:, [0, -1], :] = 255
+
+    background = _inner_border_median(image, border_fraction=0.10)
+
+    assert np.array_equal(background, np.asarray([70.0, 80.0, 150.0]))
