@@ -4,7 +4,12 @@ import numpy as np
 import polars as pl
 import pytest
 
-from cmc_bbdm.vlm_cscan.artifacts import _write_parquet_atomic
+from cmc_bbdm.vlm_cscan.artifacts import (
+    _qwen_processor_geometry,
+    _route_cost_for_mode,
+    _task_threshold_failures,
+    _write_parquet_atomic,
+)
 from cmc_bbdm.vlm_cscan.contracts import (
     BenchmarkTask,
     CScanReference,
@@ -257,3 +262,37 @@ def test_parquet_resume_schema_handles_a_late_stop_step(tmp_path) -> None:
 
     table = pl.read_parquet(path)
     assert table["autonomous_stop_step"].drop_nulls().to_list() == [103] * 89
+
+
+def test_qwen_processor_geometry_records_the_actual_internal_image_shape() -> None:
+    assert _qwen_processor_geometry(1024, 1024) == {
+        "height_px": 980,
+        "width_px": 980,
+        "image_grid_thw": [1, 70, 70],
+        "visual_token_count": 1225,
+    }
+
+
+def test_autonomous_route_cost_freezes_at_the_public_stop() -> None:
+    rows = [
+        {"step": 0, "normalized_route_cost": 0.10, "autonomous_stop_step": None},
+        {"step": 1, "normalized_route_cost": 0.25, "autonomous_stop_step": 1},
+        {"step": 2, "normalized_route_cost": 0.90, "autonomous_stop_step": 1},
+    ]
+
+    assert _route_cost_for_mode(rows, EvaluationMode.ANYTIME_REPORT) == 0.90
+    assert _route_cost_for_mode(rows, EvaluationMode.AUTONOMOUS_REPORT) == 0.25
+
+
+def test_failure_summary_names_characterize_threshold_misses() -> None:
+    row = {
+        "proxy_iou": 0.60,
+        "proxy_recall": 0.80,
+        "proxy_relative_area_error": 0.20,
+    }
+
+    assert _task_threshold_failures(row, "CHARACTERIZE") == [
+        "MASK_IOU_BELOW_0_70",
+        "CERTAIN_RECALL_BELOW_0_90",
+        "AREA_ERROR_ABOVE_0_10",
+    ]

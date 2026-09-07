@@ -34,8 +34,8 @@ Consequences fixed before execution:
 - automatic full-C-scan proposals are
   `ALGORITHM_DERIVED_NOT_REVIEWED`, and same-reader proxy scores are reported
   only as self-consistency diagnostics;
-- an annotation queue preserves clean surface, full C-scan, proposal, and JSON
-  template for later independent review.
+- separate surface-only and C-scan queues preserve review templates; the input
+  manifest locates source images, and 12 combined examples visualize proposals.
 
 ## Model decision
 
@@ -45,6 +45,13 @@ used with bfloat16, deterministic decoding, `max_new_tokens=700`, at most one
 format repair, and at most four event-triggered replans per episode. No second
 model, prompt search, quantization search, or paid API is used. Mock responses
 may test software but never enter experiment results.
+
+All 60 pilot surface renders are 1024x1024. The frozen processor applies its
+28-pixel-factor smart resize to 980x980 (`image_grid_thw=[1,70,70]`, 1,225
+merged visual tokens per surface image) without spatial padding. Evidence
+render and processor dimensions are recorded per specimen in the input
+manifest; software and preprocessor identities are recorded in the model
+manifest.
 
 ## System boundaries
 
@@ -72,7 +79,8 @@ Each primitive action's exact newly revealed positions are compiled before
 world execution. Four deterministic row/column snake candidates are evaluated
 from a common `(0,0)` start; the shortest is selected with deterministic ties.
 Information cost is unique revealed positions. Transit, active scan distance,
-total distance, turns, and revisits are separate fields; transit never reveals.
+total distance, turns, and explicit revisits are separate fields; transit
+never reveals.
 Distances use normalized scan-frame coordinates and are normalized separately
 by the same specimen's full-raster snake length.
 
@@ -80,8 +88,29 @@ LOCATE and CHARACTERIZE criteria follow the frozen YAML. `ANYTIME_REPORT` uses
 the most recent report at each cost without cumulative-max hindsight.
 `AUTONOMOUS_REPORT` freezes report and cost after an actual public STOP.
 Hindsight sufficiency, if computed, is diagnostic only. Statistics use one
-5,000-replicate paired, within-domain bootstrap and equal domain weighting once
-reviewed references exist; it is not applied to null formal outcomes.
+5,000-replicate paired, within-domain bootstrap with equal domain weighting.
+Until reviewed references exist, those intervals describe only the explicitly
+labelled self-consistency proxy and are not applied to null formal outcomes.
+
+## Pilot outcome
+
+The bounded pilot executed 960 trajectories: 60 physical specimens, eight
+methods, and two tasks. The frozen VLM made 60 initial-plan calls and 120
+event-triggered replan calls with no parser fallback. Its outputs were highly
+concentrated, however: 45/60 initial plans selected only cell 27 and all 120
+replans selected menu item `m1`. This is response collapse, not evidence of
+useful visual or dynamic reasoning.
+
+Reviewed C-scan reference coverage remains 0/60, so every formal task-success
+field is null and all four component conclusions are `INCONCLUSIVE`. Under the
+explicitly diagnostic same-reader proxy, B6 autonomously satisfied LOCATE for
+3/60 specimens and CHARACTERIZE for 0/60. B6 versus B5 changed LOCATE anytime
+AUSC by +0.000726 (95% paired bootstrap CI -0.005511 to +0.007574) and
+CHARACTERIZE anytime AUSC by -0.000133 (-0.000577 to +0.000120). Deterministic
+feedback reduced proxy anytime AUSC relative to its open counterpart in all six
+domains for both tasks. These data do not support a positive VLM, feedback, or
+autonomous-completion claim; independent C-scan review is the next evidence
+gate.
 
 ## External design sources
 

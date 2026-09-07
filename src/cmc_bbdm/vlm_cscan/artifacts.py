@@ -4,10 +4,13 @@ from __future__ import annotations
 
 import csv
 import hashlib
+import importlib.metadata
 import json
+import math
 import multiprocessing
+import platform
 import time
-from collections import defaultdict
+from collections import Counter, defaultdict
 from concurrent.futures import ProcessPoolExecutor
 from itertools import pairwise
 from pathlib import Path
@@ -55,6 +58,12 @@ from .vlm import (
 _FIXED_METHODS = (MethodId.B0, MethodId.B1, MethodId.B2, MethodId.B3)
 _RULE_METHODS = (MethodId.B4, MethodId.B5, MethodId.B7)
 _TASKS = (BenchmarkTask.LOCATE, BenchmarkTask.CHARACTERIZE)
+_QWEN_RESIZE_FACTOR = 28
+_QWEN_PATCH_SIZE = 14
+_QWEN_MERGE_SIZE = 2
+_QWEN_MIN_VISUAL_TOKENS = 256
+_QWEN_MAX_VISUAL_TOKENS = 1280
+_QWEN_PIXELS_PER_VISUAL_TOKEN = _QWEN_RESIZE_FACTOR**2
 _REQUIRED_RESULT_FILES = (
     "input_manifest.csv",
     "reference_manifest.csv",
@@ -65,6 +74,7 @@ _REQUIRED_RESULT_FILES = (
     "reports.parquet",
     "aggregate_metrics.csv",
     "comparisons.csv",
+    "failure_types.csv",
     "summary.json",
 )
 
@@ -81,20 +91,33 @@ def prepare_benchmark(
     output.mkdir(parents=True, exist_ok=True)
     pilot_keys = {record.specimen_key for record in roster.pilot_records}
     smoke_keys = {record.specimen_key for record in roster.smoke_records}
-    render_hashes: dict[str, tuple[str, str]] = {}
+    render_metadata: dict[str, tuple[str, str, int, int, dict[str, object]]] = {}
     for record in roster.pilot_records:
         with Image.open(record.surface_path) as image:
             rendered = render_surface_inputs(
                 image,
                 max_edge=int(config.values["surface"]["max_edge"]),
             )
-        render_hashes[record.specimen_key] = (
+        surface_geometry = _qwen_processor_geometry(
+            rendered.clean.height,
+            rendered.clean.width,
+        )
+        render_metadata[record.specimen_key] = (
             rendered.clean_sha256,
             rendered.gridded_sha256,
+            rendered.clean.height,
+            rendered.clean.width,
+            surface_geometry,
         )
     input_rows = []
     for record in roster.records:
-        clean_sha, gridded_sha = render_hashes.get(record.specimen_key, ("", ""))
+        clean_sha, gridded_sha, render_height, render_width, surface_geometry = (
+            render_metadata.get(
+                record.specimen_key,
+                ("", "", "", "", {}),
+            )
+        )
+        evidence_geometry = _qwen_processor_geometry(*record.native_shape)
         input_rows.append(
             {
                 "schema_version": 1,
@@ -117,6 +140,26 @@ def prepare_benchmark(
                 "smoke_selected": record.specimen_key in smoke_keys,
                 "clean_render_sha256": clean_sha,
                 "gridded_render_sha256": gridded_sha,
+                "surface_render_height_px": render_height,
+                "surface_render_width_px": render_width,
+                "model_surface_height_px": surface_geometry.get("height_px", ""),
+                "model_surface_width_px": surface_geometry.get("width_px", ""),
+                "model_surface_image_grid_thw": json.dumps(
+                    surface_geometry.get("image_grid_thw", []),
+                    separators=(",", ":"),
+                ),
+                "model_surface_visual_tokens": surface_geometry.get(
+                    "visual_token_count", ""
+                ),
+                "model_evidence_height_px": evidence_geometry["height_px"],
+                "model_evidence_width_px": evidence_geometry["width_px"],
+                "model_evidence_image_grid_thw": json.dumps(
+                    evidence_geometry["image_grid_thw"],
+                    separators=(",", ":"),
+                ),
+                "model_evidence_visual_tokens": evidence_geometry[
+                    "visual_token_count"
+                ],
             }
         )
     _write_csv(output / "input_manifest.csv", input_rows)
@@ -139,9 +182,11 @@ def prepare_benchmark(
             )
     _write_csv(output / "split_manifest.csv", split_rows)
     _write_reference_manifest(config, roster.records)
+    previous_execution = _existing_model_execution(config)
     _write_model_manifest(
         config,
-        execution={
+        execution=previous_execution
+        or {
             "state": "MODEL_AVAILABLE_INFERENCE_PENDING",
             "cohort": None,
             "unique_initial_plans": _initial_cache_count(
@@ -168,8 +213,10 @@ def export_annotation_queue(
     roster = load_input_records(config, source_root=source_root)
     output = _result_root(config)
     queue = output / "annotation_queue"
+    surface_queue = output / "surface_annotation_queue"
     visualizations = output / "visualizations"
     queue.mkdir(parents=True, exist_ok=True)
+    surface_queue.mkdir(parents=True, exist_ok=True)
     visualizations.mkdir(parents=True, exist_ok=True)
     selected_visualizations = {
         record.specimen_key
@@ -181,6 +228,43 @@ def export_annotation_queue(
     visualization_rows = []
     for record in roster.pilot_records:
         reference, full_scan = _derive_proxy(config, record)
+        with Image.open(record.surface_path) as image:
+            rendered_surface = render_surface_inputs(
+                image,
+                max_edge=int(config.values["surface"]["max_edge"]),
+            )
+        surface_template = surface_queue / _queue_name(record)
+        if not surface_template.exists():
+            _write_json(
+                surface_template,
+                {
+                    "schema_version": 1,
+                    "specimen_key": record.specimen_key,
+                    "frame": "registered_surface_rot90",
+                    "source_image_sha256": record.surface_sha256,
+                    "rendered_image_sha256": rendered_surface.clean_sha256,
+                    "source_path_from_source_root": record.surface_path.relative_to(
+                        Path(source_root).resolve()
+                    ).as_posix(),
+                    "review_state": "pending",
+                    "reviewer_alias": None,
+                    "visible_regions": [],
+                    "interference_regions": [],
+                    "unable_to_determine": True,
+                    "allowed_visible_cues": [
+                        "indentation_like",
+                        "crack_like",
+                        "other_suspicious",
+                    ],
+                    "allowed_interference_cues": [
+                        "reflection",
+                        "contamination",
+                        "texture_variation",
+                    ],
+                    "blinding_contract": "SURFACE_ONLY_NO_CSCAN_NO_CAI",
+                    "notes": "",
+                },
+            )
         payload = {
             "schema_version": 1,
             "specimen_key": record.specimen_key,
@@ -211,7 +295,17 @@ def export_annotation_queue(
             ],
             "proposal_provenance": {
                 "status": "ALGORITHM_DERIVED_NOT_REVIEWED",
-                "reader": config.values["reader"],
+                "algorithm": "FULL_CSCAN_INNER_BORDER_RGB_DISTANCE",
+                "background": "SAME_SPECIMEN_INNER_BORDER_MEDIAN",
+                "parameters": {
+                    key: config.values["reader"][key]
+                    for key in (
+                        "distance_threshold",
+                        "uncertainty_band",
+                        "border_exclusion_fraction",
+                        "minimum_component_pixels",
+                    )
+                },
             },
             "review_instructions": (
                 "A qualified reviewer must inspect and edit polygons, then set "
@@ -223,6 +317,16 @@ def export_annotation_queue(
         template = queue / _queue_name(record)
         if not template.exists():
             _write_json(template, payload)
+        else:
+            existing = json.loads(template.read_text(encoding="utf-8"))
+            if (
+                existing.get("review_state") == "pending"
+                and existing.get("reference_type")
+                == "ALGORITHM_DERIVED_NOT_REVIEWED"
+                and existing.get("reviewer_alias") is None
+            ):
+                existing["proposal_provenance"] = payload["proposal_provenance"]
+                _write_json(template, existing)
         if record.specimen_key in selected_visualizations:
             target = visualizations / f"{record.dataset_id}__{record.specimen_id}.png"
             _write_reference_visualization(record, reference, full_scan, target)
@@ -239,6 +343,7 @@ def export_annotation_queue(
     _write_reference_manifest(config, roster.records)
     return {
         "annotation_count": len(roster.pilot_records),
+        "surface_annotation_count": len(roster.pilot_records),
         "visualization_count": len(visualization_rows),
         "reviewed_reference_count": _reviewed_reference_count(config, roster.records),
     }
@@ -430,6 +535,7 @@ def evaluate_benchmark(
     _write_csv(output / "aggregate_metrics.csv", aggregate_rows)
     comparisons = _comparison_rows(config, by_method_task)
     _write_csv(output / "comparisons.csv", comparisons)
+    _write_csv(output / "failure_types.csv", _failure_type_rows(by_method_task))
     _write_curve_figures(output, aggregate_rows)
     cache_summary = _cache_summary(output / "surface_plans.jsonl")
     reviewed_count = _reviewed_reference_count(config, records)
@@ -471,6 +577,11 @@ def evaluate_benchmark(
             (output / "run_metadata.json").read_text(encoding="utf-8")
         )
     _write_json(output / "summary.json", summary)
+    _write_model_manifest(
+        config,
+        execution=_existing_model_execution(config)
+        or {"state": "MODEL_AVAILABLE_INFERENCE_PENDING"},
+    )
     _write_checksums(output)
     return summary
 
@@ -723,36 +834,89 @@ def _aggregate_rows(
                             )
                         )
                     terminal_rows = [value[-1] for value in selected.values()]
-                    early_wrong = [
-                        row["autonomous_stop_cost"] is not None
-                        and not row["autonomous_proxy_diagnostic_success"]
-                        for row in terminal_rows
-                    ]
-                    incomplete = [
-                        row["autonomous_stop_cost"] is None for row in terminal_rows
-                    ]
                     terminal_route = [
-                        float(row["normalized_route_cost"]) for row in terminal_rows
+                        _route_cost_for_mode(specimen_rows, mode)
+                        for specimen_rows in selected.values()
                     ]
-                    for name, values in (
-                        ("EARLY_WRONG_STOP_RATE", early_wrong),
-                        ("INCOMPLETE_RATE", incomplete),
-                        ("FINAL_NORMALIZED_ROUTE_COST", terminal_route),
-                    ):
-                        rows.append(
-                            _metric_row(
-                                scope,
-                                method,
-                                task,
-                                mode.value,
-                                name,
-                                None,
-                                "PROXY_DIAGNOSTIC",
-                                float(np.mean(values)),
-                                int(sum(values)) if name.endswith("RATE") else None,
-                                len(values),
-                            )
+                    rows.append(
+                        _metric_row(
+                            scope,
+                            method,
+                            task,
+                            mode.value,
+                            "FINAL_NORMALIZED_ROUTE_COST",
+                            None,
+                            "PROXY_DIAGNOSTIC",
+                            float(np.mean(terminal_route)),
+                            None,
+                            len(terminal_route),
                         )
+                    )
+                    if mode is EvaluationMode.AUTONOMOUS_REPORT:
+                        early_wrong = [
+                            row["autonomous_stop_cost"] is not None
+                            and not row["autonomous_proxy_diagnostic_success"]
+                            for row in terminal_rows
+                        ]
+                        incomplete = [
+                            row["autonomous_stop_cost"] is None
+                            for row in terminal_rows
+                        ]
+                        for name, values in (
+                            ("EARLY_WRONG_STOP_RATE", early_wrong),
+                            ("INCOMPLETE_RATE", incomplete),
+                        ):
+                            rows.append(
+                                _metric_row(
+                                    scope,
+                                    method,
+                                    task,
+                                    mode.value,
+                                    name,
+                                    None,
+                                    "PROXY_DIAGNOSTIC",
+                                    float(np.mean(values)),
+                                    int(sum(values)),
+                                    len(values),
+                                )
+                            )
+                        proxy_completion_costs = [
+                            (
+                                float(row["autonomous_stop_cost"])
+                                if row["autonomous_stop_cost"] is not None
+                                and row["autonomous_proxy_diagnostic_success"]
+                                else 1.0
+                            )
+                            for row in terminal_rows
+                        ]
+                        formal_completion_costs = [
+                            (
+                                float(row["autonomous_stop_cost"])
+                                if row["autonomous_stop_cost"] is not None
+                                and row["autonomous_formal_success"]
+                                else 1.0
+                            )
+                            for row in terminal_rows
+                            if row["reference_eligible"]
+                        ]
+                        for evidence_kind, values in (
+                            ("FORMAL", formal_completion_costs),
+                            ("PROXY_DIAGNOSTIC", proxy_completion_costs),
+                        ):
+                            rows.append(
+                                _metric_row(
+                                    scope,
+                                    method,
+                                    task,
+                                    mode.value,
+                                    "FAILURE_PENALIZED_COMPLETION_COST",
+                                    None,
+                                    evidence_kind,
+                                    float(np.mean(values)) if values else None,
+                                    None,
+                                    len(values),
+                                )
+                            )
     return rows
 
 
@@ -781,26 +945,70 @@ def _comparison_rows(
                 treatment_rows = groups[(treatment, task)]
                 comparator_rows = groups[(comparator, task)]
                 for metric in ("FINAL_SUCCESS_RATE", "AUSC"):
-                    differences: dict[str, list[float]] = defaultdict(list)
+                    proxy_differences: dict[str, list[float]] = defaultdict(list)
+                    formal_differences: dict[str, list[float]] = defaultdict(list)
                     for specimen_key in sorted(treatment_rows):
                         left = treatment_rows[specimen_key]
                         right = comparator_rows[specimen_key]
                         if metric == "FINAL_SUCCESS_RATE":
-                            left_value = _snapshot(left, mode=mode, checkpoint=1.0)[1]
-                            right_value = _snapshot(right, mode=mode, checkpoint=1.0)[1]
+                            left_formal, left_proxy = _snapshot(
+                                left,
+                                mode=mode,
+                                checkpoint=1.0,
+                            )
+                            right_formal, right_proxy = _snapshot(
+                                right,
+                                mode=mode,
+                                checkpoint=1.0,
+                            )
                         else:
-                            left_value = _specimen_ausc(left, mode=mode, formal=False)
-                            right_value = _specimen_ausc(right, mode=mode, formal=False)
-                        differences[str(left[0]["dataset_id"])].append(
-                            float(left_value) - float(right_value)
+                            left_proxy = _specimen_ausc(
+                                left,
+                                mode=mode,
+                                formal=False,
+                            )
+                            right_proxy = _specimen_ausc(
+                                right,
+                                mode=mode,
+                                formal=False,
+                            )
+                            left_formal = _specimen_ausc(
+                                left,
+                                mode=mode,
+                                formal=True,
+                            )
+                            right_formal = _specimen_ausc(
+                                right,
+                                mode=mode,
+                                formal=True,
+                            )
+                        domain = str(left[0]["dataset_id"])
+                        proxy_differences[domain].append(
+                            float(left_proxy) - float(right_proxy)
                         )
-                    result = paired_domain_bootstrap(
+                        if left_formal is not None and right_formal is not None:
+                            formal_differences[domain].append(
+                                float(left_formal) - float(right_formal)
+                            )
+                    proxy_result = paired_domain_bootstrap(
                         {
                             domain: np.asarray(values, dtype=np.float64)
-                            for domain, values in differences.items()
+                            for domain, values in proxy_differences.items()
                         },
                         replicates=replicates,
                         seed=seed,
+                    )
+                    formal_result = (
+                        paired_domain_bootstrap(
+                            {
+                                domain: np.asarray(values, dtype=np.float64)
+                                for domain, values in formal_differences.items()
+                            },
+                            replicates=replicates,
+                            seed=seed,
+                        )
+                        if formal_differences
+                        else None
                     )
                     output.append(
                         {
@@ -811,20 +1019,115 @@ def _comparison_rows(
                             "metric": metric,
                             "treatment": treatment,
                             "comparator": comparator,
-                            "formal_estimate": None,
-                            "formal_ci_lower": None,
-                            "formal_ci_upper": None,
-                            "proxy_diagnostic_estimate": result.estimate,
-                            "proxy_diagnostic_ci_lower": result.ci_lower,
-                            "proxy_diagnostic_ci_upper": result.ci_upper,
-                            "physical_specimen_n": sum(len(value) for value in differences.values()),
-                            "domain_n": len(differences),
-                            "multiple_comparison": "NOT_APPLICABLE_REFERENCE_PENDING",
+                            "formal_estimate": (
+                                formal_result.estimate if formal_result else None
+                            ),
+                            "formal_ci_lower": (
+                                formal_result.ci_lower if formal_result else None
+                            ),
+                            "formal_ci_upper": (
+                                formal_result.ci_upper if formal_result else None
+                            ),
+                            "proxy_diagnostic_estimate": proxy_result.estimate,
+                            "proxy_diagnostic_ci_lower": proxy_result.ci_lower,
+                            "proxy_diagnostic_ci_upper": proxy_result.ci_upper,
+                            "physical_specimen_n": sum(
+                                len(value) for value in proxy_differences.values()
+                            ),
+                            "domain_n": len(proxy_differences),
+                            "formal_specimen_n": sum(
+                                len(value) for value in formal_differences.values()
+                            ),
+                            "formal_domain_n": len(formal_differences),
+                            "multiple_comparison": (
+                                "HOLM_PENDING"
+                                if formal_result
+                                else "NOT_APPLICABLE_REFERENCE_PENDING"
+                            ),
                             "conclusion": "INCONCLUSIVE",
-                            "evidence_status": "PROXY_ONLY_NOT_FORMAL_TASK_EVIDENCE",
+                            "evidence_status": (
+                                "FORMAL_ESTIMATE_AVAILABLE_CONCLUSION_PENDING"
+                                if formal_result
+                                else "PROXY_ONLY_NOT_FORMAL_TASK_EVIDENCE"
+                            ),
                         }
                     )
     return output
+
+
+def _failure_type_rows(
+    groups: dict[tuple[str, str], dict[str, list[dict[str, Any]]]],
+) -> list[dict[str, object]]:
+    output = []
+    for (method, task), specimens in sorted(groups.items()):
+        for mode in EvaluationMode:
+            counts: Counter[str] = Counter()
+            for rows in specimens.values():
+                terminal = rows[-1]
+                if mode is EvaluationMode.ANYTIME_REPORT:
+                    success = bool(terminal["proxy_diagnostic_success"])
+                    failures = json.loads(terminal["proxy_failure_types_json"])
+                    score_row = terminal
+                elif terminal["autonomous_stop_cost"] is None:
+                    success = False
+                    failures = ["NO_AUTONOMOUS_STOP"]
+                    score_row = terminal
+                else:
+                    success = bool(terminal["autonomous_proxy_diagnostic_success"])
+                    failures = json.loads(
+                        terminal["autonomous_proxy_failure_types_json"]
+                    )
+                    stop_step = int(terminal["autonomous_stop_step"])
+                    score_row = next(
+                        row for row in rows if int(row["step"]) == stop_step
+                    )
+                if not success and not failures:
+                    failures = _task_threshold_failures(score_row, task)
+                if success:
+                    counts["NO_FAILURE"] += 1
+                elif failures:
+                    counts.update(str(value) for value in failures)
+                else:
+                    counts["TASK_CRITERIA_NOT_MET"] += 1
+            denominator = len(specimens)
+            for failure_type, count in sorted(counts.items()):
+                output.append(
+                    {
+                        "schema_version": 1,
+                        "scope": "ALL",
+                        "method": method,
+                        "task": task,
+                        "evaluation_mode": mode.value,
+                        "evidence_kind": "PROXY_DIAGNOSTIC",
+                        "failure_type": failure_type,
+                        "affected_specimen_count": count,
+                        "denominator": denominator,
+                        "rate": float(count / denominator),
+                        "status": "DIAGNOSTIC_ONLY_REFERENCE_PENDING",
+                    }
+                )
+    return output
+
+
+def _task_threshold_failures(
+    row: dict[str, Any], task: str
+) -> list[str]:
+    if task not in {item.value for item in _TASKS}:
+        raise ValueError("threshold failure task is invalid")
+    if task == BenchmarkTask.LOCATE.value:
+        return (
+            ["BBOX_IOU_BELOW_0_50"]
+            if float(row["proxy_iou"]) < 0.50
+            else []
+        )
+    failures = []
+    if float(row["proxy_iou"]) < 0.70:
+        failures.append("MASK_IOU_BELOW_0_70")
+    if float(row["proxy_recall"]) < 0.90:
+        failures.append("CERTAIN_RECALL_BELOW_0_90")
+    if float(row["proxy_relative_area_error"]) > 0.10:
+        failures.append("AREA_ERROR_ABOVE_0_10")
+    return failures
 
 
 def _snapshot(
@@ -844,6 +1147,22 @@ def _snapshot(
     return row["autonomous_formal_success"], bool(
         row["autonomous_proxy_diagnostic_success"]
     )
+
+
+def _route_cost_for_mode(
+    rows: list[dict[str, Any]], mode: EvaluationMode
+) -> float:
+    if not rows or type(mode) is not EvaluationMode:
+        raise ValueError("route-cost rows or evaluation mode are invalid")
+    if mode is EvaluationMode.ANYTIME_REPORT:
+        return float(rows[-1]["normalized_route_cost"])
+    stop_step = rows[-1]["autonomous_stop_step"]
+    if stop_step is None:
+        return float(rows[-1]["normalized_route_cost"])
+    for row in rows:
+        if int(row["step"]) == int(stop_step):
+            return float(row["normalized_route_cost"])
+    raise ValueError("autonomous stop step is absent from report rows")
 
 
 def _specimen_ausc(
@@ -975,6 +1294,10 @@ def _write_curve_figures(output: Path, rows: list[dict[str, object]]) -> None:
                     label=method,
                     color=color,
                     linewidth=1.4,
+                    marker="o",
+                    markevery=[len(selected) - 1],
+                    markersize=3.0,
+                    clip_on=False,
                 )
             axis.set_title(mode.value)
             axis.set_xlabel("Exact acquisition cost")
@@ -1025,7 +1348,7 @@ def _write_reference_manifest(
                     payload,
                     native_shape=record.native_shape,
                 )
-                formal_eligible = reference.formal_eligible
+                formal_eligible = _task_reference_eligible(reference)
         rows.append(
             {
                 "schema_version": 1,
@@ -1065,7 +1388,7 @@ def _reviewed_reference_count(
             )
         except (json.JSONDecodeError, ValueError):
             continue
-        count += int(reference.formal_eligible)
+        count += int(_task_reference_eligible(reference))
     return count
 
 
@@ -1081,7 +1404,7 @@ def _load_evaluation_reference(
             )
         except (json.JSONDecodeError, ValueError):
             reference = None
-        if reference is not None and reference.formal_eligible:
+        if reference is not None and _task_reference_eligible(reference):
             if (
                 reference.specimen_key != record.specimen_key
                 or reference.source_image_sha256 != record.cscan_sha256
@@ -1089,6 +1412,10 @@ def _load_evaluation_reference(
                 raise ValueError("reviewed reference identity differs from the input")
             return reference
     return _full_input_proxy(config, record, runtime)
+
+
+def _task_reference_eligible(reference: CScanReference) -> bool:
+    return reference.formal_eligible and bool(np.any(reference.certain_mask))
 
 
 def _full_input_proxy(
@@ -1289,7 +1616,36 @@ def _work_root(config: BenchmarkConfig) -> Path:
     ):
         digest.update(name.encode("ascii"))
         digest.update((module_root / name).read_bytes())
+    reviewed_digest = _reviewed_reference_cache_digest(config)
+    if reviewed_digest is not None:
+        digest.update(b"reviewed_reference_set")
+        digest.update(reviewed_digest.encode("ascii"))
     return _result_root(config) / ".work" / digest.hexdigest()[:16]
+
+
+def _reviewed_reference_cache_digest(config: BenchmarkConfig) -> str | None:
+    queue = _result_root(config) / "annotation_queue"
+    reviewed = []
+    if queue.is_dir():
+        for path in sorted(queue.glob("*.json")):
+            try:
+                payload = json.loads(path.read_text(encoding="utf-8"))
+            except json.JSONDecodeError:
+                continue
+            if (
+                payload.get("review_state") == "reviewed"
+                and payload.get("reference_type")
+                in {"EXPERT_REVIEWED", "AUTHOR_PROVIDED"}
+                and payload.get("regions")
+            ):
+                reviewed.append((path.name, path.read_bytes()))
+    if not reviewed:
+        return None
+    digest = hashlib.sha256()
+    for name, content in reviewed:
+        digest.update(name.encode("utf-8"))
+        digest.update(content)
+    return digest.hexdigest()
 
 
 def _write_model_manifest(
@@ -1309,6 +1665,36 @@ def _write_model_manifest(
         "device": model["device"],
         "do_sample": model["do_sample"],
         "max_new_tokens": model["max_new_tokens"],
+        "processor_visual_tokens": {
+            "minimum": _QWEN_MIN_VISUAL_TOKENS,
+            "maximum": _QWEN_MAX_VISUAL_TOKENS,
+        },
+        "processor_pixels_per_visual_token": _QWEN_PIXELS_PER_VISUAL_TOKEN,
+        "processor_image_transform": {
+            "implementation": "Qwen2VLImageProcessor.smart_resize",
+            "resize_factor_px": _QWEN_RESIZE_FACTOR,
+            "minimum_pixels": (
+                _QWEN_MIN_VISUAL_TOKENS * _QWEN_PIXELS_PER_VISUAL_TOKEN
+            ),
+            "maximum_pixels": (
+                _QWEN_MAX_VISUAL_TOKENS * _QWEN_PIXELS_PER_VISUAL_TOKEN
+            ),
+            "patch_size_px": _QWEN_PATCH_SIZE,
+            "temporal_patch_size": 2,
+            "merge_size": _QWEN_MERGE_SIZE,
+            "spatial_padding": "NONE",
+            "text_batch_padding": True,
+            "request_batch_size": 1,
+            "images_per_request": 2,
+            "actual_dimensions": "SEE_INPUT_MANIFEST",
+        },
+        "surface_render": {
+            "orientation": config.values["surface"]["orientation"],
+            "maximum_edge_px": config.values["surface"]["max_edge"],
+            "preserve_aspect_ratio": config.values["surface"][
+                "preserve_aspect_ratio"
+            ],
+        },
         "format_retries": model["format_retries"],
         "max_replans_per_episode": model["max_replans_per_episode"],
         "initial_prompt": INITIAL_SURFACE_PROMPT,
@@ -1318,10 +1704,95 @@ def _write_model_manifest(
         "surface_preprocessing_sha256": config.values["surface"][
             "preprocessing_sha256"
         ],
+        "model_config_sha256": (
+            _file_sha256(path / "config.json")
+            if (path / "config.json").is_file()
+            else None
+        ),
+        "model_preprocessor_config_sha256": (
+            _file_sha256(path / "preprocessor_config.json")
+            if (path / "preprocessor_config.json").is_file()
+            else None
+        ),
+        "software_versions": {
+            "python": platform.python_version(),
+            "torch": _installed_version("torch"),
+            "transformers": _installed_version("transformers"),
+            "Pillow": _installed_version("Pillow"),
+        },
         "config_sha256": config.config_sha256,
         "execution": execution,
+        "cumulative_response_cache": _cache_summary(
+            _result_root(config) / "surface_plans.jsonl"
+        ),
     }
     _write_json(_result_root(config) / "model_and_prompt_manifest.json", payload)
+
+
+def _existing_model_execution(config: BenchmarkConfig) -> dict[str, object] | None:
+    path = _result_root(config) / "model_and_prompt_manifest.json"
+    if not path.is_file():
+        return None
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        execution = payload["execution"]
+    except (json.JSONDecodeError, KeyError, TypeError):
+        return None
+    model = config.values["model"]
+    if (
+        payload.get("model_repository") != model["repository"]
+        or payload.get("model_revision") != model["revision"]
+        or type(execution) is not dict
+    ):
+        return None
+    return execution
+
+
+def _qwen_processor_geometry(height: int, width: int) -> dict[str, object]:
+    if (
+        type(height) is not int
+        or type(width) is not int
+        or min(height, width) < _QWEN_RESIZE_FACTOR
+        or max(height, width) / min(height, width) > 200
+    ):
+        raise ValueError("Qwen image dimensions are invalid")
+    resized_height = round(height / _QWEN_RESIZE_FACTOR) * _QWEN_RESIZE_FACTOR
+    resized_width = round(width / _QWEN_RESIZE_FACTOR) * _QWEN_RESIZE_FACTOR
+    minimum_pixels = _QWEN_MIN_VISUAL_TOKENS * _QWEN_PIXELS_PER_VISUAL_TOKEN
+    maximum_pixels = _QWEN_MAX_VISUAL_TOKENS * _QWEN_PIXELS_PER_VISUAL_TOKEN
+    if resized_height * resized_width > maximum_pixels:
+        scale = math.sqrt((height * width) / maximum_pixels)
+        resized_height = (
+            math.floor(height / scale / _QWEN_RESIZE_FACTOR) * _QWEN_RESIZE_FACTOR
+        )
+        resized_width = (
+            math.floor(width / scale / _QWEN_RESIZE_FACTOR) * _QWEN_RESIZE_FACTOR
+        )
+    elif resized_height * resized_width < minimum_pixels:
+        scale = math.sqrt(minimum_pixels / (height * width))
+        resized_height = (
+            math.ceil(height * scale / _QWEN_RESIZE_FACTOR) * _QWEN_RESIZE_FACTOR
+        )
+        resized_width = (
+            math.ceil(width * scale / _QWEN_RESIZE_FACTOR) * _QWEN_RESIZE_FACTOR
+        )
+    grid_height = resized_height // _QWEN_PATCH_SIZE
+    grid_width = resized_width // _QWEN_PATCH_SIZE
+    return {
+        "height_px": resized_height,
+        "width_px": resized_width,
+        "image_grid_thw": [1, grid_height, grid_width],
+        "visual_token_count": (
+            grid_height * grid_width // (_QWEN_MERGE_SIZE**2)
+        ),
+    }
+
+
+def _installed_version(distribution: str) -> str:
+    try:
+        return importlib.metadata.version(distribution)
+    except importlib.metadata.PackageNotFoundError:
+        return "NOT_INSTALLED"
 
 
 def _cache_summary(path: Path) -> dict[str, object]:
