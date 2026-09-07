@@ -1,0 +1,25 @@
+{
+  "allowed_interference_cues": [
+    "reflection",
+    "contamination",
+    "texture_variation"
+  ],
+  "allowed_visible_cues": [
+    "indentation_like",
+    "crack_like",
+    "other_suspicious"
+  ],
+  "blinding_contract": "SURFACE_ONLY_NO_CSCAN_NO_CAI",
+  "frame": "registered_surface_rot90",
+  "interference_regions": [],
+  "notes": "",
+  "rendered_image_sha256": "08d3f23546dae8c8513a7e780197f8fd0e8e2c945995274ce9c8bddc16d00632",
+  "review_state": "pending",
+  "reviewer_alias": null,
+  "schema_version": 1,
+  "source_image_sha256": "97316f12a684311cc32e3fef70136653c3e30ac8723f185c3b07b814d478a6cf",
+  "source_path_from_source_root": "data/public/hasebe/raw/ykhs7s2dck/v1/impacted surface image/q8-29.png",
+  "specimen_key": "ykhs7s2dck:q8-29",
+  "unable_to_determine": true,
+  "visible_regions": []
+}

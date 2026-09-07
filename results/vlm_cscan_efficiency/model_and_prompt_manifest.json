@@ -1,0 +1,68 @@
+{
+  "config_sha256": "394861a851e9076898a70bbff154d657786327ada93b289f6bbe5a5483c790c2",
+  "cumulative_response_cache": {
+    "deployment_calls": 180,
+    "fallback_count": 0,
+    "initial_records": 60,
+    "latency_seconds": 984.3633013898507,
+    "replan_records": 120
+  },
+  "device": "cuda:0",
+  "do_sample": false,
+  "dtype": "bfloat16",
+  "execution": {
+    "actual_calls_this_command": 54,
+    "cache_hits_this_command": 6,
+    "cohort": "pilot",
+    "elapsed_seconds": 624.4314939789474,
+    "fallback_count": 0,
+    "specimen_count": 60,
+    "state": "REAL_VLM_INITIAL_PLANS_EXECUTED",
+    "unique_initial_plans": 60
+  },
+  "format_retries": 1,
+  "frozen_model_count": 1,
+  "initial_prompt": "你是材料试样检测的表面观察模块。输入包含同一试样的清晰表面图和带编号的 8x8 网格图。\n这些图片没有提供内部超声。只描述真实可见的线索；不要把反光、污渍、纹理差异自动判成损伤。\n凹陷样、裂纹样都只是表面外观假设。允许没有可靠线索。\n坐标使用网格 cell_id 0..63，不使用文件名和试样编号。\n返回最多 3 个候选区域，总计最多 8 个唯一优先 cell。\n同时返回可见线索、干扰解释、置信级别和一份粗扫优先顺序。\n不要猜内部损伤范围、CAI、铺层、冲击能量或损伤深度。\n只输出 JSON，schema 为 {\"regions\":[{\"cells\":[27],\"visible_cue\":\"indentation_like\",\"alternative\":\"illumination_possible\",\"confidence\":\"low\"}],\"priority_cells\":[27],\"initial_skill\":\"SURVEY_ROI\",\"no_reliable_surface_cue\":false}。",
+  "initial_prompt_sha256": "677c0760e97c216ac3e633d2e49351c19cfa3dc53f0dc35ba676cb2957ab3eb9",
+  "local_model_available": true,
+  "local_model_path": "/mnt/shared/ww/models/huggingface/Qwen--Qwen2.5-VL-7B-Instruct/cc594898137f460bfe9f0759e9844b3ce807cfb5",
+  "max_new_tokens": 700,
+  "max_replans_per_episode": 4,
+  "model_config_sha256": "77d9ec7321cc572e3579e2c84799c9cadaded63c49ce93b101733349fc330c43",
+  "model_license": "Apache-2.0",
+  "model_preprocessor_config_sha256": "f2058c716eef96ccaed1cc1e2d0c08306b62586d535b28d9d08e691b2fab7ca0",
+  "model_repository": "Qwen/Qwen2.5-VL-7B-Instruct",
+  "model_revision": "cc594898137f460bfe9f0759e9844b3ce807cfb5",
+  "processor_image_transform": {
+    "actual_dimensions": "SEE_INPUT_MANIFEST",
+    "images_per_request": 2,
+    "implementation": "Qwen2VLImageProcessor.smart_resize",
+    "maximum_pixels": 1003520,
+    "merge_size": 2,
+    "minimum_pixels": 200704,
+    "patch_size_px": 14,
+    "request_batch_size": 1,
+    "resize_factor_px": 28,
+    "spatial_padding": "NONE",
+    "temporal_patch_size": 2,
+    "text_batch_padding": true
+  },
+  "processor_pixels_per_visual_token": 784,
+  "processor_visual_tokens": {
+    "maximum": 1280,
+    "minimum": 256
+  },
+  "schema_version": 1,
+  "software_versions": {
+    "Pillow": "12.2.0",
+    "python": "3.13.13",
+    "torch": "2.12.1",
+    "transformers": "4.49.0"
+  },
+  "surface_preprocessing_sha256": "b341e99fb74d9f815be810b2e8b1d91e59f236540072577c244313c584281f40",
+  "surface_render": {
+    "maximum_edge_px": 1024,
+    "orientation": "ROT90",
+    "preserve_aspect_ratio": true
+  }
+}

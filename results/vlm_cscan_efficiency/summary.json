@@ -1,0 +1,278 @@
+{
+  "autonomous_completion_efficiency": "INCONCLUSIVE",
+  "cohort": "pilot",
+  "domain_count": 6,
+  "evidence_scope": "INTERNAL_REUSED_COHORT_EVALUATION",
+  "formal_success_metrics": null,
+  "full_cohort_executed": false,
+  "initial_surface_plan_records": 60,
+  "methods": [
+    "B0",
+    "B1",
+    "B2",
+    "B3",
+    "B4",
+    "B5",
+    "B6",
+    "B7"
+  ],
+  "new_training": false,
+  "proxy_final_snapshot": [
+    {
+      "evaluation_mode": "ANYTIME_REPORT",
+      "method": "B0",
+      "n": 60,
+      "proxy_diagnostic_success_rate": 1.0,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "evaluation_mode": "AUTONOMOUS_REPORT",
+      "method": "B0",
+      "n": 60,
+      "proxy_diagnostic_success_rate": 0.0,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "evaluation_mode": "ANYTIME_REPORT",
+      "method": "B0",
+      "n": 60,
+      "proxy_diagnostic_success_rate": 1.0,
+      "task": "LOCATE"
+    },
+    {
+      "evaluation_mode": "AUTONOMOUS_REPORT",
+      "method": "B0",
+      "n": 60,
+      "proxy_diagnostic_success_rate": 0.0,
+      "task": "LOCATE"
+    },
+    {
+      "evaluation_mode": "ANYTIME_REPORT",
+      "method": "B1",
+      "n": 60,
+      "proxy_diagnostic_success_rate": 1.0,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "evaluation_mode": "AUTONOMOUS_REPORT",
+      "method": "B1",
+      "n": 60,
+      "proxy_diagnostic_success_rate": 0.0,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "evaluation_mode": "ANYTIME_REPORT",
+      "method": "B1",
+      "n": 60,
+      "proxy_diagnostic_success_rate": 1.0,
+      "task": "LOCATE"
+    },
+    {
+      "evaluation_mode": "AUTONOMOUS_REPORT",
+      "method": "B1",
+      "n": 60,
+      "proxy_diagnostic_success_rate": 0.18333333333333332,
+      "task": "LOCATE"
+    },
+    {
+      "evaluation_mode": "ANYTIME_REPORT",
+      "method": "B2",
+      "n": 60,
+      "proxy_diagnostic_success_rate": 1.0,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "evaluation_mode": "AUTONOMOUS_REPORT",
+      "method": "B2",
+      "n": 60,
+      "proxy_diagnostic_success_rate": 0.0,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "evaluation_mode": "ANYTIME_REPORT",
+      "method": "B2",
+      "n": 60,
+      "proxy_diagnostic_success_rate": 1.0,
+      "task": "LOCATE"
+    },
+    {
+      "evaluation_mode": "AUTONOMOUS_REPORT",
+      "method": "B2",
+      "n": 60,
+      "proxy_diagnostic_success_rate": 0.15,
+      "task": "LOCATE"
+    },
+    {
+      "evaluation_mode": "ANYTIME_REPORT",
+      "method": "B3",
+      "n": 60,
+      "proxy_diagnostic_success_rate": 1.0,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "evaluation_mode": "AUTONOMOUS_REPORT",
+      "method": "B3",
+      "n": 60,
+      "proxy_diagnostic_success_rate": 0.0,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "evaluation_mode": "ANYTIME_REPORT",
+      "method": "B3",
+      "n": 60,
+      "proxy_diagnostic_success_rate": 1.0,
+      "task": "LOCATE"
+    },
+    {
+      "evaluation_mode": "AUTONOMOUS_REPORT",
+      "method": "B3",
+      "n": 60,
+      "proxy_diagnostic_success_rate": 0.0,
+      "task": "LOCATE"
+    },
+    {
+      "evaluation_mode": "ANYTIME_REPORT",
+      "method": "B4",
+      "n": 60,
+      "proxy_diagnostic_success_rate": 1.0,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "evaluation_mode": "AUTONOMOUS_REPORT",
+      "method": "B4",
+      "n": 60,
+      "proxy_diagnostic_success_rate": 0.0,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "evaluation_mode": "ANYTIME_REPORT",
+      "method": "B4",
+      "n": 60,
+      "proxy_diagnostic_success_rate": 1.0,
+      "task": "LOCATE"
+    },
+    {
+      "evaluation_mode": "AUTONOMOUS_REPORT",
+      "method": "B4",
+      "n": 60,
+      "proxy_diagnostic_success_rate": 0.0,
+      "task": "LOCATE"
+    },
+    {
+      "evaluation_mode": "ANYTIME_REPORT",
+      "method": "B5",
+      "n": 60,
+      "proxy_diagnostic_success_rate": 1.0,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "evaluation_mode": "AUTONOMOUS_REPORT",
+      "method": "B5",
+      "n": 60,
+      "proxy_diagnostic_success_rate": 0.0,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "evaluation_mode": "ANYTIME_REPORT",
+      "method": "B5",
+      "n": 60,
+      "proxy_diagnostic_success_rate": 1.0,
+      "task": "LOCATE"
+    },
+    {
+      "evaluation_mode": "AUTONOMOUS_REPORT",
+      "method": "B5",
+      "n": 60,
+      "proxy_diagnostic_success_rate": 0.016666666666666666,
+      "task": "LOCATE"
+    },
+    {
+      "evaluation_mode": "ANYTIME_REPORT",
+      "method": "B6",
+      "n": 60,
+      "proxy_diagnostic_success_rate": 1.0,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "evaluation_mode": "AUTONOMOUS_REPORT",
+      "method": "B6",
+      "n": 60,
+      "proxy_diagnostic_success_rate": 0.0,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "evaluation_mode": "ANYTIME_REPORT",
+      "method": "B6",
+      "n": 60,
+      "proxy_diagnostic_success_rate": 1.0,
+      "task": "LOCATE"
+    },
+    {
+      "evaluation_mode": "AUTONOMOUS_REPORT",
+      "method": "B6",
+      "n": 60,
+      "proxy_diagnostic_success_rate": 0.05,
+      "task": "LOCATE"
+    },
+    {
+      "evaluation_mode": "ANYTIME_REPORT",
+      "method": "B7",
+      "n": 60,
+      "proxy_diagnostic_success_rate": 1.0,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "evaluation_mode": "AUTONOMOUS_REPORT",
+      "method": "B7",
+      "n": 60,
+      "proxy_diagnostic_success_rate": 0.0,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "evaluation_mode": "ANYTIME_REPORT",
+      "method": "B7",
+      "n": 60,
+      "proxy_diagnostic_success_rate": 1.0,
+      "task": "LOCATE"
+    },
+    {
+      "evaluation_mode": "AUTONOMOUS_REPORT",
+      "method": "B7",
+      "n": 60,
+      "proxy_diagnostic_success_rate": 0.0,
+      "task": "LOCATE"
+    }
+  ],
+  "proxy_metrics_role": "DIAGNOSTIC_ONLY_NOT_FORMAL_TASK_EVIDENCE",
+  "reference_coverage": 0.0,
+  "replan_choice_records": 120,
+  "report_rows": 185280,
+  "reviewed_reference_count": 0,
+  "run_metadata": {
+    "b6_actual_replan_calls_this_command": 108,
+    "b6_trajectories_executed_this_command": 108,
+    "cohort": "pilot",
+    "elapsed_seconds": 7377.552558708936,
+    "method_count": 8,
+    "schema_version": 1,
+    "specimen_count": 60,
+    "task_count": 2,
+    "trajectory_count": 960,
+    "workers": 4
+  },
+  "schema_version": 1,
+  "specimen_count": 60,
+  "status": "PILOT_EXECUTED_PROXY_ONLY",
+  "stress_test_executed": false,
+  "surface_plan_benefit": "INCONCLUSIVE",
+  "tasks": [
+    "LOCATE",
+    "CHARACTERIZE"
+  ],
+  "trajectory_rows": 184320,
+  "ultrasound_feedback_benefit": "INCONCLUSIVE",
+  "vlm_deployment_call_count": 180,
+  "vlm_fallback_count": 0,
+  "vlm_replanning_benefit": "INCONCLUSIVE",
+  "vlm_total_latency_seconds": 984.3633013898507
+}
