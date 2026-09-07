@@ -150,6 +150,14 @@ RULE_CONFIGS = (
     ("R_BALANCED_P8", RuleMethod.R_BALANCED, 8),
 )
 _BRANCH_WORKER_CONTEXT: StudyContext | None = None
+_EVALUATION_WORKER_CONTEXT: StudyContext | None = None
+_EVALUATION_WORKER_PERCEPTS: dict[str, SurfacePercept] | None = None
+_EVALUATION_WORKER_PLANNERS: tuple[
+    tuple[str, RuleMethod | LearnedCellActor, int, int], ...
+] = ()
+_EVALUATION_WORKER_STOP: LearnedStopHead | None = None
+_EVALUATION_WORKER_DEVICE = "cpu"
+_EVALUATION_WORKER_THRESHOLD: float | None = None
 
 
 def prepare_study(
@@ -547,6 +555,9 @@ def train_models(
     bank = torch.load(bank_path, map_location="cpu", weights_only=False)
     if bank.get("config_sha256") != config.config_sha256:
         raise RuntimeError("training bank config identity changed")
+    bank["stop"] = list(bank["stop"][: len(bank["base_ctg"])])
+    bank.pop("aggregate_ctg", None)
+    bank.pop("aggregate_stop", None)
     original_bank_sha256 = _file_sha256(bank_path)
     normalized_bc_rows = []
     bc_targets_changed = False
@@ -700,6 +711,9 @@ def train_models(
     models["S_LEARN"] = stop_model
     fits["S_LEARN"] = stop_fit
     logs.extend(_fit_log_rows("S_LEARN", int(training["seed"]), stop_fit))
+    aggregate_candidate_suffixes = sum(
+        len(row["queried_cells"]) for row in aggregate_rows
+    )
     model_dir = output / "models"
     model_dir.mkdir(parents=True, exist_ok=True)
     model_rows = []
@@ -721,6 +735,9 @@ def train_models(
                 "sha256": _file_sha256(path),
                 "parameter_count": sum(
                     parameter.numel() for parameter in models[method].parameters()
+                ),
+                "use_surface_features": bool(
+                    getattr(models[method], "use_surface_features", True)
                 ),
                 "optimizer_steps": fit.optimizer_steps,
                 "initial_loss": fit.initial_loss,
@@ -758,6 +775,7 @@ def train_models(
         "training_bank": {
             "base_ctg_states": len(ctg_examples),
             "aggregate_ctg_states": len(aggregate_rows),
+            "aggregate_candidate_suffixes": aggregate_candidate_suffixes,
             "aggregation_rounds": 1,
             "aggregation_transitions": aggregate_transitions,
             "bank_sha256": _file_sha256(bank_path),
@@ -771,6 +789,9 @@ def train_models(
     bank_manifest = json.loads(bank_manifest_path.read_text(encoding="utf-8"))
     bank_manifest["aggregation_rounds_complete"] = 1
     bank_manifest["aggregation_state_count"] = len(aggregate_rows)
+    bank_manifest["aggregation_candidate_suffix_count"] = (
+        aggregate_candidate_suffixes
+    )
     bank_manifest["aggregation_transition_count"] = aggregate_transitions
     bank_manifest["logical_transition_count"] += aggregate_transitions
     bank_manifest["bank_sha256"] = _file_sha256(bank_path)
@@ -783,6 +804,7 @@ def train_models(
         "model_count": len(model_rows),
         "models": model_rows,
         "aggregation_states": len(aggregate_rows),
+        "aggregation_candidate_suffixes": aggregate_candidate_suffixes,
         "elapsed_seconds": manifest["elapsed_seconds"],
     }
 
@@ -793,7 +815,7 @@ def _train_validation_confirmations(
     output: Path,
     selected_method: str,
     device: str,
-) -> list[tuple[str, LearnedCellActor, int, int]]:
+) -> tuple[tuple[str, str, str, int, int], ...]:
     bank = torch.load(
         output / "_work/training_bank.pt", map_location="cpu", weights_only=False
     )
@@ -805,7 +827,7 @@ def _train_validation_confirmations(
     examples = tuple(_policy_example(row) for row in rows)
     fit_examples, valid_examples = _internal_fit_split(examples)
     training = config.values["training"]
-    trained: list[tuple[str, LearnedCellActor, int, int]] = []
+    trained: list[tuple[str, str, str, int, int]] = []
     model_rows = []
     log_rows = []
     specifications = (
@@ -860,7 +882,9 @@ def _train_validation_confirmations(
             }
         )
         log_rows.extend(_fit_log_rows(method, seed, fit))
-        trained.append((method, model, 4, seed))
+        trained.append(
+            (method, "ACTOR", path.relative_to(output).as_posix(), 4, seed)
+        )
         print(
             f"trained validation-triggered {method} seed={seed} "
             f"steps={fit.optimizer_steps} loss={fit.initial_loss:.6f}->"
@@ -894,7 +918,141 @@ def _train_validation_confirmations(
         "no_vlm_seed": 1,
     }
     write_json_atomic(manifest_path, manifest)
-    return trained
+    return tuple(trained)
+
+
+def _evaluate_assignments_parallel(
+    *,
+    config: StudyConfig,
+    context: StudyContext,
+    assignments: tuple[SplitAssignment, ...],
+    planner_specs: tuple[tuple[str, str, str, int, int], ...],
+    learned_threshold: float | None,
+    store_trajectory: bool,
+    label: str,
+) -> tuple[
+    list[dict[str, object]],
+    list[dict[str, object]],
+    dict[str, list[StopValidationRow]],
+]:
+    episode_rows: list[dict[str, object]] = []
+    trajectory_rows: list[dict[str, object]] = []
+    stop_rows_by_method: dict[str, list[StopValidationRow]] = {}
+    with ProcessPoolExecutor(
+        max_workers=min(int(config.values["training"]["cpu_workers"]), len(assignments)),
+        mp_context=get_context("spawn"),
+        initializer=_initialize_evaluation_worker,
+        initargs=(
+            str(config.path),
+            str(config.project_root),
+            str(context.source_root),
+            planner_specs,
+            learned_threshold,
+        ),
+    ) as executor:
+        futures = tuple(
+            executor.submit(
+                _evaluate_specimen_worker,
+                assignment.record.specimen_key,
+                store_trajectory=store_trajectory,
+            )
+            for assignment in assignments
+        )
+        for specimen_index, future in enumerate(futures, start=1):
+            episodes, trajectories, stop_rows = future.result()
+            episode_rows.extend(episodes)
+            trajectory_rows.extend(trajectories)
+            for method, rows in stop_rows.items():
+                stop_rows_by_method.setdefault(method, []).extend(rows)
+            print(
+                f"{label} {specimen_index}/{len(assignments)} "
+                f"episodes={len(episode_rows)} trajectory_rows={len(trajectory_rows)}",
+                flush=True,
+            )
+    return episode_rows, trajectory_rows, stop_rows_by_method
+
+
+def _initialize_evaluation_worker(
+    config_path: str,
+    project_root: str,
+    source_root: str,
+    planner_specs: tuple[tuple[str, str, str, int, int], ...],
+    learned_threshold: float | None,
+) -> None:
+    global _EVALUATION_WORKER_CONTEXT
+    global _EVALUATION_WORKER_DEVICE
+    global _EVALUATION_WORKER_PERCEPTS
+    global _EVALUATION_WORKER_PLANNERS
+    global _EVALUATION_WORKER_STOP
+    global _EVALUATION_WORKER_THRESHOLD
+    config, context = _load(
+        Path(config_path), Path(project_root), Path(source_root)
+    )
+    output = _output_root(config)
+    device = "cuda:0" if torch.cuda.is_available() else "cpu"
+    planners = []
+    for method, kind, reference, period, seed in planner_specs:
+        if kind == "RULE":
+            planner: RuleMethod | LearnedCellActor = RuleMethod(reference)
+        elif kind == "ACTOR":
+            planner = _load_actor(output / reference, config, device)
+        else:
+            raise RuntimeError("evaluation planner specification is invalid")
+        planners.append((method, planner, period, seed))
+    _EVALUATION_WORKER_CONTEXT = context
+    _EVALUATION_WORKER_DEVICE = device
+    _EVALUATION_WORKER_PERCEPTS = _load_percepts(config, context, output)
+    _EVALUATION_WORKER_PLANNERS = tuple(planners)
+    _EVALUATION_WORKER_STOP = _load_stop(output / "models/s_learn.pt", config, device)
+    _EVALUATION_WORKER_THRESHOLD = learned_threshold
+
+
+def _evaluate_specimen_worker(
+    specimen_key: str, *, store_trajectory: bool
+) -> tuple[
+    list[dict[str, object]],
+    list[dict[str, object]],
+    dict[str, list[StopValidationRow]],
+]:
+    if (
+        _EVALUATION_WORKER_CONTEXT is None
+        or _EVALUATION_WORKER_PERCEPTS is None
+        or _EVALUATION_WORKER_STOP is None
+        or not _EVALUATION_WORKER_PLANNERS
+    ):
+        raise RuntimeError("evaluation worker is not initialized")
+    context = _EVALUATION_WORKER_CONTEXT
+    record = next(
+        row for row in context.roster.pilot_records if row.specimen_key == specimen_key
+    )
+    runtime = open_study_specimen(context, record)
+    percept = _EVALUATION_WORKER_PERCEPTS[specimen_key]
+    episodes = []
+    trajectories = []
+    stop_rows_by_method: dict[str, list[StopValidationRow]] = {}
+    for task in Task:
+        reference = _full_reference(context, runtime, task)
+        for method, planner, period, seed in _EVALUATION_WORKER_PLANNERS:
+            result, trajectory, stop_rows = _run_planner_episode(
+                runtime,
+                percept=percept,
+                task=task,
+                reference=reference,
+                context=context,
+                method_name=method,
+                planner=planner,
+                coverage_period=period,
+                seed=seed,
+                device=_EVALUATION_WORKER_DEVICE,
+                stop_model=_EVALUATION_WORKER_STOP,
+                learned_threshold=_EVALUATION_WORKER_THRESHOLD,
+                store_trajectory=store_trajectory,
+            )
+            episodes.append(result)
+            trajectories.extend(trajectory)
+            if not store_trajectory:
+                stop_rows_by_method.setdefault(method, []).extend(stop_rows)
+    return episodes, trajectories, stop_rows_by_method
 
 
 def validate_models(
@@ -904,50 +1062,28 @@ def validate_models(
     config, context = _load(config_path, project_root, source_root)
     output = _output_root(config)
     _require_files(output, ("model_manifest.json", "surface_percepts.jsonl"))
-    percepts = _load_percepts(config, context, output)
     device = "cuda:0" if torch.cuda.is_available() else "cpu"
-    actors = {
-        method: _load_actor(output / f"models/{method.lower()}.pt", config, device)
-        for method in ("L_BC", "L_CTG_0", "L_CTG_1")
-    }
-    stop_model = _load_stop(output / "models/s_learn.pt", config, device)
     assignments = tuple(
         row for row in context.roster.assignments if row.split is Split.VALID
     )
-    episode_rows = []
-    stop_rows_by_method: dict[str, list[StopValidationRow]] = {}
-    methods: list[tuple[str, RuleMethod | LearnedCellActor, int, int]] = [
-        (name, method, period, 1) for name, method, period in RULE_CONFIGS
-    ]
-    methods.extend((name, actor, 4, 1) for name, actor in actors.items())
-    for specimen_index, assignment in enumerate(assignments, start=1):
-        runtime = open_study_specimen(context, assignment.record)
-        percept = percepts[assignment.record.specimen_key]
-        for task in Task:
-            reference = _full_reference(context, runtime, task)
-            for method_name, planner, period, seed in methods:
-                result, _trajectory, stop_rows = _run_planner_episode(
-                    runtime,
-                    percept=percept,
-                    task=task,
-                    reference=reference,
-                    context=context,
-                    method_name=method_name,
-                    planner=planner,
-                    coverage_period=period,
-                    seed=seed,
-                    device=device,
-                    stop_model=stop_model,
-                    learned_threshold=None,
-                    store_trajectory=False,
-                )
-                episode_rows.append(result)
-                stop_rows_by_method.setdefault(method_name, []).extend(stop_rows)
-        print(
-            f"validation {specimen_index}/{len(assignments)} "
-            f"episodes={len(episode_rows)}",
-            flush=True,
+    planner_specs = tuple(
+        (name, "RULE", method.value, period, 1)
+        for name, method, period in RULE_CONFIGS
+    ) + tuple(
+        (method, "ACTOR", f"models/{method.lower()}.pt", 4, 1)
+        for method in ("L_BC", "L_CTG_0", "L_CTG_1")
+    )
+    episode_rows, _trajectories, stop_rows_by_method = (
+        _evaluate_assignments_parallel(
+            config=config,
+            context=context,
+            assignments=assignments,
+            planner_specs=planner_specs,
+            learned_threshold=None,
+            store_trajectory=False,
+            label="validation",
         )
+    )
     rule_names = tuple(name for name, _method, _period in RULE_CONFIGS)
     rule_selected = max(
         rule_names,
@@ -982,35 +1118,19 @@ def validate_models(
             selected_method=learned_selected,
             device=device,
         )
-        methods.extend(confirmation_methods)
-        for specimen_index, assignment in enumerate(assignments, start=1):
-            runtime = open_study_specimen(context, assignment.record)
-            percept = percepts[assignment.record.specimen_key]
-            for task in Task:
-                reference = _full_reference(context, runtime, task)
-                for method_name, planner, period, seed in confirmation_methods:
-                    result, _trajectory, stop_rows = _run_planner_episode(
-                        runtime,
-                        percept=percept,
-                        task=task,
-                        reference=reference,
-                        context=context,
-                        method_name=method_name,
-                        planner=planner,
-                        coverage_period=period,
-                        seed=seed,
-                        device=device,
-                        stop_model=stop_model,
-                        learned_threshold=None,
-                        store_trajectory=False,
-                    )
-                    episode_rows.append(result)
-                    stop_rows_by_method.setdefault(method_name, []).extend(stop_rows)
-            print(
-                f"validation confirmation {specimen_index}/{len(assignments)} "
-                f"episodes={len(episode_rows)}",
-                flush=True,
+        planner_specs += confirmation_methods
+        confirmation_rows, _trajectories, _stop_rows = (
+            _evaluate_assignments_parallel(
+                config=config,
+                context=context,
+                assignments=assignments,
+                planner_specs=confirmation_methods,
+                learned_threshold=None,
+                store_trajectory=False,
+                label="validation confirmation",
             )
+        )
+        episode_rows.extend(confirmation_rows)
         confirmation_seed_scores.update(
             {
                 str(seed): _mean_metric(
@@ -1030,9 +1150,9 @@ def validate_models(
             for task in Task
         }
         | {"overall": _mean_metric(episode_rows, name, "ausc_any")}
-        for name in dict.fromkeys(row[0] for row in methods)
+        for name in dict.fromkeys(row[0] for row in planner_specs)
     }
-    selected_rule_spec = next(row for row in methods if row[0] == rule_selected)
+    selected_rule_spec = next(row for row in planner_specs if row[0] == rule_selected)
     selection = {
         "schema_version": 1,
         "state": "VALID_SELECTION_LOCKED",
@@ -1041,7 +1161,7 @@ def validate_models(
         "validation_episode_count": len(episode_rows),
         "selected_rule": {
             "method": rule_selected,
-            "coverage_period": selected_rule_spec[2],
+            "coverage_period": selected_rule_spec[3],
             "mean_ausc_any": rule_score,
         },
         "selected_learned": {
@@ -1129,29 +1249,8 @@ def evaluate_study(
     selection["selection_sha256"] = stored_selection_sha
     if selection["state"] != "VALID_SELECTION_LOCKED" or selection["test_opened"]:
         raise RuntimeError("TEST evaluation is blocked until VALID choices are locked")
-    percepts = _load_percepts(config, context, output)
-    device = "cuda:0" if torch.cuda.is_available() else "cpu"
-    bc_actor = _load_actor(output / "models/l_bc.pt", config, device)
     selected_learned = selection["selected_learned"]["method"]
     selected_seeds = tuple(int(seed) for seed in selection["selected_learned"]["seeds"])
-    ctg_actors = tuple(
-        (
-            seed,
-            _load_actor(
-                output
-                / "models"
-                / (
-                    f"{selected_learned.lower()}.pt"
-                    if seed == 1
-                    else f"{selected_learned.lower()}_seed{seed}.pt"
-                ),
-                config,
-                device,
-            ),
-        )
-        for seed in selected_seeds
-    )
-    stop_model = _load_stop(output / "models/s_learn.pt", config, device)
     stop_threshold = (
         float(selection["learned_stop"]["threshold"])
         if selection["learned_stop"]["status"]
@@ -1163,57 +1262,55 @@ def evaluate_study(
         key=lambda name: selection["method_metrics"][name]["overall"],
     )
     balanced_period = 4 if balanced_name.endswith("P4") else 8
-    methods: list[tuple[str, RuleMethod | LearnedCellActor, int, int]] = [
-        ("R_GEOM", RuleMethod.R_GEOM, 4, 1),
-        ("R_CENTER", RuleMethod.R_CENTER, 4, 1),
-        ("R_VLM_OPEN", RuleMethod.R_VLM_OPEN, 4, 1),
-        ("R_LEGACY", RuleMethod.R_LEGACY, 4, 1),
-        ("R_BALANCED", RuleMethod.R_BALANCED, balanced_period, 1),
-        ("L_BC", bc_actor, 4, 1),
-    ]
-    methods.extend(("L_CTG", actor, 4, seed) for seed, actor in ctg_actors)
+    planner_specs = (
+        ("R_GEOM", "RULE", RuleMethod.R_GEOM.value, 4, 1),
+        ("R_CENTER", "RULE", RuleMethod.R_CENTER.value, 4, 1),
+        ("R_VLM_OPEN", "RULE", RuleMethod.R_VLM_OPEN.value, 4, 1),
+        ("R_LEGACY", "RULE", RuleMethod.R_LEGACY.value, 4, 1),
+        (
+            "R_BALANCED",
+            "RULE",
+            RuleMethod.R_BALANCED.value,
+            balanced_period,
+            1,
+        ),
+        ("L_BC", "ACTOR", "models/l_bc.pt", 4, 1),
+    ) + tuple(
+        (
+            "L_CTG",
+            "ACTOR",
+            (
+                f"models/{selected_learned.lower()}.pt"
+                if seed == 1
+                else f"models/{selected_learned.lower()}_seed{seed}.pt"
+            ),
+            4,
+            seed,
+        )
+        for seed in selected_seeds
+    )
     if selection["l_no_vlm"]["run"]:
-        methods.append(
+        planner_specs += (
             (
                 "L_NO_VLM",
-                _load_actor(output / "models/l_no_vlm.pt", config, device),
+                "ACTOR",
+                "models/l_no_vlm.pt",
                 4,
                 int(selection["l_no_vlm"]["seed"]),
-            )
+            ),
         )
     assignments = tuple(
         row for row in context.roster.assignments if row.split is Split.TEST
     )
-    episode_rows: list[dict[str, object]] = []
-    trajectory_rows: list[dict[str, object]] = []
-    for specimen_index, assignment in enumerate(assignments, start=1):
-        runtime = open_study_specimen(context, assignment.record)
-        percept = percepts[assignment.record.specimen_key]
-        for task in Task:
-            reference = _full_reference(context, runtime, task)
-            for method_name, planner, period, seed in methods:
-                result, trajectory, _stop_rows = _run_planner_episode(
-                    runtime,
-                    percept=percept,
-                    task=task,
-                    reference=reference,
-                    context=context,
-                    method_name=method_name,
-                    planner=planner,
-                    coverage_period=period,
-                    seed=seed,
-                    device=device,
-                    stop_model=stop_model,
-                    learned_threshold=stop_threshold,
-                    store_trajectory=True,
-                )
-                episode_rows.append(result)
-                trajectory_rows.extend(trajectory)
-        print(
-            f"TEST evaluation {specimen_index}/{len(assignments)} "
-            f"episodes={len(episode_rows)} trajectory_rows={len(trajectory_rows)}",
-            flush=True,
-        )
+    episode_rows, trajectory_rows, _stop_rows = _evaluate_assignments_parallel(
+        config=config,
+        context=context,
+        assignments=assignments,
+        planner_specs=planner_specs,
+        learned_threshold=stop_threshold,
+        store_trajectory=True,
+        label="TEST evaluation",
+    )
     episode_fields = tuple(episode_rows[0])
     write_csv_atomic(
         output / "per_episode_metrics.csv", tuple(episode_rows), episode_fields
@@ -1272,7 +1369,7 @@ def evaluate_study(
         "test_physical_specimens": len(assignments),
         "episode_count": len(episode_rows),
         "trajectory_row_count": len(trajectory_rows),
-        "method_count": len({row[0] for row in methods}),
+        "method_count": len({row[0] for row in planner_specs}),
         "selected_rule": selected_rule,
         "selected_learned_checkpoint": selected_learned,
         "selected_learned_seeds": list(selected_seeds),
@@ -1403,6 +1500,7 @@ def summarize_study(
     summary = {
         "schema_version": 1,
         "execution": "TRAINED_AND_EVALUATED",
+        "model_trained": True,
         "reference": "PROXY_ONLY",
         "formal_planner_effect": "INCONCLUSIVE",
         "formal_effect": None,
@@ -1422,12 +1520,22 @@ def summarize_study(
             "split_counts": inventory["split_counts"],
             "domains": len(config.domain_order),
         },
+        "surface_backend": {
+            "repository": perception["model_repository"],
+            "revision": perception["model_revision"],
+            "prompt_sha256": perception["prompt_sha256"],
+            "schema_version": perception["schema_version_surface_percept"],
+        },
         "surface_perception": perception["execution"],
         "reader_status": perception["reader_v2"]["status"],
         "training": {
             "models": models["models"],
             "base_bank_states": bank["base_state_count"],
+            "base_candidate_suffixes": bank["candidate_suffix_count"],
             "aggregation_states": bank["aggregation_state_count"],
+            "aggregation_candidate_suffixes": bank[
+                "aggregation_candidate_suffix_count"
+            ],
             "aggregation_rounds": bank["aggregation_rounds_complete"],
             "logical_transitions": bank["logical_transition_count"],
         },
@@ -1437,6 +1545,21 @@ def summarize_study(
             "episode_count": len(episodes),
             "method_metrics": method_metrics,
             "primary_proxy_comparisons": primary,
+        },
+        "proxy_effect": primary,
+        "resource_use": {
+            "training_logical_transitions": bank["logical_transition_count"],
+            "validation_action_transitions": selection[
+                "validation_episode_count"
+            ]
+            * 192,
+            "test_action_transitions": sum(int(row["action_count"]) for row in episodes),
+            "total_logical_transitions": bank["logical_transition_count"]
+            + selection["validation_episode_count"] * 192
+            + sum(int(row["action_count"]) for row in episodes),
+            "logical_transition_cap": config.values["training"][
+                "logical_transition_cap"
+            ],
         },
         "claims": {
             "learned_planning_supported_proxy": proxy_supported,
@@ -2548,14 +2671,15 @@ def _load_actor(
     path: Path, config: StudyConfig, device: str
 ) -> LearnedCellActor:
     payload = torch.load(path, map_location="cpu", weights_only=True)
+    method = payload.get("method")
+    use_surface_features = bool(payload.get("use_surface_features", True))
     if (
         payload.get("config_sha256") != config.config_sha256
-        or payload.get("method") not in {"L_BC", "L_CTG_0", "L_CTG_1", "L_NO_VLM"}
+        or method not in {"L_BC", "L_CTG_0", "L_CTG_1", "L_NO_VLM"}
+        or use_surface_features != (method != "L_NO_VLM")
     ):
         raise RuntimeError("learned actor model identity changed")
-    model = LearnedCellActor(
-        use_surface_features=bool(payload.get("use_surface_features", True))
-    )
+    model = LearnedCellActor(use_surface_features=use_surface_features)
     model.load_state_dict(payload["state_dict"])
     model.to(device)
     model.eval()

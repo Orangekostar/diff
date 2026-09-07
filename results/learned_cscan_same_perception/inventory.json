@@ -1,0 +1,81 @@
+{
+  "background_prior": {
+    "fit_specimen_count": 24,
+    "fit_specimen_keys_sha256": "efe17349a80d572d83e3b555cfe59cb2139dd22b87e179aac841e8e2bb6d5f3c",
+    "fit_split": "TRAIN",
+    "rgb": [
+      101,
+      101,
+      153
+    ]
+  },
+  "config_sha256": "12268dcaf470f769c326007702f7b0b6f4a13cf326447eef652a6dda972b5662",
+  "domain_split_counts": {
+    "74t7kcdgkr": {
+      "TEST": 4,
+      "TRAIN": 4,
+      "VALID": 2
+    },
+    "cgtnjyggtm": {
+      "TEST": 4,
+      "TRAIN": 4,
+      "VALID": 2
+    },
+    "w68dtmpfyf": {
+      "TEST": 4,
+      "TRAIN": 4,
+      "VALID": 2
+    },
+    "xcmzfsbd9t": {
+      "TEST": 4,
+      "TRAIN": 4,
+      "VALID": 2
+    },
+    "yfxyg8jm46": {
+      "TEST": 4,
+      "TRAIN": 4,
+      "VALID": 2
+    },
+    "ykhs7s2dck": {
+      "TEST": 4,
+      "TRAIN": 4,
+      "VALID": 2
+    }
+  },
+  "elapsed_seconds": 20.194478249177337,
+  "evidence_scope": "INTERNAL_REUSED_COHORT_NEW_PROTOCOL",
+  "no_new_training": true,
+  "pilot_specimens": 60,
+  "reference": {
+    "formal_effect": null,
+    "pending_algorithmic_count": 60,
+    "proxy_scope": "SAME_READER_SELF_CONSISTENCY",
+    "reviewed_count": 0,
+    "state": "PROXY_ONLY"
+  },
+  "repository_base_sha": "59a67511c0ee6395b68220c6a1644f40c383dfa2",
+  "schema_version": 1,
+  "software": {
+    "numpy": "2.5.1",
+    "python": "3.13.13",
+    "torch": "2.12.1+cu130"
+  },
+  "source_root": "/home/ww/paper3/cmc_damage_inference",
+  "source_root_exists": true,
+  "split_counts": {
+    "TEST": 24,
+    "TRAIN": 24,
+    "VALID": 12
+  },
+  "stage": "W0_PREPARED",
+  "surface_model": {
+    "available": true,
+    "device": "cuda:0",
+    "dtype": "bfloat16",
+    "local_path": "/mnt/shared/ww/models/huggingface/Qwen--Qwen2.5-VL-7B-Instruct/cc594898137f460bfe9f0759e9844b3ce807cfb5",
+    "repository": "Qwen/Qwen2.5-VL-7B-Instruct",
+    "revision": "cc594898137f460bfe9f0759e9844b3ce807cfb5"
+  },
+  "test_opened": false,
+  "total_source_specimens": 276
+}

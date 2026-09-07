@@ -6,6 +6,7 @@ import hashlib
 import json
 import math
 from dataclasses import dataclass
+from functools import lru_cache
 
 import numpy as np
 
@@ -19,7 +20,6 @@ from .readout import (
     ReaderV2Result,
     TaskReportV2,
     build_task_report_v2,
-    owned_cell_slices,
     read_visible_evidence,
 )
 
@@ -240,40 +240,76 @@ def build_observation_packet(
 def _subblock_features(
     grid: AcquisitionGrid, readout: ReaderV2Result
 ) -> np.ndarray:
-    output = np.zeros((64, 16, SUBBLOCK_FEATURE_COUNT), dtype=np.float32)
-    for cell in grid.cells:
-        row_slice, column_slice = owned_cell_slices(grid, cell)
-        cell_mask = readout.measured_mask[row_slice, column_slice]
-        cell_rgb = readout.measured_rgb[row_slice, column_slice]
-        cell_scores = readout.measured_scores[row_slice, column_slice]
-        row_groups = np.array_split(
-            np.arange(cell_mask.shape[0], dtype=np.int64), 4
+    labels, totals = _subblock_layout(
+        grid.native_shape,
+        tuple(int(value) for value in grid.row_boundaries),
+        tuple(int(value) for value in grid.column_boundaries),
+    )
+    observed_groups = labels[readout.measured_mask]
+    counts = np.bincount(observed_groups, minlength=64 * 16)
+    output = np.zeros((64 * 16, SUBBLOCK_FEATURE_COUNT), dtype=np.float32)
+    represented = totals > 0
+    output[represented, 0] = counts[represented] / totals[represented]
+    output[:, 1] = counts == 0
+    if not len(observed_groups):
+        return output.reshape(64, 16, SUBBLOCK_FEATURE_COUNT)
+    observed_rgb = readout.measured_rgb[readout.measured_mask].astype(np.float64)
+    nonempty = counts > 0
+    means = np.zeros((64 * 16, 3), dtype=np.float64)
+    for channel in range(3):
+        means[nonempty, channel] = np.bincount(
+            observed_groups,
+            weights=observed_rgb[:, channel],
+            minlength=64 * 16,
+        )[nonempty] / counts[nonempty]
+    centered = observed_rgb - means[observed_groups]
+    standard_deviations = np.zeros_like(means)
+    for channel in range(3):
+        variances = np.bincount(
+            observed_groups,
+            weights=centered[:, channel] ** 2,
+            minlength=64 * 16,
         )
+        standard_deviations[nonempty, channel] = np.sqrt(
+            variances[nonempty] / counts[nonempty]
+        )
+    observed_scores = readout.measured_scores[readout.measured_mask]
+    score_sums = np.bincount(
+        observed_groups, weights=observed_scores, minlength=64 * 16
+    )
+    score_maxima = np.zeros(64 * 16, dtype=np.float64)
+    np.maximum.at(score_maxima, observed_groups, observed_scores)
+    output[:, 2:5] = means / 255.0
+    output[:, 5:8] = standard_deviations / 255.0
+    output[nonempty, 8] = score_sums[nonempty] / counts[nonempty]
+    output[:, 9] = score_maxima
+    return output.reshape(64, 16, SUBBLOCK_FEATURE_COUNT)
+
+
+@lru_cache(maxsize=64)
+def _subblock_layout(
+    native_shape: tuple[int, int],
+    row_boundaries: tuple[int, ...],
+    column_boundaries: tuple[int, ...],
+) -> tuple[np.ndarray, np.ndarray]:
+    labels = np.empty(native_shape, dtype=np.int16)
+    totals = np.zeros(64 * 16, dtype=np.int64)
+    for cell_index in range(64):
+        row, column = divmod(cell_index, 8)
+        row_stop = row_boundaries[row + 1] + (row == 7)
+        column_stop = column_boundaries[column + 1] + (column == 7)
+        row_groups = np.array_split(np.arange(row_boundaries[row], row_stop), 4)
         column_groups = np.array_split(
-            np.arange(cell_mask.shape[1], dtype=np.int64), 4
+            np.arange(column_boundaries[column], column_stop), 4
         )
         for subrow, rows in enumerate(row_groups):
             for subcolumn, columns in enumerate(column_groups):
-                index = subrow * 4 + subcolumn
-                if not len(rows) or not len(columns):
-                    output[cell.index, index, 1] = 1.0
-                    continue
-                row_group = slice(int(rows[0]), int(rows[-1]) + 1)
-                column_group = slice(int(columns[0]), int(columns[-1]) + 1)
-                mask = cell_mask[row_group, column_group]
-                count = int(np.count_nonzero(mask))
-                total = int(mask.size)
-                output[cell.index, index, 0] = count / total
-                output[cell.index, index, 1] = float(count == 0)
-                if not count:
-                    continue
-                rgb = cell_rgb[row_group, column_group][mask]
-                scores = cell_scores[row_group, column_group][mask]
-                output[cell.index, index, 2:5] = rgb.mean(axis=0) / 255.0
-                output[cell.index, index, 5:8] = rgb.std(axis=0) / 255.0
-                output[cell.index, index, 8] = scores.mean()
-                output[cell.index, index, 9] = scores.max()
-    return output
+                index = cell_index * 16 + subrow * 4 + subcolumn
+                labels[np.ix_(rows, columns)] = index
+                totals[index] = len(rows) * len(columns)
+    labels.setflags(write=False)
+    totals.setflags(write=False)
+    return labels, totals
 
 
 def _packet_hash(task: Task, *values: object) -> str:

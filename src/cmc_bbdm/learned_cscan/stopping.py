@@ -61,6 +61,8 @@ class StopThresholdDiagnostic:
     false_stop_count: int
     negative_support_count: int
     false_stop_rate: float
+    false_stop_ci_lower: float
+    false_stop_ci_upper: float
     authorized: bool
 
 
@@ -222,6 +224,7 @@ def calibrate_learned_stop(
         false_rate = (
             float(false_stops / negative_support) if negative_support else 1.0
         )
+        false_lower, false_upper = _wilson_interval(false_stops, negative_support)
         authorized = (
             true_stops >= minimum_true_stop_support
             and negative_support >= minimum_negative_support
@@ -235,6 +238,8 @@ def calibrate_learned_stop(
                 false_stop_count=false_stops,
                 negative_support_count=negative_support,
                 false_stop_rate=false_rate,
+                false_stop_ci_lower=false_lower,
+                false_stop_ci_upper=false_upper,
                 authorized=authorized,
             )
         )
@@ -261,6 +266,24 @@ def calibrate_learned_stop(
         diagnostics=tuple(diagnostics),
         validation_specimen_count=len({row.specimen_key for row in rows}),
     )
+
+
+def _wilson_interval(successes: int, total: int) -> tuple[float, float]:
+    if total == 0:
+        return 0.0, 1.0
+    z = 1.959963984540054
+    proportion = successes / total
+    denominator = 1.0 + z**2 / total
+    center = (proportion + z**2 / (2.0 * total)) / denominator
+    half_width = (
+        z
+        * math.sqrt(
+            proportion * (1.0 - proportion) / total
+            + z**2 / (4.0 * total**2)
+        )
+        / denominator
+    )
+    return max(0.0, center - half_width), min(1.0, center + half_width)
 
 
 def learned_stop_decision(

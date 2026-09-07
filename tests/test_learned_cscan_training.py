@@ -130,6 +130,9 @@ def test_learned_stop_requires_valid_support_and_exhaustion_is_not_stop_success(
     )
 
     authorization = calibrate_learned_stop(rows)
+    diagnostic = authorization.diagnostics[0]
+    assert diagnostic.false_stop_ci_lower <= diagnostic.false_stop_rate
+    assert diagnostic.false_stop_rate <= diagnostic.false_stop_ci_upper
     decision = learned_stop_decision(
         probability=0.999,
         mechanically_eligible=True,

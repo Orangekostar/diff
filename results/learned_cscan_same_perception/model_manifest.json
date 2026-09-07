@@ -1,0 +1,77 @@
+{
+  "device": "cuda:0",
+  "elapsed_seconds": 2770.6453612828627,
+  "models": [
+    {
+      "best_valid_loss": 2.5129213333129883,
+      "final_loss": 0.45355457067489624,
+      "initial_loss": 4.049587726593018,
+      "method": "L_BC",
+      "optimizer_steps": 1250,
+      "parameter_count": 329505,
+      "path": "models/l_bc.pt",
+      "seed": 1,
+      "sha256": "c95185aec70515f2578d671e520ebe9b57e600e91e70e5f6752567ae2f87fbe5",
+      "stopped_early": true,
+      "use_surface_features": true
+    },
+    {
+      "best_valid_loss": 1.5568759441375732,
+      "final_loss": 1.5265040397644043,
+      "initial_loss": 1.5625534057617188,
+      "method": "L_CTG_0",
+      "optimizer_steps": 3750,
+      "parameter_count": 329505,
+      "path": "models/l_ctg_0.pt",
+      "seed": 1,
+      "sha256": "260e193e25353a65a2a3a0ca98a82f3c829375e389d85d2cf2127a20c107058c",
+      "stopped_early": true,
+      "use_surface_features": true
+    },
+    {
+      "best_valid_loss": 1.6187288761138916,
+      "final_loss": 1.5961686372756958,
+      "initial_loss": 1.6153810024261475,
+      "method": "L_CTG_1",
+      "optimizer_steps": 1250,
+      "parameter_count": 329505,
+      "path": "models/l_ctg_1.pt",
+      "seed": 1,
+      "sha256": "bec1b9a1625d61d1888d17876545867c156b607bc5be4a3dfd4856ebd8aec2bf",
+      "stopped_early": true,
+      "use_surface_features": true
+    },
+    {
+      "best_valid_loss": 0.3318561911582947,
+      "final_loss": 0.2800188362598419,
+      "initial_loss": 0.7200534343719482,
+      "method": "S_LEARN",
+      "optimizer_steps": 3750,
+      "parameter_count": 13697,
+      "path": "models/s_learn.pt",
+      "seed": 1,
+      "sha256": "c6af5c383ef4c586a4ac85c7dc9afbcd5bc71dc07558c692fb295d0f5386892d",
+      "stopped_early": true,
+      "use_surface_features": true
+    }
+  ],
+  "overfit_check": {
+    "final_loss": 1.539648413658142,
+    "initial_loss": 1.5531563758850098,
+    "optimizer_steps": 64,
+    "passed": true,
+    "state_count": 32
+  },
+  "peak_gpu_memory_bytes": 110337536,
+  "schema_version": 1,
+  "state": "ACTORS_AND_STOP_TRAINED",
+  "test_opened": false,
+  "training_bank": {
+    "aggregate_candidate_suffixes": 541,
+    "aggregate_ctg_states": 96,
+    "aggregation_rounds": 1,
+    "aggregation_transitions": 58304,
+    "bank_sha256": "52167731b60bbd6db759a1e74a85bd0eb0bc8ea208bd51e981bff44d841281c7",
+    "base_ctg_states": 192
+  }
+}

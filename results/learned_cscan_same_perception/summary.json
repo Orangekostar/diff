@@ -1,0 +1,497 @@
+{
+  "branch": "research/learned-cscan-same-perception",
+  "claims": {
+    "learned_planning_supported_formal": null,
+    "learned_planning_supported_proxy": false,
+    "stop_increment_supported": null,
+    "vlm_increment_supported": null
+  },
+  "data_roster": {
+    "domains": 6,
+    "pilot": 60,
+    "split_counts": {
+      "TEST": 24,
+      "TRAIN": 24,
+      "VALID": 12
+    }
+  },
+  "evidence_scope": "INTERNAL_REUSED_COHORT_NEW_PROTOCOL",
+  "execution": "TRAINED_AND_EVALUATED",
+  "formal_effect": null,
+  "formal_planner_effect": "INCONCLUSIVE",
+  "limitations": [
+    "All task outcomes are same-reader self-consistency proxies; none is independently reviewed.",
+    "The retrospective 60-specimen cohort is reused and is not a prospective scanner or robot experiment.",
+    "The pilot TEST split has 24 physical specimens and does not support new-material transfer claims.",
+    "Route values are normalized image-plane diagnostics, not physical travel time or path optimality."
+  ],
+  "model_trained": true,
+  "not_run": {
+    "all_276": "RESOURCE_SCOPED_PILOT",
+    "extra_policy_seeds": "NOT_RUN_VALID_SIGNAL_NOT_POSITIVE",
+    "l_no_vlm": "NOT_RUN_VALID_SIGNAL_NOT_POSITIVE",
+    "l_open_init": "NOT_RUN_RESOURCE_SCOPED",
+    "leave_domain_out": "RESOURCE_SCOPED_PILOT",
+    "new_vlm_models": "FROZEN_SINGLE_BACKEND"
+  },
+  "proxy_effect": [
+    {
+      "bootstrap_replicates": "5000",
+      "ci_lower": "-0.33755604322579",
+      "ci_upper": "-0.08945550369111774",
+      "comparator": "R_BALANCED",
+      "domain_count": "6",
+      "estimate": "-0.2167273564882922",
+      "formal_estimate": "",
+      "metric": "ausc_any",
+      "physical_specimen_count": "24",
+      "proxy_scope": "SAME_READER_SELF_CONSISTENCY",
+      "schema_version": "1",
+      "task": "LOCATE",
+      "treatment": "L_CTG"
+    },
+    {
+      "bootstrap_replicates": "5000",
+      "ci_lower": "-0.2199551194074304",
+      "ci_upper": "-0.09837919155281301",
+      "comparator": "R_BALANCED",
+      "domain_count": "6",
+      "estimate": "-0.15809508102152697",
+      "formal_estimate": "",
+      "metric": "ausc_any",
+      "physical_specimen_count": "24",
+      "proxy_scope": "SAME_READER_SELF_CONSISTENCY",
+      "schema_version": "1",
+      "task": "CHARACTERIZE",
+      "treatment": "L_CTG"
+    }
+  ],
+  "proxy_planner_effect": "NOT_SUPPORTED",
+  "reader_status": "FUNCTIONAL",
+  "reference": "PROXY_ONLY",
+  "repository_base_sha": "59a67511c0ee6395b68220c6a1644f40c383dfa2",
+  "resource_use": {
+    "logical_transition_cap": 400000,
+    "test_action_transitions": 64512,
+    "total_logical_transitions": 285190,
+    "training_logical_transitions": 179206,
+    "validation_action_transitions": 41472
+  },
+  "schema_version": 1,
+  "stop_effect": "INCONCLUSIVE",
+  "surface_backend": {
+    "prompt_sha256": "07ba97c242f8f8ab4ec0b742d64aec231dace2455bb275e285174381c1e79ce0",
+    "repository": "Qwen/Qwen2.5-VL-7B-Instruct",
+    "revision": "cc594898137f460bfe9f0759e9844b3ce807cfb5",
+    "schema_version": 2
+  },
+  "surface_perception": {
+    "actual_calls_this_command": 33,
+    "cache_hits_this_command": 28,
+    "cumulative_deployment_calls": 62,
+    "elapsed_seconds": 545.5659797340631,
+    "main_call_cap": 60,
+    "repair_calls_this_command": 1
+  },
+  "test": {
+    "episode_count": 336,
+    "method_metrics": {
+      "L_BC": {
+        "CHARACTERIZE": {
+          "ausc_any": 0.5488189459859377,
+          "full_input_success": 1.0,
+          "learned_stop_success": 0.6666666666666666,
+          "mean_inference_seconds": 0.46162692457437515,
+          "mean_route_cost": 1.6920322486530626,
+          "physical_specimens": 24,
+          "rule_stop_success": 1.0,
+          "success_c010": 0.08333333333333333,
+          "success_c040": 0.4166666666666667
+        },
+        "LOCATE": {
+          "ausc_any": 0.809954538529655,
+          "full_input_success": 1.0,
+          "learned_stop_success": 0.625,
+          "mean_inference_seconds": 0.5027809660338486,
+          "mean_route_cost": 1.6901082541071488,
+          "physical_specimens": 24,
+          "rule_stop_success": 0.7083333333333334,
+          "success_c010": 0.625,
+          "success_c040": 0.75
+        }
+      },
+      "L_CTG": {
+        "CHARACTERIZE": {
+          "ausc_any": 0.30983501770963,
+          "full_input_success": 1.0,
+          "learned_stop_success": 0.625,
+          "mean_inference_seconds": 0.4594756535370834,
+          "mean_route_cost": 1.7151309449628798,
+          "physical_specimens": 24,
+          "rule_stop_success": 1.0,
+          "success_c010": 0.0,
+          "success_c040": 0.041666666666666664
+        },
+        "LOCATE": {
+          "ausc_any": 0.41309149188278815,
+          "full_input_success": 1.0,
+          "learned_stop_success": 0.375,
+          "mean_inference_seconds": 0.4689053956923696,
+          "mean_route_cost": 1.7220459375310924,
+          "physical_specimens": 24,
+          "rule_stop_success": 0.4166666666666667,
+          "success_c010": 0.08333333333333333,
+          "success_c040": 0.2916666666666667
+        }
+      },
+      "R_BALANCED": {
+        "CHARACTERIZE": {
+          "ausc_any": 0.467930098731157,
+          "full_input_success": 1.0,
+          "learned_stop_success": 0.6666666666666666,
+          "mean_inference_seconds": 0.17180091437573233,
+          "mean_route_cost": 1.6949626683125503,
+          "physical_specimens": 24,
+          "rule_stop_success": 0.875,
+          "success_c010": 0.125,
+          "success_c040": 0.25
+        },
+        "LOCATE": {
+          "ausc_any": 0.6298188483710804,
+          "full_input_success": 1.0,
+          "learned_stop_success": 0.5833333333333334,
+          "mean_inference_seconds": 0.17899401167718074,
+          "mean_route_cost": 1.6949626683125503,
+          "physical_specimens": 24,
+          "rule_stop_success": 0.875,
+          "success_c010": 0.4583333333333333,
+          "success_c040": 0.5833333333333334
+        }
+      },
+      "R_CENTER": {
+        "CHARACTERIZE": {
+          "ausc_any": 0.2021121867776512,
+          "full_input_success": 1.0,
+          "learned_stop_success": 0.08333333333333333,
+          "mean_inference_seconds": 0.31183403470398235,
+          "mean_route_cost": 1.7777730729016223,
+          "physical_specimens": 24,
+          "rule_stop_success": 0.9583333333333334,
+          "success_c010": 0.041666666666666664,
+          "success_c040": 0.4166666666666667
+        },
+        "LOCATE": {
+          "ausc_any": 0.5724402240853824,
+          "full_input_success": 1.0,
+          "learned_stop_success": 0.4166666666666667,
+          "mean_inference_seconds": 0.3206238335114904,
+          "mean_route_cost": 1.7777730729016223,
+          "physical_specimens": 24,
+          "rule_stop_success": 0.75,
+          "success_c010": 0.5,
+          "success_c040": 0.75
+        }
+      },
+      "R_GEOM": {
+        "CHARACTERIZE": {
+          "ausc_any": 0.1174827512046301,
+          "full_input_success": 1.0,
+          "learned_stop_success": 0.5,
+          "mean_inference_seconds": 0.18931157970412946,
+          "mean_route_cost": 1.7309711903937697,
+          "physical_specimens": 24,
+          "rule_stop_success": 1.0,
+          "success_c010": 0.125,
+          "success_c040": 0.041666666666666664
+        },
+        "LOCATE": {
+          "ausc_any": 0.6017082595248785,
+          "full_input_success": 1.0,
+          "learned_stop_success": 0.4583333333333333,
+          "mean_inference_seconds": 0.1891396497764314,
+          "mean_route_cost": 1.7309711903937697,
+          "physical_specimens": 24,
+          "rule_stop_success": 0.9166666666666666,
+          "success_c010": 0.75,
+          "success_c040": 0.4583333333333333
+        }
+      },
+      "R_LEGACY": {
+        "CHARACTERIZE": {
+          "ausc_any": 0.32899863002888097,
+          "full_input_success": 1.0,
+          "learned_stop_success": 0.375,
+          "mean_inference_seconds": 0.0671446366274419,
+          "mean_route_cost": 1.6624162790812294,
+          "physical_specimens": 24,
+          "rule_stop_success": 1.0,
+          "success_c010": 0.0,
+          "success_c040": 0.041666666666666664
+        },
+        "LOCATE": {
+          "ausc_any": 0.6190989586264105,
+          "full_input_success": 1.0,
+          "learned_stop_success": 0.2916666666666667,
+          "mean_inference_seconds": 0.06772447957579668,
+          "mean_route_cost": 1.6624162790812294,
+          "physical_specimens": 24,
+          "rule_stop_success": 1.0,
+          "success_c010": 0.20833333333333334,
+          "success_c040": 0.5416666666666666
+        }
+      },
+      "R_VLM_OPEN": {
+        "CHARACTERIZE": {
+          "ausc_any": 0.18516609784092253,
+          "full_input_success": 1.0,
+          "learned_stop_success": 0.16666666666666666,
+          "mean_inference_seconds": 0.31836124513453495,
+          "mean_route_cost": 1.7745607848749732,
+          "physical_specimens": 24,
+          "rule_stop_success": 0.9583333333333334,
+          "success_c010": 0.041666666666666664,
+          "success_c040": 0.2916666666666667
+        },
+        "LOCATE": {
+          "ausc_any": 0.5231337068856902,
+          "full_input_success": 1.0,
+          "learned_stop_success": 0.4583333333333333,
+          "mean_inference_seconds": 0.3288370525697246,
+          "mean_route_cost": 1.7745607848749732,
+          "physical_specimens": 24,
+          "rule_stop_success": 0.75,
+          "success_c010": 0.5,
+          "success_c040": 0.5416666666666666
+        }
+      }
+    },
+    "physical_specimens": 24,
+    "primary_proxy_comparisons": [
+      {
+        "bootstrap_replicates": "5000",
+        "ci_lower": "-0.33755604322579",
+        "ci_upper": "-0.08945550369111774",
+        "comparator": "R_BALANCED",
+        "domain_count": "6",
+        "estimate": "-0.2167273564882922",
+        "formal_estimate": "",
+        "metric": "ausc_any",
+        "physical_specimen_count": "24",
+        "proxy_scope": "SAME_READER_SELF_CONSISTENCY",
+        "schema_version": "1",
+        "task": "LOCATE",
+        "treatment": "L_CTG"
+      },
+      {
+        "bootstrap_replicates": "5000",
+        "ci_lower": "-0.2199551194074304",
+        "ci_upper": "-0.09837919155281301",
+        "comparator": "R_BALANCED",
+        "domain_count": "6",
+        "estimate": "-0.15809508102152697",
+        "formal_estimate": "",
+        "metric": "ausc_any",
+        "physical_specimen_count": "24",
+        "proxy_scope": "SAME_READER_SELF_CONSISTENCY",
+        "schema_version": "1",
+        "task": "CHARACTERIZE",
+        "treatment": "L_CTG"
+      }
+    ]
+  },
+  "training": {
+    "aggregation_candidate_suffixes": 541,
+    "aggregation_rounds": 1,
+    "aggregation_states": 96,
+    "base_bank_states": 192,
+    "base_candidate_suffixes": 916,
+    "logical_transitions": 179206,
+    "models": [
+      {
+        "best_valid_loss": 2.5129213333129883,
+        "final_loss": 0.45355457067489624,
+        "initial_loss": 4.049587726593018,
+        "method": "L_BC",
+        "optimizer_steps": 1250,
+        "parameter_count": 329505,
+        "path": "models/l_bc.pt",
+        "seed": 1,
+        "sha256": "c95185aec70515f2578d671e520ebe9b57e600e91e70e5f6752567ae2f87fbe5",
+        "stopped_early": true,
+        "use_surface_features": true
+      },
+      {
+        "best_valid_loss": 1.5568759441375732,
+        "final_loss": 1.5265040397644043,
+        "initial_loss": 1.5625534057617188,
+        "method": "L_CTG_0",
+        "optimizer_steps": 3750,
+        "parameter_count": 329505,
+        "path": "models/l_ctg_0.pt",
+        "seed": 1,
+        "sha256": "260e193e25353a65a2a3a0ca98a82f3c829375e389d85d2cf2127a20c107058c",
+        "stopped_early": true,
+        "use_surface_features": true
+      },
+      {
+        "best_valid_loss": 1.6187288761138916,
+        "final_loss": 1.5961686372756958,
+        "initial_loss": 1.6153810024261475,
+        "method": "L_CTG_1",
+        "optimizer_steps": 1250,
+        "parameter_count": 329505,
+        "path": "models/l_ctg_1.pt",
+        "seed": 1,
+        "sha256": "bec1b9a1625d61d1888d17876545867c156b607bc5be4a3dfd4856ebd8aec2bf",
+        "stopped_early": true,
+        "use_surface_features": true
+      },
+      {
+        "best_valid_loss": 0.3318561911582947,
+        "final_loss": 0.2800188362598419,
+        "initial_loss": 0.7200534343719482,
+        "method": "S_LEARN",
+        "optimizer_steps": 3750,
+        "parameter_count": 13697,
+        "path": "models/s_learn.pt",
+        "seed": 1,
+        "sha256": "c6af5c383ef4c586a4ac85c7dc9afbcd5bc71dc07558c692fb295d0f5386892d",
+        "stopped_early": true,
+        "use_surface_features": true
+      }
+    ]
+  },
+  "validation_selection": {
+    "config_sha256": "12268dcaf470f769c326007702f7b0b6f4a13cf326447eef652a6dda972b5662",
+    "confirmation_seeds": {
+      "mean_ausc_any_by_seed": {
+        "1": 0.38686230778928027
+      },
+      "reason": "NOT_RUN_VALID_SIGNAL_NOT_POSITIVE",
+      "run": false,
+      "seeds": [
+        1
+      ]
+    },
+    "elapsed_seconds": 2151.8445388651453,
+    "formal_effect": null,
+    "l_no_vlm": {
+      "mean_ausc_any": null,
+      "reason": "NOT_RUN_VALID_SIGNAL_NOT_POSITIVE",
+      "run": false,
+      "seed": null
+    },
+    "learned_stop": {
+      "diagnostics": [
+        {
+          "authorized": true,
+          "false_stop_ci_lower": 0.014405919891142604,
+          "false_stop_ci_upper": 0.021358203193988425,
+          "false_stop_count": 97,
+          "false_stop_rate": 0.017547033285094066,
+          "negative_support_count": 5528,
+          "predicted_stop_count": 562,
+          "threshold": 0.9,
+          "true_stop_count": 465
+        },
+        {
+          "authorized": true,
+          "false_stop_ci_lower": 0.004404808944243268,
+          "false_stop_ci_upper": 0.008582088701953853,
+          "false_stop_count": 34,
+          "false_stop_rate": 0.006150506512301013,
+          "negative_support_count": 5528,
+          "predicted_stop_count": 158,
+          "threshold": 0.95,
+          "true_stop_count": 124
+        },
+        {
+          "authorized": false,
+          "false_stop_ci_lower": 0.0,
+          "false_stop_ci_upper": 0.0006944267743915182,
+          "false_stop_count": 0,
+          "false_stop_rate": 0.0,
+          "negative_support_count": 5528,
+          "predicted_stop_count": 2,
+          "threshold": 0.99,
+          "true_stop_count": 2
+        }
+      ],
+      "status": "LEARNED_STOP_AUTHORIZED",
+      "threshold": 0.9,
+      "validation_specimen_count": 12
+    },
+    "method_metrics": {
+      "L_BC": {
+        "CHARACTERIZE": 0.645288036733802,
+        "LOCATE": 0.8592360235983546,
+        "overall": 0.7522620301660782
+      },
+      "L_CTG_0": {
+        "CHARACTERIZE": 0.06757000019547518,
+        "LOCATE": 0.18346166904928338,
+        "overall": 0.12551583462237928
+      },
+      "L_CTG_1": {
+        "CHARACTERIZE": 0.3778270767793204,
+        "LOCATE": 0.39589753879924,
+        "overall": 0.38686230778928027
+      },
+      "R_BALANCED_P4": {
+        "CHARACTERIZE": 0.512651792035556,
+        "LOCATE": 0.7339569480719881,
+        "overall": 0.623304370053772
+      },
+      "R_BALANCED_P8": {
+        "CHARACTERIZE": 0.5095479711028528,
+        "LOCATE": 0.7371930774379685,
+        "overall": 0.6233705242704105
+      },
+      "R_CENTER": {
+        "CHARACTERIZE": 0.265051239121338,
+        "LOCATE": 0.5727387614015869,
+        "overall": 0.4188950002614624
+      },
+      "R_GEOM": {
+        "CHARACTERIZE": 0.22297295427228717,
+        "LOCATE": 0.5938423081303098,
+        "overall": 0.40840763120129847
+      },
+      "R_LEGACY": {
+        "CHARACTERIZE": 0.368079514445915,
+        "LOCATE": 0.6052785570963666,
+        "overall": 0.4866790357711408
+      },
+      "R_VLM_OPEN": {
+        "CHARACTERIZE": 0.26320840380098615,
+        "LOCATE": 0.4976257453192335,
+        "overall": 0.3804170745601098
+      }
+    },
+    "reference": "PROXY_ONLY",
+    "schema_version": 1,
+    "selected_learned": {
+      "mean_ausc_any": 0.38686230778928027,
+      "method": "L_CTG_1",
+      "seeds": [
+        1
+      ]
+    },
+    "selected_rule": {
+      "coverage_period": 8,
+      "mean_ausc_any": 0.6233705242704105,
+      "method": "R_BALANCED_P8"
+    },
+    "selection_sha256": "8fb4210ba96612333418ab74d7ca6640301b53db792c25ef76f96d63039d5441",
+    "state": "VALID_SELECTION_LOCKED",
+    "test_opened": false,
+    "validation_action_signal": {
+      "difference": -0.23650821648113024,
+      "positive_after_confirmation": false,
+      "positive_initial_seed": false
+    },
+    "validation_episode_count": 216,
+    "validation_physical_specimens": 12
+  },
+  "vlm_increment": "NOT_TESTED"
+}
