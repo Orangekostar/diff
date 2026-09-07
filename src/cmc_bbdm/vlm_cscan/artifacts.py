@@ -1381,7 +1381,7 @@ def _write_parquet_atomic(path: Path, rows: list[dict[str, object]]) -> None:
     if not rows:
         raise ValueError("cannot write an empty trajectory shard")
     path.parent.mkdir(parents=True, exist_ok=True)
-    table = pl.DataFrame(rows, strict=False)
+    table = pl.DataFrame(rows, strict=False, infer_schema_length=None)
     _write_table_atomic(path, table)
 
 

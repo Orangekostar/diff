@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import numpy as np
+import polars as pl
 import pytest
 
+from cmc_bbdm.vlm_cscan.artifacts import _write_parquet_atomic
 from cmc_bbdm.vlm_cscan.contracts import (
     BenchmarkTask,
     CScanReference,
@@ -242,3 +244,16 @@ def test_proxy_background_uses_inner_ring_not_rendered_outer_frame() -> None:
     assert reference.certain_mask[20, 20]
     assert not reference.certain_mask[10, 10]
     assert np.count_nonzero(reference.certain_mask) < 100
+
+
+def test_parquet_resume_schema_handles_a_late_stop_step(tmp_path) -> None:
+    rows = [
+        {"step": index, "autonomous_stop_step": None if index < 103 else 103}
+        for index in range(192)
+    ]
+    path = tmp_path / "episode.parquet"
+
+    _write_parquet_atomic(path, rows)
+
+    table = pl.read_parquet(path)
+    assert table["autonomous_stop_step"].drop_nulls().to_list() == [103] * 89
