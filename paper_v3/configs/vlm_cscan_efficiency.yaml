@@ -1,0 +1,102 @@
+schema_version: 1
+stage: VLM_CSCAN_SUCCESS_EFFICIENCY
+mode: pilot
+repository_base_sha: 78453de3fe01c261887bc56c41e04aa505526fa1
+controlling_prompt_sha256: fa4e351288b42723ad2b31b4e04765d77112fdc04d68d8be65610b30d9dc8cdf
+configuration_frozen: true
+
+sources:
+  mavis_config:
+    path: paper_v3/configs/mavis_development.yaml
+    sha256: d35faaf7f1c2e86785acf6ee821db6cf783d9a38565e1e75ec9a282e266e729c
+  p0r_surface_manifest:
+    path: results/agentic_task_driven_nde/p0r_author_registration/surface_manifest.csv
+    sha256: e3274cacfb50b5b136e81ed3c107ac79d134e37d5d14ccc296b4e1ae2a51b44b
+  p0r_registration:
+    path: results/agentic_task_driven_nde/p0r_author_registration/registration.csv
+    sha256: 43bafc8819a1bea0df7f7ea9fa2b1dc194591ef9a4b58e8dcf3e64c13622e265
+  p0r_grid_mapping:
+    path: results/agentic_task_driven_nde/p0r_author_registration/grid_mapping_qc.csv
+    sha256: fb076daefbb0b748184d10b777268dfd13777a3e78cb7fed104252e6d62afd35
+
+cohort:
+  specimen_count: 276
+  domain_order: [74t7kcdgkr, cgtnjyggtm, w68dtmpfyf, xcmzfsbd9t, yfxyg8jm46, ykhs7s2dck]
+  outer_split: leave_one_domain_out
+  evidence_scope: INTERNAL_REUSED_COHORT_EVALUATION
+  pilot_per_domain: 10
+  smoke_per_domain: 1
+  pilot_selection: sha256_lexicographic
+  pilot_seed: vlm-cscan-pilot-v1
+
+surface:
+  orientation: ROT90
+  max_edge: 1024
+  preserve_aspect_ratio: true
+  grid_shape: [8, 8]
+  clean_and_gridded_inputs: true
+
+model:
+  repository: Qwen/Qwen2.5-VL-7B-Instruct
+  revision: cc594898137f460bfe9f0759e9844b3ce807cfb5
+  license: Apache-2.0
+  local_path: /mnt/shared/ww/models/huggingface/Qwen--Qwen2.5-VL-7B-Instruct/cc594898137f460bfe9f0759e9844b3ce807cfb5
+  device: cuda:0
+  dtype: bfloat16
+  max_new_tokens: 700
+  do_sample: false
+  format_retries: 1
+  max_replans_per_episode: 4
+
+acquisition:
+  cell_shape: [8, 8]
+  levels: [-1, 0, 1, 2]
+  initial_nominal_budget: 0.015625
+  endpoint_budget: 1.0
+  budget_unit: unique_native_raster_locations
+  start_position: [0.0, 0.0]
+  display_checkpoints: [0.01, 0.025, 0.05, 0.10, 0.20, 0.40, 0.60, 0.80, 1.00]
+
+reader:
+  implementation: ROBUST_RGB_BACKGROUND_DISTANCE_PROXY
+  provenance: ALGORITHM_DERIVED_NOT_REVIEWED
+  background: source_domain_border_median
+  distance_threshold: 0.18
+  minimum_component_pixels: 9
+  cell_indication_fraction: 0.05
+
+tasks:
+  names: [LOCATE, CHARACTERIZE]
+  locate:
+    bbox_iou: 0.50
+    minimum_support_points: 3
+    minimum_support_rows: 2
+    minimum_support_columns: 2
+    full_frame_max_area_fraction: 0.95
+  characterize:
+    iou: 0.70
+    recall: 0.90
+    relative_area_error: 0.10
+    sensitivity_iou: [0.60, 0.70, 0.80]
+
+planning:
+  methods: [B0, B1, B2, B3, B4, B5, B6, B7]
+  macro_action_limit: 4
+  exploration_period: 4
+  initial_priority_limit: 8
+  vlm_region_limit: 3
+  evidence_stability_updates: 2
+
+evaluation:
+  modes: [ANYTIME_REPORT, AUTONOMOUS_REPORT]
+  bootstrap_replicates: 5000
+  bootstrap_seed: 2026090701
+  success_noninferiority_margin: -0.02
+  target_success_rates: [0.80, 0.90]
+  multiple_comparison: holm
+  full_cohort_requires_reviewed_references: true
+  stress_test_requires_reviewed_references: true
+
+outputs:
+  root: results/vlm_cscan_efficiency
+  artifacts: artifacts/vlm_cscan_efficiency
