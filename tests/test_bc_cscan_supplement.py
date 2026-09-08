@@ -11,11 +11,22 @@ from cmc_bbdm.learned_cscan.bc_supplement import (
     verify_frozen_file,
 )
 from cmc_bbdm.learned_cscan.contracts import Task
+from cmc_bbdm.learned_cscan.episode_stop_calibration import (
+    calibrate_episode_stop,
+    first_stop_outcome,
+    summarize_episode_risk,
+)
+from cmc_bbdm.learned_cscan.metrics import MetricRecord
 from cmc_bbdm.learned_cscan.readout import TaskReportV2
 from cmc_bbdm.learned_cscan.supplement_adapters import (
     ActorInputMode,
     adapt_task_report_v2,
     mask_actor_tensors,
+)
+from cmc_bbdm.learned_cscan.supplement_analysis import (
+    cost_at_success_rate,
+    make_domain_bootstrap_draws,
+    paired_domain_bootstrap,
 )
 from cmc_bbdm.vlm_cscan.contracts import BenchmarkTask, TaskReport
 
@@ -92,3 +103,178 @@ def test_review_adapter_preserves_mask_support_and_formal_scope() -> None:
     np.testing.assert_array_equal(adapted.predicted_mask, prediction)
     np.testing.assert_array_equal(adapted.support_positions, support)
     assert adapted.confidence == 0.75
+
+
+def test_first_false_stop_is_not_replaced_by_later_success() -> None:
+    rows = (
+        {
+            "step": 0,
+            "cost": 0.0,
+            "success": False,
+            "eligible": False,
+            "p": 0.99,
+        },
+        {
+            "step": 1,
+            "cost": 0.2,
+            "success": False,
+            "eligible": True,
+            "p": 0.91,
+        },
+        {
+            "step": 2,
+            "cost": 0.4,
+            "success": True,
+            "eligible": True,
+            "p": 0.99,
+        },
+    )
+
+    outcome = first_stop_outcome(
+        rows,
+        probability_field="p",
+        eligibility_field="eligible",
+        threshold=0.90,
+    )
+
+    assert outcome.false_stop and not outcome.completed
+    assert outcome.stop_cost == 0.2
+    assert outcome.failure_penalized_cost == 1.0
+
+
+def test_never_stopping_is_exhaustion() -> None:
+    rows = (
+        {
+            "step": 0,
+            "cost": 0.0,
+            "success": False,
+            "eligible": False,
+            "p": 0.2,
+        },
+        {
+            "step": 1,
+            "cost": 1.0,
+            "success": True,
+            "eligible": True,
+            "p": 0.98,
+        },
+    )
+
+    outcome = first_stop_outcome(
+        rows,
+        probability_field="p",
+        eligibility_field="eligible",
+        threshold=0.99,
+    )
+
+    assert outcome.exhausted and not outcome.stopped
+    assert outcome.failure_penalized_cost == 1.0
+
+
+def test_wrong_among_stops_uses_actual_stops_and_shared_threshold() -> None:
+    false = first_stop_outcome(
+        (
+            {"step": 0, "cost": 0.2, "success": False, "eligible": True, "p": 1.0},
+        ),
+        probability_field="p",
+        eligibility_field="eligible",
+        threshold=0.9,
+    )
+    correct = first_stop_outcome(
+        (
+            {"step": 0, "cost": 0.2, "success": True, "eligible": True, "p": 1.0},
+        ),
+        probability_field="p",
+        eligibility_field="eligible",
+        threshold=0.9,
+    )
+    exhausted = first_stop_outcome(
+        (
+            {"step": 0, "cost": 1.0, "success": True, "eligible": True, "p": 0.0},
+        ),
+        probability_field="p",
+        eligibility_field="eligible",
+        threshold=0.9,
+    )
+    risk = summarize_episode_risk((false, correct, exhausted))
+    assert risk.wrong_among_stops == 0.5
+    assert risk.false_stop_episode_rate == pytest.approx(1 / 3)
+
+    rows = []
+    for planner in ("BC_S1", "R_BALANCED_P8"):
+        for index in range(6):
+            rows.extend(
+                (
+                    {
+                        "specimen_key": f"domain:s{index}",
+                        "task": "LOCATE",
+                        "planner": planner,
+                        "step": 0,
+                        "cost": 0.2,
+                        "success": index != 0,
+                        "eligible": True,
+                        "p": 0.91,
+                    },
+                    {
+                        "specimen_key": f"domain:s{index}",
+                        "task": "LOCATE",
+                        "planner": planner,
+                        "step": 1,
+                        "cost": 0.4,
+                        "success": True,
+                        "eligible": True,
+                        "p": 0.96,
+                    },
+                )
+            )
+    calibration = calibrate_episode_stop(
+        tuple(rows),
+        task="LOCATE",
+        planners=("BC_S1", "R_BALANCED_P8"),
+        rule_completion={"BC_S1": 1.0, "R_BALANCED_P8": 1.0},
+        probability_field="p",
+        eligibility_field="eligible",
+    )
+    assert calibration.qualified
+    assert calibration.selected_threshold == 0.95
+
+
+def test_cost_at_success_rate_keeps_nonmonotone_current_reports() -> None:
+    rows = (
+        {"dataset_id": "d", "specimen_key": "d:a", "seed": 1, "step": 0, "cost": 0.0, "success": False},
+        {"dataset_id": "d", "specimen_key": "d:b", "seed": 1, "step": 0, "cost": 0.0, "success": False},
+        {"dataset_id": "d", "specimen_key": "d:a", "seed": 1, "step": 1, "cost": 0.2, "success": True},
+        {"dataset_id": "d", "specimen_key": "d:b", "seed": 1, "step": 1, "cost": 0.2, "success": True},
+        {"dataset_id": "d", "specimen_key": "d:a", "seed": 1, "step": 2, "cost": 0.4, "success": False},
+        {"dataset_id": "d", "specimen_key": "d:b", "seed": 1, "step": 2, "cost": 0.4, "success": False},
+    )
+
+    assert cost_at_success_rate(rows, target=1.0) == 0.2
+
+
+def test_paired_bootstrap_averages_seeds_within_physical_specimen() -> None:
+    records = []
+    for domain, values in {"d1": (1.0, 3.0), "d2": (2.0, 4.0)}.items():
+        for index, effect in enumerate(values):
+            specimen = f"{domain}:s{index}"
+            records.extend(
+                (
+                    MetricRecord(specimen, domain, "BC", Task.LOCATE, 1, 100.0 + effect),
+                    MetricRecord(specimen, domain, "BC", Task.LOCATE, 2, 102.0 + effect),
+                    MetricRecord(specimen, domain, "RULE", Task.LOCATE, 1, 101.0),
+                )
+            )
+    domains = {row.specimen_key: row.domain for row in records}
+    draws = make_domain_bootstrap_draws(domains, replicates=128, seed=7)
+
+    effect = paired_domain_bootstrap(
+        tuple(records),
+        treatment="BC",
+        comparator="RULE",
+        confidence_level=0.95,
+        draws=draws,
+    )
+
+    assert effect.estimate == pytest.approx(2.5)
+    assert effect.physical_specimen_count == 4
+    assert effect.domain_count == 2
