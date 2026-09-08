@@ -18,9 +18,11 @@ if LOCAL_PACKAGE not in cmc_bbdm.__path__:
 from cmc_bbdm.learned_cscan.bc_supplement import (
     audit_supplement,
     calibrate_stop,
+    evaluate_supplement,
     train_ablations,
     train_replicas,
 )
+from cmc_bbdm.learned_cscan.contracts import Split
 
 DEFAULT_CONFIG = PROJECT_ROOT / "paper_v3/configs/bc_cscan_path_b_supplement.yaml"
 DEFAULT_SOURCE_ROOT = Path("/home/ww/paper3/cmc_damage_inference")
@@ -34,12 +36,19 @@ def build_parser() -> argparse.ArgumentParser:
         "train-replicas",
         "train-ablations",
         "calibrate-stop",
+        "evaluate",
     ):
         command = commands.add_parser(name)
         command.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
         command.add_argument(
             "--source-root", type=Path, default=DEFAULT_SOURCE_ROOT
         )
+        if name == "evaluate":
+            command.add_argument(
+                "--split",
+                choices=(Split.TEST.value.lower(),),
+                required=True,
+            )
     return parser
 
 
@@ -56,6 +65,10 @@ def main(argv: Sequence[str] | None = None) -> int:
         result = train_replicas(**common)
     elif arguments.command == "calibrate-stop":
         result = calibrate_stop(**common)
+    elif arguments.command == "evaluate":
+        result = evaluate_supplement(
+            **common, split=Split(arguments.split.upper())
+        )
     else:
         result = train_ablations(**common)
     print(json.dumps(result, indent=2, sort_keys=True))

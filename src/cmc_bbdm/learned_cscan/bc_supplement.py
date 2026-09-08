@@ -35,11 +35,15 @@ from .benchmark import (
     _load_actor,
     _load_percepts,
     _load_stop,
+    _mechanically_stop_eligible,
     _packet,
     _policy_example,
     _proxy_score,
+    _replay_value_equal,
+    _report_digest,
     _run_planner_episode,
     _stop_example,
+    _stop_probability,
     _torch_save_atomic,
 )
 from .contracts import Split, Task
@@ -127,6 +131,42 @@ VALIDATION_TRAJECTORY_FIELDS = (
     "action_cell",
     "action_from_level",
     "action_to_level",
+    "cumulative_route_cost",
+    "cumulative_route_turns",
+)
+
+TEST_METHOD_ORDER = (
+    "R_BALANCED_P4",
+    "R_BALANCED_P8",
+    "BC_S1",
+    "BC_S2",
+    "BC_S3",
+    "BC_NO_VLM_S1",
+    "BC_NO_US_FEEDBACK_S1",
+)
+
+_HISTORICAL_REPLAY_FIELDS = (
+    "schema_version",
+    "dataset_id",
+    "specimen_id",
+    "specimen_key",
+    "task",
+    "seed",
+    "step",
+    "cost",
+    "success",
+    "task_loss",
+    "iou",
+    "recall",
+    "relative_area_error",
+    "report_sha256",
+    "packet_sha256",
+    "candidate_cell_count",
+    "support_count",
+    "action_cell",
+    "action_from_level",
+    "action_to_level",
+    "rule_stop",
     "cumulative_route_cost",
     "cumulative_route_turns",
 )
@@ -1814,6 +1854,849 @@ def calibrate_stop(
     }
 
 
+def _locked_calibration(config: SupplementConfig) -> dict[str, object]:
+    calibration_path = config.output_root / "stop_calibration.json"
+    if not calibration_path.is_file():
+        raise RuntimeError("run STOP calibration before supplement TEST")
+    payload = json.loads(calibration_path.read_text(encoding="utf-8"))
+    stored_id = payload.get("calibration_id")
+    identity = dict(payload)
+    identity.pop("calibration_id", None)
+    computed_id = hashlib.sha256(
+        json.dumps(identity, sort_keys=True, separators=(",", ":")).encode()
+    ).hexdigest()
+    thresholds = payload.get("selected_thresholds")
+    stop_path = config.output_root / "models/s_bc_cal.pt"
+    if (
+        payload.get("locked_for_test") is not True
+        or payload.get("all_tasks_qualified") is not True
+        or payload.get("head") != "S_BC_CAL"
+        or stored_id != computed_id
+        or type(thresholds) is not dict
+        or set(thresholds) != {"LOCATE", "CHARACTERIZE"}
+        or any(thresholds[task] not in {0.90, 0.95, 0.99} for task in thresholds)
+        or not stop_path.is_file()
+        or file_sha256(stop_path) != payload.get("head_sha256")
+        or file_sha256(
+            config.output_root / "validation_episode_scores.parquet"
+        )
+        != payload.get("validation_trajectory_sha256")
+    ):
+        raise RuntimeError("locked STOP calibration identity changed")
+    return payload
+
+
+def _test_planner_specs() -> tuple[tuple[str, str, str, int, int], ...]:
+    return (
+        (
+            "R_BALANCED_P4",
+            "RULE",
+            RuleMethod.R_BALANCED.value,
+            4,
+            1,
+        ),
+        (
+            "R_BALANCED_P8",
+            "RULE",
+            RuleMethod.R_BALANCED.value,
+            8,
+            1,
+        ),
+        ("BC_S1", "FROZEN_BC", "", 4, 1),
+        ("BC_S2", "SUPPLEMENT_ACTOR", "models/bc_seed2.pt", 4, 2),
+        ("BC_S3", "SUPPLEMENT_ACTOR", "models/bc_seed3.pt", 4, 3),
+        (
+            "BC_NO_VLM_S1",
+            "SUPPLEMENT_ACTOR",
+            "models/bc_no_vlm_seed1.pt",
+            4,
+            1,
+        ),
+        (
+            "BC_NO_US_FEEDBACK_S1",
+            "SUPPLEMENT_ACTOR",
+            "models/bc_no_us_feedback_seed1.pt",
+            4,
+            1,
+        ),
+    )
+
+
+def _first_trigger(
+    rows: list[dict[str, object]],
+    *,
+    probability_field: str,
+    eligibility_field: str,
+    threshold: float,
+) -> dict[str, object] | None:
+    return next(
+        (
+            row
+            for row in rows
+            if bool(row[eligibility_field])
+            and float(row[probability_field]) >= threshold
+        ),
+        None,
+    )
+
+
+def _prefix_runtime_fields(
+    rows: list[dict[str, object]], terminal: dict[str, object] | None
+) -> dict[str, object]:
+    selected = rows[-1] if terminal is None else terminal
+    terminal_step = int(selected["step"])
+    return {
+        "action_count": terminal_step,
+        "route_cost": float(selected["cumulative_route_cost"]),
+        "route_turns": int(selected["cumulative_route_turns"]),
+        "planner_inference_seconds": float(
+            sum(
+                float(row["action_inference_seconds"])
+                for row in rows
+                if int(row["step"]) < terminal_step
+            )
+        ),
+    }
+
+
+def _enrich_test_outputs(
+    episodes: list[dict[str, object]],
+    trajectories: list[dict[str, object]],
+    *,
+    thresholds: dict[str, float],
+) -> tuple[list[dict[str, object]], list[dict[str, object]]]:
+    grouped: dict[tuple[str, str, str, int], list[dict[str, object]]] = {}
+    for row in trajectories:
+        key = (
+            str(row["specimen_key"]),
+            str(row["task"]),
+            str(row["method"]),
+            int(row["seed"]),
+        )
+        grouped.setdefault(key, []).append(row)
+    enriched_episodes = []
+    for episode in episodes:
+        key = (
+            str(episode["specimen_key"]),
+            str(episode["task"]),
+            str(episode["method"]),
+            int(episode["seed"]),
+        )
+        rows = sorted(grouped[key], key=lambda row: int(row["step"]))
+        if len(rows) != 193 or [int(row["step"]) for row in rows] != list(
+            range(193)
+        ):
+            raise RuntimeError("TEST full trajectory is incomplete")
+        threshold = thresholds[str(episode["task"])]
+        calibrated = _first_trigger(
+            rows,
+            probability_field="learned_stop_probability",
+            eligibility_field="learned_stop_eligible",
+            threshold=threshold,
+        )
+        rule = next((row for row in rows if bool(row["rule_stop"])), None)
+        calibrated_runtime = _prefix_runtime_fields(rows, calibrated)
+        rule_runtime = _prefix_runtime_fields(rows, rule)
+        stopped = calibrated is not None
+        successful = bool(stopped and calibrated["success"])
+        if (
+            stopped != bool(episode["learned_stopped"])
+            or successful != bool(episode["learned_stop_success"])
+        ):
+            raise RuntimeError("calibrated STOP prefix differs from episode result")
+        enriched_episodes.append(
+            {
+                **episode,
+                "evaluation_split": Split.TEST.value,
+                "reference_version": "PROXY_LEGACY",
+                "historical_test_reuse": True,
+                "stop_model": "S_BC_CAL",
+                "calibrated_threshold": threshold,
+                "calibrated_stopped": stopped,
+                "calibrated_stop_cost": (
+                    "" if calibrated is None else float(calibrated["cost"])
+                ),
+                "calibrated_stop_success": successful,
+                "calibrated_false_stop": bool(stopped and not successful),
+                "calibrated_resource_exhausted": not stopped,
+                "calibrated_autonomous_ausc": float(
+                    1.0 - float(calibrated["cost"])
+                    if successful and calibrated is not None
+                    else 0.0
+                ),
+                "calibrated_failure_penalized_cost": float(
+                    calibrated["cost"]
+                    if successful and calibrated is not None
+                    else 1.0
+                ),
+                "calibrated_action_count": calibrated_runtime["action_count"],
+                "calibrated_route_cost": calibrated_runtime["route_cost"],
+                "calibrated_route_turns": calibrated_runtime["route_turns"],
+                "calibrated_planner_inference_seconds": calibrated_runtime[
+                    "planner_inference_seconds"
+                ],
+                "calibrated_stop_latency_available": False,
+                "calibrated_stop_inference_seconds": "",
+                "rule_action_count": rule_runtime["action_count"],
+                "rule_route_cost_at_stop": rule_runtime["route_cost"],
+                "rule_route_turns_at_stop": rule_runtime["route_turns"],
+                "rule_planner_inference_seconds": rule_runtime[
+                    "planner_inference_seconds"
+                ],
+                "full_trajectory_mode": "PREFIX_REPLAY_EVALUATION",
+                "original_vlm_calls": 0,
+                "true_break_executed": False,
+                "true_break_prefix_match": "",
+                "true_break_action_count": "",
+                "true_break_stop_inference_seconds": "",
+                "true_break_planner_inference_seconds": "",
+            }
+        )
+    enriched_trajectories = []
+    seen_triggers: set[tuple[str, str, str, int]] = set()
+    for row in trajectories:
+        key = (
+            str(row["specimen_key"]),
+            str(row["task"]),
+            str(row["method"]),
+            int(row["seed"]),
+        )
+        threshold = thresholds[str(row["task"])]
+        crosses = bool(row["learned_stop_eligible"]) and float(
+            row["learned_stop_probability"]
+        ) >= threshold
+        trigger = crosses and key not in seen_triggers
+        if trigger:
+            seen_triggers.add(key)
+        enriched_trajectories.append(
+            {
+                **row,
+                "evaluation_split": Split.TEST.value,
+                "reference_version": "PROXY_LEGACY",
+                "stop_model": "S_BC_CAL",
+                "calibrated_threshold": threshold,
+                "calibrated_stop_trigger": trigger,
+                "trajectory_mode": "FULL_PLANNER_TRAJECTORY_FOR_PREFIX_EVALUATION",
+            }
+        )
+    return enriched_episodes, enriched_trajectories
+
+
+def _verify_historical_replay(
+    config: SupplementConfig, trajectories: list[dict[str, object]]
+) -> dict[str, object]:
+    historical = pl.read_parquet(
+        config.source_result_root / "trajectories.parquet"
+    ).filter(pl.col("method").is_in(["L_BC", "R_BALANCED"]))
+    mapping = {"L_BC": "BC_S1", "R_BALANCED": "R_BALANCED_P8"}
+    historical_rows = historical.to_dicts()
+    new_by_key = {
+        (
+            str(row["specimen_key"]),
+            str(row["task"]),
+            str(row["method"]),
+            int(row["seed"]),
+            int(row["step"]),
+        ): row
+        for row in trajectories
+        if row["method"] in set(mapping.values())
+    }
+    mismatches = []
+    for old in historical_rows:
+        key = (
+            str(old["specimen_key"]),
+            str(old["task"]),
+            mapping[str(old["method"])],
+            int(old["seed"]),
+            int(old["step"]),
+        )
+        new = new_by_key.get(key)
+        if new is None:
+            mismatches.append({"key": key, "field": "MISSING"})
+            continue
+        for field in _HISTORICAL_REPLAY_FIELDS:
+            if not _replay_value_equal(old[field], new[field]):
+                mismatches.append(
+                    {
+                        "key": key,
+                        "field": field,
+                        "historical": old[field],
+                        "replayed": new[field],
+                    }
+                )
+                break
+    if len(new_by_key) != len(historical_rows):
+        raise RuntimeError("historical replay row count changed")
+    if mismatches:
+        raise RuntimeError(f"historical TEST replay mismatch: {mismatches[:3]}")
+    return {
+        "source_path": "results/learned_cscan_same_perception/trajectories.parquet",
+        "source_sha256": file_sha256(
+            config.source_result_root / "trajectories.parquet"
+        ),
+        "methods": mapping,
+        "compared_rows": len(historical_rows),
+        "compared_fields": list(_HISTORICAL_REPLAY_FIELDS),
+        "mismatch_count": 0,
+    }
+
+
+def _true_break_specimens(
+    config: SupplementConfig, *, source_root: Path
+) -> tuple[str, ...]:
+    parent = load_study_config(
+        config.parent_config_path, project_root=config.project_root
+    )
+    context = load_study_context(parent, source_root=source_root)
+    test = tuple(
+        assignment.record
+        for assignment in context.roster.assignments
+        if assignment.split is Split.TEST
+    )
+    selected = []
+    for domain in sorted({row.dataset_id for row in test}):
+        candidates = tuple(row for row in test if row.dataset_id == domain)
+        selected.append(
+            min(
+                candidates,
+                key=lambda row: (
+                    hashlib.sha256(
+                        (
+                            "bc-cscan-path-b-true-break-v1|"
+                            f"{row.specimen_key}"
+                        ).encode()
+                    ).hexdigest(),
+                    row.specimen_key,
+                ),
+            ).specimen_key
+        )
+    if len(selected) != 6:
+        raise RuntimeError("true-break selector no longer covers six domains")
+    return tuple(selected)
+
+
+def _supplement_true_break_worker(
+    specimen_key: str,
+) -> list[dict[str, object]]:
+    if (
+        _SUPPLEMENT_WORKER_CONTEXT is None
+        or _SUPPLEMENT_WORKER_PERCEPTS is None
+        or _SUPPLEMENT_WORKER_STOP is None
+        or not _SUPPLEMENT_WORKER_PLANNERS
+    ):
+        raise RuntimeError("true-break worker is not initialized")
+    context = _SUPPLEMENT_WORKER_CONTEXT
+    record = next(
+        row for row in context.roster.pilot_records if row.specimen_key == specimen_key
+    )
+    runtime = open_study_specimen(context, record)
+    percept = _SUPPLEMENT_WORKER_PERCEPTS[specimen_key]
+    outputs = []
+    for task in Task:
+        reference = _full_reference(context, runtime, task)
+        threshold = _SUPPLEMENT_WORKER_THRESHOLDS[task.value]
+        if threshold is None:
+            raise RuntimeError("true-break threshold is unavailable")
+        for method, planner, period, seed in _SUPPLEMENT_WORKER_PLANNERS:
+            timing = {"planner": 0.0, "stop": 0.0}
+            stop_state: dict[str, object] = {}
+            action_prefix: list[tuple[int, int, int]] = []
+            initial = {
+                "observation": runtime.world.reset(),
+                "probe": (0.0, 0.0),
+                "route_cost": 0.0,
+                "route_turns": 0,
+            }
+
+            def packet_for_state(
+                state: object, *, current_task: Task = task
+            ) -> object:
+                assert type(state) is dict
+                return _packet(
+                    state["observation"],
+                    runtime=runtime,
+                    percept=percept,
+                    task=current_task,
+                    context=context,
+                    probe_position=state["probe"],
+                    route_cost=float(state["route_cost"]),
+                )
+
+            def should_stop(
+                packet: object,
+                *,
+                current_timing: dict[str, float] = timing,
+                current_stop_state: dict[str, object] = stop_state,
+                current_threshold: float = float(threshold),
+            ) -> bool:
+                before = time.perf_counter()
+                probability = _stop_probability(
+                    _SUPPLEMENT_WORKER_STOP, packet, _SUPPLEMENT_WORKER_DEVICE
+                )
+                current_timing["stop"] += time.perf_counter() - before
+                eligible = _mechanically_stop_eligible(packet)
+                current_stop_state["probability"] = probability
+                current_stop_state["eligible"] = eligible
+                return bool(eligible and probability >= current_threshold)
+
+            def select_action(
+                packet: object,
+                *,
+                current_planner: object = planner,
+                current_period: int = period,
+                current_timing: dict[str, float] = timing,
+            ) -> object | None:
+                before = time.perf_counter()
+                if isinstance(current_planner, RuleMethod):
+                    action = select_rule_action(
+                        current_planner,
+                        packet,
+                        grid=runtime.grid,
+                        coverage_period=current_period,
+                    )
+                else:
+                    action, _scores = _actor_action_and_scores(
+                        current_planner,
+                        packet,
+                        runtime,
+                        _SUPPLEMENT_WORKER_DEVICE,
+                    )
+                current_timing["planner"] += time.perf_counter() - before
+                return action
+
+            def advance(
+                state: object,
+                action: object,
+                *,
+                current_prefix: list[tuple[int, int, int]] = action_prefix,
+            ) -> object:
+                assert type(state) is dict
+                observation, probe, route_cost, turns = _advance_detailed(
+                    runtime,
+                    state["observation"],
+                    action,
+                    state["probe"],
+                    float(state["route_cost"]),
+                )
+                current_prefix.append(
+                    (action.cell_index, action.from_level, action.to_level)
+                )
+                return {
+                    "observation": observation,
+                    "probe": probe,
+                    "route_cost": route_cost,
+                    "route_turns": int(state["route_turns"]) + turns,
+                }
+
+            result = run_true_break(
+                initial_state=initial,
+                packet_for_state=packet_for_state,
+                should_stop=should_stop,
+                select_action=select_action,
+                advance=advance,
+                exhausted=lambda packet: all(
+                    level == 2 for level in packet.cell_levels
+                ),
+                max_actions=192,
+            )
+            state = result.state
+            assert type(state) is dict
+            score = _proxy_score(result.packet.report, reference)
+            successful = bool(result.stopped and score["success"])
+            prefix_payload = json.dumps(
+                action_prefix, separators=(",", ":")
+            ).encode()
+            outputs.append(
+                {
+                    "schema_version": 1,
+                    "dataset_id": record.dataset_id,
+                    "specimen_id": record.specimen_id,
+                    "specimen_key": specimen_key,
+                    "task": task.value,
+                    "method": method,
+                    "seed": seed,
+                    "selection": "HASH_MIN_ONE_TEST_SPECIMEN_PER_DOMAIN",
+                    "execution_mode": "ACTUAL_TRUE_BREAK",
+                    "threshold": float(threshold),
+                    "stopped": result.stopped,
+                    "resource_exhausted": result.exhausted,
+                    "stop_success": successful,
+                    "false_stop": bool(result.stopped and not successful),
+                    "terminal_step": result.terminal_step,
+                    "terminal_cost": float(
+                        state["observation"].effective_budget
+                    ),
+                    "failure_penalized_cost": float(
+                        state["observation"].effective_budget
+                        if successful
+                        else 1.0
+                    ),
+                    "route_cost": float(state["route_cost"]),
+                    "route_turns": int(state["route_turns"]),
+                    "planner_inference_seconds": timing["planner"],
+                    "stop_inference_seconds": timing["stop"],
+                    "terminal_stop_probability": float(
+                        stop_state["probability"]
+                    ),
+                    "terminal_stop_eligible": bool(stop_state["eligible"]),
+                    "report_sha256": _report_digest(result.packet.report),
+                    "packet_sha256": result.packet.feature_sha256,
+                    "action_prefix": action_prefix,
+                    "action_prefix_sha256": hashlib.sha256(
+                        prefix_payload
+                    ).hexdigest(),
+                    "post_stop_world_steps": 0,
+                    "original_vlm_calls": 0,
+                }
+            )
+    return outputs
+
+
+def _run_true_break_audit(
+    config: SupplementConfig,
+    *,
+    source_root: Path,
+    thresholds: dict[str, float],
+    trajectories: list[dict[str, object]],
+) -> tuple[list[dict[str, object]], int]:
+    selected = _true_break_specimens(config, source_root=source_root)
+    planner_specs = (
+        ("BC_S1", "FROZEN_BC", "", 4, 1),
+        (
+            "R_BALANCED_P8",
+            "RULE",
+            RuleMethod.R_BALANCED.value,
+            8,
+            1,
+        ),
+    )
+    parent = load_study_config(
+        config.parent_config_path, project_root=config.project_root
+    )
+    actual = []
+    with ProcessPoolExecutor(
+        max_workers=min(
+            int(parent.values["training"]["cpu_workers"]), len(selected)
+        ),
+        mp_context=get_context("spawn"),
+        initializer=_initialize_supplement_evaluation_worker,
+        initargs=(
+            str(config.path),
+            str(config.project_root),
+            str(Path(source_root).resolve(strict=True)),
+            planner_specs,
+            "SUPPLEMENT_STOP",
+            str(config.output_root / "models/s_bc_cal.pt"),
+            thresholds,
+        ),
+    ) as executor:
+        futures = tuple(
+            executor.submit(_supplement_true_break_worker, key) for key in selected
+        )
+        for index, future in enumerate(futures, start=1):
+            actual.extend(future.result())
+            print(
+                f"TEST true-break {index}/{len(selected)} episodes={len(actual)}",
+                flush=True,
+            )
+    if len(actual) != 24:
+        raise RuntimeError("true-break audit episode count changed")
+    grouped: dict[tuple[str, str, str, int], list[dict[str, object]]] = {}
+    for row in trajectories:
+        key = (
+            str(row["specimen_key"]),
+            str(row["task"]),
+            str(row["method"]),
+            int(row["seed"]),
+        )
+        grouped.setdefault(key, []).append(row)
+    for result in actual:
+        key = (
+            str(result["specimen_key"]),
+            str(result["task"]),
+            str(result["method"]),
+            int(result["seed"]),
+        )
+        cached = sorted(grouped[key], key=lambda row: int(row["step"]))
+        expected_terminal = _first_trigger(
+            cached,
+            probability_field="learned_stop_probability",
+            eligibility_field="learned_stop_eligible",
+            threshold=float(result["threshold"]),
+        )
+        expected_terminal = cached[-1] if expected_terminal is None else expected_terminal
+        expected_prefix = [
+            (
+                int(row["action_cell"]),
+                int(row["action_from_level"]),
+                int(row["action_to_level"]),
+            )
+            for row in cached
+            if int(row["step"]) < int(expected_terminal["step"])
+        ]
+        comparisons = (
+            len(result["action_prefix"]) == len(expected_prefix),
+            result["action_prefix"] == expected_prefix,
+            int(result["terminal_step"]) == int(expected_terminal["step"]),
+            _replay_value_equal(result["terminal_cost"], expected_terminal["cost"]),
+            _replay_value_equal(
+                result["route_cost"], expected_terminal["cumulative_route_cost"]
+            ),
+            int(result["route_turns"])
+            == int(expected_terminal["cumulative_route_turns"]),
+            result["report_sha256"] == expected_terminal["report_sha256"],
+            result["packet_sha256"] == expected_terminal["packet_sha256"],
+            bool(result["stop_success"])
+            == bool(result["stopped"] and expected_terminal["success"]),
+            int(result["post_stop_world_steps"]) == 0,
+        )
+        if not all(comparisons):
+            raise RuntimeError(f"actual true-break prefix mismatch: {key}")
+        result["cached_prefix_match"] = True
+        result["cached_terminal_step"] = int(expected_terminal["step"])
+        result["cached_action_prefix_sha256"] = hashlib.sha256(
+            json.dumps(expected_prefix, separators=(",", ":")).encode()
+        ).hexdigest()
+    return actual, sum(int(row["terminal_step"]) for row in actual)
+
+
+def _trajectory_indices(
+    trajectories: list[dict[str, object]],
+) -> list[dict[str, object]]:
+    indices = []
+    start = 0
+    grouped: list[tuple[tuple[str, str, str, int], int]] = []
+    current: tuple[str, str, str, int] | None = None
+    current_count = 0
+    for row in trajectories:
+        key = (
+            str(row["specimen_key"]),
+            str(row["task"]),
+            str(row["method"]),
+            int(row["seed"]),
+        )
+        if current is not None and key != current:
+            grouped.append((current, current_count))
+            current_count = 0
+        current = key
+        current_count += 1
+    if current is not None:
+        grouped.append((current, current_count))
+    for key, count in grouped:
+        indices.append(
+            {
+                "specimen_key": key[0],
+                "task": key[1],
+                "method": key[2],
+                "seed": key[3],
+                "start_row": start,
+                "row_count": count,
+            }
+        )
+        start += count
+    if start != len(trajectories):
+        raise RuntimeError("trajectory recovery index is incomplete")
+    return indices
+
+
+def evaluate_supplement(
+    *,
+    config_path: Path,
+    project_root: Path,
+    source_root: Path,
+    split: Split,
+) -> dict[str, object]:
+    """Evaluate the frozen supplement matrix on retrospective TEST only."""
+
+    if type(split) is not Split or split is not Split.TEST:
+        raise ValueError("supplement evaluation requires TEST")
+    config = load_supplement_config(config_path, project_root=project_root)
+    calibration = _locked_calibration(config)
+    thresholds = {
+        task: float(value)
+        for task, value in calibration["selected_thresholds"].items()
+    }
+    episode_path = config.output_root / "per_episode_metrics.csv"
+    trajectory_path = config.output_root / "trajectories.parquet"
+    manifest_path = config.output_root / "report_manifest.json"
+    if episode_path.is_file() and trajectory_path.is_file() and manifest_path.is_file():
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        if (
+            manifest.get("stage") != "TEST_EVALUATION_COMPLETE"
+            or manifest.get("calibration_id") != calibration["calibration_id"]
+            or manifest.get("outputs", {}).get("per_episode_metrics_sha256")
+            != file_sha256(episode_path)
+            or manifest.get("outputs", {}).get("trajectories_sha256")
+            != file_sha256(trajectory_path)
+        ):
+            raise RuntimeError("stored TEST evaluation identity changed")
+        return {
+            "stage": manifest["stage"],
+            "episodes": manifest["matrix"]["episode_count"],
+            "trajectory_rows": manifest["matrix"]["trajectory_rows"],
+            "true_break_episodes": manifest["true_break"]["episode_count"],
+            "world_transitions": manifest["resource_use"][
+                "total_supplement_world_transitions"
+            ],
+            "recovered": True,
+        }
+    planner_specs = _test_planner_specs()
+    episodes, trajectories = _evaluate_supplement_assignments(
+        config,
+        source_root=source_root,
+        split=split,
+        planner_specs=planner_specs,
+        stop_kind="SUPPLEMENT_STOP",
+        stop_path=config.output_root / "models/s_bc_cal.pt",
+        thresholds=thresholds,
+        store_trajectory=True,
+        label="TEST supplement matrix",
+    )
+    expected_episodes = 24 * 2 * len(TEST_METHOD_ORDER)
+    expected_rows = expected_episodes * 193
+    if len(episodes) != expected_episodes or len(trajectories) != expected_rows:
+        raise RuntimeError("TEST supplement matrix dimensions changed")
+    order = {method: index for index, method in enumerate(TEST_METHOD_ORDER)}
+    episodes.sort(
+        key=lambda row: (
+            str(row["specimen_key"]),
+            str(row["task"]),
+            order[str(row["method"])],
+            int(row["seed"]),
+        )
+    )
+    trajectories.sort(
+        key=lambda row: (
+            str(row["specimen_key"]),
+            str(row["task"]),
+            order[str(row["method"])],
+            int(row["seed"]),
+            int(row["step"]),
+        )
+    )
+    episodes, trajectories = _enrich_test_outputs(
+        episodes, trajectories, thresholds=thresholds
+    )
+    replay = _verify_historical_replay(config, trajectories)
+    true_break, true_break_transitions = _run_true_break_audit(
+        config,
+        source_root=source_root,
+        thresholds=thresholds,
+        trajectories=trajectories,
+    )
+    true_break_by_key = {
+        (
+            str(row["specimen_key"]),
+            str(row["task"]),
+            str(row["method"]),
+            int(row["seed"]),
+        ): row
+        for row in true_break
+    }
+    for episode in episodes:
+        key = (
+            str(episode["specimen_key"]),
+            str(episode["task"]),
+            str(episode["method"]),
+            int(episode["seed"]),
+        )
+        evidence = true_break_by_key.get(key)
+        if evidence is None:
+            continue
+        episode["true_break_executed"] = True
+        episode["true_break_prefix_match"] = evidence["cached_prefix_match"]
+        episode["true_break_action_count"] = evidence["terminal_step"]
+        episode["true_break_stop_inference_seconds"] = evidence[
+            "stop_inference_seconds"
+        ]
+        episode["true_break_planner_inference_seconds"] = evidence[
+            "planner_inference_seconds"
+        ]
+    test_transitions = sum(int(row["action_count"]) for row in episodes)
+    total_transitions = (
+        int(calibration["validation_world_transitions"])
+        + test_transitions
+        + true_break_transitions
+    )
+    if total_transitions > config.base_episode_transition_cap:
+        raise RuntimeError("supplement TEST transition cap exceeded")
+    write_csv_atomic(episode_path, tuple(episodes), tuple(episodes[0]))
+    write_parquet_atomic(trajectory_path, tuple(trajectories))
+    true_break_manifest = []
+    for row in true_break:
+        compact = {key: value for key, value in row.items() if key != "action_prefix"}
+        true_break_manifest.append(compact)
+    manifest = {
+        "schema_version": 1,
+        "stage": "TEST_EVALUATION_COMPLETE",
+        "evaluation_split": Split.TEST.value,
+        "reference_version": "PROXY_LEGACY",
+        "historical_test_reuse": True,
+        "test_opened_after_calibration_lock": True,
+        "calibration_id": calibration["calibration_id"],
+        "calibration_sha256": file_sha256(
+            config.output_root / "stop_calibration.json"
+        ),
+        "selected_thresholds": thresholds,
+        "matrix": {
+            "methods": list(TEST_METHOD_ORDER),
+            "physical_specimens": 24,
+            "tasks": [task.value for task in Task],
+            "episode_count": len(episodes),
+            "trajectory_rows": len(trajectories),
+            "full_trajectory_actions_per_episode": 192,
+            "trajectory_storage": "NEW_METHOD_MATRIX_ONLY",
+            "autonomous_metric_mode": "PREFIX_REPLAY_EVALUATION",
+        },
+        "historical_replay": replay,
+        "trajectory_recovery_indices": _trajectory_indices(trajectories),
+        "true_break": {
+            "selector_seed": "bc-cscan-path-b-true-break-v1",
+            "selection": "HASH_MIN_ONE_TEST_SPECIMEN_PER_DOMAIN",
+            "specimen_count": 6,
+            "episode_count": len(true_break),
+            "all_cached_prefixes_match": all(
+                row["cached_prefix_match"] for row in true_break
+            ),
+            "post_stop_world_steps": 0,
+            "episodes": true_break_manifest,
+        },
+        "reference_scope": {
+            "reviewed_reference_count": 0,
+            "formal_effects": None,
+            "proxy_scope": "SAME_READER_SELF_CONSISTENCY",
+        },
+        "resource_use": {
+            "validation_and_stop_training_world_transitions": calibration[
+                "validation_world_transitions"
+            ],
+            "test_full_trajectory_world_transitions": test_transitions,
+            "true_break_world_transitions": true_break_transitions,
+            "total_supplement_world_transitions": total_transitions,
+            "base_episode_transition_cap": config.base_episode_transition_cap,
+            "original_60_vlm_calls": 0,
+        },
+        "outputs": {
+            "per_episode_metrics": "per_episode_metrics.csv",
+            "per_episode_metrics_sha256": file_sha256(episode_path),
+            "trajectories": "trajectories.parquet",
+            "trajectories_sha256": file_sha256(trajectory_path),
+        },
+    }
+    write_json_atomic(manifest_path, manifest)
+    return {
+        "stage": manifest["stage"],
+        "episodes": len(episodes),
+        "trajectory_rows": len(trajectories),
+        "historical_replay_mismatches": replay["mismatch_count"],
+        "true_break_episodes": len(true_break),
+        "true_break_prefix_mismatches": 0,
+        "world_transitions": total_transitions,
+        "transition_cap": config.base_episode_transition_cap,
+        "recovered": False,
+    }
+
+
 def audit_supplement(
     *, config_path: Path, project_root: Path, source_root: Path
 ) -> dict[str, object]:
@@ -2087,6 +2970,7 @@ __all__ = [
     "TrueBreakResult",
     "audit_supplement",
     "calibrate_stop",
+    "evaluate_supplement",
     "file_sha256",
     "load_supplement_config",
     "planned_checkpoint_paths",

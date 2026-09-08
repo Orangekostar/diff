@@ -7,6 +7,7 @@ import pytest
 
 from cmc_bbdm.learned_cscan.bc_supplement import (
     FROZEN_BC_SHA256,
+    evaluate_supplement,
     load_supplement_config,
     planned_checkpoint_paths,
     require_calibration_split,
@@ -295,6 +296,13 @@ def test_supplement_checkpoint_paths_cannot_overwrite_frozen_models() -> None:
 def test_test_split_cannot_enter_fit_or_calibration() -> None:
     with pytest.raises(ValueError, match="VALID"):
         require_calibration_split(Split.TEST)
+    with pytest.raises(ValueError, match="TEST"):
+        evaluate_supplement(
+            config_path=CONFIG,
+            project_root=ROOT,
+            source_root=Path("/unused"),
+            split=Split.VALID,
+        )
 
 
 def test_true_break_performs_no_step_after_stop() -> None:
