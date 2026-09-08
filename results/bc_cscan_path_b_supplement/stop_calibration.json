@@ -1,0 +1,800 @@
+{
+  "all_tasks_qualified": true,
+  "calibration_id": "7fb0f6dab7cf10199a8ff0085a0c9a7822e4e3510fc3bfef7a51b54ca7141acf",
+  "calibration_split": "VALID",
+  "candidate_thresholds": [
+    0.9,
+    0.95,
+    0.99
+  ],
+  "conditional_refit_performed": true,
+  "conditional_refit_required": false,
+  "conditional_stop_fit": {
+    "best_valid_loss": 0.3371414542198181,
+    "final_loss": 0.2998265326023102,
+    "fit_rows": 1152,
+    "fit_specimens": 18,
+    "initial_loss": 0.6905646324157715,
+    "internal_valid_rows": 384,
+    "internal_valid_specimens": 6,
+    "method": "S_BC_CAL",
+    "optimizer_steps": 2500,
+    "parameter_count": 13697,
+    "path": "models/s_bc_cal.pt",
+    "reference_version": "PROXY_LEGACY",
+    "retrained_once": true,
+    "seed": 1,
+    "sha256": "29de4c8bb26d0b2df43da1d56d4d9f3d57061c382a4263f3dc7f4619360eb907",
+    "states_per_specimen_task_planner": 16,
+    "stopped_early": true,
+    "test_opened": false,
+    "training_world_transitions": 18432
+  },
+  "fit_split": "TRAIN_INTERNAL_18_6",
+  "head": "S_BC_CAL",
+  "head_sha256": "29de4c8bb26d0b2df43da1d56d4d9f3d57061c382a4263f3dc7f4619360eb907",
+  "initial_frozen_head_calibration": {
+    "all_tasks_qualified": false,
+    "calibration_id": "faff7ced506800f9d3db322949037c86c660f95b63f3955a08b4f572371ac99b",
+    "calibration_split": "VALID",
+    "candidate_thresholds": [
+      0.9,
+      0.95,
+      0.99
+    ],
+    "fit_split": "NONE_FROZEN_HEAD",
+    "head": "S_OLD",
+    "head_sha256": "c6af5c383ef4c586a4ac85c7dc9afbcd5bc71dc07558c692fb295d0f5386892d",
+    "planners": [
+      "BC_S1",
+      "R_BALANCED_P8"
+    ],
+    "reference_version": "PROXY_LEGACY",
+    "schema_version": 1,
+    "selected_thresholds": {
+      "CHARACTERIZE": null,
+      "LOCATE": null
+    },
+    "stage": "VALID_EPISODE_FIRST_STOP_CALIBRATED",
+    "status": "S_EP_NOT_QUALIFIED",
+    "task_results": {
+      "CHARACTERIZE": {
+        "candidates": [
+          {
+            "equal_planner_failure_cost": 0.8599838947519327,
+            "planner_results": [
+              {
+                "failed_requirements": [
+                  "RULE_COMPLETION_MARGIN"
+                ],
+                "planner": "BC_S1",
+                "qualified": false,
+                "risk": {
+                  "autonomous_ausc": 0.15062021467560538,
+                  "completion_count": 6,
+                  "completion_rate": 0.5,
+                  "episode_count": 12,
+                  "exhaustion_count": 6,
+                  "exhaustion_rate": 0.5,
+                  "failure_penalized_cost": 0.8493797853243947,
+                  "false_stop_count": 0,
+                  "false_stop_episode_rate": 0.0,
+                  "stop_count": 6,
+                  "wrong_among_stops": 0.0,
+                  "wrong_ci_lower": 0.0,
+                  "wrong_ci_upper": 0.39033428790216523
+                },
+                "rule_completion_rate": 1.0,
+                "threshold": 0.9
+              },
+              {
+                "failed_requirements": [
+                  "WRONG_AMONG_STOPS",
+                  "RULE_COMPLETION_MARGIN"
+                ],
+                "planner": "R_BALANCED_P8",
+                "qualified": false,
+                "risk": {
+                  "autonomous_ausc": 0.12941199582052912,
+                  "completion_count": 6,
+                  "completion_rate": 0.5,
+                  "episode_count": 12,
+                  "exhaustion_count": 5,
+                  "exhaustion_rate": 0.4166666666666667,
+                  "failure_penalized_cost": 0.8705880041794708,
+                  "false_stop_count": 1,
+                  "false_stop_episode_rate": 0.08333333333333333,
+                  "stop_count": 7,
+                  "wrong_among_stops": 0.14285714285714285,
+                  "wrong_ci_lower": 0.02567962434474355,
+                  "wrong_ci_upper": 0.5131278292743188
+                },
+                "rule_completion_rate": 0.8333333333333334,
+                "threshold": 0.9
+              }
+            ],
+            "qualified": false,
+            "threshold": 0.9
+          },
+          {
+            "equal_planner_failure_cost": 0.9771131443015715,
+            "planner_results": [
+              {
+                "failed_requirements": [
+                  "WRONG_AMONG_STOPS",
+                  "MINIMUM_COMPLETION",
+                  "RULE_COMPLETION_MARGIN",
+                  "MINIMUM_STOP_COUNT"
+                ],
+                "planner": "BC_S1",
+                "qualified": false,
+                "risk": {
+                  "autonomous_ausc": 0.0,
+                  "completion_count": 0,
+                  "completion_rate": 0.0,
+                  "episode_count": 12,
+                  "exhaustion_count": 12,
+                  "exhaustion_rate": 1.0,
+                  "failure_penalized_cost": 1.0,
+                  "false_stop_count": 0,
+                  "false_stop_episode_rate": 0.0,
+                  "stop_count": 0,
+                  "wrong_among_stops": null,
+                  "wrong_ci_lower": null,
+                  "wrong_ci_upper": null
+                },
+                "rule_completion_rate": 1.0,
+                "threshold": 0.95
+              },
+              {
+                "failed_requirements": [
+                  "MINIMUM_COMPLETION",
+                  "RULE_COMPLETION_MARGIN",
+                  "MINIMUM_STOP_COUNT"
+                ],
+                "planner": "R_BALANCED_P8",
+                "qualified": false,
+                "risk": {
+                  "autonomous_ausc": 0.0457737113968568,
+                  "completion_count": 2,
+                  "completion_rate": 0.16666666666666666,
+                  "episode_count": 12,
+                  "exhaustion_count": 10,
+                  "exhaustion_rate": 0.8333333333333334,
+                  "failure_penalized_cost": 0.9542262886031431,
+                  "false_stop_count": 0,
+                  "false_stop_episode_rate": 0.0,
+                  "stop_count": 2,
+                  "wrong_among_stops": 0.0,
+                  "wrong_ci_lower": 0.0,
+                  "wrong_ci_upper": 0.6576197724933468
+                },
+                "rule_completion_rate": 0.8333333333333334,
+                "threshold": 0.95
+              }
+            ],
+            "qualified": false,
+            "threshold": 0.95
+          },
+          {
+            "equal_planner_failure_cost": 1.0,
+            "planner_results": [
+              {
+                "failed_requirements": [
+                  "WRONG_AMONG_STOPS",
+                  "MINIMUM_COMPLETION",
+                  "RULE_COMPLETION_MARGIN",
+                  "MINIMUM_STOP_COUNT"
+                ],
+                "planner": "BC_S1",
+                "qualified": false,
+                "risk": {
+                  "autonomous_ausc": 0.0,
+                  "completion_count": 0,
+                  "completion_rate": 0.0,
+                  "episode_count": 12,
+                  "exhaustion_count": 12,
+                  "exhaustion_rate": 1.0,
+                  "failure_penalized_cost": 1.0,
+                  "false_stop_count": 0,
+                  "false_stop_episode_rate": 0.0,
+                  "stop_count": 0,
+                  "wrong_among_stops": null,
+                  "wrong_ci_lower": null,
+                  "wrong_ci_upper": null
+                },
+                "rule_completion_rate": 1.0,
+                "threshold": 0.99
+              },
+              {
+                "failed_requirements": [
+                  "WRONG_AMONG_STOPS",
+                  "MINIMUM_COMPLETION",
+                  "RULE_COMPLETION_MARGIN",
+                  "MINIMUM_STOP_COUNT"
+                ],
+                "planner": "R_BALANCED_P8",
+                "qualified": false,
+                "risk": {
+                  "autonomous_ausc": 0.0,
+                  "completion_count": 0,
+                  "completion_rate": 0.0,
+                  "episode_count": 12,
+                  "exhaustion_count": 12,
+                  "exhaustion_rate": 1.0,
+                  "failure_penalized_cost": 1.0,
+                  "false_stop_count": 0,
+                  "false_stop_episode_rate": 0.0,
+                  "stop_count": 0,
+                  "wrong_among_stops": null,
+                  "wrong_ci_lower": null,
+                  "wrong_ci_upper": null
+                },
+                "rule_completion_rate": 0.8333333333333334,
+                "threshold": 0.99
+              }
+            ],
+            "qualified": false,
+            "threshold": 0.99
+          }
+        ],
+        "qualified": false,
+        "selected_threshold": null,
+        "status": "S_EP_NOT_QUALIFIED",
+        "task": "CHARACTERIZE"
+      },
+      "LOCATE": {
+        "candidates": [
+          {
+            "equal_planner_failure_cost": 0.628306498882661,
+            "planner_results": [
+              {
+                "failed_requirements": [
+                  "WRONG_AMONG_STOPS",
+                  "MINIMUM_COMPLETION",
+                  "RULE_COMPLETION_MARGIN"
+                ],
+                "planner": "BC_S1",
+                "qualified": false,
+                "risk": {
+                  "autonomous_ausc": 0.38772062864050993,
+                  "completion_count": 5,
+                  "completion_rate": 0.4166666666666667,
+                  "episode_count": 12,
+                  "exhaustion_count": 3,
+                  "exhaustion_rate": 0.25,
+                  "failure_penalized_cost": 0.61227937135949,
+                  "false_stop_count": 4,
+                  "false_stop_episode_rate": 0.3333333333333333,
+                  "stop_count": 9,
+                  "wrong_among_stops": 0.4444444444444444,
+                  "wrong_ci_lower": 0.18877852109766463,
+                  "wrong_ci_upper": 0.7333487065045068
+                },
+                "rule_completion_rate": 0.9166666666666666,
+                "threshold": 0.9
+              },
+              {
+                "failed_requirements": [
+                  "WRONG_AMONG_STOPS",
+                  "MINIMUM_COMPLETION",
+                  "RULE_COMPLETION_MARGIN"
+                ],
+                "planner": "R_BALANCED_P8",
+                "qualified": false,
+                "risk": {
+                  "autonomous_ausc": 0.35566637359416786,
+                  "completion_count": 5,
+                  "completion_rate": 0.4166666666666667,
+                  "episode_count": 12,
+                  "exhaustion_count": 2,
+                  "exhaustion_rate": 0.16666666666666666,
+                  "failure_penalized_cost": 0.6443336264058321,
+                  "false_stop_count": 5,
+                  "false_stop_episode_rate": 0.4166666666666667,
+                  "stop_count": 10,
+                  "wrong_among_stops": 0.5,
+                  "wrong_ci_lower": 0.23659309051256405,
+                  "wrong_ci_upper": 0.763406909487436
+                },
+                "rule_completion_rate": 0.9166666666666666,
+                "threshold": 0.9
+              }
+            ],
+            "qualified": false,
+            "threshold": 0.9
+          },
+          {
+            "equal_planner_failure_cost": 0.6348652782357036,
+            "planner_results": [
+              {
+                "failed_requirements": [
+                  "WRONG_AMONG_STOPS",
+                  "MINIMUM_COMPLETION",
+                  "RULE_COMPLETION_MARGIN"
+                ],
+                "planner": "BC_S1",
+                "qualified": false,
+                "risk": {
+                  "autonomous_ausc": 0.3777120196358574,
+                  "completion_count": 5,
+                  "completion_rate": 0.4166666666666667,
+                  "episode_count": 12,
+                  "exhaustion_count": 5,
+                  "exhaustion_rate": 0.4166666666666667,
+                  "failure_penalized_cost": 0.6222879803641426,
+                  "false_stop_count": 2,
+                  "false_stop_episode_rate": 0.16666666666666666,
+                  "stop_count": 7,
+                  "wrong_among_stops": 0.2857142857142857,
+                  "wrong_ci_lower": 0.08221892400405678,
+                  "wrong_ci_upper": 0.6410655481673806
+                },
+                "rule_completion_rate": 0.9166666666666666,
+                "threshold": 0.95
+              },
+              {
+                "failed_requirements": [
+                  "WRONG_AMONG_STOPS",
+                  "MINIMUM_COMPLETION",
+                  "RULE_COMPLETION_MARGIN"
+                ],
+                "planner": "R_BALANCED_P8",
+                "qualified": false,
+                "risk": {
+                  "autonomous_ausc": 0.3525574238927354,
+                  "completion_count": 5,
+                  "completion_rate": 0.4166666666666667,
+                  "episode_count": 12,
+                  "exhaustion_count": 4,
+                  "exhaustion_rate": 0.3333333333333333,
+                  "failure_penalized_cost": 0.6474425761072645,
+                  "false_stop_count": 3,
+                  "false_stop_episode_rate": 0.25,
+                  "stop_count": 8,
+                  "wrong_among_stops": 0.375,
+                  "wrong_ci_lower": 0.13684428582359742,
+                  "wrong_ci_upper": 0.6942576053973726
+                },
+                "rule_completion_rate": 0.9166666666666666,
+                "threshold": 0.95
+              }
+            ],
+            "qualified": false,
+            "threshold": 0.95
+          },
+          {
+            "equal_planner_failure_cost": 0.8906019892295857,
+            "planner_results": [
+              {
+                "failed_requirements": [
+                  "WRONG_AMONG_STOPS",
+                  "MINIMUM_COMPLETION",
+                  "RULE_COMPLETION_MARGIN",
+                  "MINIMUM_STOP_COUNT"
+                ],
+                "planner": "BC_S1",
+                "qualified": false,
+                "risk": {
+                  "autonomous_ausc": 0.15602209033959777,
+                  "completion_count": 2,
+                  "completion_rate": 0.16666666666666666,
+                  "episode_count": 12,
+                  "exhaustion_count": 9,
+                  "exhaustion_rate": 0.75,
+                  "failure_penalized_cost": 0.8439779096604022,
+                  "false_stop_count": 1,
+                  "false_stop_episode_rate": 0.08333333333333333,
+                  "stop_count": 3,
+                  "wrong_among_stops": 0.3333333333333333,
+                  "wrong_ci_lower": 0.06149194472039632,
+                  "wrong_ci_upper": 0.7923403991979523
+                },
+                "rule_completion_rate": 0.9166666666666666,
+                "threshold": 0.99
+              },
+              {
+                "failed_requirements": [
+                  "MINIMUM_COMPLETION",
+                  "RULE_COMPLETION_MARGIN",
+                  "MINIMUM_STOP_COUNT"
+                ],
+                "planner": "R_BALANCED_P8",
+                "qualified": false,
+                "risk": {
+                  "autonomous_ausc": 0.06277393120123091,
+                  "completion_count": 1,
+                  "completion_rate": 0.08333333333333333,
+                  "episode_count": 12,
+                  "exhaustion_count": 11,
+                  "exhaustion_rate": 0.9166666666666666,
+                  "failure_penalized_cost": 0.9372260687987691,
+                  "false_stop_count": 0,
+                  "false_stop_episode_rate": 0.0,
+                  "stop_count": 1,
+                  "wrong_among_stops": 0.0,
+                  "wrong_ci_lower": 0.0,
+                  "wrong_ci_upper": 0.7934506856227626
+                },
+                "rule_completion_rate": 0.9166666666666666,
+                "threshold": 0.99
+              }
+            ],
+            "qualified": false,
+            "threshold": 0.99
+          }
+        ],
+        "qualified": false,
+        "selected_threshold": null,
+        "status": "S_EP_NOT_QUALIFIED",
+        "task": "LOCATE"
+      }
+    },
+    "test_opened": false
+  },
+  "locked_for_test": true,
+  "planners": [
+    "BC_S1",
+    "R_BALANCED_P8"
+  ],
+  "recovered_trajectory": true,
+  "reference_version": "PROXY_LEGACY",
+  "schema_version": 1,
+  "selected_thresholds": {
+    "CHARACTERIZE": 0.99,
+    "LOCATE": 0.99
+  },
+  "stage": "VALID_EPISODE_FIRST_STOP_CALIBRATED",
+  "status": "S_BC_CAL_QUALIFIED",
+  "task_results": {
+    "CHARACTERIZE": {
+      "candidates": [
+        {
+          "equal_planner_failure_cost": 0.6072002792971096,
+          "planner_results": [
+            {
+              "failed_requirements": [
+                "WRONG_AMONG_STOPS",
+                "RULE_COMPLETION_MARGIN"
+              ],
+              "planner": "BC_S1",
+              "qualified": false,
+              "risk": {
+                "autonomous_ausc": 0.41108988790091683,
+                "completion_count": 11,
+                "completion_rate": 0.9166666666666666,
+                "episode_count": 12,
+                "exhaustion_count": 0,
+                "exhaustion_rate": 0.0,
+                "failure_penalized_cost": 0.5889101120990832,
+                "false_stop_count": 1,
+                "false_stop_episode_rate": 0.08333333333333333,
+                "stop_count": 12,
+                "wrong_among_stops": 0.08333333333333333,
+                "wrong_ci_lower": 0.014865094404917123,
+                "wrong_ci_upper": 0.3538799111411169
+              },
+              "rule_completion_rate": 1.0,
+              "threshold": 0.9
+            },
+            {
+              "failed_requirements": [
+                "WRONG_AMONG_STOPS",
+                "RULE_COMPLETION_MARGIN"
+              ],
+              "planner": "R_BALANCED_P8",
+              "qualified": false,
+              "risk": {
+                "autonomous_ausc": 0.37450955350486415,
+                "completion_count": 9,
+                "completion_rate": 0.75,
+                "episode_count": 12,
+                "exhaustion_count": 0,
+                "exhaustion_rate": 0.0,
+                "failure_penalized_cost": 0.625490446495136,
+                "false_stop_count": 3,
+                "false_stop_episode_rate": 0.25,
+                "stop_count": 12,
+                "wrong_among_stops": 0.25,
+                "wrong_ci_lower": 0.08894166839405476,
+                "wrong_ci_upper": 0.5323053349335656
+              },
+              "rule_completion_rate": 0.8333333333333334,
+              "threshold": 0.9
+            }
+          ],
+          "qualified": false,
+          "threshold": 0.9
+        },
+        {
+          "equal_planner_failure_cost": 0.6243660045397802,
+          "planner_results": [
+            {
+              "failed_requirements": [
+                "WRONG_AMONG_STOPS",
+                "RULE_COMPLETION_MARGIN"
+              ],
+              "planner": "BC_S1",
+              "qualified": false,
+              "risk": {
+                "autonomous_ausc": 0.3828470185783406,
+                "completion_count": 11,
+                "completion_rate": 0.9166666666666666,
+                "episode_count": 12,
+                "exhaustion_count": 0,
+                "exhaustion_rate": 0.0,
+                "failure_penalized_cost": 0.6171529814216594,
+                "false_stop_count": 1,
+                "false_stop_episode_rate": 0.08333333333333333,
+                "stop_count": 12,
+                "wrong_among_stops": 0.08333333333333333,
+                "wrong_ci_lower": 0.014865094404917123,
+                "wrong_ci_upper": 0.3538799111411169
+              },
+              "rule_completion_rate": 1.0,
+              "threshold": 0.95
+            },
+            {
+              "failed_requirements": [
+                "WRONG_AMONG_STOPS",
+                "RULE_COMPLETION_MARGIN"
+              ],
+              "planner": "R_BALANCED_P8",
+              "qualified": false,
+              "risk": {
+                "autonomous_ausc": 0.36842097234209903,
+                "completion_count": 9,
+                "completion_rate": 0.75,
+                "episode_count": 12,
+                "exhaustion_count": 0,
+                "exhaustion_rate": 0.0,
+                "failure_penalized_cost": 0.631579027657901,
+                "false_stop_count": 3,
+                "false_stop_episode_rate": 0.25,
+                "stop_count": 12,
+                "wrong_among_stops": 0.25,
+                "wrong_ci_lower": 0.08894166839405476,
+                "wrong_ci_upper": 0.5323053349335656
+              },
+              "rule_completion_rate": 0.8333333333333334,
+              "threshold": 0.95
+            }
+          ],
+          "qualified": false,
+          "threshold": 0.95
+        },
+        {
+          "equal_planner_failure_cost": 0.8029662270987221,
+          "planner_results": [
+            {
+              "failed_requirements": [],
+              "planner": "BC_S1",
+              "qualified": true,
+              "risk": {
+                "autonomous_ausc": 0.20848065653607964,
+                "completion_count": 12,
+                "completion_rate": 1.0,
+                "episode_count": 12,
+                "exhaustion_count": 0,
+                "exhaustion_rate": 0.0,
+                "failure_penalized_cost": 0.7915193434639202,
+                "false_stop_count": 0,
+                "false_stop_episode_rate": 0.0,
+                "stop_count": 12,
+                "wrong_among_stops": 0.0,
+                "wrong_ci_lower": 0.0,
+                "wrong_ci_upper": 0.2424940066552408
+              },
+              "rule_completion_rate": 1.0,
+              "threshold": 0.99
+            },
+            {
+              "failed_requirements": [],
+              "planner": "R_BALANCED_P8",
+              "qualified": true,
+              "risk": {
+                "autonomous_ausc": 0.18558688926647604,
+                "completion_count": 12,
+                "completion_rate": 1.0,
+                "episode_count": 12,
+                "exhaustion_count": 0,
+                "exhaustion_rate": 0.0,
+                "failure_penalized_cost": 0.8144131107335241,
+                "false_stop_count": 0,
+                "false_stop_episode_rate": 0.0,
+                "stop_count": 12,
+                "wrong_among_stops": 0.0,
+                "wrong_ci_lower": 0.0,
+                "wrong_ci_upper": 0.2424940066552408
+              },
+              "rule_completion_rate": 0.8333333333333334,
+              "threshold": 0.99
+            }
+          ],
+          "qualified": true,
+          "threshold": 0.99
+        }
+      ],
+      "qualified": true,
+      "selected_threshold": 0.99,
+      "status": "S_EP_QUALIFIED",
+      "task": "CHARACTERIZE"
+    },
+    "LOCATE": {
+      "candidates": [
+        {
+          "equal_planner_failure_cost": 0.46856505253615266,
+          "planner_results": [
+            {
+              "failed_requirements": [
+                "WRONG_AMONG_STOPS"
+              ],
+              "planner": "BC_S1",
+              "qualified": false,
+              "risk": {
+                "autonomous_ausc": 0.63836918364607,
+                "completion_count": 11,
+                "completion_rate": 0.9166666666666666,
+                "episode_count": 12,
+                "exhaustion_count": 0,
+                "exhaustion_rate": 0.0,
+                "failure_penalized_cost": 0.3616308163539299,
+                "false_stop_count": 1,
+                "false_stop_episode_rate": 0.08333333333333333,
+                "stop_count": 12,
+                "wrong_among_stops": 0.08333333333333333,
+                "wrong_ci_lower": 0.014865094404917123,
+                "wrong_ci_upper": 0.3538799111411169
+              },
+              "rule_completion_rate": 0.9166666666666666,
+              "threshold": 0.9
+            },
+            {
+              "failed_requirements": [
+                "WRONG_AMONG_STOPS",
+                "RULE_COMPLETION_MARGIN"
+              ],
+              "planner": "R_BALANCED_P8",
+              "qualified": false,
+              "risk": {
+                "autonomous_ausc": 0.4245007112816246,
+                "completion_count": 9,
+                "completion_rate": 0.75,
+                "episode_count": 12,
+                "exhaustion_count": 0,
+                "exhaustion_rate": 0.0,
+                "failure_penalized_cost": 0.5754992887183754,
+                "false_stop_count": 3,
+                "false_stop_episode_rate": 0.25,
+                "stop_count": 12,
+                "wrong_among_stops": 0.25,
+                "wrong_ci_lower": 0.08894166839405476,
+                "wrong_ci_upper": 0.5323053349335656
+              },
+              "rule_completion_rate": 0.9166666666666666,
+              "threshold": 0.9
+            }
+          ],
+          "qualified": false,
+          "threshold": 0.9
+        },
+        {
+          "equal_planner_failure_cost": 0.534293237909953,
+          "planner_results": [
+            {
+              "failed_requirements": [
+                "WRONG_AMONG_STOPS"
+              ],
+              "planner": "BC_S1",
+              "qualified": false,
+              "risk": {
+                "autonomous_ausc": 0.4625272106575003,
+                "completion_count": 11,
+                "completion_rate": 0.9166666666666666,
+                "episode_count": 12,
+                "exhaustion_count": 0,
+                "exhaustion_rate": 0.0,
+                "failure_penalized_cost": 0.5374727893424996,
+                "false_stop_count": 1,
+                "false_stop_episode_rate": 0.08333333333333333,
+                "stop_count": 12,
+                "wrong_among_stops": 0.08333333333333333,
+                "wrong_ci_lower": 0.014865094404917123,
+                "wrong_ci_upper": 0.3538799111411169
+              },
+              "rule_completion_rate": 0.9166666666666666,
+              "threshold": 0.95
+            },
+            {
+              "failed_requirements": [
+                "WRONG_AMONG_STOPS"
+              ],
+              "planner": "R_BALANCED_P8",
+              "qualified": false,
+              "risk": {
+                "autonomous_ausc": 0.4688863135225938,
+                "completion_count": 11,
+                "completion_rate": 0.9166666666666666,
+                "episode_count": 12,
+                "exhaustion_count": 0,
+                "exhaustion_rate": 0.0,
+                "failure_penalized_cost": 0.5311136864774062,
+                "false_stop_count": 1,
+                "false_stop_episode_rate": 0.08333333333333333,
+                "stop_count": 12,
+                "wrong_among_stops": 0.08333333333333333,
+                "wrong_ci_lower": 0.014865094404917123,
+                "wrong_ci_upper": 0.3538799111411169
+              },
+              "rule_completion_rate": 0.9166666666666666,
+              "threshold": 0.95
+            }
+          ],
+          "qualified": false,
+          "threshold": 0.95
+        },
+        {
+          "equal_planner_failure_cost": 0.6393371325823822,
+          "planner_results": [
+            {
+              "failed_requirements": [],
+              "planner": "BC_S1",
+              "qualified": true,
+              "risk": {
+                "autonomous_ausc": 0.3773727469844448,
+                "completion_count": 12,
+                "completion_rate": 1.0,
+                "episode_count": 12,
+                "exhaustion_count": 0,
+                "exhaustion_rate": 0.0,
+                "failure_penalized_cost": 0.6226272530155552,
+                "false_stop_count": 0,
+                "false_stop_episode_rate": 0.0,
+                "stop_count": 12,
+                "wrong_among_stops": 0.0,
+                "wrong_ci_lower": 0.0,
+                "wrong_ci_upper": 0.2424940066552408
+              },
+              "rule_completion_rate": 0.9166666666666666,
+              "threshold": 0.99
+            },
+            {
+              "failed_requirements": [],
+              "planner": "R_BALANCED_P8",
+              "qualified": true,
+              "risk": {
+                "autonomous_ausc": 0.34395298785079076,
+                "completion_count": 12,
+                "completion_rate": 1.0,
+                "episode_count": 12,
+                "exhaustion_count": 0,
+                "exhaustion_rate": 0.0,
+                "failure_penalized_cost": 0.6560470121492091,
+                "false_stop_count": 0,
+                "false_stop_episode_rate": 0.0,
+                "stop_count": 12,
+                "wrong_among_stops": 0.0,
+                "wrong_ci_lower": 0.0,
+                "wrong_ci_upper": 0.2424940066552408
+              },
+              "rule_completion_rate": 0.9166666666666666,
+              "threshold": 0.99
+            }
+          ],
+          "qualified": true,
+          "threshold": 0.99
+        }
+      ],
+      "qualified": true,
+      "selected_threshold": 0.99,
+      "status": "S_EP_QUALIFIED",
+      "task": "LOCATE"
+    }
+  },
+  "test_opened": false,
+  "validation_episode_count": 48,
+  "validation_physical_specimens": 12,
+  "validation_trajectory_rows": 18528,
+  "validation_trajectory_sha256": "2b1b65cd95d21f4f3447a16825598418b7a51ed650e8325c0bbfb2168976af3d",
+  "validation_world_transitions": 36864
+}

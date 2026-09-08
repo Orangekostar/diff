@@ -17,6 +17,7 @@ if LOCAL_PACKAGE not in cmc_bbdm.__path__:
 
 from cmc_bbdm.learned_cscan.bc_supplement import (
     audit_supplement,
+    calibrate_stop,
     train_ablations,
     train_replicas,
 )
@@ -28,7 +29,12 @@ DEFAULT_SOURCE_ROOT = Path("/home/ww/paper3/cmc_damage_inference")
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
-    for name in ("audit", "train-replicas", "train-ablations"):
+    for name in (
+        "audit",
+        "train-replicas",
+        "train-ablations",
+        "calibrate-stop",
+    ):
         command = commands.add_parser(name)
         command.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
         command.add_argument(
@@ -48,6 +54,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         result = audit_supplement(**common)
     elif arguments.command == "train-replicas":
         result = train_replicas(**common)
+    elif arguments.command == "calibrate-stop":
+        result = calibrate_stop(**common)
     else:
         result = train_ablations(**common)
     print(json.dumps(result, indent=2, sort_keys=True))

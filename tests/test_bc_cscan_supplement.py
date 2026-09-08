@@ -9,9 +9,11 @@ from cmc_bbdm.learned_cscan.bc_supplement import (
     FROZEN_BC_SHA256,
     load_supplement_config,
     planned_checkpoint_paths,
+    require_calibration_split,
+    run_true_break,
     verify_frozen_file,
 )
-from cmc_bbdm.learned_cscan.contracts import Task
+from cmc_bbdm.learned_cscan.contracts import Split, Task
 from cmc_bbdm.learned_cscan.episode_stop_calibration import (
     calibrate_episode_stop,
     first_stop_outcome,
@@ -288,3 +290,34 @@ def test_supplement_checkpoint_paths_cannot_overwrite_frozen_models() -> None:
         assert config.output_root in path.parents
         assert config.source_result_root not in path.parents
         assert path != config.frozen_bc_path
+
+
+def test_test_split_cannot_enter_fit_or_calibration() -> None:
+    with pytest.raises(ValueError, match="VALID"):
+        require_calibration_split(Split.TEST)
+
+
+def test_true_break_performs_no_step_after_stop() -> None:
+    class FakeWorld:
+        def __init__(self) -> None:
+            self.step_count = 0
+
+        def step(self, state: int, _action: object) -> int:
+            self.step_count += 1
+            return state + 1
+
+    world = FakeWorld()
+    packets = ("continue", "stop", "unused")
+    result = run_true_break(
+        initial_state=0,
+        packet_for_state=lambda state: packets[state],
+        should_stop=lambda packet: packet == "stop",
+        select_action=lambda _packet: object(),
+        advance=world.step,
+        exhausted=lambda _packet: False,
+        max_actions=2,
+    )
+
+    assert world.step_count == 1
+    assert result.terminal_step == 1
+    assert result.stopped

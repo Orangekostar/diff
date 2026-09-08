@@ -7,11 +7,15 @@ import json
 import shutil
 import subprocess
 import time
-from dataclasses import dataclass
+from collections.abc import Callable
+from concurrent.futures import ProcessPoolExecutor
+from dataclasses import asdict, dataclass
+from multiprocessing import get_context
 from pathlib import Path
 from types import MappingProxyType
 from typing import Any
 
+import numpy as np
 import polars as pl
 import torch
 import yaml
@@ -20,17 +24,46 @@ from .artifacts import (
     _atomic_write,
     write_csv_atomic,
     write_json_atomic,
+    write_parquet_atomic,
 )
-from .benchmark import _internal_fit_split, _policy_example, _torch_save_atomic
-from .policies import LearnedCellActor
-from .runtime import load_study_config, load_study_context
+from .benchmark import (
+    _actor_action_and_scores,
+    _advance_detailed,
+    _full_reference,
+    _internal_fit_split,
+    _internal_stop_split,
+    _load_actor,
+    _load_percepts,
+    _load_stop,
+    _packet,
+    _policy_example,
+    _proxy_score,
+    _run_planner_episode,
+    _stop_example,
+    _torch_save_atomic,
+)
+from .contracts import Split, Task
+from .episode_stop_calibration import calibrate_episode_stop
+from .policies import LearnedCellActor, RuleMethod, select_rule_action
+from .runtime import (
+    StudyContext,
+    load_study_config,
+    load_study_context,
+    open_study_specimen,
+)
+from .stopping import LearnedStopHead
 from .supplement_adapters import (
     ActorInputMode,
     load_supplement_actor,
     save_supplement_actor,
     transform_policy_example,
 )
-from .training import ActorFitResult, TrainingRoute, fit_actor
+from .training import (
+    ActorFitResult,
+    TrainingRoute,
+    fit_actor,
+    fit_stop_head,
+)
 
 SUPPLEMENT_BASE_SHA = "d8b5b090891fc030931c6dc81e3619a80966f739"
 SUPPLEMENT_PROMPT_SHA256 = (
@@ -74,6 +107,37 @@ _ACTOR_SPECS = (
     ),
 )
 
+VALIDATION_TRAJECTORY_FIELDS = (
+    "schema_version",
+    "dataset_id",
+    "specimen_id",
+    "specimen_key",
+    "task",
+    "planner",
+    "seed",
+    "step",
+    "cost",
+    "stop_model",
+    "stop_probability",
+    "mechanically_eligible",
+    "rule_stop",
+    "report_id",
+    "reference_score_for_calibration_only",
+    "task_loss_for_calibration_only",
+    "action_cell",
+    "action_from_level",
+    "action_to_level",
+    "cumulative_route_cost",
+    "cumulative_route_turns",
+)
+
+_SUPPLEMENT_WORKER_CONTEXT: StudyContext | None = None
+_SUPPLEMENT_WORKER_PERCEPTS: dict[str, object] | None = None
+_SUPPLEMENT_WORKER_PLANNERS: tuple[tuple[str, object, int, int], ...] = ()
+_SUPPLEMENT_WORKER_STOP: LearnedStopHead | None = None
+_SUPPLEMENT_WORKER_THRESHOLDS: dict[str, float | None] = {}
+_SUPPLEMENT_WORKER_DEVICE = "cpu"
+
 COHORT_FIELDS = (
     "schema_version",
     "dataset_id",
@@ -115,6 +179,15 @@ class SupplementConfig:
     base_episode_transition_cap: int
     confirmation_transition_cap: int
     values: MappingProxyType[str, Any]
+
+
+@dataclass(frozen=True, slots=True)
+class TrueBreakResult:
+    terminal_step: int
+    stopped: bool
+    exhausted: bool
+    state: object
+    packet: object
 
 
 def file_sha256(path: str | Path) -> str:
@@ -455,6 +528,57 @@ def planned_checkpoint_paths(config: SupplementConfig) -> tuple[Path, ...]:
     ):
         raise RuntimeError("supplement checkpoint destination is unsafe")
     return paths
+
+
+def require_calibration_split(split: Split) -> None:
+    """Restrict STOP threshold selection to the frozen VALID split."""
+
+    if type(split) is not Split:
+        raise TypeError("typed split is required")
+    if split is not Split.VALID:
+        raise ValueError("STOP calibration requires VALID")
+
+
+def run_true_break(
+    *,
+    initial_state: object,
+    packet_for_state: Callable[[object], object],
+    should_stop: Callable[[object], bool],
+    select_action: Callable[[object], object | None],
+    advance: Callable[[object, object], object],
+    exhausted: Callable[[object], bool],
+    max_actions: int,
+) -> TrueBreakResult:
+    """Execute actions only until the first visible STOP or exhaustion."""
+
+    if (
+        not callable(packet_for_state)
+        or not callable(should_stop)
+        or not callable(select_action)
+        or not callable(advance)
+        or not callable(exhausted)
+        or type(max_actions) is not int
+        or max_actions < 0
+    ):
+        raise ValueError("true-break execution request is invalid")
+    state = initial_state
+    for step in range(max_actions + 1):
+        packet = packet_for_state(state)
+        decision = should_stop(packet)
+        terminal = exhausted(packet)
+        if type(decision) is not bool or type(terminal) is not bool:
+            raise TypeError("true-break predicates must return booleans")
+        if decision:
+            return TrueBreakResult(step, True, False, state, packet)
+        if terminal:
+            return TrueBreakResult(step, False, True, state, packet)
+        if step == max_actions:
+            raise RuntimeError("true-break action cap exceeded")
+        action = select_action(packet)
+        if action is None:
+            raise RuntimeError("true-break planner returned no legal action")
+        state = advance(state, action)
+    raise AssertionError("unreachable true-break state")
 
 
 def _base_bc_examples(
@@ -824,6 +948,872 @@ def train_ablations(
     )
 
 
+def _load_supplement_stop(path: Path, *, device: str) -> LearnedStopHead:
+    payload = torch.load(path.resolve(strict=True), map_location="cpu", weights_only=False)
+    if (
+        type(payload) is not dict
+        or payload.get("schema_version") != 1
+        or payload.get("stage") != "BC_CSCAN_PATH_B_SUPPLEMENT"
+        or payload.get("method") != "S_BC_CAL"
+        or payload.get("parent_config_sha256") != PARENT_CONFIG_SHA256
+        or payload.get("parameter_count") != 13_697
+        or type(payload.get("state_dict")) is not dict
+    ):
+        raise RuntimeError("supplement STOP checkpoint identity changed")
+    model = LearnedStopHead()
+    model.load_state_dict(payload["state_dict"], strict=True)
+    if sum(parameter.numel() for parameter in model.parameters()) != 13_697:
+        raise RuntimeError("supplement STOP parameter count changed")
+    model.to(torch.device(device))
+    model.eval()
+    return model
+
+
+def _initialize_supplement_evaluation_worker(
+    config_path: str,
+    project_root: str,
+    source_root: str,
+    planner_specs: tuple[tuple[str, str, str, int, int], ...],
+    stop_kind: str,
+    stop_path: str,
+    thresholds: dict[str, float | None],
+) -> None:
+    global _SUPPLEMENT_WORKER_CONTEXT
+    global _SUPPLEMENT_WORKER_DEVICE
+    global _SUPPLEMENT_WORKER_PERCEPTS
+    global _SUPPLEMENT_WORKER_PLANNERS
+    global _SUPPLEMENT_WORKER_STOP
+    global _SUPPLEMENT_WORKER_THRESHOLDS
+    supplement = load_supplement_config(
+        Path(config_path), project_root=Path(project_root)
+    )
+    parent = load_study_config(
+        supplement.parent_config_path, project_root=supplement.project_root
+    )
+    context = load_study_context(parent, source_root=Path(source_root))
+    device = str(supplement.values["training"]["device"])
+    if device.startswith("cuda") and not torch.cuda.is_available():
+        raise RuntimeError("configured evaluation CUDA device is unavailable")
+    planners = []
+    for method, kind, reference, period, seed in planner_specs:
+        if kind == "RULE":
+            planner: object = RuleMethod(reference)
+        elif kind == "FROZEN_BC":
+            planner = _load_actor(supplement.frozen_bc_path, parent, device)
+        elif kind == "SUPPLEMENT_ACTOR":
+            checkpoint = load_supplement_actor(
+                supplement.output_root / reference,
+                parent_config_sha256=PARENT_CONFIG_SHA256,
+                device=device,
+            )
+            if checkpoint.method != method or checkpoint.seed != seed:
+                raise RuntimeError("supplement evaluation Actor identity changed")
+            planner = checkpoint.view
+        else:
+            raise RuntimeError("supplement planner specification is invalid")
+        planners.append((method, planner, period, seed))
+    if stop_kind == "FROZEN_STOP":
+        stop = _load_stop(Path(stop_path), parent, device)
+    elif stop_kind == "SUPPLEMENT_STOP":
+        stop = _load_supplement_stop(Path(stop_path), device=device)
+    else:
+        raise RuntimeError("supplement STOP specification is invalid")
+    _SUPPLEMENT_WORKER_CONTEXT = context
+    _SUPPLEMENT_WORKER_DEVICE = device
+    _SUPPLEMENT_WORKER_PERCEPTS = _load_percepts(
+        parent, context, supplement.source_result_root
+    )
+    _SUPPLEMENT_WORKER_PLANNERS = tuple(planners)
+    _SUPPLEMENT_WORKER_STOP = stop
+    _SUPPLEMENT_WORKER_THRESHOLDS = thresholds
+
+
+def _supplement_evaluation_worker(
+    specimen_key: str, *, store_trajectory: bool
+) -> tuple[list[dict[str, object]], list[dict[str, object]]]:
+    if (
+        _SUPPLEMENT_WORKER_CONTEXT is None
+        or _SUPPLEMENT_WORKER_PERCEPTS is None
+        or _SUPPLEMENT_WORKER_STOP is None
+        or not _SUPPLEMENT_WORKER_PLANNERS
+    ):
+        raise RuntimeError("supplement evaluation worker is not initialized")
+    context = _SUPPLEMENT_WORKER_CONTEXT
+    record = next(
+        row for row in context.roster.pilot_records if row.specimen_key == specimen_key
+    )
+    runtime = open_study_specimen(context, record)
+    percept = _SUPPLEMENT_WORKER_PERCEPTS[specimen_key]
+    episodes = []
+    trajectories = []
+    for task in Task:
+        reference = _full_reference(context, runtime, task)
+        for method, planner, period, seed in _SUPPLEMENT_WORKER_PLANNERS:
+            result, trajectory, _stop_rows = _run_planner_episode(
+                runtime,
+                percept=percept,
+                task=task,
+                reference=reference,
+                context=context,
+                method_name=method,
+                planner=planner,
+                coverage_period=period,
+                seed=seed,
+                device=_SUPPLEMENT_WORKER_DEVICE,
+                stop_model=_SUPPLEMENT_WORKER_STOP,
+                learned_threshold=_SUPPLEMENT_WORKER_THRESHOLDS.get(task.value),
+                store_trajectory=store_trajectory,
+            )
+            episodes.append(result)
+            trajectories.extend(trajectory)
+    return episodes, trajectories
+
+
+def _collect_stop_training_worker(
+    specimen_key: str,
+) -> tuple[list[dict[str, object]], int]:
+    if (
+        _SUPPLEMENT_WORKER_CONTEXT is None
+        or _SUPPLEMENT_WORKER_PERCEPTS is None
+        or not _SUPPLEMENT_WORKER_PLANNERS
+    ):
+        raise RuntimeError("supplement training worker is not initialized")
+    context = _SUPPLEMENT_WORKER_CONTEXT
+    record = next(
+        row for row in context.roster.pilot_records if row.specimen_key == specimen_key
+    )
+    runtime = open_study_specimen(context, record)
+    percept = _SUPPLEMENT_WORKER_PERCEPTS[specimen_key]
+    selected_steps = tuple(
+        int(value) for value in np.rint(np.linspace(0, 192, 16)).astype(np.int64)
+    )
+    if len(set(selected_steps)) != 16:
+        raise RuntimeError("predetermined STOP training states are not unique")
+    rows: list[dict[str, object]] = []
+    transitions = 0
+    for task in Task:
+        reference = _full_reference(context, runtime, task)
+        for planner_name, planner, period, seed in _SUPPLEMENT_WORKER_PLANNERS:
+            observation = runtime.world.reset()
+            probe = (0.0, 0.0)
+            route_cost = 0.0
+            step = 0
+            while True:
+                packet = _packet(
+                    observation,
+                    runtime=runtime,
+                    percept=percept,
+                    task=task,
+                    context=context,
+                    probe_position=probe,
+                    route_cost=route_cost,
+                )
+                if step in selected_steps:
+                    score = _proxy_score(packet.report, reference)
+                    rows.append(
+                        {
+                            "specimen_key": specimen_key,
+                            "task": task.value,
+                            "planner": planner_name,
+                            "planner_seed": seed,
+                            "step": step,
+                            "cost": float(observation.effective_budget),
+                            "cell_features": np.asarray(packet.cell_features),
+                            "subblock_features": np.asarray(
+                                packet.subblock_features
+                            ),
+                            "global_features": np.asarray(
+                                packet.global_features
+                            ),
+                            "history_features": np.asarray(
+                                packet.history_features
+                            ),
+                            "label": bool(score["success"]),
+                        }
+                    )
+                terminal = all(level == 2 for level in packet.cell_levels)
+                if terminal:
+                    break
+                if isinstance(planner, RuleMethod):
+                    action = select_rule_action(
+                        planner,
+                        packet,
+                        grid=runtime.grid,
+                        coverage_period=period,
+                    )
+                else:
+                    action, _scores = _actor_action_and_scores(
+                        planner, packet, runtime, _SUPPLEMENT_WORKER_DEVICE
+                    )
+                observation, probe, route_cost, _turns = _advance_detailed(
+                    runtime, observation, action, probe, route_cost
+                )
+                transitions += 1
+                step += 1
+                if step > 192:
+                    raise RuntimeError("STOP training trajectory exceeded 192 actions")
+            selected = [
+                row
+                for row in rows
+                if row["task"] == task.value
+                and row["planner"] == planner_name
+            ]
+            if len(selected) != 16:
+                raise RuntimeError("STOP training state count changed")
+    return rows, transitions
+
+
+def _collect_stop_training_rows(
+    config: SupplementConfig, *, source_root: Path
+) -> tuple[list[dict[str, object]], int]:
+    parent = load_study_config(
+        config.parent_config_path, project_root=config.project_root
+    )
+    context = load_study_context(parent, source_root=source_root)
+    assignments = tuple(
+        row for row in context.roster.assignments if row.split is Split.TRAIN
+    )
+    planner_specs = (
+        ("BC_S1", "FROZEN_BC", "", 4, 1),
+        (
+            "R_BALANCED_P8",
+            "RULE",
+            RuleMethod.R_BALANCED.value,
+            8,
+            1,
+        ),
+    )
+    rows: list[dict[str, object]] = []
+    transitions = 0
+    with ProcessPoolExecutor(
+        max_workers=min(
+            int(parent.values["training"]["cpu_workers"]), len(assignments)
+        ),
+        mp_context=get_context("spawn"),
+        initializer=_initialize_supplement_evaluation_worker,
+        initargs=(
+            str(config.path),
+            str(config.project_root),
+            str(Path(source_root).resolve(strict=True)),
+            planner_specs,
+            "FROZEN_STOP",
+            str(config.frozen_stop_path),
+            {},
+        ),
+    ) as executor:
+        futures = tuple(
+            executor.submit(
+                _collect_stop_training_worker, assignment.record.specimen_key
+            )
+            for assignment in assignments
+        )
+        for index, future in enumerate(futures, start=1):
+            specimen_rows, specimen_transitions = future.result()
+            rows.extend(specimen_rows)
+            transitions += specimen_transitions
+            print(
+                f"TRAIN STOP states {index}/{len(assignments)} "
+                f"rows={len(rows)} transitions={transitions}",
+                flush=True,
+            )
+    if len(rows) != 24 * 2 * 2 * 16 or transitions != 24 * 2 * 2 * 192:
+        raise RuntimeError("conditional STOP training roster changed")
+    return rows, transitions
+
+
+def _save_supplement_stop(
+    path: Path,
+    model: LearnedStopHead,
+    *,
+    optimizer_steps: int,
+) -> None:
+    parameter_count = sum(parameter.numel() for parameter in model.parameters())
+    if parameter_count != 13_697 or not 0 < optimizer_steps <= 4000:
+        raise RuntimeError("supplement STOP fit identity is invalid")
+    payload = {
+        "schema_version": 1,
+        "stage": "BC_CSCAN_PATH_B_SUPPLEMENT",
+        "method": "S_BC_CAL",
+        "seed": 1,
+        "parent_config_sha256": PARENT_CONFIG_SHA256,
+        "source_bank_sha256": FROZEN_BANK_SHA256,
+        "reference_version": "PROXY_LEGACY",
+        "parameter_count": parameter_count,
+        "optimizer_steps": optimizer_steps,
+        "state_dict": {
+            name: value.detach().cpu()
+            for name, value in model.state_dict().items()
+        },
+    }
+    _atomic_write(path, lambda temporary: torch.save(payload, temporary))
+
+
+def _fit_conditional_stop(
+    config: SupplementConfig, *, source_root: Path
+) -> tuple[Path, dict[str, object], int]:
+    model_path = config.output_root / "models/s_bc_cal.pt"
+    manifest_path = config.output_root / "model_manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    prior_record = manifest.get("conditional_stop")
+    bank_path = config.output_root / "_work/stop_training_bank.pt"
+    if prior_record is not None:
+        if (
+            type(prior_record) is not dict
+            or prior_record.get("method") != "S_BC_CAL"
+            or prior_record.get("seed") != 1
+            or prior_record.get("reference_version") != "PROXY_LEGACY"
+            or prior_record.get("parameter_count") != 13_697
+            or type(prior_record.get("sha256")) is not str
+        ):
+            raise RuntimeError("conditional STOP manifest identity changed")
+        verify_frozen_file(
+            model_path, str(prior_record["sha256"]), label="S_BC_CAL"
+        )
+        _load_supplement_stop(model_path, device="cpu")
+        return model_path, prior_record, int(
+            prior_record["training_world_transitions"]
+        )
+    if bank_path.is_file():
+        bank = torch.load(bank_path, map_location="cpu", weights_only=False)
+        if (
+            type(bank) is not dict
+            or bank.get("schema_version") != 1
+            or bank.get("parent_config_sha256") != PARENT_CONFIG_SHA256
+            or bank.get("source")
+            != "TRAIN_NATURAL_BC_S1_AND_R_BALANCED_P8"
+            or type(bank.get("rows")) is not list
+            or len(bank["rows"]) != 1536
+            or bank.get("world_transitions") != 18_432
+        ):
+            raise RuntimeError("conditional STOP training cache changed")
+        rows = bank["rows"]
+        transitions = int(bank["world_transitions"])
+    else:
+        rows, transitions = _collect_stop_training_rows(
+            config, source_root=source_root
+        )
+        _torch_save_atomic(
+            {
+                "schema_version": 1,
+                "parent_config_sha256": PARENT_CONFIG_SHA256,
+                "source": "TRAIN_NATURAL_BC_S1_AND_R_BALANCED_P8",
+                "states_per_specimen_task_planner": 16,
+                "selection": "ROUND_LINSPACE_ACTION_INDEX_0_TO_192",
+                "reference_version": "PROXY_LEGACY",
+                "world_transitions": transitions,
+                "rows": rows,
+            },
+            bank_path,
+        )
+    examples = tuple(_stop_example(row) for row in rows)
+    fit_examples, valid_examples = _internal_stop_split(examples)
+    if (
+        len(examples) != 1536
+        or len(fit_examples) != 1152
+        or len(valid_examples) != 384
+        or len({row.specimen_key for row in fit_examples}) != 18
+        or len({row.specimen_key for row in valid_examples}) != 6
+    ):
+        raise RuntimeError("conditional STOP internal split changed")
+    parent = load_study_config(
+        config.parent_config_path, project_root=config.project_root
+    )
+    training = parent.values["training"]
+    device = str(config.values["training"]["device"])
+    torch.manual_seed(1)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(1)
+    model = LearnedStopHead()
+    fit = fit_stop_head(
+        model,
+        fit_examples,
+        max_steps=int(training["max_optimizer_steps"]),
+        batch_size=min(32, len(fit_examples)),
+        learning_rate=float(training["learning_rate"]),
+        weight_decay=float(training["weight_decay"]),
+        gradient_clip=float(training["gradient_clip"]),
+        seed=1,
+        device=device,
+        validation_examples=valid_examples,
+        validation_interval=int(training["validation_interval"]),
+        patience=int(training["validation_patience"]),
+    )
+    _save_supplement_stop(model_path, model, optimizer_steps=fit.optimizer_steps)
+    record: dict[str, object] = {
+        "method": "S_BC_CAL",
+        "seed": 1,
+        "path": model_path.relative_to(config.output_root).as_posix(),
+        "sha256": file_sha256(model_path),
+        "parameter_count": sum(
+            parameter.numel() for parameter in model.parameters()
+        ),
+        "optimizer_steps": fit.optimizer_steps,
+        "initial_loss": fit.initial_loss,
+        "final_loss": fit.final_loss,
+        "best_valid_loss": fit.best_valid_loss,
+        "stopped_early": fit.stopped_early,
+        "fit_rows": len(fit_examples),
+        "internal_valid_rows": len(valid_examples),
+        "fit_specimens": 18,
+        "internal_valid_specimens": 6,
+        "states_per_specimen_task_planner": 16,
+        "reference_version": "PROXY_LEGACY",
+        "training_world_transitions": transitions,
+        "retrained_once": True,
+        "test_opened": False,
+    }
+    logs = pl.read_csv(config.output_root / "training_log.csv").to_dicts()
+    logs.extend(
+        {
+            "schema_version": 1,
+            "method": "S_BC_CAL",
+            "seed": 1,
+            "actor_input_mode": "STOP_FULL_VISIBLE",
+            "optimizer_step": row.optimizer_step,
+            "train_loss": row.train_loss,
+            "valid_loss": row.valid_loss,
+        }
+        for row in fit.log
+    )
+    write_csv_atomic(
+        config.output_root / "training_log.csv",
+        tuple(
+            sorted(
+                logs,
+                key=lambda row: (
+                    str(row["method"]),
+                    int(row["seed"]),
+                    int(row["optimizer_step"]),
+                ),
+            )
+        ),
+        TRAINING_LOG_FIELDS,
+    )
+    actor_updates = int(
+        manifest["resource_use"]["actor_optimizer_updates"]
+    )
+    if actor_updates + fit.optimizer_steps > config.total_update_cap:
+        raise RuntimeError("supplement total optimizer update cap exceeded")
+    manifest["conditional_stop"] = record
+    manifest["resource_use"]["conditional_stop_optimizer_updates"] = (
+        fit.optimizer_steps
+    )
+    manifest["resource_use"]["total_optimizer_updates"] = (
+        actor_updates + fit.optimizer_steps
+    )
+    manifest["resource_use"]["total_update_cap"] = config.total_update_cap
+    manifest["resource_use"]["stop_training_world_transitions"] = transitions
+    write_json_atomic(manifest_path, manifest)
+    print(
+        f"trained S_BC_CAL steps={fit.optimizer_steps} "
+        f"loss={fit.initial_loss:.6f}->{fit.final_loss:.6f}",
+        flush=True,
+    )
+    model.to("cpu")
+    return model_path, record, transitions
+
+
+def _evaluate_supplement_assignments(
+    config: SupplementConfig,
+    *,
+    source_root: Path,
+    split: Split,
+    planner_specs: tuple[tuple[str, str, str, int, int], ...],
+    stop_kind: str,
+    stop_path: Path,
+    thresholds: dict[str, float | None],
+    store_trajectory: bool,
+    label: str,
+) -> tuple[list[dict[str, object]], list[dict[str, object]]]:
+    parent = load_study_config(
+        config.parent_config_path, project_root=config.project_root
+    )
+    context = load_study_context(parent, source_root=source_root)
+    assignments = tuple(
+        row for row in context.roster.assignments if row.split is split
+    )
+    if not assignments:
+        raise RuntimeError("supplement evaluation split is empty")
+    episodes: list[dict[str, object]] = []
+    trajectories: list[dict[str, object]] = []
+    with ProcessPoolExecutor(
+        max_workers=min(
+            int(parent.values["training"]["cpu_workers"]), len(assignments)
+        ),
+        mp_context=get_context("spawn"),
+        initializer=_initialize_supplement_evaluation_worker,
+        initargs=(
+            str(config.path),
+            str(config.project_root),
+            str(Path(source_root).resolve(strict=True)),
+            planner_specs,
+            stop_kind,
+            str(stop_path),
+            thresholds,
+        ),
+    ) as executor:
+        futures = tuple(
+            executor.submit(
+                _supplement_evaluation_worker,
+                assignment.record.specimen_key,
+                store_trajectory=store_trajectory,
+            )
+            for assignment in assignments
+        )
+        for index, future in enumerate(futures, start=1):
+            specimen_episodes, specimen_trajectories = future.result()
+            episodes.extend(specimen_episodes)
+            trajectories.extend(specimen_trajectories)
+            print(
+                f"{label} {index}/{len(assignments)} "
+                f"episodes={len(episodes)} trajectories={len(trajectories)}",
+                flush=True,
+            )
+    return episodes, trajectories
+
+
+def _validation_rows(
+    trajectories: list[dict[str, object]], *, stop_model: str
+) -> tuple[dict[str, object], ...]:
+    rows = tuple(
+        {
+            "schema_version": 1,
+            "dataset_id": str(row["dataset_id"]),
+            "specimen_id": str(row["specimen_id"]),
+            "specimen_key": str(row["specimen_key"]),
+            "task": str(row["task"]),
+            "planner": str(row["method"]),
+            "seed": int(row["seed"]),
+            "step": int(row["step"]),
+            "cost": float(row["cost"]),
+            "stop_model": stop_model,
+            "stop_probability": float(row["learned_stop_probability"]),
+            "mechanically_eligible": bool(row["learned_stop_eligible"]),
+            "rule_stop": bool(row["rule_stop"]),
+            "report_id": str(row["report_sha256"]),
+            "reference_score_for_calibration_only": bool(row["success"]),
+            "task_loss_for_calibration_only": float(row["task_loss"]),
+            "action_cell": int(row["action_cell"]),
+            "action_from_level": int(row["action_from_level"]),
+            "action_to_level": int(row["action_to_level"]),
+            "cumulative_route_cost": float(row["cumulative_route_cost"]),
+            "cumulative_route_turns": int(row["cumulative_route_turns"]),
+        }
+        for row in trajectories
+    )
+    if not rows or any(set(row) != set(VALIDATION_TRAJECTORY_FIELDS) for row in rows):
+        raise RuntimeError("VALID trajectory export is invalid")
+    return rows
+
+
+def _rule_completion_from_trajectories(
+    rows: tuple[dict[str, object], ...], *, task: str, planner: str
+) -> float:
+    grouped: dict[str, list[dict[str, object]]] = {}
+    for row in rows:
+        if row["task"] == task and row["planner"] == planner:
+            grouped.setdefault(str(row["specimen_key"]), []).append(row)
+    if len(grouped) != 12:
+        raise RuntimeError("VALID rule completion cohort changed")
+    completed = []
+    for episode in grouped.values():
+        first = next((row for row in episode if row["rule_stop"]), None)
+        completed.append(
+            bool(first is not None and first["reference_score_for_calibration_only"])
+        )
+    return float(np.mean(completed))
+
+
+def _calibration_payload(
+    rows: tuple[dict[str, object], ...], *, head_name: str, head_sha256: str
+) -> dict[str, object]:
+    planners = ("BC_S1", "R_BALANCED_P8")
+    task_results = {}
+    selected = {}
+    for task in ("LOCATE", "CHARACTERIZE"):
+        rule_completion = {
+            planner: _rule_completion_from_trajectories(
+                rows, task=task, planner=planner
+            )
+            for planner in planners
+        }
+        task_rows = tuple(
+            {
+                **row,
+                "success": bool(row["reference_score_for_calibration_only"]),
+            }
+            for row in rows
+            if row["task"] == task
+        )
+        result = calibrate_episode_stop(
+            task_rows,
+            task=task,
+            planners=planners,
+            rule_completion=rule_completion,
+        )
+        task_results[task] = asdict(result)
+        selected[task] = result.selected_threshold
+    qualified = all(task_results[task]["qualified"] for task in task_results)
+    payload: dict[str, object] = {
+        "schema_version": 1,
+        "stage": "VALID_EPISODE_FIRST_STOP_CALIBRATED",
+        "fit_split": "NONE_FROZEN_HEAD",
+        "calibration_split": Split.VALID.value,
+        "reference_version": "PROXY_LEGACY",
+        "head": head_name,
+        "head_sha256": head_sha256,
+        "candidate_thresholds": [0.90, 0.95, 0.99],
+        "planners": list(planners),
+        "task_results": task_results,
+        "selected_thresholds": selected,
+        "all_tasks_qualified": qualified,
+        "status": (
+            "S_EP_QUALIFIED" if qualified else "S_EP_NOT_QUALIFIED"
+        ),
+        "test_opened": False,
+    }
+    identity = dict(payload)
+    payload["calibration_id"] = hashlib.sha256(
+        json.dumps(identity, sort_keys=True, separators=(",", ":")).encode()
+    ).hexdigest()
+    return payload
+
+
+def calibrate_stop(
+    *, config_path: Path, project_root: Path, source_root: Path
+) -> dict[str, object]:
+    """Collect VALID trajectories and calibrate the frozen STOP by episode."""
+
+    config = load_supplement_config(config_path, project_root=project_root)
+    require_calibration_split(Split.VALID)
+    if (config.output_root / "per_episode_metrics.csv").exists():
+        raise RuntimeError("STOP calibration cannot run after supplement TEST")
+    calibration_path = config.output_root / "stop_calibration.json"
+    if calibration_path.is_file():
+        previous = json.loads(calibration_path.read_text(encoding="utf-8"))
+        if previous.get("locked_for_test") is True:
+            stored_id = previous.pop("calibration_id", None)
+            computed_id = hashlib.sha256(
+                json.dumps(previous, sort_keys=True, separators=(",", ":")).encode()
+            ).hexdigest()
+            previous["calibration_id"] = stored_id
+            if (
+                stored_id != computed_id
+                or file_sha256(
+                    config.output_root / "validation_episode_scores.parquet"
+                )
+                != previous.get("validation_trajectory_sha256")
+            ):
+                raise RuntimeError("locked STOP calibration identity changed")
+            return {
+                "stage": previous["stage"],
+                "head": previous["head"],
+                "status": previous["status"],
+                "selected_thresholds": previous["selected_thresholds"],
+                "conditional_refit_required": False,
+                "locked_for_test": True,
+                "validation_trajectory_rows": previous[
+                    "validation_trajectory_rows"
+                ],
+                "validation_world_transitions": previous[
+                    "validation_world_transitions"
+                ],
+                "test_opened": False,
+                "recovered": True,
+            }
+    verify_frozen_file(
+        config.frozen_stop_path, FROZEN_STOP_SHA256, label="frozen STOP"
+    )
+    manifest = json.loads(
+        (config.output_root / "model_manifest.json").read_text(encoding="utf-8")
+    )
+    if manifest.get("state") != "ACTOR_SUPPLEMENT_TRAINING_COMPLETE":
+        raise RuntimeError("Actor supplement training is incomplete")
+    trajectory_path = config.output_root / "validation_episode_scores.parquet"
+    if trajectory_path.is_file():
+        all_rows = tuple(pl.read_parquet(trajectory_path).to_dicts())
+        rows = tuple(row for row in all_rows if row.get("stop_model") == "S_OLD")
+        if len(rows) != 9264:
+            raise RuntimeError("stored VALID STOP trajectory identity changed")
+        transitions = 12 * 2 * 2 * 192
+        recovered = True
+    else:
+        episodes, trajectories = _evaluate_supplement_assignments(
+            config,
+            source_root=source_root,
+            split=Split.VALID,
+            planner_specs=(
+                ("BC_S1", "FROZEN_BC", "", 4, 1),
+                (
+                    "R_BALANCED_P8",
+                    "RULE",
+                    RuleMethod.R_BALANCED.value,
+                    8,
+                    1,
+                ),
+            ),
+            stop_kind="FROZEN_STOP",
+            stop_path=config.frozen_stop_path,
+            thresholds={},
+            store_trajectory=True,
+            label="VALID STOP calibration",
+        )
+        if len(episodes) != 48:
+            raise RuntimeError("VALID episode count changed")
+        transitions = sum(int(row["action_count"]) for row in episodes)
+        rows = _validation_rows(trajectories, stop_model="S_OLD")
+        write_parquet_atomic(trajectory_path, rows)
+        recovered = False
+    if transitions > config.base_episode_transition_cap:
+        raise RuntimeError("supplement transition cap exceeded during VALID")
+    initial_payload = _calibration_payload(
+        rows, head_name="S_OLD", head_sha256=FROZEN_STOP_SHA256
+    )
+    if initial_payload["all_tasks_qualified"]:
+        final_rows = rows
+        payload = initial_payload
+        payload["conditional_refit_required"] = False
+        payload["conditional_refit_performed"] = False
+        payload["locked_for_test"] = True
+        total_transitions = transitions
+    else:
+        stop_path, fit_record, training_transitions = _fit_conditional_stop(
+            config, source_root=source_root
+        )
+        new_cache = config.output_root / "_work/validation_s_bc_cal.parquet"
+        if new_cache.is_file():
+            calibrated_rows = tuple(pl.read_parquet(new_cache).to_dicts())
+            if (
+                len(calibrated_rows) != 9264
+                or any(
+                    row.get("stop_model") != "S_BC_CAL"
+                    for row in calibrated_rows
+                )
+            ):
+                raise RuntimeError("stored S_BC_CAL VALID trajectories changed")
+            calibrated_transitions = 12 * 2 * 2 * 192
+        else:
+            calibrated_episodes, calibrated_trajectories = (
+                _evaluate_supplement_assignments(
+                    config,
+                    source_root=source_root,
+                    split=Split.VALID,
+                    planner_specs=(
+                        ("BC_S1", "FROZEN_BC", "", 4, 1),
+                        (
+                            "R_BALANCED_P8",
+                            "RULE",
+                            RuleMethod.R_BALANCED.value,
+                            8,
+                            1,
+                        ),
+                    ),
+                    stop_kind="SUPPLEMENT_STOP",
+                    stop_path=stop_path,
+                    thresholds={},
+                    store_trajectory=True,
+                    label="VALID S_BC_CAL calibration",
+                )
+            )
+            if len(calibrated_episodes) != 48:
+                raise RuntimeError("S_BC_CAL VALID episode count changed")
+            calibrated_transitions = sum(
+                int(row["action_count"]) for row in calibrated_episodes
+            )
+            calibrated_rows = _validation_rows(
+                calibrated_trajectories, stop_model="S_BC_CAL"
+            )
+            write_parquet_atomic(new_cache, calibrated_rows)
+        old_by_key = {
+            (
+                row["specimen_key"],
+                row["task"],
+                row["planner"],
+                row["seed"],
+                row["step"],
+            ): row
+            for row in rows
+        }
+        calibrated_by_key = {
+            (
+                row["specimen_key"],
+                row["task"],
+                row["planner"],
+                row["seed"],
+                row["step"],
+            ): row
+            for row in calibrated_rows
+        }
+        if set(old_by_key) != set(calibrated_by_key):
+            raise RuntimeError("STOP recalibration trajectories are not paired")
+        frozen_fields = (
+            "dataset_id",
+            "specimen_id",
+            "cost",
+            "rule_stop",
+            "report_id",
+            "reference_score_for_calibration_only",
+            "task_loss_for_calibration_only",
+            "action_cell",
+            "action_from_level",
+            "action_to_level",
+            "cumulative_route_cost",
+            "cumulative_route_turns",
+        )
+        if any(
+            old_by_key[key][field] != calibrated_by_key[key][field]
+            for key in old_by_key
+            for field in frozen_fields
+        ):
+            raise RuntimeError("STOP head changed the frozen planner trajectory")
+        final_rows = (*rows, *calibrated_rows)
+        write_parquet_atomic(trajectory_path, final_rows)
+        payload = _calibration_payload(
+            calibrated_rows,
+            head_name="S_BC_CAL",
+            head_sha256=str(fit_record["sha256"]),
+        )
+        payload["fit_split"] = "TRAIN_INTERNAL_18_6"
+        payload["status"] = (
+            "S_BC_CAL_QUALIFIED"
+            if payload["all_tasks_qualified"]
+            else "S_BC_CAL_NOT_QUALIFIED"
+        )
+        payload["initial_frozen_head_calibration"] = initial_payload
+        payload["conditional_stop_fit"] = fit_record
+        payload["conditional_refit_required"] = False
+        payload["conditional_refit_performed"] = True
+        payload["locked_for_test"] = True
+        total_transitions = (
+            transitions + training_transitions + calibrated_transitions
+        )
+    if total_transitions > config.base_episode_transition_cap:
+        raise RuntimeError("supplement transition cap exceeded during calibration")
+    payload["validation_physical_specimens"] = 12
+    payload["validation_episode_count"] = 48
+    payload["validation_trajectory_rows"] = len(final_rows)
+    payload["validation_world_transitions"] = total_transitions
+    payload["validation_trajectory_sha256"] = file_sha256(trajectory_path)
+    payload["recovered_trajectory"] = recovered
+    payload.pop("calibration_id")
+    payload["calibration_id"] = hashlib.sha256(
+        json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
+    ).hexdigest()
+    write_json_atomic(calibration_path, payload)
+    return {
+        "stage": payload["stage"],
+        "head": payload["head"],
+        "status": payload["status"],
+        "selected_thresholds": payload["selected_thresholds"],
+        "conditional_refit_required": payload["conditional_refit_required"],
+        "locked_for_test": payload["locked_for_test"],
+        "validation_trajectory_rows": len(final_rows),
+        "validation_world_transitions": total_transitions,
+        "test_opened": False,
+        "recovered": False,
+    }
+
+
 def audit_supplement(
     *, config_path: Path, project_root: Path, source_root: Path
 ) -> dict[str, object]:
@@ -1094,10 +2084,14 @@ These values are same-Reader proxy evidence. This audit performs no fitting, no 
 __all__ = [
     "FROZEN_BC_SHA256",
     "SupplementConfig",
+    "TrueBreakResult",
     "audit_supplement",
+    "calibrate_stop",
     "file_sha256",
     "load_supplement_config",
     "planned_checkpoint_paths",
+    "require_calibration_split",
+    "run_true_break",
     "train_ablations",
     "train_replicas",
     "verify_frozen_file",

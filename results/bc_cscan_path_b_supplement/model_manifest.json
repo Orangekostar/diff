@@ -1,5 +1,26 @@
 {
   "base_bc_content_sha256": "9d73c3e27de235ffe8337738517aec48f3f4a3267eb5f687ef0f6eeaae3566d1",
+  "conditional_stop": {
+    "best_valid_loss": 0.3371414542198181,
+    "final_loss": 0.2998265326023102,
+    "fit_rows": 1152,
+    "fit_specimens": 18,
+    "initial_loss": 0.6905646324157715,
+    "internal_valid_rows": 384,
+    "internal_valid_specimens": 6,
+    "method": "S_BC_CAL",
+    "optimizer_steps": 2500,
+    "parameter_count": 13697,
+    "path": "models/s_bc_cal.pt",
+    "reference_version": "PROXY_LEGACY",
+    "retrained_once": true,
+    "seed": 1,
+    "sha256": "29de4c8bb26d0b2df43da1d56d4d9f3d57061c382a4263f3dc7f4619360eb907",
+    "states_per_specimen_task_planner": 16,
+    "stopped_early": true,
+    "test_opened": false,
+    "training_world_transitions": 18432
+  },
   "device": "cuda:0",
   "frozen_bc_seed_1": {
     "path": "results/learned_cscan_same_perception/models/l_bc.pt",
@@ -88,7 +109,11 @@
     "actor_update_cap": 16000,
     "base_episode_transition_cap": 180000,
     "base_episode_transitions": 0,
-    "original_60_vlm_calls": 0
+    "conditional_stop_optimizer_updates": 2500,
+    "original_60_vlm_calls": 0,
+    "stop_training_world_transitions": 18432,
+    "total_optimizer_updates": 7500,
+    "total_update_cap": 20000
   },
   "schema_version": 1,
   "source_bank_sha256": "52167731b60bbd6db759a1e74a85bd0eb0bc8ea208bd51e981bff44d841281c7",
