@@ -1,0 +1,3581 @@
+{
+  "calibration_id": "7fb0f6dab7cf10199a8ff0085a0c9a7822e4e3510fc3bfef7a51b54ca7141acf",
+  "calibration_sha256": "281fca34979d0b482932e6d1b29c37faa4604b0ec7707cfa0921984ef3d22b02",
+  "evaluation_split": "TEST",
+  "historical_replay": {
+    "compared_fields": [
+      "schema_version",
+      "dataset_id",
+      "specimen_id",
+      "specimen_key",
+      "task",
+      "seed",
+      "step",
+      "cost",
+      "success",
+      "task_loss",
+      "iou",
+      "recall",
+      "relative_area_error",
+      "report_sha256",
+      "packet_sha256",
+      "candidate_cell_count",
+      "support_count",
+      "action_cell",
+      "action_from_level",
+      "action_to_level",
+      "rule_stop",
+      "cumulative_route_cost",
+      "cumulative_route_turns"
+    ],
+    "compared_rows": 18528,
+    "methods": {
+      "L_BC": "BC_S1",
+      "R_BALANCED": "R_BALANCED_P8"
+    },
+    "mismatch_count": 0,
+    "source_path": "results/learned_cscan_same_perception/trajectories.parquet",
+    "source_sha256": "12a389bb69cba09f01ed5299bd775b4e90487dbdc9b3ad2616731c9bea700b2e"
+  },
+  "historical_test_reuse": true,
+  "matrix": {
+    "autonomous_metric_mode": "PREFIX_REPLAY_EVALUATION",
+    "episode_count": 336,
+    "full_trajectory_actions_per_episode": 192,
+    "methods": [
+      "R_BALANCED_P4",
+      "R_BALANCED_P8",
+      "BC_S1",
+      "BC_S2",
+      "BC_S3",
+      "BC_NO_VLM_S1",
+      "BC_NO_US_FEEDBACK_S1"
+    ],
+    "physical_specimens": 24,
+    "tasks": [
+      "LOCATE",
+      "CHARACTERIZE"
+    ],
+    "trajectory_rows": 64848,
+    "trajectory_storage": "NEW_METHOD_MATRIX_ONLY"
+  },
+  "outputs": {
+    "per_episode_metrics": "per_episode_metrics.csv",
+    "per_episode_metrics_sha256": "1f8ce073d79c3d38965415f8f74ebfb1159289cf4529cb50073ff5ad62814638",
+    "trajectories": "trajectories.parquet",
+    "trajectories_sha256": "5bf8e4ba677be063f3d434ce947c541e8dc213bf5d017c07b893d3d74a9b50c1"
+  },
+  "reference_scope": {
+    "formal_effects": null,
+    "proxy_scope": "SAME_READER_SELF_CONSISTENCY",
+    "reviewed_reference_count": 0
+  },
+  "reference_version": "PROXY_LEGACY",
+  "resource_use": {
+    "base_episode_transition_cap": 180000,
+    "original_60_vlm_calls": 0,
+    "test_full_trajectory_world_transitions": 64512,
+    "total_supplement_world_transitions": 105208,
+    "true_break_world_transitions": 3832,
+    "validation_and_stop_training_world_transitions": 36864
+  },
+  "schema_version": 1,
+  "selected_thresholds": {
+    "CHARACTERIZE": 0.99,
+    "LOCATE": 0.99
+  },
+  "stage": "TEST_EVALUATION_COMPLETE",
+  "test_opened_after_calibration_lock": true,
+  "trajectory_recovery_indices": [
+    {
+      "method": "R_BALANCED_P4",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "74t7kcdgkr:c8-24",
+      "start_row": 0,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "R_BALANCED_P8",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "74t7kcdgkr:c8-24",
+      "start_row": 193,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "74t7kcdgkr:c8-24",
+      "start_row": 386,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S2",
+      "row_count": 193,
+      "seed": 2,
+      "specimen_key": "74t7kcdgkr:c8-24",
+      "start_row": 579,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S3",
+      "row_count": 193,
+      "seed": 3,
+      "specimen_key": "74t7kcdgkr:c8-24",
+      "start_row": 772,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_NO_VLM_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "74t7kcdgkr:c8-24",
+      "start_row": 965,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_NO_US_FEEDBACK_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "74t7kcdgkr:c8-24",
+      "start_row": 1158,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "R_BALANCED_P4",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "74t7kcdgkr:c8-24",
+      "start_row": 1351,
+      "task": "LOCATE"
+    },
+    {
+      "method": "R_BALANCED_P8",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "74t7kcdgkr:c8-24",
+      "start_row": 1544,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "74t7kcdgkr:c8-24",
+      "start_row": 1737,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S2",
+      "row_count": 193,
+      "seed": 2,
+      "specimen_key": "74t7kcdgkr:c8-24",
+      "start_row": 1930,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S3",
+      "row_count": 193,
+      "seed": 3,
+      "specimen_key": "74t7kcdgkr:c8-24",
+      "start_row": 2123,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_NO_VLM_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "74t7kcdgkr:c8-24",
+      "start_row": 2316,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_NO_US_FEEDBACK_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "74t7kcdgkr:c8-24",
+      "start_row": 2509,
+      "task": "LOCATE"
+    },
+    {
+      "method": "R_BALANCED_P4",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "74t7kcdgkr:c8-41",
+      "start_row": 2702,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "R_BALANCED_P8",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "74t7kcdgkr:c8-41",
+      "start_row": 2895,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "74t7kcdgkr:c8-41",
+      "start_row": 3088,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S2",
+      "row_count": 193,
+      "seed": 2,
+      "specimen_key": "74t7kcdgkr:c8-41",
+      "start_row": 3281,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S3",
+      "row_count": 193,
+      "seed": 3,
+      "specimen_key": "74t7kcdgkr:c8-41",
+      "start_row": 3474,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_NO_VLM_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "74t7kcdgkr:c8-41",
+      "start_row": 3667,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_NO_US_FEEDBACK_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "74t7kcdgkr:c8-41",
+      "start_row": 3860,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "R_BALANCED_P4",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "74t7kcdgkr:c8-41",
+      "start_row": 4053,
+      "task": "LOCATE"
+    },
+    {
+      "method": "R_BALANCED_P8",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "74t7kcdgkr:c8-41",
+      "start_row": 4246,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "74t7kcdgkr:c8-41",
+      "start_row": 4439,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S2",
+      "row_count": 193,
+      "seed": 2,
+      "specimen_key": "74t7kcdgkr:c8-41",
+      "start_row": 4632,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S3",
+      "row_count": 193,
+      "seed": 3,
+      "specimen_key": "74t7kcdgkr:c8-41",
+      "start_row": 4825,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_NO_VLM_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "74t7kcdgkr:c8-41",
+      "start_row": 5018,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_NO_US_FEEDBACK_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "74t7kcdgkr:c8-41",
+      "start_row": 5211,
+      "task": "LOCATE"
+    },
+    {
+      "method": "R_BALANCED_P4",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "74t7kcdgkr:c8-5",
+      "start_row": 5404,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "R_BALANCED_P8",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "74t7kcdgkr:c8-5",
+      "start_row": 5597,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "74t7kcdgkr:c8-5",
+      "start_row": 5790,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S2",
+      "row_count": 193,
+      "seed": 2,
+      "specimen_key": "74t7kcdgkr:c8-5",
+      "start_row": 5983,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S3",
+      "row_count": 193,
+      "seed": 3,
+      "specimen_key": "74t7kcdgkr:c8-5",
+      "start_row": 6176,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_NO_VLM_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "74t7kcdgkr:c8-5",
+      "start_row": 6369,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_NO_US_FEEDBACK_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "74t7kcdgkr:c8-5",
+      "start_row": 6562,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "R_BALANCED_P4",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "74t7kcdgkr:c8-5",
+      "start_row": 6755,
+      "task": "LOCATE"
+    },
+    {
+      "method": "R_BALANCED_P8",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "74t7kcdgkr:c8-5",
+      "start_row": 6948,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "74t7kcdgkr:c8-5",
+      "start_row": 7141,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S2",
+      "row_count": 193,
+      "seed": 2,
+      "specimen_key": "74t7kcdgkr:c8-5",
+      "start_row": 7334,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S3",
+      "row_count": 193,
+      "seed": 3,
+      "specimen_key": "74t7kcdgkr:c8-5",
+      "start_row": 7527,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_NO_VLM_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "74t7kcdgkr:c8-5",
+      "start_row": 7720,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_NO_US_FEEDBACK_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "74t7kcdgkr:c8-5",
+      "start_row": 7913,
+      "task": "LOCATE"
+    },
+    {
+      "method": "R_BALANCED_P4",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "74t7kcdgkr:c8-7",
+      "start_row": 8106,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "R_BALANCED_P8",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "74t7kcdgkr:c8-7",
+      "start_row": 8299,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "74t7kcdgkr:c8-7",
+      "start_row": 8492,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S2",
+      "row_count": 193,
+      "seed": 2,
+      "specimen_key": "74t7kcdgkr:c8-7",
+      "start_row": 8685,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S3",
+      "row_count": 193,
+      "seed": 3,
+      "specimen_key": "74t7kcdgkr:c8-7",
+      "start_row": 8878,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_NO_VLM_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "74t7kcdgkr:c8-7",
+      "start_row": 9071,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_NO_US_FEEDBACK_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "74t7kcdgkr:c8-7",
+      "start_row": 9264,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "R_BALANCED_P4",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "74t7kcdgkr:c8-7",
+      "start_row": 9457,
+      "task": "LOCATE"
+    },
+    {
+      "method": "R_BALANCED_P8",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "74t7kcdgkr:c8-7",
+      "start_row": 9650,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "74t7kcdgkr:c8-7",
+      "start_row": 9843,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S2",
+      "row_count": 193,
+      "seed": 2,
+      "specimen_key": "74t7kcdgkr:c8-7",
+      "start_row": 10036,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S3",
+      "row_count": 193,
+      "seed": 3,
+      "specimen_key": "74t7kcdgkr:c8-7",
+      "start_row": 10229,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_NO_VLM_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "74t7kcdgkr:c8-7",
+      "start_row": 10422,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_NO_US_FEEDBACK_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "74t7kcdgkr:c8-7",
+      "start_row": 10615,
+      "task": "LOCATE"
+    },
+    {
+      "method": "R_BALANCED_P4",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "cgtnjyggtm:q24-21",
+      "start_row": 10808,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "R_BALANCED_P8",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "cgtnjyggtm:q24-21",
+      "start_row": 11001,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "cgtnjyggtm:q24-21",
+      "start_row": 11194,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S2",
+      "row_count": 193,
+      "seed": 2,
+      "specimen_key": "cgtnjyggtm:q24-21",
+      "start_row": 11387,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S3",
+      "row_count": 193,
+      "seed": 3,
+      "specimen_key": "cgtnjyggtm:q24-21",
+      "start_row": 11580,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_NO_VLM_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "cgtnjyggtm:q24-21",
+      "start_row": 11773,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_NO_US_FEEDBACK_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "cgtnjyggtm:q24-21",
+      "start_row": 11966,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "R_BALANCED_P4",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "cgtnjyggtm:q24-21",
+      "start_row": 12159,
+      "task": "LOCATE"
+    },
+    {
+      "method": "R_BALANCED_P8",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "cgtnjyggtm:q24-21",
+      "start_row": 12352,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "cgtnjyggtm:q24-21",
+      "start_row": 12545,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S2",
+      "row_count": 193,
+      "seed": 2,
+      "specimen_key": "cgtnjyggtm:q24-21",
+      "start_row": 12738,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S3",
+      "row_count": 193,
+      "seed": 3,
+      "specimen_key": "cgtnjyggtm:q24-21",
+      "start_row": 12931,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_NO_VLM_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "cgtnjyggtm:q24-21",
+      "start_row": 13124,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_NO_US_FEEDBACK_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "cgtnjyggtm:q24-21",
+      "start_row": 13317,
+      "task": "LOCATE"
+    },
+    {
+      "method": "R_BALANCED_P4",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "cgtnjyggtm:q24-37",
+      "start_row": 13510,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "R_BALANCED_P8",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "cgtnjyggtm:q24-37",
+      "start_row": 13703,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "cgtnjyggtm:q24-37",
+      "start_row": 13896,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S2",
+      "row_count": 193,
+      "seed": 2,
+      "specimen_key": "cgtnjyggtm:q24-37",
+      "start_row": 14089,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S3",
+      "row_count": 193,
+      "seed": 3,
+      "specimen_key": "cgtnjyggtm:q24-37",
+      "start_row": 14282,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_NO_VLM_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "cgtnjyggtm:q24-37",
+      "start_row": 14475,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_NO_US_FEEDBACK_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "cgtnjyggtm:q24-37",
+      "start_row": 14668,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "R_BALANCED_P4",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "cgtnjyggtm:q24-37",
+      "start_row": 14861,
+      "task": "LOCATE"
+    },
+    {
+      "method": "R_BALANCED_P8",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "cgtnjyggtm:q24-37",
+      "start_row": 15054,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "cgtnjyggtm:q24-37",
+      "start_row": 15247,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S2",
+      "row_count": 193,
+      "seed": 2,
+      "specimen_key": "cgtnjyggtm:q24-37",
+      "start_row": 15440,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S3",
+      "row_count": 193,
+      "seed": 3,
+      "specimen_key": "cgtnjyggtm:q24-37",
+      "start_row": 15633,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_NO_VLM_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "cgtnjyggtm:q24-37",
+      "start_row": 15826,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_NO_US_FEEDBACK_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "cgtnjyggtm:q24-37",
+      "start_row": 16019,
+      "task": "LOCATE"
+    },
+    {
+      "method": "R_BALANCED_P4",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "cgtnjyggtm:q24-40",
+      "start_row": 16212,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "R_BALANCED_P8",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "cgtnjyggtm:q24-40",
+      "start_row": 16405,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "cgtnjyggtm:q24-40",
+      "start_row": 16598,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S2",
+      "row_count": 193,
+      "seed": 2,
+      "specimen_key": "cgtnjyggtm:q24-40",
+      "start_row": 16791,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S3",
+      "row_count": 193,
+      "seed": 3,
+      "specimen_key": "cgtnjyggtm:q24-40",
+      "start_row": 16984,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_NO_VLM_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "cgtnjyggtm:q24-40",
+      "start_row": 17177,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_NO_US_FEEDBACK_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "cgtnjyggtm:q24-40",
+      "start_row": 17370,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "R_BALANCED_P4",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "cgtnjyggtm:q24-40",
+      "start_row": 17563,
+      "task": "LOCATE"
+    },
+    {
+      "method": "R_BALANCED_P8",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "cgtnjyggtm:q24-40",
+      "start_row": 17756,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "cgtnjyggtm:q24-40",
+      "start_row": 17949,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S2",
+      "row_count": 193,
+      "seed": 2,
+      "specimen_key": "cgtnjyggtm:q24-40",
+      "start_row": 18142,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S3",
+      "row_count": 193,
+      "seed": 3,
+      "specimen_key": "cgtnjyggtm:q24-40",
+      "start_row": 18335,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_NO_VLM_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "cgtnjyggtm:q24-40",
+      "start_row": 18528,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_NO_US_FEEDBACK_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "cgtnjyggtm:q24-40",
+      "start_row": 18721,
+      "task": "LOCATE"
+    },
+    {
+      "method": "R_BALANCED_P4",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "cgtnjyggtm:q24-8",
+      "start_row": 18914,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "R_BALANCED_P8",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "cgtnjyggtm:q24-8",
+      "start_row": 19107,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "cgtnjyggtm:q24-8",
+      "start_row": 19300,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S2",
+      "row_count": 193,
+      "seed": 2,
+      "specimen_key": "cgtnjyggtm:q24-8",
+      "start_row": 19493,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S3",
+      "row_count": 193,
+      "seed": 3,
+      "specimen_key": "cgtnjyggtm:q24-8",
+      "start_row": 19686,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_NO_VLM_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "cgtnjyggtm:q24-8",
+      "start_row": 19879,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_NO_US_FEEDBACK_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "cgtnjyggtm:q24-8",
+      "start_row": 20072,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "R_BALANCED_P4",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "cgtnjyggtm:q24-8",
+      "start_row": 20265,
+      "task": "LOCATE"
+    },
+    {
+      "method": "R_BALANCED_P8",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "cgtnjyggtm:q24-8",
+      "start_row": 20458,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "cgtnjyggtm:q24-8",
+      "start_row": 20651,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S2",
+      "row_count": 193,
+      "seed": 2,
+      "specimen_key": "cgtnjyggtm:q24-8",
+      "start_row": 20844,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S3",
+      "row_count": 193,
+      "seed": 3,
+      "specimen_key": "cgtnjyggtm:q24-8",
+      "start_row": 21037,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_NO_VLM_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "cgtnjyggtm:q24-8",
+      "start_row": 21230,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_NO_US_FEEDBACK_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "cgtnjyggtm:q24-8",
+      "start_row": 21423,
+      "task": "LOCATE"
+    },
+    {
+      "method": "R_BALANCED_P4",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "w68dtmpfyf:q16-21",
+      "start_row": 21616,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "R_BALANCED_P8",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "w68dtmpfyf:q16-21",
+      "start_row": 21809,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "w68dtmpfyf:q16-21",
+      "start_row": 22002,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S2",
+      "row_count": 193,
+      "seed": 2,
+      "specimen_key": "w68dtmpfyf:q16-21",
+      "start_row": 22195,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S3",
+      "row_count": 193,
+      "seed": 3,
+      "specimen_key": "w68dtmpfyf:q16-21",
+      "start_row": 22388,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_NO_VLM_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "w68dtmpfyf:q16-21",
+      "start_row": 22581,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_NO_US_FEEDBACK_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "w68dtmpfyf:q16-21",
+      "start_row": 22774,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "R_BALANCED_P4",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "w68dtmpfyf:q16-21",
+      "start_row": 22967,
+      "task": "LOCATE"
+    },
+    {
+      "method": "R_BALANCED_P8",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "w68dtmpfyf:q16-21",
+      "start_row": 23160,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "w68dtmpfyf:q16-21",
+      "start_row": 23353,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S2",
+      "row_count": 193,
+      "seed": 2,
+      "specimen_key": "w68dtmpfyf:q16-21",
+      "start_row": 23546,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S3",
+      "row_count": 193,
+      "seed": 3,
+      "specimen_key": "w68dtmpfyf:q16-21",
+      "start_row": 23739,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_NO_VLM_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "w68dtmpfyf:q16-21",
+      "start_row": 23932,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_NO_US_FEEDBACK_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "w68dtmpfyf:q16-21",
+      "start_row": 24125,
+      "task": "LOCATE"
+    },
+    {
+      "method": "R_BALANCED_P4",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "w68dtmpfyf:q16-3",
+      "start_row": 24318,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "R_BALANCED_P8",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "w68dtmpfyf:q16-3",
+      "start_row": 24511,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "w68dtmpfyf:q16-3",
+      "start_row": 24704,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S2",
+      "row_count": 193,
+      "seed": 2,
+      "specimen_key": "w68dtmpfyf:q16-3",
+      "start_row": 24897,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S3",
+      "row_count": 193,
+      "seed": 3,
+      "specimen_key": "w68dtmpfyf:q16-3",
+      "start_row": 25090,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_NO_VLM_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "w68dtmpfyf:q16-3",
+      "start_row": 25283,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_NO_US_FEEDBACK_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "w68dtmpfyf:q16-3",
+      "start_row": 25476,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "R_BALANCED_P4",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "w68dtmpfyf:q16-3",
+      "start_row": 25669,
+      "task": "LOCATE"
+    },
+    {
+      "method": "R_BALANCED_P8",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "w68dtmpfyf:q16-3",
+      "start_row": 25862,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "w68dtmpfyf:q16-3",
+      "start_row": 26055,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S2",
+      "row_count": 193,
+      "seed": 2,
+      "specimen_key": "w68dtmpfyf:q16-3",
+      "start_row": 26248,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S3",
+      "row_count": 193,
+      "seed": 3,
+      "specimen_key": "w68dtmpfyf:q16-3",
+      "start_row": 26441,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_NO_VLM_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "w68dtmpfyf:q16-3",
+      "start_row": 26634,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_NO_US_FEEDBACK_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "w68dtmpfyf:q16-3",
+      "start_row": 26827,
+      "task": "LOCATE"
+    },
+    {
+      "method": "R_BALANCED_P4",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "w68dtmpfyf:q16-31",
+      "start_row": 27020,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "R_BALANCED_P8",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "w68dtmpfyf:q16-31",
+      "start_row": 27213,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "w68dtmpfyf:q16-31",
+      "start_row": 27406,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S2",
+      "row_count": 193,
+      "seed": 2,
+      "specimen_key": "w68dtmpfyf:q16-31",
+      "start_row": 27599,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S3",
+      "row_count": 193,
+      "seed": 3,
+      "specimen_key": "w68dtmpfyf:q16-31",
+      "start_row": 27792,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_NO_VLM_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "w68dtmpfyf:q16-31",
+      "start_row": 27985,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_NO_US_FEEDBACK_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "w68dtmpfyf:q16-31",
+      "start_row": 28178,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "R_BALANCED_P4",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "w68dtmpfyf:q16-31",
+      "start_row": 28371,
+      "task": "LOCATE"
+    },
+    {
+      "method": "R_BALANCED_P8",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "w68dtmpfyf:q16-31",
+      "start_row": 28564,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "w68dtmpfyf:q16-31",
+      "start_row": 28757,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S2",
+      "row_count": 193,
+      "seed": 2,
+      "specimen_key": "w68dtmpfyf:q16-31",
+      "start_row": 28950,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S3",
+      "row_count": 193,
+      "seed": 3,
+      "specimen_key": "w68dtmpfyf:q16-31",
+      "start_row": 29143,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_NO_VLM_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "w68dtmpfyf:q16-31",
+      "start_row": 29336,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_NO_US_FEEDBACK_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "w68dtmpfyf:q16-31",
+      "start_row": 29529,
+      "task": "LOCATE"
+    },
+    {
+      "method": "R_BALANCED_P4",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "w68dtmpfyf:q16-36",
+      "start_row": 29722,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "R_BALANCED_P8",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "w68dtmpfyf:q16-36",
+      "start_row": 29915,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "w68dtmpfyf:q16-36",
+      "start_row": 30108,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S2",
+      "row_count": 193,
+      "seed": 2,
+      "specimen_key": "w68dtmpfyf:q16-36",
+      "start_row": 30301,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S3",
+      "row_count": 193,
+      "seed": 3,
+      "specimen_key": "w68dtmpfyf:q16-36",
+      "start_row": 30494,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_NO_VLM_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "w68dtmpfyf:q16-36",
+      "start_row": 30687,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_NO_US_FEEDBACK_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "w68dtmpfyf:q16-36",
+      "start_row": 30880,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "R_BALANCED_P4",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "w68dtmpfyf:q16-36",
+      "start_row": 31073,
+      "task": "LOCATE"
+    },
+    {
+      "method": "R_BALANCED_P8",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "w68dtmpfyf:q16-36",
+      "start_row": 31266,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "w68dtmpfyf:q16-36",
+      "start_row": 31459,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S2",
+      "row_count": 193,
+      "seed": 2,
+      "specimen_key": "w68dtmpfyf:q16-36",
+      "start_row": 31652,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S3",
+      "row_count": 193,
+      "seed": 3,
+      "specimen_key": "w68dtmpfyf:q16-36",
+      "start_row": 31845,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_NO_VLM_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "w68dtmpfyf:q16-36",
+      "start_row": 32038,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_NO_US_FEEDBACK_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "w68dtmpfyf:q16-36",
+      "start_row": 32231,
+      "task": "LOCATE"
+    },
+    {
+      "method": "R_BALANCED_P4",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "xcmzfsbd9t:c24-20",
+      "start_row": 32424,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "R_BALANCED_P8",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "xcmzfsbd9t:c24-20",
+      "start_row": 32617,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "xcmzfsbd9t:c24-20",
+      "start_row": 32810,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S2",
+      "row_count": 193,
+      "seed": 2,
+      "specimen_key": "xcmzfsbd9t:c24-20",
+      "start_row": 33003,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S3",
+      "row_count": 193,
+      "seed": 3,
+      "specimen_key": "xcmzfsbd9t:c24-20",
+      "start_row": 33196,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_NO_VLM_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "xcmzfsbd9t:c24-20",
+      "start_row": 33389,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_NO_US_FEEDBACK_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "xcmzfsbd9t:c24-20",
+      "start_row": 33582,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "R_BALANCED_P4",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "xcmzfsbd9t:c24-20",
+      "start_row": 33775,
+      "task": "LOCATE"
+    },
+    {
+      "method": "R_BALANCED_P8",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "xcmzfsbd9t:c24-20",
+      "start_row": 33968,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "xcmzfsbd9t:c24-20",
+      "start_row": 34161,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S2",
+      "row_count": 193,
+      "seed": 2,
+      "specimen_key": "xcmzfsbd9t:c24-20",
+      "start_row": 34354,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S3",
+      "row_count": 193,
+      "seed": 3,
+      "specimen_key": "xcmzfsbd9t:c24-20",
+      "start_row": 34547,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_NO_VLM_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "xcmzfsbd9t:c24-20",
+      "start_row": 34740,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_NO_US_FEEDBACK_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "xcmzfsbd9t:c24-20",
+      "start_row": 34933,
+      "task": "LOCATE"
+    },
+    {
+      "method": "R_BALANCED_P4",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "xcmzfsbd9t:c24-39",
+      "start_row": 35126,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "R_BALANCED_P8",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "xcmzfsbd9t:c24-39",
+      "start_row": 35319,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "xcmzfsbd9t:c24-39",
+      "start_row": 35512,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S2",
+      "row_count": 193,
+      "seed": 2,
+      "specimen_key": "xcmzfsbd9t:c24-39",
+      "start_row": 35705,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S3",
+      "row_count": 193,
+      "seed": 3,
+      "specimen_key": "xcmzfsbd9t:c24-39",
+      "start_row": 35898,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_NO_VLM_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "xcmzfsbd9t:c24-39",
+      "start_row": 36091,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_NO_US_FEEDBACK_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "xcmzfsbd9t:c24-39",
+      "start_row": 36284,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "R_BALANCED_P4",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "xcmzfsbd9t:c24-39",
+      "start_row": 36477,
+      "task": "LOCATE"
+    },
+    {
+      "method": "R_BALANCED_P8",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "xcmzfsbd9t:c24-39",
+      "start_row": 36670,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "xcmzfsbd9t:c24-39",
+      "start_row": 36863,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S2",
+      "row_count": 193,
+      "seed": 2,
+      "specimen_key": "xcmzfsbd9t:c24-39",
+      "start_row": 37056,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S3",
+      "row_count": 193,
+      "seed": 3,
+      "specimen_key": "xcmzfsbd9t:c24-39",
+      "start_row": 37249,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_NO_VLM_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "xcmzfsbd9t:c24-39",
+      "start_row": 37442,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_NO_US_FEEDBACK_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "xcmzfsbd9t:c24-39",
+      "start_row": 37635,
+      "task": "LOCATE"
+    },
+    {
+      "method": "R_BALANCED_P4",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "xcmzfsbd9t:c24-49",
+      "start_row": 37828,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "R_BALANCED_P8",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "xcmzfsbd9t:c24-49",
+      "start_row": 38021,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "xcmzfsbd9t:c24-49",
+      "start_row": 38214,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S2",
+      "row_count": 193,
+      "seed": 2,
+      "specimen_key": "xcmzfsbd9t:c24-49",
+      "start_row": 38407,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S3",
+      "row_count": 193,
+      "seed": 3,
+      "specimen_key": "xcmzfsbd9t:c24-49",
+      "start_row": 38600,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_NO_VLM_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "xcmzfsbd9t:c24-49",
+      "start_row": 38793,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_NO_US_FEEDBACK_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "xcmzfsbd9t:c24-49",
+      "start_row": 38986,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "R_BALANCED_P4",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "xcmzfsbd9t:c24-49",
+      "start_row": 39179,
+      "task": "LOCATE"
+    },
+    {
+      "method": "R_BALANCED_P8",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "xcmzfsbd9t:c24-49",
+      "start_row": 39372,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "xcmzfsbd9t:c24-49",
+      "start_row": 39565,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S2",
+      "row_count": 193,
+      "seed": 2,
+      "specimen_key": "xcmzfsbd9t:c24-49",
+      "start_row": 39758,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S3",
+      "row_count": 193,
+      "seed": 3,
+      "specimen_key": "xcmzfsbd9t:c24-49",
+      "start_row": 39951,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_NO_VLM_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "xcmzfsbd9t:c24-49",
+      "start_row": 40144,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_NO_US_FEEDBACK_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "xcmzfsbd9t:c24-49",
+      "start_row": 40337,
+      "task": "LOCATE"
+    },
+    {
+      "method": "R_BALANCED_P4",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "xcmzfsbd9t:c24-54",
+      "start_row": 40530,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "R_BALANCED_P8",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "xcmzfsbd9t:c24-54",
+      "start_row": 40723,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "xcmzfsbd9t:c24-54",
+      "start_row": 40916,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S2",
+      "row_count": 193,
+      "seed": 2,
+      "specimen_key": "xcmzfsbd9t:c24-54",
+      "start_row": 41109,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S3",
+      "row_count": 193,
+      "seed": 3,
+      "specimen_key": "xcmzfsbd9t:c24-54",
+      "start_row": 41302,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_NO_VLM_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "xcmzfsbd9t:c24-54",
+      "start_row": 41495,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_NO_US_FEEDBACK_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "xcmzfsbd9t:c24-54",
+      "start_row": 41688,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "R_BALANCED_P4",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "xcmzfsbd9t:c24-54",
+      "start_row": 41881,
+      "task": "LOCATE"
+    },
+    {
+      "method": "R_BALANCED_P8",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "xcmzfsbd9t:c24-54",
+      "start_row": 42074,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "xcmzfsbd9t:c24-54",
+      "start_row": 42267,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S2",
+      "row_count": 193,
+      "seed": 2,
+      "specimen_key": "xcmzfsbd9t:c24-54",
+      "start_row": 42460,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S3",
+      "row_count": 193,
+      "seed": 3,
+      "specimen_key": "xcmzfsbd9t:c24-54",
+      "start_row": 42653,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_NO_VLM_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "xcmzfsbd9t:c24-54",
+      "start_row": 42846,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_NO_US_FEEDBACK_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "xcmzfsbd9t:c24-54",
+      "start_row": 43039,
+      "task": "LOCATE"
+    },
+    {
+      "method": "R_BALANCED_P4",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "yfxyg8jm46:c16-15",
+      "start_row": 43232,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "R_BALANCED_P8",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "yfxyg8jm46:c16-15",
+      "start_row": 43425,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "yfxyg8jm46:c16-15",
+      "start_row": 43618,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S2",
+      "row_count": 193,
+      "seed": 2,
+      "specimen_key": "yfxyg8jm46:c16-15",
+      "start_row": 43811,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S3",
+      "row_count": 193,
+      "seed": 3,
+      "specimen_key": "yfxyg8jm46:c16-15",
+      "start_row": 44004,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_NO_VLM_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "yfxyg8jm46:c16-15",
+      "start_row": 44197,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_NO_US_FEEDBACK_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "yfxyg8jm46:c16-15",
+      "start_row": 44390,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "R_BALANCED_P4",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "yfxyg8jm46:c16-15",
+      "start_row": 44583,
+      "task": "LOCATE"
+    },
+    {
+      "method": "R_BALANCED_P8",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "yfxyg8jm46:c16-15",
+      "start_row": 44776,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "yfxyg8jm46:c16-15",
+      "start_row": 44969,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S2",
+      "row_count": 193,
+      "seed": 2,
+      "specimen_key": "yfxyg8jm46:c16-15",
+      "start_row": 45162,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S3",
+      "row_count": 193,
+      "seed": 3,
+      "specimen_key": "yfxyg8jm46:c16-15",
+      "start_row": 45355,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_NO_VLM_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "yfxyg8jm46:c16-15",
+      "start_row": 45548,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_NO_US_FEEDBACK_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "yfxyg8jm46:c16-15",
+      "start_row": 45741,
+      "task": "LOCATE"
+    },
+    {
+      "method": "R_BALANCED_P4",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "yfxyg8jm46:c16-19",
+      "start_row": 45934,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "R_BALANCED_P8",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "yfxyg8jm46:c16-19",
+      "start_row": 46127,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "yfxyg8jm46:c16-19",
+      "start_row": 46320,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S2",
+      "row_count": 193,
+      "seed": 2,
+      "specimen_key": "yfxyg8jm46:c16-19",
+      "start_row": 46513,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S3",
+      "row_count": 193,
+      "seed": 3,
+      "specimen_key": "yfxyg8jm46:c16-19",
+      "start_row": 46706,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_NO_VLM_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "yfxyg8jm46:c16-19",
+      "start_row": 46899,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_NO_US_FEEDBACK_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "yfxyg8jm46:c16-19",
+      "start_row": 47092,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "R_BALANCED_P4",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "yfxyg8jm46:c16-19",
+      "start_row": 47285,
+      "task": "LOCATE"
+    },
+    {
+      "method": "R_BALANCED_P8",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "yfxyg8jm46:c16-19",
+      "start_row": 47478,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "yfxyg8jm46:c16-19",
+      "start_row": 47671,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S2",
+      "row_count": 193,
+      "seed": 2,
+      "specimen_key": "yfxyg8jm46:c16-19",
+      "start_row": 47864,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S3",
+      "row_count": 193,
+      "seed": 3,
+      "specimen_key": "yfxyg8jm46:c16-19",
+      "start_row": 48057,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_NO_VLM_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "yfxyg8jm46:c16-19",
+      "start_row": 48250,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_NO_US_FEEDBACK_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "yfxyg8jm46:c16-19",
+      "start_row": 48443,
+      "task": "LOCATE"
+    },
+    {
+      "method": "R_BALANCED_P4",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "yfxyg8jm46:c16-38",
+      "start_row": 48636,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "R_BALANCED_P8",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "yfxyg8jm46:c16-38",
+      "start_row": 48829,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "yfxyg8jm46:c16-38",
+      "start_row": 49022,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S2",
+      "row_count": 193,
+      "seed": 2,
+      "specimen_key": "yfxyg8jm46:c16-38",
+      "start_row": 49215,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S3",
+      "row_count": 193,
+      "seed": 3,
+      "specimen_key": "yfxyg8jm46:c16-38",
+      "start_row": 49408,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_NO_VLM_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "yfxyg8jm46:c16-38",
+      "start_row": 49601,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_NO_US_FEEDBACK_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "yfxyg8jm46:c16-38",
+      "start_row": 49794,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "R_BALANCED_P4",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "yfxyg8jm46:c16-38",
+      "start_row": 49987,
+      "task": "LOCATE"
+    },
+    {
+      "method": "R_BALANCED_P8",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "yfxyg8jm46:c16-38",
+      "start_row": 50180,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "yfxyg8jm46:c16-38",
+      "start_row": 50373,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S2",
+      "row_count": 193,
+      "seed": 2,
+      "specimen_key": "yfxyg8jm46:c16-38",
+      "start_row": 50566,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S3",
+      "row_count": 193,
+      "seed": 3,
+      "specimen_key": "yfxyg8jm46:c16-38",
+      "start_row": 50759,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_NO_VLM_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "yfxyg8jm46:c16-38",
+      "start_row": 50952,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_NO_US_FEEDBACK_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "yfxyg8jm46:c16-38",
+      "start_row": 51145,
+      "task": "LOCATE"
+    },
+    {
+      "method": "R_BALANCED_P4",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "yfxyg8jm46:c16-4",
+      "start_row": 51338,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "R_BALANCED_P8",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "yfxyg8jm46:c16-4",
+      "start_row": 51531,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "yfxyg8jm46:c16-4",
+      "start_row": 51724,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S2",
+      "row_count": 193,
+      "seed": 2,
+      "specimen_key": "yfxyg8jm46:c16-4",
+      "start_row": 51917,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S3",
+      "row_count": 193,
+      "seed": 3,
+      "specimen_key": "yfxyg8jm46:c16-4",
+      "start_row": 52110,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_NO_VLM_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "yfxyg8jm46:c16-4",
+      "start_row": 52303,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_NO_US_FEEDBACK_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "yfxyg8jm46:c16-4",
+      "start_row": 52496,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "R_BALANCED_P4",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "yfxyg8jm46:c16-4",
+      "start_row": 52689,
+      "task": "LOCATE"
+    },
+    {
+      "method": "R_BALANCED_P8",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "yfxyg8jm46:c16-4",
+      "start_row": 52882,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "yfxyg8jm46:c16-4",
+      "start_row": 53075,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S2",
+      "row_count": 193,
+      "seed": 2,
+      "specimen_key": "yfxyg8jm46:c16-4",
+      "start_row": 53268,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S3",
+      "row_count": 193,
+      "seed": 3,
+      "specimen_key": "yfxyg8jm46:c16-4",
+      "start_row": 53461,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_NO_VLM_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "yfxyg8jm46:c16-4",
+      "start_row": 53654,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_NO_US_FEEDBACK_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "yfxyg8jm46:c16-4",
+      "start_row": 53847,
+      "task": "LOCATE"
+    },
+    {
+      "method": "R_BALANCED_P4",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "ykhs7s2dck:q8-19",
+      "start_row": 54040,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "R_BALANCED_P8",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "ykhs7s2dck:q8-19",
+      "start_row": 54233,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "ykhs7s2dck:q8-19",
+      "start_row": 54426,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S2",
+      "row_count": 193,
+      "seed": 2,
+      "specimen_key": "ykhs7s2dck:q8-19",
+      "start_row": 54619,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S3",
+      "row_count": 193,
+      "seed": 3,
+      "specimen_key": "ykhs7s2dck:q8-19",
+      "start_row": 54812,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_NO_VLM_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "ykhs7s2dck:q8-19",
+      "start_row": 55005,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_NO_US_FEEDBACK_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "ykhs7s2dck:q8-19",
+      "start_row": 55198,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "R_BALANCED_P4",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "ykhs7s2dck:q8-19",
+      "start_row": 55391,
+      "task": "LOCATE"
+    },
+    {
+      "method": "R_BALANCED_P8",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "ykhs7s2dck:q8-19",
+      "start_row": 55584,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "ykhs7s2dck:q8-19",
+      "start_row": 55777,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S2",
+      "row_count": 193,
+      "seed": 2,
+      "specimen_key": "ykhs7s2dck:q8-19",
+      "start_row": 55970,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S3",
+      "row_count": 193,
+      "seed": 3,
+      "specimen_key": "ykhs7s2dck:q8-19",
+      "start_row": 56163,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_NO_VLM_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "ykhs7s2dck:q8-19",
+      "start_row": 56356,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_NO_US_FEEDBACK_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "ykhs7s2dck:q8-19",
+      "start_row": 56549,
+      "task": "LOCATE"
+    },
+    {
+      "method": "R_BALANCED_P4",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "ykhs7s2dck:q8-31",
+      "start_row": 56742,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "R_BALANCED_P8",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "ykhs7s2dck:q8-31",
+      "start_row": 56935,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "ykhs7s2dck:q8-31",
+      "start_row": 57128,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S2",
+      "row_count": 193,
+      "seed": 2,
+      "specimen_key": "ykhs7s2dck:q8-31",
+      "start_row": 57321,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S3",
+      "row_count": 193,
+      "seed": 3,
+      "specimen_key": "ykhs7s2dck:q8-31",
+      "start_row": 57514,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_NO_VLM_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "ykhs7s2dck:q8-31",
+      "start_row": 57707,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_NO_US_FEEDBACK_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "ykhs7s2dck:q8-31",
+      "start_row": 57900,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "R_BALANCED_P4",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "ykhs7s2dck:q8-31",
+      "start_row": 58093,
+      "task": "LOCATE"
+    },
+    {
+      "method": "R_BALANCED_P8",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "ykhs7s2dck:q8-31",
+      "start_row": 58286,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "ykhs7s2dck:q8-31",
+      "start_row": 58479,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S2",
+      "row_count": 193,
+      "seed": 2,
+      "specimen_key": "ykhs7s2dck:q8-31",
+      "start_row": 58672,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S3",
+      "row_count": 193,
+      "seed": 3,
+      "specimen_key": "ykhs7s2dck:q8-31",
+      "start_row": 58865,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_NO_VLM_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "ykhs7s2dck:q8-31",
+      "start_row": 59058,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_NO_US_FEEDBACK_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "ykhs7s2dck:q8-31",
+      "start_row": 59251,
+      "task": "LOCATE"
+    },
+    {
+      "method": "R_BALANCED_P4",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "ykhs7s2dck:q8-33",
+      "start_row": 59444,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "R_BALANCED_P8",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "ykhs7s2dck:q8-33",
+      "start_row": 59637,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "ykhs7s2dck:q8-33",
+      "start_row": 59830,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S2",
+      "row_count": 193,
+      "seed": 2,
+      "specimen_key": "ykhs7s2dck:q8-33",
+      "start_row": 60023,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S3",
+      "row_count": 193,
+      "seed": 3,
+      "specimen_key": "ykhs7s2dck:q8-33",
+      "start_row": 60216,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_NO_VLM_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "ykhs7s2dck:q8-33",
+      "start_row": 60409,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_NO_US_FEEDBACK_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "ykhs7s2dck:q8-33",
+      "start_row": 60602,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "R_BALANCED_P4",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "ykhs7s2dck:q8-33",
+      "start_row": 60795,
+      "task": "LOCATE"
+    },
+    {
+      "method": "R_BALANCED_P8",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "ykhs7s2dck:q8-33",
+      "start_row": 60988,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "ykhs7s2dck:q8-33",
+      "start_row": 61181,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S2",
+      "row_count": 193,
+      "seed": 2,
+      "specimen_key": "ykhs7s2dck:q8-33",
+      "start_row": 61374,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S3",
+      "row_count": 193,
+      "seed": 3,
+      "specimen_key": "ykhs7s2dck:q8-33",
+      "start_row": 61567,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_NO_VLM_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "ykhs7s2dck:q8-33",
+      "start_row": 61760,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_NO_US_FEEDBACK_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "ykhs7s2dck:q8-33",
+      "start_row": 61953,
+      "task": "LOCATE"
+    },
+    {
+      "method": "R_BALANCED_P4",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "ykhs7s2dck:q8-4",
+      "start_row": 62146,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "R_BALANCED_P8",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "ykhs7s2dck:q8-4",
+      "start_row": 62339,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "ykhs7s2dck:q8-4",
+      "start_row": 62532,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S2",
+      "row_count": 193,
+      "seed": 2,
+      "specimen_key": "ykhs7s2dck:q8-4",
+      "start_row": 62725,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_S3",
+      "row_count": 193,
+      "seed": 3,
+      "specimen_key": "ykhs7s2dck:q8-4",
+      "start_row": 62918,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_NO_VLM_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "ykhs7s2dck:q8-4",
+      "start_row": 63111,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "BC_NO_US_FEEDBACK_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "ykhs7s2dck:q8-4",
+      "start_row": 63304,
+      "task": "CHARACTERIZE"
+    },
+    {
+      "method": "R_BALANCED_P4",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "ykhs7s2dck:q8-4",
+      "start_row": 63497,
+      "task": "LOCATE"
+    },
+    {
+      "method": "R_BALANCED_P8",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "ykhs7s2dck:q8-4",
+      "start_row": 63690,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "ykhs7s2dck:q8-4",
+      "start_row": 63883,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S2",
+      "row_count": 193,
+      "seed": 2,
+      "specimen_key": "ykhs7s2dck:q8-4",
+      "start_row": 64076,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_S3",
+      "row_count": 193,
+      "seed": 3,
+      "specimen_key": "ykhs7s2dck:q8-4",
+      "start_row": 64269,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_NO_VLM_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "ykhs7s2dck:q8-4",
+      "start_row": 64462,
+      "task": "LOCATE"
+    },
+    {
+      "method": "BC_NO_US_FEEDBACK_S1",
+      "row_count": 193,
+      "seed": 1,
+      "specimen_key": "ykhs7s2dck:q8-4",
+      "start_row": 64655,
+      "task": "LOCATE"
+    }
+  ],
+  "true_break": {
+    "all_cached_prefixes_match": true,
+    "episode_count": 24,
+    "episodes": [
+      {
+        "action_prefix_sha256": "9ecf82f37b0bc3a50465131765e0ca3b90a42524afa0266e8c644122a25b9fe0",
+        "cached_action_prefix_sha256": "9ecf82f37b0bc3a50465131765e0ca3b90a42524afa0266e8c644122a25b9fe0",
+        "cached_prefix_match": true,
+        "cached_terminal_step": 144,
+        "dataset_id": "74t7kcdgkr",
+        "execution_mode": "ACTUAL_TRUE_BREAK",
+        "failure_penalized_cost": 0.6222676644622346,
+        "false_stop": false,
+        "method": "BC_S1",
+        "original_vlm_calls": 0,
+        "packet_sha256": "d42c7fcae0d7924e25a7360cd1dd67a7b0058c7730e824631372adbb6df1a47a",
+        "planner_inference_seconds": 0.46477768709883094,
+        "post_stop_world_steps": 0,
+        "report_sha256": "1f468f21d945f7907d0382893eebe416cd5c03a41e898507824a066a6d29b4e5",
+        "resource_exhausted": false,
+        "route_cost": 1.1490145164155678,
+        "route_turns": 5398,
+        "schema_version": 1,
+        "seed": 1,
+        "selection": "HASH_MIN_ONE_TEST_SPECIMEN_PER_DOMAIN",
+        "specimen_id": "c8-7",
+        "specimen_key": "74t7kcdgkr:c8-7",
+        "stop_inference_seconds": 0.23471401073038578,
+        "stop_success": true,
+        "stopped": true,
+        "task": "LOCATE",
+        "terminal_cost": 0.6222676644622346,
+        "terminal_step": 144,
+        "terminal_stop_eligible": true,
+        "terminal_stop_probability": 0.9909164309501648,
+        "threshold": 0.99
+      },
+      {
+        "action_prefix_sha256": "94ba835f95e80ce3da366503aadec8ff479cd22f601ec9babe53c8b0127a54ca",
+        "cached_action_prefix_sha256": "94ba835f95e80ce3da366503aadec8ff479cd22f601ec9babe53c8b0127a54ca",
+        "cached_prefix_match": true,
+        "cached_terminal_step": 142,
+        "dataset_id": "74t7kcdgkr",
+        "execution_mode": "ACTUAL_TRUE_BREAK",
+        "failure_penalized_cost": 0.6147493908806126,
+        "false_stop": false,
+        "method": "R_BALANCED_P8",
+        "original_vlm_calls": 0,
+        "packet_sha256": "af73087b5a200c8e4d1ecd53258d9c87817a4486dd9b8f6bfb9a1e7c33d826c0",
+        "planner_inference_seconds": 0.053386874962598085,
+        "post_stop_world_steps": 0,
+        "report_sha256": "1f468f21d945f7907d0382893eebe416cd5c03a41e898507824a066a6d29b4e5",
+        "resource_exhausted": false,
+        "route_cost": 1.1461835271953726,
+        "route_turns": 5326,
+        "schema_version": 1,
+        "seed": 1,
+        "selection": "HASH_MIN_ONE_TEST_SPECIMEN_PER_DOMAIN",
+        "specimen_id": "c8-7",
+        "specimen_key": "74t7kcdgkr:c8-7",
+        "stop_inference_seconds": 0.13648106111213565,
+        "stop_success": true,
+        "stopped": true,
+        "task": "LOCATE",
+        "terminal_cost": 0.6147493908806126,
+        "terminal_step": 142,
+        "terminal_stop_eligible": true,
+        "terminal_stop_probability": 0.990480363368988,
+        "threshold": 0.99
+      },
+      {
+        "action_prefix_sha256": "1bbfb1d25e0bd315352ed95e8da5ede79c34fd947e7e575f7794487ed45feb18",
+        "cached_action_prefix_sha256": "1bbfb1d25e0bd315352ed95e8da5ede79c34fd947e7e575f7794487ed45feb18",
+        "cached_prefix_match": true,
+        "cached_terminal_step": 152,
+        "dataset_id": "74t7kcdgkr",
+        "execution_mode": "ACTUAL_TRUE_BREAK",
+        "failure_penalized_cost": 0.6508092586146885,
+        "false_stop": false,
+        "method": "BC_S1",
+        "original_vlm_calls": 0,
+        "packet_sha256": "78ae29a4467524b14687f8e1ce98a91441fae6711c9e8c407d330fafc8664a7b",
+        "planner_inference_seconds": 0.3385957954451442,
+        "post_stop_world_steps": 0,
+        "report_sha256": "347545d2c420a558238e29cd76d45824312df356fd25f0eccfb260cc2f042133",
+        "resource_exhausted": false,
+        "route_cost": 1.2194362264504977,
+        "route_turns": 5708,
+        "schema_version": 1,
+        "seed": 1,
+        "selection": "HASH_MIN_ONE_TEST_SPECIMEN_PER_DOMAIN",
+        "specimen_id": "c8-7",
+        "specimen_key": "74t7kcdgkr:c8-7",
+        "stop_inference_seconds": 0.1492402544245124,
+        "stop_success": true,
+        "stopped": true,
+        "task": "CHARACTERIZE",
+        "terminal_cost": 0.6508092586146885,
+        "terminal_step": 152,
+        "terminal_stop_eligible": true,
+        "terminal_stop_probability": 0.9908887147903442,
+        "threshold": 0.99
+      },
+      {
+        "action_prefix_sha256": "e8aa18aca924e1cd45be156af9d677fac65eba3ae94b7c7bb121b3ced1d8917a",
+        "cached_action_prefix_sha256": "e8aa18aca924e1cd45be156af9d677fac65eba3ae94b7c7bb121b3ced1d8917a",
+        "cached_prefix_match": true,
+        "cached_terminal_step": 159,
+        "dataset_id": "74t7kcdgkr",
+        "execution_mode": "ACTUAL_TRUE_BREAK",
+        "failure_penalized_cost": 0.6755917159763314,
+        "false_stop": false,
+        "method": "R_BALANCED_P8",
+        "original_vlm_calls": 0,
+        "packet_sha256": "d0dc321d2f5069098abcb54269df151d519aeb7216788d769b838406ae9a271e",
+        "planner_inference_seconds": 0.061877872329205275,
+        "post_stop_world_steps": 0,
+        "report_sha256": "347545d2c420a558238e29cd76d45824312df356fd25f0eccfb260cc2f042133",
+        "resource_exhausted": false,
+        "route_cost": 1.2859607806790303,
+        "route_turns": 5996,
+        "schema_version": 1,
+        "seed": 1,
+        "selection": "HASH_MIN_ONE_TEST_SPECIMEN_PER_DOMAIN",
+        "specimen_id": "c8-7",
+        "specimen_key": "74t7kcdgkr:c8-7",
+        "stop_inference_seconds": 0.1553111015819013,
+        "stop_success": true,
+        "stopped": true,
+        "task": "CHARACTERIZE",
+        "terminal_cost": 0.6755917159763314,
+        "terminal_step": 159,
+        "terminal_stop_eligible": true,
+        "terminal_stop_probability": 0.992495059967041,
+        "threshold": 0.99
+      },
+      {
+        "action_prefix_sha256": "ff9f7e5f8bf0aaf70767075cf7cf68ca3260f4eb121ff56822f2a4425a704874",
+        "cached_action_prefix_sha256": "ff9f7e5f8bf0aaf70767075cf7cf68ca3260f4eb121ff56822f2a4425a704874",
+        "cached_prefix_match": true,
+        "cached_terminal_step": 147,
+        "dataset_id": "cgtnjyggtm",
+        "execution_mode": "ACTUAL_TRUE_BREAK",
+        "failure_penalized_cost": 0.6933179470271459,
+        "false_stop": false,
+        "method": "BC_S1",
+        "original_vlm_calls": 0,
+        "packet_sha256": "45a381d13a480ab04b732e5f7d42a224a097cc5e2ba6fce45d1b20f2883fc7d7",
+        "planner_inference_seconds": 0.5570241827517748,
+        "post_stop_world_steps": 0,
+        "report_sha256": "af7ff0ddad5a5ac35ec306a5d6303dd06f541e7602ed93de484272d37b965f00",
+        "resource_exhausted": false,
+        "route_cost": 1.1906175283397835,
+        "route_turns": 12022,
+        "schema_version": 1,
+        "seed": 1,
+        "selection": "HASH_MIN_ONE_TEST_SPECIMEN_PER_DOMAIN",
+        "specimen_id": "q24-40",
+        "specimen_key": "cgtnjyggtm:q24-40",
+        "stop_inference_seconds": 0.26627579843625426,
+        "stop_success": true,
+        "stopped": true,
+        "task": "LOCATE",
+        "terminal_cost": 0.6933179470271459,
+        "terminal_step": 147,
+        "terminal_stop_eligible": true,
+        "terminal_stop_probability": 0.9919439554214478,
+        "threshold": 0.99
+      },
+      {
+        "action_prefix_sha256": "1e9338c0d6bb2777e5342eca11b1877fd7032694da518d1baa3b9c04100a8f85",
+        "cached_action_prefix_sha256": "1e9338c0d6bb2777e5342eca11b1877fd7032694da518d1baa3b9c04100a8f85",
+        "cached_prefix_match": true,
+        "cached_terminal_step": 167,
+        "dataset_id": "cgtnjyggtm",
+        "execution_mode": "ACTUAL_TRUE_BREAK",
+        "failure_penalized_cost": 0.8059918672381581,
+        "false_stop": false,
+        "method": "R_BALANCED_P8",
+        "original_vlm_calls": 0,
+        "packet_sha256": "ac103460039366943b4bce73aeae9c65b6cb64eebe2a7ce62f5ae5b94014f5a7",
+        "planner_inference_seconds": 0.159744911827147,
+        "post_stop_world_steps": 0,
+        "report_sha256": "af7ff0ddad5a5ac35ec306a5d6303dd06f541e7602ed93de484272d37b965f00",
+        "resource_exhausted": false,
+        "route_cost": 1.383062994834821,
+        "route_turns": 13944,
+        "schema_version": 1,
+        "seed": 1,
+        "selection": "HASH_MIN_ONE_TEST_SPECIMEN_PER_DOMAIN",
+        "specimen_id": "q24-40",
+        "specimen_key": "cgtnjyggtm:q24-40",
+        "stop_inference_seconds": 0.17808548035100102,
+        "stop_success": true,
+        "stopped": true,
+        "task": "LOCATE",
+        "terminal_cost": 0.8059918672381581,
+        "terminal_step": 167,
+        "terminal_stop_eligible": true,
+        "terminal_stop_probability": 0.9904478788375854,
+        "threshold": 0.99
+      },
+      {
+        "action_prefix_sha256": "6d0411dcf2c09a44f726c3846392353017a44885b98c73e17169f2d8e53412d5",
+        "cached_action_prefix_sha256": "6d0411dcf2c09a44f726c3846392353017a44885b98c73e17169f2d8e53412d5",
+        "cached_prefix_match": true,
+        "cached_terminal_step": 169,
+        "dataset_id": "cgtnjyggtm",
+        "execution_mode": "ACTUAL_TRUE_BREAK",
+        "failure_penalized_cost": 0.8131223211341906,
+        "false_stop": false,
+        "method": "BC_S1",
+        "original_vlm_calls": 0,
+        "packet_sha256": "ff1fb4e7f56e5cf5e6e3160385b0a8b4a1aafc732e55a5f05bb3a32361e364d2",
+        "planner_inference_seconds": 0.43819044809788465,
+        "post_stop_world_steps": 0,
+        "report_sha256": "26ffe0150cb9a31490aeb0885a4ef7fad19b6f71d6aa6abe6152366f506c8f4c",
+        "resource_exhausted": false,
+        "route_cost": 1.3887219415610936,
+        "route_turns": 14086,
+        "schema_version": 1,
+        "seed": 1,
+        "selection": "HASH_MIN_ONE_TEST_SPECIMEN_PER_DOMAIN",
+        "specimen_id": "q24-40",
+        "specimen_key": "cgtnjyggtm:q24-40",
+        "stop_inference_seconds": 0.20522308675572276,
+        "stop_success": true,
+        "stopped": true,
+        "task": "CHARACTERIZE",
+        "terminal_cost": 0.8131223211341906,
+        "terminal_step": 169,
+        "terminal_stop_eligible": true,
+        "terminal_stop_probability": 0.9943596720695496,
+        "threshold": 0.99
+      },
+      {
+        "action_prefix_sha256": "07aa282541f0c3925ecf75d5ccc3295ee46c0b9241d1f5a0e2d391a834f9f26e",
+        "cached_action_prefix_sha256": "07aa282541f0c3925ecf75d5ccc3295ee46c0b9241d1f5a0e2d391a834f9f26e",
+        "cached_prefix_match": true,
+        "cached_terminal_step": 170,
+        "dataset_id": "cgtnjyggtm",
+        "execution_mode": "ACTUAL_TRUE_BREAK",
+        "failure_penalized_cost": 0.8329135069787889,
+        "false_stop": false,
+        "method": "R_BALANCED_P8",
+        "original_vlm_calls": 0,
+        "packet_sha256": "e5c239a56996932e14d8f3e8271483b91eb159c56b0e3bb0bec7f096130daff5",
+        "planner_inference_seconds": 0.18645978905260563,
+        "post_stop_world_steps": 0,
+        "report_sha256": "d8fe8f302f550c02e35b95dd29075144defbaf7a3f0c0ebefde4de119f2f8d90",
+        "resource_exhausted": false,
+        "route_cost": 1.422075353696127,
+        "route_turns": 14352,
+        "schema_version": 1,
+        "seed": 1,
+        "selection": "HASH_MIN_ONE_TEST_SPECIMEN_PER_DOMAIN",
+        "specimen_id": "q24-40",
+        "specimen_key": "cgtnjyggtm:q24-40",
+        "stop_inference_seconds": 0.2598529024980962,
+        "stop_success": true,
+        "stopped": true,
+        "task": "CHARACTERIZE",
+        "terminal_cost": 0.8329135069787889,
+        "terminal_step": 170,
+        "terminal_stop_eligible": true,
+        "terminal_stop_probability": 0.9900214076042175,
+        "threshold": 0.99
+      },
+      {
+        "action_prefix_sha256": "5e6efe0d7ae03f2752e7b30bc86d79ae3667932935be6d03df0d8df4563603f3",
+        "cached_action_prefix_sha256": "5e6efe0d7ae03f2752e7b30bc86d79ae3667932935be6d03df0d8df4563603f3",
+        "cached_prefix_match": true,
+        "cached_terminal_step": 167,
+        "dataset_id": "w68dtmpfyf",
+        "execution_mode": "ACTUAL_TRUE_BREAK",
+        "failure_penalized_cost": 0.7091152873942191,
+        "false_stop": false,
+        "method": "BC_S1",
+        "original_vlm_calls": 0,
+        "packet_sha256": "4ff80aad40a28906eb70737704eec5537c9400aa65d186f655ebdef2788da4cd",
+        "planner_inference_seconds": 0.5406627380289137,
+        "post_stop_world_steps": 0,
+        "report_sha256": "3b628d6e88bf0ac67ed653344ba9489f68ba5e1ccc45b57696a762236a6b4bc9",
+        "resource_exhausted": false,
+        "route_cost": 1.2911374656557617,
+        "route_turns": 12946,
+        "schema_version": 1,
+        "seed": 1,
+        "selection": "HASH_MIN_ONE_TEST_SPECIMEN_PER_DOMAIN",
+        "specimen_id": "q16-31",
+        "specimen_key": "w68dtmpfyf:q16-31",
+        "stop_inference_seconds": 0.2583969342522323,
+        "stop_success": true,
+        "stopped": true,
+        "task": "LOCATE",
+        "terminal_cost": 0.7091152873942191,
+        "terminal_step": 167,
+        "terminal_stop_eligible": true,
+        "terminal_stop_probability": 0.9911476373672485,
+        "threshold": 0.99
+      },
+      {
+        "action_prefix_sha256": "8b61c39afbee365368594d0ebae15dce2cc4173dcb6b34f2314e3df38ce4d0c5",
+        "cached_action_prefix_sha256": "8b61c39afbee365368594d0ebae15dce2cc4173dcb6b34f2314e3df38ce4d0c5",
+        "cached_prefix_match": true,
+        "cached_terminal_step": 158,
+        "dataset_id": "w68dtmpfyf",
+        "execution_mode": "ACTUAL_TRUE_BREAK",
+        "failure_penalized_cost": 0.6028530607759094,
+        "false_stop": false,
+        "method": "R_BALANCED_P8",
+        "original_vlm_calls": 0,
+        "packet_sha256": "18e8218415f4843cb0da27519438176820752dda43a20c73331aa2e9f6b734d4",
+        "planner_inference_seconds": 0.11099791852757335,
+        "post_stop_world_steps": 0,
+        "report_sha256": "3b628d6e88bf0ac67ed653344ba9489f68ba5e1ccc45b57696a762236a6b4bc9",
+        "resource_exhausted": false,
+        "route_cost": 1.1509247841111663,
+        "route_turns": 11434,
+        "schema_version": 1,
+        "seed": 1,
+        "selection": "HASH_MIN_ONE_TEST_SPECIMEN_PER_DOMAIN",
+        "specimen_id": "q16-31",
+        "specimen_key": "w68dtmpfyf:q16-31",
+        "stop_inference_seconds": 0.15177230583503842,
+        "stop_success": true,
+        "stopped": true,
+        "task": "LOCATE",
+        "terminal_cost": 0.6028530607759094,
+        "terminal_step": 158,
+        "terminal_stop_eligible": true,
+        "terminal_stop_probability": 0.9901498556137085,
+        "threshold": 0.99
+      },
+      {
+        "action_prefix_sha256": "bf9db72d431d8a134164eb49d95aa732209652f1b405007549e873aaea806c55",
+        "cached_action_prefix_sha256": "bf9db72d431d8a134164eb49d95aa732209652f1b405007549e873aaea806c55",
+        "cached_prefix_match": true,
+        "cached_terminal_step": 174,
+        "dataset_id": "w68dtmpfyf",
+        "execution_mode": "ACTUAL_TRUE_BREAK",
+        "failure_penalized_cost": 0.7907220573689416,
+        "false_stop": false,
+        "method": "BC_S1",
+        "original_vlm_calls": 0,
+        "packet_sha256": "3e685b9dce0c89de9b46dbe6dd7ec1df1cfd32647fd5d93f4758d462d40e8646",
+        "planner_inference_seconds": 0.42880496801808476,
+        "post_stop_world_steps": 0,
+        "report_sha256": "f76c88280c22ee52165c44dfe0da63f78cee529c6d4b04c84ec47892cb2e3f7f",
+        "resource_exhausted": false,
+        "route_cost": 1.4062882298096648,
+        "route_turns": 14098,
+        "schema_version": 1,
+        "seed": 1,
+        "selection": "HASH_MIN_ONE_TEST_SPECIMEN_PER_DOMAIN",
+        "specimen_id": "q16-31",
+        "specimen_key": "w68dtmpfyf:q16-31",
+        "stop_inference_seconds": 0.18566569685935974,
+        "stop_success": true,
+        "stopped": true,
+        "task": "CHARACTERIZE",
+        "terminal_cost": 0.7907220573689416,
+        "terminal_step": 174,
+        "terminal_stop_eligible": true,
+        "terminal_stop_probability": 0.9915279150009155,
+        "threshold": 0.99
+      },
+      {
+        "action_prefix_sha256": "74b78c9c764d61ad198fe5543b782d3de87afe7e95ed270686bd745ffc0db710",
+        "cached_action_prefix_sha256": "74b78c9c764d61ad198fe5543b782d3de87afe7e95ed270686bd745ffc0db710",
+        "cached_prefix_match": true,
+        "cached_terminal_step": 180,
+        "dataset_id": "w68dtmpfyf",
+        "execution_mode": "ACTUAL_TRUE_BREAK",
+        "failure_penalized_cost": 0.8597757995384108,
+        "false_stop": false,
+        "method": "R_BALANCED_P8",
+        "original_vlm_calls": 0,
+        "packet_sha256": "9f0aaa4f917475c32ce62a8bfcc915a571355c2e3463bd562ff85f2e30f12a36",
+        "planner_inference_seconds": 0.16493698442354798,
+        "post_stop_world_steps": 0,
+        "report_sha256": "4e65b32b5467ddafce208862ede3f0aee24831a7bfb0f4094365dc7427ddcf60",
+        "resource_exhausted": false,
+        "route_cost": 1.4957969758261913,
+        "route_turns": 15086,
+        "schema_version": 1,
+        "seed": 1,
+        "selection": "HASH_MIN_ONE_TEST_SPECIMEN_PER_DOMAIN",
+        "specimen_id": "q16-31",
+        "specimen_key": "w68dtmpfyf:q16-31",
+        "stop_inference_seconds": 0.2309980634599924,
+        "stop_success": true,
+        "stopped": true,
+        "task": "CHARACTERIZE",
+        "terminal_cost": 0.8597757995384108,
+        "terminal_step": 180,
+        "terminal_stop_eligible": true,
+        "terminal_stop_probability": 0.993780791759491,
+        "threshold": 0.99
+      },
+      {
+        "action_prefix_sha256": "fa1da7f6bd13169aa4e0d7911a797b39b0cb26f8f29a80e130d1b899ed4af49c",
+        "cached_action_prefix_sha256": "fa1da7f6bd13169aa4e0d7911a797b39b0cb26f8f29a80e130d1b899ed4af49c",
+        "cached_prefix_match": true,
+        "cached_terminal_step": 148,
+        "dataset_id": "xcmzfsbd9t",
+        "execution_mode": "ACTUAL_TRUE_BREAK",
+        "failure_penalized_cost": 0.563539853811347,
+        "false_stop": false,
+        "method": "BC_S1",
+        "original_vlm_calls": 0,
+        "packet_sha256": "df6080bb02e6a52ce82f0696df1e880fb0c558c7d454d8f75b86ac3cb0927506",
+        "planner_inference_seconds": 0.5316063305363059,
+        "post_stop_world_steps": 0,
+        "report_sha256": "a1a753e2ad5d8be27510033d07036f822ac4c52570d3c4e4feb20385896990c6",
+        "resource_exhausted": false,
+        "route_cost": 1.1504196286542723,
+        "route_turns": 5164,
+        "schema_version": 1,
+        "seed": 1,
+        "selection": "HASH_MIN_ONE_TEST_SPECIMEN_PER_DOMAIN",
+        "specimen_id": "c24-20",
+        "specimen_key": "xcmzfsbd9t:c24-20",
+        "stop_inference_seconds": 0.28051039204001427,
+        "stop_success": true,
+        "stopped": true,
+        "task": "LOCATE",
+        "terminal_cost": 0.563539853811347,
+        "terminal_step": 148,
+        "terminal_stop_eligible": true,
+        "terminal_stop_probability": 0.9907490611076355,
+        "threshold": 0.99
+      },
+      {
+        "action_prefix_sha256": "54e991efd2ef37f8e4e0ef9f2801a6f04d045cc9a55add8f2194fa42dc66cd81",
+        "cached_action_prefix_sha256": "54e991efd2ef37f8e4e0ef9f2801a6f04d045cc9a55add8f2194fa42dc66cd81",
+        "cached_prefix_match": true,
+        "cached_terminal_step": 147,
+        "dataset_id": "xcmzfsbd9t",
+        "execution_mode": "ACTUAL_TRUE_BREAK",
+        "failure_penalized_cost": 0.4763052558301427,
+        "false_stop": false,
+        "method": "R_BALANCED_P8",
+        "original_vlm_calls": 0,
+        "packet_sha256": "3aea258d514be6a41d834c911f47c69c916384ce348e7563c1955a4af8590ee8",
+        "planner_inference_seconds": 0.06791005888953805,
+        "post_stop_world_steps": 0,
+        "report_sha256": "a1a753e2ad5d8be27510033d07036f822ac4c52570d3c4e4feb20385896990c6",
+        "resource_exhausted": false,
+        "route_cost": 1.0428030171578997,
+        "route_turns": 4702,
+        "schema_version": 1,
+        "seed": 1,
+        "selection": "HASH_MIN_ONE_TEST_SPECIMEN_PER_DOMAIN",
+        "specimen_id": "c24-20",
+        "specimen_key": "xcmzfsbd9t:c24-20",
+        "stop_inference_seconds": 0.1701975711621344,
+        "stop_success": true,
+        "stopped": true,
+        "task": "LOCATE",
+        "terminal_cost": 0.4763052558301427,
+        "terminal_step": 147,
+        "terminal_stop_eligible": true,
+        "terminal_stop_probability": 0.9903135299682617,
+        "threshold": 0.99
+      },
+      {
+        "action_prefix_sha256": "c11d96bf3f7060ed3235a319ca9ef39c796d21f8928c5f598fc9c2c58df8f98b",
+        "cached_action_prefix_sha256": "c11d96bf3f7060ed3235a319ca9ef39c796d21f8928c5f598fc9c2c58df8f98b",
+        "cached_prefix_match": true,
+        "cached_terminal_step": 159,
+        "dataset_id": "xcmzfsbd9t",
+        "execution_mode": "ACTUAL_TRUE_BREAK",
+        "failure_penalized_cost": 0.6511747302471285,
+        "false_stop": false,
+        "method": "BC_S1",
+        "original_vlm_calls": 0,
+        "packet_sha256": "917c999d04226e0d1d1317ac755d9f927b730b344e026898ef1a074eb64f9910",
+        "planner_inference_seconds": 0.37680503027513623,
+        "post_stop_world_steps": 0,
+        "report_sha256": "531a72a68a8dba6ef3e60eb22a5e96352e872221977a5880153ea35042d0a8f1",
+        "resource_exhausted": false,
+        "route_cost": 1.2917331954204305,
+        "route_turns": 5854,
+        "schema_version": 1,
+        "seed": 1,
+        "selection": "HASH_MIN_ONE_TEST_SPECIMEN_PER_DOMAIN",
+        "specimen_id": "c24-20",
+        "specimen_key": "xcmzfsbd9t:c24-20",
+        "stop_inference_seconds": 0.17606994323432446,
+        "stop_success": true,
+        "stopped": true,
+        "task": "CHARACTERIZE",
+        "terminal_cost": 0.6511747302471285,
+        "terminal_step": 159,
+        "terminal_stop_eligible": true,
+        "terminal_stop_probability": 0.9909523725509644,
+        "threshold": 0.99
+      },
+      {
+        "action_prefix_sha256": "650c9321d4a483e1dc21057c932feb22b1f3f65a7a38d18b3c169cbbb70759ee",
+        "cached_action_prefix_sha256": "650c9321d4a483e1dc21057c932feb22b1f3f65a7a38d18b3c169cbbb70759ee",
+        "cached_prefix_match": true,
+        "cached_terminal_step": 170,
+        "dataset_id": "xcmzfsbd9t",
+        "execution_mode": "ACTUAL_TRUE_BREAK",
+        "failure_penalized_cost": 0.7414549251653324,
+        "false_stop": false,
+        "method": "R_BALANCED_P8",
+        "original_vlm_calls": 0,
+        "packet_sha256": "7b32616f73bc12916721acd446c9f38315669c1839aa01dc1b1bb47b16d7675e",
+        "planner_inference_seconds": 0.0854496406391263,
+        "post_stop_world_steps": 0,
+        "report_sha256": "531a72a68a8dba6ef3e60eb22a5e96352e872221977a5880153ea35042d0a8f1",
+        "resource_exhausted": false,
+        "route_cost": 1.4052323743313555,
+        "route_turns": 6580,
+        "schema_version": 1,
+        "seed": 1,
+        "selection": "HASH_MIN_ONE_TEST_SPECIMEN_PER_DOMAIN",
+        "specimen_id": "c24-20",
+        "specimen_key": "xcmzfsbd9t:c24-20",
+        "stop_inference_seconds": 0.1850862978026271,
+        "stop_success": true,
+        "stopped": true,
+        "task": "CHARACTERIZE",
+        "terminal_cost": 0.7414549251653324,
+        "terminal_step": 170,
+        "terminal_stop_eligible": true,
+        "terminal_stop_probability": 0.9902774095535278,
+        "threshold": 0.99
+      },
+      {
+        "action_prefix_sha256": "321aff2f8a8cef4d2fe2eb8dd0f301269efa006d075961fc0c5ce109cc831eaf",
+        "cached_action_prefix_sha256": "321aff2f8a8cef4d2fe2eb8dd0f301269efa006d075961fc0c5ce109cc831eaf",
+        "cached_prefix_match": true,
+        "cached_terminal_step": 166,
+        "dataset_id": "yfxyg8jm46",
+        "execution_mode": "ACTUAL_TRUE_BREAK",
+        "failure_penalized_cost": 0.6978525112649742,
+        "false_stop": false,
+        "method": "BC_S1",
+        "original_vlm_calls": 0,
+        "packet_sha256": "48b52f4dc08a5dfc4103f5b438ad5324353e4c64adc71c68cad262f4a898e96b",
+        "planner_inference_seconds": 0.34011604357510805,
+        "post_stop_world_steps": 0,
+        "report_sha256": "55099d38e247f2f825d0df135821f69207633c140b051c9853ef3dea1204b2ca",
+        "resource_exhausted": false,
+        "route_cost": 1.2810418818811082,
+        "route_turns": 12778,
+        "schema_version": 1,
+        "seed": 1,
+        "selection": "HASH_MIN_ONE_TEST_SPECIMEN_PER_DOMAIN",
+        "specimen_id": "c16-38",
+        "specimen_key": "yfxyg8jm46:c16-38",
+        "stop_inference_seconds": 0.15782362082973123,
+        "stop_success": true,
+        "stopped": true,
+        "task": "LOCATE",
+        "terminal_cost": 0.6978525112649742,
+        "terminal_step": 166,
+        "terminal_stop_eligible": true,
+        "terminal_stop_probability": 0.9928217530250549,
+        "threshold": 0.99
+      },
+      {
+        "action_prefix_sha256": "0d107ee8e5ca49f6676ca4dc2ee36726516a2ec622499e9bfecd82f83b9c7916",
+        "cached_action_prefix_sha256": "0d107ee8e5ca49f6676ca4dc2ee36726516a2ec622499e9bfecd82f83b9c7916",
+        "cached_prefix_match": true,
+        "cached_terminal_step": 161,
+        "dataset_id": "yfxyg8jm46",
+        "execution_mode": "ACTUAL_TRUE_BREAK",
+        "failure_penalized_cost": 1.0,
+        "false_stop": true,
+        "method": "R_BALANCED_P8",
+        "original_vlm_calls": 0,
+        "packet_sha256": "109065e75e9b67661045ed2b46cad5ed78ab2d55d0a114da6eeca2d9afb4f80a",
+        "planner_inference_seconds": 0.20081355376169086,
+        "post_stop_world_steps": 0,
+        "report_sha256": "c7999812a3289c0a8bb7593153eecdab2cf7b8bd7c389473e3f0bebeb3affaa1",
+        "resource_exhausted": false,
+        "route_cost": 1.199297981237393,
+        "route_turns": 11932,
+        "schema_version": 1,
+        "seed": 1,
+        "selection": "HASH_MIN_ONE_TEST_SPECIMEN_PER_DOMAIN",
+        "specimen_id": "c16-38",
+        "specimen_key": "yfxyg8jm46:c16-38",
+        "stop_inference_seconds": 0.18026233604177833,
+        "stop_success": false,
+        "stopped": true,
+        "task": "LOCATE",
+        "terminal_cost": 0.6379338388833938,
+        "terminal_step": 161,
+        "terminal_stop_eligible": true,
+        "terminal_stop_probability": 0.9913548827171326,
+        "threshold": 0.99
+      },
+      {
+        "action_prefix_sha256": "75a7f113a26645f15b3cd9ef760f00ef5571d11f3735697da22060615314babe",
+        "cached_action_prefix_sha256": "75a7f113a26645f15b3cd9ef760f00ef5571d11f3735697da22060615314babe",
+        "cached_prefix_match": true,
+        "cached_terminal_step": 173,
+        "dataset_id": "yfxyg8jm46",
+        "execution_mode": "ACTUAL_TRUE_BREAK",
+        "failure_penalized_cost": 0.7794592812396967,
+        "false_stop": false,
+        "method": "BC_S1",
+        "original_vlm_calls": 0,
+        "packet_sha256": "421a6f77d632ec7b5eef636f787621691eadddf94f10d21f0ca6829ead010d66",
+        "planner_inference_seconds": 0.5950609156861901,
+        "post_stop_world_steps": 0,
+        "report_sha256": "eed885636881a696ad5a62e82052b1f728c014e80039aeaddfa261bc8143c1ec",
+        "resource_exhausted": false,
+        "route_cost": 1.3949212078800004,
+        "route_turns": 13940,
+        "schema_version": 1,
+        "seed": 1,
+        "selection": "HASH_MIN_ONE_TEST_SPECIMEN_PER_DOMAIN",
+        "specimen_id": "c16-38",
+        "specimen_key": "yfxyg8jm46:c16-38",
+        "stop_inference_seconds": 0.2578090555034578,
+        "stop_success": true,
+        "stopped": true,
+        "task": "CHARACTERIZE",
+        "terminal_cost": 0.7794592812396967,
+        "terminal_step": 173,
+        "terminal_stop_eligible": true,
+        "terminal_stop_probability": 0.9912464022636414,
+        "threshold": 0.99
+      },
+      {
+        "action_prefix_sha256": "bf08549dadbda6e6dec52326c75001eeacddca222d027c187745ea19e22d8c33",
+        "cached_action_prefix_sha256": "bf08549dadbda6e6dec52326c75001eeacddca222d027c187745ea19e22d8c33",
+        "cached_prefix_match": true,
+        "cached_terminal_step": 174,
+        "dataset_id": "yfxyg8jm46",
+        "execution_mode": "ACTUAL_TRUE_BREAK",
+        "failure_penalized_cost": 0.7892427739312012,
+        "false_stop": false,
+        "method": "R_BALANCED_P8",
+        "original_vlm_calls": 0,
+        "packet_sha256": "c507526a93366b64bc333939831233c401dd11c5817b90cea15a5b2d30af5834",
+        "planner_inference_seconds": 0.14482963737100363,
+        "post_stop_world_steps": 0,
+        "report_sha256": "7a044900442e1ae55602fd2071de197a9e67a038d45d86355ef864362da0ac48",
+        "resource_exhausted": false,
+        "route_cost": 1.4020991994175485,
+        "route_turns": 14086,
+        "schema_version": 1,
+        "seed": 1,
+        "selection": "HASH_MIN_ONE_TEST_SPECIMEN_PER_DOMAIN",
+        "specimen_id": "c16-38",
+        "specimen_key": "yfxyg8jm46:c16-38",
+        "stop_inference_seconds": 0.3175531360320747,
+        "stop_success": true,
+        "stopped": true,
+        "task": "CHARACTERIZE",
+        "terminal_cost": 0.7892427739312012,
+        "terminal_step": 174,
+        "terminal_stop_eligible": true,
+        "terminal_stop_probability": 0.9901948571205139,
+        "threshold": 0.99
+      },
+      {
+        "action_prefix_sha256": "02a4b1e7fb7653e69718656d47bce572328cc3a6ff9e776f66e72789d53367d5",
+        "cached_action_prefix_sha256": "02a4b1e7fb7653e69718656d47bce572328cc3a6ff9e776f66e72789d53367d5",
+        "cached_prefix_match": true,
+        "cached_terminal_step": 149,
+        "dataset_id": "ykhs7s2dck",
+        "execution_mode": "ACTUAL_TRUE_BREAK",
+        "failure_penalized_cost": 1.0,
+        "false_stop": true,
+        "method": "BC_S1",
+        "original_vlm_calls": 0,
+        "packet_sha256": "ae2c0416a29b0dbb5ba0220583677462c2901c8027dec03be4372efeb654f067",
+        "planner_inference_seconds": 0.34210484428331256,
+        "post_stop_world_steps": 0,
+        "report_sha256": "55099d38e247f2f825d0df135821f69207633c140b051c9853ef3dea1204b2ca",
+        "resource_exhausted": false,
+        "route_cost": 1.1374859335370742,
+        "route_turns": 11476,
+        "schema_version": 1,
+        "seed": 1,
+        "selection": "HASH_MIN_ONE_TEST_SPECIMEN_PER_DOMAIN",
+        "specimen_id": "q8-31",
+        "specimen_key": "ykhs7s2dck:q8-31",
+        "stop_inference_seconds": 0.1637107147835195,
+        "stop_success": false,
+        "stopped": true,
+        "task": "LOCATE",
+        "terminal_cost": 0.6440927574458731,
+        "terminal_step": 149,
+        "terminal_stop_eligible": true,
+        "terminal_stop_probability": 0.9909171462059021,
+        "threshold": 0.99
+      },
+      {
+        "action_prefix_sha256": "783a1b0e379d2c982d342c00bd85a34ac8ce4448855d52d0011ba93d88aa366a",
+        "cached_action_prefix_sha256": "783a1b0e379d2c982d342c00bd85a34ac8ce4448855d52d0011ba93d88aa366a",
+        "cached_prefix_match": true,
+        "cached_terminal_step": 150,
+        "dataset_id": "ykhs7s2dck",
+        "execution_mode": "ACTUAL_TRUE_BREAK",
+        "failure_penalized_cost": 0.6718144851082537,
+        "false_stop": false,
+        "method": "R_BALANCED_P8",
+        "original_vlm_calls": 0,
+        "packet_sha256": "1d24d2c0055df15f8bd6277c503b6dd83430b593317195b49addf128012212f4",
+        "planner_inference_seconds": 0.13558028731495142,
+        "post_stop_world_steps": 0,
+        "report_sha256": "980ba96f58355c45e620920388d10a1715c3365329610bd4da472f832fc6c91a",
+        "resource_exhausted": false,
+        "route_cost": 1.1842993832253024,
+        "route_turns": 11822,
+        "schema_version": 1,
+        "seed": 1,
+        "selection": "HASH_MIN_ONE_TEST_SPECIMEN_PER_DOMAIN",
+        "specimen_id": "q8-31",
+        "specimen_key": "ykhs7s2dck:q8-31",
+        "stop_inference_seconds": 0.17629439430311322,
+        "stop_success": true,
+        "stopped": true,
+        "task": "LOCATE",
+        "terminal_cost": 0.6718144851082537,
+        "terminal_step": 150,
+        "terminal_stop_eligible": true,
+        "terminal_stop_probability": 0.9923630952835083,
+        "threshold": 0.99
+      },
+      {
+        "action_prefix_sha256": "9a9f85242ebedd837713bdbe7d4ecb8895f7a6988ca3578c1c29a37e4fb303e1",
+        "cached_action_prefix_sha256": "9a9f85242ebedd837713bdbe7d4ecb8895f7a6988ca3578c1c29a37e4fb303e1",
+        "cached_prefix_match": true,
+        "cached_terminal_step": 152,
+        "dataset_id": "ykhs7s2dck",
+        "execution_mode": "ACTUAL_TRUE_BREAK",
+        "failure_penalized_cost": 0.6790812177162325,
+        "false_stop": false,
+        "method": "BC_S1",
+        "original_vlm_calls": 0,
+        "packet_sha256": "b1f016b26361803393fc13bcd4755e220b6331f5fcfcbf5c7df03a8d1f1b6210",
+        "planner_inference_seconds": 0.6227508918382227,
+        "post_stop_world_steps": 0,
+        "report_sha256": "0004a631f5037efc3c5844556e4858a681e0ad603cbf5d764cd133bb6430cfa6",
+        "resource_exhausted": false,
+        "route_cost": 1.190733598881738,
+        "route_turns": 11974,
+        "schema_version": 1,
+        "seed": 1,
+        "selection": "HASH_MIN_ONE_TEST_SPECIMEN_PER_DOMAIN",
+        "specimen_id": "q8-31",
+        "specimen_key": "ykhs7s2dck:q8-31",
+        "stop_inference_seconds": 0.2732056616805494,
+        "stop_success": true,
+        "stopped": true,
+        "task": "CHARACTERIZE",
+        "terminal_cost": 0.6790812177162325,
+        "terminal_step": 152,
+        "terminal_stop_eligible": true,
+        "terminal_stop_probability": 0.9933720827102661,
+        "threshold": 0.99
+      },
+      {
+        "action_prefix_sha256": "32cc384fbf9b87f3cf079da3cb30b4f57d20be7e808b44aa90187ab1fa96caf4",
+        "cached_action_prefix_sha256": "32cc384fbf9b87f3cf079da3cb30b4f57d20be7e808b44aa90187ab1fa96caf4",
+        "cached_prefix_match": true,
+        "cached_terminal_step": 154,
+        "dataset_id": "ykhs7s2dck",
+        "execution_mode": "ACTUAL_TRUE_BREAK",
+        "failure_penalized_cost": 0.6862138696560062,
+        "false_stop": false,
+        "method": "R_BALANCED_P8",
+        "original_vlm_calls": 0,
+        "packet_sha256": "65191d22d02b49bd855b32778a5b5f760150f62e502f70bc7014d405ac018dfd",
+        "planner_inference_seconds": 0.11000885255634785,
+        "post_stop_world_steps": 0,
+        "report_sha256": "0004a631f5037efc3c5844556e4858a681e0ad603cbf5d764cd133bb6430cfa6",
+        "resource_exhausted": false,
+        "route_cost": 1.2152739664991126,
+        "route_turns": 12148,
+        "schema_version": 1,
+        "seed": 1,
+        "selection": "HASH_MIN_ONE_TEST_SPECIMEN_PER_DOMAIN",
+        "specimen_id": "q8-31",
+        "specimen_key": "ykhs7s2dck:q8-31",
+        "stop_inference_seconds": 0.27836585510522127,
+        "stop_success": true,
+        "stopped": true,
+        "task": "CHARACTERIZE",
+        "terminal_cost": 0.6862138696560062,
+        "terminal_step": 154,
+        "terminal_stop_eligible": true,
+        "terminal_stop_probability": 0.9912575483322144,
+        "threshold": 0.99
+      }
+    ],
+    "post_stop_world_steps": 0,
+    "selection": "HASH_MIN_ONE_TEST_SPECIMEN_PER_DOMAIN",
+    "selector_seed": "bc-cscan-path-b-true-break-v1",
+    "specimen_count": 6
+  }
+}

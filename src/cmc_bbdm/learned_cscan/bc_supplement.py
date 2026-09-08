@@ -904,6 +904,19 @@ def _train_actor_stage(
         del actor
         if device.startswith("cuda"):
             torch.cuda.empty_cache()
+    if recovered and not trained:
+        total_updates = sum(
+            int(row["optimizer_steps"]) for row in manifest["models"]
+        )
+        return {
+            "stage": manifest["state"],
+            "trained": trained,
+            "recovered": recovered,
+            "actor_optimizer_updates": total_updates,
+            "actor_update_cap": config.actor_update_cap,
+            "test_opened": bool(manifest["test_opened"]),
+            "elapsed_seconds": time.perf_counter() - started,
+        }
     manifest["models"] = sorted(
         manifest["models"], key=lambda row: str(row["method"])
     )
@@ -1626,8 +1639,6 @@ def calibrate_stop(
 
     config = load_supplement_config(config_path, project_root=project_root)
     require_calibration_split(Split.VALID)
-    if (config.output_root / "per_episode_metrics.csv").exists():
-        raise RuntimeError("STOP calibration cannot run after supplement TEST")
     calibration_path = config.output_root / "stop_calibration.json"
     if calibration_path.is_file():
         previous = json.loads(calibration_path.read_text(encoding="utf-8"))
@@ -1661,6 +1672,8 @@ def calibrate_stop(
                 "test_opened": False,
                 "recovered": True,
             }
+    if (config.output_root / "per_episode_metrics.csv").exists():
+        raise RuntimeError("STOP calibration cannot run after supplement TEST")
     verify_frozen_file(
         config.frozen_stop_path, FROZEN_STOP_SHA256, label="frozen STOP"
     )

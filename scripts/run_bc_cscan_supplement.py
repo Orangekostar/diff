@@ -32,7 +32,6 @@ from cmc_bbdm.learned_cscan.supplement_reporting import (
 )
 
 DEFAULT_CONFIG = PROJECT_ROOT / "paper_v3/configs/bc_cscan_path_b_supplement.yaml"
-DEFAULT_SOURCE_ROOT = Path("/home/ww/paper3/cmc_damage_inference")
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -52,9 +51,7 @@ def build_parser() -> argparse.ArgumentParser:
     ):
         command = commands.add_parser(name)
         command.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
-        command.add_argument(
-            "--source-root", type=Path, default=DEFAULT_SOURCE_ROOT
-        )
+        command.add_argument("--source-root", type=Path, required=True)
         if name == "evaluate":
             command.add_argument(
                 "--split",

@@ -10,23 +10,37 @@ from statistics import NormalDist
 
 import numpy as np
 import polars as pl
-from PIL import Image
 
+from cmc_bbdm.inspection_agent.state import InspectionCellAction
 from cmc_bbdm.vlm_cscan.references import (
-    component_bbox_polygons,
-    derive_proxy_reference,
+    evaluate_task_report,
     reference_from_payload,
 )
 
 from .artifacts import write_csv_atomic, write_json_atomic
-from .bc_supplement import SupplementConfig, load_supplement_config
+from .bc_supplement import (
+    SupplementConfig,
+    load_supplement_config,
+)
+from .benchmark import (
+    _advance_detailed,
+    _load_percepts,
+    _packet,
+    _report_digest,
+)
 from .contracts import Task
 from .metrics import MetricRecord
-from .runtime import load_study_config, load_study_context
+from .runtime import (
+    load_study_config,
+    load_study_context,
+    open_study_specimen,
+)
+from .supplement_adapters import adapt_task_report_v2
 from .supplement_analysis import (
     make_domain_bootstrap_draws,
     paired_domain_bootstrap,
 )
+from .supplement_figures import render_supplement_figures
 
 ANNOTATION_QUEUE_FIELDS = (
     "schema_version",
@@ -68,10 +82,17 @@ CONFIRMATION_FIELDS = (
 
 REVIEWED_RESCORE_FIELDS = (
     "schema_version",
+    "dataset_id",
+    "specimen_id",
     "specimen_key",
     "task",
     "method",
     "seed",
+    "step",
+    "cost",
+    "report_sha256",
+    "rule_stop",
+    "calibrated_stop_trigger",
     "reference_version",
     "formal_success",
     "iou",
@@ -274,7 +295,6 @@ def analyze_existing(
 ) -> dict[str, object]:
     """Compute direct paired effects from the already frozen TEST table."""
 
-    del source_root
     config = _config(config_path, project_root=project_root)
     rows = pl.read_csv(
         config.source_result_root / "per_episode_metrics.csv"
@@ -419,6 +439,55 @@ def import_references(
                 ),
             }
         )
+    confirmation_roster = config.output_root / "confirmation_roster.csv"
+    if confirmation_roster.is_file():
+        for confirmation in pl.read_csv(confirmation_roster).to_dicts():
+            annotation_path = str(confirmation["annotation_path"])
+            source = _annotation_file(config, annotation_path)
+            payload = json.loads(source.read_text(encoding="utf-8"))
+            review_state = str(payload.get("review_state", "pending"))
+            reviewer_alias = payload.get("reviewer_alias")
+            reference_type = str(
+                payload.get(
+                    "reference_type", "ALGORITHM_DERIVED_NOT_REVIEWED"
+                )
+            )
+            formal_eligible = bool(
+                review_state == "reviewed"
+                and reviewer_alias
+                and reference_type in {"EXPERT_REVIEWED", "AUTHOR_PROVIDED"}
+            )
+            reviewed += int(formal_eligible)
+            rows.append(
+                {
+                    "schema_version": 1,
+                    "cohort": "ADDITIONAL_BC_CONFIRM_24",
+                    "dataset_id": confirmation["dataset_id"],
+                    "specimen_id": confirmation["specimen_id"],
+                    "specimen_key": confirmation["specimen_key"],
+                    "split": "CONFIRM",
+                    "priority": 4,
+                    "reference_version": (
+                        "REVIEWED_V1"
+                        if formal_eligible
+                        else "REVIEWED_V1_PENDING"
+                    ),
+                    "reference_type": reference_type,
+                    "review_state": review_state,
+                    "reviewer_alias": (
+                        "" if reviewer_alias is None else reviewer_alias
+                    ),
+                    "formal_eligible": formal_eligible,
+                    "annotation_path": annotation_path,
+                    "annotation_exists": source.is_file(),
+                    "blinding_contract": "FULL_CSCAN_ONLY_NO_MODEL_OUTPUTS",
+                    "status": (
+                        "ATTRIBUTABLE_REVIEW_AVAILABLE"
+                        if formal_eligible
+                        else "INDEPENDENT_REVIEW_PENDING"
+                    ),
+                }
+            )
     rows.sort(key=lambda row: (int(row["priority"]), str(row["specimen_key"])))
     write_csv_atomic(
         config.output_root / "annotation_queue.csv",
@@ -467,21 +536,6 @@ def _confirmation_candidates(
 def _write_confirmation_template(
     config: SupplementConfig, record: object, *, source_root: Path
 ) -> str:
-    parent = load_study_config(
-        config.parent_config_path, project_root=config.project_root
-    )
-    reader = parent.legacy_config.values["reader"]
-    with Image.open(record.cscan_path) as image:
-        full_scan = np.asarray(image.convert("RGB"), dtype=np.uint8)
-    reference = derive_proxy_reference(
-        specimen_key=record.specimen_key,
-        source_image_sha256=record.cscan_sha256,
-        full_scan=full_scan,
-        distance_threshold=float(reader["distance_threshold"]),
-        minimum_component_pixels=int(reader["minimum_component_pixels"]),
-        uncertainty_band=float(reader["uncertainty_band"]),
-        border_exclusion_fraction=float(reader["border_exclusion_fraction"]),
-    )
     name = f"{record.dataset_id}__{record.specimen_id}.json"
     relative = Path("confirmation_annotation_queue") / name
     path = config.output_root / relative
@@ -496,38 +550,12 @@ def _write_confirmation_template(
         "reference_type": "ALGORITHM_DERIVED_NOT_REVIEWED",
         "review_state": "pending",
         "reviewer_alias": None,
-        "regions": [
-            {
-                "id": f"proposal-{index}",
-                "polygon": polygon,
-                "certainty": "certain",
-            }
-            for index, polygon in enumerate(
-                component_bbox_polygons(reference.certain_mask), start=1
-            )
-        ],
-        "uncertain_regions": [
-            {
-                "id": f"uncertain-{index}",
-                "polygon": polygon,
-                "certainty": "uncertain",
-            }
-            for index, polygon in enumerate(
-                component_bbox_polygons(reference.uncertain_mask), start=1
-            )
-        ],
+        "regions": [],
+        "uncertain_regions": [],
         "proposal_provenance": {
-            "status": "ALGORITHM_DERIVED_NOT_REVIEWED",
-            "algorithm": "FULL_CSCAN_INNER_BORDER_RGB_DISTANCE",
-            "parameters": {
-                key: reader[key]
-                for key in (
-                    "distance_threshold",
-                    "uncertainty_band",
-                    "border_exclusion_fraction",
-                    "minimum_component_pixels",
-                )
-            },
+            "status": "BLANK_INDEPENDENT_REVIEW_TEMPLATE",
+            "algorithm": None,
+            "parameters": {},
         },
         "blinding_contract": "FULL_CSCAN_ONLY_NO_MODEL_OUTPUTS",
         "review_instructions": (
@@ -550,11 +578,15 @@ def prepare_confirmation(
     selected = _confirmation_candidates(config, source_root=source_root)
     seed = str(config.values["confirmation"]["roster_seed"])
     rows = []
-    queue_rows = (
-        pl.read_csv(config.output_root / "annotation_queue.csv").to_dicts()
-        if (config.output_root / "annotation_queue.csv").is_file()
-        else []
-    )
+    queue_rows = [
+        row
+        for row in (
+            pl.read_csv(config.output_root / "annotation_queue.csv").to_dicts()
+            if (config.output_root / "annotation_queue.csv").is_file()
+            else []
+        )
+        if row["cohort"] != "ADDITIONAL_BC_CONFIRM_24"
+    ]
     by_domain: dict[str, int] = {}
     for record in selected:
         rank = by_domain.get(record.dataset_id, 0)
@@ -633,6 +665,108 @@ def prepare_confirmation(
     }
 
 
+def _replay_reviewed_reports(
+    config: SupplementConfig,
+    *,
+    source_root: Path,
+    references: dict[str, object],
+    trajectories: pl.DataFrame,
+) -> list[dict[str, object]]:
+    parent = load_study_config(
+        config.parent_config_path, project_root=config.project_root
+    )
+    context = load_study_context(parent, source_root=source_root)
+    percepts = _load_percepts(parent, context, config.source_result_root)
+    records = {record.specimen_key: record for record in context.roster.pilot_records}
+    output = []
+    for specimen_key in sorted(references):
+        record = records.get(specimen_key)
+        if record is None:
+            continue
+        runtime = open_study_specimen(context, record)
+        specimen = trajectories.filter(pl.col("specimen_key") == specimen_key)
+        episodes = specimen.partition_by(
+            ["task", "method", "seed"], maintain_order=True
+        )
+        if len(episodes) != 14:
+            raise RuntimeError(
+                f"stored TEST episode matrix changed for {specimen_key}"
+            )
+        for episode in episodes:
+            episode = episode.sort("step")
+            rows = episode.to_dicts()
+            if len(rows) != 193:
+                raise RuntimeError(
+                    f"stored TEST trajectory length changed for {specimen_key}"
+                )
+            task = Task(str(rows[0]["task"]))
+            observation = runtime.world.reset()
+            probe = (0.0, 0.0)
+            route_cost = 0.0
+            for index, row in enumerate(rows):
+                if int(row["step"]) != index:
+                    raise RuntimeError("stored TEST trajectory order changed")
+                packet = _packet(
+                    observation,
+                    runtime=runtime,
+                    percept=percepts[specimen_key],
+                    task=task,
+                    context=context,
+                    probe_position=probe,
+                    route_cost=route_cost,
+                )
+                if (
+                    _report_digest(packet.report) != row["report_sha256"]
+                    or packet.feature_sha256 != row["packet_sha256"]
+                    or abs(float(observation.effective_budget) - float(row["cost"]))
+                    > 1e-12
+                ):
+                    raise RuntimeError("stored report replay identity changed")
+                score = evaluate_task_report(
+                    adapt_task_report_v2(packet.report), references[specimen_key]
+                )
+                if score.formal_success is None:
+                    raise RuntimeError("reviewed rescore lost formal eligibility")
+                output.append(
+                    {
+                        "schema_version": 1,
+                        "dataset_id": row["dataset_id"],
+                        "specimen_id": row["specimen_id"],
+                        "specimen_key": specimen_key,
+                        "task": task.value,
+                        "method": row["method"],
+                        "seed": int(row["seed"]),
+                        "step": index,
+                        "cost": float(row["cost"]),
+                        "report_sha256": row["report_sha256"],
+                        "rule_stop": bool(row["rule_stop"]),
+                        "calibrated_stop_trigger": bool(
+                            row["calibrated_stop_trigger"]
+                        ),
+                        "reference_version": "REVIEWED_V1",
+                        "formal_success": bool(score.formal_success),
+                        "iou": score.iou,
+                        "recall": score.recall,
+                        "relative_area_error": score.relative_area_error,
+                        "status": "FROZEN_REPORT_PREFIX_RESCORED",
+                    }
+                )
+                action_cell = int(row["action_cell"])
+                if action_cell < 0:
+                    if index != len(rows) - 1:
+                        raise RuntimeError("stored terminal action is misplaced")
+                    continue
+                action = InspectionCellAction(
+                    action_cell,
+                    int(row["action_from_level"]),
+                    int(row["action_to_level"]),
+                )
+                observation, probe, route_cost, _turns = _advance_detailed(
+                    runtime, observation, action, probe, route_cost
+                )
+    return output
+
+
 def rescore_references(
     *,
     config_path: Path,
@@ -640,46 +774,74 @@ def rescore_references(
     source_root: Path,
     references: Path,
 ) -> dict[str, object]:
-    """Freeze the current reviewed-reference availability and score status."""
+    """Rescore frozen TEST report prefixes when reviewed references arrive."""
 
     config = _config(config_path, project_root=project_root)
     parent = load_study_config(
         config.parent_config_path, project_root=config.project_root
     )
     context = load_study_context(parent, source_root=source_root)
-    shapes = {
-        record.specimen_key: record.native_shape for record in context.roster.records
-    }
+    records = {record.specimen_key: record for record in context.roster.records}
+    trajectory_path = config.output_root / "trajectories.parquet"
+    if not trajectory_path.is_file():
+        raise RuntimeError("run frozen TEST evaluation before reference rescoring")
+    trajectories = pl.read_parquet(trajectory_path)
+    test_keys = set(trajectories["specimen_key"].unique().to_list())
     root = references.resolve(strict=True)
-    reviewed = []
+    reviewed: dict[str, object] = {}
     for path in sorted(root.glob("*.json")):
         payload = json.loads(path.read_text(encoding="utf-8"))
-        key = payload.get("specimen_key")
-        if key not in shapes or payload.get("review_state") != "reviewed":
+        key = str(payload.get("specimen_key", ""))
+        record = records.get(key)
+        if record is None or payload.get("review_state") != "reviewed":
             continue
-        reference = reference_from_payload(payload, native_shape=shapes[str(key)])
-        if reference.formal_eligible:
-            reviewed.append((path, reference))
-    if reviewed:
-        raise RuntimeError(
-            "reviewed references arrived; reconstruct stored report prefixes "
-            "before writing formal scores"
+        reference = reference_from_payload(
+            payload, native_shape=record.native_shape
         )
+        if not reference.formal_eligible:
+            continue
+        if (
+            reference.specimen_key != key
+            or reference.source_image_sha256 != record.cscan_sha256
+        ):
+            raise RuntimeError(f"reviewed reference identity changed: {key}")
+        if key in reviewed:
+            raise RuntimeError(f"duplicate reviewed reference: {key}")
+        reviewed[key] = reference
+    reviewed_test = {key: value for key, value in reviewed.items() if key in test_keys}
+    rows = _replay_reviewed_reports(
+        config,
+        source_root=source_root,
+        references=reviewed_test,
+        trajectories=trajectories,
+    )
     write_csv_atomic(
         config.output_root / "reviewed_rescore.csv",
-        (),
+        tuple(rows),
         REVIEWED_RESCORE_FIELDS,
     )
+    test_count = len(reviewed_test)
+    if test_count == 24:
+        state = "FULL_TEST_REVIEWED_RESCORE_AVAILABLE"
+    elif test_count:
+        state = "PARTIAL_TEST_REVIEWED_RESCORE_AVAILABLE"
+    elif reviewed:
+        state = "REVIEWED_REFERENCE_OUTSIDE_FROZEN_TEST"
+    else:
+        state = "INDEPENDENT_REVIEW_PENDING"
     status = {
         "schema_version": 1,
         "stage": "REVIEWED_RESCORE_FROZEN",
         "reference_root": "USER_SUPPLIED_REFERENCE_ROOT",
-        "reviewed_reference_count": 0,
+        "reviewed_reference_count": len(reviewed),
+        "reviewed_test_reference_count": test_count,
+        "rescored_report_count": len(rows),
+        "formal_report_scores_available": bool(rows),
         "formal_effects": None,
         "proxy_values_unchanged": True,
         "model_retrained": False,
         "threshold_recalibrated": False,
-        "status": "INDEPENDENT_REVIEW_PENDING",
+        "status": state,
     }
     write_json_atomic(config.output_root / "reviewed_rescore_status.json", status)
     return status
@@ -1361,9 +1523,88 @@ def _assemble_statistics(
             "failure_cost_improvement_pass": cost_pass,
             "joint_proxy_path_b_pass": completion_pass and cost_pass,
         }
+    planner_means = {}
+    autonomous_means = {}
+    for task in Task:
+        per_method = {
+            method: float(
+                np.mean(
+                    [
+                        float(row["ausc_any"])
+                        for row in new_rows
+                        if row["task"] == task.value and row["method"] == method
+                    ]
+                )
+            )
+            for method in (
+                "R_BALANCED_P4",
+                "R_BALANCED_P8",
+                "BC_S1",
+                "BC_S2",
+                "BC_S3",
+                "BC_NO_VLM_S1",
+                "BC_NO_US_FEEDBACK_S1",
+            )
+        }
+        bc_seeds = [per_method[f"BC_S{seed_value}"] for seed_value in (1, 2, 3)]
+        planner_means[task.value] = {
+            **per_method,
+            "BC_3SEED_MEAN": float(np.mean(bc_seeds)),
+            "BC_3SEED_MIN": min(bc_seeds),
+            "BC_3SEED_MAX": max(bc_seeds),
+        }
+        autonomous_means[task.value] = {}
+        for stop_system in ("S_RULE", "S_BC_CAL"):
+            selected_risk = [
+                row
+                for row in risk
+                if row["task"] == task.value
+                and row["stop_system"] == stop_system
+            ]
+            p8 = next(
+                row for row in selected_risk if row["planner"] == "R_BALANCED_P8"
+            )
+            bc_rows = [
+                row
+                for row in selected_risk
+                if row["planner"] in {"BC_S1", "BC_S2", "BC_S3"}
+            ]
+            autonomous_means[task.value][stop_system] = {
+                "R_BALANCED_P8": {
+                    "completion_rate": p8["completion_rate"],
+                    "false_stop_episode_rate": p8["false_stop_episode_rate"],
+                    "exhaustion_rate": p8["exhaustion_rate"],
+                    "failure_penalized_cost": p8["failure_penalized_cost"],
+                },
+                "BC_3SEED_MEAN": {
+                    field: float(np.mean([float(row[field]) for row in bc_rows]))
+                    for field in (
+                        "completion_rate",
+                        "false_stop_episode_rate",
+                        "exhaustion_rate",
+                        "failure_penalized_cost",
+                    )
+                },
+            }
+    report_manifest = json.loads(
+        (config.output_root / "report_manifest.json").read_text(encoding="utf-8")
+    )
+    model_manifest = json.loads(
+        (config.output_root / "model_manifest.json").read_text(encoding="utf-8")
+    )
+    rescore_status = json.loads(
+        (config.output_root / "reviewed_rescore_status.json").read_text(
+            encoding="utf-8"
+        )
+    )
     summary = {
         "schema_version": 1,
         "stage": "BC_SUPPLEMENT_COMPLETED_PROXY_ONLY",
+        "scientific_status": (
+            "BC_PLANNING_SUPPORTED_STOP_NOT_SUPPORTED_PROXY_ONLY"
+        ),
+        "planner_supported_proxy": True,
+        "autonomous_path_b_supported_proxy": False,
         "bc_planner_signal_proxy": {
             "effects": [
                 row
@@ -1405,8 +1646,18 @@ def _assemble_statistics(
             "old_stop_retained_as": "S_OLD_090_HISTORICAL_REFERENCE",
         },
         "reference_status": {
-            "reviewed_count": 0,
-            "reviewed_version": "REVIEWED_V1_PENDING",
+            "reviewed_count": rescore_status["reviewed_reference_count"],
+            "reviewed_test_count": rescore_status[
+                "reviewed_test_reference_count"
+            ],
+            "rescored_report_count": rescore_status[
+                "rescored_report_count"
+            ],
+            "reviewed_version": (
+                "REVIEWED_V1"
+                if rescore_status["formal_report_scores_available"]
+                else "REVIEWED_V1_PENDING"
+            ),
             "proxy_version": "PROXY_LEGACY",
             "formal_effects": None,
         },
@@ -1423,6 +1674,26 @@ def _assemble_statistics(
             "domains": 6,
             "seeds_averaged_within_physical_specimen": True,
         },
+        "planner_means_proxy": planner_means,
+        "autonomous_means_proxy": autonomous_means,
+        "true_break_evidence": {
+            "actual_episode_count": report_manifest["true_break"]["episode_count"],
+            "physical_specimen_count": report_manifest["true_break"][
+                "specimen_count"
+            ],
+            "all_cached_prefixes_match": report_manifest["true_break"][
+                "all_cached_prefixes_match"
+            ],
+            "post_stop_world_steps": report_manifest["true_break"][
+                "post_stop_world_steps"
+            ],
+        },
+        "resource_use": {
+            **report_manifest["resource_use"],
+            **model_manifest["resource_use"],
+            "confirmation_world_transitions": 0,
+            "confirmation_vlm_calls": 0,
+        },
     }
     return paired, domains, ablations, risk, summary
 
@@ -1432,7 +1703,6 @@ def summarize_supplement(
 ) -> dict[str, object]:
     """Assemble the frozen proxy statistics after TEST evaluation."""
 
-    del source_root
     config = _config(config_path, project_root=project_root)
     required = (
         "per_episode_metrics.csv",
@@ -1467,6 +1737,13 @@ def summarize_supplement(
         RISK_COVERAGE_FIELDS,
     )
     write_json_atomic(config.output_root / "summary.json", summary)
+    figures = render_supplement_figures(
+        config_path=config_path,
+        project_root=project_root,
+        source_root=source_root,
+    )
+    summary["figures"] = figures
+    write_json_atomic(config.output_root / "summary.json", summary)
     return {
         "stage": summary["stage"],
         "paired_effect_rows": len(paired),
@@ -1477,6 +1754,7 @@ def summarize_supplement(
             task: value["joint_proxy_path_b_pass"]
             for task, value in summary["bc_autonomous_effect_proxy"].items()
         },
+        "figures": len(figures["files"]),
         "formal_effects": None,
     }
 
