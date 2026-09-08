@@ -8,6 +8,7 @@ import pytest
 from cmc_bbdm.learned_cscan.bc_supplement import (
     FROZEN_BC_SHA256,
     load_supplement_config,
+    planned_checkpoint_paths,
     verify_frozen_file,
 )
 from cmc_bbdm.learned_cscan.contracts import Task
@@ -278,3 +279,12 @@ def test_paired_bootstrap_averages_seeds_within_physical_specimen() -> None:
     assert effect.estimate == pytest.approx(2.5)
     assert effect.physical_specimen_count == 4
     assert effect.domain_count == 2
+
+
+def test_supplement_checkpoint_paths_cannot_overwrite_frozen_models() -> None:
+    config = load_supplement_config(CONFIG, project_root=ROOT)
+
+    for path in planned_checkpoint_paths(config):
+        assert config.output_root in path.parents
+        assert config.source_result_root not in path.parents
+        assert path != config.frozen_bc_path

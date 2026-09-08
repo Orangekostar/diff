@@ -6,6 +6,7 @@ import hashlib
 import json
 import shutil
 import subprocess
+import time
 from dataclasses import dataclass
 from pathlib import Path
 from types import MappingProxyType
@@ -21,7 +22,15 @@ from .artifacts import (
     write_json_atomic,
 )
 from .benchmark import _internal_fit_split, _policy_example, _torch_save_atomic
+from .policies import LearnedCellActor
 from .runtime import load_study_config, load_study_context
+from .supplement_adapters import (
+    ActorInputMode,
+    load_supplement_actor,
+    save_supplement_actor,
+    transform_policy_example,
+)
+from .training import ActorFitResult, TrainingRoute, fit_actor
 
 SUPPLEMENT_BASE_SHA = "d8b5b090891fc030931c6dc81e3619a80966f739"
 SUPPLEMENT_PROMPT_SHA256 = (
@@ -41,6 +50,28 @@ FROZEN_BANK_SHA256 = (
 )
 FROZEN_BASE_BC_CONTENT_SHA256 = (
     "9d73c3e27de235ffe8337738517aec48f3f4a3267eb5f687ef0f6eeaae3566d1"
+)
+
+TRAINING_LOG_FIELDS = (
+    "schema_version",
+    "method",
+    "seed",
+    "actor_input_mode",
+    "optimizer_step",
+    "train_loss",
+    "valid_loss",
+)
+
+_ACTOR_SPECS = (
+    ("BC_S2", 2, ActorInputMode.FULL, "bc_seed2.pt"),
+    ("BC_S3", 3, ActorInputMode.FULL, "bc_seed3.pt"),
+    ("BC_NO_VLM_S1", 1, ActorInputMode.NO_VLM, "bc_no_vlm_seed1.pt"),
+    (
+        "BC_NO_US_FEEDBACK_S1",
+        1,
+        ActorInputMode.NO_US_FEEDBACK,
+        "bc_no_us_feedback_seed1.pt",
+    ),
 )
 
 COHORT_FIELDS = (
@@ -410,6 +441,389 @@ def _write_text_atomic(path: Path, text: str) -> None:
     _atomic_write(path, writer)
 
 
+def planned_checkpoint_paths(config: SupplementConfig) -> tuple[Path, ...]:
+    """Return all new Actor destinations under the supplement result root."""
+
+    if type(config) is not SupplementConfig:
+        raise TypeError("issued supplement config is required")
+    paths = tuple(config.output_root / "models" / spec[3] for spec in _ACTOR_SPECS)
+    if any(
+        config.output_root not in path.parents
+        or config.source_result_root in path.parents
+        or path in {config.frozen_bc_path, config.frozen_stop_path}
+        for path in paths
+    ):
+        raise RuntimeError("supplement checkpoint destination is unsafe")
+    return paths
+
+
+def _base_bc_examples(
+    config: SupplementConfig,
+) -> tuple[Any, ...]:
+    source_bank = _selected_bank(config)
+    verify_frozen_file(source_bank, FROZEN_BANK_SHA256, label="frozen BC bank")
+    cache_path = config.output_root / "_work/base_bc.pt"
+    if not cache_path.is_file():
+        raise RuntimeError("run supplement audit before training")
+    payload = torch.load(cache_path, map_location="cpu", weights_only=False)
+    if (
+        type(payload) is not dict
+        or set(payload)
+        != {
+            "schema_version",
+            "parent_config_sha256",
+            "source_bank_sha256",
+            "base_bc_content_sha256",
+            "base_bc",
+        }
+        or payload.get("schema_version") != 1
+        or payload.get("parent_config_sha256") != PARENT_CONFIG_SHA256
+        or payload.get("source_bank_sha256") != FROZEN_BANK_SHA256
+        or payload.get("base_bc_content_sha256")
+        != FROZEN_BASE_BC_CONTENT_SHA256
+        or type(payload.get("base_bc")) is not list
+        or len(payload["base_bc"]) != 192
+    ):
+        raise RuntimeError("audited base_bc cache identity changed")
+    return tuple(_policy_example(row) for row in payload["base_bc"])
+
+
+def _existing_training_state(
+    config: SupplementConfig,
+) -> tuple[dict[str, Any], list[dict[str, object]]]:
+    manifest_path = config.output_root / "model_manifest.json"
+    if manifest_path.is_file():
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        if (
+            type(manifest) is not dict
+            or manifest.get("schema_version") != 1
+            or manifest.get("parent_config_sha256") != PARENT_CONFIG_SHA256
+            or manifest.get("source_bank_sha256") != FROZEN_BANK_SHA256
+            or type(manifest.get("models")) is not list
+        ):
+            raise RuntimeError("supplement model manifest identity changed")
+    else:
+        manifest = {
+            "schema_version": 1,
+            "state": "ACTOR_SUPPLEMENT_TRAINING_STARTED",
+            "parent_config_sha256": PARENT_CONFIG_SHA256,
+            "source_bank_sha256": FROZEN_BANK_SHA256,
+            "base_bc_content_sha256": FROZEN_BASE_BC_CONTENT_SHA256,
+            "frozen_bc_seed_1": {
+                "path": config.frozen_bc_path.relative_to(
+                    config.project_root
+                ).as_posix(),
+                "sha256": FROZEN_BC_SHA256,
+                "retrained": False,
+            },
+            "models": [],
+            "resource_use": {
+                "actor_optimizer_updates": 0,
+                "actor_update_cap": config.actor_update_cap,
+                "base_episode_transitions": 0,
+                "base_episode_transition_cap": config.base_episode_transition_cap,
+                "original_60_vlm_calls": 0,
+            },
+            "test_opened": False,
+        }
+    log_path = config.output_root / "training_log.csv"
+    logs = pl.read_csv(log_path).to_dicts() if log_path.is_file() else []
+    return manifest, logs
+
+
+def _model_record(
+    config: SupplementConfig,
+    *,
+    method: str,
+    seed: int,
+    mode: ActorInputMode,
+    path: Path,
+    fit: ActorFitResult,
+    parameter_count: int,
+    fit_examples: tuple[Any, ...],
+    valid_examples: tuple[Any, ...],
+) -> dict[str, object]:
+    return {
+        "method": method,
+        "seed": seed,
+        "actor_input_mode": mode.value,
+        "path": path.relative_to(config.output_root).as_posix(),
+        "sha256": file_sha256(path),
+        "parameter_count": parameter_count,
+        "optimizer_steps": fit.optimizer_steps,
+        "initial_loss": fit.initial_loss,
+        "final_loss": fit.final_loss,
+        "best_valid_loss": fit.best_valid_loss,
+        "stopped_early": fit.stopped_early,
+        "fit_rows": len(fit_examples),
+        "internal_valid_rows": len(valid_examples),
+        "fit_specimens": len({row.specimen_key for row in fit_examples}),
+        "internal_valid_specimens": len(
+            {row.specimen_key for row in valid_examples}
+        ),
+        "training_route": TrainingRoute.BEHAVIOR_CLONING.value,
+    }
+
+
+def _verify_recovered_model(
+    config: SupplementConfig,
+    record: dict[str, object],
+    *,
+    method: str,
+    seed: int,
+    mode: ActorInputMode,
+) -> bool:
+    if (
+        record.get("method") != method
+        or record.get("seed") != seed
+        or record.get("actor_input_mode") != mode.value
+        or type(record.get("path")) is not str
+        or type(record.get("sha256")) is not str
+    ):
+        return False
+    path = (config.output_root / str(record["path"])).resolve(strict=True)
+    if config.output_root not in path.parents:
+        raise RuntimeError("supplement checkpoint escaped the result root")
+    verify_frozen_file(path, str(record["sha256"]), label=method)
+    loaded = load_supplement_actor(
+        path, parent_config_sha256=PARENT_CONFIG_SHA256
+    )
+    if (
+        loaded.method != method
+        or loaded.seed != seed
+        or loaded.view.mode is not mode
+        or loaded.parameter_count != 329_505
+    ):
+        raise RuntimeError(f"recovered supplement checkpoint changed: {method}")
+    return True
+
+
+def _train_actor_stage(
+    *,
+    config_path: Path,
+    project_root: Path,
+    source_root: Path,
+    requested_methods: tuple[str, ...],
+) -> dict[str, object]:
+    started = time.perf_counter()
+    config = load_supplement_config(config_path, project_root=project_root)
+    verify_frozen_file(config.frozen_bc_path, FROZEN_BC_SHA256, label="frozen BC")
+    verify_frozen_file(
+        config.frozen_stop_path, FROZEN_STOP_SHA256, label="frozen STOP"
+    )
+    audited = json.loads(
+        (config.output_root / "inventory.json").read_text(encoding="utf-8")
+    )
+    actual_source = str(Path(source_root).resolve(strict=True))
+    if (
+        audited.get("stage") != "E0_SOURCE_AUDIT_COMPLETE"
+        or audited.get("source_root") != actual_source
+        or audited.get("test_opened_by_supplement") is not False
+    ):
+        raise RuntimeError("supplement source audit is missing or changed")
+    parent = load_study_config(
+        config.parent_config_path, project_root=config.project_root
+    )
+    training = parent.values["training"]
+    if (
+        int(training["max_optimizer_steps"]) != 4000
+        or float(training["learning_rate"]) != 0.0003
+        or float(training["weight_decay"]) != 0.0001
+        or float(training["gradient_clip"]) != 1.0
+        or int(training["validation_interval"]) != 250
+        or int(training["validation_patience"]) != 4
+    ):
+        raise RuntimeError("parent BC training contract changed")
+    base_examples = _base_bc_examples(config)
+    manifest, logs = _existing_training_state(config)
+    existing = {
+        str(row["method"]): row
+        for row in manifest["models"]
+        if type(row) is dict and "method" in row
+    }
+    specifications = tuple(
+        spec for spec in _ACTOR_SPECS if spec[0] in requested_methods
+    )
+    if {spec[0] for spec in specifications} != set(requested_methods):
+        raise ValueError("requested supplement Actor set is invalid")
+    recovered = []
+    trained = []
+    device = str(config.values["training"]["device"])
+    if device.startswith("cuda") and not torch.cuda.is_available():
+        raise RuntimeError("configured CUDA device is unavailable")
+    if device.startswith("cuda"):
+        torch.empty(0, device=device)
+        torch.cuda.reset_peak_memory_stats(torch.device(device))
+    for method, seed, mode, filename in specifications:
+        old_record = existing.get(method)
+        if old_record is not None:
+            if not _verify_recovered_model(
+                config,
+                old_record,
+                method=method,
+                seed=seed,
+                mode=mode,
+            ):
+                raise RuntimeError(f"supplement checkpoint identity changed: {method}")
+            recovered.append(method)
+            continue
+        transformed = tuple(
+            transform_policy_example(example, mode) for example in base_examples
+        )
+        fit_examples, valid_examples = _internal_fit_split(transformed)
+        if (len(fit_examples), len(valid_examples)) != (144, 48):
+            raise RuntimeError("supplement Actor fit split changed")
+        torch.manual_seed(seed)
+        if torch.cuda.is_available():
+            torch.cuda.manual_seed_all(seed)
+        actor = LearnedCellActor(
+            use_surface_features=mode is not ActorInputMode.NO_VLM
+        )
+        fit = fit_actor(
+            actor,
+            fit_examples,
+            route=TrainingRoute.BEHAVIOR_CLONING,
+            max_steps=int(training["max_optimizer_steps"]),
+            batch_size=min(32, len(fit_examples)),
+            learning_rate=float(training["learning_rate"]),
+            weight_decay=float(training["weight_decay"]),
+            gradient_clip=float(training["gradient_clip"]),
+            seed=seed,
+            device=device,
+            validation_examples=valid_examples,
+            validation_interval=int(training["validation_interval"]),
+            patience=int(training["validation_patience"]),
+        )
+        path = config.output_root / "models" / filename
+        save_supplement_actor(
+            path,
+            actor,
+            method=method,
+            seed=seed,
+            mode=mode,
+            parent_config_sha256=PARENT_CONFIG_SHA256,
+            optimizer_steps=fit.optimizer_steps,
+        )
+        record = _model_record(
+            config,
+            method=method,
+            seed=seed,
+            mode=mode,
+            path=path,
+            fit=fit,
+            parameter_count=actor.parameter_count,
+            fit_examples=fit_examples,
+            valid_examples=valid_examples,
+        )
+        manifest["models"].append(record)
+        existing[method] = record
+        logs.extend(
+            {
+                "schema_version": 1,
+                "method": method,
+                "seed": seed,
+                "actor_input_mode": mode.value,
+                "optimizer_step": row.optimizer_step,
+                "train_loss": row.train_loss,
+                "valid_loss": row.valid_loss,
+            }
+            for row in fit.log
+        )
+        trained.append(method)
+        print(
+            f"trained {method} seed={seed} mode={mode.value} "
+            f"steps={fit.optimizer_steps} "
+            f"loss={fit.initial_loss:.6f}->{fit.final_loss:.6f}",
+            flush=True,
+        )
+        actor.to("cpu")
+        del actor
+        if device.startswith("cuda"):
+            torch.cuda.empty_cache()
+    manifest["models"] = sorted(
+        manifest["models"], key=lambda row: str(row["method"])
+    )
+    total_updates = sum(int(row["optimizer_steps"]) for row in manifest["models"])
+    if total_updates > config.actor_update_cap:
+        raise RuntimeError("supplement Actor update cap exceeded")
+    complete = {row["method"] for row in manifest["models"]} == {
+        spec[0] for spec in _ACTOR_SPECS
+    }
+    manifest["state"] = (
+        "ACTOR_SUPPLEMENT_TRAINING_COMPLETE"
+        if complete
+        else "ACTOR_SUPPLEMENT_TRAINING_PARTIAL"
+    )
+    manifest["device"] = device
+    manifest["resource_use"] = {
+        "actor_optimizer_updates": total_updates,
+        "actor_update_cap": config.actor_update_cap,
+        "base_episode_transitions": 0,
+        "base_episode_transition_cap": config.base_episode_transition_cap,
+        "original_60_vlm_calls": 0,
+    }
+    current_peak = (
+        int(torch.cuda.max_memory_allocated(torch.device(device)))
+        if device.startswith("cuda")
+        else 0
+    )
+    manifest["peak_gpu_memory_bytes"] = max(
+        int(manifest.get("peak_gpu_memory_bytes", 0)), current_peak
+    )
+    manifest["last_stage_elapsed_seconds"] = time.perf_counter() - started
+    manifest["test_opened"] = False
+    write_csv_atomic(
+        config.output_root / "training_log.csv",
+        tuple(
+            sorted(
+                logs,
+                key=lambda row: (
+                    str(row["method"]),
+                    int(row["seed"]),
+                    int(row["optimizer_step"]),
+                ),
+            )
+        ),
+        TRAINING_LOG_FIELDS,
+    )
+    write_json_atomic(config.output_root / "model_manifest.json", manifest)
+    return {
+        "stage": manifest["state"],
+        "trained": trained,
+        "recovered": recovered,
+        "actor_optimizer_updates": total_updates,
+        "actor_update_cap": config.actor_update_cap,
+        "test_opened": False,
+        "elapsed_seconds": manifest["last_stage_elapsed_seconds"],
+    }
+
+
+def train_replicas(
+    *, config_path: Path, project_root: Path, source_root: Path
+) -> dict[str, object]:
+    """Train the fixed BC replicas for seeds two and three."""
+
+    return _train_actor_stage(
+        config_path=config_path,
+        project_root=project_root,
+        source_root=source_root,
+        requested_methods=("BC_S2", "BC_S3"),
+    )
+
+
+def train_ablations(
+    *, config_path: Path, project_root: Path, source_root: Path
+) -> dict[str, object]:
+    """Independently train the two fixed seed-one Actor-input ablations."""
+
+    return _train_actor_stage(
+        config_path=config_path,
+        project_root=project_root,
+        source_root=source_root,
+        requested_methods=("BC_NO_VLM_S1", "BC_NO_US_FEEDBACK_S1"),
+    )
+
+
 def audit_supplement(
     *, config_path: Path, project_root: Path, source_root: Path
 ) -> dict[str, object]:
@@ -683,5 +1097,8 @@ __all__ = [
     "audit_supplement",
     "file_sha256",
     "load_supplement_config",
+    "planned_checkpoint_paths",
+    "train_ablations",
+    "train_replicas",
     "verify_frozen_file",
 ]
