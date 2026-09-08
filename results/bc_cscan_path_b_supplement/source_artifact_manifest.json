@@ -1,0 +1,507 @@
+{
+  "schema_version": 1,
+  "source_files": [
+    {
+      "bytes": 2207,
+      "path": "paper_v3/configs/learned_cscan_same_perception.yaml",
+      "read_only_source": true,
+      "role": "parent_config",
+      "sha256": "12268dcaf470f769c326007702f7b0b6f4a13cf326447eef652a6dda972b5662"
+    },
+    {
+      "bytes": 15012,
+      "path": "results/learned_cscan_same_perception/split_manifest.csv",
+      "read_only_source": true,
+      "role": "cohort_split",
+      "sha256": "5ba4be92696241ffef1597aeeaded3202f8fd37734ee9da95a5ff2a76cad8f84"
+    },
+    {
+      "bytes": 85636,
+      "path": "results/learned_cscan_same_perception/surface_percepts.jsonl",
+      "read_only_source": true,
+      "role": "surface_cache",
+      "sha256": "85f400119093b362e2eb76489c9ae158ecdd453ce84ad04b6dfab7f04384693e"
+    },
+    {
+      "bytes": 33511,
+      "path": "results/learned_cscan_same_perception/perception_manifest.json",
+      "read_only_source": true,
+      "role": "surface_cache_manifest",
+      "sha256": "b87b85240ee96c31b7fd9f8b46e0ca2338c7e11065fe531bd1f9e286aa942454"
+    },
+    {
+      "bytes": 2376,
+      "path": "results/learned_cscan_same_perception/model_manifest.json",
+      "read_only_source": true,
+      "role": "model_manifest",
+      "sha256": "e697464ce87a63cbf2f02091d351d1333c1db8e6e6cd77a22cb0ff3bdf9636f8"
+    },
+    {
+      "bytes": 1335993,
+      "path": "results/learned_cscan_same_perception/models/l_bc.pt",
+      "read_only_source": true,
+      "role": "frozen_bc_seed_1",
+      "sha256": "c95185aec70515f2578d671e520ebe9b57e600e91e70e5f6752567ae2f87fbe5"
+    },
+    {
+      "bytes": 58213,
+      "path": "results/learned_cscan_same_perception/models/s_learn.pt",
+      "read_only_source": true,
+      "role": "frozen_old_stop",
+      "sha256": "c6af5c383ef4c586a4ac85c7dc9afbcd5bc71dc07558c692fb295d0f5386892d"
+    },
+    {
+      "bytes": 97776,
+      "path": "results/learned_cscan_same_perception/per_episode_metrics.csv",
+      "read_only_source": true,
+      "role": "historical_episode_metrics",
+      "sha256": "a0833519461189a544becf3273e8c442fd9dc22a5044580d1e3ca46be85da986"
+    },
+    {
+      "bytes": 4848651,
+      "path": "results/learned_cscan_same_perception/trajectories.parquet",
+      "read_only_source": true,
+      "role": "historical_trajectories",
+      "sha256": "12a389bb69cba09f01ed5299bd775b4e90487dbdc9b3ad2616731c9bea700b2e"
+    },
+    {
+      "bytes": 46956,
+      "path": "results/vlm_cscan_efficiency/reference_manifest.csv",
+      "read_only_source": true,
+      "role": "reference_manifest_276",
+      "sha256": "4a6261daee3e84cd7252866495db31134e67e53c51d2e985f3663e4c02eec2bb"
+    },
+    {
+      "bytes": 16951897,
+      "path": "/home/ww/diff/.worktrees/learned-cscan-same-perception/results/learned_cscan_same_perception/_work/training_bank.pt",
+      "read_only_source": true,
+      "role": "frozen_training_bank",
+      "sha256": "52167731b60bbd6db759a1e74a85bd0eb0bc8ea208bd51e981bff44d841281c7"
+    },
+    {
+      "bytes": 99652,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/74t7kcdgkr__c8-15.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "843ae5bd05816b92f0d91f7476cc62b4e253e9d8ea85875335e7ae0741a137ef"
+    },
+    {
+      "bytes": 137988,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/74t7kcdgkr__c8-2.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "e0cb8204978c37f8de6302f4cacec254f8547c09331d5811b54200b55c24afbe"
+    },
+    {
+      "bytes": 192535,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/74t7kcdgkr__c8-20.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "62d3676f693a2e8c66f8efef472e679c71ea5c70b7a8211818a819f1c671852c"
+    },
+    {
+      "bytes": 205627,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/74t7kcdgkr__c8-21.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "bc18ab465e715444a59d665b1ee1d7ca47a5f0f903378d35c8bb695d98afb240"
+    },
+    {
+      "bytes": 89265,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/74t7kcdgkr__c8-24.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "8b79774bee2978631b8cf9b9aa08483008782ebb80d81ef79a1864cd84898936"
+    },
+    {
+      "bytes": 66688,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/74t7kcdgkr__c8-28.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "d5aa9d207979c3ee0d3dd13fbc12f8cd215eb5cf9ef74183ff4bdbf3b9f14034"
+    },
+    {
+      "bytes": 294999,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/74t7kcdgkr__c8-32.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "3a7ce8c25856d38f6276da7db3624f8669c9467a0474b1f614ed8257453f15c6"
+    },
+    {
+      "bytes": 103213,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/74t7kcdgkr__c8-41.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "9156b64dbbf10d77991fb3b0c603ab1b4a2a924c5538d9f98434ed1699cbcaa8"
+    },
+    {
+      "bytes": 73529,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/74t7kcdgkr__c8-5.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "5ea5fe697bb8b04c62bbee9f61dd4ce2ba095ca5c5c4586d8fa1007514c0f7de"
+    },
+    {
+      "bytes": 80214,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/74t7kcdgkr__c8-7.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "e0f1faa09e1ba458091261319eb47dc6a88cab83759b418d20770d9266af7f65"
+    },
+    {
+      "bytes": 97688,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/cgtnjyggtm__q24-16.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "7779bf2bff4fb75d2a186f5b4fc1619650d81b21952d701a58ce53152fed755e"
+    },
+    {
+      "bytes": 55185,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/cgtnjyggtm__q24-18.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "e443540d30df6b42a5352f9942a99661406b59e8628de3fe5d1261b1d28bde66"
+    },
+    {
+      "bytes": 295122,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/cgtnjyggtm__q24-21.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "c88680b4e134f2b7536c5eada8db32acc0142bf87c62cc70f7a52714e0b53c58"
+    },
+    {
+      "bytes": 212955,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/cgtnjyggtm__q24-29.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "7ebc3e744290bdbe1821db06dd9dc0316537a6747c7bbdc20fbfca2d9830a5c0"
+    },
+    {
+      "bytes": 195167,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/cgtnjyggtm__q24-30.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "12eced5fbebe1d67166d1dfec5050ee55554e75155bf6721052f17bb32c858cf"
+    },
+    {
+      "bytes": 211252,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/cgtnjyggtm__q24-32.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "075a4cae70d9732e810530bbdc2e26e7fb7ff40af96c56bc3a38f1d9c1dc1c65"
+    },
+    {
+      "bytes": 126634,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/cgtnjyggtm__q24-37.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "446bc06538437d2dd24a25c63736b36fbb85a36d8c9823cd1cc6cf9646742a9b"
+    },
+    {
+      "bytes": 215059,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/cgtnjyggtm__q24-4.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "d0ba7c6a68c677d2e5e96d3af30d3b4f0de0f3b2252f1e9fcceb221d6e15c1e4"
+    },
+    {
+      "bytes": 318012,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/cgtnjyggtm__q24-40.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "8b8a74fc3b0322de77d1fc64a154f72840e1200b31a6126b8c5b328a3af7f75c"
+    },
+    {
+      "bytes": 315167,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/cgtnjyggtm__q24-8.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "7ba3aa5741cbef79e33ea525bfa4def48cb87540bf764dcf825ffd465618082e"
+    },
+    {
+      "bytes": 249488,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/w68dtmpfyf__q16-12.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "b62c2cbf65beded211ce89ba0b9a118add8344aa65e4edf76affff54308e04f3"
+    },
+    {
+      "bytes": 328406,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/w68dtmpfyf__q16-21.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "4e4d7288f6b14b38d02611d9a6799625faf971190093d672fb7547fc8a7ff825"
+    },
+    {
+      "bytes": 169776,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/w68dtmpfyf__q16-22.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "82b16c577289375ab781e360fc42c3d3fc59c430fd71da9173c1c4986e32fde7"
+    },
+    {
+      "bytes": 226488,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/w68dtmpfyf__q16-23.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "bebb09f34f4d0610153493933e56e851b68736c3bdf802de345d94c144044f01"
+    },
+    {
+      "bytes": 232074,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/w68dtmpfyf__q16-24.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "e3728aae440fd25d0ccf82b9b3f739d482f37e3a2b1805a9a904a40368bea0e1"
+    },
+    {
+      "bytes": 343185,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/w68dtmpfyf__q16-3.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "3de07379382e6740ab234c7e9fbf34aac362d720ed65c4050ae23a9d51480446"
+    },
+    {
+      "bytes": 162947,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/w68dtmpfyf__q16-31.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "37179207539d3f28c7b03953bc25f828fa736181235c03eec90126ab2baa3d18"
+    },
+    {
+      "bytes": 177114,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/w68dtmpfyf__q16-32.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "0436245219dc03b2d8fdf20474e55007d6f02efc6c96a0f348aed30e499ebb7c"
+    },
+    {
+      "bytes": 326580,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/w68dtmpfyf__q16-36.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "2ffc5f1588d4bd25579c7e00d2ea99bcf6c24d8aa3c2655dd060746d4c5fb1d1"
+    },
+    {
+      "bytes": 259208,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/w68dtmpfyf__q16-42.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "20ff10e2a708f19a6e390d35f8c5c7718d033040a6fde53d047e90b27733b907"
+    },
+    {
+      "bytes": 43230,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/xcmzfsbd9t__c24-11t.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "0392d6ead11f8e3e78a5f7cd222f47778ff87d1362435dd9492d43b2e474e418"
+    },
+    {
+      "bytes": 20617,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/xcmzfsbd9t__c24-20.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "fd7490131f1525c59512646501e371154d58dbc24201260b9ee77cda8bd456b3"
+    },
+    {
+      "bytes": 414112,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/xcmzfsbd9t__c24-27.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "ab9dfc1166e5ad191c180f8fd64f0f998f8f650c67ebab578cade7a85c5615d5"
+    },
+    {
+      "bytes": 539308,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/xcmzfsbd9t__c24-33.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "8689770f62cb606ed80f9c6e9aa11aeeab49b6e5ec3fc0cf06ace42400e8ece6"
+    },
+    {
+      "bytes": 209776,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/xcmzfsbd9t__c24-37.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "df88d88052eb11f291ddfe787fc9ebb63b8ce986800729caf82469eeb0bd0f5e"
+    },
+    {
+      "bytes": 391541,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/xcmzfsbd9t__c24-39.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "11dee98242f33f94c96c27392ad06a19a3ac2067bc49c9ee2b8ac369bdc10bb8"
+    },
+    {
+      "bytes": 222097,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/xcmzfsbd9t__c24-43.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "a233c2af10fbcd3dd921f2edd84846299837fee170d50ec3f0163def693de977"
+    },
+    {
+      "bytes": 147746,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/xcmzfsbd9t__c24-49.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "5dd180aa550a56a28f1bdd1d191b6777bc272548cbd66c0e30ccfeed1efbfb7e"
+    },
+    {
+      "bytes": 230871,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/xcmzfsbd9t__c24-54.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "25dd3b9bd64a831b937d56b8e81f4bf1f6dfac99c30fc5add662fe44f091d32d"
+    },
+    {
+      "bytes": 250024,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/xcmzfsbd9t__c24-9t.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "5423fe69152f2430fc2358b163cff0023ea466c051c4cb1a7f106276259a902c"
+    },
+    {
+      "bytes": 238980,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/yfxyg8jm46__c16-12.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "4c1dc9a85a99017c09ca04783122fc042f37590a563f283d31aa59f12bb5790e"
+    },
+    {
+      "bytes": 169104,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/yfxyg8jm46__c16-15.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "6019a9cebfedd0877070509ffc2e266b07e53485c570b09a57305e9067ef7afc"
+    },
+    {
+      "bytes": 29065,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/yfxyg8jm46__c16-16.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "6bc47c495f82542ec141697543c9777759d4d50bb8d88504ed8eb20ece35a2fa"
+    },
+    {
+      "bytes": 104386,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/yfxyg8jm46__c16-18.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "9732e1f6462baa9edb1706e61be1350fafe1601a911eb7ebac8583c21736e953"
+    },
+    {
+      "bytes": 225496,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/yfxyg8jm46__c16-19.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "7bc36e9b170aab1544bf3adbf5370981d13fbad40b440ce27c4a8a2e8d861875"
+    },
+    {
+      "bytes": 258802,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/yfxyg8jm46__c16-30.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "ad6ef0426c2e08fee4bc2583500f0e9cd2010b03ecc69556fe668428ff3e07e1"
+    },
+    {
+      "bytes": 322576,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/yfxyg8jm46__c16-35.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "3076698988267c6f1827b32cc930f4a5ca61c2e193b8ef073d1f41a61b2e356b"
+    },
+    {
+      "bytes": 162124,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/yfxyg8jm46__c16-38.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "cefc97b506f5c5df5b11a5a6c1255034c6c97f25971365f0c4ace333a6b47a9a"
+    },
+    {
+      "bytes": 213493,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/yfxyg8jm46__c16-4.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "fe6ed36b9a7b1e2e79b38dfdd49ff8f8d118593bddfc42a883403101aa72f604"
+    },
+    {
+      "bytes": 130361,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/yfxyg8jm46__c16-42.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "e080b66f2a20c7f5c62b0097b4a42b81f213b3e0aad81d94ebaf07e7cf40e1cd"
+    },
+    {
+      "bytes": 337970,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/ykhs7s2dck__q8-11.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "acbd3aa75dec87427d58b265efd64236a07ad807501b1ed3cc8e0df160dddde5"
+    },
+    {
+      "bytes": 85286,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/ykhs7s2dck__q8-14.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "6785a14eb91c00fe0a1052c3b57e1b37f243ed7edcdf32c10138faed9a16c954"
+    },
+    {
+      "bytes": 165467,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/ykhs7s2dck__q8-19.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "342623797f0f2218973bb11613b4c13297c5ebf472f2be5facf3260e3cb2c1b5"
+    },
+    {
+      "bytes": 359263,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/ykhs7s2dck__q8-28.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "bab6c32a4a6ef9b96acc2e66378b6b2f2cfdfbc637a1441bbefd6d976652baea"
+    },
+    {
+      "bytes": 406505,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/ykhs7s2dck__q8-29.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "a7c9a249b06e6cab8d3d373ff4898e8b90cbf09e08216ca8dc499ab52241c751"
+    },
+    {
+      "bytes": 203885,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/ykhs7s2dck__q8-31.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "1047d9274d2e3778b210af986097d4f0e03b9ac6a53372853902f9f8fda5bf74"
+    },
+    {
+      "bytes": 197494,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/ykhs7s2dck__q8-33.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "8947334c31c446d2635b56637455f3f68fe4011802b39290ab217f2bd1b70e71"
+    },
+    {
+      "bytes": 139536,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/ykhs7s2dck__q8-4.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "437e5fff653e74926657ff871c758a17a6337926d9279e00889c4b0aa69a1d2b"
+    },
+    {
+      "bytes": 226283,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/ykhs7s2dck__q8-41.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "0edd1c478f7e2ca9567a6eabb755aee4fe4cf2b437d53ef6984ea69363ca3a0f"
+    },
+    {
+      "bytes": 392515,
+      "path": "results/vlm_cscan_efficiency/annotation_queue/ykhs7s2dck__q8-7.json",
+      "read_only_source": true,
+      "role": "algorithmic_annotation_proposal_not_reviewed",
+      "sha256": "e9df62560d80a39a27cb98f8b2b251aef7628667f87b4b9d2ae5a7c815ed124b"
+    }
+  ],
+  "source_roots_read_only": [
+    "/home/ww/diff/.worktrees/bc-cscan-path-b-supplement/results/learned_cscan_same_perception",
+    "/home/ww/diff/.worktrees/bc-cscan-path-b-supplement/artifacts/learned_cscan_same_perception"
+  ],
+  "stage": "E0_SOURCE_AUDIT_COMPLETE"
+}

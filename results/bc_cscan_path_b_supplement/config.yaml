@@ -1,0 +1,65 @@
+schema_version: 1
+stage: BC_CSCAN_PATH_B_SUPPLEMENT
+mode: retrospective_supplement
+repository_base_sha: d8b5b090891fc030931c6dc81e3619a80966f739
+controlling_prompt_sha256: ff4e2986d904127225a9fa0c834b38fddcb55860a995d4378031cde2d43a06c9
+configuration_frozen: true
+
+parent:
+  config_path: paper_v3/configs/learned_cscan_same_perception.yaml
+  config_sha256: 12268dcaf470f769c326007702f7b0b6f4a13cf326447eef652a6dda972b5662
+  result_root: results/learned_cscan_same_perception
+  artifact_root: artifacts/learned_cscan_same_perception
+  frozen_bc_path: results/learned_cscan_same_perception/models/l_bc.pt
+  frozen_bc_sha256: c95185aec70515f2578d671e520ebe9b57e600e91e70e5f6752567ae2f87fbe5
+  frozen_stop_path: results/learned_cscan_same_perception/models/s_learn.pt
+  frozen_stop_sha256: c6af5c383ef4c586a4ac85c7dc9afbcd5bc71dc07558c692fb295d0f5386892d
+  bank_candidates:
+    - results/learned_cscan_same_perception/_work/training_bank.pt
+    - ../learned-cscan-same-perception/results/learned_cscan_same_perception/_work/training_bank.pt
+  bank_sha256: 52167731b60bbd6db759a1e74a85bd0eb0bc8ea208bd51e981bff44d841281c7
+  base_bc_content_sha256: 9d73c3e27de235ffe8337738517aec48f3f4a3267eb5f687ef0f6eeaae3566d1
+
+references:
+  source_manifest: results/vlm_cscan_efficiency/reference_manifest.csv
+  annotation_root: results/vlm_cscan_efficiency/annotation_queue
+  reviewed_version: REVIEWED_V1
+  proxy_version: PROXY_LEGACY
+
+training:
+  actor_seeds: [2, 3]
+  ablation_seed: 1
+  optimizer_steps_per_actor: 4000
+  actor_update_cap: 16000
+  conditional_stop_update_cap: 4000
+  total_update_cap: 20000
+  base_episode_transition_cap: 180000
+  confirmation_transition_cap: 60000
+  original_60_vlm_call_cap: 0
+  device: cuda:0
+
+stopping:
+  candidate_thresholds: [0.90, 0.95, 0.99]
+  maximum_wrong_among_stops: 0.05
+  minimum_completion: 0.50
+  maximum_rule_completion_loss: 0.05
+  minimum_stop_count: 6
+  failure_penalty_cost: 1.0
+
+evaluation:
+  tasks: [LOCATE, CHARACTERIZE]
+  display_costs: [0.025, 0.05, 0.10, 0.20, 0.40, 0.60, 0.80, 1.00]
+  bootstrap_replicates: 5000
+  bootstrap_seed: 2026090801
+  confidence_levels: [0.95, 0.975]
+  main_rule_comparator: R_BALANCED_P8
+  demonstrator_rule: R_BALANCED_P4
+
+confirmation:
+  roster_seed: bc-cscan-path-b-confirm-v1
+  specimens_per_domain: 4
+  status_without_reviewed_reference: ADDITIONAL_CONFIRMATION_PENDING_REFERENCE
+
+outputs:
+  root: results/bc_cscan_path_b_supplement
+  artifacts: artifacts/bc_cscan_path_b_supplement

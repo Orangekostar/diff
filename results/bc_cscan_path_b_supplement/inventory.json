@@ -1,0 +1,302 @@
+{
+  "base_bc": {
+    "content_sha256": "9d73c3e27de235ffe8337738517aec48f3f4a3267eb5f687ef0f6eeaae3566d1",
+    "destination_cache": "_work/base_bc.pt",
+    "fit_rows": 144,
+    "fit_specimens": 18,
+    "internal_valid_keys": [
+      "74t7kcdgkr:c8-32",
+      "cgtnjyggtm:q24-4",
+      "w68dtmpfyf:q16-42",
+      "xcmzfsbd9t:c24-43",
+      "yfxyg8jm46:c16-42",
+      "ykhs7s2dck:q8-7"
+    ],
+    "internal_valid_rows": 48,
+    "internal_valid_specimens": 6,
+    "only_base_bc_copied": true,
+    "row_count": 192,
+    "source_bank_path": "/home/ww/diff/.worktrees/learned-cscan-same-perception/results/learned_cscan_same_perception/_work/training_bank.pt",
+    "source_bank_sha256": "52167731b60bbd6db759a1e74a85bd0eb0bc8ea208bd51e981bff44d841281c7"
+  },
+  "cohort": {
+    "domains": 6,
+    "physical_specimens": 60,
+    "split_counts": {
+      "TEST": 24,
+      "TRAIN": 24,
+      "VALID": 12
+    }
+  },
+  "config_sha256": "1bf9cdf85083bfd6a71d04479d362cb3d8c4b0eaf07236e19ab0cd7c076cb0bd",
+  "controlling_prompt_sha256": "ff4e2986d904127225a9fa0c834b38fddcb55860a995d4378031cde2d43a06c9",
+  "data_paths": {
+    "hasebe": "/home/ww/paper3/cmc_damage_inference/data/public/hasebe",
+    "hasebe_cai": "/home/ww/paper3/cmc_damage_inference/data/public/hasebe_cai"
+  },
+  "execution_commit_sha": "abfad35dccb39887354464002fe10be9628deadb",
+  "frozen_models": {
+    "bc_seed_1_sha256": "c95185aec70515f2578d671e520ebe9b57e600e91e70e5f6752567ae2f87fbe5",
+    "old_stop_sha256": "c6af5c383ef4c586a4ac85c7dc9afbcd5bc71dc07558c692fb295d0f5386892d"
+  },
+  "historical_metrics": [
+    {
+      "matches_frozen_prompt_value": true,
+      "method": "R_BALANCED_P8",
+      "metric": "planner_ausc",
+      "physical_specimens": 24,
+      "task": "LOCATE",
+      "value": 0.6298188483710805
+    },
+    {
+      "matches_frozen_prompt_value": true,
+      "method": "R_BALANCED_P8",
+      "metric": "rule_completion",
+      "physical_specimens": 24,
+      "task": "LOCATE",
+      "value": 0.875
+    },
+    {
+      "matches_frozen_prompt_value": null,
+      "method": "R_BALANCED_P8",
+      "metric": "rule_autonomous_ausc",
+      "physical_specimens": 24,
+      "task": "LOCATE",
+      "value": 0.6162122172500377
+    },
+    {
+      "matches_frozen_prompt_value": null,
+      "method": "R_BALANCED_P8",
+      "metric": "rule_failure_penalized_cost",
+      "physical_specimens": 24,
+      "task": "LOCATE",
+      "value": 0.38378778274996234
+    },
+    {
+      "matches_frozen_prompt_value": true,
+      "method": "R_BALANCED_P8",
+      "metric": "old_stop_completion",
+      "physical_specimens": 24,
+      "task": "LOCATE",
+      "value": 0.5833333333333334
+    },
+    {
+      "matches_frozen_prompt_value": null,
+      "method": "R_BALANCED_P8",
+      "metric": "old_stop_autonomous_ausc",
+      "physical_specimens": 24,
+      "task": "LOCATE",
+      "value": 0.4881646378434759
+    },
+    {
+      "matches_frozen_prompt_value": null,
+      "method": "R_BALANCED_P8",
+      "metric": "old_stop_failure_penalized_cost",
+      "physical_specimens": 24,
+      "task": "LOCATE",
+      "value": 0.511835362156524
+    },
+    {
+      "matches_frozen_prompt_value": true,
+      "method": "L_BC",
+      "metric": "planner_ausc",
+      "physical_specimens": 24,
+      "task": "LOCATE",
+      "value": 0.8099545385296553
+    },
+    {
+      "matches_frozen_prompt_value": true,
+      "method": "L_BC",
+      "metric": "rule_completion",
+      "physical_specimens": 24,
+      "task": "LOCATE",
+      "value": 0.7083333333333334
+    },
+    {
+      "matches_frozen_prompt_value": null,
+      "method": "L_BC",
+      "metric": "rule_autonomous_ausc",
+      "physical_specimens": 24,
+      "task": "LOCATE",
+      "value": 0.46790260834523933
+    },
+    {
+      "matches_frozen_prompt_value": null,
+      "method": "L_BC",
+      "metric": "rule_failure_penalized_cost",
+      "physical_specimens": 24,
+      "task": "LOCATE",
+      "value": 0.5320973916547607
+    },
+    {
+      "matches_frozen_prompt_value": true,
+      "method": "L_BC",
+      "metric": "old_stop_completion",
+      "physical_specimens": 24,
+      "task": "LOCATE",
+      "value": 0.625
+    },
+    {
+      "matches_frozen_prompt_value": null,
+      "method": "L_BC",
+      "metric": "old_stop_autonomous_ausc",
+      "physical_specimens": 24,
+      "task": "LOCATE",
+      "value": 0.5042872640824722
+    },
+    {
+      "matches_frozen_prompt_value": null,
+      "method": "L_BC",
+      "metric": "old_stop_failure_penalized_cost",
+      "physical_specimens": 24,
+      "task": "LOCATE",
+      "value": 0.4957127359175279
+    },
+    {
+      "matches_frozen_prompt_value": true,
+      "method": "R_BALANCED_P8",
+      "metric": "planner_ausc",
+      "physical_specimens": 24,
+      "task": "CHARACTERIZE",
+      "value": 0.467930098731157
+    },
+    {
+      "matches_frozen_prompt_value": true,
+      "method": "R_BALANCED_P8",
+      "metric": "rule_completion",
+      "physical_specimens": 24,
+      "task": "CHARACTERIZE",
+      "value": 0.875
+    },
+    {
+      "matches_frozen_prompt_value": null,
+      "method": "R_BALANCED_P8",
+      "metric": "rule_autonomous_ausc",
+      "physical_specimens": 24,
+      "task": "CHARACTERIZE",
+      "value": 0.2240150922375049
+    },
+    {
+      "matches_frozen_prompt_value": null,
+      "method": "R_BALANCED_P8",
+      "metric": "rule_failure_penalized_cost",
+      "physical_specimens": 24,
+      "task": "CHARACTERIZE",
+      "value": 0.7759849077624952
+    },
+    {
+      "matches_frozen_prompt_value": true,
+      "method": "R_BALANCED_P8",
+      "metric": "old_stop_completion",
+      "physical_specimens": 24,
+      "task": "CHARACTERIZE",
+      "value": 0.6666666666666666
+    },
+    {
+      "matches_frozen_prompt_value": null,
+      "method": "R_BALANCED_P8",
+      "metric": "old_stop_autonomous_ausc",
+      "physical_specimens": 24,
+      "task": "CHARACTERIZE",
+      "value": 0.12923259128285794
+    },
+    {
+      "matches_frozen_prompt_value": null,
+      "method": "R_BALANCED_P8",
+      "metric": "old_stop_failure_penalized_cost",
+      "physical_specimens": 24,
+      "task": "CHARACTERIZE",
+      "value": 0.8707674087171421
+    },
+    {
+      "matches_frozen_prompt_value": true,
+      "method": "L_BC",
+      "metric": "planner_ausc",
+      "physical_specimens": 24,
+      "task": "CHARACTERIZE",
+      "value": 0.5488189459859376
+    },
+    {
+      "matches_frozen_prompt_value": true,
+      "method": "L_BC",
+      "metric": "rule_completion",
+      "physical_specimens": 24,
+      "task": "CHARACTERIZE",
+      "value": 1.0
+    },
+    {
+      "matches_frozen_prompt_value": null,
+      "method": "L_BC",
+      "metric": "rule_autonomous_ausc",
+      "physical_specimens": 24,
+      "task": "CHARACTERIZE",
+      "value": 0.20786122342645383
+    },
+    {
+      "matches_frozen_prompt_value": null,
+      "method": "L_BC",
+      "metric": "rule_failure_penalized_cost",
+      "physical_specimens": 24,
+      "task": "CHARACTERIZE",
+      "value": 0.7921387765735463
+    },
+    {
+      "matches_frozen_prompt_value": true,
+      "method": "L_BC",
+      "metric": "old_stop_completion",
+      "physical_specimens": 24,
+      "task": "CHARACTERIZE",
+      "value": 0.6666666666666666
+    },
+    {
+      "matches_frozen_prompt_value": null,
+      "method": "L_BC",
+      "metric": "old_stop_autonomous_ausc",
+      "physical_specimens": 24,
+      "task": "CHARACTERIZE",
+      "value": 0.13047590365380593
+    },
+    {
+      "matches_frozen_prompt_value": null,
+      "method": "L_BC",
+      "metric": "old_stop_failure_penalized_cost",
+      "physical_specimens": 24,
+      "task": "CHARACTERIZE",
+      "value": 0.8695240963461942
+    }
+  ],
+  "new_training_started": false,
+  "references": {
+    "algorithmic_annotation_proposals": 60,
+    "formal_effect": null,
+    "proxy_scope": "SAME_READER_SELF_CONSISTENCY",
+    "reviewed_by_split": {
+      "TEST": 0,
+      "TRAIN": 0,
+      "VALID": 0
+    },
+    "reviewed_total": 0,
+    "source_manifest_rows": 276
+  },
+  "repository_base_sha": "d8b5b090891fc030931c6dc81e3619a80966f739",
+  "schema_version": 1,
+  "source_root": "/home/ww/paper3/cmc_damage_inference",
+  "stage": "E0_SOURCE_AUDIT_COMPLETE",
+  "surface_cache": {
+    "coverage_by_split": {
+      "TEST": 24,
+      "TRAIN": 24,
+      "VALID": 12
+    },
+    "original_60_vlm_calls_required": 0
+  },
+  "test_opened_by_supplement": false,
+  "trajectories": {
+    "columns": 27,
+    "predicted_mask_saved": false,
+    "required_replay_fields_available": true,
+    "reviewed_rescore_recovery": "REPLAY_STORED_ACTION_PREFIXES",
+    "rows": 64848,
+    "support_positions_saved": false
+  }
+}
