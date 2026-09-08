@@ -1,0 +1,11 @@
+{
+  "formal_effects": null,
+  "model_retrained": false,
+  "proxy_values_unchanged": true,
+  "reference_root": "USER_SUPPLIED_REFERENCE_ROOT",
+  "reviewed_reference_count": 0,
+  "schema_version": 1,
+  "stage": "REVIEWED_RESCORE_FROZEN",
+  "status": "INDEPENDENT_REVIEW_PENDING",
+  "threshold_recalibrated": false
+}

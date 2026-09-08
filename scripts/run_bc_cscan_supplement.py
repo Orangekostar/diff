@@ -23,6 +23,13 @@ from cmc_bbdm.learned_cscan.bc_supplement import (
     train_replicas,
 )
 from cmc_bbdm.learned_cscan.contracts import Split
+from cmc_bbdm.learned_cscan.supplement_reporting import (
+    analyze_existing,
+    import_references,
+    prepare_confirmation,
+    rescore_references,
+    summarize_supplement,
+)
 
 DEFAULT_CONFIG = PROJECT_ROOT / "paper_v3/configs/bc_cscan_path_b_supplement.yaml"
 DEFAULT_SOURCE_ROOT = Path("/home/ww/paper3/cmc_damage_inference")
@@ -33,10 +40,15 @@ def build_parser() -> argparse.ArgumentParser:
     commands = parser.add_subparsers(dest="command", required=True)
     for name in (
         "audit",
+        "analyze-existing",
+        "import-references",
         "train-replicas",
         "train-ablations",
         "calibrate-stop",
         "evaluate",
+        "rescore",
+        "prepare-confirm",
+        "summarize",
     ):
         command = commands.add_parser(name)
         command.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
@@ -49,6 +61,8 @@ def build_parser() -> argparse.ArgumentParser:
                 choices=(Split.TEST.value.lower(),),
                 required=True,
             )
+        if name == "rescore":
+            command.add_argument("--references", type=Path, required=True)
     return parser
 
 
@@ -61,16 +75,28 @@ def main(argv: Sequence[str] | None = None) -> int:
     }
     if arguments.command == "audit":
         result = audit_supplement(**common)
+    elif arguments.command == "analyze-existing":
+        result = analyze_existing(**common)
+    elif arguments.command == "import-references":
+        result = import_references(**common)
     elif arguments.command == "train-replicas":
         result = train_replicas(**common)
+    elif arguments.command == "train-ablations":
+        result = train_ablations(**common)
     elif arguments.command == "calibrate-stop":
         result = calibrate_stop(**common)
     elif arguments.command == "evaluate":
         result = evaluate_supplement(
             **common, split=Split(arguments.split.upper())
         )
+    elif arguments.command == "rescore":
+        result = rescore_references(
+            **common, references=arguments.references
+        )
+    elif arguments.command == "prepare-confirm":
+        result = prepare_confirmation(**common)
     else:
-        result = train_ablations(**common)
+        result = summarize_supplement(**common)
     print(json.dumps(result, indent=2, sort_keys=True))
     return 0
 
