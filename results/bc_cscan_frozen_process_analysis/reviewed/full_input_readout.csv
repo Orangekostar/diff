@@ -1,0 +1,1 @@
+schema_version,dataset_id,specimen_id,specimen_key,task,analysis_scope,reference_version,report_sha256,formal_success,iou,recall,relative_area_error,failure_types

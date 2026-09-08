@@ -1,0 +1,42 @@
+{
+  "actor_forward_calls": 0,
+  "computational_implementation": "W0_W8_IMPLEMENTED",
+  "external_evidence": {
+    "blind_reviews": "PENDING_INPUT",
+    "human_sessions": "PENDING_INPUT",
+    "reviewed_references": "PENDING_USER_INPUT"
+  },
+  "external_input_identities": {
+    "blind_reviews": {
+      "path": "",
+      "sha256": "",
+      "status": "PENDING_USER_INPUT"
+    },
+    "human_sessions": {
+      "path": "",
+      "sha256": "",
+      "status": "PENDING_USER_INPUT"
+    },
+    "reviewed_references": {
+      "path": "",
+      "sha256": "",
+      "status": "PENDING_USER_INPUT"
+    }
+  },
+  "schema_version": 1,
+  "scientific_claim_statuses": {
+    "C1_PLANNER_VS_P8": "SUPPORTED",
+    "C2_SURFACE_INPUT": "SUPPORTED",
+    "C3_US_FEEDBACK": "SUPPORTED",
+    "C4_PATH_B_CHARACTERIZE": "PENDING_INPUT",
+    "C4_PATH_B_LOCATE": "PENDING_INPUT",
+    "C5_BLIND_DELIVERABILITY": "PENDING_INPUT",
+    "C6_HUMAN_COMPARISON": "PENDING_INPUT",
+    "C7_PROCESS_ASSOCIATION": "SUPPORTED",
+    "C8_SCOPE_BOUNDARIES": "NOT_EVALUATED"
+  },
+  "stage": "COMPUTATION_COMPLETE_INPUT_PENDING",
+  "stop_forward_calls": 0,
+  "training_updates": 0,
+  "vlm_calls": 0
+}

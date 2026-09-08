@@ -1,0 +1,1 @@
+schema_version,dataset_id,specimen_id,specimen_key,task,method,seed,reference_version,analysis_scope,stop_system,wait_definition,defined,total_wait_cost,ineligible_wait_cost,eligible_below_threshold_wait_cost,eligible_crossed_unstopped_cost,missing_reason

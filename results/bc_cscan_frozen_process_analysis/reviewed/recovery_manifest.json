@@ -1,0 +1,31 @@
+{
+  "cache_schema_version": 1,
+  "config_sha256": "6fc7d88e72bec9a37f3527a0a137b3407fb11803d5f90547183f56c82db4f5d7",
+  "external_frozen_input_hashes": {
+    "paper_v3/configs/bc_cscan_path_b_supplement.yaml": "1bf9cdf85083bfd6a71d04479d362cb3d8c4b0eaf07236e19ab0cd7c076cb0bd",
+    "paper_v3/configs/learned_cscan_same_perception.yaml": "12268dcaf470f769c326007702f7b0b6f4a13cf326447eef652a6dda972b5662",
+    "results/learned_cscan_same_perception/surface_percepts.jsonl": "85f400119093b362e2eb76489c9ae158ecdd453ce84ad04b6dfab7f04384693e"
+  },
+  "frozen_input_hashes": {
+    "cohort_and_reference_coverage.csv": "2b5938e93d8df8b738a527dba17127bdcc8ab0876e03001e7de6eb736471193f",
+    "paired_effects.csv": "40fbb128bfb80686bdf49032de2f33363ed2c969415ebdeacae96fb77b05bb86",
+    "per_episode_metrics.csv": "1f8ce073d79c3d38965415f8f74ebfb1159289cf4529cb50073ff5ad62814638",
+    "report_manifest.json": "67a7d54e14f0cfe6516391af0486a483c1d1d61289c2215b429703ec8609c057",
+    "risk_coverage.csv": "d35a028f3e23b39710bd2772a69ae8df0c6301b0b826eccf331abaf1ba72c027",
+    "stop_calibration.json": "281fca34979d0b482932e6d1b29c37faa4604b0ec7707cfa0921984ef3d22b02",
+    "summary.json": "744d5cdc625561ee9994d43cf7e4a97080fb18a1581ff0f1fb3e34b6bf088a27",
+    "trajectories.parquet": "5bf8e4ba677be063f3d434ce947c541e8dc213bf5d017c07b893d3d74a9b50c1"
+  },
+  "implementation_sha256": "2a3ceb60817ccb2d84db6ee3ed6b61592b76589c4f29ffda4bf2b08d7a30ef8c",
+  "recovery": {
+    "actor_forward_calls": 0,
+    "status": "PENDING_USER_INPUT",
+    "stop_forward_calls": 0,
+    "training_updates": 0,
+    "vlm_calls": 0,
+    "world_step_count": 0
+  },
+  "reference_files": {},
+  "reference_version": "REVIEWED_PENDING",
+  "repository_base_sha": "fe58de39298c412d0829580cfda40b7c7c4c53e9"
+}

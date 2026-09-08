@@ -1,0 +1,1 @@
+schema_version,task,stop_system,analysis_scope,reference_version,metric,effect_direction,treatment,comparator,estimate,ci_lower,ci_upper,confidence_level,physical_specimen_count,domain_count,bootstrap_replicates,bootstrap_draws_sha256

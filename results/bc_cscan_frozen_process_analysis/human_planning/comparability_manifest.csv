@@ -1,0 +1,2 @@
+status,session_id,specimen_key,task,operator_id,reference_version,geometry_version,reasons,outcome_comparable,cost_comparable,cost_limitation,route_cost_comparable,route_cost_limitation,information_permission,report_production,action_sequence_recorded,first_stop_or_handoff_recorded,final_report_recorded,process_trace_comparable,pure_planner_comparable
+PENDING_USER_INPUT,,,,,REVIEWED_PENDING,,,False,False,,False,,NOT_RECORDED,NOT_RECORDED,False,False,False,False,False
