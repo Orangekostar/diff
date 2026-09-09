@@ -1,0 +1,3 @@
+task,physical_specimen_count,formal_success_count,formal_success_fraction,mean_iou,mean_recall,mean_relative_area_error,uncertain_pixel_fraction,references_with_uncertain_regions
+CHARACTERIZE,24,0,0.0,0.21726168444691532,0.47340198993352006,2.700201795934247,0.0,0
+LOCATE,24,6,0.25,0.2609816132121507,0.25,0.0,0.0,0

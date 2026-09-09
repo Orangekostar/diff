@@ -1,0 +1,17 @@
+{
+  "entrypoint": "execute_frozen_finalize",
+  "formal_run_count": 1,
+  "result": {
+    "actor_forward_calls": 0,
+    "blind_review_status": "PENDING_INPUT",
+    "human_session_status": "PENDING_INPUT",
+    "output_root": "/home/ww/diff/.worktrees/bc-cscan-expert-pooled-rescore/results/bc_cscan_expert_pooled_rescore/v1",
+    "reference_status": "FULL_TEST_REVIEWED_REFERENCE",
+    "reviewed_recovery_steps": 55296,
+    "stage": "COMPUTATION_COMPLETE_INPUT_PENDING",
+    "stop_forward_calls": 0,
+    "training_updates": 0,
+    "vlm_calls": 0
+  },
+  "schema_version": 1
+}

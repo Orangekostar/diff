@@ -1,0 +1,28 @@
+{
+  "analysis_scope": "PROXY_LEGACY_CONTEXT_ONLY",
+  "files": [
+    {
+      "name": "analysis_summary.json",
+      "output_path": "/home/ww/diff/.worktrees/bc-cscan-expert-pooled-rescore/results/bc_cscan_expert_pooled_rescore/v1/analysis_summary.json",
+      "role": "FINALIZE_CONTEXT_NOT_REVIEWED_RESULT",
+      "sha256": "2ba97a27fb9c96bc473119042f1f1583a28d29cec5ae10d36522721f886edcfc",
+      "source_path": "/home/ww/diff/.worktrees/bc-cscan-expert-pooled-rescore/results/bc_cscan_frozen_process_analysis/analysis_summary.json"
+    },
+    {
+      "name": "recovery_manifest.json",
+      "output_path": "/home/ww/diff/.worktrees/bc-cscan-expert-pooled-rescore/results/bc_cscan_expert_pooled_rescore/v1/recovery_manifest.json",
+      "role": "FINALIZE_CONTEXT_NOT_REVIEWED_RESULT",
+      "sha256": "9ba18c948feb53f0ad07fcee8a6b372f32d76ad67764954edcb698a49c567bb5",
+      "source_path": "/home/ww/diff/.worktrees/bc-cscan-expert-pooled-rescore/results/bc_cscan_frozen_process_analysis/recovery_manifest.json"
+    },
+    {
+      "name": "report_stability_and_delay.csv",
+      "output_path": "/home/ww/diff/.worktrees/bc-cscan-expert-pooled-rescore/results/bc_cscan_expert_pooled_rescore/v1/report_stability_and_delay.csv",
+      "role": "FINALIZE_CONTEXT_NOT_REVIEWED_RESULT",
+      "sha256": "fd7e4dbce2bf6f29748ad7e519b310c6a3e69c2b16217ff1020d8c27f3a86698",
+      "source_path": "/home/ww/diff/.worktrees/bc-cscan-expert-pooled-rescore/results/bc_cscan_frozen_process_analysis/report_stability_and_delay.csv"
+    }
+  ],
+  "reference_version": "PROXY_LEGACY",
+  "schema_version": 1
+}

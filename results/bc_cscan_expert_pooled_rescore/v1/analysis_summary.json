@@ -1,0 +1,317 @@
+{
+  "action_cost_means": {
+    "CHARACTERIZE": {
+      "BC_3SEED": {
+        "dense_measurement_cost": 0.5492042975636802,
+        "medium_measurement_cost": 0.2152650906622062,
+        "survey_measurement_cost": 0.015240519674002492
+      },
+      "R_BALANCED_P8": {
+        "dense_measurement_cost": 0.5768719708839282,
+        "medium_measurement_cost": 0.2211613174846958,
+        "survey_measurement_cost": 0.015489448127678716
+      }
+    },
+    "LOCATE": {
+      "BC_3SEED": {
+        "dense_measurement_cost": 0.4644106877674148,
+        "medium_measurement_cost": 0.19180284670062836,
+        "survey_measurement_cost": 0.014967656966256829
+      },
+      "R_BALANCED_P8": {
+        "dense_measurement_cost": 0.46397495722657633,
+        "medium_measurement_cost": 0.19309611705270205,
+        "survey_measurement_cost": 0.015479556930843899
+      }
+    }
+  },
+  "figure_checks": [
+    {
+      "grayscale_standard_deviation": 59.042405400939025,
+      "height": 836,
+      "nonblank": true,
+      "path": "figures/figure_1_planning_to_stop_accounting.png",
+      "width": 1584
+    },
+    {
+      "grayscale_standard_deviation": 71.97929230063025,
+      "height": 792,
+      "nonblank": true,
+      "path": "figures/figure_2_action_cost_allocation.png",
+      "width": 1584
+    },
+    {
+      "grayscale_standard_deviation": 33.56886571697574,
+      "height": 924,
+      "nonblank": true,
+      "path": "figures/figure_3_surface_proxy_process_cases.png",
+      "width": 1804
+    }
+  ],
+  "matrix": {
+    "actions_per_episode": 192,
+    "domains": 6,
+    "episodes": 336,
+    "methods": 7,
+    "physical_specimens": 24,
+    "states_per_episode": 193,
+    "tasks": 2,
+    "trajectory_rows": 64848
+  },
+  "not_established": "No causal mechanism, hardware-time benefit, independent correctness, or human superiority is established.",
+  "observed_fact": "Frozen trajectories permit exact signed planning-to-stop and action-cost accounting.",
+  "paired_diagnostic_effects": [
+    {
+      "analysis_scope": "EXPLORATORY_FROZEN_COHORT_DIAGNOSTIC",
+      "bootstrap_draws_sha256": "ec9e3bcc4bb6cbabe76d6d2f612d42a2272f1581a37ed78e25fd49439515c3b2",
+      "bootstrap_replicates": 5000,
+      "ci_lower": 0.02145917847417051,
+      "ci_upper": 0.17543619048820694,
+      "comparator": "R_BALANCED_P8",
+      "confidence_level": 0.95,
+      "domain_count": 6,
+      "effect_direction": "BC_MINUS_P8",
+      "estimate": 0.09705892544565799,
+      "metric": "planner_ausc",
+      "physical_specimen_count": 24,
+      "reference_version": "PROXY_LEGACY",
+      "schema_version": 1,
+      "stop_system": "S_BC_CAL",
+      "task": "LOCATE",
+      "treatment": "BC_3SEED"
+    },
+    {
+      "analysis_scope": "EXPLORATORY_FROZEN_COHORT_DIAGNOSTIC",
+      "bootstrap_draws_sha256": "ec9e3bcc4bb6cbabe76d6d2f612d42a2272f1581a37ed78e25fd49439515c3b2",
+      "bootstrap_replicates": 5000,
+      "ci_lower": -0.03242012833717703,
+      "ci_upper": 0.03672430860776979,
+      "comparator": "R_BALANCED_P8",
+      "confidence_level": 0.95,
+      "domain_count": 6,
+      "effect_direction": "BC_MINUS_P8",
+      "estimate": 0.0009792564833970147,
+      "metric": "autonomous_ausc",
+      "physical_specimen_count": 24,
+      "reference_version": "PROXY_LEGACY",
+      "schema_version": 1,
+      "stop_system": "S_BC_CAL",
+      "task": "LOCATE",
+      "treatment": "BC_3SEED"
+    },
+    {
+      "analysis_scope": "EXPLORATORY_FROZEN_COHORT_DIAGNOSTIC",
+      "bootstrap_draws_sha256": "ec9e3bcc4bb6cbabe76d6d2f612d42a2272f1581a37ed78e25fd49439515c3b2",
+      "bootstrap_replicates": 5000,
+      "ci_lower": 0.027731084423795495,
+      "ci_upper": 0.16745143901128015,
+      "comparator": "R_BALANCED_P8",
+      "confidence_level": 0.95,
+      "domain_count": 6,
+      "effect_direction": "BC_MINUS_P8",
+      "estimate": 0.09607966896226099,
+      "metric": "gap",
+      "physical_specimen_count": 24,
+      "reference_version": "PROXY_LEGACY",
+      "schema_version": 1,
+      "stop_system": "S_BC_CAL",
+      "task": "LOCATE",
+      "treatment": "BC_3SEED"
+    },
+    {
+      "analysis_scope": "EXPLORATORY_FROZEN_COHORT_DIAGNOSTIC",
+      "bootstrap_draws_sha256": "ec9e3bcc4bb6cbabe76d6d2f612d42a2272f1581a37ed78e25fd49439515c3b2",
+      "bootstrap_replicates": 5000,
+      "ci_lower": 0.01886958690652782,
+      "ci_upper": 0.06144894218624288,
+      "comparator": "R_BALANCED_P8",
+      "confidence_level": 0.95,
+      "domain_count": 6,
+      "effect_direction": "BC_MINUS_P8",
+      "estimate": 0.04032361574185169,
+      "metric": "planner_ausc",
+      "physical_specimen_count": 24,
+      "reference_version": "PROXY_LEGACY",
+      "schema_version": 1,
+      "stop_system": "S_BC_CAL",
+      "task": "CHARACTERIZE",
+      "treatment": "BC_3SEED"
+    },
+    {
+      "analysis_scope": "EXPLORATORY_FROZEN_COHORT_DIAGNOSTIC",
+      "bootstrap_draws_sha256": "ec9e3bcc4bb6cbabe76d6d2f612d42a2272f1581a37ed78e25fd49439515c3b2",
+      "bootstrap_replicates": 5000,
+      "ci_lower": 0.007150237817715333,
+      "ci_upper": 0.034829018784958116,
+      "comparator": "R_BALANCED_P8",
+      "confidence_level": 0.95,
+      "domain_count": 6,
+      "effect_direction": "BC_MINUS_P8",
+      "estimate": 0.02079509771023594,
+      "metric": "autonomous_ausc",
+      "physical_specimen_count": 24,
+      "reference_version": "PROXY_LEGACY",
+      "schema_version": 1,
+      "stop_system": "S_BC_CAL",
+      "task": "CHARACTERIZE",
+      "treatment": "BC_3SEED"
+    },
+    {
+      "analysis_scope": "EXPLORATORY_FROZEN_COHORT_DIAGNOSTIC",
+      "bootstrap_draws_sha256": "ec9e3bcc4bb6cbabe76d6d2f612d42a2272f1581a37ed78e25fd49439515c3b2",
+      "bootstrap_replicates": 5000,
+      "ci_lower": -0.00833251646684951,
+      "ci_upper": 0.0483076190043691,
+      "comparator": "R_BALANCED_P8",
+      "confidence_level": 0.95,
+      "domain_count": 6,
+      "effect_direction": "BC_MINUS_P8",
+      "estimate": 0.019528518031615743,
+      "metric": "gap",
+      "physical_specimen_count": 24,
+      "reference_version": "PROXY_LEGACY",
+      "schema_version": 1,
+      "stop_system": "S_BC_CAL",
+      "task": "CHARACTERIZE",
+      "treatment": "BC_3SEED"
+    }
+  ],
+  "report_outcome_category_counts": [
+    {
+      "category": "FALSE_STOP_WITH_LATER_SUCCESS",
+      "count": 22,
+      "stop_system": "S_BC_CAL",
+      "task": "CHARACTERIZE"
+    },
+    {
+      "category": "NO_STOP_DESPITE_SUSTAINED_SUCCESS",
+      "count": 10,
+      "stop_system": "S_BC_CAL",
+      "task": "CHARACTERIZE"
+    },
+    {
+      "category": "SUCCESS_WITH_POSTSUSTAINED_DELAY",
+      "count": 136,
+      "stop_system": "S_BC_CAL",
+      "task": "CHARACTERIZE"
+    },
+    {
+      "category": "FALSE_STOP_WITH_LATER_SUCCESS",
+      "count": 11,
+      "stop_system": "S_RULE",
+      "task": "CHARACTERIZE"
+    },
+    {
+      "category": "SUCCESS_AT_STOP_NO_POSTSUSTAINED_DELAY",
+      "count": 2,
+      "stop_system": "S_RULE",
+      "task": "CHARACTERIZE"
+    },
+    {
+      "category": "SUCCESS_WITH_POSTSUSTAINED_DELAY",
+      "count": 155,
+      "stop_system": "S_RULE",
+      "task": "CHARACTERIZE"
+    },
+    {
+      "category": "FALSE_STOP_WITH_LATER_SUCCESS",
+      "count": 15,
+      "stop_system": "S_BC_CAL",
+      "task": "LOCATE"
+    },
+    {
+      "category": "SUCCESS_BEFORE_LATER_REGRESSION",
+      "count": 1,
+      "stop_system": "S_BC_CAL",
+      "task": "LOCATE"
+    },
+    {
+      "category": "SUCCESS_WITH_POSTSUSTAINED_DELAY",
+      "count": 152,
+      "stop_system": "S_BC_CAL",
+      "task": "LOCATE"
+    },
+    {
+      "category": "FALSE_STOP_WITH_LATER_SUCCESS",
+      "count": 36,
+      "stop_system": "S_RULE",
+      "task": "LOCATE"
+    },
+    {
+      "category": "SUCCESS_BEFORE_LATER_REGRESSION",
+      "count": 59,
+      "stop_system": "S_RULE",
+      "task": "LOCATE"
+    },
+    {
+      "category": "SUCCESS_WITH_POSTSUSTAINED_DELAY",
+      "count": 73,
+      "stop_system": "S_RULE",
+      "task": "LOCATE"
+    }
+  ],
+  "resource_use": {
+    "actor_forward_calls": 0,
+    "analysis_scope": "PROXY_SPATIAL_RELATION",
+    "cache_reuse": "SURFACE_PERCEPT_CACHE_STORED_ACTIONS_AND_CELL_INTERPOLATION",
+    "episode_count": 192,
+    "full_input_specimen_reads": 24,
+    "full_input_task_reports": 48,
+    "packet_hash_scope": "REPORT_DIGEST_ONLY_EXACT_CACHED_READER_PATH",
+    "proxy_score_mismatches": 0,
+    "reader_recovery_episode_count": 192,
+    "reference_version": "PROXY_LEGACY",
+    "report_cache_entries": [],
+    "report_cache_file_count": 0,
+    "report_cache_scope": "NONE_W4_COMPACT_SUMMARIES_ONLY",
+    "report_digest_mismatches": 0,
+    "report_state_count": 37056,
+    "schema_version": 1,
+    "source_root": "/home/ww/paper3/cmc_damage_inference",
+    "stage": "FROZEN_SPATIAL_RECOVERY_COMPLETE",
+    "stop_forward_calls": 0,
+    "stored_action_transition_cap": 40000,
+    "stored_action_transition_count": 36864,
+    "training_updates": 0,
+    "vlm_calls": 0,
+    "world_step_count": 0
+  },
+  "schema_version": 1,
+  "scientific_status_unchanged": "BC_PLANNING_SUPPORTED_STOP_NOT_SUPPORTED_PROXY_ONLY",
+  "stage": "W0_W5_FROZEN_ANALYSIS_COMPLETE",
+  "stop_summary_main_methods": {
+    "CHARACTERIZE": {
+      "S_BC_CAL": {
+        "completion_rate": 0.8958333333333334,
+        "episode_count": 96,
+        "exhaustion_rate": 0.052083333333333336,
+        "false_stop_episode_rate": 0.052083333333333336
+      },
+      "S_RULE": {
+        "completion_rate": 0.9479166666666666,
+        "episode_count": 96,
+        "exhaustion_rate": 0.0,
+        "false_stop_episode_rate": 0.052083333333333336
+      }
+    },
+    "LOCATE": {
+      "S_BC_CAL": {
+        "completion_rate": 0.9583333333333334,
+        "episode_count": 96,
+        "exhaustion_rate": 0.0,
+        "false_stop_episode_rate": 0.041666666666666664
+      },
+      "S_RULE": {
+        "completion_rate": 0.78125,
+        "episode_count": 96,
+        "exhaustion_rate": 0.0,
+        "false_stop_episode_rate": 0.21875
+      }
+    }
+  },
+  "supported_association": "Report stability, STOP waiting, and spatial proxy groups are descriptive frozen-path associations.",
+  "surface_proxy_group_counts": {
+    "CUE_DISJOINT": 9,
+    "CUE_OVERLAP": 39
+  }
+}

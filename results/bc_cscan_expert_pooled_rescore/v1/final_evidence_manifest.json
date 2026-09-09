@@ -1,0 +1,42 @@
+{
+  "actor_forward_calls": 0,
+  "computational_implementation": "W0_W8_IMPLEMENTED",
+  "external_evidence": {
+    "blind_reviews": "PENDING_INPUT",
+    "human_sessions": "PENDING_INPUT",
+    "reviewed_references": "FULL_TEST_REVIEWED_REFERENCE"
+  },
+  "external_input_identities": {
+    "blind_reviews": {
+      "path": "",
+      "sha256": "",
+      "status": "PENDING_USER_INPUT"
+    },
+    "human_sessions": {
+      "path": "",
+      "sha256": "",
+      "status": "PENDING_USER_INPUT"
+    },
+    "reviewed_references": {
+      "path": "/home/ww/diff/.worktrees/bc-cscan-expert-pooled-rescore/results/bc_cscan_expert_pooled_rescore/v1/inputs/references",
+      "sha256": "02339eda86d486c3126bbd123243c8e6d69f3eb8e7e2e0fe852ed0f9ecf00c06",
+      "status": "FULL_TEST_REVIEWED_REFERENCE"
+    }
+  },
+  "schema_version": 1,
+  "scientific_claim_statuses": {
+    "C1_PLANNER_VS_P8": "SUPPORTED",
+    "C2_SURFACE_INPUT": "SUPPORTED",
+    "C3_US_FEEDBACK": "SUPPORTED",
+    "C4_PATH_B_CHARACTERIZE": "NOT_SUPPORTED",
+    "C4_PATH_B_LOCATE": "NOT_SUPPORTED",
+    "C5_BLIND_DELIVERABILITY": "PENDING_INPUT",
+    "C6_HUMAN_COMPARISON": "PENDING_INPUT",
+    "C7_PROCESS_ASSOCIATION": "SUPPORTED",
+    "C8_SCOPE_BOUNDARIES": "NOT_EVALUATED"
+  },
+  "stage": "COMPUTATION_COMPLETE_INPUT_PENDING",
+  "stop_forward_calls": 0,
+  "training_updates": 0,
+  "vlm_calls": 0
+}

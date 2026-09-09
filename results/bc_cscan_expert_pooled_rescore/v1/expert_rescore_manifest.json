@@ -1,0 +1,87 @@
+{
+  "analysis_grouping": "POOLED_NOT_BY_REVIEWER",
+  "blind_review_status": "PENDING_INPUT",
+  "execution_status": "REVIEWED_COMPUTATION_COMPLETE_OTHER_HUMAN_INPUTS_PENDING",
+  "figure_checks": [
+    {
+      "grayscale_standard_deviation": 50.47330716321822,
+      "height": 780,
+      "nonblank": true,
+      "path": "/home/ww/diff/.worktrees/bc-cscan-expert-pooled-rescore/artifacts/bc_cscan_expert_pooled_rescore/v1/figures/figure_1_reviewed_planner_effects.png",
+      "width": 1968
+    },
+    {
+      "grayscale_standard_deviation": 75.76220976303671,
+      "height": 816,
+      "nonblank": true,
+      "path": "/home/ww/diff/.worktrees/bc-cscan-expert-pooled-rescore/artifacts/bc_cscan_expert_pooled_rescore/v1/figures/figure_2_reviewed_stop_outcomes.png",
+      "width": 1968
+    },
+    {
+      "grayscale_standard_deviation": 40.2814545034205,
+      "height": 864,
+      "nonblank": true,
+      "path": "/home/ww/diff/.worktrees/bc-cscan-expert-pooled-rescore/artifacts/bc_cscan_expert_pooled_rescore/v1/figures/figure_3_fixed_case_reviewed_process.png",
+      "width": 2208
+    }
+  ],
+  "human_planning_status": "PENDING_INPUT",
+  "physical_specimen_count": 24,
+  "primary_result_files": [
+    "reviewed/full_input_readout.csv",
+    "reviewed/planner_effects.csv",
+    "reviewed/autonomous_effects.csv",
+    "reviewed/actor_input_ablations.csv",
+    "reviewed/task_decisions.json",
+    "tables/planner_absolute_means.csv",
+    "tables/autonomous_absolute_means.csv",
+    "tables/proxy_reviewed_episode_comparison.csv",
+    "reviewed_claims.json"
+  ],
+  "reference_input_status": "FULL_TEST_REVIEWED_REFERENCE",
+  "reference_set_label": "EXPERT_POOL_V1",
+  "reference_version": "REVIEWED_02339eda86d486c3",
+  "resource_use": {
+    "actor_forward_calls": 0,
+    "cache_hit_episode_count": 0,
+    "cache_hit_specimen_count": 0,
+    "cache_reuse": "IDENTITY_BOUND_RESULT_ROWS_AND_STORED_ACTIONS",
+    "cached_action_transition_count": 0,
+    "conditional_transition_cap": 60000,
+    "episode_count": 288,
+    "reference_version": "REVIEWED_02339eda86d486c3",
+    "report_state_count": 55584,
+    "reviewed_specimen_count": 24,
+    "source_action_transition_count": 55296,
+    "status": "FROZEN_REVIEWED_RECOVERY_COMPLETE",
+    "stop_forward_calls": 0,
+    "stored_action_transition_count": 55296,
+    "training_updates": 0,
+    "vlm_calls": 0,
+    "world_step_count": 0
+  },
+  "reviewed_scientific_claim_statuses": {
+    "R1_CHARACTERIZE": "NOT_SUPPORTED",
+    "R1_LOCATE": "NOT_SUPPORTED",
+    "R2_CHARACTERIZE": "NOT_SUPPORTED",
+    "R2_LOCATE": "NOT_SUPPORTED",
+    "R3_CHARACTERIZE": "NOT_SUPPORTED",
+    "R3_LOCATE": "SUPPORTED",
+    "R4_CHARACTERIZE": "NOT_SUPPORTED",
+    "R4_LOCATE": "NOT_SUPPORTED",
+    "R5_CHARACTERIZE": "DESCRIPTIVE_RESULT",
+    "R5_LOCATE": "DESCRIPTIVE_RESULT",
+    "R6_PROCESS": "DESCRIPTIVE_RESULT",
+    "R7_BLIND_REVIEW": "PENDING_INPUT",
+    "R8_HUMAN_PLANNING": "PENDING_INPUT"
+  },
+  "schema_version": 1,
+  "source_expert_count": 2,
+  "source_versions": {
+    "derived_config_sha256": "d6ab65098e80505ccdece446b3f961232fb52a8ba440cab1893fb44f223ece1f",
+    "development_base_sha": "0e7f15b5c4cb59b05f19b2c598cdc9a9278cc15e",
+    "frozen_config_repository_base_sha": "fe58de39298c412d0829580cfda40b7c7c4c53e9",
+    "frozen_science_sha": "2102cc4a1726910931dfaaf20e29ad29a20eaf2e",
+    "proxy_reference_version": "PROXY_LEGACY"
+  }
+}

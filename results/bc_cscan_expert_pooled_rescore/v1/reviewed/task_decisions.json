@@ -1,0 +1,22 @@
+{
+  "CHARACTERIZE": {
+    "completion_noninferiority_margin": -0.05,
+    "completion_noninferiority_pass": true,
+    "confidence_level": 0.975,
+    "expected_physical_specimen_count": 24,
+    "failure_cost_improvement_pass": false,
+    "joint_path_b_pass": false,
+    "physical_specimen_count": 24,
+    "status": "NOT_SUPPORTED"
+  },
+  "LOCATE": {
+    "completion_noninferiority_margin": -0.05,
+    "completion_noninferiority_pass": true,
+    "confidence_level": 0.975,
+    "expected_physical_specimen_count": 24,
+    "failure_cost_improvement_pass": false,
+    "joint_path_b_pass": false,
+    "physical_specimen_count": 24,
+    "status": "NOT_SUPPORTED"
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "checks": {
+    "domain_count_6": true,
+    "episode_cost_identity": true,
+    "episode_outcome_partition": true,
+    "figures_nonblank": true,
+    "formal_run_once": true,
+    "full_input_rows_48": true,
+    "main_stop_coverage_187_5": true,
+    "pooled_reference_bytes_preserved": true,
+    "reference_count_24": true,
+    "reviewed_episode_rows_576": true,
+    "reviewed_state_rows_55584": true,
+    "source_expert_count_2": true,
+    "stop_identity_unchanged": true,
+    "stored_action_transitions_55296": true,
+    "zero_actor_forward_calls": true,
+    "zero_stop_forward_calls": true,
+    "zero_training": true,
+    "zero_vlm_calls": true
+  },
+  "counts": {
+    "full_input_reports": 48,
+    "main_actual_stop": 187,
+    "main_no_stop": 5,
+    "physical_specimens": 24,
+    "reviewed_episodes": 576,
+    "reviewed_states": 55584,
+    "stored_action_transitions": 55296
+  },
+  "figure_checks": [
+    {
+      "grayscale_standard_deviation": 50.47330716321822,
+      "height": 780,
+      "nonblank": true,
+      "path": "/home/ww/diff/.worktrees/bc-cscan-expert-pooled-rescore/artifacts/bc_cscan_expert_pooled_rescore/v1/figures/figure_1_reviewed_planner_effects.png",
+      "width": 1968
+    },
+    {
+      "grayscale_standard_deviation": 75.76220976303671,
+      "height": 816,
+      "nonblank": true,
+      "path": "/home/ww/diff/.worktrees/bc-cscan-expert-pooled-rescore/artifacts/bc_cscan_expert_pooled_rescore/v1/figures/figure_2_reviewed_stop_outcomes.png",
+      "width": 1968
+    },
+    {
+      "grayscale_standard_deviation": 40.2814545034205,
+      "height": 864,
+      "nonblank": true,
+      "path": "/home/ww/diff/.worktrees/bc-cscan-expert-pooled-rescore/artifacts/bc_cscan_expert_pooled_rescore/v1/figures/figure_3_fixed_case_reviewed_process.png",
+      "width": 2208
+    }
+  ],
+  "schema_version": 1,
+  "status": "PASSED"
+}

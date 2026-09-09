@@ -1,0 +1,98 @@
+{
+  "analysis_grouping": "POOLED_NOT_BY_REVIEWER",
+  "certain_reference_count": 24,
+  "configuration_changes": {
+    "paths.artifact_root": "artifacts/bc_cscan_expert_pooled_rescore/v1",
+    "paths.output_root": "results/bc_cscan_expert_pooled_rescore/v1"
+  },
+  "domain_count": 6,
+  "exported_sessions": [
+    {
+      "export_id": "reference-20260909073915",
+      "exported_reference_count": 6,
+      "packet_id": "224ced1740a3eedec8c147bb8af81074dcbef1c68bb9f6ee475220ea04078986",
+      "reviewer_alias": "phl",
+      "session_path": "/home/ww/diff/.worktrees/bc-cscan-expert-pooled-rescore/.local/cscan_human_review_html/expert_reference_exports/phl/reference-20260909073915/session.json",
+      "session_sha256": "04aac88732e6ace09ec9641bb69f6ba3535be179b45a1ac7714e9100f2880cb1"
+    },
+    {
+      "export_id": "reference-20260909081350",
+      "exported_reference_count": 6,
+      "packet_id": "fa1cbb696e8260359a07b31be16f38b91b38bd116470e690cd69ee70d5a50f2d",
+      "reviewer_alias": "phl",
+      "session_path": "/home/ww/diff/.worktrees/bc-cscan-expert-pooled-rescore/.local/cscan_human_review_html/expert_reference_exports/phl/reference-20260909081350/session.json",
+      "session_sha256": "11c9b4b6cb9bae09c6de0918f0057b7c0e2beb7da2f7268b0fce75a1db620d68"
+    },
+    {
+      "export_id": "reference-20260909082011",
+      "exported_reference_count": 6,
+      "packet_id": "a86e7c1eb9b96a92ed8974842cab3ae84906f93a409c789a9afe8fe6b2f163ab",
+      "reviewer_alias": "phl",
+      "session_path": "/home/ww/diff/.worktrees/bc-cscan-expert-pooled-rescore/.local/cscan_human_review_html/expert_reference_exports/phl/reference-20260909082011/session.json",
+      "session_sha256": "6811ef06558a2c8e4698218123c3fdc72f190bb789006c0209f14c1266039f97"
+    },
+    {
+      "export_id": "reference-20260909070923",
+      "exported_reference_count": 6,
+      "packet_id": "c70a096a2928a75a3b76430443d14a953b8f9fe96e80f7ad66427e9d69b2008d",
+      "reviewer_alias": "ww",
+      "session_path": "/home/ww/diff/.worktrees/bc-cscan-expert-pooled-rescore/.local/cscan_human_review_html/expert_reference_exports/ww/reference-20260909070923/session.json",
+      "session_sha256": "6791b2a194151913b28f654b796d3eb27c2a67f63d9c2a00c648a78a0b327d5e"
+    }
+  ],
+  "inherited_proxy_inputs": [
+    {
+      "name": "analysis_summary.json",
+      "output_path": "/home/ww/diff/.worktrees/bc-cscan-expert-pooled-rescore/results/bc_cscan_expert_pooled_rescore/v1/analysis_summary.json",
+      "role": "FINALIZE_CONTEXT_NOT_REVIEWED_RESULT",
+      "sha256": "2ba97a27fb9c96bc473119042f1f1583a28d29cec5ae10d36522721f886edcfc",
+      "source_path": "/home/ww/diff/.worktrees/bc-cscan-expert-pooled-rescore/results/bc_cscan_frozen_process_analysis/analysis_summary.json"
+    },
+    {
+      "name": "recovery_manifest.json",
+      "output_path": "/home/ww/diff/.worktrees/bc-cscan-expert-pooled-rescore/results/bc_cscan_expert_pooled_rescore/v1/recovery_manifest.json",
+      "role": "FINALIZE_CONTEXT_NOT_REVIEWED_RESULT",
+      "sha256": "9ba18c948feb53f0ad07fcee8a6b372f32d76ad67764954edcb698a49c567bb5",
+      "source_path": "/home/ww/diff/.worktrees/bc-cscan-expert-pooled-rescore/results/bc_cscan_frozen_process_analysis/recovery_manifest.json"
+    },
+    {
+      "name": "report_stability_and_delay.csv",
+      "output_path": "/home/ww/diff/.worktrees/bc-cscan-expert-pooled-rescore/results/bc_cscan_expert_pooled_rescore/v1/report_stability_and_delay.csv",
+      "role": "FINALIZE_CONTEXT_NOT_REVIEWED_RESULT",
+      "sha256": "fd7e4dbce2bf6f29748ad7e519b310c6a3e69c2b16217ff1020d8c27f3a86698",
+      "source_path": "/home/ww/diff/.worktrees/bc-cscan-expert-pooled-rescore/results/bc_cscan_frozen_process_analysis/report_stability_and_delay.csv"
+    }
+  ],
+  "new_actor_forward_calls": 0,
+  "new_stop_forward_calls": 0,
+  "new_training": 0,
+  "new_vlm_calls": 0,
+  "original_sessions": [
+    {
+      "path": "/home/ww/diff/.worktrees/cscan-human-review-html/.local/cscan_human_review_html/reference_packets/reference-20260909070923.json",
+      "sha256": "040748a939fd9140907e2a68d71ff821490bbbd092311094f34b9d07838abf74"
+    },
+    {
+      "path": "/home/ww/diff/.worktrees/cscan-human-review-html/.local/cscan_human_review_html/reference_packets/reference-20260909073915.json",
+      "sha256": "3e8059f784e47ee931f9ee6b9c369dfd56d9f64068c5106d349d2fe838e5e1e6"
+    },
+    {
+      "path": "/home/ww/diff/.worktrees/cscan-human-review-html/.local/cscan_human_review_html/reference_packets/reference-20260909081350.json",
+      "sha256": "8a1ea21f3b337c884bc4cecfdfd77a17cc767be919bb25b629de43ae872aa092"
+    },
+    {
+      "path": "/home/ww/diff/.worktrees/cscan-human-review-html/.local/cscan_human_review_html/reference_packets/reference-20260909082011.json",
+      "sha256": "1d552a4436c08bfa4f815ac11f421296b0b35869cb29cfe2a55405695168b152"
+    }
+  ],
+  "physical_specimen_count": 24,
+  "pooled_reference_root": "/home/ww/diff/.worktrees/bc-cscan-expert-pooled-rescore/results/bc_cscan_expert_pooled_rescore/v1/inputs/references",
+  "reference_input_status": "FULL_TEST_REVIEWED_REFERENCE",
+  "reference_set_label": "EXPERT_POOL_V1",
+  "reference_version": "REVIEWED_02339eda86d486c3",
+  "schema_version": 1,
+  "source_expert_count": 2,
+  "source_export_count": 4,
+  "source_root": "/home/ww/paper3/cmc_damage_inference",
+  "uncertain_region_reference_count": 0
+}

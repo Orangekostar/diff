@@ -1,0 +1,135 @@
+{
+  "claims": [
+    {
+      "ci_lower_97_5": -0.00826279896297359,
+      "ci_upper_97_5": 0.04567531135004124,
+      "claim": "BC three-seed mean improves reviewed planner AUSC over P8",
+      "claim_id": "R1_LOCATE",
+      "estimate": 0.01804367740500334,
+      "evidence": "reviewed/planner_effects.csv",
+      "reference_version": "REVIEWED_02339eda86d486c3",
+      "status": "NOT_SUPPORTED",
+      "task": "LOCATE"
+    },
+    {
+      "ci_lower_97_5": 0.0,
+      "ci_upper_97_5": 0.0,
+      "claim": "BC three-seed mean improves reviewed planner AUSC over P8",
+      "claim_id": "R1_CHARACTERIZE",
+      "estimate": 0.0,
+      "evidence": "reviewed/planner_effects.csv",
+      "reference_version": "REVIEWED_02339eda86d486c3",
+      "status": "NOT_SUPPORTED",
+      "task": "CHARACTERIZE"
+    },
+    {
+      "ci_lower_97_5": -0.0071483381873465816,
+      "ci_upper_97_5": 0.028269513724885145,
+      "claim": "ACTOR_SURFACE_CUES contributes to seed-1 Actor planner AUSC",
+      "claim_id": "R2_LOCATE",
+      "estimate": 0.010738424477873121,
+      "evidence": "reviewed/actor_input_ablations.csv",
+      "reference_version": "REVIEWED_02339eda86d486c3",
+      "status": "NOT_SUPPORTED",
+      "task": "LOCATE"
+    },
+    {
+      "ci_lower_97_5": 0.0,
+      "ci_upper_97_5": 0.0,
+      "claim": "ACTOR_SURFACE_CUES contributes to seed-1 Actor planner AUSC",
+      "claim_id": "R2_CHARACTERIZE",
+      "estimate": 0.0,
+      "evidence": "reviewed/actor_input_ablations.csv",
+      "reference_version": "REVIEWED_02339eda86d486c3",
+      "status": "NOT_SUPPORTED",
+      "task": "CHARACTERIZE"
+    },
+    {
+      "ci_lower_97_5": 0.07315800758026718,
+      "ci_upper_97_5": 0.33717933770887865,
+      "claim": "ACTOR_US_FEEDBACK_CONTENT contributes to seed-1 Actor planner AUSC",
+      "claim_id": "R3_LOCATE",
+      "estimate": 0.20127601899850378,
+      "evidence": "reviewed/actor_input_ablations.csv",
+      "reference_version": "REVIEWED_02339eda86d486c3",
+      "status": "SUPPORTED",
+      "task": "LOCATE"
+    },
+    {
+      "ci_lower_97_5": 0.0,
+      "ci_upper_97_5": 0.0,
+      "claim": "ACTOR_US_FEEDBACK_CONTENT contributes to seed-1 Actor planner AUSC",
+      "claim_id": "R3_CHARACTERIZE",
+      "estimate": 0.0,
+      "evidence": "reviewed/actor_input_ablations.csv",
+      "reference_version": "REVIEWED_02339eda86d486c3",
+      "status": "NOT_SUPPORTED",
+      "task": "CHARACTERIZE"
+    },
+    {
+      "claim": "Frozen Path B joint completion/cost condition",
+      "claim_id": "R4_CHARACTERIZE",
+      "evidence": "reviewed/task_decisions.json",
+      "joint_path_b_pass": false,
+      "reference_version": "REVIEWED_02339eda86d486c3",
+      "status": "NOT_SUPPORTED",
+      "task": "CHARACTERIZE"
+    },
+    {
+      "claim": "Frozen Path B joint completion/cost condition",
+      "claim_id": "R4_LOCATE",
+      "evidence": "reviewed/task_decisions.json",
+      "joint_path_b_pass": false,
+      "reference_version": "REVIEWED_02339eda86d486c3",
+      "status": "NOT_SUPPORTED",
+      "task": "LOCATE"
+    },
+    {
+      "claim": "Full-input Reader agreement with pooled expert references",
+      "claim_id": "R5_CHARACTERIZE",
+      "evidence": "tables/full_input_reader_summary.csv",
+      "formal_success_count": 0,
+      "physical_specimen_count": 24,
+      "reference_version": "REVIEWED_02339eda86d486c3",
+      "status": "DESCRIPTIVE_RESULT",
+      "task": "CHARACTERIZE"
+    },
+    {
+      "claim": "Full-input Reader agreement with pooled expert references",
+      "claim_id": "R5_LOCATE",
+      "evidence": "tables/full_input_reader_summary.csv",
+      "formal_success_count": 6,
+      "physical_specimen_count": 24,
+      "reference_version": "REVIEWED_02339eda86d486c3",
+      "status": "DESCRIPTIVE_RESULT",
+      "task": "LOCATE"
+    },
+    {
+      "claim": "Frozen report and STOP process description",
+      "claim_id": "R6_PROCESS",
+      "evidence": "tables/reviewed_process_summary.csv",
+      "reference_version": "REVIEWED_02339eda86d486c3",
+      "status": "DESCRIPTIVE_RESULT",
+      "task": "BOTH"
+    },
+    {
+      "claim": "Blinded report review",
+      "claim_id": "R7_BLIND_REVIEW",
+      "evidence": "human_review/input_coverage.csv",
+      "reference_version": "REVIEWED_02339eda86d486c3",
+      "status": "PENDING_INPUT",
+      "task": "BOTH"
+    },
+    {
+      "claim": "Human planning comparison",
+      "claim_id": "R8_HUMAN_PLANNING",
+      "evidence": "human_planning/comparability_manifest.csv",
+      "reference_version": "REVIEWED_02339eda86d486c3",
+      "status": "PENDING_INPUT",
+      "task": "BOTH"
+    }
+  ],
+  "reference_set_label": "EXPERT_POOL_V1",
+  "reference_version": "REVIEWED_02339eda86d486c3",
+  "schema_version": 1
+}
