@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>C-scan 人工评审工作台</title>
+  <style>/*__CSCAN_STYLES__*/</style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="product-mark" aria-label="C-scan 人工评审工作台">
+      <span class="mark">CS</span>
+      <div><strong>C-scan 人工评审</strong><span id="mode-name">等待任务包</span></div>
+    </div>
+    <div class="top-actions">
+      <label class="command primary" title="导入本地任务包">
+        导入任务包<input id="packet-file" type="file" accept="application/json,.json" hidden>
+      </label>
+      <label class="command" title="恢复已导出的会话">
+        恢复会话<input id="session-file" type="file" accept="application/json,.json" hidden>
+      </label>
+      <button id="export-session" class="command" type="button" disabled>导出会话</button>
+      <span id="save-state" class="save-state">尚未导出</span>
+    </div>
+  </header>
+
+  <main class="workspace">
+    <aside class="item-panel" aria-label="任务列表">
+      <div class="panel-heading">
+        <div><span class="eyebrow">进度</span><strong id="progress-text">0 / 0</strong></div>
+        <span id="packet-number" class="quiet">未载入</span>
+      </div>
+      <div class="progress-track"><span id="progress-bar"></span></div>
+      <div id="item-list" class="item-list" role="listbox" aria-label="评审项目"></div>
+    </aside>
+
+    <section class="viewer-panel" aria-label="图像工作区">
+      <div class="viewer-header">
+        <div><span id="item-kicker" class="eyebrow">任务</span><strong id="item-title">请导入任务包</strong></div>
+        <span id="item-state" class="state-chip neutral">未开始</span>
+      </div>
+
+      <div id="reference-toolbar" class="toolbar mode-section" hidden>
+        <div class="segmented" aria-label="编辑工具">
+          <button type="button" data-tool="select" class="active" title="选择与编辑顶点">选择</button>
+          <button type="button" data-tool="certain" title="绘制确定异常区">确定区</button>
+          <button type="button" data-tool="uncertain" title="绘制不确定区">不确定区</button>
+          <button type="button" data-tool="pan" title="拖动画面">平移</button>
+        </div>
+        <div class="icon-actions">
+          <button id="undo" type="button" title="撤销" aria-label="撤销">↶</button>
+          <button id="redo" type="button" title="重做" aria-label="重做">↷</button>
+          <button id="cancel-polygon" type="button" title="取消未闭合多边形" aria-label="取消未闭合多边形">×</button>
+          <button id="delete-region" type="button" title="删除选中区域" aria-label="删除选中区域">⌫</button>
+        </div>
+      </div>
+
+      <div id="viewer-stage" class="viewer-stage empty">
+        <svg id="review-svg" xmlns="http://www.w3.org/2000/svg" tabindex="0" aria-label="C-scan 图像">
+          <defs>
+            <pattern id="empty-grid" width="20" height="20" patternUnits="userSpaceOnUse">
+              <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#cbd3d8" stroke-width="1"/>
+            </pattern>
+          </defs>
+          <rect id="empty-background" x="0" y="0" width="100" height="100" fill="url(#empty-grid)"/>
+          <image id="base-image" preserveAspectRatio="none"></image>
+          <image id="report-layer" preserveAspectRatio="none"></image>
+          <image id="support-layer" preserveAspectRatio="none"></image>
+          <g id="polygon-layer"></g>
+          <polyline id="draft-polygon" class="draft-polygon" points=""></polyline>
+          <g id="handle-layer"></g>
+        </svg>
+        <div id="empty-message" class="empty-message">导入 JSON 任务包后开始</div>
+      </div>
+
+      <div class="view-controls">
+        <div class="icon-actions">
+          <button id="zoom-out" type="button" title="缩小" aria-label="缩小">−</button>
+          <button id="zoom-in" type="button" title="放大" aria-label="放大">+</button>
+          <button id="reset-view" type="button" title="重置视图">重置</button>
+        </div>
+        <label><input id="show-certain" type="checkbox" checked> 确定区</label>
+        <label><input id="show-uncertain" type="checkbox" checked> 不确定区</label>
+        <label id="report-toggle-wrap" hidden><input id="show-report" type="checkbox" checked> 报告</label>
+        <label id="support-toggle-wrap" hidden><input id="show-support" type="checkbox" checked> 支持点</label>
+        <label class="opacity-control">图层 <input id="layer-opacity" type="range" min="20" max="100" value="72"></label>
+      </div>
+    </section>
+
+    <aside class="review-panel" aria-label="评审表单">
+      <section class="identity-band">
+        <span class="eyebrow">任务包</span>
+        <strong id="packet-id">未载入</strong>
+        <span id="packet-kind" class="quiet">—</span>
+      </section>
+
+      <section id="reference-form" class="mode-section" hidden>
+        <h2>标注来源</h2>
+        <label>评阅者别名<input id="reviewer-alias" type="text" autocomplete="off"></label>
+        <label>参考类型
+          <select id="reference-type">
+            <option value="">请选择真实来源</option>
+            <option value="EXPERT_REVIEWED">专家评阅</option>
+            <option value="AUTHOR_PROVIDED">作者提供</option>
+          </select>
+        </label>
+        <label>标注方式
+          <select id="annotation-origin">
+            <option value="FROM_SCRATCH">从零标注</option>
+            <option value="WITH_PREANNOTATION">借助预标注</option>
+          </select>
+        </label>
+        <label class="check-row"><input id="method-participant" type="checkbox"> 参与过方法开发</label>
+        <label class="check-row"><input id="saw-model" type="checkbox"> 提前看过模型输出</label>
+
+        <h2>当前试样</h2>
+        <label>备注<textarea id="reference-notes" rows="4"></textarea></label>
+        <div class="stacked-actions">
+          <button id="save-draft" type="button">保存草稿</button>
+          <button id="confirm-reference" type="button" class="positive">确认完成</button>
+          <button id="confirm-no-certain" type="button" class="warning">确认无确定区</button>
+          <button id="unable-reference" type="button">无法判读</button>
+        </div>
+        <div class="legend-row"><span class="swatch certain"></span>确定区 <span class="swatch uncertain"></span>不确定区</div>
+      </section>
+
+      <section id="blind-form" class="mode-section" hidden>
+        <h2>盲评身份</h2>
+        <label>评阅者编号<input id="blind-reviewer" type="text" autocomplete="off"></label>
+        <div class="condition" id="blind-condition">—</div>
+
+        <h2>当前报告</h2>
+        <div class="decision-group" role="group" aria-label="报告判断">
+          <button type="button" data-decision="DELIVERABLE">可交付</button>
+          <button type="button" data-decision="NEEDS_FURTHER_INSPECTION">需要继续检查</button>
+          <button type="button" data-decision="UNABLE_TO_JUDGE">无法判断</button>
+        </div>
+        <label>问题类型<input id="problem-type" type="text"></label>
+        <label>判断依据<textarea id="review-basis" rows="3"></textarea></label>
+        <label>备注<textarea id="blind-notes" rows="3"></textarea></label>
+        <div class="stacked-actions">
+          <button id="save-blind-draft" type="button">保存草稿</button>
+          <button id="confirm-blind" type="button" class="positive">确认判断</button>
+        </div>
+        <div class="legend-row"><span class="swatch measured"></span>已测证据 <span class="swatch unmeasured"></span>未测区 <span class="swatch report"></span>报告区域 <span class="swatch support"></span>支持点</div>
+      </section>
+
+      <div id="message" class="message" role="status" aria-live="polite"></div>
+      <div class="nav-actions">
+        <button id="previous-item" type="button" disabled>上一件</button>
+        <button id="next-item" type="button" disabled>下一件</button>
+      </div>
+    </aside>
+  </main>
+
+  <script>/*__CSCAN_APP__*/</script>
+</body>
+</html>

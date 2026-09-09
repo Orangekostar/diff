@@ -1,0 +1,1132 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>C-scan 人工评审工作台</title>
+  <style>:root {
+  color-scheme: light;
+  font-family: Inter, "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif;
+  background: #e9edef;
+  color: #172026;
+  letter-spacing: 0;
+  --line: #c8d0d5;
+  --panel: #f8fafb;
+  --muted: #66737c;
+  --ink: #172026;
+  --green: #087f6a;
+  --green-dark: #065c4f;
+  --amber: #b36b00;
+  --red: #b33a3a;
+  --blue: #176da8;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+button, input, select, textarea { font: inherit; letter-spacing: 0; }
+button, .command { min-height: 34px; border: 1px solid #aeb8be; border-radius: 5px; background: #fff; color: var(--ink); padding: 6px 11px; cursor: pointer; }
+button:hover, .command:hover { border-color: #667983; background: #f1f5f6; }
+button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, svg:focus-visible { outline: 2px solid #13856f; outline-offset: 2px; }
+button:disabled { opacity: .45; cursor: not-allowed; }
+.primary, button.positive { background: var(--green); border-color: var(--green); color: #fff; }
+.primary:hover, button.positive:hover { background: var(--green-dark); border-color: var(--green-dark); }
+button.warning { color: #704500; border-color: #d79c3c; background: #fff7e8; }
+
+.topbar { height: 58px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; border-bottom: 1px solid #b9c2c7; background: #fff; }
+.product-mark { display: flex; align-items: center; gap: 10px; min-width: 220px; }
+.product-mark .mark { display: grid; place-items: center; width: 34px; height: 34px; background: #12313a; color: #fff; border-radius: 5px; font-weight: 750; font-size: 13px; }
+.product-mark div { display: flex; flex-direction: column; line-height: 1.25; }
+.product-mark strong { font-size: 15px; }
+.product-mark div span { color: var(--muted); font-size: 12px; }
+.top-actions { display: flex; align-items: center; gap: 8px; }
+.command { display: inline-flex; align-items: center; }
+.save-state { color: var(--muted); font-size: 12px; min-width: 72px; }
+
+.workspace { height: calc(100vh - 58px); display: grid; grid-template-columns: 228px minmax(520px, 1fr) 300px; min-width: 1050px; }
+.item-panel, .review-panel, .viewer-panel { min-height: 0; background: var(--panel); }
+.item-panel { border-right: 1px solid var(--line); display: flex; flex-direction: column; }
+.review-panel { border-left: 1px solid var(--line); overflow: auto; padding: 14px; }
+.viewer-panel { display: grid; grid-template-rows: 57px auto minmax(0, 1fr) 46px; background: #dde3e6; }
+.viewer-panel:has(.toolbar[hidden]) { grid-template-rows: 57px minmax(0, 1fr) 46px; }
+
+.panel-heading, .viewer-header { height: 57px; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--line); background: #f8fafb; }
+.panel-heading > div, .viewer-header > div { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.eyebrow { color: var(--muted); font-size: 10px; text-transform: uppercase; font-weight: 700; }
+.quiet { color: var(--muted); font-size: 11px; }
+.progress-track { height: 4px; background: #dce2e5; }
+.progress-track span { display: block; height: 100%; width: 0; background: var(--green); transition: width .15s ease; }
+.item-list { overflow: auto; padding: 7px; }
+.item-button { width: 100%; display: grid; grid-template-columns: 28px minmax(0, 1fr) 9px; align-items: center; gap: 7px; min-height: 46px; margin-bottom: 4px; padding: 6px 8px; text-align: left; background: transparent; border-color: transparent; }
+.item-button.active { background: #e7f1ef; border-color: #8ab5ac; }
+.item-button .index { color: var(--muted); font-variant-numeric: tabular-nums; font-size: 11px; }
+.item-button .labels { min-width: 0; display: flex; flex-direction: column; }
+.item-button .labels strong, .item-button .labels span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.item-button .labels strong { font-size: 12px; }
+.item-button .labels span { color: var(--muted); font-size: 10px; }
+.status-dot { width: 8px; height: 8px; border-radius: 50%; background: #a9b2b7; }
+.status-dot.draft { background: var(--amber); }
+.status-dot.done { background: var(--green); }
+.status-dot.unable { background: var(--red); }
+
+.toolbar { display: flex; justify-content: space-between; align-items: center; min-height: 43px; padding: 5px 10px; background: #f4f7f8; border-bottom: 1px solid var(--line); }
+.segmented { display: inline-flex; }
+.segmented button { border-radius: 0; margin-left: -1px; min-width: 62px; }
+.segmented button:first-child { border-radius: 5px 0 0 5px; margin-left: 0; }
+.segmented button:last-child { border-radius: 0 5px 5px 0; }
+.segmented button.active { background: #163b45; border-color: #163b45; color: #fff; }
+.icon-actions { display: flex; gap: 5px; }
+.icon-actions button { width: 34px; min-width: 34px; padding: 4px; font-size: 17px; }
+.icon-actions #reset-view { width: auto; font-size: 12px; padding: 4px 10px; }
+
+.viewer-stage { min-height: 0; position: relative; overflow: hidden; background: #252d31; }
+#review-svg { width: 100%; height: 100%; display: block; touch-action: none; user-select: none; }
+.viewer-stage.empty #review-svg { opacity: .28; }
+.empty-message { position: absolute; inset: 0; display: grid; place-items: center; color: #e6ecef; font-size: 14px; pointer-events: none; }
+.viewer-stage:not(.empty) .empty-message { display: none; }
+.region { vector-effect: non-scaling-stroke; stroke-width: 2; cursor: pointer; }
+.region.certain { fill: rgba(218, 70, 55, .24); stroke: #e75042; }
+.region.uncertain { fill: rgba(36, 123, 194, .19); stroke: #3b91d1; stroke-dasharray: 6 4; }
+.region.selected { stroke: #fff; stroke-width: 3; }
+.draft-polygon { fill: rgba(255, 255, 255, .1); stroke: #fff; stroke-width: 2; stroke-dasharray: 5 4; vector-effect: non-scaling-stroke; }
+.vertex-handle { fill: #fff; stroke: #153943; stroke-width: 2; vector-effect: non-scaling-stroke; cursor: grab; }
+
+.view-controls { min-height: 46px; display: flex; align-items: center; gap: 12px; padding: 6px 10px; border-top: 1px solid var(--line); background: #f8fafb; color: #45535b; font-size: 11px; }
+.view-controls label { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+.view-controls .opacity-control { margin-left: auto; }
+.view-controls input[type="range"] { width: 84px; }
+
+.identity-band { padding-bottom: 12px; border-bottom: 1px solid var(--line); display: flex; flex-direction: column; gap: 3px; }
+.identity-band strong { font-size: 11px; overflow-wrap: anywhere; }
+.review-panel h2 { margin: 16px 0 8px; font-size: 12px; color: #33434b; }
+.review-panel label:not(.check-row) { display: flex; flex-direction: column; gap: 4px; margin-bottom: 9px; color: #526069; font-size: 11px; font-weight: 650; }
+.review-panel input[type="text"], .review-panel select, .review-panel textarea { width: 100%; border: 1px solid #b9c3c8; border-radius: 4px; background: #fff; color: var(--ink); padding: 7px 8px; resize: vertical; }
+.check-row { display: flex; align-items: center; gap: 6px; margin: 7px 0; color: #45535b; font-size: 11px; }
+.stacked-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 10px; }
+.stacked-actions button { min-height: 37px; font-size: 11px; padding: 5px 7px; }
+.decision-group { display: grid; grid-template-columns: 1fr; gap: 6px; margin-bottom: 12px; }
+.decision-group button { text-align: left; }
+.decision-group button.active { background: #163b45; border-color: #163b45; color: #fff; }
+.condition { padding: 8px; border-left: 3px solid #77858c; background: #edf1f3; color: #4f5e66; font-size: 10px; overflow-wrap: anywhere; }
+.legend-row { display: flex; align-items: center; flex-wrap: wrap; gap: 5px; margin-top: 13px; color: var(--muted); font-size: 10px; }
+.swatch { display: inline-block; width: 12px; height: 9px; border: 1px solid transparent; margin-left: 5px; }
+.swatch:first-child { margin-left: 0; }
+.swatch.certain { background: rgba(218,70,55,.35); border-color: #e75042; }
+.swatch.uncertain { background: rgba(36,123,194,.28); border-color: #3b91d1; }
+.swatch.measured { background: #7563b4; }
+.swatch.unmeasured { background: repeating-conic-gradient(#263036 0 25%, #384249 0 50%) 50% / 5px 5px; }
+.swatch.report { background: #ffb800; }
+.swatch.support { background: #00d6be; }
+.message { min-height: 40px; margin-top: 12px; padding: 8px; border-radius: 4px; background: #eef2f3; color: #45535b; font-size: 11px; white-space: pre-wrap; }
+.message.error { background: #fff0ef; color: #8d2929; }
+.message.success { background: #e8f4f1; color: #075c4e; }
+.nav-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 12px; }
+.state-chip { flex: 0 0 auto; border-radius: 999px; padding: 4px 8px; font-size: 10px; font-weight: 700; }
+.state-chip.neutral { background: #dfe5e8; color: #526069; }
+.state-chip.draft { background: #fff0cf; color: #7b4b00; }
+.state-chip.done { background: #d9efe9; color: #075c4e; }
+.state-chip.unable { background: #f8dedc; color: #8d2929; }
+
+@media (max-height: 720px) {
+  .review-panel h2 { margin-top: 10px; }
+  .review-panel textarea { max-height: 62px; }
+  .stacked-actions button { min-height: 33px; }
+}
+</style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="product-mark" aria-label="C-scan 人工评审工作台">
+      <span class="mark">CS</span>
+      <div><strong>C-scan 人工评审</strong><span id="mode-name">等待任务包</span></div>
+    </div>
+    <div class="top-actions">
+      <label class="command primary" title="导入本地任务包">
+        导入任务包<input id="packet-file" type="file" accept="application/json,.json" hidden>
+      </label>
+      <label class="command" title="恢复已导出的会话">
+        恢复会话<input id="session-file" type="file" accept="application/json,.json" hidden>
+      </label>
+      <button id="export-session" class="command" type="button" disabled>导出会话</button>
+      <span id="save-state" class="save-state">尚未导出</span>
+    </div>
+  </header>
+
+  <main class="workspace">
+    <aside class="item-panel" aria-label="任务列表">
+      <div class="panel-heading">
+        <div><span class="eyebrow">进度</span><strong id="progress-text">0 / 0</strong></div>
+        <span id="packet-number" class="quiet">未载入</span>
+      </div>
+      <div class="progress-track"><span id="progress-bar"></span></div>
+      <div id="item-list" class="item-list" role="listbox" aria-label="评审项目"></div>
+    </aside>
+
+    <section class="viewer-panel" aria-label="图像工作区">
+      <div class="viewer-header">
+        <div><span id="item-kicker" class="eyebrow">任务</span><strong id="item-title">请导入任务包</strong></div>
+        <span id="item-state" class="state-chip neutral">未开始</span>
+      </div>
+
+      <div id="reference-toolbar" class="toolbar mode-section" hidden>
+        <div class="segmented" aria-label="编辑工具">
+          <button type="button" data-tool="select" class="active" title="选择与编辑顶点">选择</button>
+          <button type="button" data-tool="certain" title="绘制确定异常区">确定区</button>
+          <button type="button" data-tool="uncertain" title="绘制不确定区">不确定区</button>
+          <button type="button" data-tool="pan" title="拖动画面">平移</button>
+        </div>
+        <div class="icon-actions">
+          <button id="undo" type="button" title="撤销" aria-label="撤销">↶</button>
+          <button id="redo" type="button" title="重做" aria-label="重做">↷</button>
+          <button id="cancel-polygon" type="button" title="取消未闭合多边形" aria-label="取消未闭合多边形">×</button>
+          <button id="delete-region" type="button" title="删除选中区域" aria-label="删除选中区域">⌫</button>
+        </div>
+      </div>
+
+      <div id="viewer-stage" class="viewer-stage empty">
+        <svg id="review-svg" xmlns="http://www.w3.org/2000/svg" tabindex="0" aria-label="C-scan 图像">
+          <defs>
+            <pattern id="empty-grid" width="20" height="20" patternUnits="userSpaceOnUse">
+              <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#cbd3d8" stroke-width="1"/>
+            </pattern>
+          </defs>
+          <rect id="empty-background" x="0" y="0" width="100" height="100" fill="url(#empty-grid)"/>
+          <image id="base-image" preserveAspectRatio="none"></image>
+          <image id="report-layer" preserveAspectRatio="none"></image>
+          <image id="support-layer" preserveAspectRatio="none"></image>
+          <g id="polygon-layer"></g>
+          <polyline id="draft-polygon" class="draft-polygon" points=""></polyline>
+          <g id="handle-layer"></g>
+        </svg>
+        <div id="empty-message" class="empty-message">导入 JSON 任务包后开始</div>
+      </div>
+
+      <div class="view-controls">
+        <div class="icon-actions">
+          <button id="zoom-out" type="button" title="缩小" aria-label="缩小">−</button>
+          <button id="zoom-in" type="button" title="放大" aria-label="放大">+</button>
+          <button id="reset-view" type="button" title="重置视图">重置</button>
+        </div>
+        <label><input id="show-certain" type="checkbox" checked> 确定区</label>
+        <label><input id="show-uncertain" type="checkbox" checked> 不确定区</label>
+        <label id="report-toggle-wrap" hidden><input id="show-report" type="checkbox" checked> 报告</label>
+        <label id="support-toggle-wrap" hidden><input id="show-support" type="checkbox" checked> 支持点</label>
+        <label class="opacity-control">图层 <input id="layer-opacity" type="range" min="20" max="100" value="72"></label>
+      </div>
+    </section>
+
+    <aside class="review-panel" aria-label="评审表单">
+      <section class="identity-band">
+        <span class="eyebrow">任务包</span>
+        <strong id="packet-id">未载入</strong>
+        <span id="packet-kind" class="quiet">—</span>
+      </section>
+
+      <section id="reference-form" class="mode-section" hidden>
+        <h2>标注来源</h2>
+        <label>评阅者别名<input id="reviewer-alias" type="text" autocomplete="off"></label>
+        <label>参考类型
+          <select id="reference-type">
+            <option value="">请选择真实来源</option>
+            <option value="EXPERT_REVIEWED">专家评阅</option>
+            <option value="AUTHOR_PROVIDED">作者提供</option>
+          </select>
+        </label>
+        <label>标注方式
+          <select id="annotation-origin">
+            <option value="FROM_SCRATCH">从零标注</option>
+            <option value="WITH_PREANNOTATION">借助预标注</option>
+          </select>
+        </label>
+        <label class="check-row"><input id="method-participant" type="checkbox"> 参与过方法开发</label>
+        <label class="check-row"><input id="saw-model" type="checkbox"> 提前看过模型输出</label>
+
+        <h2>当前试样</h2>
+        <label>备注<textarea id="reference-notes" rows="4"></textarea></label>
+        <div class="stacked-actions">
+          <button id="save-draft" type="button">保存草稿</button>
+          <button id="confirm-reference" type="button" class="positive">确认完成</button>
+          <button id="confirm-no-certain" type="button" class="warning">确认无确定区</button>
+          <button id="unable-reference" type="button">无法判读</button>
+        </div>
+        <div class="legend-row"><span class="swatch certain"></span>确定区 <span class="swatch uncertain"></span>不确定区</div>
+      </section>
+
+      <section id="blind-form" class="mode-section" hidden>
+        <h2>盲评身份</h2>
+        <label>评阅者编号<input id="blind-reviewer" type="text" autocomplete="off"></label>
+        <div class="condition" id="blind-condition">—</div>
+
+        <h2>当前报告</h2>
+        <div class="decision-group" role="group" aria-label="报告判断">
+          <button type="button" data-decision="DELIVERABLE">可交付</button>
+          <button type="button" data-decision="NEEDS_FURTHER_INSPECTION">需要继续检查</button>
+          <button type="button" data-decision="UNABLE_TO_JUDGE">无法判断</button>
+        </div>
+        <label>问题类型<input id="problem-type" type="text"></label>
+        <label>判断依据<textarea id="review-basis" rows="3"></textarea></label>
+        <label>备注<textarea id="blind-notes" rows="3"></textarea></label>
+        <div class="stacked-actions">
+          <button id="save-blind-draft" type="button">保存草稿</button>
+          <button id="confirm-blind" type="button" class="positive">确认判断</button>
+        </div>
+        <div class="legend-row"><span class="swatch measured"></span>已测证据 <span class="swatch unmeasured"></span>未测区 <span class="swatch report"></span>报告区域 <span class="swatch support"></span>支持点</div>
+      </section>
+
+      <div id="message" class="message" role="status" aria-live="polite"></div>
+      <div class="nav-actions">
+        <button id="previous-item" type="button" disabled>上一件</button>
+        <button id="next-item" type="button" disabled>下一件</button>
+      </div>
+    </aside>
+  </main>
+
+  <script>(() => {
+  "use strict";
+
+  const REFERENCE_PACKET = "REFERENCE_ANNOTATION";
+  const BLIND_PACKET = "BLIND_FIRST_STOP_REVIEW";
+  const BLINDING_CONDITION = "FROZEN_FIRST_STOP_VISIBLE_EVIDENCE_ONLY_V1";
+  const DECISIONS = new Set([
+    "DELIVERABLE",
+    "NEEDS_FURTHER_INSPECTION",
+    "UNABLE_TO_JUDGE",
+  ]);
+
+  const byId = (id) => document.getElementById(id);
+  const elements = {
+    packetFile: byId("packet-file"),
+    sessionFile: byId("session-file"),
+    exportSession: byId("export-session"),
+    modeName: byId("mode-name"),
+    saveState: byId("save-state"),
+    progressText: byId("progress-text"),
+    progressBar: byId("progress-bar"),
+    packetNumber: byId("packet-number"),
+    itemList: byId("item-list"),
+    itemKicker: byId("item-kicker"),
+    itemTitle: byId("item-title"),
+    itemState: byId("item-state"),
+    referenceToolbar: byId("reference-toolbar"),
+    viewerStage: byId("viewer-stage"),
+    svg: byId("review-svg"),
+    emptyBackground: byId("empty-background"),
+    baseImage: byId("base-image"),
+    reportLayer: byId("report-layer"),
+    supportLayer: byId("support-layer"),
+    polygonLayer: byId("polygon-layer"),
+    draftPolygon: byId("draft-polygon"),
+    handleLayer: byId("handle-layer"),
+    showCertain: byId("show-certain"),
+    showUncertain: byId("show-uncertain"),
+    showReport: byId("show-report"),
+    showSupport: byId("show-support"),
+    reportToggleWrap: byId("report-toggle-wrap"),
+    supportToggleWrap: byId("support-toggle-wrap"),
+    layerOpacity: byId("layer-opacity"),
+    referenceForm: byId("reference-form"),
+    blindForm: byId("blind-form"),
+    packetId: byId("packet-id"),
+    packetKind: byId("packet-kind"),
+    reviewerAlias: byId("reviewer-alias"),
+    referenceType: byId("reference-type"),
+    annotationOrigin: byId("annotation-origin"),
+    methodParticipant: byId("method-participant"),
+    sawModel: byId("saw-model"),
+    referenceNotes: byId("reference-notes"),
+    blindReviewer: byId("blind-reviewer"),
+    blindCondition: byId("blind-condition"),
+    problemType: byId("problem-type"),
+    reviewBasis: byId("review-basis"),
+    blindNotes: byId("blind-notes"),
+    message: byId("message"),
+    previousItem: byId("previous-item"),
+    nextItem: byId("next-item"),
+  };
+
+  const state = {
+    packet: null,
+    mode: null,
+    currentIndex: 0,
+    items: {},
+    history: {},
+    future: {},
+    tool: "select",
+    selectedRegion: null,
+    view: null,
+    drag: null,
+    changeLog: [],
+    dirty: false,
+  };
+
+  const clone = (value) => JSON.parse(JSON.stringify(value));
+
+  function showMessage(text, kind = "") {
+    elements.message.textContent = text;
+    elements.message.className = `message ${kind}`.trim();
+  }
+
+  function readJsonFile(file) {
+    return file.text().then((text) => JSON.parse(text));
+  }
+
+  function currentPacketItem() {
+    return state.packet ? state.packet.items[state.currentIndex] : null;
+  }
+
+  function currentItemState() {
+    const item = currentPacketItem();
+    return item ? state.items[item.item_id] : null;
+  }
+
+  function defaultReferenceState() {
+    return {
+      state: "UNANNOTATED",
+      regions: [],
+      uncertain_regions: [],
+      open_polygon: null,
+      notes: "",
+    };
+  }
+
+  function defaultBlindState() {
+    return {
+      state: "UNREVIEWED",
+      decision: "",
+      problem_type: "",
+      review_basis: "",
+      notes: "",
+    };
+  }
+
+  function validatePacket(packet) {
+    if (!packet || packet.schema_version !== 1 || !Array.isArray(packet.items) || !packet.packet_id) {
+      throw new Error("任务包结构无效");
+    }
+    if (packet.packet_kind !== REFERENCE_PACKET && packet.packet_kind !== BLIND_PACKET) {
+      throw new Error("不支持的任务包类型");
+    }
+    if (packet.packet_kind === BLIND_PACKET && packet.blinding_condition !== BLINDING_CONDITION) {
+      throw new Error("盲评材料条件不匹配");
+    }
+    const ids = new Set();
+    packet.items.forEach((item) => {
+      if (!item.item_id || ids.has(item.item_id) || !Number.isInteger(item.native_width) || !Number.isInteger(item.native_height)) {
+        throw new Error("任务项目身份无效");
+      }
+      ids.add(item.item_id);
+      if (packet.packet_kind === REFERENCE_PACKET && (!item.image_data || !item.specimen_key || item.frame !== "registered_cscan")) {
+        throw new Error("参考标注项目不完整");
+      }
+      if (packet.packet_kind === BLIND_PACKET && (!item.measured_image_data || !item.report_overlay_data || !item.support_overlay_data || !item.report_id)) {
+        throw new Error("盲评项目不完整");
+      }
+    });
+  }
+
+  function loadPacket(packet) {
+    validatePacket(packet);
+    state.packet = packet;
+    state.mode = packet.packet_kind === REFERENCE_PACKET ? "reference" : "blind";
+    state.currentIndex = 0;
+    state.items = {};
+    state.history = {};
+    state.future = {};
+    state.selectedRegion = null;
+    state.changeLog = [];
+    packet.items.forEach((item) => {
+      state.items[item.item_id] = state.mode === "reference" ? defaultReferenceState() : defaultBlindState();
+      state.history[item.item_id] = [];
+      state.future[item.item_id] = [];
+    });
+    state.dirty = false;
+    elements.referenceForm.hidden = state.mode !== "reference";
+    elements.referenceToolbar.hidden = state.mode !== "reference";
+    elements.blindForm.hidden = state.mode !== "blind";
+    elements.reportToggleWrap.hidden = state.mode !== "blind";
+    elements.supportToggleWrap.hidden = state.mode !== "blind";
+    elements.exportSession.disabled = false;
+    elements.previousItem.disabled = packet.items.length < 2;
+    elements.nextItem.disabled = packet.items.length < 2;
+    elements.modeName.textContent = state.mode === "reference" ? "参考区域标注" : "首次 STOP 报告盲评";
+    elements.packetId.textContent = packet.packet_id;
+    elements.packetKind.textContent = packet.packet_kind;
+    elements.packetNumber.textContent = packet.packet_number === 0 ? "练习包" : `第 ${packet.packet_number || 1} 包`;
+    if (state.mode === "blind") {
+      elements.blindCondition.textContent = packet.blinding_condition;
+    }
+    elements.saveState.textContent = "尚未导出";
+    renderAll(true);
+    showMessage(packet.test_only ? "已载入 TEST_ONLY 练习包" : `已载入 ${packet.items.length} 个项目`, "success");
+  }
+
+  function itemStatus(itemState) {
+    if (!itemState) return {label: "未开始", className: "neutral", dot: ""};
+    if (itemState.state === "DRAFT") return {label: "草稿", className: "draft", dot: "draft"};
+    if (itemState.state === "UNABLE_TO_JUDGE") return {label: "无法判读", className: "unable", dot: "unable"};
+    if (itemState.state === "CONFIRMED_NO_CERTAIN_REGION") return {label: "已确认无确定区", className: "done", dot: "done"};
+    if (itemState.state === "CONFIRMED") return {label: "已确认", className: "done", dot: "done"};
+    return {label: "未开始", className: "neutral", dot: ""};
+  }
+
+  function completedCount() {
+    return Object.values(state.items).filter((item) =>
+      state.mode === "reference"
+        ? ["CONFIRMED", "CONFIRMED_NO_CERTAIN_REGION", "UNABLE_TO_JUDGE"].includes(item.state)
+        : item.state === "CONFIRMED"
+    ).length;
+  }
+
+  function renderNavigator() {
+    elements.itemList.replaceChildren();
+    state.packet.items.forEach((item, index) => {
+      const appState = state.items[item.item_id];
+      const status = itemStatus(appState);
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = `item-button${index === state.currentIndex ? " active" : ""}`;
+      button.setAttribute("role", "option");
+      button.setAttribute("aria-selected", String(index === state.currentIndex));
+      const title = state.mode === "reference" ? item.specimen_key : `匿名报告 ${String(item.display_number).padStart(3, "0")}`;
+      const subtitle = state.mode === "reference" ? `${item.native_width} × ${item.native_height}` : item.task;
+      button.innerHTML = `<span class="index">${String(index + 1).padStart(2, "0")}</span><span class="labels"><strong></strong><span></span></span><i class="status-dot ${status.dot}"></i>`;
+      button.querySelector("strong").textContent = title;
+      button.querySelector(".labels span").textContent = subtitle;
+      button.addEventListener("click", () => navigateTo(index));
+      elements.itemList.append(button);
+    });
+    const done = completedCount();
+    elements.progressText.textContent = `${done} / ${state.packet.items.length}`;
+    elements.progressBar.style.width = `${state.packet.items.length ? (100 * done) / state.packet.items.length : 0}%`;
+  }
+
+  function resetView() {
+    const item = currentPacketItem();
+    if (!item) return;
+    state.view = {x: -0.5, y: -0.5, width: item.native_width, height: item.native_height};
+    applyView();
+  }
+
+  function applyView() {
+    if (!state.view) return;
+    const {x, y, width, height} = state.view;
+    elements.svg.setAttribute("viewBox", `${x} ${y} ${width} ${height}`);
+  }
+
+  function setImageAttributes(element, href, item) {
+    element.setAttribute("href", href || "");
+    element.setAttribute("x", "-0.5");
+    element.setAttribute("y", "-0.5");
+    element.setAttribute("width", String(item.native_width));
+    element.setAttribute("height", String(item.native_height));
+  }
+
+  function polygonPoints(region, item) {
+    return region.polygon
+      .map(([u, v]) => `${u * (item.native_width - 1)},${v * (item.native_height - 1)}`)
+      .join(" ");
+  }
+
+  function allReferenceRegions(itemState) {
+    return [
+      ...itemState.regions.map((region) => ({...region, bucket: "regions"})),
+      ...itemState.uncertain_regions.map((region) => ({...region, bucket: "uncertain_regions"})),
+    ];
+  }
+
+  function renderReferenceLayers(item) {
+    const itemState = currentItemState();
+    elements.polygonLayer.replaceChildren();
+    elements.handleLayer.replaceChildren();
+    const opacity = Number(elements.layerOpacity.value) / 100;
+    allReferenceRegions(itemState).forEach((region) => {
+      if ((region.certainty === "certain" && !elements.showCertain.checked) ||
+          (region.certainty === "uncertain" && !elements.showUncertain.checked)) return;
+      const polygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+      polygon.setAttribute("points", polygonPoints(region, item));
+      polygon.setAttribute("class", `region ${region.certainty}${state.selectedRegion === region.id ? " selected" : ""}`);
+      polygon.style.opacity = String(opacity);
+      polygon.dataset.regionId = region.id;
+      polygon.addEventListener("pointerdown", (event) => {
+        if (state.tool !== "select") return;
+        event.stopPropagation();
+        state.selectedRegion = region.id;
+        renderReferenceLayers(item);
+      });
+      elements.polygonLayer.append(polygon);
+    });
+    const selected = allReferenceRegions(itemState).find((region) => region.id === state.selectedRegion);
+    if (selected) {
+      const radius = Math.max(state.view.width, state.view.height) * 0.007;
+      selected.polygon.forEach(([u, v], index) => {
+        const handle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        handle.setAttribute("cx", String(u * (item.native_width - 1)));
+        handle.setAttribute("cy", String(v * (item.native_height - 1)));
+        handle.setAttribute("r", String(radius));
+        handle.setAttribute("class", "vertex-handle");
+        handle.dataset.handleIndex = String(index);
+        handle.dataset.regionId = selected.id;
+        elements.handleLayer.append(handle);
+      });
+    }
+    const open = itemState.open_polygon;
+    elements.draftPolygon.setAttribute("points", open ? polygonPoints({polygon: open.polygon}, item) : "");
+  }
+
+  function renderCurrent(resetViewport = false) {
+    const item = currentPacketItem();
+    const itemState = currentItemState();
+    if (!item) return;
+    elements.viewerStage.classList.remove("empty");
+    elements.emptyBackground.style.display = "none";
+    elements.itemKicker.textContent = state.mode === "reference" ? "试样" : "匿名首次 STOP 报告";
+    elements.itemTitle.textContent = state.mode === "reference" ? item.specimen_key : `报告 ${String(item.display_number).padStart(3, "0")} · ${item.task}`;
+    const status = itemStatus(itemState);
+    elements.itemState.textContent = status.label;
+    elements.itemState.className = `state-chip ${status.className}`;
+    if (state.mode === "reference") {
+      setImageAttributes(elements.baseImage, item.image_data, item);
+      setImageAttributes(elements.reportLayer, "", item);
+      setImageAttributes(elements.supportLayer, "", item);
+      elements.referenceNotes.value = itemState.notes || "";
+      renderReferenceLayers(item);
+    } else {
+      setImageAttributes(elements.baseImage, item.measured_image_data, item);
+      setImageAttributes(elements.reportLayer, item.report_overlay_data, item);
+      setImageAttributes(elements.supportLayer, item.support_overlay_data, item);
+      elements.reportLayer.style.display = elements.showReport.checked ? "" : "none";
+      elements.supportLayer.style.display = elements.showSupport.checked ? "" : "none";
+      elements.reportLayer.style.opacity = String(Number(elements.layerOpacity.value) / 100);
+      elements.problemType.value = itemState.problem_type || "";
+      elements.reviewBasis.value = itemState.review_basis || "";
+      elements.blindNotes.value = itemState.notes || "";
+      document.querySelectorAll("[data-decision]").forEach((button) => {
+        button.classList.toggle("active", button.dataset.decision === itemState.decision);
+      });
+      elements.polygonLayer.replaceChildren();
+      elements.handleLayer.replaceChildren();
+      elements.draftPolygon.setAttribute("points", "");
+    }
+    if (resetViewport || !state.view) resetView();
+    elements.previousItem.disabled = state.currentIndex === 0;
+    elements.nextItem.disabled = state.currentIndex === state.packet.items.length - 1;
+  }
+
+  function renderAll(resetViewport = false) {
+    if (!state.packet) return;
+    renderNavigator();
+    renderCurrent(resetViewport);
+  }
+
+  function syncCurrentInputs() {
+    const itemState = currentItemState();
+    if (!itemState) return;
+    if (state.mode === "reference") {
+      itemState.notes = elements.referenceNotes.value;
+    } else {
+      itemState.problem_type = elements.problemType.value;
+      itemState.review_basis = elements.reviewBasis.value;
+      itemState.notes = elements.blindNotes.value;
+    }
+  }
+
+  function navigateTo(index) {
+    if (!state.packet || index < 0 || index >= state.packet.items.length || index === state.currentIndex) return;
+    syncCurrentInputs();
+    state.currentIndex = index;
+    state.selectedRegion = null;
+    renderAll(true);
+  }
+
+  function pushHistory() {
+    const item = currentPacketItem();
+    if (!item) return;
+    state.history[item.item_id].push(clone(state.items[item.item_id]));
+    if (state.history[item.item_id].length > 80) state.history[item.item_id].shift();
+    state.future[item.item_id] = [];
+  }
+
+  function markEdited() {
+    const itemState = currentItemState();
+    if (itemState && ["CONFIRMED", "CONFIRMED_NO_CERTAIN_REGION", "UNABLE_TO_JUDGE"].includes(itemState.state)) {
+      recordStateChange(itemState.state, "DRAFT");
+      itemState.state = "DRAFT";
+    }
+    markDirty();
+  }
+
+  function recordStateChange(from, to) {
+    const item = currentPacketItem();
+    if (!item || from === to) return;
+    state.changeLog.push({item_id: item.item_id, from, to, sequence: state.changeLog.length + 1});
+  }
+
+  function undo() {
+    const item = currentPacketItem();
+    if (!item || !state.history[item.item_id].length) return;
+    state.future[item.item_id].push(clone(state.items[item.item_id]));
+    state.items[item.item_id] = state.history[item.item_id].pop();
+    state.selectedRegion = null;
+    markDirty();
+    renderAll();
+  }
+
+  function redo() {
+    const item = currentPacketItem();
+    if (!item || !state.future[item.item_id].length) return;
+    state.history[item.item_id].push(clone(state.items[item.item_id]));
+    state.items[item.item_id] = state.future[item.item_id].pop();
+    state.selectedRegion = null;
+    markDirty();
+    renderAll();
+  }
+
+  function screenToImage(event) {
+    const item = currentPacketItem();
+    const matrix = elements.svg.getScreenCTM();
+    if (!item || !matrix) throw new Error("无法读取图像坐标");
+    const point = elements.svg.createSVGPoint();
+    point.x = event.clientX;
+    point.y = event.clientY;
+    const local = point.matrixTransform(matrix.inverse());
+    return {
+      x: Math.max(0, Math.min(item.native_width - 1, local.x)),
+      y: Math.max(0, Math.min(item.native_height - 1, local.y)),
+    };
+  }
+
+  function normalizedPoint(event) {
+    const item = currentPacketItem();
+    const point = screenToImage(event);
+    return [point.x / (item.native_width - 1), point.y / (item.native_height - 1)];
+  }
+
+  function setTool(tool) {
+    if (!state.packet || state.mode !== "reference") return;
+    state.tool = tool;
+    document.querySelectorAll("[data-tool]").forEach((button) => {
+      button.classList.toggle("active", button.dataset.tool === tool);
+    });
+    elements.svg.style.cursor = tool === "pan" ? "grab" : tool === "select" ? "default" : "crosshair";
+  }
+
+  function addDraftPoint(event) {
+    if (!state.packet || state.mode !== "reference" || !["certain", "uncertain"].includes(state.tool)) return;
+    const itemState = currentItemState();
+    if (!itemState.open_polygon) {
+      pushHistory();
+      itemState.open_polygon = {certainty: state.tool, polygon: []};
+    } else if (itemState.open_polygon.certainty !== state.tool) {
+      showMessage("请先闭合或取消当前多边形", "error");
+      return;
+    }
+    itemState.open_polygon.polygon.push(normalizedPoint(event));
+    itemState.state = "DRAFT";
+    markDirty();
+    renderReferenceLayers(currentPacketItem());
+  }
+
+  function finishDraftPolygon() {
+    if (!state.packet || state.mode !== "reference") return;
+    const itemState = currentItemState();
+    const open = itemState.open_polygon;
+    if (!open) return;
+    const points = open.polygon.filter((point, index, values) =>
+      index === 0 || Math.hypot(point[0] - values[index - 1][0], point[1] - values[index - 1][1]) > 1e-8
+    );
+    if (points.length > 1 && Math.hypot(points[0][0] - points.at(-1)[0], points[0][1] - points.at(-1)[1]) <= 1e-8) points.pop();
+    const distinct = new Set(points.map(([u, v]) => `${u.toFixed(12)},${v.toFixed(12)}`));
+    const area = Math.abs(points.reduce((total, point, index) => {
+      const next = points[(index + 1) % points.length];
+      return total + point[0] * next[1] - next[0] * point[1];
+    }, 0));
+    if (distinct.size < 3 || area <= 1e-12) {
+      showMessage("多边形至少需要三个不同且非共线的顶点", "error");
+      return;
+    }
+    const certainty = open.certainty;
+    const bucket = certainty === "certain" ? "regions" : "uncertain_regions";
+    const id = `${certainty}-${Date.now()}-${itemState[bucket].length + 1}`;
+    itemState[bucket].push({id, certainty, polygon: points});
+    itemState.open_polygon = null;
+    itemState.state = "DRAFT";
+    state.selectedRegion = id;
+    markDirty();
+    renderAll();
+    showMessage(certainty === "certain" ? "已添加确定区" : "已添加不确定区", "success");
+  }
+
+  function cancelDraftPolygon() {
+    const itemState = currentItemState();
+    if (!itemState || !itemState.open_polygon) return;
+    itemState.open_polygon = null;
+    markDirty();
+    renderReferenceLayers(currentPacketItem());
+  }
+
+  function deleteSelectedRegion() {
+    const itemState = currentItemState();
+    if (!itemState || !state.selectedRegion) return;
+    pushHistory();
+    itemState.regions = itemState.regions.filter((region) => region.id !== state.selectedRegion);
+    itemState.uncertain_regions = itemState.uncertain_regions.filter((region) => region.id !== state.selectedRegion);
+    state.selectedRegion = null;
+    itemState.state = "DRAFT";
+    markEdited();
+    renderAll();
+  }
+
+  function selectedRegion() {
+    const itemState = currentItemState();
+    if (!itemState || !state.selectedRegion) return null;
+    return allReferenceRegions(itemState).find((region) => region.id === state.selectedRegion) || null;
+  }
+
+  function beginPointer(event) {
+    if (!state.packet) return;
+    if (state.mode === "reference" && event.target.dataset.handleIndex !== undefined) {
+      const region = selectedRegion();
+      if (!region) return;
+      pushHistory();
+      state.drag = {kind: "vertex", index: Number(event.target.dataset.handleIndex), pointerId: event.pointerId};
+      elements.svg.setPointerCapture(event.pointerId);
+      event.preventDefault();
+      return;
+    }
+    if (state.tool === "pan" || event.button === 1 || state.mode === "blind") {
+      state.drag = {
+        kind: "pan",
+        pointerId: event.pointerId,
+        clientX: event.clientX,
+        clientY: event.clientY,
+        view: {...state.view},
+      };
+      elements.svg.setPointerCapture(event.pointerId);
+      elements.svg.style.cursor = "grabbing";
+      event.preventDefault();
+      return;
+    }
+    if (state.mode === "reference" && state.tool === "select" && event.target === elements.svg) {
+      state.selectedRegion = null;
+      renderReferenceLayers(currentPacketItem());
+    }
+  }
+
+  function movePointer(event) {
+    if (!state.drag || state.drag.pointerId !== event.pointerId) return;
+    if (state.drag.kind === "vertex") {
+      const region = selectedRegion();
+      if (!region) return;
+      region.polygon[state.drag.index] = normalizedPoint(event);
+      markEdited();
+      renderReferenceLayers(currentPacketItem());
+      return;
+    }
+    const rect = elements.svg.getBoundingClientRect();
+    state.view.x = state.drag.view.x - (event.clientX - state.drag.clientX) * state.drag.view.width / rect.width;
+    state.view.y = state.drag.view.y - (event.clientY - state.drag.clientY) * state.drag.view.height / rect.height;
+    applyView();
+  }
+
+  function endPointer(event) {
+    if (!state.drag || state.drag.pointerId !== event.pointerId) return;
+    elements.svg.releasePointerCapture(event.pointerId);
+    state.drag = null;
+    elements.svg.style.cursor = state.tool === "pan" || state.mode === "blind" ? "grab" : "default";
+    if (state.mode === "reference") renderAll();
+  }
+
+  function zoom(factor, clientPoint = null) {
+    if (!state.packet || !state.view) return;
+    const item = currentPacketItem();
+    const minWidth = item.native_width * 0.08;
+    const maxWidth = item.native_width * 4;
+    const nextWidth = Math.max(minWidth, Math.min(maxWidth, state.view.width * factor));
+    const applied = nextWidth / state.view.width;
+    let anchorX = state.view.x + state.view.width / 2;
+    let anchorY = state.view.y + state.view.height / 2;
+    if (clientPoint) {
+      const local = screenToImage(clientPoint);
+      anchorX = local.x;
+      anchorY = local.y;
+    }
+    state.view.x = anchorX - (anchorX - state.view.x) * applied;
+    state.view.y = anchorY - (anchorY - state.view.y) * applied;
+    state.view.width *= applied;
+    state.view.height *= applied;
+    applyView();
+    if (state.mode === "reference") renderReferenceLayers(item);
+  }
+
+  function setApplicationState(next) {
+    const itemState = currentItemState();
+    if (!itemState) return;
+    syncCurrentInputs();
+    if (!elements.reviewerAlias.value.trim()) {
+      showMessage("请填写评阅者别名", "error");
+      return;
+    }
+    if (next !== "UNABLE_TO_JUDGE" && !elements.referenceType.value) {
+      showMessage("请选择真实参考来源", "error");
+      return;
+    }
+    if (next === "CONFIRMED" && itemState.regions.length === 0) {
+      showMessage("确认完成前至少需要一个确定区", "error");
+      return;
+    }
+    if (next === "CONFIRMED_NO_CERTAIN_REGION" && itemState.regions.length > 0) {
+      showMessage("当前仍有确定区，请删除后再确认无确定区", "error");
+      return;
+    }
+    if (itemState.open_polygon) {
+      showMessage("请先闭合或取消未完成的多边形", "error");
+      return;
+    }
+    recordStateChange(itemState.state, next);
+    itemState.state = next;
+    markDirty();
+    renderAll();
+    showMessage("当前试样状态已更新", "success");
+  }
+
+  function saveReferenceDraft() {
+    const itemState = currentItemState();
+    if (!itemState) return;
+    syncCurrentInputs();
+    recordStateChange(itemState.state, "DRAFT");
+    itemState.state = "DRAFT";
+    markDirty();
+    renderAll();
+    showMessage("草稿已保留在当前会话，请导出会话形成可移动备份", "success");
+  }
+
+  function chooseDecision(decision) {
+    if (!DECISIONS.has(decision)) return;
+    const itemState = currentItemState();
+    if (!itemState) return;
+    itemState.decision = decision;
+    if (itemState.state !== "CONFIRMED") itemState.state = "DRAFT";
+    markDirty();
+    renderAll();
+  }
+
+  function saveBlindDraft() {
+    const itemState = currentItemState();
+    if (!itemState) return;
+    syncCurrentInputs();
+    recordStateChange(itemState.state, "DRAFT");
+    itemState.state = "DRAFT";
+    markDirty();
+    renderAll();
+    showMessage("盲评草稿已保留，请导出会话形成可移动备份", "success");
+  }
+
+  function confirmBlind() {
+    const itemState = currentItemState();
+    if (!itemState) return;
+    syncCurrentInputs();
+    if (!elements.blindReviewer.value.trim()) {
+      showMessage("请填写评阅者编号", "error");
+      return;
+    }
+    if (!DECISIONS.has(itemState.decision)) {
+      showMessage("请选择一个判断", "error");
+      return;
+    }
+    recordStateChange(itemState.state, "CONFIRMED");
+    itemState.state = "CONFIRMED";
+    markDirty();
+    renderAll();
+    showMessage("当前报告判断已确认", "success");
+  }
+
+  function sessionSnapshot() {
+    syncCurrentInputs();
+    const stamp = new Date().toISOString().replace(/[-:.TZ]/g, "").slice(0, 14);
+    if (state.mode === "reference") {
+      return {
+        schema_version: 1,
+        session_kind: "CSCAN_REFERENCE_SESSION",
+        packet_id: state.packet.packet_id,
+        export_id: `reference-${stamp}`,
+        reviewer: {
+          reviewer_alias: elements.reviewerAlias.value.trim(),
+          reference_type: elements.referenceType.value,
+          participated_in_method_development: elements.methodParticipant.checked,
+          saw_model_outputs: elements.sawModel.checked,
+          annotation_origin: elements.annotationOrigin.value,
+        },
+        items: clone(state.items),
+        change_log: clone(state.changeLog),
+      };
+    }
+    return {
+      schema_version: 1,
+      session_kind: "CSCAN_BLIND_REVIEW_SESSION",
+      packet_id: state.packet.packet_id,
+      export_id: `blind-${stamp}`,
+      reviewer_id: elements.blindReviewer.value.trim(),
+      blinding_condition: BLINDING_CONDITION,
+      items: clone(state.items),
+      change_log: clone(state.changeLog),
+    };
+  }
+
+  function downloadJson(payload, filename) {
+    const blob = new Blob([JSON.stringify(payload, null, 2) + "\n"], {type: "application/json;charset=utf-8"});
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = filename;
+    document.body.append(anchor);
+    anchor.click();
+    anchor.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  function exportSession() {
+    if (!state.packet) return;
+    const session = sessionSnapshot();
+    downloadJson(session, `${session.export_id}.json`);
+    state.dirty = false;
+    elements.saveState.textContent = "已导出";
+    showMessage("会话文件已导出", "success");
+  }
+
+  function importSession(session) {
+    if (!state.packet) throw new Error("请先导入对应任务包");
+    const expectedKind = state.mode === "reference" ? "CSCAN_REFERENCE_SESSION" : "CSCAN_BLIND_REVIEW_SESSION";
+    if (!session || session.schema_version !== 1 || session.session_kind !== expectedKind || session.packet_id !== state.packet.packet_id || !session.items) {
+      throw new Error("会话与当前任务包不匹配");
+    }
+    const known = new Set(state.packet.items.map((item) => item.item_id));
+    if (Object.keys(session.items).some((id) => !known.has(id))) throw new Error("会话包含未知项目");
+    state.packet.items.forEach((item) => {
+      state.items[item.item_id] = clone(session.items[item.item_id] || (state.mode === "reference" ? defaultReferenceState() : defaultBlindState()));
+      state.history[item.item_id] = [];
+      state.future[item.item_id] = [];
+    });
+    state.changeLog = clone(session.change_log || []);
+    if (state.mode === "reference") {
+      const reviewer = session.reviewer || {};
+      elements.reviewerAlias.value = reviewer.reviewer_alias || "";
+      elements.referenceType.value = reviewer.reference_type || "";
+      elements.annotationOrigin.value = reviewer.annotation_origin || "FROM_SCRATCH";
+      elements.methodParticipant.checked = reviewer.participated_in_method_development === true;
+      elements.sawModel.checked = reviewer.saw_model_outputs === true;
+    } else {
+      elements.blindReviewer.value = session.reviewer_id || "";
+    }
+    state.currentIndex = 0;
+    state.selectedRegion = null;
+    state.dirty = false;
+    elements.saveState.textContent = "会话已恢复";
+    renderAll(true);
+    showMessage("会话已恢复", "success");
+  }
+
+  function markDirty() {
+    state.dirty = true;
+    elements.saveState.textContent = "有未导出更改";
+    try {
+      if (state.packet) localStorage.setItem(`cscan-review-${state.packet.packet_id}`, JSON.stringify(sessionSnapshot()));
+    } catch (_) {
+      // Explicit file export remains the authoritative backup path.
+    }
+  }
+
+  elements.packetFile.addEventListener("change", async () => {
+    const file = elements.packetFile.files[0];
+    if (!file) return;
+    try {
+      loadPacket(await readJsonFile(file));
+    } catch (error) {
+      showMessage(error.message || String(error), "error");
+    } finally {
+      elements.packetFile.value = "";
+    }
+  });
+
+  elements.sessionFile.addEventListener("change", async () => {
+    const file = elements.sessionFile.files[0];
+    if (!file) return;
+    try {
+      importSession(await readJsonFile(file));
+    } catch (error) {
+      showMessage(error.message || String(error), "error");
+    } finally {
+      elements.sessionFile.value = "";
+    }
+  });
+
+  elements.exportSession.addEventListener("click", exportSession);
+  elements.previousItem.addEventListener("click", () => navigateTo(state.currentIndex - 1));
+  elements.nextItem.addEventListener("click", () => navigateTo(state.currentIndex + 1));
+  document.querySelectorAll("[data-tool]").forEach((button) => button.addEventListener("click", () => setTool(button.dataset.tool)));
+  document.querySelectorAll("[data-decision]").forEach((button) => button.addEventListener("click", () => chooseDecision(button.dataset.decision)));
+  byId("undo").addEventListener("click", undo);
+  byId("redo").addEventListener("click", redo);
+  byId("cancel-polygon").addEventListener("click", cancelDraftPolygon);
+  byId("delete-region").addEventListener("click", deleteSelectedRegion);
+  byId("zoom-in").addEventListener("click", () => zoom(0.8));
+  byId("zoom-out").addEventListener("click", () => zoom(1.25));
+  byId("reset-view").addEventListener("click", resetView);
+  byId("save-draft").addEventListener("click", saveReferenceDraft);
+  byId("confirm-reference").addEventListener("click", () => setApplicationState("CONFIRMED"));
+  byId("confirm-no-certain").addEventListener("click", () => setApplicationState("CONFIRMED_NO_CERTAIN_REGION"));
+  byId("unable-reference").addEventListener("click", () => setApplicationState("UNABLE_TO_JUDGE"));
+  byId("save-blind-draft").addEventListener("click", saveBlindDraft);
+  byId("confirm-blind").addEventListener("click", confirmBlind);
+
+  [elements.showCertain, elements.showUncertain, elements.layerOpacity].forEach((control) => control.addEventListener("input", () => state.mode === "reference" && renderReferenceLayers(currentPacketItem())));
+  elements.showReport.addEventListener("change", () => { elements.reportLayer.style.display = elements.showReport.checked ? "" : "none"; });
+  elements.showSupport.addEventListener("change", () => { elements.supportLayer.style.display = elements.showSupport.checked ? "" : "none"; });
+  elements.layerOpacity.addEventListener("input", () => {
+    elements.reportLayer.style.opacity = String(Number(elements.layerOpacity.value) / 100);
+  });
+
+  elements.svg.addEventListener("click", (event) => {
+    if (event.detail === 1) addDraftPoint(event);
+  });
+  elements.svg.addEventListener("dblclick", (event) => {
+    if (["certain", "uncertain"].includes(state.tool)) {
+      event.preventDefault();
+      finishDraftPolygon();
+    }
+  });
+  elements.svg.addEventListener("pointerdown", beginPointer);
+  elements.svg.addEventListener("pointermove", movePointer);
+  elements.svg.addEventListener("pointerup", endPointer);
+  elements.svg.addEventListener("pointercancel", endPointer);
+  elements.svg.addEventListener("wheel", (event) => {
+    if (!state.packet) return;
+    event.preventDefault();
+    zoom(event.deltaY < 0 ? 0.88 : 1.14, event);
+  }, {passive: false});
+
+  document.addEventListener("keydown", (event) => {
+    const tag = document.activeElement && document.activeElement.tagName;
+    if (["INPUT", "TEXTAREA", "SELECT"].includes(tag)) return;
+    if (event.key === "Escape") cancelDraftPolygon();
+    if (event.key === "Enter" && state.mode === "reference") finishDraftPolygon();
+    if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "z") {
+      event.preventDefault();
+      event.shiftKey ? redo() : undo();
+    }
+    if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "y") {
+      event.preventDefault();
+      redo();
+    }
+  });
+
+  window.addEventListener("beforeunload", (event) => {
+    if (!state.dirty) return;
+    event.preventDefault();
+    event.returnValue = "";
+  });
+
+  window.CScanReviewApp = {loadPacket, importSession, sessionSnapshot, screenToImage};
+})();
+</script>
+</body>
+</html>

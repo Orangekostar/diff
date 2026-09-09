@@ -1,0 +1,9 @@
+{
+  "network_dependencies": 0,
+  "output_bytes": 51842,
+  "output_path": "/home/ww/diff/.worktrees/cscan-human-review-html/dist/cscan_human_review/index.html",
+  "output_sha256": "4ef35323936c98925fef0059602ccbed0241dc6c181f09643d3d1ec1a896e4f9",
+  "schema_version": 1,
+  "stage": "CSCAN_HUMAN_REVIEW_HTML",
+  "tool_status": "READY"
+}

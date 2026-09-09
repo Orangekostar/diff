@@ -1,0 +1,6 @@
+schema_version,dataset_id,specimen_id,specimen_key,task,method,seed,stop_system,stopped,exhausted,report_status
+1,cgtnjyggtm,q24-37,cgtnjyggtm:q24-37,CHARACTERIZE,R_BALANCED_P8,1,S_BC_CAL,False,True,NO_FIRST_STOP_REPORT
+1,xcmzfsbd9t,c24-54,xcmzfsbd9t:c24-54,CHARACTERIZE,R_BALANCED_P8,1,S_BC_CAL,False,True,NO_FIRST_STOP_REPORT
+1,ykhs7s2dck,q8-4,ykhs7s2dck:q8-4,CHARACTERIZE,BC_S1,1,S_BC_CAL,False,True,NO_FIRST_STOP_REPORT
+1,ykhs7s2dck,q8-4,ykhs7s2dck:q8-4,CHARACTERIZE,BC_S2,2,S_BC_CAL,False,True,NO_FIRST_STOP_REPORT
+1,ykhs7s2dck,q8-4,ykhs7s2dck:q8-4,CHARACTERIZE,R_BALANCED_P8,1,S_BC_CAL,False,True,NO_FIRST_STOP_REPORT

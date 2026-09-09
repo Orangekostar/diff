@@ -1,0 +1,33 @@
+schema_version: 1
+stage: CSCAN_HUMAN_REVIEW_HTML
+repository_base_sha: 2102cc4a1726910931dfaaf20e29ad29a20eaf2e
+
+paths:
+  frozen_process_config: paper_v3/configs/bc_cscan_frozen_process_analysis.yaml
+  first_stop: results/bc_cscan_frozen_process_analysis/first_stop_decomposition.csv
+  trajectories: results/bc_cscan_path_b_supplement/trajectories.parquet
+  cohort: results/bc_cscan_path_b_supplement/cohort_and_reference_coverage.csv
+  web_root: web/cscan_human_review
+  dist_root: dist/cscan_human_review
+  result_root: results/cscan_human_review_html
+  artifact_root: artifacts/cscan_human_review_html
+  local_root: .local/cscan_human_review_html
+
+frozen_inputs:
+  frozen_process_config: 6fc7d88e72bec9a37f3527a0a137b3407fb11803d5f90547183f56c82db4f5d7
+  first_stop: 1a716518ad7db79b665f00e9dba038ac26df1620527cef0d63b984e03b5dab72
+  trajectories: 5bf8e4ba677be063f3d434ce947c541e8dc213bf5d017c07b893d3d74a9b50c1
+  cohort: 2b5938e93d8df8b738a527dba17127bdcc8ab0876e03001e7de6eb736471193f
+
+packets:
+  schema_version: 1
+  reference_packet_size: 6
+  blind_packet_size: 32
+  shuffle_seed: 20260909
+  blinding_condition: FROZEN_FIRST_STOP_VISIBLE_EVIDENCE_ONLY_V1
+
+resource_limits:
+  training_updates: 0
+  vlm_calls: 0
+  actor_stop_forward_calls: 0
+  cpu_processes: 1
