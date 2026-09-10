@@ -462,7 +462,6 @@ def _overlay_mask(
             colors=(color,),
             linewidths=(linewidth,),
             linestyles=(linestyle,),
-            origin="upper",
         )
 
 

@@ -86,6 +86,10 @@ Still hypotheses requiring separate analysis:
 
 No annotation/Reader base-image mismatch was found.
 
+## Rendering Correction
+
+The initial PNG export applied `origin="upper"` independently to both the mask image and its contour. With the registered y-axis already directed downward, the contour received a second y transform and was vertically mirrored while the translucent fill remained correct. The shared contour call now uses the registered array coordinates directly. An asymmetric-mask regression test checks exact contour bounds, and all PNGs containing mask boundaries were regenerated in place. Mask arrays, report hashes, overlap metrics, first-STOP identity, trajectory, and the base C-scan were unchanged.
+
 ## Stored Identity
 
 - Reference version: `REVIEWED_02339eda86d486c3`.

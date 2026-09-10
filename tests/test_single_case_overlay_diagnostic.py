@@ -7,6 +7,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+import numpy as np
 import polars as pl
 import pytest
 from PIL import Image, ImageStat
@@ -92,6 +93,37 @@ def test_selection_prioritizes_distinct_report_identity_then_lowest_iou(
     assert selected.proxy_report_sha256 == "y" * 64
     assert "preselected fixed case" in selected.selected_reason
     assert "lowest EXPERT_GT-vs-PROXY_GT" in selected.selected_reason
+
+
+def test_overlay_boundary_uses_same_registered_coordinates_as_mask_fill() -> None:
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    mask = np.zeros((10, 12), dtype=np.bool_)
+    mask[1:4, 2:6] = True
+    figure, axis = plt.subplots()
+    try:
+        axis.imshow(np.zeros((10, 12, 3), dtype=np.uint8), origin="upper")
+        axis.set_ylim(9.5, -0.5)
+        _overlay_module()._overlay_mask(
+            axis,
+            mask,
+            color="#009E73",
+            alpha=0.2,
+            linestyle="solid",
+        )
+        vertices = np.concatenate(
+            [path.vertices for path in axis.collections[-1].get_paths()]
+        )
+    finally:
+        plt.close(figure)
+
+    assert vertices[:, 0].min() == pytest.approx(1.5)
+    assert vertices[:, 0].max() == pytest.approx(5.5)
+    assert vertices[:, 1].min() == pytest.approx(0.5)
+    assert vertices[:, 1].max() == pytest.approx(3.5)
 
 
 def test_real_case_recovery_preserves_registered_pixels_and_first_stop() -> None:

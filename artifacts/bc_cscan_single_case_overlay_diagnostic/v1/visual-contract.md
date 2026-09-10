@@ -9,7 +9,7 @@
 - Expert source: `results/bc_cscan_expert_pooled_rescore/v1/inputs/references/reference-023-4c81fe9c.json`.
 - Proxy source: frozen full-input Reader report recovered by the existing reviewed pipeline.
 - BC source: stored actions replayed only through the actual calibrated first STOP.
-- Coordinate contract: all masks use the unchanged 675 x 674 registered C-scan pixel frame, upper-left origin, x rightward, y downward.
+- Coordinate contract: all mask fills and contour vertices use the unchanged 675 x 674 registered C-scan pixel frame, upper-left origin, x rightward, y downward.
 - Encoding: `EXPERT_GT` green solid; `PROXY_GT` blue dashed; `BC_FINAL` red-orange dotted; trajectory magenta; measured cells amber.
 - Layout: independent square panels plus one 2 x 3 browsing summary; legends sit below the image field.
 - Export: PNG, long edge at least 1800 px, white background, embedded title and description metadata.
