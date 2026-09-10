@@ -1,0 +1,30 @@
+{
+  "action_protocol": "NATIVE_8X8_FULL_CELL_V1",
+  "actor_state_protocol": "VISIBLE_ORDERED_HISTORY_BUDGET_V1",
+  "cohort_count": 60,
+  "endpoint_budget": 0.25,
+  "initial_proposal_rule": "HIGHEST_RELIABLE_CONFIDENCE_C0_THEN_UNLOCK_V1",
+  "no_new_training_during_prepare": true,
+  "protocol_sha256": "5ed1911bfe029a40962a4a1f391dc1ced1ddc6cff7fe8bb1f0953f69c8ce9726",
+  "repository_base_sha": "29b3249610c821e8f9c4f58d740588181c443dd5",
+  "schema_version": 2,
+  "source_bindings": {
+    "cai_mpa_authority": "1d65d9f7c40f561727329ab6b7f922973765cc57f6ae36b5a94c572b20e8b054",
+    "learned_cscan_config": "12268dcaf470f769c326007702f7b0b6f4a13cf326447eef652a6dda972b5662",
+    "resnet18_weights": "f37072fd47e89c5e827621c5baffa7500819f7896bbacec160b1a16c560e07ec",
+    "vlm_cache": "85f400119093b362e2eb76489c9ae158ecdd453ce84ad04b6dfab7f04384693e",
+    "vlm_manifest": "b87b85240ee96c31b7fd9f8b46e0ca2338c7e11065fe531bd1f9e286aa942454"
+  },
+  "source_root": "external:cmc_damage_inference",
+  "split_counts": {
+    "TEST": 24,
+    "TRAIN": 24,
+    "VALID": 12
+  },
+  "status": "P0_PROTOCOL_FROZEN",
+  "total_optimizer_updates": 21500,
+  "true_label": "author CAI strength",
+  "true_label_unit": "MPa",
+  "vlm_cache_coverage": "60/60",
+  "vlm_new_calls": 0
+}

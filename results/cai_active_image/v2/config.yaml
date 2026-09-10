@@ -1,0 +1,83 @@
+schema_version: 2
+stage: CAI_ACTIVE_IMAGE_VLM_GUIDED_AGENT
+repository_base_sha: 29b3249610c821e8f9c4f58d740588181c443dd5
+configuration_frozen: true
+
+sources:
+  learned_cscan_config:
+    path: paper_v3/configs/learned_cscan_same_perception.yaml
+    sha256: 12268dcaf470f769c326007702f7b0b6f4a13cf326447eef652a6dda972b5662
+  vlm_cache:
+    path: results/learned_cscan_same_perception/surface_percepts.jsonl
+    sha256: 85f400119093b362e2eb76489c9ae158ecdd453ce84ad04b6dfab7f04384693e
+  vlm_manifest:
+    path: results/learned_cscan_same_perception/perception_manifest.json
+    sha256: b87b85240ee96c31b7fd9f8b46e0ca2338c7e11065fe531bd1f9e286aa942454
+  cai_mpa_authority:
+    path: results/multiview/e1_audit/oof_predictions.csv
+    sha256: 1d65d9f7c40f561727329ab6b7f922973765cc57f6ae36b5a94c572b20e8b054
+  resnet18_weights:
+    path: paper_v3/assets/resnet18-f37072fd.pth
+    sha256: f37072fd47e89c5e827621c5baffa7500819f7896bbacec160b1a16c560e07ec
+
+cohort:
+  roster: VLM_CSCAN_PILOT_60
+  split_seed: learned-cscan-same-perception-pilot-v1
+  domain_order: [74t7kcdgkr, cgtnjyggtm, w68dtmpfyf, xcmzfsbd9t, yfxyg8jm46, ykhs7s2dck]
+  train: 24
+  valid: 12
+  test: 24
+
+vlm:
+  repository: Qwen/Qwen2.5-VL-7B-Instruct
+  revision: cc594898137f460bfe9f0759e9844b3ce807cfb5
+  prompt_sha256: 07ba97c242f8f8ab4ec0b742d64aec231dace2455bb275e285174381c1e79ce0
+  render_version: b341e99fb74d9f815be810b2e8b1d91e59f236540072577c244313c584281f40
+  schema_version: 2
+  max_regions: 2
+  max_cells_per_region: 4
+  max_total_cells: 8
+  format_repairs_per_specimen: 1
+
+acquisition:
+  action_protocol: NATIVE_8X8_FULL_CELL_V1
+  initial_proposal_rule: HIGHEST_RELIABLE_CONFIDENCE_C0_THEN_UNLOCK_V1
+  grid_shape: [8, 8]
+  early_budget: 0.0625
+  endpoint_budget: 0.25
+  reporting_budgets: [0.0, 0.0625, 0.125, 0.1875, 0.25]
+
+training:
+  device: cuda:2
+  actor_state_protocol: VISIBLE_ORDERED_HISTORY_BUDGET_V1
+  seeds: [1, 2, 3]
+  predictor_updates: [2000, 2000, 2000, 2000]
+  predictor_mask_counts: [0, 1, 2, 4, 8, 12, 16, 32, 64]
+  predictor_validation_interval: 250
+  actor_updates_per_seed: 1250
+  learned_static_updates_per_seed: 750
+  predictor_batch_size: 32
+  actor_batch_size: 8
+  validation_interval: 250
+  learning_rate: 0.0003
+  weight_decay: 0.0001
+  gradient_clip: 1.0
+  entropy_weight: 0.01
+  value_weight: 0.5
+  predictor_width: 64
+  actor_width: 64
+  wall_clock_limit_hours: 12
+
+evaluation:
+  bootstrap_replicates: 5000
+  bootstrap_seed: 2026091001
+  confidence_level: 0.9833333333333333
+  engineering_accuracy_status: ENGINEERING_ACCURACY_CRITERION_NOT_SPECIFIED
+  preselected_cases:
+    - 74t7kcdgkr:c8-24
+    - cgtnjyggtm:q24-21
+    - w68dtmpfyf:q16-21
+
+outputs:
+  results: results/cai_active_image/v2
+  artifacts: artifacts/cai_active_image/v2

@@ -1,0 +1,33 @@
+{
+  "checks": [
+    {
+      "command": "python -m ruff check src/cmc_bbdm/cai_active_image scripts/run_cai_active_image_v2.py tests/test_cai_active_image_v2.py",
+      "output": "All checks passed!",
+      "returncode": 0
+    },
+    {
+      "command": "python -m pytest -q -p no:cacheprovider tests/test_cai_active_image_v2.py tests/test_learned_cscan_cli.py tests/test_learned_cscan_controls.py tests/test_learned_cscan_perception_readout.py tests/test_learned_cscan_rollouts_metrics.py tests/test_learned_cscan_runtime.py tests/test_learned_cscan_training.py",
+      "output": "..............................................                           [100%]\n46 passed in 9.88s",
+      "returncode": 0
+    },
+    {
+      "command": "git diff --check",
+      "output": "",
+      "returncode": 0
+    }
+  ],
+  "frozen_diff": {
+    "command": "git diff --name-only 29b3249610c821e8f9c4f58d740588181c443dd5 -- results/learned_cscan_same_perception results/multiview src/cmc_bbdm/learned_cscan src/cmc_bbdm/vlm_cscan src/cmc_bbdm/mavis",
+    "output": "",
+    "returncode": 0
+  },
+  "frozen_paths": [
+    "results/learned_cscan_same_perception",
+    "results/multiview",
+    "src/cmc_bbdm/learned_cscan",
+    "src/cmc_bbdm/vlm_cscan",
+    "src/cmc_bbdm/mavis"
+  ],
+  "schema_version": 2,
+  "status": "P6_SCOPED_VERIFICATION_PASS"
+}

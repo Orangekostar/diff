@@ -1,0 +1,65 @@
+{
+  "case_count": 3,
+  "maximum_allowed_cases": 3,
+  "records": [
+    {
+      "file": "results/cai_active_image/v2/figures/case_74t7kcdgkr_c8-24.png",
+      "full_cscan_displayed": false,
+      "main_seed": 1,
+      "pixel_size": [
+        2700,
+        1620
+      ],
+      "selection_rule": "preselected before TEST evaluation in frozen v2 config",
+      "sha256": "0e93658dbe7febba36d8a0aaf2e6901cc6590e2c719a7e6612dd8d4752c83fa0",
+      "specimen_key": "74t7kcdgkr:c8-24",
+      "split": "TEST",
+      "vlm_prior_cells": [
+        35,
+        36,
+        59,
+        60
+      ]
+    },
+    {
+      "file": "results/cai_active_image/v2/figures/case_cgtnjyggtm_q24-21.png",
+      "full_cscan_displayed": false,
+      "main_seed": 1,
+      "pixel_size": [
+        2700,
+        1620
+      ],
+      "selection_rule": "preselected before TEST evaluation in frozen v2 config",
+      "sha256": "9b75d1ca4d4dda2f872bd140c4a45c2a4785c7643ea2c4b007f6e9bcd3b4b837",
+      "specimen_key": "cgtnjyggtm:q24-21",
+      "split": "TEST",
+      "vlm_prior_cells": [
+        35,
+        36,
+        44,
+        45
+      ]
+    },
+    {
+      "file": "results/cai_active_image/v2/figures/case_w68dtmpfyf_q16-21.png",
+      "full_cscan_displayed": false,
+      "main_seed": 1,
+      "pixel_size": [
+        2700,
+        1620
+      ],
+      "selection_rule": "preselected before TEST evaluation in frozen v2 config",
+      "sha256": "01004f04a5db92e8f97823dfd1f93b86f7932aa17f6fab1fd8dd1226b76c517f",
+      "specimen_key": "w68dtmpfyf:q16-21",
+      "split": "TEST",
+      "vlm_prior_cells": [
+        35,
+        36,
+        43,
+        44
+      ]
+    }
+  ],
+  "schema_version": 2,
+  "selection_frozen_before_test": true
+}

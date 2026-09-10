@@ -1,0 +1,316 @@
+{
+  "deployment_predictor": "all",
+  "models": [
+    {
+      "checkpoint": "results/cai_active_image/v2/models/predictor_fold0.pt",
+      "checkpoint_reused": false,
+      "checkpoint_sha256": "ba712becb60f12ea7685115633a92789d788e355703ce831a1a249b1e17229be",
+      "fit_specimen_keys": [
+        "74t7kcdgkr:c8-32",
+        "74t7kcdgkr:c8-21",
+        "cgtnjyggtm:q24-29",
+        "cgtnjyggtm:q24-4",
+        "w68dtmpfyf:q16-22",
+        "w68dtmpfyf:q16-42",
+        "xcmzfsbd9t:c24-37",
+        "xcmzfsbd9t:c24-33",
+        "yfxyg8jm46:c16-12",
+        "yfxyg8jm46:c16-18",
+        "ykhs7s2dck:q8-41",
+        "ykhs7s2dck:q8-11"
+      ],
+      "kind": "COMMON_CAI_PREDICTOR",
+      "name": "fold0",
+      "query_specimen_keys": [
+        "74t7kcdgkr:c8-15",
+        "74t7kcdgkr:c8-20",
+        "cgtnjyggtm:q24-32",
+        "cgtnjyggtm:q24-18",
+        "w68dtmpfyf:q16-23",
+        "w68dtmpfyf:q16-24",
+        "xcmzfsbd9t:c24-11t",
+        "xcmzfsbd9t:c24-43",
+        "yfxyg8jm46:c16-30",
+        "yfxyg8jm46:c16-42",
+        "ykhs7s2dck:q8-7",
+        "ykhs7s2dck:q8-28"
+      ],
+      "schema_version": 2,
+      "selected_update": 500,
+      "state_dict_sha256": "6ac6ad993af8cb16fcc1606d632d6189d81d5b3f21cd6ec8bbf07c10f14ef31b",
+      "target_mean": 311.29412841796875,
+      "target_scale": 98.90631103515625,
+      "token_dimension": 512,
+      "updates_completed": 2000,
+      "validation_scores": [
+        [
+          250,
+          82.83372681229203
+        ],
+        [
+          500,
+          71.19205079255282
+        ],
+        [
+          750,
+          71.30219551368997
+        ],
+        [
+          1000,
+          72.37207624647353
+        ],
+        [
+          1250,
+          72.0811846697772
+        ],
+        [
+          1500,
+          75.80767567952473
+        ],
+        [
+          1750,
+          71.51385921902127
+        ],
+        [
+          2000,
+          72.13366218849465
+        ]
+      ],
+      "width": 64
+    },
+    {
+      "checkpoint": "results/cai_active_image/v2/models/predictor_fold1.pt",
+      "checkpoint_reused": false,
+      "checkpoint_sha256": "d70b97c7c09d5e652492ec1bdc6f35dd86eb5c0b375fa3a8ba2b8c76dce31611",
+      "fit_specimen_keys": [
+        "74t7kcdgkr:c8-15",
+        "74t7kcdgkr:c8-21",
+        "74t7kcdgkr:c8-20",
+        "cgtnjyggtm:q24-32",
+        "cgtnjyggtm:q24-18",
+        "cgtnjyggtm:q24-4",
+        "w68dtmpfyf:q16-23",
+        "w68dtmpfyf:q16-24",
+        "w68dtmpfyf:q16-42",
+        "xcmzfsbd9t:c24-11t",
+        "xcmzfsbd9t:c24-43",
+        "xcmzfsbd9t:c24-33",
+        "yfxyg8jm46:c16-30",
+        "yfxyg8jm46:c16-12",
+        "yfxyg8jm46:c16-42",
+        "ykhs7s2dck:q8-7",
+        "ykhs7s2dck:q8-28",
+        "ykhs7s2dck:q8-11"
+      ],
+      "kind": "COMMON_CAI_PREDICTOR",
+      "name": "fold1",
+      "query_specimen_keys": [
+        "74t7kcdgkr:c8-32",
+        "cgtnjyggtm:q24-29",
+        "w68dtmpfyf:q16-22",
+        "xcmzfsbd9t:c24-37",
+        "yfxyg8jm46:c16-18",
+        "ykhs7s2dck:q8-41"
+      ],
+      "schema_version": 2,
+      "selected_update": 2000,
+      "state_dict_sha256": "fa65a6e1802c95115a59bb22050be093ec677ae7cd3494e6971f119804e581f8",
+      "target_mean": 314.44537353515625,
+      "target_scale": 104.07422637939453,
+      "token_dimension": 512,
+      "updates_completed": 2000,
+      "validation_scores": [
+        [
+          250,
+          90.20636975323713
+        ],
+        [
+          500,
+          90.55047070538556
+        ],
+        [
+          750,
+          84.25598695543077
+        ],
+        [
+          1000,
+          82.61723977548105
+        ],
+        [
+          1250,
+          81.51887201379846
+        ],
+        [
+          1500,
+          79.44781946252894
+        ],
+        [
+          1750,
+          77.71601994832356
+        ],
+        [
+          2000,
+          76.67661765769675
+        ]
+      ],
+      "width": 64
+    },
+    {
+      "checkpoint": "results/cai_active_image/v2/models/predictor_fold2.pt",
+      "checkpoint_reused": false,
+      "checkpoint_sha256": "52a5c8de2816cdaa8ab102c78097982711ad4c22a1295c45125d7ff7e64388df",
+      "fit_specimen_keys": [
+        "74t7kcdgkr:c8-32",
+        "74t7kcdgkr:c8-15",
+        "74t7kcdgkr:c8-20",
+        "cgtnjyggtm:q24-29",
+        "cgtnjyggtm:q24-32",
+        "cgtnjyggtm:q24-18",
+        "w68dtmpfyf:q16-23",
+        "w68dtmpfyf:q16-22",
+        "w68dtmpfyf:q16-24",
+        "xcmzfsbd9t:c24-11t",
+        "xcmzfsbd9t:c24-37",
+        "xcmzfsbd9t:c24-43",
+        "yfxyg8jm46:c16-30",
+        "yfxyg8jm46:c16-42",
+        "yfxyg8jm46:c16-18",
+        "ykhs7s2dck:q8-41",
+        "ykhs7s2dck:q8-7",
+        "ykhs7s2dck:q8-28"
+      ],
+      "kind": "COMMON_CAI_PREDICTOR",
+      "name": "fold2",
+      "query_specimen_keys": [
+        "74t7kcdgkr:c8-21",
+        "cgtnjyggtm:q24-4",
+        "w68dtmpfyf:q16-42",
+        "xcmzfsbd9t:c24-33",
+        "yfxyg8jm46:c16-12",
+        "ykhs7s2dck:q8-11"
+      ],
+      "schema_version": 2,
+      "selected_update": 250,
+      "state_dict_sha256": "d8f9a4bbb518778a865023de3b1fbb70558a744aca6b0c19252079015de27f56",
+      "target_mean": 345.2350158691406,
+      "target_scale": 115.3125991821289,
+      "token_dimension": 512,
+      "updates_completed": 2000,
+      "validation_scores": [
+        [
+          250,
+          90.32900209780094
+        ],
+        [
+          500,
+          101.95280781498661
+        ],
+        [
+          750,
+          105.48060537267615
+        ],
+        [
+          1000,
+          105.96870238692674
+        ],
+        [
+          1250,
+          109.20398924085829
+        ],
+        [
+          1500,
+          106.49912657561124
+        ],
+        [
+          1750,
+          110.24419403076172
+        ],
+        [
+          2000,
+          108.47553620515048
+        ]
+      ],
+      "width": 64
+    },
+    {
+      "checkpoint": "results/cai_active_image/v2/models/predictor_all.pt",
+      "checkpoint_reused": false,
+      "checkpoint_sha256": "294b3b8222c21aeb2dd7c52940a2f222147d16cb4682f3a9667f616e62d64fb2",
+      "fit_specimen_keys": [
+        "74t7kcdgkr:c8-32",
+        "74t7kcdgkr:c8-15",
+        "74t7kcdgkr:c8-21",
+        "74t7kcdgkr:c8-20",
+        "cgtnjyggtm:q24-29",
+        "cgtnjyggtm:q24-32",
+        "cgtnjyggtm:q24-18",
+        "cgtnjyggtm:q24-4",
+        "w68dtmpfyf:q16-23",
+        "w68dtmpfyf:q16-22",
+        "w68dtmpfyf:q16-24",
+        "w68dtmpfyf:q16-42",
+        "xcmzfsbd9t:c24-11t",
+        "xcmzfsbd9t:c24-37",
+        "xcmzfsbd9t:c24-43",
+        "xcmzfsbd9t:c24-33",
+        "yfxyg8jm46:c16-30",
+        "yfxyg8jm46:c16-12",
+        "yfxyg8jm46:c16-42",
+        "yfxyg8jm46:c16-18",
+        "ykhs7s2dck:q8-41",
+        "ykhs7s2dck:q8-7",
+        "ykhs7s2dck:q8-28",
+        "ykhs7s2dck:q8-11"
+      ],
+      "kind": "COMMON_CAI_PREDICTOR",
+      "name": "all",
+      "query_specimen_keys": [],
+      "schema_version": 2,
+      "selected_update": 1250,
+      "state_dict_sha256": "62f6d951dab0fbfb2a8691786c6096a52629bcda0f6c6fc8fc0ff1d12586217d",
+      "target_mean": 325.2036437988281,
+      "target_scale": 108.33292388916016,
+      "token_dimension": 512,
+      "updates_completed": 2000,
+      "validation_scores": [
+        [
+          250,
+          90.3420181274414
+        ],
+        [
+          500,
+          88.42522684733073
+        ],
+        [
+          750,
+          84.4398834793656
+        ],
+        [
+          1000,
+          85.192140367296
+        ],
+        [
+          1250,
+          82.25764917444299
+        ],
+        [
+          1500,
+          88.68857687490959
+        ],
+        [
+          1750,
+          88.67087879887333
+        ],
+        [
+          2000,
+          85.88011508517796
+        ]
+      ],
+      "width": 64
+    }
+  ],
+  "optimizer_updates": 8000,
+  "return_protocol": "TRAIN_THREE_FOLD_OUT_OF_FOLD",
+  "schema_version": 2,
+  "status": "P2_COMMON_PREDICTORS_COMPLETE"
+}

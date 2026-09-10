@@ -1,0 +1,46 @@
+{
+  "actor_state_protocol": "VISIBLE_ORDERED_HISTORY_BUDGET_V1",
+  "artifacts": {
+    "absolute_cai_performance": "absolute_cai_performance.csv",
+    "domain_cai_performance": "domain_cai_performance.csv",
+    "initialization_summary": "initialization_summary.csv",
+    "trajectories": "trajectories.csv",
+    "vlm_ablation_effects": "vlm_ablation_effects.csv"
+  },
+  "best_nonadaptive": "CENTER_FIRST",
+  "bootstrap_replicates": 5000,
+  "common_predictor_state_sha256": "62f6d951dab0fbfb2a8691786c6096a52629bcda0f6c6fc8fc0ff1d12586217d",
+  "initial_proposal_rule": "HIGHEST_RELIABLE_CONFIDENCE_C0_THEN_UNLOCK_V1",
+  "preselected_cases": [
+    "74t7kcdgkr:c8-24",
+    "cgtnjyggtm:q24-21",
+    "w68dtmpfyf:q16-21"
+  ],
+  "schema_version": 2,
+  "status": "P5_EVALUATION_COMPLETE",
+  "statuses": {
+    "CAI_ABSOLUTE_PERFORMANCE": {
+      "engineering": "ENGINEERING_ACCURACY_CRITERION_NOT_SPECIFIED",
+      "evidence": "REPORTED",
+      "wired": true
+    },
+    "FEEDBACK_ACQUISITION": {
+      "evidence": "NOT_SUPPORTED",
+      "wired": true
+    },
+    "VLM_EARLY_GUIDANCE": {
+      "evidence": "NOT_SUPPORTED",
+      "wired": true
+    }
+  },
+  "test_episode_count": 432,
+  "test_specimens": 24,
+  "test_target_join": "P5_SCORING_SIDE_ONLY",
+  "validation": {
+    "best_nonadaptive_normalized_error_area_mpa": 76.37200413845578,
+    "main_beats_best_nonadaptive": false,
+    "main_beats_no_vlm": false,
+    "main_normalized_error_area_mpa": 78.40459968394002,
+    "no_vlm_normalized_error_area_mpa": 77.97225141155344
+  }
+}

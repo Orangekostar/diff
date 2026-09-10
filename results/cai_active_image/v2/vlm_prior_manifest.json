@@ -1,0 +1,2261 @@
+{
+  "cache_hits": 60,
+  "cache_source": "results/learned_cscan_same_perception/surface_percepts.jsonl",
+  "cache_source_sha256": "85f400119093b362e2eb76489c9ae158ecdd453ce84ad04b6dfab7f04384693e",
+  "confidence_cell_counts": {
+    "high": 23,
+    "low": 15,
+    "medium": 226,
+    "unknown": 17
+  },
+  "format_repairs": 2,
+  "initial_proposal_rule": "HIGHEST_RELIABLE_CONFIDENCE_C0_THEN_UNLOCK_V1",
+  "model_repository": "Qwen/Qwen2.5-VL-7B-Instruct",
+  "model_revision": "cc594898137f460bfe9f0759e9844b3ce807cfb5",
+  "new_calls": 0,
+  "no_reliable_cue_fraction": 0.0,
+  "original_calls": 62,
+  "prompt_sha256": "07ba97c242f8f8ab4ec0b742d64aec231dace2455bb275e285174381c1e79ce0",
+  "records": [
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "bee27b3bb9936e140c6bc8c24b2a4dc4d9b75f55a9cf56d5af1a16ec833ab9e0",
+      "latency_seconds": 9.912153013981879,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [35, 36],\n      \"cue\": \"circle\",\n      \"alternative\": \"\u53ef\u80fd\u662f\u4e00\u4e2a\u6807\u8bb0\u6216\u5212\u75d5\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [37, 38],\n      \"cue\": \"circle continuation\",\n      \"alternative\": \"\u53ef\u80fd\u662f\u8fde\u7eed\u7684\u5212\u75d5\u6216\u6807\u8bb0\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u53ef\u80fd\u662f\u4e00\u4e2a\u6807\u8bb0\u6216\u5212\u75d5",
+          "cells": [
+            35,
+            36
+          ],
+          "confidence": "medium",
+          "cue": "circle"
+        },
+        {
+          "alternative": "\u53ef\u80fd\u662f\u8fde\u7eed\u7684\u5212\u75d5\u6216\u6807\u8bb0",
+          "cells": [
+            37,
+            38
+          ],
+          "confidence": "medium",
+          "cue": "circle continuation"
+        }
+      ],
+      "reliable_candidates": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "repaired": false,
+      "specimen_key": "74t7kcdgkr:c8-15"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "0f4ff7f6d0c9c0a853598ba9d918f5628f3a975f0f3b508f52e68bb9955aaf0e",
+      "latency_seconds": 17.251857662107795,
+      "no_reliable_cue": false,
+      "original_call_count": 2,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [35, 36, 37],\n      \"cue\": \"\u5212\u75d5\",\n      \"alternative\": \"\u8868\u9762\u78e8\u635f\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u8868\u9762\u78e8\u635f",
+          "cells": [
+            35,
+            36,
+            37
+          ],
+          "confidence": "medium",
+          "cue": "\u5212\u75d5"
+        }
+      ],
+      "reliable_candidates": [
+        35,
+        36,
+        37
+      ],
+      "repaired": true,
+      "specimen_key": "74t7kcdgkr:c8-2"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "48b0432fc31e436749029ac63bcd352f3a76769c6b6861809a5b8161437cdd6e",
+      "latency_seconds": 9.58395699923858,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [27, 28, 29],\n      \"cue\": \"\u5212\u75d5\",\n      \"alternative\": \"\u8868\u9762\u78e8\u635f\u6216\u5212\u75d5\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [56, 57, 58],\n      \"cue\": \"\u5212\u75d5\",\n      \"alternative\": \"\u8868\u9762\u78e8\u635f\u6216\u5212\u75d5\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u8868\u9762\u78e8\u635f\u6216\u5212\u75d5",
+          "cells": [
+            27,
+            28,
+            29
+          ],
+          "confidence": "medium",
+          "cue": "\u5212\u75d5"
+        },
+        {
+          "alternative": "\u8868\u9762\u78e8\u635f\u6216\u5212\u75d5",
+          "cells": [
+            56,
+            57,
+            58
+          ],
+          "confidence": "medium",
+          "cue": "\u5212\u75d5"
+        }
+      ],
+      "reliable_candidates": [
+        27,
+        28,
+        29,
+        56,
+        57,
+        58
+      ],
+      "repaired": false,
+      "specimen_key": "74t7kcdgkr:c8-20"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "8168ff138a20287e5067238033145638c8d6dce85cffc9b29d85a0f9fb463dd6",
+      "latency_seconds": 9.104768312070519,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [27, 28],\n      \"cue\": \"\u5212\u75d5\",\n      \"alternative\": \"\u8868\u9762\u78e8\u635f\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [59, 60],\n      \"cue\": \"\u5212\u75d5\",\n      \"alternative\": \"\u8868\u9762\u78e8\u635f\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u8868\u9762\u78e8\u635f",
+          "cells": [
+            27,
+            28
+          ],
+          "confidence": "medium",
+          "cue": "\u5212\u75d5"
+        },
+        {
+          "alternative": "\u8868\u9762\u78e8\u635f",
+          "cells": [
+            59,
+            60
+          ],
+          "confidence": "medium",
+          "cue": "\u5212\u75d5"
+        }
+      ],
+      "reliable_candidates": [
+        27,
+        28,
+        59,
+        60
+      ],
+      "repaired": false,
+      "specimen_key": "74t7kcdgkr:c8-21"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "868bf952fdddf8f815df91ed0e507c24a8169605ca4ee7e7243232e46c129361",
+      "latency_seconds": 9.362450605258346,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [35, 36],\n      \"cue\": \"\u5212\u75d5\",\n      \"alternative\": \"\u8868\u9762\u78e8\u635f\u6216\u5212\u75d5\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [59, 60],\n      \"cue\": \"\u5212\u75d5\",\n      \"alternative\": \"\u8868\u9762\u78e8\u635f\u6216\u5212\u75d5\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u8868\u9762\u78e8\u635f\u6216\u5212\u75d5",
+          "cells": [
+            35,
+            36
+          ],
+          "confidence": "medium",
+          "cue": "\u5212\u75d5"
+        },
+        {
+          "alternative": "\u8868\u9762\u78e8\u635f\u6216\u5212\u75d5",
+          "cells": [
+            59,
+            60
+          ],
+          "confidence": "medium",
+          "cue": "\u5212\u75d5"
+        }
+      ],
+      "reliable_candidates": [
+        35,
+        36,
+        59,
+        60
+      ],
+      "repaired": false,
+      "specimen_key": "74t7kcdgkr:c8-24"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "865a1afee97673a566955d8805a95455d0d4712e40d89b3a0580e556195c3f2d",
+      "latency_seconds": 9.623296098783612,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [0, 1, 2, 3],\n      \"cue\": \"unknown\",\n      \"alternative\": \"\u53ef\u80fd\u7684\u7eb9\u7406\u53d8\u5316\",\n      \"confidence\": \"unknown\"\n    },\n    {\n      \"cells\": [56, 57, 58, 59],\n      \"cue\": \"unknown\",\n      \"alternative\": \"\u53ef\u80fd\u7684\u7eb9\u7406\u53d8\u5316\",\n      \"confidence\": \"unknown\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u53ef\u80fd\u7684\u7eb9\u7406\u53d8\u5316",
+          "cells": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "confidence": "unknown",
+          "cue": "unknown"
+        },
+        {
+          "alternative": "\u53ef\u80fd\u7684\u7eb9\u7406\u53d8\u5316",
+          "cells": [
+            56,
+            57,
+            58,
+            59
+          ],
+          "confidence": "unknown",
+          "cue": "unknown"
+        }
+      ],
+      "reliable_candidates": [],
+      "repaired": false,
+      "specimen_key": "74t7kcdgkr:c8-28"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "534131433a3effddbf7509befc5e90bf88c85b8cc87df34538a9aa16e861593a",
+      "latency_seconds": 9.719900319352746,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [27, 28, 29],\n      \"cue\": \"bright spot with faint lines\",\n      \"alternative\": \"potential impact or scratch\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [52, 53, 54],\n      \"cue\": \"faint line\",\n      \"alternative\": \"scratch or minor damage\",\n      \"confidence\": \"low\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "potential impact or scratch",
+          "cells": [
+            27,
+            28,
+            29
+          ],
+          "confidence": "medium",
+          "cue": "bright spot with faint lines"
+        },
+        {
+          "alternative": "scratch or minor damage",
+          "cells": [
+            52,
+            53,
+            54
+          ],
+          "confidence": "low",
+          "cue": "faint line"
+        }
+      ],
+      "reliable_candidates": [
+        27,
+        28,
+        29
+      ],
+      "repaired": false,
+      "specimen_key": "74t7kcdgkr:c8-32"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "9402d020537d15ba0de9129d948713dbcc8e3613fa195ab3eb3a84ba22e8642f",
+      "latency_seconds": 9.443905669264495,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [0, 1, 2, 3],\n      \"cue\": \"unknown\",\n      \"alternative\": \"\u53ef\u80fd\u7684\u8fb9\u7f18\u6548\u5e94\u6216\u8f7b\u5fae\u5212\u75d5\",\n      \"confidence\": \"low\"\n    },\n    {\n      \"cells\": [63],\n      \"cue\": \"unknown\",\n      \"alternative\": \"\u53ef\u80fd\u7684\u8fb9\u7f18\u6548\u5e94\u6216\u8f7b\u5fae\u5212\u75d5\",\n      \"confidence\": \"low\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u53ef\u80fd\u7684\u8fb9\u7f18\u6548\u5e94\u6216\u8f7b\u5fae\u5212\u75d5",
+          "cells": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "confidence": "low",
+          "cue": "unknown"
+        },
+        {
+          "alternative": "\u53ef\u80fd\u7684\u8fb9\u7f18\u6548\u5e94\u6216\u8f7b\u5fae\u5212\u75d5",
+          "cells": [
+            63
+          ],
+          "confidence": "low",
+          "cue": "unknown"
+        }
+      ],
+      "reliable_candidates": [],
+      "repaired": false,
+      "specimen_key": "74t7kcdgkr:c8-41"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "e2f7788a8a371b2e128a662a57d4264d78136d7ca34b0bc9924aed15afda771f",
+      "latency_seconds": 9.312245613895357,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [35, 36],\n      \"cue\": \"\u5212\u75d5\",\n      \"alternative\": \"\u8868\u9762\u78e8\u635f\u6216\u5212\u75d5\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [37, 38],\n      \"cue\": \"\u5212\u75d5\",\n      \"alternative\": \"\u8868\u9762\u78e8\u635f\u6216\u5212\u75d5\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u8868\u9762\u78e8\u635f\u6216\u5212\u75d5",
+          "cells": [
+            35,
+            36
+          ],
+          "confidence": "medium",
+          "cue": "\u5212\u75d5"
+        },
+        {
+          "alternative": "\u8868\u9762\u78e8\u635f\u6216\u5212\u75d5",
+          "cells": [
+            37,
+            38
+          ],
+          "confidence": "medium",
+          "cue": "\u5212\u75d5"
+        }
+      ],
+      "reliable_candidates": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "repaired": false,
+      "specimen_key": "74t7kcdgkr:c8-5"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "034a66d55e280205d5ca3664f30bd9fcb720e403c5f72726ca3af6c0345322c7",
+      "latency_seconds": 9.571440857835114,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [35, 36],\n      \"cue\": \"\u5b54\u6d1e\",\n      \"alternative\": \"\u53ef\u80fd\u662f\u4e00\u4e2a\u5c0f\u7684\u5b54\u6d1e\u6216\u7f3a\u9677\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [27, 28],\n      \"cue\": \"\u7ebf\u6761\",\n      \"alternative\": \"\u53ef\u80fd\u662f\u6750\u6599\u4e0a\u7684\u5212\u75d5\u6216\u5236\u9020\u8fc7\u7a0b\u4e2d\u7684\u75d5\u8ff9\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u53ef\u80fd\u662f\u4e00\u4e2a\u5c0f\u7684\u5b54\u6d1e\u6216\u7f3a\u9677",
+          "cells": [
+            35,
+            36
+          ],
+          "confidence": "medium",
+          "cue": "\u5b54\u6d1e"
+        },
+        {
+          "alternative": "\u53ef\u80fd\u662f\u6750\u6599\u4e0a\u7684\u5212\u75d5\u6216\u5236\u9020\u8fc7\u7a0b\u4e2d\u7684\u75d5\u8ff9",
+          "cells": [
+            27,
+            28
+          ],
+          "confidence": "medium",
+          "cue": "\u7ebf\u6761"
+        }
+      ],
+      "reliable_candidates": [
+        27,
+        28,
+        35,
+        36
+      ],
+      "repaired": false,
+      "specimen_key": "74t7kcdgkr:c8-7"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "fa3cedb9a621fcad38a28f5ccfbc3460ce9df60621b6ca1a4637b61a84b69286",
+      "latency_seconds": 9.759597858879715,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [35, 36, 37, 38],\n      \"cue\": \"circle\",\n      \"alternative\": \"\u5b54\u6d1e\u6216\u7f3a\u9677\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [27, 28, 29, 30],\n      \"cue\": \"circle\",\n      \"alternative\": \"\u5b54\u6d1e\u6216\u7f3a\u9677\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u5b54\u6d1e\u6216\u7f3a\u9677",
+          "cells": [
+            35,
+            36,
+            37,
+            38
+          ],
+          "confidence": "medium",
+          "cue": "circle"
+        },
+        {
+          "alternative": "\u5b54\u6d1e\u6216\u7f3a\u9677",
+          "cells": [
+            27,
+            28,
+            29,
+            30
+          ],
+          "confidence": "medium",
+          "cue": "circle"
+        }
+      ],
+      "reliable_candidates": [
+        27,
+        28,
+        29,
+        30,
+        35,
+        36,
+        37,
+        38
+      ],
+      "repaired": false,
+      "specimen_key": "cgtnjyggtm:q24-16"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "94ae16aa309a40689b7a9dd85fff06a4e630330a594f03952fd1ef608f39f5a0",
+      "latency_seconds": 9.51025734608993,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [29],\n      \"cue\": \"circle\",\n      \"alternative\": \"\u53ef\u80fd\u662f\u4e00\u4e2a\u900f\u660e\u8d34\u7eb8\u6216\u4fdd\u62a4\u819c\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [35, 36, 37, 38],\n      \"cue\": \"grid lines\",\n      \"alternative\": \"\u7f51\u683c\u7ebf\u6807\u8bb0\",\n      \"confidence\": \"high\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u53ef\u80fd\u662f\u4e00\u4e2a\u900f\u660e\u8d34\u7eb8\u6216\u4fdd\u62a4\u819c",
+          "cells": [
+            29
+          ],
+          "confidence": "medium",
+          "cue": "circle"
+        },
+        {
+          "alternative": "\u7f51\u683c\u7ebf\u6807\u8bb0",
+          "cells": [
+            35,
+            36,
+            37,
+            38
+          ],
+          "confidence": "high",
+          "cue": "grid lines"
+        }
+      ],
+      "reliable_candidates": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "repaired": false,
+      "specimen_key": "cgtnjyggtm:q24-18"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "ad93ebe31bf09abf2a6bd7cff118d54169aad2ea871416e70549c7c27f29e284",
+      "latency_seconds": 9.530385339166969,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [35, 36],\n      \"cue\": \"\u5c0f\u7684\u767d\u8272\u6591\u70b9\",\n      \"alternative\": \"\u53ef\u80fd\u662f\u7070\u5c18\u6216\u6c61\u6e0d\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [44, 45],\n      \"cue\": \"\u6a21\u7cca\u7684\u7070\u8272\u533a\u57df\",\n      \"alternative\": \"\u53ef\u80fd\u662f\u78e8\u635f\u6216\u5212\u75d5\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u53ef\u80fd\u662f\u7070\u5c18\u6216\u6c61\u6e0d",
+          "cells": [
+            35,
+            36
+          ],
+          "confidence": "medium",
+          "cue": "\u5c0f\u7684\u767d\u8272\u6591\u70b9"
+        },
+        {
+          "alternative": "\u53ef\u80fd\u662f\u78e8\u635f\u6216\u5212\u75d5",
+          "cells": [
+            44,
+            45
+          ],
+          "confidence": "medium",
+          "cue": "\u6a21\u7cca\u7684\u7070\u8272\u533a\u57df"
+        }
+      ],
+      "reliable_candidates": [
+        35,
+        36,
+        44,
+        45
+      ],
+      "repaired": false,
+      "specimen_key": "cgtnjyggtm:q24-21"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "8cd21a469daecace3f795cc5bc0c47bd98269bd87b4e344c1cda166cf52dda24",
+      "latency_seconds": 9.637726889923215,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [27, 28],\n      \"cue\": \"circle\",\n      \"alternative\": \"\u53ef\u80fd\u662f\u4e00\u4e2a\u5c0f\u7684\u5212\u75d5\u6216\u6c61\u6e0d\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [59, 60],\n      \"cue\": \"line\",\n      \"alternative\": \"\u53ef\u80fd\u662f\u6750\u6599\u8868\u9762\u7684\u81ea\u7136\u7eb9\u7406\u6216\u8f7b\u5fae\u5212\u75d5\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u53ef\u80fd\u662f\u4e00\u4e2a\u5c0f\u7684\u5212\u75d5\u6216\u6c61\u6e0d",
+          "cells": [
+            27,
+            28
+          ],
+          "confidence": "medium",
+          "cue": "circle"
+        },
+        {
+          "alternative": "\u53ef\u80fd\u662f\u6750\u6599\u8868\u9762\u7684\u81ea\u7136\u7eb9\u7406\u6216\u8f7b\u5fae\u5212\u75d5",
+          "cells": [
+            59,
+            60
+          ],
+          "confidence": "medium",
+          "cue": "line"
+        }
+      ],
+      "reliable_candidates": [
+        27,
+        28,
+        59,
+        60
+      ],
+      "repaired": false,
+      "specimen_key": "cgtnjyggtm:q24-29"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "144ed7710fdd6df006332ea7eb279f115bb4ae2ad8457ebe3f6bb500d1e4e4f4",
+      "latency_seconds": 9.805550849996507,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [27, 28, 35, 36],\n      \"cue\": \"crack\",\n      \"alternative\": \"\u5212\u75d5\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [29, 30, 37, 38],\n      \"cue\": \"crack\",\n      \"alternative\": \"\u5212\u75d5\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u5212\u75d5",
+          "cells": [
+            27,
+            28,
+            35,
+            36
+          ],
+          "confidence": "medium",
+          "cue": "crack"
+        },
+        {
+          "alternative": "\u5212\u75d5",
+          "cells": [
+            29,
+            30,
+            37,
+            38
+          ],
+          "confidence": "medium",
+          "cue": "crack"
+        }
+      ],
+      "reliable_candidates": [
+        27,
+        28,
+        29,
+        30,
+        35,
+        36,
+        37,
+        38
+      ],
+      "repaired": false,
+      "specimen_key": "cgtnjyggtm:q24-30"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "c12be319f9817be99c57f066921964205c7eceff772f93f4c0e634e37fb0922f",
+      "latency_seconds": 9.369190586265177,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [35, 36],\n      \"cue\": \"\u5212\u75d5\",\n      \"alternative\": \"\u4f7f\u7528\u5de5\u5177\u9020\u6210\u7684\u5212\u75d5\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [37, 38],\n      \"cue\": \"\u5212\u75d5\",\n      \"alternative\": \"\u4f7f\u7528\u5de5\u5177\u9020\u6210\u7684\u5212\u75d5\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u4f7f\u7528\u5de5\u5177\u9020\u6210\u7684\u5212\u75d5",
+          "cells": [
+            35,
+            36
+          ],
+          "confidence": "medium",
+          "cue": "\u5212\u75d5"
+        },
+        {
+          "alternative": "\u4f7f\u7528\u5de5\u5177\u9020\u6210\u7684\u5212\u75d5",
+          "cells": [
+            37,
+            38
+          ],
+          "confidence": "medium",
+          "cue": "\u5212\u75d5"
+        }
+      ],
+      "reliable_candidates": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "repaired": false,
+      "specimen_key": "cgtnjyggtm:q24-32"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "384bb2792bf667e5ebeb8c619fde97c96d3cf08843e0c32a36b943d31b144d3f",
+      "latency_seconds": 9.916249234229326,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [27, 28, 35, 36],\n      \"cue\": \"\u5c0f\u5706\u73af\",\n      \"alternative\": \"\u53ef\u80fd\u662f\u5236\u9020\u8fc7\u7a0b\u4e2d\u7684\u6807\u8bb0\u6216\u5212\u75d5\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [39, 40, 47, 48],\n      \"cue\": \"\u672a\u77e5\",\n      \"alternative\": \"\u65e0\u76f8\u5173\u4fe1\u606f\",\n      \"confidence\": \"unknown\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u53ef\u80fd\u662f\u5236\u9020\u8fc7\u7a0b\u4e2d\u7684\u6807\u8bb0\u6216\u5212\u75d5",
+          "cells": [
+            27,
+            28,
+            35,
+            36
+          ],
+          "confidence": "medium",
+          "cue": "\u5c0f\u5706\u73af"
+        },
+        {
+          "alternative": "\u65e0\u76f8\u5173\u4fe1\u606f",
+          "cells": [
+            39,
+            40,
+            47,
+            48
+          ],
+          "confidence": "unknown",
+          "cue": "\u672a\u77e5"
+        }
+      ],
+      "reliable_candidates": [
+        27,
+        28,
+        35,
+        36
+      ],
+      "repaired": false,
+      "specimen_key": "cgtnjyggtm:q24-37"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "b8fd6f5f7c1986a6e8bbf29e17febd6eca6042e639f4a6fe90abff20069ad56a",
+      "latency_seconds": 9.425382037181407,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [35, 36],\n      \"cue\": \"circle\",\n      \"alternative\": \"\u53ef\u80fd\u662f\u4e00\u4e2a\u5c0f\u7684\u6c61\u6e0d\u6216\u5212\u75d5\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [37, 38],\n      \"cue\": \"circle\",\n      \"alternative\": \"\u53ef\u80fd\u662f\u7531\u4e8e\u5236\u9020\u8fc7\u7a0b\u4e2d\u7684\u7455\u75b5\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u53ef\u80fd\u662f\u4e00\u4e2a\u5c0f\u7684\u6c61\u6e0d\u6216\u5212\u75d5",
+          "cells": [
+            35,
+            36
+          ],
+          "confidence": "medium",
+          "cue": "circle"
+        },
+        {
+          "alternative": "\u53ef\u80fd\u662f\u7531\u4e8e\u5236\u9020\u8fc7\u7a0b\u4e2d\u7684\u7455\u75b5",
+          "cells": [
+            37,
+            38
+          ],
+          "confidence": "medium",
+          "cue": "circle"
+        }
+      ],
+      "reliable_candidates": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "repaired": false,
+      "specimen_key": "cgtnjyggtm:q24-4"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "6e832805392c7ca4595d25f2d8f20a25a936cd10bcedd6221cef927d11cdbc36",
+      "latency_seconds": 9.330426670145243,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [27, 28, 29],\n      \"cue\": \"crack\",\n      \"alternative\": \"\u5212\u75d5\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [58, 59, 60],\n      \"cue\": \"unknown\",\n      \"alternative\": \"\u672a\u77e5\",\n      \"confidence\": \"unknown\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u5212\u75d5",
+          "cells": [
+            27,
+            28,
+            29
+          ],
+          "confidence": "medium",
+          "cue": "crack"
+        },
+        {
+          "alternative": "\u672a\u77e5",
+          "cells": [
+            58,
+            59,
+            60
+          ],
+          "confidence": "unknown",
+          "cue": "unknown"
+        }
+      ],
+      "reliable_candidates": [
+        27,
+        28,
+        29
+      ],
+      "repaired": false,
+      "specimen_key": "cgtnjyggtm:q24-40"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "769a08a28023c119cd559758e49cb5630382ed2803e83146ca5d78c7ace87b61",
+      "latency_seconds": 9.701537962071598,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [29, 30, 35, 36],\n      \"cue\": \"\u5212\u75d5\",\n      \"alternative\": \"\u8868\u9762\u78e8\u635f\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [37, 38, 43, 44],\n      \"cue\": \"\u5212\u75d5\",\n      \"alternative\": \"\u8868\u9762\u78e8\u635f\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u8868\u9762\u78e8\u635f",
+          "cells": [
+            29,
+            30,
+            35,
+            36
+          ],
+          "confidence": "medium",
+          "cue": "\u5212\u75d5"
+        },
+        {
+          "alternative": "\u8868\u9762\u78e8\u635f",
+          "cells": [
+            37,
+            38,
+            43,
+            44
+          ],
+          "confidence": "medium",
+          "cue": "\u5212\u75d5"
+        }
+      ],
+      "reliable_candidates": [
+        29,
+        30,
+        35,
+        36,
+        37,
+        38,
+        43,
+        44
+      ],
+      "repaired": false,
+      "specimen_key": "cgtnjyggtm:q24-8"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "8f2e2797ecebf3c5b568850b872dde4bd4cc291c723ee29c78cde87356348a9b",
+      "latency_seconds": 9.344459666870534,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [29],\n      \"cue\": \"small hole\",\n      \"alternative\": \"scratch or minor impact\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [57, 58, 59, 60],\n      \"cue\": \"grid lines\",\n      \"alternative\": \"grid overlay\",\n      \"confidence\": \"high\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "scratch or minor impact",
+          "cells": [
+            29
+          ],
+          "confidence": "medium",
+          "cue": "small hole"
+        },
+        {
+          "alternative": "grid overlay",
+          "cells": [
+            57,
+            58,
+            59,
+            60
+          ],
+          "confidence": "high",
+          "cue": "grid lines"
+        }
+      ],
+      "reliable_candidates": [
+        57,
+        58,
+        59,
+        60
+      ],
+      "repaired": false,
+      "specimen_key": "w68dtmpfyf:q16-12"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "74da358e39b4f16fe4acdac0d3109fedcf64c1638cfe6924fc8a7f787b73a743",
+      "latency_seconds": 9.69941681297496,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [35, 36],\n      \"cue\": \"\u7ec6\u957f\u7ebf\u6761\",\n      \"alternative\": \"\u53ef\u80fd\u7684\u5212\u75d5\u6216\u5236\u9020\u8fc7\u7a0b\u4e2d\u7684\u7eb9\u7406\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [43, 44],\n      \"cue\": \"\u7ec6\u957f\u7ebf\u6761\",\n      \"alternative\": \"\u53ef\u80fd\u7684\u5212\u75d5\u6216\u5236\u9020\u8fc7\u7a0b\u4e2d\u7684\u7eb9\u7406\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u53ef\u80fd\u7684\u5212\u75d5\u6216\u5236\u9020\u8fc7\u7a0b\u4e2d\u7684\u7eb9\u7406",
+          "cells": [
+            35,
+            36
+          ],
+          "confidence": "medium",
+          "cue": "\u7ec6\u957f\u7ebf\u6761"
+        },
+        {
+          "alternative": "\u53ef\u80fd\u7684\u5212\u75d5\u6216\u5236\u9020\u8fc7\u7a0b\u4e2d\u7684\u7eb9\u7406",
+          "cells": [
+            43,
+            44
+          ],
+          "confidence": "medium",
+          "cue": "\u7ec6\u957f\u7ebf\u6761"
+        }
+      ],
+      "reliable_candidates": [
+        35,
+        36,
+        43,
+        44
+      ],
+      "repaired": false,
+      "specimen_key": "w68dtmpfyf:q16-21"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "ac4f4eefe165f1137b8c3e506de84cbde8d2e40d6cbb235f8af0102cd258a34f",
+      "latency_seconds": 9.35182142816484,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [35, 36],\n      \"cue\": \"\u5212\u75d5\",\n      \"alternative\": \"\u8868\u9762\u78e8\u635f\u6216\u5212\u75d5\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [59, 60],\n      \"cue\": \"\u5212\u75d5\",\n      \"alternative\": \"\u8868\u9762\u78e8\u635f\u6216\u5212\u75d5\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u8868\u9762\u78e8\u635f\u6216\u5212\u75d5",
+          "cells": [
+            35,
+            36
+          ],
+          "confidence": "medium",
+          "cue": "\u5212\u75d5"
+        },
+        {
+          "alternative": "\u8868\u9762\u78e8\u635f\u6216\u5212\u75d5",
+          "cells": [
+            59,
+            60
+          ],
+          "confidence": "medium",
+          "cue": "\u5212\u75d5"
+        }
+      ],
+      "reliable_candidates": [
+        35,
+        36,
+        59,
+        60
+      ],
+      "repaired": false,
+      "specimen_key": "w68dtmpfyf:q16-22"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "d26488e047edb2fefb70fcfd2fac1843effdb599a37a3d608fbbb412c4bd7ce4",
+      "latency_seconds": 9.96947274915874,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [25, 26, 27, 28],\n      \"cue\": \"unknown\",\n      \"alternative\": \"\u53ef\u80fd\u7684\u5212\u75d5\u6216\u78e8\u635f\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [52, 53, 54, 55],\n      \"cue\": \"unknown\",\n      \"alternative\": \"\u53ef\u80fd\u7684\u5212\u75d5\u6216\u78e8\u635f\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u53ef\u80fd\u7684\u5212\u75d5\u6216\u78e8\u635f",
+          "cells": [
+            25,
+            26,
+            27,
+            28
+          ],
+          "confidence": "medium",
+          "cue": "unknown"
+        },
+        {
+          "alternative": "\u53ef\u80fd\u7684\u5212\u75d5\u6216\u78e8\u635f",
+          "cells": [
+            52,
+            53,
+            54,
+            55
+          ],
+          "confidence": "medium",
+          "cue": "unknown"
+        }
+      ],
+      "reliable_candidates": [
+        25,
+        26,
+        27,
+        28,
+        52,
+        53,
+        54,
+        55
+      ],
+      "repaired": false,
+      "specimen_key": "w68dtmpfyf:q16-23"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "8bc9dae3c91bd919a9c229e8e2cb0f2b36434f087a84a78e30e8ca3d0b435dfe",
+      "latency_seconds": 9.407975947018713,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [35, 36],\n      \"cue\": \"unknown\",\n      \"alternative\": \"\u53ef\u80fd\u7684\u5212\u75d5\u6216\u64e6\u4f24\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [59, 60],\n      \"cue\": \"unknown\",\n      \"alternative\": \"\u53ef\u80fd\u7684\u5212\u75d5\u6216\u64e6\u4f24\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u53ef\u80fd\u7684\u5212\u75d5\u6216\u64e6\u4f24",
+          "cells": [
+            35,
+            36
+          ],
+          "confidence": "medium",
+          "cue": "unknown"
+        },
+        {
+          "alternative": "\u53ef\u80fd\u7684\u5212\u75d5\u6216\u64e6\u4f24",
+          "cells": [
+            59,
+            60
+          ],
+          "confidence": "medium",
+          "cue": "unknown"
+        }
+      ],
+      "reliable_candidates": [
+        35,
+        36,
+        59,
+        60
+      ],
+      "repaired": false,
+      "specimen_key": "w68dtmpfyf:q16-24"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "943af824cfaf9d9237cc43b135d25712369cffaefe0fac280929dc54ef52153b",
+      "latency_seconds": 9.397884652018547,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [35, 36],\n      \"cue\": \"unknown\",\n      \"alternative\": \"\u53ef\u80fd\u7684\u5212\u75d5\u6216\u6c61\u6e0d\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [43, 44],\n      \"cue\": \"unknown\",\n      \"alternative\": \"\u53ef\u80fd\u7684\u5212\u75d5\u6216\u6c61\u6e0d\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u53ef\u80fd\u7684\u5212\u75d5\u6216\u6c61\u6e0d",
+          "cells": [
+            35,
+            36
+          ],
+          "confidence": "medium",
+          "cue": "unknown"
+        },
+        {
+          "alternative": "\u53ef\u80fd\u7684\u5212\u75d5\u6216\u6c61\u6e0d",
+          "cells": [
+            43,
+            44
+          ],
+          "confidence": "medium",
+          "cue": "unknown"
+        }
+      ],
+      "reliable_candidates": [
+        35,
+        36,
+        43,
+        44
+      ],
+      "repaired": false,
+      "specimen_key": "w68dtmpfyf:q16-3"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "49a57acf6a530b143538d70adc821b60c179e158a81bfb846a33187edacc3539",
+      "latency_seconds": 9.336902592796832,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [35, 36],\n      \"cue\": \"\u5212\u75d5\",\n      \"alternative\": \"\u4f7f\u7528\u5de5\u5177\u9020\u6210\u7684\u5212\u75d5\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [49, 50],\n      \"cue\": \"\u5212\u75d5\",\n      \"alternative\": \"\u4f7f\u7528\u5de5\u5177\u9020\u6210\u7684\u5212\u75d5\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u4f7f\u7528\u5de5\u5177\u9020\u6210\u7684\u5212\u75d5",
+          "cells": [
+            35,
+            36
+          ],
+          "confidence": "medium",
+          "cue": "\u5212\u75d5"
+        },
+        {
+          "alternative": "\u4f7f\u7528\u5de5\u5177\u9020\u6210\u7684\u5212\u75d5",
+          "cells": [
+            49,
+            50
+          ],
+          "confidence": "medium",
+          "cue": "\u5212\u75d5"
+        }
+      ],
+      "reliable_candidates": [
+        35,
+        36,
+        49,
+        50
+      ],
+      "repaired": false,
+      "specimen_key": "w68dtmpfyf:q16-31"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "99113e1fdc7bc024fea7bfd5c09197d26d56465458591e2d63bc6e751610e5c0",
+      "latency_seconds": 9.873469458892941,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [35, 36, 37],\n      \"cue\": \"crack\",\n      \"alternative\": \"\u53ef\u80fd\u7684\u5212\u75d5\u6216\u5fae\u5c0f\u88c2\u7eb9\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [29, 30, 31],\n      \"cue\": \"crack\",\n      \"alternative\": \"\u53ef\u80fd\u7684\u5212\u75d5\u6216\u5fae\u5c0f\u88c2\u7eb9\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u53ef\u80fd\u7684\u5212\u75d5\u6216\u5fae\u5c0f\u88c2\u7eb9",
+          "cells": [
+            35,
+            36,
+            37
+          ],
+          "confidence": "medium",
+          "cue": "crack"
+        },
+        {
+          "alternative": "\u53ef\u80fd\u7684\u5212\u75d5\u6216\u5fae\u5c0f\u88c2\u7eb9",
+          "cells": [
+            29,
+            30,
+            31
+          ],
+          "confidence": "medium",
+          "cue": "crack"
+        }
+      ],
+      "reliable_candidates": [
+        29,
+        30,
+        31,
+        35,
+        36,
+        37
+      ],
+      "repaired": false,
+      "specimen_key": "w68dtmpfyf:q16-32"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "597f8ff0266da68bb54be91457b7b8e0b7d902792c368d89425a5d4c79779d6f",
+      "latency_seconds": 10.019056149758399,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [35, 36, 37],\n      \"cue\": \"circle with lines\",\n      \"alternative\": \"scratch or mark from a tool\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [36],\n      \"cue\": \"circle with lines\",\n      \"alternative\": \"scratch or mark from a tool\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "scratch or mark from a tool",
+          "cells": [
+            35,
+            36,
+            37
+          ],
+          "confidence": "medium",
+          "cue": "circle with lines"
+        },
+        {
+          "alternative": "scratch or mark from a tool",
+          "cells": [
+            36
+          ],
+          "confidence": "medium",
+          "cue": "circle with lines"
+        }
+      ],
+      "reliable_candidates": [
+        35,
+        36,
+        37
+      ],
+      "repaired": false,
+      "specimen_key": "w68dtmpfyf:q16-36"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "2b39e7353112de5e8b54aff0cc55cacc42ba7296f62ce673104f1de753a8ac0e",
+      "latency_seconds": 9.603540007956326,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [27, 28, 29, 30],\n      \"cue\": \"hole\",\n      \"alternative\": \"\u5b54\u6d1e\",\n      \"confidence\": \"high\"\n    },\n    {\n      \"cells\": [35, 36, 37, 38],\n      \"cue\": \"hole\",\n      \"alternative\": \"\u5b54\u6d1e\",\n      \"confidence\": \"high\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u5b54\u6d1e",
+          "cells": [
+            27,
+            28,
+            29,
+            30
+          ],
+          "confidence": "high",
+          "cue": "hole"
+        },
+        {
+          "alternative": "\u5b54\u6d1e",
+          "cells": [
+            35,
+            36,
+            37,
+            38
+          ],
+          "confidence": "high",
+          "cue": "hole"
+        }
+      ],
+      "reliable_candidates": [
+        27,
+        28,
+        29,
+        30,
+        35,
+        36,
+        37,
+        38
+      ],
+      "repaired": false,
+      "specimen_key": "w68dtmpfyf:q16-42"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "aabd5db1c2019cf0ed76ccd27e76996995a7485fd5d119e6c5624b8fbef7a70c",
+      "latency_seconds": 11.104269695002586,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [35, 36, 37],\n      \"cue\": \"circle\",\n      \"alternative\": \"\u53ef\u80fd\u662f\u4e00\u4e2a\u6807\u8bb0\u6216\u7f3a\u9677\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [35, 36, 37],\n      \"cue\": \"circle\",\n      \"alternative\": \"\u53ef\u80fd\u662f\u4e00\u4e2a\u6807\u8bb0\u6216\u7f3a\u9677\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u53ef\u80fd\u662f\u4e00\u4e2a\u6807\u8bb0\u6216\u7f3a\u9677",
+          "cells": [
+            35,
+            36,
+            37
+          ],
+          "confidence": "medium",
+          "cue": "circle"
+        },
+        {
+          "alternative": "\u53ef\u80fd\u662f\u4e00\u4e2a\u6807\u8bb0\u6216\u7f3a\u9677",
+          "cells": [
+            35,
+            36,
+            37
+          ],
+          "confidence": "medium",
+          "cue": "circle"
+        }
+      ],
+      "reliable_candidates": [
+        35,
+        36,
+        37
+      ],
+      "repaired": false,
+      "specimen_key": "xcmzfsbd9t:c24-11t"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "37980e3b55198e41f86d3a160adbc1591fcc6dd85ea77fb7d516c8ee799354c8",
+      "latency_seconds": 9.331240264698863,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [35, 36],\n      \"cue\": \"\u5c0f\u5706\u70b9\",\n      \"alternative\": \"\u53ef\u80fd\u662f\u8f7b\u5fae\u7684\u5212\u75d5\u6216\u6c61\u6e0d\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [59, 60],\n      \"cue\": \"\u672a\u77e5\",\n      \"alternative\": \"\u65e0\u660e\u663e\u7ebf\u7d22\",\n      \"confidence\": \"unknown\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u53ef\u80fd\u662f\u8f7b\u5fae\u7684\u5212\u75d5\u6216\u6c61\u6e0d",
+          "cells": [
+            35,
+            36
+          ],
+          "confidence": "medium",
+          "cue": "\u5c0f\u5706\u70b9"
+        },
+        {
+          "alternative": "\u65e0\u660e\u663e\u7ebf\u7d22",
+          "cells": [
+            59,
+            60
+          ],
+          "confidence": "unknown",
+          "cue": "\u672a\u77e5"
+        }
+      ],
+      "reliable_candidates": [
+        35,
+        36
+      ],
+      "repaired": false,
+      "specimen_key": "xcmzfsbd9t:c24-20"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "cd5ebfba88edb63c2bd8db90705cf9deb7440d66b96b4d4f0dab4b7685d0a4dd",
+      "latency_seconds": 9.356446042191237,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [35, 36],\n      \"cue\": \"\u5212\u75d5\",\n      \"alternative\": \"\u4f7f\u7528\u5de5\u5177\u9020\u6210\u7684\u5212\u75d5\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [37, 38],\n      \"cue\": \"\u5212\u75d5\",\n      \"alternative\": \"\u4f7f\u7528\u5de5\u5177\u9020\u6210\u7684\u5212\u75d5\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u4f7f\u7528\u5de5\u5177\u9020\u6210\u7684\u5212\u75d5",
+          "cells": [
+            35,
+            36
+          ],
+          "confidence": "medium",
+          "cue": "\u5212\u75d5"
+        },
+        {
+          "alternative": "\u4f7f\u7528\u5de5\u5177\u9020\u6210\u7684\u5212\u75d5",
+          "cells": [
+            37,
+            38
+          ],
+          "confidence": "medium",
+          "cue": "\u5212\u75d5"
+        }
+      ],
+      "reliable_candidates": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "repaired": false,
+      "specimen_key": "xcmzfsbd9t:c24-27"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "bda5958a8f7c57c5defb3da18980d661c44db233ad6954684f8e160ce02e50af",
+      "latency_seconds": 9.284838841762394,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [35, 36, 37],\n      \"cue\": \"\u5212\u75d5\",\n      \"alternative\": \"\u8868\u9762\u78e8\u635f\u6216\u5212\u75d5\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [36],\n      \"cue\": \"\u4e2d\u5fc3\u70b9\",\n      \"alternative\": \"\u8868\u9762\u7f3a\u9677\u6216\u5236\u9020\u7455\u75b5\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u8868\u9762\u78e8\u635f\u6216\u5212\u75d5",
+          "cells": [
+            35,
+            36,
+            37
+          ],
+          "confidence": "medium",
+          "cue": "\u5212\u75d5"
+        },
+        {
+          "alternative": "\u8868\u9762\u7f3a\u9677\u6216\u5236\u9020\u7455\u75b5",
+          "cells": [
+            36
+          ],
+          "confidence": "medium",
+          "cue": "\u4e2d\u5fc3\u70b9"
+        }
+      ],
+      "reliable_candidates": [
+        35,
+        36,
+        37
+      ],
+      "repaired": false,
+      "specimen_key": "xcmzfsbd9t:c24-33"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "fb0cf2a8f67f3245298c60cc02a6361b23794ac198f3d7f981c5b20687e28e5a",
+      "latency_seconds": 9.37670127581805,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [35, 36],\n      \"cue\": \"unknown\",\n      \"alternative\": \"\u53ef\u80fd\u7684\u6c61\u6e0d\u6216\u5212\u75d5\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [59, 60],\n      \"cue\": \"unknown\",\n      \"alternative\": \"\u53ef\u80fd\u7684\u6c61\u6e0d\u6216\u5212\u75d5\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u53ef\u80fd\u7684\u6c61\u6e0d\u6216\u5212\u75d5",
+          "cells": [
+            35,
+            36
+          ],
+          "confidence": "medium",
+          "cue": "unknown"
+        },
+        {
+          "alternative": "\u53ef\u80fd\u7684\u6c61\u6e0d\u6216\u5212\u75d5",
+          "cells": [
+            59,
+            60
+          ],
+          "confidence": "medium",
+          "cue": "unknown"
+        }
+      ],
+      "reliable_candidates": [
+        35,
+        36,
+        59,
+        60
+      ],
+      "repaired": false,
+      "specimen_key": "xcmzfsbd9t:c24-37"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "873342d64182db699f695ce43d06b8c70ed5a8eba8d0379166b0b9c80955860c",
+      "latency_seconds": 9.209669697098434,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [35, 36, 37],\n      \"cue\": \"crack\",\n      \"alternative\": \"\u5212\u75d5\u6216\u8f7b\u5fae\u88c2\u7eb9\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [36],\n      \"cue\": \"hole\",\n      \"alternative\": \"\u5b54\u6d1e\",\n      \"confidence\": \"high\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u5212\u75d5\u6216\u8f7b\u5fae\u88c2\u7eb9",
+          "cells": [
+            35,
+            36,
+            37
+          ],
+          "confidence": "medium",
+          "cue": "crack"
+        },
+        {
+          "alternative": "\u5b54\u6d1e",
+          "cells": [
+            36
+          ],
+          "confidence": "high",
+          "cue": "hole"
+        }
+      ],
+      "reliable_candidates": [
+        36
+      ],
+      "repaired": false,
+      "specimen_key": "xcmzfsbd9t:c24-39"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "3c485cdf3818348965713de9c374200335f7721b556c8667e44661b8fe010e37",
+      "latency_seconds": 9.040539390407503,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [36],\n      \"cue\": \"crack\",\n      \"alternative\": \"\u5212\u75d5\",\n      \"confidence\": \"high\"\n    },\n    {\n      \"cells\": [27, 28, 29],\n      \"cue\": \"scratch\",\n      \"alternative\": \"\u5212\u75d5\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u5212\u75d5",
+          "cells": [
+            36
+          ],
+          "confidence": "high",
+          "cue": "crack"
+        },
+        {
+          "alternative": "\u5212\u75d5",
+          "cells": [
+            27,
+            28,
+            29
+          ],
+          "confidence": "medium",
+          "cue": "scratch"
+        }
+      ],
+      "reliable_candidates": [
+        36
+      ],
+      "repaired": false,
+      "specimen_key": "xcmzfsbd9t:c24-43"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "015e036cb05ab6747918444659b565b8d6c4b80df2ef7a9c6c3402a25289a33f",
+      "latency_seconds": 9.191196149215102,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [35, 36, 37],\n      \"cue\": \"damage\",\n      \"alternative\": \"scratches or minor impact\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [38],\n      \"cue\": \"damage\",\n      \"alternative\": \"scratch or small dent\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "scratches or minor impact",
+          "cells": [
+            35,
+            36,
+            37
+          ],
+          "confidence": "medium",
+          "cue": "damage"
+        },
+        {
+          "alternative": "scratch or small dent",
+          "cells": [
+            38
+          ],
+          "confidence": "medium",
+          "cue": "damage"
+        }
+      ],
+      "reliable_candidates": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "repaired": false,
+      "specimen_key": "xcmzfsbd9t:c24-49"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "2d1d9094597ef07bf3f9bf3457ff7657906a6bcb5c43a0f30dfb56038e46c09e",
+      "latency_seconds": 9.551306365057826,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [35, 36, 37],\n      \"cue\": \"crack-like pattern\",\n      \"alternative\": \"potential crack or scratch\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [38, 39, 40],\n      \"cue\": \"unknown\",\n      \"alternative\": \"unclear anomaly\",\n      \"confidence\": \"low\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "potential crack or scratch",
+          "cells": [
+            35,
+            36,
+            37
+          ],
+          "confidence": "medium",
+          "cue": "crack-like pattern"
+        },
+        {
+          "alternative": "unclear anomaly",
+          "cells": [
+            38,
+            39,
+            40
+          ],
+          "confidence": "low",
+          "cue": "unknown"
+        }
+      ],
+      "reliable_candidates": [
+        35,
+        36,
+        37
+      ],
+      "repaired": false,
+      "specimen_key": "xcmzfsbd9t:c24-54"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "64ee84c7a429b557ee3ac66037f903a2cb298d1ea7fa63e120f2fbd64e9eee89",
+      "latency_seconds": 9.704435973893851,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [35, 36, 37],\n      \"cue\": \"\u6c34\u6ce2\u7eb9\",\n      \"alternative\": \"\u53ef\u80fd\u662f\u7531\u4e8e\u98ce\u6216\u6c34\u6d41\u5f15\u8d77\u7684\u8868\u9762\u6270\u52a8\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [36],\n      \"cue\": \"\u53cd\u5c04\u5149\u6591\",\n      \"alternative\": \"\u53ef\u80fd\u662f\u7531\u4e8e\u5149\u7ebf\u7167\u5c04\u5728\u7279\u5b9a\u89d2\u5ea6\u9020\u6210\u7684\u53cd\u5c04\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u53ef\u80fd\u662f\u7531\u4e8e\u98ce\u6216\u6c34\u6d41\u5f15\u8d77\u7684\u8868\u9762\u6270\u52a8",
+          "cells": [
+            35,
+            36,
+            37
+          ],
+          "confidence": "medium",
+          "cue": "\u6c34\u6ce2\u7eb9"
+        },
+        {
+          "alternative": "\u53ef\u80fd\u662f\u7531\u4e8e\u5149\u7ebf\u7167\u5c04\u5728\u7279\u5b9a\u89d2\u5ea6\u9020\u6210\u7684\u53cd\u5c04",
+          "cells": [
+            36
+          ],
+          "confidence": "medium",
+          "cue": "\u53cd\u5c04\u5149\u6591"
+        }
+      ],
+      "reliable_candidates": [
+        35,
+        36,
+        37
+      ],
+      "repaired": false,
+      "specimen_key": "xcmzfsbd9t:c24-9t"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "6f8c2211b6e605cd76c488f4a30481aa09b826a059f7e4290f7cec48174d2417",
+      "latency_seconds": 9.098275633063167,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [36, 37],\n      \"cue\": \"crack\",\n      \"alternative\": \"\u5212\u75d5\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [35, 36],\n      \"cue\": \"crack\",\n      \"alternative\": \"\u5212\u75d5\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u5212\u75d5",
+          "cells": [
+            36,
+            37
+          ],
+          "confidence": "medium",
+          "cue": "crack"
+        },
+        {
+          "alternative": "\u5212\u75d5",
+          "cells": [
+            35,
+            36
+          ],
+          "confidence": "medium",
+          "cue": "crack"
+        }
+      ],
+      "reliable_candidates": [
+        35,
+        36,
+        37
+      ],
+      "repaired": false,
+      "specimen_key": "yfxyg8jm46:c16-12"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "21f2cda7a78a54983d20b58af9478dbf847a7aa2ab95237d1055c787182b40b9",
+      "latency_seconds": 8.910822715144604,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [36],\n      \"cue\": \"circle\",\n      \"alternative\": \"\u5b54\u6d1e\u6216\u7f3a\u9677\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [37],\n      \"cue\": \"circle\",\n      \"alternative\": \"\u5b54\u6d1e\u6216\u7f3a\u9677\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u5b54\u6d1e\u6216\u7f3a\u9677",
+          "cells": [
+            36
+          ],
+          "confidence": "medium",
+          "cue": "circle"
+        },
+        {
+          "alternative": "\u5b54\u6d1e\u6216\u7f3a\u9677",
+          "cells": [
+            37
+          ],
+          "confidence": "medium",
+          "cue": "circle"
+        }
+      ],
+      "reliable_candidates": [
+        36,
+        37
+      ],
+      "repaired": false,
+      "specimen_key": "yfxyg8jm46:c16-15"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "2e564fae3915940a891bd90d5a84f0849f885490fe0b5a7789c43ee48188bbf3",
+      "latency_seconds": 9.595771841704845,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [35, 36, 37],\n      \"cue\": \"\u900f\u660e\u5706\u5708\",\n      \"alternative\": \"\u53ef\u80fd\u662f\u6c14\u6ce1\u6216\u6db2\u4f53\u6ef4\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [36],\n      \"cue\": \"\u900f\u660e\u5706\u5708\",\n      \"alternative\": \"\u53ef\u80fd\u662f\u6c14\u6ce1\u6216\u6db2\u4f53\u6ef4\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u53ef\u80fd\u662f\u6c14\u6ce1\u6216\u6db2\u4f53\u6ef4",
+          "cells": [
+            35,
+            36,
+            37
+          ],
+          "confidence": "medium",
+          "cue": "\u900f\u660e\u5706\u5708"
+        },
+        {
+          "alternative": "\u53ef\u80fd\u662f\u6c14\u6ce1\u6216\u6db2\u4f53\u6ef4",
+          "cells": [
+            36
+          ],
+          "confidence": "medium",
+          "cue": "\u900f\u660e\u5706\u5708"
+        }
+      ],
+      "reliable_candidates": [
+        35,
+        36,
+        37
+      ],
+      "repaired": false,
+      "specimen_key": "yfxyg8jm46:c16-16"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "5e6ebcbd11f8bfddf58bd19daef5dc6af5e61476d23be11a41da20df35282143",
+      "latency_seconds": 9.175422703381628,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [35, 36],\n      \"cue\": \"circle\",\n      \"alternative\": \"\u5b54\u6d1e\u6216\u7f3a\u9677\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [37, 38],\n      \"cue\": \"circle\",\n      \"alternative\": \"\u5b54\u6d1e\u6216\u7f3a\u9677\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u5b54\u6d1e\u6216\u7f3a\u9677",
+          "cells": [
+            35,
+            36
+          ],
+          "confidence": "medium",
+          "cue": "circle"
+        },
+        {
+          "alternative": "\u5b54\u6d1e\u6216\u7f3a\u9677",
+          "cells": [
+            37,
+            38
+          ],
+          "confidence": "medium",
+          "cue": "circle"
+        }
+      ],
+      "reliable_candidates": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "repaired": false,
+      "specimen_key": "yfxyg8jm46:c16-18"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "38c9d7a65ffe9d8ddbcf7b6bbbadb1b774a439fe76451b4ae67eda25c9646a10",
+      "latency_seconds": 9.59024423127994,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [35, 36, 37],\n      \"cue\": \"\u5212\u75d5\",\n      \"alternative\": \"\u8868\u9762\u78e8\u635f\u6216\u5212\u75d5\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [59, 60, 61],\n      \"cue\": \"\u5212\u75d5\",\n      \"alternative\": \"\u8868\u9762\u78e8\u635f\u6216\u5212\u75d5\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u8868\u9762\u78e8\u635f\u6216\u5212\u75d5",
+          "cells": [
+            35,
+            36,
+            37
+          ],
+          "confidence": "medium",
+          "cue": "\u5212\u75d5"
+        },
+        {
+          "alternative": "\u8868\u9762\u78e8\u635f\u6216\u5212\u75d5",
+          "cells": [
+            59,
+            60,
+            61
+          ],
+          "confidence": "medium",
+          "cue": "\u5212\u75d5"
+        }
+      ],
+      "reliable_candidates": [
+        35,
+        36,
+        37,
+        59,
+        60,
+        61
+      ],
+      "repaired": false,
+      "specimen_key": "yfxyg8jm46:c16-19"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "fa174a71224cb6646f999bcf77f215a538b5c183971fb406f8d944fe526788f8",
+      "latency_seconds": 18.41418003803119,
+      "no_reliable_cue": false,
+      "original_call_count": 2,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [5, 13],\n      \"cue\": \"\u5212\u75d5\",\n      \"alternative\": \"\u4f7f\u7528\u5de5\u5177\u9020\u6210\u7684\u8868\u9762\u78e8\u635f\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [59],\n      \"cue\": \"\u5212\u75d5\",\n      \"alternative\": \"\u4f7f\u7528\u5de5\u5177\u9020\u6210\u7684\u8868\u9762\u78e8\u635f\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u4f7f\u7528\u5de5\u5177\u9020\u6210\u7684\u8868\u9762\u78e8\u635f",
+          "cells": [
+            5,
+            13
+          ],
+          "confidence": "medium",
+          "cue": "\u5212\u75d5"
+        },
+        {
+          "alternative": "\u4f7f\u7528\u5de5\u5177\u9020\u6210\u7684\u8868\u9762\u78e8\u635f",
+          "cells": [
+            59
+          ],
+          "confidence": "medium",
+          "cue": "\u5212\u75d5"
+        }
+      ],
+      "reliable_candidates": [
+        5,
+        13,
+        59
+      ],
+      "repaired": true,
+      "specimen_key": "yfxyg8jm46:c16-30"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "8a07f86ded7f97b6071a8c0888cae7b45a1d60503035120342636522ce6ac1ef",
+      "latency_seconds": 9.171049253083766,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [36],\n      \"cue\": \"crack\",\n      \"alternative\": \"\u53ef\u80fd\u7684\u5212\u75d5\u6216\u88c2\u7eb9\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [37],\n      \"cue\": \"crack\",\n      \"alternative\": \"\u53ef\u80fd\u7684\u5212\u75d5\u6216\u88c2\u7eb9\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u53ef\u80fd\u7684\u5212\u75d5\u6216\u88c2\u7eb9",
+          "cells": [
+            36
+          ],
+          "confidence": "medium",
+          "cue": "crack"
+        },
+        {
+          "alternative": "\u53ef\u80fd\u7684\u5212\u75d5\u6216\u88c2\u7eb9",
+          "cells": [
+            37
+          ],
+          "confidence": "medium",
+          "cue": "crack"
+        }
+      ],
+      "reliable_candidates": [
+        36,
+        37
+      ],
+      "repaired": false,
+      "specimen_key": "yfxyg8jm46:c16-35"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "943e6f8173bf098f0725a11c37454f1939f50e908732897ceff42866c0f839bf",
+      "latency_seconds": 9.379087775945663,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [35, 36],\n      \"cue\": \"\u5212\u75d5\",\n      \"alternative\": \"\u53ef\u80fd\u662f\u4f7f\u7528\u5de5\u5177\u9020\u6210\u7684\u5212\u75d5\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [59, 60],\n      \"cue\": \"\u5212\u75d5\",\n      \"alternative\": \"\u53ef\u80fd\u662f\u4f7f\u7528\u5de5\u5177\u9020\u6210\u7684\u5212\u75d5\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u53ef\u80fd\u662f\u4f7f\u7528\u5de5\u5177\u9020\u6210\u7684\u5212\u75d5",
+          "cells": [
+            35,
+            36
+          ],
+          "confidence": "medium",
+          "cue": "\u5212\u75d5"
+        },
+        {
+          "alternative": "\u53ef\u80fd\u662f\u4f7f\u7528\u5de5\u5177\u9020\u6210\u7684\u5212\u75d5",
+          "cells": [
+            59,
+            60
+          ],
+          "confidence": "medium",
+          "cue": "\u5212\u75d5"
+        }
+      ],
+      "reliable_candidates": [
+        35,
+        36,
+        59,
+        60
+      ],
+      "repaired": false,
+      "specimen_key": "yfxyg8jm46:c16-38"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "9ae2962cbde0a82b7b138359e2c2db4b12b530d233af0a3ab5752c514609e782",
+      "latency_seconds": 9.3124077366665,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [35, 36, 37],\n      \"cue\": \"crack\",\n      \"alternative\": \"\u53ef\u80fd\u7684\u5212\u75d5\u6216\u88c2\u7f1d\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [36],\n      \"cue\": \"circle\",\n      \"alternative\": \"\u53ef\u80fd\u662f\u6807\u8bb0\u6216\u6c61\u6e0d\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u53ef\u80fd\u7684\u5212\u75d5\u6216\u88c2\u7f1d",
+          "cells": [
+            35,
+            36,
+            37
+          ],
+          "confidence": "medium",
+          "cue": "crack"
+        },
+        {
+          "alternative": "\u53ef\u80fd\u662f\u6807\u8bb0\u6216\u6c61\u6e0d",
+          "cells": [
+            36
+          ],
+          "confidence": "medium",
+          "cue": "circle"
+        }
+      ],
+      "reliable_candidates": [
+        35,
+        36,
+        37
+      ],
+      "repaired": false,
+      "specimen_key": "yfxyg8jm46:c16-4"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "c872c261d120d0a3c6385d131287f2795a6e7bbb9d6e3a8c9095db132436f6f6",
+      "latency_seconds": 8.861352667212486,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [36],\n      \"cue\": \"hole\",\n      \"alternative\": \"\u5b54\u6d1e\",\n      \"confidence\": \"high\"\n    },\n    {\n      \"cells\": [35, 37],\n      \"cue\": \"shadow\",\n      \"alternative\": \"\u9634\u5f71\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u5b54\u6d1e",
+          "cells": [
+            36
+          ],
+          "confidence": "high",
+          "cue": "hole"
+        },
+        {
+          "alternative": "\u9634\u5f71",
+          "cells": [
+            35,
+            37
+          ],
+          "confidence": "medium",
+          "cue": "shadow"
+        }
+      ],
+      "reliable_candidates": [
+        36
+      ],
+      "repaired": false,
+      "specimen_key": "yfxyg8jm46:c16-42"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "4f1cdca411cdf0f1a48537af110eaec2c16750f8e5118f585839dc9ab657ffdd",
+      "latency_seconds": 9.385213627945632,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [36],\n      \"cue\": \"\u5c0f\u5b54\u6d1e\",\n      \"alternative\": \"\u53ef\u80fd\u662f\u8f7b\u5fae\u7684\u5212\u75d5\u6216\u78e8\u635f\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [35, 37],\n      \"cue\": \"\u8fb9\u7f18\u6a21\u7cca\",\n      \"alternative\": \"\u53ef\u80fd\u662f\u7531\u4e8e\u5149\u7ebf\u53cd\u5c04\u9020\u6210\u7684\u89c6\u89c9\u9519\u89c9\",\n      \"confidence\": \"low\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u53ef\u80fd\u662f\u8f7b\u5fae\u7684\u5212\u75d5\u6216\u78e8\u635f",
+          "cells": [
+            36
+          ],
+          "confidence": "medium",
+          "cue": "\u5c0f\u5b54\u6d1e"
+        },
+        {
+          "alternative": "\u53ef\u80fd\u662f\u7531\u4e8e\u5149\u7ebf\u53cd\u5c04\u9020\u6210\u7684\u89c6\u89c9\u9519\u89c9",
+          "cells": [
+            35,
+            37
+          ],
+          "confidence": "low",
+          "cue": "\u8fb9\u7f18\u6a21\u7cca"
+        }
+      ],
+      "reliable_candidates": [
+        36
+      ],
+      "repaired": false,
+      "specimen_key": "ykhs7s2dck:q8-11"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "3fa67a12af3cb2f95abcf2c96d1f0986f38b5d1d4680e3331ad90a96ed4b425b",
+      "latency_seconds": 9.282990376930684,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [29],\n      \"cue\": \"circle\",\n      \"alternative\": \"\u5b54\u6d1e\u6216\u6807\u8bb0\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [35, 36, 37, 38],\n      \"cue\": \"grid lines\",\n      \"alternative\": \"\u7f51\u683c\u7ebf\",\n      \"confidence\": \"high\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u5b54\u6d1e\u6216\u6807\u8bb0",
+          "cells": [
+            29
+          ],
+          "confidence": "medium",
+          "cue": "circle"
+        },
+        {
+          "alternative": "\u7f51\u683c\u7ebf",
+          "cells": [
+            35,
+            36,
+            37,
+            38
+          ],
+          "confidence": "high",
+          "cue": "grid lines"
+        }
+      ],
+      "reliable_candidates": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "repaired": false,
+      "specimen_key": "ykhs7s2dck:q8-14"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "379d6e7dc9c21feed42325e695d200581d32c12631c3d5ef49738e75f3e00183",
+      "latency_seconds": 9.348441157024354,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [5, 13],\n      \"cue\": \"\u5212\u75d5\",\n      \"alternative\": \"\u4f7f\u7528\u4e0d\u5f53\u5bfc\u81f4\u7684\u8868\u9762\u78e8\u635f\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [47, 55],\n      \"cue\": \"\u5212\u75d5\",\n      \"alternative\": \"\u4f7f\u7528\u4e0d\u5f53\u5bfc\u81f4\u7684\u8868\u9762\u78e8\u635f\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u4f7f\u7528\u4e0d\u5f53\u5bfc\u81f4\u7684\u8868\u9762\u78e8\u635f",
+          "cells": [
+            5,
+            13
+          ],
+          "confidence": "medium",
+          "cue": "\u5212\u75d5"
+        },
+        {
+          "alternative": "\u4f7f\u7528\u4e0d\u5f53\u5bfc\u81f4\u7684\u8868\u9762\u78e8\u635f",
+          "cells": [
+            47,
+            55
+          ],
+          "confidence": "medium",
+          "cue": "\u5212\u75d5"
+        }
+      ],
+      "reliable_candidates": [
+        5,
+        13,
+        47,
+        55
+      ],
+      "repaired": false,
+      "specimen_key": "ykhs7s2dck:q8-19"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "2d821bba46bd6c3b65458a2e73fd0ec6c10ca133aa55aefd2d47f8a089ef7a3b",
+      "latency_seconds": 9.381724995095283,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [35, 36],\n      \"cue\": \"\u5c0f\u5706\u5708\",\n      \"alternative\": \"\u53ef\u80fd\u662f\u6807\u8bb0\u6216\u6c61\u6e0d\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [37, 38],\n      \"cue\": \"\u5c0f\u5706\u5708\",\n      \"alternative\": \"\u53ef\u80fd\u662f\u6807\u8bb0\u6216\u6c61\u6e0d\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u53ef\u80fd\u662f\u6807\u8bb0\u6216\u6c61\u6e0d",
+          "cells": [
+            35,
+            36
+          ],
+          "confidence": "medium",
+          "cue": "\u5c0f\u5706\u5708"
+        },
+        {
+          "alternative": "\u53ef\u80fd\u662f\u6807\u8bb0\u6216\u6c61\u6e0d",
+          "cells": [
+            37,
+            38
+          ],
+          "confidence": "medium",
+          "cue": "\u5c0f\u5706\u5708"
+        }
+      ],
+      "reliable_candidates": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "repaired": false,
+      "specimen_key": "ykhs7s2dck:q8-28"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "f9e19381ffaa9b649ed4f7d94072620456a1122b560cc1634be00a017dcd5bd4",
+      "latency_seconds": 9.284075058996677,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [36],\n      \"cue\": \"centered circular pattern\",\n      \"alternative\": \"dust or debris accumulation\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [35, 37],\n      \"cue\": \"adjacent faint lines\",\n      \"alternative\": \"scratch marks from handling\",\n      \"confidence\": \"low\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "dust or debris accumulation",
+          "cells": [
+            36
+          ],
+          "confidence": "medium",
+          "cue": "centered circular pattern"
+        },
+        {
+          "alternative": "scratch marks from handling",
+          "cells": [
+            35,
+            37
+          ],
+          "confidence": "low",
+          "cue": "adjacent faint lines"
+        }
+      ],
+      "reliable_candidates": [
+        36
+      ],
+      "repaired": false,
+      "specimen_key": "ykhs7s2dck:q8-29"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "c0559f356875856f1a8e0c1cc1e3e786b34bd1104593261f784119040c644447",
+      "latency_seconds": 9.941422613803297,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [35, 36, 37, 38],\n      \"cue\": \"circle with lines\",\n      \"alternative\": \"potential impact or scratch pattern\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [35, 36, 37, 38],\n      \"cue\": \"circle with lines\",\n      \"alternative\": \"potential impact or scratch pattern\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "potential impact or scratch pattern",
+          "cells": [
+            35,
+            36,
+            37,
+            38
+          ],
+          "confidence": "medium",
+          "cue": "circle with lines"
+        },
+        {
+          "alternative": "potential impact or scratch pattern",
+          "cells": [
+            35,
+            36,
+            37,
+            38
+          ],
+          "confidence": "medium",
+          "cue": "circle with lines"
+        }
+      ],
+      "reliable_candidates": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "repaired": false,
+      "specimen_key": "ykhs7s2dck:q8-31"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "838877b6aaab778228aaa97d498d2fff938fac5c4ece57a98c6b01e30a8c3c03",
+      "latency_seconds": 9.310582072008401,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [35, 36, 37],\n      \"cue\": \"\u73af\u5f62\u6807\u8bb0\",\n      \"alternative\": \"\u53ef\u80fd\u662f\u6807\u8bb0\u70b9\u800c\u975e\u635f\u4f24\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [36],\n      \"cue\": \"\u4e2d\u5fc3\u70b9\",\n      \"alternative\": \"\u53ef\u80fd\u662f\u4e00\u4e2a\u6807\u8bb0\u70b9\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u53ef\u80fd\u662f\u6807\u8bb0\u70b9\u800c\u975e\u635f\u4f24",
+          "cells": [
+            35,
+            36,
+            37
+          ],
+          "confidence": "medium",
+          "cue": "\u73af\u5f62\u6807\u8bb0"
+        },
+        {
+          "alternative": "\u53ef\u80fd\u662f\u4e00\u4e2a\u6807\u8bb0\u70b9",
+          "cells": [
+            36
+          ],
+          "confidence": "medium",
+          "cue": "\u4e2d\u5fc3\u70b9"
+        }
+      ],
+      "reliable_candidates": [
+        35,
+        36,
+        37
+      ],
+      "repaired": false,
+      "specimen_key": "ykhs7s2dck:q8-33"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "04c11630f7f11834870271d8218520bcb1fb35854bcbcdf0a320f6ff727e3350",
+      "latency_seconds": 9.312909508123994,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [35, 36],\n      \"cue\": \"\u5212\u75d5\",\n      \"alternative\": \"\u8868\u9762\u78e8\u635f\u6216\u5212\u75d5\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [59, 60],\n      \"cue\": \"\u5212\u75d5\",\n      \"alternative\": \"\u8868\u9762\u78e8\u635f\u6216\u5212\u75d5\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u8868\u9762\u78e8\u635f\u6216\u5212\u75d5",
+          "cells": [
+            35,
+            36
+          ],
+          "confidence": "medium",
+          "cue": "\u5212\u75d5"
+        },
+        {
+          "alternative": "\u8868\u9762\u78e8\u635f\u6216\u5212\u75d5",
+          "cells": [
+            59,
+            60
+          ],
+          "confidence": "medium",
+          "cue": "\u5212\u75d5"
+        }
+      ],
+      "reliable_candidates": [
+        35,
+        36,
+        59,
+        60
+      ],
+      "repaired": false,
+      "specimen_key": "ykhs7s2dck:q8-4"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "1c2c3c0a6e3a5451baa5f839f3c2e35fb72357f2da1e1c6132cb64cc783bf447",
+      "latency_seconds": 9.347383702173829,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [5, 13],\n      \"cue\": \"\u5212\u75d5\",\n      \"alternative\": \"\u4f7f\u7528\u4e0d\u5f53\u5bfc\u81f4\u7684\u8868\u9762\u78e8\u635f\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [37, 45],\n      \"cue\": \"\u5212\u75d5\",\n      \"alternative\": \"\u4f7f\u7528\u4e0d\u5f53\u5bfc\u81f4\u7684\u8868\u9762\u78e8\u635f\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u4f7f\u7528\u4e0d\u5f53\u5bfc\u81f4\u7684\u8868\u9762\u78e8\u635f",
+          "cells": [
+            5,
+            13
+          ],
+          "confidence": "medium",
+          "cue": "\u5212\u75d5"
+        },
+        {
+          "alternative": "\u4f7f\u7528\u4e0d\u5f53\u5bfc\u81f4\u7684\u8868\u9762\u78e8\u635f",
+          "cells": [
+            37,
+            45
+          ],
+          "confidence": "medium",
+          "cue": "\u5212\u75d5"
+        }
+      ],
+      "reliable_candidates": [
+        5,
+        13,
+        37,
+        45
+      ],
+      "repaired": false,
+      "specimen_key": "ykhs7s2dck:q8-41"
+    },
+    {
+      "actual_call_count": 0,
+      "cache_hit": true,
+      "cache_key": "9b310f35f0347f703161fe75839c975841dfe37d22c47fa1de5407d5dc2dcfae",
+      "latency_seconds": 9.5215490530245,
+      "no_reliable_cue": false,
+      "original_call_count": 1,
+      "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [35, 36],\n      \"cue\": \"\u5b54\u6d1e\",\n      \"alternative\": \"\u53ef\u80fd\u662f\u5c0f\u7684\u7a7f\u5b54\u6216\u5212\u75d5\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [37, 38],\n      \"cue\": \"\u8fb9\u7f18\u6a21\u7cca\",\n      \"alternative\": \"\u53ef\u80fd\u662f\u7531\u4e8e\u5149\u7ebf\u6216\u89d2\u5ea6\u9020\u6210\u7684\u89c6\u89c9\u6548\u679c\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "regions": [
+        {
+          "alternative": "\u53ef\u80fd\u662f\u5c0f\u7684\u7a7f\u5b54\u6216\u5212\u75d5",
+          "cells": [
+            35,
+            36
+          ],
+          "confidence": "medium",
+          "cue": "\u5b54\u6d1e"
+        },
+        {
+          "alternative": "\u53ef\u80fd\u662f\u7531\u4e8e\u5149\u7ebf\u6216\u89d2\u5ea6\u9020\u6210\u7684\u89c6\u89c9\u6548\u679c",
+          "cells": [
+            37,
+            38
+          ],
+          "confidence": "medium",
+          "cue": "\u8fb9\u7f18\u6a21\u7cca"
+        }
+      ],
+      "reliable_candidates": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "repaired": false,
+      "specimen_key": "ykhs7s2dck:q8-7"
+    }
+  ],
+  "reliable_initialization_specimens": 58,
+  "render_version": "b341e99fb74d9f815be810b2e8b1d91e59f236540072577c244313c584281f40",
+  "schema_version": 2,
+  "specimen_count": 60
+}

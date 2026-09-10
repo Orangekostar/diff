@@ -1,0 +1,59 @@
+{
+  "cai_unit": "MPa",
+  "encoder": {
+    "architecture_sha256": "118174aa09d19fc2d298a6065dc6a20b54b70a2925068377db1759df046d8aef",
+    "batch_size": 32,
+    "device": "cuda:2",
+    "embedding_dimension": 512,
+    "encoder": "torchvision_resnet18",
+    "frozen": true,
+    "model_state_sha256": "cbf2e5609c31f76c589acd162bf0bd55e89d8d297c84d2c3c3334dcea0be8b50",
+    "runtime": {
+      "cuda_matmul_tf32": false,
+      "cudnn_benchmark": false,
+      "cudnn_deterministic": true,
+      "cudnn_tf32": false,
+      "deterministic_algorithms": true,
+      "float32_matmul_precision": "highest"
+    },
+    "torch_version": "2.12.1+cu130",
+    "torchvision_version": "0.27.1+cu130",
+    "transform_sha256": "4cb561ea8d1466a2c98b2b717843c19a3e7888ba6ffc715a503751226c41e3a7",
+    "weight_path": "paper_v3/assets/resnet18-f37072fd.pth",
+    "weights": "ResNet18_Weights.IMAGENET1K_V1",
+    "weights_bytes": 46830571,
+    "weights_filename": "resnet18-f37072fd.pth",
+    "weights_sha256": "f37072fd47e89c5e827621c5baffa7500819f7896bbacec160b1a16c560e07ec",
+    "weights_url": "https://download.pytorch.org/models/resnet18-f37072fd.pth"
+  },
+  "encoder_elapsed_seconds": 127.98659709887579,
+  "encoder_execution_root": "external:cmc_damage_inference",
+  "feature_bank_sha256": "d6688ca704f231ef5d6928e6b5baf5ba0bb3e459bd675c70fc36ff58d15707aa",
+  "protocol_sha256": "5ed1911bfe029a40962a4a1f391dc1ced1ddc6cff7fe8bb1f0953f69c8ce9726",
+  "schema_version": 2,
+  "source_hashes": {
+    "cai_mpa_authority": "1d65d9f7c40f561727329ab6b7f922973765cc57f6ae36b5a94c572b20e8b054",
+    "learned_cscan_config": "12268dcaf470f769c326007702f7b0b6f4a13cf326447eef652a6dda972b5662",
+    "resnet18_weights": "f37072fd47e89c5e827621c5baffa7500819f7896bbacec160b1a16c560e07ec",
+    "vlm_cache": "85f400119093b362e2eb76489c9ae158ecdd453ce84ad04b6dfab7f04384693e",
+    "vlm_manifest": "b87b85240ee96c31b7fd9f8b46e0ca2338c7e11065fe531bd1f9e286aa942454"
+  },
+  "specimen_count": 60,
+  "split_counts": {
+    "TEST": 24,
+    "TRAIN": 24,
+    "VALID": 12
+  },
+  "target_max_mpa": 566.0504760742188,
+  "target_min_mpa": 163.86158752441406,
+  "test_targets_join_stage": "P5_EVALUATION_ONLY",
+  "test_targets_stored": false,
+  "token_shape": [
+    60,
+    64,
+    512
+  ],
+  "vlm_cache_hits": 60,
+  "vlm_new_calls": 0,
+  "vlm_original_calls": 62
+}

@@ -1,0 +1,477 @@
+{
+  "common_predictor_state_sha256": "62f6d951dab0fbfb2a8691786c6096a52629bcda0f6c6fc8fc0ff1d12586217d",
+  "elapsed_hours": 0.33390949409881915,
+  "models": [
+    {
+      "actor_state_protocol": "VISIBLE_ORDERED_HISTORY_BUDGET_V1",
+      "checkpoint": "results/cai_active_image/v2/models/actor_vlm_cai_feedback_agent_seed1.pt",
+      "checkpoint_reused": false,
+      "checkpoint_sha256": "8e87375bcc0926170e61504a5effcd5774833d9167b133401dfdc671701dbf14",
+      "common_predictor_state_sha256": "62f6d951dab0fbfb2a8691786c6096a52629bcda0f6c6fc8fc0ff1d12586217d",
+      "initial_proposal_rule": "HIGHEST_RELIABLE_CONFIDENCE_C0_THEN_UNLOCK_V1",
+      "kind": "CAI_ACQUISITION_ACTOR",
+      "method": "VLM_CAI_FEEDBACK_AGENT",
+      "schema_version": 2,
+      "seed": 1,
+      "selected_update": 1000,
+      "state_dict_sha256": "0877d23a77ad71f9f51aaf90cda98214e78c6da07055c223bfa8cae218f9a842",
+      "token_dimension": 512,
+      "updates_completed": 1250,
+      "use_feedback": true,
+      "use_vlm": true,
+      "validation_scores": [
+        [
+          250,
+          83.45954680310328
+        ],
+        [
+          500,
+          83.15090057400496
+        ],
+        [
+          750,
+          79.39060097312424
+        ],
+        [
+          1000,
+          78.55950835616152
+        ],
+        [
+          1250,
+          78.87332315193791
+        ]
+      ],
+      "width": 64
+    },
+    {
+      "actor_state_protocol": "VISIBLE_ORDERED_HISTORY_BUDGET_V1",
+      "checkpoint": "results/cai_active_image/v2/models/actor_no_vlm_feedback_seed1.pt",
+      "checkpoint_reused": false,
+      "checkpoint_sha256": "7cd0f7d7f99c9d08760c9532f6a185fb5c8a5210d7fda24e56a533f4a629fcb8",
+      "common_predictor_state_sha256": "62f6d951dab0fbfb2a8691786c6096a52629bcda0f6c6fc8fc0ff1d12586217d",
+      "initial_proposal_rule": "HIGHEST_RELIABLE_CONFIDENCE_C0_THEN_UNLOCK_V1",
+      "kind": "CAI_ACQUISITION_ACTOR",
+      "method": "NO_VLM_FEEDBACK",
+      "schema_version": 2,
+      "seed": 1,
+      "selected_update": 1250,
+      "state_dict_sha256": "a9481eab1487cfb458a8b602482fe348873b8fb48b27afc06043eeb5d92fc7ec",
+      "token_dimension": 512,
+      "updates_completed": 1250,
+      "use_feedback": true,
+      "use_vlm": false,
+      "validation_scores": [
+        [
+          250,
+          84.95262731131895
+        ],
+        [
+          500,
+          81.27005272879485
+        ],
+        [
+          750,
+          79.5843888395831
+        ],
+        [
+          1000,
+          78.47717146912932
+        ],
+        [
+          1250,
+          78.08930884610665
+        ]
+      ],
+      "width": 64
+    },
+    {
+      "actor_state_protocol": "VISIBLE_ORDERED_HISTORY_BUDGET_V1",
+      "checkpoint": "results/cai_active_image/v2/models/actor_vlm_open_loop_seed1.pt",
+      "checkpoint_reused": false,
+      "checkpoint_sha256": "35ce3e1293befac0f44333a7cca073218a9da66824183c5b1c340f48898e0d5b",
+      "common_predictor_state_sha256": "62f6d951dab0fbfb2a8691786c6096a52629bcda0f6c6fc8fc0ff1d12586217d",
+      "initial_proposal_rule": "HIGHEST_RELIABLE_CONFIDENCE_C0_THEN_UNLOCK_V1",
+      "kind": "CAI_ACQUISITION_ACTOR",
+      "method": "VLM_OPEN_LOOP",
+      "schema_version": 2,
+      "seed": 1,
+      "selected_update": 1250,
+      "state_dict_sha256": "d07c284b26dff3eb1bb4d5bd37fadf9700149b9b945ef21a20ed7ff3c24e77bc",
+      "token_dimension": 512,
+      "updates_completed": 1250,
+      "use_feedback": false,
+      "use_vlm": true,
+      "validation_scores": [
+        [
+          250,
+          81.92092997145828
+        ],
+        [
+          500,
+          80.40954980512618
+        ],
+        [
+          750,
+          80.55305582696433
+        ],
+        [
+          1000,
+          80.08693548263955
+        ],
+        [
+          1250,
+          78.825934420049
+        ]
+      ],
+      "width": 64
+    },
+    {
+      "actor_state_protocol": "VISIBLE_ORDERED_HISTORY_BUDGET_V1",
+      "checkpoint": "results/cai_active_image/v2/models/actor_learned_static_seed1.pt",
+      "checkpoint_reused": false,
+      "checkpoint_sha256": "0a03fdb6635d522b991c438197beca0f52cca858b251bee968e4b495e3957c15",
+      "common_predictor_state_sha256": "62f6d951dab0fbfb2a8691786c6096a52629bcda0f6c6fc8fc0ff1d12586217d",
+      "initial_proposal_rule": "HIGHEST_RELIABLE_CONFIDENCE_C0_THEN_UNLOCK_V1",
+      "kind": "CAI_ACQUISITION_ACTOR",
+      "method": "LEARNED_STATIC",
+      "schema_version": 2,
+      "seed": 1,
+      "selected_update": 750,
+      "state_dict_sha256": "bafdab8075958647ef932662d8da6bbebb485ba5d070133a4f18c7029f3d2050",
+      "token_dimension": 512,
+      "updates_completed": 750,
+      "use_feedback": false,
+      "use_vlm": false,
+      "validation_scores": [
+        [
+          250,
+          84.60769384862475
+        ],
+        [
+          500,
+          80.343154788226
+        ],
+        [
+          750,
+          78.3978652714986
+        ]
+      ],
+      "width": 64
+    },
+    {
+      "actor_state_protocol": "VISIBLE_ORDERED_HISTORY_BUDGET_V1",
+      "checkpoint": "results/cai_active_image/v2/models/actor_vlm_cai_feedback_agent_seed2.pt",
+      "checkpoint_reused": false,
+      "checkpoint_sha256": "cf9361ff902ae88b2b83a3d961c89b0fe0216f37a2b2f8b04045ebb1e3dcefd4",
+      "common_predictor_state_sha256": "62f6d951dab0fbfb2a8691786c6096a52629bcda0f6c6fc8fc0ff1d12586217d",
+      "initial_proposal_rule": "HIGHEST_RELIABLE_CONFIDENCE_C0_THEN_UNLOCK_V1",
+      "kind": "CAI_ACQUISITION_ACTOR",
+      "method": "VLM_CAI_FEEDBACK_AGENT",
+      "schema_version": 2,
+      "seed": 2,
+      "selected_update": 750,
+      "state_dict_sha256": "a0dfc239dda3c924fd5fcfab593e85e2d1147abe1fe024e78be65a387a5b43ea",
+      "token_dimension": 512,
+      "updates_completed": 1250,
+      "use_feedback": true,
+      "use_vlm": true,
+      "validation_scores": [
+        [
+          250,
+          78.50911274016504
+        ],
+        [
+          500,
+          78.80545385806828
+        ],
+        [
+          750,
+          78.49224611718554
+        ],
+        [
+          1000,
+          79.49974973684438
+        ],
+        [
+          1250,
+          78.49697974316605
+        ]
+      ],
+      "width": 64
+    },
+    {
+      "actor_state_protocol": "VISIBLE_ORDERED_HISTORY_BUDGET_V1",
+      "checkpoint": "results/cai_active_image/v2/models/actor_no_vlm_feedback_seed2.pt",
+      "checkpoint_reused": false,
+      "checkpoint_sha256": "d6982d129ec39a26106d53f8ab6386d27391e21d0ca5a501cc81c7b473a5ce74",
+      "common_predictor_state_sha256": "62f6d951dab0fbfb2a8691786c6096a52629bcda0f6c6fc8fc0ff1d12586217d",
+      "initial_proposal_rule": "HIGHEST_RELIABLE_CONFIDENCE_C0_THEN_UNLOCK_V1",
+      "kind": "CAI_ACQUISITION_ACTOR",
+      "method": "NO_VLM_FEEDBACK",
+      "schema_version": 2,
+      "seed": 2,
+      "selected_update": 250,
+      "state_dict_sha256": "721124ede4c3440090455bf74540f9df0f840bbabf7bb9ebaaeccbe0a5880214",
+      "token_dimension": 512,
+      "updates_completed": 1250,
+      "use_feedback": true,
+      "use_vlm": false,
+      "validation_scores": [
+        [
+          250,
+          78.0018340355993
+        ],
+        [
+          500,
+          79.94988685378
+        ],
+        [
+          750,
+          79.44528110461944
+        ],
+        [
+          1000,
+          79.37255856261676
+        ],
+        [
+          1250,
+          78.47283410378617
+        ]
+      ],
+      "width": 64
+    },
+    {
+      "actor_state_protocol": "VISIBLE_ORDERED_HISTORY_BUDGET_V1",
+      "checkpoint": "results/cai_active_image/v2/models/actor_vlm_open_loop_seed2.pt",
+      "checkpoint_reused": false,
+      "checkpoint_sha256": "3c147227479636566bed9e4ae7790977b41dfa45904cbb6a22152a1aad8861c4",
+      "common_predictor_state_sha256": "62f6d951dab0fbfb2a8691786c6096a52629bcda0f6c6fc8fc0ff1d12586217d",
+      "initial_proposal_rule": "HIGHEST_RELIABLE_CONFIDENCE_C0_THEN_UNLOCK_V1",
+      "kind": "CAI_ACQUISITION_ACTOR",
+      "method": "VLM_OPEN_LOOP",
+      "schema_version": 2,
+      "seed": 2,
+      "selected_update": 500,
+      "state_dict_sha256": "309fa848dbfc8707fcd0f43d7211e4442bc091bb2bec8b91ba5099cb54f068cf",
+      "token_dimension": 512,
+      "updates_completed": 1250,
+      "use_feedback": false,
+      "use_vlm": true,
+      "validation_scores": [
+        [
+          250,
+          80.67715274703508
+        ],
+        [
+          500,
+          79.14965554539094
+        ],
+        [
+          750,
+          79.84494657347805
+        ],
+        [
+          1000,
+          81.16029762267827
+        ],
+        [
+          1250,
+          80.62875313963083
+        ]
+      ],
+      "width": 64
+    },
+    {
+      "actor_state_protocol": "VISIBLE_ORDERED_HISTORY_BUDGET_V1",
+      "checkpoint": "results/cai_active_image/v2/models/actor_learned_static_seed2.pt",
+      "checkpoint_reused": false,
+      "checkpoint_sha256": "4241bcca6ade116da6f62bc7640a5d2d8aeaee63b8b2717d722a3912609da3e9",
+      "common_predictor_state_sha256": "62f6d951dab0fbfb2a8691786c6096a52629bcda0f6c6fc8fc0ff1d12586217d",
+      "initial_proposal_rule": "HIGHEST_RELIABLE_CONFIDENCE_C0_THEN_UNLOCK_V1",
+      "kind": "CAI_ACQUISITION_ACTOR",
+      "method": "LEARNED_STATIC",
+      "schema_version": 2,
+      "seed": 2,
+      "selected_update": 750,
+      "state_dict_sha256": "584826c139b35b1f60ea20970ce0f3a0544401b979b60529754d78f68d21ded3",
+      "token_dimension": 512,
+      "updates_completed": 750,
+      "use_feedback": false,
+      "use_vlm": false,
+      "validation_scores": [
+        [
+          250,
+          82.16474411681251
+        ],
+        [
+          500,
+          80.9763350945871
+        ],
+        [
+          750,
+          80.79070772590218
+        ]
+      ],
+      "width": 64
+    },
+    {
+      "actor_state_protocol": "VISIBLE_ORDERED_HISTORY_BUDGET_V1",
+      "checkpoint": "results/cai_active_image/v2/models/actor_vlm_cai_feedback_agent_seed3.pt",
+      "checkpoint_reused": false,
+      "checkpoint_sha256": "604f5a08eadfb8da1b79f8942b33907f4831d7ea7fa2065e4162588d1a97e255",
+      "common_predictor_state_sha256": "62f6d951dab0fbfb2a8691786c6096a52629bcda0f6c6fc8fc0ff1d12586217d",
+      "initial_proposal_rule": "HIGHEST_RELIABLE_CONFIDENCE_C0_THEN_UNLOCK_V1",
+      "kind": "CAI_ACQUISITION_ACTOR",
+      "method": "VLM_CAI_FEEDBACK_AGENT",
+      "schema_version": 2,
+      "seed": 3,
+      "selected_update": 750,
+      "state_dict_sha256": "a1ab844fb33ef1d4e9e93186e8288f568d0ac5843ffad4d18e0bb260a800e76d",
+      "token_dimension": 512,
+      "updates_completed": 1250,
+      "use_feedback": true,
+      "use_vlm": true,
+      "validation_scores": [
+        [
+          250,
+          78.45172422152378
+        ],
+        [
+          500,
+          78.49998779063121
+        ],
+        [
+          750,
+          78.16204457847303
+        ],
+        [
+          1000,
+          78.2893624594402
+        ],
+        [
+          1250,
+          78.43878586530452
+        ]
+      ],
+      "width": 64
+    },
+    {
+      "actor_state_protocol": "VISIBLE_ORDERED_HISTORY_BUDGET_V1",
+      "checkpoint": "results/cai_active_image/v2/models/actor_no_vlm_feedback_seed3.pt",
+      "checkpoint_reused": false,
+      "checkpoint_sha256": "40c172dd200084574a80f62b9d5d04534fdab8b6c96069472935bfa0c00a64dd",
+      "common_predictor_state_sha256": "62f6d951dab0fbfb2a8691786c6096a52629bcda0f6c6fc8fc0ff1d12586217d",
+      "initial_proposal_rule": "HIGHEST_RELIABLE_CONFIDENCE_C0_THEN_UNLOCK_V1",
+      "kind": "CAI_ACQUISITION_ACTOR",
+      "method": "NO_VLM_FEEDBACK",
+      "schema_version": 2,
+      "seed": 3,
+      "selected_update": 250,
+      "state_dict_sha256": "77b4af520c9f69eb1da28fae75c62c0e8d616c556b0c66ea59ec99a2c920c8d4",
+      "token_dimension": 512,
+      "updates_completed": 1250,
+      "use_feedback": true,
+      "use_vlm": false,
+      "validation_scores": [
+        [
+          250,
+          77.82561135295438
+        ],
+        [
+          500,
+          78.17137547303778
+        ],
+        [
+          750,
+          77.897231357885
+        ],
+        [
+          1000,
+          78.38505581667975
+        ],
+        [
+          1250,
+          78.330031444942
+        ]
+      ],
+      "width": 64
+    },
+    {
+      "actor_state_protocol": "VISIBLE_ORDERED_HISTORY_BUDGET_V1",
+      "checkpoint": "results/cai_active_image/v2/models/actor_vlm_open_loop_seed3.pt",
+      "checkpoint_reused": false,
+      "checkpoint_sha256": "c2ea51fafda5f67e75760d9e231143af21a6edd2515f9440312e6d706cddc58e",
+      "common_predictor_state_sha256": "62f6d951dab0fbfb2a8691786c6096a52629bcda0f6c6fc8fc0ff1d12586217d",
+      "initial_proposal_rule": "HIGHEST_RELIABLE_CONFIDENCE_C0_THEN_UNLOCK_V1",
+      "kind": "CAI_ACQUISITION_ACTOR",
+      "method": "VLM_OPEN_LOOP",
+      "schema_version": 2,
+      "seed": 3,
+      "selected_update": 1250,
+      "state_dict_sha256": "506b1be6e37b827dc122bbfe81cc190b82cf9796476c65630d3ba7368c626070",
+      "token_dimension": 512,
+      "updates_completed": 1250,
+      "use_feedback": false,
+      "use_vlm": true,
+      "validation_scores": [
+        [
+          250,
+          78.31151979957677
+        ],
+        [
+          500,
+          78.17210195965302
+        ],
+        [
+          750,
+          78.14206126783128
+        ],
+        [
+          1000,
+          77.97144838079093
+        ],
+        [
+          1250,
+          77.77773426352346
+        ]
+      ],
+      "width": 64
+    },
+    {
+      "actor_state_protocol": "VISIBLE_ORDERED_HISTORY_BUDGET_V1",
+      "checkpoint": "results/cai_active_image/v2/models/actor_learned_static_seed3.pt",
+      "checkpoint_reused": false,
+      "checkpoint_sha256": "5e78aede203fca649bfe3adc1caa0e8f112a7e93585b506d2acda2c9f61dfe1a",
+      "common_predictor_state_sha256": "62f6d951dab0fbfb2a8691786c6096a52629bcda0f6c6fc8fc0ff1d12586217d",
+      "initial_proposal_rule": "HIGHEST_RELIABLE_CONFIDENCE_C0_THEN_UNLOCK_V1",
+      "kind": "CAI_ACQUISITION_ACTOR",
+      "method": "LEARNED_STATIC",
+      "schema_version": 2,
+      "seed": 3,
+      "selected_update": 250,
+      "state_dict_sha256": "356049e772680b88869a16d93bff747a9624740fa199b8a84b67d52f20e516a7",
+      "token_dimension": 512,
+      "updates_completed": 750,
+      "use_feedback": false,
+      "use_vlm": false,
+      "validation_scores": [
+        [
+          250,
+          78.02723615534016
+        ],
+        [
+          500,
+          78.28075421645205
+        ],
+        [
+          750,
+          78.15686543996304
+        ]
+      ],
+      "width": 64
+    }
+  ],
+  "optimizer_updates": 13500,
+  "schema_version": 2,
+  "status": "P3_P4_ACTORS_COMPLETE"
+}
