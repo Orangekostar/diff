@@ -1,0 +1,76 @@
+{
+  "artifacts": {
+    "evidence_figures": [
+      "figures/author_cscan_ykhs7s2dck_q8-4.png",
+      "figures/author_cscan_74t7kcdgkr_c8-24.png",
+      "figures/author_cscan_cgtnjyggtm_q24-40.png"
+    ],
+    "results": [
+      "source_inventory.json",
+      "workbook_fields.csv",
+      "author_measurements.csv",
+      "test24_reference_crosswalk.csv",
+      "case_review.csv",
+      "reference_comparison.csv"
+    ]
+  },
+  "author_cscan_screenshot_n": 24,
+  "calibration_resolved_n": 3,
+  "comparable_scalar_case_n": 3,
+  "evidence_categories": [
+    "AUTHOR_SCALARS_ONLY",
+    "SCREENSHOT_MEASUREMENT_ONLY"
+  ],
+  "historical_proxy_lineage": {
+    "calibration_scope": "71 HASH_SPLIT_CALIBRATION_SPECIMENS_USING_AUTHOR_AREA_SCALARS",
+    "physical_descriptors": "LOCAL_DERIVED_PROXY",
+    "published_damage_measurements": "DIRECT_TRANSCRIPTION_FROM_BOUND_CAI_LVI_WORKBOOK_G_H",
+    "selected_rule": "bg40_rb20_close08"
+  },
+  "implementation_status": "COMPLETE_WITH_EVIDENCE_LIMITS",
+  "incomplete_accesses": [
+    {
+      "impact": "Full target-definition methods could not be independently verified.",
+      "source": "10.1016/j.compositesb.2022.109844",
+      "status": "ABSTRACT_AND_INTRO_ONLY"
+    },
+    {
+      "impact": "Author scalar areas cannot adjudicate pixelwise expert/Reader differences.",
+      "source": "AUTHOR_IMAGEJ_ROI_OR_CONTOUR_FILES",
+      "status": "NOT_PRESENT_IN_BOUND_LOCAL_FILES"
+    }
+  ],
+  "missing_or_ambiguous_n": 24,
+  "not_established": [
+    "AUTHOR_SPATIAL_GROUND_TRUTH",
+    "RAW_QUANTITATIVE_ULTRASOUND_FOR_TEST24",
+    "UNIQUE_CORRECT_SCAN_REGION",
+    "UNIQUE_OPTIMAL_SCAN_ROUTE",
+    "PHYSICAL_TIME_OR_PATH_COST_FROM_SCREENSHOT_PIXELS",
+    "CAUSE_OF_Q8_4_EXPERT_READER_SPATIAL_DIFFERENCE"
+  ],
+  "physical_test_n": 24,
+  "primary_conclusion": "All 24 reviewed TEST specimens match author projected-area/dent scalars and author C-scan screenshots, but no bound author spatial contour/mask or raw quantitative ultrasound array was found.",
+  "quantitative_ultrasound_n": 0,
+  "recommended_next_step": "REQUEST_AUTHOR_IMAGEJ_ROI_AND_MEASUREMENT_DEFINITION",
+  "resource_use": {
+    "background_prior_deterministic_reconstruction_count": 1,
+    "bc_prefix_replays": 0,
+    "decoded_fixed_case_raw_screenshots": 3,
+    "formal_reviewed_rescore_runs": 0,
+    "full_input_reader_report_recovery_n": 6,
+    "new_actor_forward_calls": 0,
+    "new_stop_forward_calls": 0,
+    "new_training": 0,
+    "new_vlm_calls": 0
+  },
+  "scalar_reference_n": 24,
+  "searched_scope": {
+    "bound_workbooks": 9,
+    "fixed_case_screenshots": 3,
+    "full_input_reader_reports": 6,
+    "public_primary_records": 5,
+    "reviewed_test_specimens": 24
+  },
+  "spatial_reference_n": 0
+}

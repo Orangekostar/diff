@@ -1,0 +1,454 @@
+{
+  "bound_workbook_count": 9,
+  "field_lineage": {
+    "classification": "AUTHOR_SCALAR_MEASUREMENT",
+    "generator": "src/cmc_bbdm/cpb_published_measurements.py::read_published_damage_measurements/build_matched_measurement_rows",
+    "matched_direct_workbook_row_count": 278,
+    "mismatch_count": 0,
+    "physical_descriptor_chain": {
+      "calibration_row_count": 71,
+      "classification": "LOCAL_DERIVED_PROXY",
+      "method": "RGB_THRESHOLD_MORPHOLOGY_WITH_AUTHOR_SCALAR_CALIBRATION",
+      "not_author_spatial_ground_truth": true,
+      "physical_descriptor_row_count": 292,
+      "selected_rule": "bg40_rb20_close08",
+      "source_code": "src/cmc_bbdm/cpb_cscan_morphology.py"
+    },
+    "published_row_count": 278,
+    "reversed_energy_header_relation_audit": {
+      "checked_specimen_count": 420,
+      "exact_relation_count": 298,
+      "over_five_percent_count": 1,
+      "within_five_percent_count": 419
+    },
+    "source_csv": "results/cpb_cfrp_revision/published_damage_measurements.csv",
+    "source_workbook": "data/public/hasebe_cai/raw/8scdmfdcfb/v3/1_Low velocity impact testing condition/Low velocity impact testing condition and damage_v0.2.xlsx"
+  },
+  "missing_required_source_count": 0,
+  "public_evidence": [
+    {
+      "access_status": "FULL_TEXT",
+      "citation": "Hasebe et al., Data in Brief 42 (2022), 108462",
+      "does_not_support": "A downloadable author mask or raw quantitative amplitude grid.",
+      "doi": "10.1016/j.dib.2022.108462",
+      "source_id": "O01",
+      "supports": "Internal-damage files are ultrasound C-scan screenshots; display colour encodes amplitude. Reported setup: 3.5 MHz probe, 0.200 x 0.200 mm pitch, and 75 x 75 mm scanning length.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9294053/"
+    },
+    {
+      "access_status": "ABSTRACT_AND_INTRO_ONLY",
+      "citation": "Hasebe et al., Composites Part B 237 (2022), 109844",
+      "does_not_support": "The inaccessible methods cannot be cited for a public mask protocol.",
+      "doi": "10.1016/j.compositesb.2022.109844",
+      "source_id": "O02",
+      "supports": "The prediction targets include delamination area and delamination length.",
+      "url": "https://doi.org/10.1016/j.compositesb.2022.109844"
+    },
+    {
+      "access_status": "RECORD_DESCRIPTIONS_VERIFIED",
+      "citation": "Six Hasebe low-velocity-impact datasets, Mendeley Data v1",
+      "does_not_support": "A spatial contour or raw ultrasound array in the bound local files.",
+      "doi": "10.17632/74t7kcdgkr.1 and five bound companion records",
+      "source_id": "O03",
+      "supports": "Each record describes post-impact C-scan images and an image scale.",
+      "url": "https://data.mendeley.com/datasets/74t7kcdgkr/1"
+    },
+    {
+      "access_status": "RECORD_DESCRIPTION_VERIFIED",
+      "citation": "Hasebe et al., Mendeley Data CAI dataset v3",
+      "does_not_support": "Treating post-CAI photographs or CAI logger traces as pre-CAI ultrasound.",
+      "doi": "10.17632/8scdmfdcfb.3",
+      "source_id": "O04",
+      "supports": "The package separates LVI conditions/damage, specimen size, CAI images, raw logger records, and strength.",
+      "url": "https://data.mendeley.com/datasets/8scdmfdcfb/3"
+    },
+    {
+      "access_status": "FULL_TEXT",
+      "citation": "Hasebe et al., Data in Brief 58 (2025), 111509",
+      "does_not_support": "An exported ImageJ ROI/contour in the files inspected here.",
+      "doi": "10.1016/j.dib.2025.111509",
+      "source_id": "O05",
+      "supports": "Projected delamination area was measured from C-scan images with ImageJ; dent depth is reported separately.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11999467/"
+    }
+  ],
+  "records": [
+    {
+      "access_level": "LOCAL_READ_ONLY",
+      "actual_sha256": "c875c09c136ce8d97f2b1699a9247bbc513386eb0fc83c637c2901eaa8a296ea",
+      "expected_sha256": "c875c09c136ce8d97f2b1699a9247bbc513386eb0fc83c637c2901eaa8a296ea",
+      "path": "data/public/hasebe/raw/74t7kcdgkr/v1/root/impact condition_c8.xlsx",
+      "source_id": "impact_condition_74t7kcdgkr",
+      "status": "HASH_VERIFIED"
+    },
+    {
+      "access_level": "LOCAL_READ_ONLY",
+      "actual_sha256": "8a10058c529bbb97314d982093d1d87353ea832c0e4ef5c3659f07327f0612f1",
+      "expected_sha256": "8a10058c529bbb97314d982093d1d87353ea832c0e4ef5c3659f07327f0612f1",
+      "path": "data/public/hasebe/raw/yfxyg8jm46/v1/root/impact condition_c16.xlsx",
+      "source_id": "impact_condition_yfxyg8jm46",
+      "status": "HASH_VERIFIED"
+    },
+    {
+      "access_level": "LOCAL_READ_ONLY",
+      "actual_sha256": "01693ddb4f616669f4404800c48a27f8597ebded7062db029c692526cb6e8487",
+      "expected_sha256": "01693ddb4f616669f4404800c48a27f8597ebded7062db029c692526cb6e8487",
+      "path": "data/public/hasebe/raw/xcmzfsbd9t/v1/root/impact condition_c24.xlsx",
+      "source_id": "impact_condition_xcmzfsbd9t",
+      "status": "HASH_VERIFIED"
+    },
+    {
+      "access_level": "LOCAL_READ_ONLY",
+      "actual_sha256": "042104cd8c32461cd3e033a18d046d3da2688c89d89af0f476737129fafaba87",
+      "expected_sha256": "042104cd8c32461cd3e033a18d046d3da2688c89d89af0f476737129fafaba87",
+      "path": "data/public/hasebe/raw/ykhs7s2dck/v1/root/impact condition_q8.xlsx",
+      "source_id": "impact_condition_ykhs7s2dck",
+      "status": "HASH_VERIFIED"
+    },
+    {
+      "access_level": "LOCAL_READ_ONLY",
+      "actual_sha256": "4ddc326e707b91c7bde1abe2b7963f6f51fa39dc28a6bae0e34aa2db827c9853",
+      "expected_sha256": "4ddc326e707b91c7bde1abe2b7963f6f51fa39dc28a6bae0e34aa2db827c9853",
+      "path": "data/public/hasebe/raw/w68dtmpfyf/v1/root/impact condition_q16.xlsx",
+      "source_id": "impact_condition_w68dtmpfyf",
+      "status": "HASH_VERIFIED"
+    },
+    {
+      "access_level": "LOCAL_READ_ONLY",
+      "actual_sha256": "8135151ff22244c2c94429c81eac259b6eb1fad952df30cdedb0d3a832a58388",
+      "expected_sha256": "8135151ff22244c2c94429c81eac259b6eb1fad952df30cdedb0d3a832a58388",
+      "path": "data/public/hasebe/raw/cgtnjyggtm/v1/root/impact condition_q24.xlsx",
+      "source_id": "impact_condition_cgtnjyggtm",
+      "status": "HASH_VERIFIED"
+    },
+    {
+      "access_level": "LOCAL_READ_ONLY",
+      "actual_sha256": "e6d98c968f57ac5748e104dc1da5e112114d25d77c03c7222ba3a0d93ac23cf1",
+      "expected_sha256": "e6d98c968f57ac5748e104dc1da5e112114d25d77c03c7222ba3a0d93ac23cf1",
+      "path": "data/public/hasebe_cai/raw/8scdmfdcfb/v3/1_Low velocity impact testing condition/Low velocity impact testing condition and damage_v0.2.xlsx",
+      "source_id": "lvi_workbook",
+      "status": "HASH_VERIFIED"
+    },
+    {
+      "access_level": "LOCAL_READ_ONLY",
+      "actual_sha256": "72c6dc7e1e8790883dba2b4b1e3ee1259fdfbad61d22d241a866d4621834fa65",
+      "expected_sha256": "72c6dc7e1e8790883dba2b4b1e3ee1259fdfbad61d22d241a866d4621834fa65",
+      "path": "data/public/hasebe_cai/raw/8scdmfdcfb/v3/2_Specimen size/Specimen size_v0.2.xlsx",
+      "source_id": "size_workbook",
+      "status": "HASH_VERIFIED"
+    },
+    {
+      "access_level": "LOCAL_READ_ONLY",
+      "actual_sha256": "0de44feca06294c33f2c6bc98ce6e9a8035476ff8fbef21d29f852e820cf4e2d",
+      "expected_sha256": "0de44feca06294c33f2c6bc98ce6e9a8035476ff8fbef21d29f852e820cf4e2d",
+      "path": "data/public/hasebe_cai/raw/8scdmfdcfb/v3/5_Compression after impact strength/Compression after impact strength_v0.2.xlsx",
+      "source_id": "cai_workbook",
+      "status": "HASH_VERIFIED"
+    },
+    {
+      "access_level": "LOCAL_READ_ONLY",
+      "actual_sha256": "f81002981bf2f6aed84818b48da87cd57e6336f5f3da8d78df1a58d26dd8026f",
+      "expected_sha256": "f81002981bf2f6aed84818b48da87cd57e6336f5f3da8d78df1a58d26dd8026f",
+      "path": "data/public/hasebe/manifest/paired.csv",
+      "source_id": "manifest",
+      "status": "HASH_VERIFIED"
+    },
+    {
+      "access_level": "LOCAL_READ_ONLY",
+      "actual_sha256": "302bd258e44b74c41d725da5ac69aefe983702882a31ea6ac474ed4a8c41573f",
+      "expected_sha256": "302bd258e44b74c41d725da5ac69aefe983702882a31ea6ac474ed4a8c41573f",
+      "path": "data/public/hasebe/physical_calibration.csv",
+      "source_id": "physical_calibration",
+      "status": "HASH_VERIFIED"
+    },
+    {
+      "access_level": "LOCAL_READ_ONLY",
+      "actual_sha256": "715d198f6b5d5531b66221e665074262cc55fa306d20469a15af6d8ce945c177",
+      "expected_sha256": "715d198f6b5d5531b66221e665074262cc55fa306d20469a15af6d8ce945c177",
+      "path": "results/cpb_cfrp_revision/published_damage_measurements.csv",
+      "source_id": "physical_measurements",
+      "status": "HASH_VERIFIED"
+    },
+    {
+      "access_level": "LOCAL_READ_ONLY",
+      "actual_sha256": "d3785adb4ad36ee9032679002df8c78955aac455a4570fa91759a528b7cc9bf7",
+      "expected_sha256": "d3785adb4ad36ee9032679002df8c78955aac455a4570fa91759a528b7cc9bf7",
+      "path": "results/cpb_cfrp_revision/cscan_rule_calibration.csv",
+      "source_id": "physical_rule_calibration",
+      "status": "HASH_VERIFIED"
+    },
+    {
+      "access_level": "LOCAL_READ_ONLY",
+      "actual_sha256": "2f2c3b3a16cbe1b48364b76ad10999a91c01de000b81525ba56c8ec90399e078",
+      "expected_sha256": "2f2c3b3a16cbe1b48364b76ad10999a91c01de000b81525ba56c8ec90399e078",
+      "path": "results/cpb_cfrp_revision/physical_descriptors.csv",
+      "source_id": "physical_descriptors",
+      "status": "HASH_VERIFIED"
+    },
+    {
+      "access_level": "LOCAL_READ_ONLY",
+      "actual_sha256": "d283b5a91717ac7bb06685661bfc47d92e451fb3e87097db91ed8f41a776a220",
+      "expected_sha256": "d283b5a91717ac7bb06685661bfc47d92e451fb3e87097db91ed8f41a776a220",
+      "path": "results/cpb_cfrp_revision/artifact_manifest.json",
+      "source_id": "physical_result_manifest",
+      "status": "HASH_VERIFIED"
+    },
+    {
+      "access_level": "LOCAL_READ_ONLY",
+      "actual_sha256": "f6c3ffefb5b2ad97c2167ca8b7a55be62bf3012647b69573203753b8a9331eff",
+      "expected_sha256": "f6c3ffefb5b2ad97c2167ca8b7a55be62bf3012647b69573203753b8a9331eff",
+      "path": "src/cmc_bbdm/cpb_revision_pipeline.py",
+      "source_id": "physical_generation_code",
+      "status": "HASH_VERIFIED"
+    },
+    {
+      "access_level": "LOCAL_READ_ONLY",
+      "actual_sha256": "8fd1b8d47f5363437342043a3a60e48c574267fcb15b29f9cc02d7363d85beb0",
+      "expected_sha256": "8fd1b8d47f5363437342043a3a60e48c574267fcb15b29f9cc02d7363d85beb0",
+      "path": "src/cmc_bbdm/cpb_physical_descriptors.py",
+      "source_id": "physical_descriptor_authority",
+      "status": "HASH_VERIFIED"
+    },
+    {
+      "access_level": "LOCAL_READ_ONLY",
+      "actual_sha256": "c0b0aae0d4befd2861c9051b7116179261438cebd520f2f97dd28c8fcb61cb3a",
+      "expected_sha256": "c0b0aae0d4befd2861c9051b7116179261438cebd520f2f97dd28c8fcb61cb3a",
+      "path": "src/cmc_bbdm/cpb_cscan_morphology.py",
+      "source_id": "physical_morphology_authority",
+      "status": "HASH_VERIFIED"
+    },
+    {
+      "access_level": "LOCAL_READ_ONLY",
+      "actual_sha256": "18e00ea0e1c7c97c51be0dbd56ae7e1f1cdb845988faba3a6bac5f1dfb39d982",
+      "expected_sha256": "18e00ea0e1c7c97c51be0dbd56ae7e1f1cdb845988faba3a6bac5f1dfb39d982",
+      "path": "configs/cpb_cfrp_revision.yaml",
+      "source_id": "physical_generation_config",
+      "status": "HASH_VERIFIED"
+    },
+    {
+      "access_level": "LOCAL_READ_ONLY",
+      "actual_sha256": "df46f87749e95de177b9591d65f6ec962ec89369734ad81fbe6fd0fd9f6dcc69",
+      "expected_sha256": "",
+      "path": "src/cmc_bbdm/cpb_published_measurements.py",
+      "source_id": "published_measurement_reader",
+      "status": "LOCAL_READ_VERIFIED_EXISTENCE"
+    },
+    {
+      "access_level": "LOCAL_READ_ONLY",
+      "actual_sha256": "e788f77e01fd534b14168f06d3177ba81c24abc3fe53ca8ab7feebeb0d0dbf07",
+      "expected_sha256": "",
+      "path": "src/cmc_bbdm/hasebe_cai.py",
+      "source_id": "cai_workbook_reader",
+      "status": "LOCAL_READ_VERIFIED_EXISTENCE"
+    },
+    {
+      "access_level": "LOCAL_READ_ONLY",
+      "actual_sha256": "c7bdbe66f6337c51f06d674f5de860a4749d42830b3814f0d6b892a6a98bf44e",
+      "expected_sha256": "",
+      "path": "src/cmc_bbdm/mendeley.py",
+      "source_id": "mendeley_source_adapter",
+      "status": "LOCAL_READ_VERIFIED_EXISTENCE"
+    }
+  ],
+  "repository_base_sha": "a48c76fcead10d4f833c54ab6e892eb524432269",
+  "schema_version": 1,
+  "scope_limits": {
+    "fixed_case_images": 3,
+    "full_input_reader_reports": 6,
+    "model_forward_calls": 0,
+    "training_updates": 0,
+    "workbooks": 9
+  },
+  "source_root_label": "EXPLICIT_EXTERNAL_HASEBE_SOURCE_ROOT",
+  "workbook_audits": [
+    {
+      "path": "data/public/hasebe/raw/74t7kcdgkr/v1/root/impact condition_c8.xlsx",
+      "sha256": "c875c09c136ce8d97f2b1699a9247bbc513386eb0fc83c637c2901eaa8a296ea",
+      "sheet_count": 1,
+      "sheets": [
+        {
+          "chart_count": 0,
+          "comment_count": 0,
+          "dimensions": "A1:F49",
+          "formula_count": 0,
+          "formula_without_cached_value_count": 0,
+          "freeze_panes": null,
+          "image_count": 0,
+          "merged_ranges": [],
+          "name": "condition",
+          "nonempty_cell_count": 294,
+          "visibility": "visible"
+        }
+      ],
+      "source_id": "impact_condition_74t7kcdgkr"
+    },
+    {
+      "path": "data/public/hasebe/raw/yfxyg8jm46/v1/root/impact condition_c16.xlsx",
+      "sha256": "8a10058c529bbb97314d982093d1d87353ea832c0e4ef5c3659f07327f0612f1",
+      "sheet_count": 1,
+      "sheets": [
+        {
+          "chart_count": 0,
+          "comment_count": 0,
+          "dimensions": "A1:F43",
+          "formula_count": 0,
+          "formula_without_cached_value_count": 0,
+          "freeze_panes": null,
+          "image_count": 0,
+          "merged_ranges": [],
+          "name": "condition",
+          "nonempty_cell_count": 258,
+          "visibility": "visible"
+        }
+      ],
+      "source_id": "impact_condition_yfxyg8jm46"
+    },
+    {
+      "path": "data/public/hasebe/raw/xcmzfsbd9t/v1/root/impact condition_c24.xlsx",
+      "sha256": "01693ddb4f616669f4404800c48a27f8597ebded7062db029c692526cb6e8487",
+      "sheet_count": 1,
+      "sheets": [
+        {
+          "chart_count": 0,
+          "comment_count": 0,
+          "dimensions": "A1:F64",
+          "formula_count": 0,
+          "formula_without_cached_value_count": 0,
+          "freeze_panes": null,
+          "image_count": 0,
+          "merged_ranges": [],
+          "name": "condition",
+          "nonempty_cell_count": 384,
+          "visibility": "visible"
+        }
+      ],
+      "source_id": "impact_condition_xcmzfsbd9t"
+    },
+    {
+      "path": "data/public/hasebe/raw/ykhs7s2dck/v1/root/impact condition_q8.xlsx",
+      "sha256": "042104cd8c32461cd3e033a18d046d3da2688c89d89af0f476737129fafaba87",
+      "sheet_count": 1,
+      "sheets": [
+        {
+          "chart_count": 0,
+          "comment_count": 0,
+          "dimensions": "A1:F40",
+          "formula_count": 0,
+          "formula_without_cached_value_count": 0,
+          "freeze_panes": null,
+          "image_count": 0,
+          "merged_ranges": [],
+          "name": "condition",
+          "nonempty_cell_count": 240,
+          "visibility": "visible"
+        }
+      ],
+      "source_id": "impact_condition_ykhs7s2dck"
+    },
+    {
+      "path": "data/public/hasebe/raw/w68dtmpfyf/v1/root/impact condition_q16.xlsx",
+      "sha256": "4ddc326e707b91c7bde1abe2b7963f6f51fa39dc28a6bae0e34aa2db827c9853",
+      "sheet_count": 1,
+      "sheets": [
+        {
+          "chart_count": 0,
+          "comment_count": 0,
+          "dimensions": "A1:F44",
+          "formula_count": 0,
+          "formula_without_cached_value_count": 0,
+          "freeze_panes": null,
+          "image_count": 0,
+          "merged_ranges": [],
+          "name": "condition",
+          "nonempty_cell_count": 264,
+          "visibility": "visible"
+        }
+      ],
+      "source_id": "impact_condition_w68dtmpfyf"
+    },
+    {
+      "path": "data/public/hasebe/raw/cgtnjyggtm/v1/root/impact condition_q24.xlsx",
+      "sha256": "8135151ff22244c2c94429c81eac259b6eb1fad952df30cdedb0d3a832a58388",
+      "sheet_count": 1,
+      "sheets": [
+        {
+          "chart_count": 0,
+          "comment_count": 0,
+          "dimensions": "A1:F51",
+          "formula_count": 0,
+          "formula_without_cached_value_count": 0,
+          "freeze_panes": null,
+          "image_count": 0,
+          "merged_ranges": [],
+          "name": "condition",
+          "nonempty_cell_count": 306,
+          "visibility": "visible"
+        }
+      ],
+      "source_id": "impact_condition_cgtnjyggtm"
+    },
+    {
+      "path": "data/public/hasebe_cai/raw/8scdmfdcfb/v3/1_Low velocity impact testing condition/Low velocity impact testing condition and damage_v0.2.xlsx",
+      "sha256": "e6d98c968f57ac5748e104dc1da5e112114d25d77c03c7222ba3a0d93ac23cf1",
+      "sheet_count": 1,
+      "sheets": [
+        {
+          "chart_count": 0,
+          "comment_count": 0,
+          "dimensions": "A1:K452",
+          "formula_count": 0,
+          "formula_without_cached_value_count": 0,
+          "freeze_panes": "C5",
+          "image_count": 0,
+          "merged_ranges": [],
+          "name": "LVI condition",
+          "nonempty_cell_count": 3598,
+          "visibility": "visible"
+        }
+      ],
+      "source_id": "lvi_workbook"
+    },
+    {
+      "path": "data/public/hasebe_cai/raw/8scdmfdcfb/v3/2_Specimen size/Specimen size_v0.2.xlsx",
+      "sha256": "72c6dc7e1e8790883dba2b4b1e3ee1259fdfbad61d22d241a866d4621834fa65",
+      "sheet_count": 1,
+      "sheets": [
+        {
+          "chart_count": 0,
+          "comment_count": 0,
+          "dimensions": "A1:I451",
+          "formula_count": 0,
+          "formula_without_cached_value_count": 0,
+          "freeze_panes": "C4",
+          "image_count": 0,
+          "merged_ranges": [],
+          "name": "Specimen size",
+          "nonempty_cell_count": 1797,
+          "visibility": "visible"
+        }
+      ],
+      "source_id": "size_workbook"
+    },
+    {
+      "path": "data/public/hasebe_cai/raw/8scdmfdcfb/v3/5_Compression after impact strength/Compression after impact strength_v0.2.xlsx",
+      "sha256": "0de44feca06294c33f2c6bc98ce6e9a8035476ff8fbef21d29f852e820cf4e2d",
+      "sheet_count": 1,
+      "sheets": [
+        {
+          "chart_count": 0,
+          "comment_count": 0,
+          "dimensions": "A1:F451",
+          "formula_count": 0,
+          "formula_without_cached_value_count": 0,
+          "freeze_panes": "C4",
+          "image_count": 0,
+          "merged_ranges": [],
+          "name": "CAI strength",
+          "nonempty_cell_count": 1348,
+          "visibility": "visible"
+        }
+      ],
+      "source_id": "cai_workbook"
+    }
+  ]
+}
