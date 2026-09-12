@@ -12,6 +12,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
+from uuid import uuid4
 
 import numpy as np
 import torch
@@ -25,6 +26,12 @@ from cmc_bbdm.cai_active_image.contracts import Method
 from cmc_bbdm.cai_active_image.environment import NativeCellGrid
 from cmc_bbdm.cai_active_image.policies import fixed_action_order
 
+from .checkpoint_selection import (
+    CheckpointArchive,
+    inspect_archive,
+    rescore_archive,
+    validation_identity,
+)
 from .feature_bank import V3FeatureBank, load_feature_bank
 from .files import read_csv, sha256_file, write_csv, write_json
 from .gates import choose_common_predictor
@@ -563,7 +570,10 @@ def _train_candidate(
     max_updates: int = _CANDIDATE_UPDATES,
     validation_interval: int = _VALIDATION_INTERVAL,
     validation_patience: int = _VALIDATION_PATIENCE,
+    archive_dir: Path | None = None,
 ) -> tuple[nn.Module, dict[str, object], list[dict[str, object]]]:
+    if archive_dir is not None:
+        _require_exact_validation(bank, library, cell_costs)
     seed = _MODEL_SEEDS[name] if seed_override is None else seed_override
     rng = np.random.default_rng(seed)
     torch.manual_seed(seed)
@@ -579,6 +589,22 @@ def _train_candidate(
         )
         for domain in sorted({bank.dataset_ids[int(index)] for index in train})
     }
+    archive = None
+    if archive_dir is not None:
+        archive = CheckpointArchive(
+            archive_dir,
+            model_name=name,
+            validation=validation_identity(bank, library),
+            max_updates=max_updates,
+            validation_interval=validation_interval,
+            validation_patience=validation_patience,
+            run_metadata={
+                "seed": seed,
+                "fit_specimen_keys": [bank.specimen_keys[int(i)] for i in train],
+                "fit_capture_group_ids": [bank.capture_group_ids[int(i)] for i in train],
+                "constants": dict(constants),
+            },
+        )
     scale = max(constants["train_target_std_mpa"], 1.0)
     progress: list[dict[str, object]] = []
     best_area = math.inf
@@ -608,6 +634,8 @@ def _train_candidate(
         optimizer.step()
         if update % validation_interval == 0 or update == max_updates:
             metrics = evaluate_predictor(model, bank, library, constants, device=device)
+            if archive is not None:
+                archive.record(update, model.state_dict(), metrics)
             model.train()
             progress.append(
                 {
@@ -628,6 +656,15 @@ def _train_candidate(
                 break
     if best_state is None:
         raise ValueError("predictor candidate produced no selected checkpoint")
+    if archive is not None:
+        selection = archive.finish(updates_completed=update)
+        if selection["selected_update"] != best_update:
+            raise ValueError("durable checkpoint ranking disagrees with training selection")
+        saved = torch.load(
+            archive.directory / f"update_{best_update:06d}.pt",
+            map_location=device, weights_only=False,
+        )
+        best_state = saved["state_dict"]
     model.load_state_dict(best_state)
     model.eval()
     final_metrics = evaluate_predictor(model, bank, library, constants, device=device)
@@ -646,6 +683,10 @@ def _train_candidate(
         "metrics": final_metrics,
         "architecture": repr(model),
     }
+    if archive is not None:
+        manifest["selection_archive"] = str(archive.directory)
+        manifest["validation_identity"] = archive.manifest["validation"]
+        manifest["checkpoint_selection_history"] = _EXACT_CHECKPOINT_SELECTION_HISTORY
     return model, manifest, progress
 
 
@@ -738,6 +779,11 @@ def run_predictor_candidates(
 ) -> dict[str, object]:
     root = Path(project_root).resolve(strict=True)
     output = root / "results/cai_agent_v3/new_protocol"
+    from .actor_training import _optimizer_update_upper_bound
+
+    used = _optimizer_update_upper_bound(root / "results/cai_agent_v3/compute_ledger.jsonl")
+    if 28100 - used < 12000:
+        raise ValueError("RESOURCE_LIMITED: registered W2 replay requires up to 12000 updates")
     model_dir = output / "models"
     model_dir.mkdir(parents=True, exist_ok=True)
     ledger = root / "results/cai_agent_v3/compute_ledger.jsonl"
@@ -774,19 +820,27 @@ def run_predictor_candidates(
     all_progress: list[dict[str, object]] = []
     for name in ("MEAN_SC", "SPATIAL_SC", "SPATIAL_C"):
         job_started = _utc_now()
+        run_id = uuid4().hex
         _append_ledger(
             ledger,
             {
                 "job": f"predictor_candidate_{name}",
+                "run_id": run_id,
                 "stage": "W2",
                 "device": device,
                 "actual_optimizer_updates": 0,
                 "status": "STARTED",
+                "optimizer_update_reservation": _CANDIDATE_UPDATES,
                 "started_at": job_started,
             },
         )
         model, manifest, progress = _train_candidate(
-            name, bank, library, cell_costs, constants, device=device
+            name, bank, library, cell_costs, constants,
+            device=device,
+            archive_dir=model_dir / "selection_history" / f"predictor_{name.lower()}",
+        )
+        manifest["selection_archive"] = (
+            Path(manifest["selection_archive"]).relative_to(root).as_posix()
         )
         checkpoint = model_dir / f"predictor_{name.lower()}.pt"
         torch.save(
@@ -806,6 +860,7 @@ def run_predictor_candidates(
             ledger,
             {
                 "job": f"predictor_candidate_{name}",
+                "run_id": run_id,
                 "stage": "W2",
                 "device": device,
                 "actual_optimizer_updates": manifest["updates_completed"],
@@ -912,6 +967,7 @@ def run_oof_reward_predictors(
     bank = load_feature_bank(project_root=root)
     cell_costs = _cell_costs(bank)
     valid_library = build_validation_library(bank, cell_costs)
+    require_predictor_selection_evidence(root, bank, include_oof=False)
     assignments = _oof_assignments(bank)
     fold_rows = [
         {
@@ -947,14 +1003,17 @@ def run_oof_reward_predictors(
         constants = _constant_metrics(bank, fit)
         started_at = _utc_now()
         job = f"oof_reward_predictor_{selected}_fold{fold}"
+        run_id = uuid4().hex
         _append_ledger(
             ledger,
             {
                 "job": job,
+                "run_id": run_id,
                 "stage": "W2",
                 "device": device,
                 "actual_optimizer_updates": 0,
                 "status": "STARTED",
+                "optimizer_update_reservation": _CANDIDATE_UPDATES,
                 "started_at": started_at,
             },
         )
@@ -967,6 +1026,12 @@ def run_oof_reward_predictors(
             device=device,
             fit_indices=fit,
             seed_override=2026091211 + fold,
+            archive_dir=(
+                model_dir / "selection_history" / f"reward_{selected.lower()}_fold{fold}"
+            ),
+        )
+        manifest["selection_archive"] = (
+            Path(manifest["selection_archive"]).relative_to(root).as_posix()
         )
         checkpoint = model_dir / f"reward_predictor_{selected.lower()}_fold{fold}.pt"
         torch.save(
@@ -1058,6 +1123,7 @@ def run_oof_reward_predictors(
             ledger,
             {
                 "job": job,
+                "run_id": run_id,
                 "stage": "W2",
                 "device": device,
                 "actual_optimizer_updates": manifest["updates_completed"],
@@ -1083,6 +1149,120 @@ def run_oof_reward_predictors(
     }
     write_json(output / "oof_readiness.json", payload)
     return payload
+
+
+def _require_exact_validation(bank, library, cell_costs) -> None:
+    if cell_costs.dtype != np.float64 or not np.array_equal(
+        cell_costs, _cell_costs(bank)
+    ):
+        raise ValueError("checkpoint selection requires float64 native-pixel costs")
+    expected = build_validation_library(bank, cell_costs)
+    if (
+        library.costs.dtype != np.float64
+        or library.route_names != expected.route_names
+        or any(
+            not np.array_equal(getattr(library, field), getattr(expected, field))
+            for field in ("specimen_indices", "state_indices", "masks", "costs")
+        )
+    ):
+        raise ValueError(
+            "checkpoint selection requires the fixed exact-cost VALID library"
+        )
+
+
+def _manifest_selection_verified(
+    root, manifest, bank, library, *, validation=None
+) -> bool:
+    archive = manifest.get("selection_archive")
+    if not archive:
+        return False
+    try:
+        evidence = inspect_archive(
+            root / archive,
+            validation=validation
+            if validation is not None
+            else validation_identity(bank, library),
+        )
+        selected = next(
+            row
+            for row in evidence["candidates"]
+            if row["update"] == evidence["selected_update"]
+        )
+        snapshot = root / manifest["checkpoint_path"]
+        if sha256_file(snapshot) != manifest["checkpoint_sha256"]:
+            return False
+        selected_payload = torch.load(
+            root / archive / selected["checkpoint"],
+            map_location="cpu",
+            weights_only=False,
+        )
+        snapshot_payload = torch.load(snapshot, map_location="cpu", weights_only=False)
+        if _state_dict_sha256(selected_payload["state_dict"]) != _state_dict_sha256(
+            snapshot_payload["state_dict"]
+        ):
+            return False
+        return (
+            evidence["model_name"] == manifest["model"]
+            and evidence["updates_completed"] == manifest["updates_completed"]
+            and evidence["selected_update"] == manifest["selected_update"]
+            and selected["metrics"] == manifest["metrics"]
+        )
+    except (OSError, ValueError, KeyError):
+        return False
+
+
+def require_predictor_selection_evidence(root, bank, *, include_oof=True) -> None:
+    """Stop dependent optimization when actual selection evidence is unavailable."""
+    output = root / "results/cai_agent_v3/new_protocol"
+    gate = json.loads((output / "predictor_gate.json").read_text())
+    manifests = gate.get("candidate_manifests", [])
+    if (
+        len(manifests) != 3
+        or {m["model"] for m in manifests} != set(_MODEL_SEEDS)
+        or gate.get("status") != "PREDICTOR_READY"
+    ):
+        raise ValueError("PREDICTOR_NOT_READY: complete candidate evidence is required")
+    selected, _ = choose_common_predictor(
+        [(m["model"], m["metrics"], m["parameter_count"]) for m in manifests]
+    )
+    if selected is None or selected != gate.get("selected_p_all"):
+        raise ValueError("PREDICTOR_NOT_READY: common predictor selection mismatch")
+    if include_oof:
+        oof = json.loads((output / "oof_readiness.json").read_text())
+        folds = oof.get("fold_manifests", [])
+        if (
+            oof.get("status") != "REWARD_MODELS_READY"
+            or len(folds) != 3
+            or {m["fold"] for m in folds} != {0, 1, 2}
+            or any(m["model"] != selected for m in folds)
+        ):
+            raise ValueError(
+                "REWARD_MODELS_NOT_READY: complete fold evidence is required"
+            )
+        manifests = [*manifests, *folds]
+    library = build_validation_library(bank, _cell_costs(bank))
+    binding = validation_identity(bank, library)
+    if not all(
+        _manifest_selection_verified(root, m, bank, library, validation=binding)
+        for m in manifests
+    ):
+        raise ValueError(
+            "PREDICTOR_NOT_READY: missing checkpoints or changed VALID identity"
+        )
+
+
+def rescore_predictor_archive(archive_dir, bank, library, constants, *, device="cpu"):
+    """Zero-training full-candidate score replay, returning a separate report."""
+    _require_exact_validation(bank, library, _cell_costs(bank))
+
+    def score(payload):
+        model = _model(payload["model_name"], constants).to(device)
+        model.load_state_dict(payload["state_dict"])
+        return evaluate_predictor(model, bank, library, constants, device=device)
+
+    return rescore_archive(
+        archive_dir, validation=validation_identity(bank, library), score=score
+    )
 
 
 def refresh_cost_precision_evaluations(
@@ -1149,6 +1329,16 @@ def refresh_cost_precision_evaluations(
         current_changed_rows=current_changed_rows,
         historical_changed_rows=historical_changed_rows,
         checkpoint_selection_history=checkpoint_selection_history,
+    )
+    # Even unchanged masks or an exact-cost label cannot replace actual candidates.
+    oof_path = output / "oof_readiness.json"
+    oof = json.loads(oof_path.read_text(encoding="utf-8"))
+    current_validation = validation_identity(bank, exact_library)
+    checkpoint_selection_verified = checkpoint_selection_verified and all(
+        _manifest_selection_verified(
+            root, manifest, bank, exact_library, validation=current_validation
+        )
+        for manifest in [*predictor_gate["candidate_manifests"], *oof["fold_manifests"]]
     )
     candidate_deltas = []
     candidates = []

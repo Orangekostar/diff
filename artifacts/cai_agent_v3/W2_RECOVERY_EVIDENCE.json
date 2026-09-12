@@ -1,0 +1,305 @@
+{
+  "actual_selection_point_count": 43,
+  "all_model_file_paths": [
+    "results/cai_agent_v3/new_protocol/models/actor_learned_static_true_seed1.pt",
+    "results/cai_agent_v3/new_protocol/models/actor_no_vlm_spatial_feedback_seed1.pt",
+    "results/cai_agent_v3/new_protocol/models/actor_vlm_mean_feedback_seed1.pt",
+    "results/cai_agent_v3/new_protocol/models/actor_vlm_spatial_feedback_seed1.pt",
+    "results/cai_agent_v3/new_protocol/models/actor_vlm_spatial_open_loop_seed1.pt",
+    "results/cai_agent_v3/new_protocol/models/gdfs_adapted_frozen_predictor_seed1.pt",
+    "results/cai_agent_v3/new_protocol/models/predictor_mean_sc.pt",
+    "results/cai_agent_v3/new_protocol/models/predictor_spatial_c.pt",
+    "results/cai_agent_v3/new_protocol/models/predictor_spatial_sc.pt",
+    "results/cai_agent_v3/new_protocol/models/reward_predictor_mean_sc_fold0.pt",
+    "results/cai_agent_v3/new_protocol/models/reward_predictor_mean_sc_fold1.pt",
+    "results/cai_agent_v3/new_protocol/models/reward_predictor_mean_sc_fold2.pt"
+  ],
+  "checked_model_directory": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/new_protocol/models",
+  "cumulative_limit": 28100,
+  "gpu_time_note": "incomplete durations: interrupted static and some prechecks; not an upper bound",
+  "historical_selection_recoverable": false,
+  "historical_validation_mask_changes": 3,
+  "known_updates": 21514,
+  "ledger_by_stage": {
+    "W0": {
+      "known_updates": 0,
+      "unknown_upper_bound": 0
+    },
+    "W1": {
+      "known_updates": 0,
+      "unknown_upper_bound": 0
+    },
+    "W2": {
+      "known_updates": 10750,
+      "unknown_upper_bound": 0
+    },
+    "W2_CORRECTION": {
+      "known_updates": 0,
+      "unknown_upper_bound": 0
+    },
+    "W2_PRECHECK": {
+      "known_updates": 3,
+      "unknown_upper_bound": 0
+    },
+    "W2_RECOVERY": {
+      "known_updates": 0,
+      "unknown_upper_bound": 0
+    },
+    "W3": {
+      "known_updates": 9500,
+      "unknown_upper_bound": 750
+    },
+    "W3_AUDIT": {
+      "known_updates": 0,
+      "unknown_upper_bound": 0
+    },
+    "W3_INPUT": {
+      "known_updates": 0,
+      "unknown_upper_bound": 0
+    },
+    "W3_PRECHECK": {
+      "known_updates": 10,
+      "unknown_upper_bound": 0
+    },
+    "W4": {
+      "known_updates": 1250,
+      "unknown_upper_bound": 0
+    },
+    "W4_PRECHECK": {
+      "known_updates": 1,
+      "unknown_upper_bound": 0
+    },
+    "W5": {
+      "known_updates": 0,
+      "unknown_upper_bound": 0
+    },
+    "W6_FINAL_REVIEW": {
+      "known_updates": 0,
+      "unknown_upper_bound": 0
+    }
+  },
+  "ledger_path": "results/cai_agent_v3/compute_ledger.jsonl",
+  "ledger_recorded_gpu_seconds_lower_bound": 8383.222302116454,
+  "ledger_sha256": "d64dfc90121f0b964064e8326a8aad49d1c2e1c592f1531ccbe372889c3d3e78",
+  "missing_selection_point_count": 37,
+  "remaining_lower_bound": 5836,
+  "requested_new_protocol_ledger_exists": false,
+  "scope": "metadata and files only; no model inference, training, VLM or TEST scoring",
+  "selection_coverage": [
+    {
+      "actual_selection_updates": [
+        250,
+        500,
+        750,
+        1000,
+        1250,
+        1500,
+        1750,
+        2000
+      ],
+      "fold": null,
+      "missing_updates": [
+        250,
+        500,
+        750,
+        1000,
+        1250,
+        1500,
+        2000
+      ],
+      "model": "MEAN_SC",
+      "retained_updates": [
+        1750
+      ]
+    },
+    {
+      "actual_selection_updates": [
+        250,
+        500,
+        750,
+        1000,
+        1250,
+        1500
+      ],
+      "fold": null,
+      "missing_updates": [
+        250,
+        750,
+        1000,
+        1250,
+        1500
+      ],
+      "model": "SPATIAL_SC",
+      "retained_updates": [
+        500
+      ]
+    },
+    {
+      "actual_selection_updates": [
+        250,
+        500,
+        750,
+        1000,
+        1250,
+        1500
+      ],
+      "fold": null,
+      "missing_updates": [
+        250,
+        750,
+        1000,
+        1250,
+        1500
+      ],
+      "model": "SPATIAL_C",
+      "retained_updates": [
+        500
+      ]
+    },
+    {
+      "actual_selection_updates": [
+        250,
+        500,
+        750,
+        1000,
+        1250,
+        1500,
+        1750,
+        2000
+      ],
+      "fold": "0",
+      "missing_updates": [
+        250,
+        500,
+        750,
+        1000,
+        1500,
+        1750,
+        2000
+      ],
+      "model": "MEAN_SC",
+      "retained_updates": [
+        1250
+      ]
+    },
+    {
+      "actual_selection_updates": [
+        250,
+        500,
+        750,
+        1000,
+        1250,
+        1500,
+        1750,
+        2000
+      ],
+      "fold": "1",
+      "missing_updates": [
+        250,
+        500,
+        750,
+        1250,
+        1500,
+        1750,
+        2000
+      ],
+      "model": "MEAN_SC",
+      "retained_updates": [
+        1000
+      ]
+    },
+    {
+      "actual_selection_updates": [
+        250,
+        500,
+        750,
+        1000,
+        1250,
+        1500,
+        1750
+      ],
+      "fold": "2",
+      "missing_updates": [
+        250,
+        500,
+        1000,
+        1250,
+        1500,
+        1750
+      ],
+      "model": "MEAN_SC",
+      "retained_updates": [
+        750
+      ]
+    }
+  ],
+  "this_task_new_test_perception_or_scores": 0,
+  "this_task_new_vlm_calls": 0,
+  "this_task_real_optimizer_updates": 0,
+  "unknown_updates_upper_bound": 750,
+  "used_upper_bound": 22264,
+  "w2_additional_update_capacity_needed": 6164,
+  "w2_checkpoints": [
+    {
+      "model": "MEAN_SC",
+      "path": "results/cai_agent_v3/new_protocol/models/predictor_mean_sc.pt",
+      "query_fold": null,
+      "selection_archive_present": false,
+      "sha256": "1f5ee806875c98bcfcbaa3b87f393774f8adef4950fc7a73a4a6d0155b99a493",
+      "update": 1750,
+      "updates_completed": 2000,
+      "validation_identity_present": false
+    },
+    {
+      "model": "SPATIAL_C",
+      "path": "results/cai_agent_v3/new_protocol/models/predictor_spatial_c.pt",
+      "query_fold": null,
+      "selection_archive_present": false,
+      "sha256": "0cfe827c6140c9e567a107d2cb7dd05a9f1b9639c246261e65cc9e760805b872",
+      "update": 500,
+      "updates_completed": 1500,
+      "validation_identity_present": false
+    },
+    {
+      "model": "SPATIAL_SC",
+      "path": "results/cai_agent_v3/new_protocol/models/predictor_spatial_sc.pt",
+      "query_fold": null,
+      "selection_archive_present": false,
+      "sha256": "3e0318c844a770189c1d1844eca52d5684e67192028c9e88ff7fff58fcdf29c6",
+      "update": 500,
+      "updates_completed": 1500,
+      "validation_identity_present": false
+    },
+    {
+      "model": "MEAN_SC",
+      "path": "results/cai_agent_v3/new_protocol/models/reward_predictor_mean_sc_fold0.pt",
+      "query_fold": 0,
+      "selection_archive_present": false,
+      "sha256": "cb6b9eee823fca63431762119bdd054f7bfb49885ea045885b7ab6f4bcb84802",
+      "update": 1250,
+      "updates_completed": 2000,
+      "validation_identity_present": false
+    },
+    {
+      "model": "MEAN_SC",
+      "path": "results/cai_agent_v3/new_protocol/models/reward_predictor_mean_sc_fold1.pt",
+      "query_fold": 1,
+      "selection_archive_present": false,
+      "sha256": "c457e79527553a04f4408afa4d9849dc38acd1c05febdaa481dce61aee9a873e",
+      "update": 1000,
+      "updates_completed": 2000,
+      "validation_identity_present": false
+    },
+    {
+      "model": "MEAN_SC",
+      "path": "results/cai_agent_v3/new_protocol/models/reward_predictor_mean_sc_fold2.pt",
+      "query_fold": 2,
+      "selection_archive_present": false,
+      "sha256": "3e4ca7163e032aa394922d184c7df39886a692a2d9b0e643f89713d0349d1408",
+      "update": 750,
+      "updates_completed": 1750,
+      "validation_identity_present": false
+    }
+  ],
+  "w2_replay_registered_upper_bound": 12000
+}

@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "purpose": "Independent hand-derived contract cases, not measured experimental data",
+  "trajectory_cases": [
+    {
+      "id": "LEFT_NOT_TRAPEZOID",
+      "costs": [0.0, 0.125, 0.25],
+      "predictions": [190.0, 194.0, 198.0],
+      "target": 200.0,
+      "budget": 0.25,
+      "terminal_weight": 0.25,
+      "expected_area": 8.0,
+      "expected_objective": 8.5,
+      "expected_cost_to_go": [8.5, 3.5],
+      "derivation": "(.125*10 + .125*6)/.25=8; terminal=.25*2=.5"
+    },
+    {
+      "id": "UNUSED_BUDGET_TAIL",
+      "costs": [0.0, 0.1, 0.2],
+      "predictions": [190.0, 196.0, 198.0],
+      "target": 200.0,
+      "budget": 0.25,
+      "terminal_weight": 0.25,
+      "expected_area": 6.0,
+      "expected_objective": 6.5,
+      "expected_cost_to_go": [6.5, 2.5],
+      "derivation": "(.1*10 + .1*4 + .05*2)/.25=6; terminal_aux=.5"
+    },
+    {
+      "id": "REGRESSION_NOT_HISTORICAL_BEST",
+      "costs": [0.0, 0.1, 0.2],
+      "predictions": [190.0, 198.0, 180.0],
+      "target": 200.0,
+      "budget": 0.25,
+      "terminal_weight": 0.25,
+      "expected_area": 8.8,
+      "expected_objective": 13.8,
+      "expected_cost_to_go": [13.8, 9.8],
+      "derivation": "(.1*10 + .1*2 + .05*20)/.25=8.8; terminal_aux=5"
+    },
+    {
+      "id": "NO_AFFORDABLE_ACTION",
+      "costs": [0.0],
+      "predictions": [190.0],
+      "target": 200.0,
+      "budget": 0.01,
+      "terminal_weight": 0.25,
+      "expected_area": 10.0,
+      "expected_objective": 12.5,
+      "expected_cost_to_go": [],
+      "derivation": "No action means unchanged error over whole budget; no policy action terms"
+    }
+  ],
+  "prefix_cases": [
+    {
+      "id": "NO_FUTURE_INTERPOLATION",
+      "costs": [0.0, 0.1, 0.2],
+      "predictions": [190.0, 196.0, 198.0],
+      "budget": 0.15,
+      "expected_prediction": 196.0
+    }
+  ],
+  "seed_cases": [
+    {
+      "id": "INDEPENDENT_RUNS_NOT_ENSEMBLE",
+      "target": 200.0,
+      "predictions": [190.0, 210.0],
+      "expected_independent_mae": 10.0,
+      "expected_ensemble_mae": 0.0
+    }
+  ],
+  "policy_gradient_case": {
+    "id": "COST_MINIMIZATION_SIGN",
+    "probabilities": [0.5, 0.5],
+    "costs": [1.0, 3.0],
+    "expected_logit_gradient": [-0.5, 0.5],
+    "learning_rate": 0.1
+  }
+}

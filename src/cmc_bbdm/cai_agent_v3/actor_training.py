@@ -30,6 +30,7 @@ from .policy import vlm_first_action_mask
 from .predictor_training import (
     _cell_costs,
     load_predictor_checkpoint,
+    require_predictor_selection_evidence,
 )
 
 _ENDPOINT_BUDGET = 0.25
@@ -74,9 +75,16 @@ def _append_ledger(path: Path, payload: dict[str, object]) -> None:
 
 def _optimizer_update_upper_bound(path: Path) -> int:
     total = 0
+    reservations: dict[str, int] = {}
+    completed: set[str] = set()
     with path.open(encoding="utf-8") as handle:
         for line in handle:
             row = json.loads(line)
+            run_id = row.get("run_id")
+            if run_id and "optimizer_update_reservation" in row:
+                reservations[run_id] = int(row["optimizer_update_reservation"])
+            if run_id and row.get("status") == "COMPLETED":
+                completed.add(run_id)
             actual = row.get("actual_optimizer_updates")
             if isinstance(actual, int):
                 total += actual
@@ -84,7 +92,7 @@ def _optimizer_update_upper_bound(path: Path) -> int:
                 row.get("actual_optimizer_updates_upper_bound"), int
             ):
                 total += int(row["actual_optimizer_updates_upper_bound"])
-    return total
+    return total + sum(value for key, value in reservations.items() if key not in completed)
 
 
 def _state_dict_sha256(state: dict[str, torch.Tensor]) -> str:
@@ -569,6 +577,8 @@ def _load_oof_predictors(
     readiness = json.loads((output / "oof_readiness.json").read_text(encoding="utf-8"))
     if readiness.get("status") != "REWARD_MODELS_READY":
         raise ValueError("reward predictor gate is not ready")
+    bank = load_feature_bank(project_root=root)
+    require_predictor_selection_evidence(root, bank)
     predictors = {}
     for manifest in readiness["fold_manifests"]:
         model, _ = load_predictor_checkpoint(
@@ -577,7 +587,6 @@ def _load_oof_predictors(
         for parameter in model.parameters():
             parameter.requires_grad_(False)
         predictors[int(manifest["fold"])] = model
-    bank = load_feature_bank(project_root=root)
     fold_by_index = np.full(len(bank.specimen_keys), -1, dtype=np.int64)
     key_index = {key: index for index, key in enumerate(bank.specimen_keys)}
     for row in read_csv(output / "oof_fold_manifest.csv"):
