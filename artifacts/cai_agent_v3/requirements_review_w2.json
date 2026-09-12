@@ -1,20 +1,47 @@
 {
   "review_mode": "SELF_CHECK_WITH_EXTERNAL_NUMERIC_ORACLE",
-  "stage": "W2_PREDICTOR_AND_OOF_GATE",
-  "blocker_failures": 0,
-  "predictor_status": "PREDICTOR_READY",
-  "selected_p_all": "MEAN_SC",
-  "reward_model_status": "REWARD_MODELS_READY",
-  "cost_precision_status": "EXACT_NATIVE_COST_REEVALUATION_COMPLETE",
+  "stage": "W2_PREDICTOR_AND_OOF_GATE_FINAL_CORRECTION",
+  "blocker_failures": 2,
+  "predictor_status": "PREDICTOR_NOT_READY",
+  "selected_p_all": null,
+  "provisional_frozen_checkpoint_winner": "MEAN_SC",
+  "reward_model_status": "REWARD_MODELS_NOT_READY",
+  "cost_precision_status": "CHECKPOINT_SELECTION_INVALIDATED_EXACT_COST_INPUT_CHANGED",
   "cost_precision_optimizer_updates": 0,
   "predictor_or_reward_model_identity_changed": false,
+  "checkpoint_identity_verified": false,
   "actual_optimizer_updates_cumulative": 10753,
   "requirements": [
-    {"requirement_id": "A01", "status": "PASS", "severity": "BLOCKER"},
-    {"requirement_id": "A04", "status": "PASS", "severity": "BLOCKER"},
-    {"requirement_id": "A06", "status": "PASS", "severity": "BLOCKER"},
-    {"requirement_id": "A07", "status": "PASS", "severity": "BLOCKER"},
-    {"requirement_id": "A11", "status": "PASS", "severity": "BLOCKER"},
-    {"requirement_id": "A12", "status": "PASS", "severity": "BLOCKER"}
-  ]
+    {
+      "requirement_id": "A01",
+      "status": "FAIL",
+      "severity": "BLOCKER"
+    },
+    {
+      "requirement_id": "A04",
+      "status": "PASS",
+      "severity": "BLOCKER"
+    },
+    {
+      "requirement_id": "A06",
+      "status": "PASS",
+      "severity": "BLOCKER"
+    },
+    {
+      "requirement_id": "A07",
+      "status": "PASS",
+      "severity": "BLOCKER"
+    },
+    {
+      "requirement_id": "A11",
+      "status": "FAIL",
+      "severity": "BLOCKER"
+    },
+    {
+      "requirement_id": "A12",
+      "status": "PASS",
+      "severity": "BLOCKER"
+    }
+  ],
+  "failure_reason": "Three exact-cost prefix masks changed after checkpoint selection, but only the selected snapshots were retained. Exact-cost ranking over training updates cannot be reconstructed without optimization replay."
 }

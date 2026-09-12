@@ -71,3 +71,6 @@
 {"actual_optimizer_updates": 0, "device": "cuda:0", "job": "gdfs_adapted_frozen_predictor_seed1", "stage": "W4", "status": "STARTED"}
 {"actual_optimizer_updates": 1250, "checkpoint_sha256": "eb38225d47766666875be4d5785ed682efa89e074345de17b6a23ea3a2161716", "device": "cuda:0", "elapsed_seconds": 747.2893228298053, "job": "gdfs_adapted_frozen_predictor_seed1", "stage": "W4", "status": "GDFS_ADAPTER_COMPLETE"}
 {"actual_optimizer_updates": 0, "job": "policy_seed_expansion", "stage": "W5", "status": "RESOURCE_LIMITED"}
+{"actual_optimizer_updates": 0, "device": "cpu", "job": "w2_exact_native_cost_reevaluation", "stage": "W2_CORRECTION", "status": "CHECKPOINT_SELECTION_INVALIDATED_EXACT_COST_INPUT_CHANGED"}
+{"actual_optimizer_updates": 0, "affected_completed_optimizer_updates_already_counted": 17750, "invalidated_scientific_scope": ["W2 predictor checkpoint selection", "W2 OOF checkpoint selection", "W3 policy pilot", "W4 GDFS pilot"], "job": "final_requirement_audit_invalidation", "reason": "exact-cost checkpoint ranking cannot be reconstructed from retained selected snapshots", "stage": "W6_FINAL_REVIEW", "status": "SCIENTIFIC_RESULTS_INVALIDATED_UPSTREAM"}
+{"actual_optimizer_updates": 0, "device": "cpu", "job": "w2_exact_native_cost_reevaluation", "stage": "W2_CORRECTION", "status": "CHECKPOINT_SELECTION_INVALIDATED_EXACT_COST_INPUT_CHANGED"}

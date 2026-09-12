@@ -86,6 +86,7 @@
   "best_nonadaptive_validation_area_mpa": 46.96714982215848,
   "early_vlm_effect_mpa": 0.9888888881762128,
   "feedback_effect_mpa": 0.22528951158566457,
+  "invalidation_reason": "upstream W2 checkpoint updates were selected with float32 validation costs before exact-cost prefix masks changed",
   "main_method": "VLM_SPATIAL_FEEDBACK",
   "main_minus_best_nonadaptive_effect_mpa": 2.3395125186193795,
   "main_validation_area_mpa": 44.6276373035391,
@@ -94,8 +95,10 @@
   "no_vlm_validation_area_mpa": 46.75112610808443,
   "no_vlm_validation_early_area_mpa": 49.89686434028377,
   "open_loop_validation_area_mpa": 44.85292681512477,
-  "passed": true,
+  "passed": false,
   "reasons": [],
-  "status": "POLICY_PILOT_SUPPORTED",
+  "scientific_use": "DIAGNOSTIC_ONLY_INVALIDATED",
+  "status": "INVALIDATED_UPSTREAM_PREDICTOR_CHECKPOINT_SELECTION",
+  "status_before_invalidation": "POLICY_PILOT_SUPPORTED",
   "test_accessed": false
 }

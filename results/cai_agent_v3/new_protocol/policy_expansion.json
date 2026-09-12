@@ -4,6 +4,8 @@
   "optimizer_updates_remaining": 5836,
   "optimizer_updates_used_upper_bound": 22264,
   "planned_expansion_updates": 9000,
-  "status": "RESOURCE_LIMITED",
-  "test_accessed": false
+  "status": "NOT_EXECUTED_UPSTREAM_NOT_READY_AND_RESOURCE_LIMITED",
+  "status_before_upstream_invalidation": "RESOURCE_LIMITED",
+  "test_accessed": false,
+  "upstream_status": "PREDICTOR_NOT_READY"
 }

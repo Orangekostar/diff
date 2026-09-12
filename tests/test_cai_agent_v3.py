@@ -47,6 +47,8 @@ from cmc_bbdm.cai_agent_v3.models import (
 from cmc_bbdm.cai_agent_v3.policy import vlm_first_action_mask
 from cmc_bbdm.cai_agent_v3.predictor_training import (
     _cell_costs,
+    _checkpoint_selection_is_verified,
+    _invalidate_downstream_after_checkpoint_selection,
     build_validation_library,
 )
 from cmc_bbdm.cai_agent_v3.vlm_perception import (
@@ -164,6 +166,53 @@ def test_metric_rejects_invalid_cost_trajectory():
         left_error_area_mpa([0.0, 0.1, 0.1], [1.0, 2.0, 3.0], 2.0, end=0.25)
     with pytest.raises(ValueError, match="endpoint"):
         trajectory_objective_mpa([0.0, 0.3], [1.0, 2.0], 2.0, budget=0.25)
+
+
+def test_exact_cost_checkpoint_invalidation_propagates_to_downstream(tmp_path):
+    (tmp_path / "policy_pilot_gate.json").write_text(
+        json.dumps({"status": "POLICY_PILOT_SUPPORTED", "passed": True}),
+        encoding="utf-8",
+    )
+    (tmp_path / "gdfs_pilot.json").write_text(
+        json.dumps({"status": "GDFS_ADAPTER_COMPLETE"}), encoding="utf-8"
+    )
+    (tmp_path / "policy_expansion.json").write_text(
+        json.dumps({"status": "RESOURCE_LIMITED"}), encoding="utf-8"
+    )
+
+    _invalidate_downstream_after_checkpoint_selection(tmp_path)
+
+    policy = json.loads((tmp_path / "policy_pilot_gate.json").read_text())
+    gdfs = json.loads((tmp_path / "gdfs_pilot.json").read_text())
+    expansion = json.loads((tmp_path / "policy_expansion.json").read_text())
+    assert policy["status"] == "INVALIDATED_UPSTREAM_PREDICTOR_CHECKPOINT_SELECTION"
+    assert policy["passed"] is False
+    assert gdfs["scientific_use"] == "DIAGNOSTIC_ONLY_INVALIDATED"
+    assert expansion["status"] == (
+        "NOT_EXECUTED_UPSTREAM_NOT_READY_AND_RESOURCE_LIMITED"
+    )
+
+
+@pytest.mark.parametrize(
+    ("current", "historical", "history", "expected"),
+    [
+        (3, 3, "UPDATE_SELECTED_WITH_FLOAT64_NATIVE_COSTS", False),
+        (0, 3, "UPDATE_SELECTED_WITH_FLOAT32_COSTS", False),
+        (0, 3, "UPDATE_SELECTED_WITH_FLOAT64_NATIVE_COSTS", True),
+        (0, 0, "UPDATE_SELECTED_WITH_FLOAT32_COSTS", True),
+    ],
+)
+def test_exact_cost_checkpoint_selection_requires_unchanged_or_exact_library(
+    current, historical, history, expected
+):
+    assert (
+        _checkpoint_selection_is_verified(
+            current_changed_rows=current,
+            historical_changed_rows=historical,
+            checkpoint_selection_history=history,
+        )
+        is expected
+    )
 
 
 @pytest.mark.parametrize(

@@ -4,6 +4,64 @@
       "exact_full_mae_mpa": 41.14089569091797,
       "exact_valid_area_mpa": 48.3125710093265,
       "model": "MEAN_SC",
+      "old_full_mae_mpa": 41.14089569091797,
+      "old_valid_area_mpa": 48.3125710093265,
+      "valid_area_delta_mpa": 0.0
+    },
+    {
+      "exact_full_mae_mpa": 49.5180908203125,
+      "exact_valid_area_mpa": 55.73975906801906,
+      "model": "SPATIAL_SC",
+      "old_full_mae_mpa": 49.5180908203125,
+      "old_valid_area_mpa": 55.73975906801906,
+      "valid_area_delta_mpa": 0.0
+    },
+    {
+      "exact_full_mae_mpa": 59.31563354492187,
+      "exact_valid_area_mpa": 66.92088231586527,
+      "model": "SPATIAL_C",
+      "old_full_mae_mpa": 59.31563354492187,
+      "old_valid_area_mpa": 66.92088231586527,
+      "valid_area_delta_mpa": 0.0
+    }
+  ],
+  "checkpoint_selection_verified": false,
+  "exact_selected_p_all": null,
+  "invalidated_scientific_scope": [
+    "W2 common-predictor checkpoint selection",
+    "W2 OOF reward-predictor checkpoint selection",
+    "W3 policy pilot",
+    "W4 GDFS pilot"
+  ],
+  "invalidation_reason": "Only the previously selected checkpoints were retained. Re-evaluating them cannot prove which training update minimizes the exact-cost validation objective after three prefix masks changed.",
+  "maximum_stored_cost_delta": 0.00036981701850891113,
+  "model_parameters_changed": false,
+  "oof_metric_deltas": [
+    {
+      "exact_valid_area_mpa": 54.632430902660936,
+      "fold": 0,
+      "old_valid_area_mpa": 54.632430902660936,
+      "valid_area_delta_mpa": 0.0
+    },
+    {
+      "exact_valid_area_mpa": 53.4263493645936,
+      "fold": 1,
+      "old_valid_area_mpa": 53.4263493645936,
+      "valid_area_delta_mpa": 0.0
+    },
+    {
+      "exact_valid_area_mpa": 48.66192263451879,
+      "fold": 2,
+      "old_valid_area_mpa": 48.66192263451879,
+      "valid_area_delta_mpa": 0.0
+    }
+  ],
+  "optimizer_updates": 0,
+  "original_candidate_metric_deltas": [
+    {
+      "exact_full_mae_mpa": 41.14089569091797,
+      "exact_valid_area_mpa": 48.3125710093265,
+      "model": "MEAN_SC",
       "old_full_mae_mpa": 41.14089721679687,
       "old_valid_area_mpa": 48.3125844153495,
       "valid_area_delta_mpa": -1.3406023001039102e-05
@@ -25,10 +83,7 @@
       "valid_area_delta_mpa": 0.00012322528888830675
     }
   ],
-  "exact_selected_p_all": "MEAN_SC",
-  "maximum_stored_cost_delta": 0.00036981701850891113,
-  "model_parameters_changed": false,
-  "oof_metric_deltas": [
+  "original_oof_metric_deltas": [
     {
       "exact_valid_area_mpa": 54.632430902660936,
       "fold": 0,
@@ -48,9 +103,14 @@
       "valid_area_delta_mpa": 3.1452554232203056e-05
     }
   ],
-  "optimizer_updates": 0,
   "previous_selected_p_all": "MEAN_SC",
-  "status": "EXACT_NATIVE_COST_REEVALUATION_COMPLETE",
+  "provisional_frozen_checkpoint_winner": "MEAN_SC",
+  "resource_recovery": {
+    "optimizer_updates_remaining_lower_bound": 5836,
+    "registered_w2_replay_upper_bound_updates": 12000,
+    "status": "RESOURCE_LIMITED"
+  },
+  "status": "CHECKPOINT_SELECTION_INVALIDATED_EXACT_COST_INPUT_CHANGED",
   "test_labels_or_metrics_used": false,
   "validation_rows_with_mask_change": 3,
   "validation_specimens_with_mask_change": 3

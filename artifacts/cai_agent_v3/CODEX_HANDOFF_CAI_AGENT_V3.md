@@ -10,7 +10,7 @@
 
 ## Outcome
 
-`P_all=MEAN_SC` passed the predictor gate. The corrected seed-1 W3 pilot also passed its internal VALID continuation gate: `VLM_SPATIAL_FEEDBACK=44.627637 MPa`, `GEOMETRY_SPREAD=46.967150 MPa`, and `VLM_SPATIAL_OPEN_LOOP=44.852927 MPa`. The GDFS diagnostic completed at `46.335553 MPa` with unchanged predictor hashes. Seed expansion was not run because its 9,000 updates would exceed the registered 28,100 limit after conservatively accounting for invalidated work. TEST perception and scoring remained closed.
+The final requirement audit invalidated W2 checkpoint selection. The exact-cost refresh changed three VALID prefix masks, but only each model's previously selected checkpoint was retained; therefore the exact-cost ranking across 250-update checkpoints cannot be verified. `MEAN_SC` remains only the provisional winner among the retained snapshots, not a valid `P_all`. W3 and GDFS values are preserved as invalidated diagnostics, not scientific evidence. The remaining update budget cannot fund a contract-compliant W2 replay, so execution stops as `RESOURCE_LIMITED`; TEST perception and scoring remain closed.
 
 ## Data and perception
 
@@ -25,12 +25,15 @@
 
 During W3 review, a float32 cumulative-cost round trip was shown to alter reachable hard-action legality for 18 TRAIN and 5 VALID specimens. The run was stopped; three completed checkpoints were invalidated and removed, and the interrupted static job is charged at an honest upper bound of 750 updates. Actor and GDFS hard legality now use float64 native-pixel fractions, and all corrected policy/GDFS episode routes replay exactly. See `results/cai_agent_v3/new_protocol/w3_cost_legality_audit.json`.
 
+A later requirement-by-requirement audit found that the earlier W2 remediation was insufficient: it re-evaluated only the retained selected snapshots rather than re-running exact-cost checkpoint selection over all training updates. The corrected `refresh-cost-evaluation` now reports `PREDICTOR_NOT_READY`, marks OOF reward models not ready, and propagates invalidation to W3/GDFS. No further optimization was run.
+
 ## Resource and stage gates
 
 - Known optimizer updates: 21,514.
 - Interrupted invalid static updates: unknown, bounded by 750 because the old loop lacked a durable per-update counter.
 - Conservative used upper bound: 22,264 / 28,100; remaining lower bound: 5,836.
-- Expansion requirement: 9,000; result: `RESOURCE_LIMITED`, 0 new updates.
+- Contract-compliant W2 replay upper bound: 12,000 updates before downstream replay; result: `RESOURCE_LIMITED`.
+- Expansion: not executed because the upstream predictor is not ready and the remaining budget is insufficient.
 - TEST VLM: `NOT_EXECUTED_POLICY_EXPANSION_NOT_LOCKED`, 0 calls.
 - TEST scoring: `NOT_EXECUTED_POLICY_EXPANSION_NOT_LOCKED`, labels accessed=false.
 
@@ -38,8 +41,9 @@ During W3 review, a float32 cumulative-cost round trip was shown to alter reacha
 
 - Legacy correction: `results/cai_agent_v3/legacy_v2_rescore/`
 - Cohort/features/predictors/policies: `results/cai_agent_v3/new_protocol/`
-- W3 gate: `results/cai_agent_v3/new_protocol/policy_pilot_gate.json`
-- GDFS: `results/cai_agent_v3/new_protocol/gdfs_pilot.json`
+- W2 invalidation authority: `results/cai_agent_v3/new_protocol/cost_precision_audit.json`
+- Invalidated W3 diagnostic: `results/cai_agent_v3/new_protocol/policy_pilot_gate.json`
+- Invalidated GDFS diagnostic: `results/cai_agent_v3/new_protocol/gdfs_pilot.json`
 - Resource gate: `results/cai_agent_v3/new_protocol/policy_expansion.json`
 - Action trace: `results/cai_agent_v3/new_protocol/policy_valid_action_trace.csv`
 - Three fixed-hash figures: `results/cai_agent_v3/new_protocol/figures/`

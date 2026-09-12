@@ -80,6 +80,7 @@
     }
   ],
   "checkpoint_selection_history": "UPDATE_SELECTED_WITH_FLOAT32_COSTS; FROZEN_CHECKPOINT_REEVALUATED_WITH_FLOAT64_COSTS",
+  "checkpoint_selection_status": "INVALID_UNVERIFIED_AFTER_EXACT_COST_INPUT_CHANGE",
   "constants": {
     "train_mean_full_mae_mpa": 77.45799786680233,
     "train_mean_full_mse_mpa2": 10052.94650467202,
@@ -90,7 +91,7 @@
     "train_target_std_mpa": 101.93511207018967
   },
   "cost_precision": "FLOAT64_NATIVE_PIXEL_FRACTIONS",
-  "gates": {
+  "frozen_checkpoint_gates": {
     "MEAN_SC": {
       "passed": true,
       "reasons": [],
@@ -107,9 +108,33 @@
       "status": "PREDICTOR_READY"
     }
   },
-  "selected_p_all": "MEAN_SC",
+  "gates": {
+    "MEAN_SC": {
+      "passed": false,
+      "reasons": [
+        "checkpoint update was selected before exact-cost prefix masks changed"
+      ],
+      "status": "CHECKPOINT_SELECTION_UNVERIFIED_EXACT_COST"
+    },
+    "SPATIAL_C": {
+      "passed": false,
+      "reasons": [
+        "checkpoint update was selected before exact-cost prefix masks changed"
+      ],
+      "status": "CHECKPOINT_SELECTION_UNVERIFIED_EXACT_COST"
+    },
+    "SPATIAL_SC": {
+      "passed": false,
+      "reasons": [
+        "checkpoint update was selected before exact-cost prefix masks changed"
+      ],
+      "status": "CHECKPOINT_SELECTION_UNVERIFIED_EXACT_COST"
+    }
+  },
+  "provisional_frozen_checkpoint_winner": "MEAN_SC",
+  "selected_p_all": null,
   "selection_rule": "MIN_VALID_PREFIX_AREA_THEN_PARAMETERS_THEN_NAME",
-  "status": "PREDICTOR_READY",
+  "status": "PREDICTOR_NOT_READY",
   "test_labels_or_metrics_used": false,
   "validation_prefix_library_sha256": "fa96a48e02802fafd793e8273298795a1a7aecb6c8f8e1c132bfcae95036809b"
 }

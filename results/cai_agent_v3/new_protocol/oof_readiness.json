@@ -1,6 +1,7 @@
 {
   "actual_optimizer_updates": 5750,
   "checkpoint_selection_history": "UPDATE_SELECTED_WITH_FLOAT32_COSTS; FROZEN_CHECKPOINT_REEVALUATED_WITH_FLOAT64_COSTS",
+  "checkpoint_selection_status": "INVALID_UNVERIFIED_AFTER_EXACT_COST_INPUT_CHANGE",
   "cost_precision": "FLOAT64_NATIVE_PIXEL_FRACTIONS",
   "fold_manifests": [
     {
@@ -12,10 +13,17 @@
       "fit_domain_n": 6,
       "fit_physical_n": 104,
       "fold": 0,
-      "gate": {
+      "frozen_checkpoint_gate": {
         "passed": true,
         "reasons": [],
         "status": "PREDICTOR_READY"
+      },
+      "gate": {
+        "passed": false,
+        "reasons": [
+          "checkpoint update was selected before exact-cost prefix masks changed"
+        ],
+        "status": "CHECKPOINT_SELECTION_UNVERIFIED_EXACT_COST"
       },
       "metrics": {
         "center_endpoint_mae_mpa": 52.90054473876953,
@@ -34,8 +42,10 @@
       "query_capture_group_n": 55,
       "query_domain_n": 6,
       "query_physical_n": 57,
-      "readiness_reasons": [],
-      "readiness_status": "PREDICTOR_READY",
+      "readiness_reasons": [
+        "checkpoint update was selected with a validation library whose exact-cost masks later changed"
+      ],
+      "readiness_status": "CHECKPOINT_SELECTION_UNVERIFIED_EXACT_COST",
       "seed": 2026091211,
       "selected_update": 1250,
       "state_dict_sha256": "d90828548245fca3824d3b9a328c10523dfc97c34af9ef96a232eeb32276fa32",
@@ -50,10 +60,17 @@
       "fit_domain_n": 6,
       "fit_physical_n": 108,
       "fold": 1,
-      "gate": {
+      "frozen_checkpoint_gate": {
         "passed": true,
         "reasons": [],
         "status": "PREDICTOR_READY"
+      },
+      "gate": {
+        "passed": false,
+        "reasons": [
+          "checkpoint update was selected before exact-cost prefix masks changed"
+        ],
+        "status": "CHECKPOINT_SELECTION_UNVERIFIED_EXACT_COST"
       },
       "metrics": {
         "center_endpoint_mae_mpa": 54.71766357421875,
@@ -72,8 +89,10 @@
       "query_capture_group_n": 50,
       "query_domain_n": 6,
       "query_physical_n": 53,
-      "readiness_reasons": [],
-      "readiness_status": "PREDICTOR_READY",
+      "readiness_reasons": [
+        "checkpoint update was selected with a validation library whose exact-cost masks later changed"
+      ],
+      "readiness_status": "CHECKPOINT_SELECTION_UNVERIFIED_EXACT_COST",
       "seed": 2026091212,
       "selected_update": 1000,
       "state_dict_sha256": "1b74fa47bc0aa8471b63da219e1ea57bbc80bae205a9f1438d48709c0ad8b4c0",
@@ -88,10 +107,17 @@
       "fit_domain_n": 6,
       "fit_physical_n": 110,
       "fold": 2,
-      "gate": {
+      "frozen_checkpoint_gate": {
         "passed": true,
         "reasons": [],
         "status": "PREDICTOR_READY"
+      },
+      "gate": {
+        "passed": false,
+        "reasons": [
+          "checkpoint update was selected before exact-cost prefix masks changed"
+        ],
+        "status": "CHECKPOINT_SELECTION_UNVERIFIED_EXACT_COST"
       },
       "metrics": {
         "center_endpoint_mae_mpa": 47.48245727539062,
@@ -110,8 +136,10 @@
       "query_capture_group_n": 47,
       "query_domain_n": 6,
       "query_physical_n": 51,
-      "readiness_reasons": [],
-      "readiness_status": "PREDICTOR_READY",
+      "readiness_reasons": [
+        "checkpoint update was selected with a validation library whose exact-cost masks later changed"
+      ],
+      "readiness_status": "CHECKPOINT_SELECTION_UNVERIFIED_EXACT_COST",
       "seed": 2026091213,
       "selected_update": 750,
       "state_dict_sha256": "d20a5e1961614e7854efd36aeb53f2c044fe0f1d0b48537d448334b7b6efc709",
@@ -121,6 +149,6 @@
   "group_isolation": true,
   "query_physical_n": 161,
   "selected_structure": "MEAN_SC",
-  "status": "REWARD_MODELS_READY",
+  "status": "REWARD_MODELS_NOT_READY",
   "test_labels_or_metrics_used": false
 }

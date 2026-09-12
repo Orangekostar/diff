@@ -1,5 +1,6 @@
 {
   "actual_optimizer_updates": 1250,
+  "invalidation_reason": "upstream W2 checkpoint updates were selected with float32 validation costs before exact-cost prefix masks changed",
   "manifest": {
     "adaptation_identity": "FROZEN_PREDICTOR_VLM_COST_GROUPED_CONCRETE_GREEDY_RELAXATION",
     "checkpoint_path": "results/cai_agent_v3/new_protocol/models/gdfs_adapted_frozen_predictor_seed1.pt",
@@ -34,6 +35,8 @@
     "validation_hard_area_mpa": 46.33555333764619
   },
   "scientific_role": "learning-method diagnostic outside the three main comparisons",
-  "status": "GDFS_ADAPTER_COMPLETE",
+  "scientific_use": "DIAGNOSTIC_ONLY_INVALIDATED",
+  "status": "INVALIDATED_UPSTREAM_PREDICTOR_CHECKPOINT_SELECTION",
+  "status_before_invalidation": "GDFS_ADAPTER_COMPLETE",
   "test_accessed": false
 }

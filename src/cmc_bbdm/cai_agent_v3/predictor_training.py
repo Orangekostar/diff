@@ -36,6 +36,7 @@ _VALIDATION_INTERVAL = 250
 _VALIDATION_PATIENCE = 4
 _CANDIDATE_UPDATES = 2000
 _BATCH_SIZE = 32
+_EXACT_CHECKPOINT_SELECTION_HISTORY = "UPDATE_SELECTED_WITH_FLOAT64_NATIVE_COSTS"
 _MODEL_SEEDS = {
     "MEAN_SC": 2026091201,
     "SPATIAL_SC": 2026091202,
@@ -1091,6 +1092,12 @@ def refresh_cost_precision_evaluations(
 
     root = Path(project_root).resolve(strict=True)
     output = root / "results/cai_agent_v3/new_protocol"
+    previous_audit_path = output / "cost_precision_audit.json"
+    previous_audit = (
+        json.loads(previous_audit_path.read_text(encoding="utf-8"))
+        if previous_audit_path.is_file()
+        else {}
+    )
     bank = load_feature_bank(project_root=root)
     cell_costs = _cell_costs(bank)
     exact_library = build_validation_library(bank, cell_costs)
@@ -1112,6 +1119,37 @@ def refresh_cost_precision_evaluations(
     constants = _constant_metrics(bank)
     gate_path = output / "predictor_gate.json"
     predictor_gate = json.loads(gate_path.read_text(encoding="utf-8"))
+    current_changed_rows = int(np.sum(changed_rows))
+    stored_history = predictor_gate.get("checkpoint_selection_history")
+    checkpoint_selection_history = str(
+        stored_history
+        if stored_history is not None
+        else (
+            "UPDATE_SELECTED_WITH_NONEXACT_STORED_COSTS"
+            if current_changed_rows
+            else _EXACT_CHECKPOINT_SELECTION_HISTORY
+        )
+    )
+    historical_changed_rows = max(
+        current_changed_rows,
+        int(previous_audit.get("validation_rows_with_mask_change", 0)),
+    )
+    current_changed_specimens = len(
+        set(exact_library.specimen_indices[changed_rows].tolist())
+    )
+    historical_changed_specimens = max(
+        current_changed_specimens,
+        int(previous_audit.get("validation_specimens_with_mask_change", 0)),
+    )
+    maximum_stored_cost_delta = max(
+        float(np.max(np.abs(stored_costs - exact_library.costs))),
+        float(previous_audit.get("maximum_stored_cost_delta", 0.0)),
+    )
+    checkpoint_selection_verified = _checkpoint_selection_is_verified(
+        current_changed_rows=current_changed_rows,
+        historical_changed_rows=historical_changed_rows,
+        checkpoint_selection_history=checkpoint_selection_history,
+    )
     candidate_deltas = []
     candidates = []
     comparison_rows = []
@@ -1138,7 +1176,8 @@ def refresh_cost_precision_evaluations(
         candidates.append(
             (str(manifest["model"]), metrics, int(manifest["parameter_count"]))
         )
-    selected, gate_results = choose_common_predictor(candidates)
+    provisional_selected, gate_results = choose_common_predictor(candidates)
+    selected = provisional_selected if checkpoint_selection_verified else None
     for manifest in predictor_gate["candidate_manifests"]:
         name = str(manifest["model"])
         result = gate_results[name]
@@ -1147,8 +1186,22 @@ def refresh_cost_precision_evaluations(
             {
                 "model": name,
                 "selected_as_p_all": name == selected,
-                "gate_status": result.status,
-                "gate_reasons": ";".join(result.reasons),
+                "gate_status": (
+                    result.status
+                    if checkpoint_selection_verified
+                    else "CHECKPOINT_SELECTION_UNVERIFIED_EXACT_COST"
+                ),
+                "gate_reasons": ";".join(
+                    result.reasons
+                    if checkpoint_selection_verified
+                    else (
+                        *result.reasons,
+                        (
+                            "checkpoint update was selected with a validation "
+                            "library whose exact-cost masks later changed"
+                        ),
+                    )
+                ),
                 "parameter_count": manifest["parameter_count"],
                 "updates_completed": manifest["updates_completed"],
                 "selected_update": manifest["selected_update"],
@@ -1157,12 +1210,15 @@ def refresh_cost_precision_evaluations(
                 "checkpoint_sha256": manifest["checkpoint_sha256"],
             }
         )
-    previous_selected = predictor_gate["selected_p_all"]
+    previous_selected = predictor_gate.get("selected_p_all") or previous_audit.get(
+        "previous_selected_p_all"
+    )
     predictor_gate["status"] = (
         "PREDICTOR_READY" if selected is not None else "PREDICTOR_NOT_READY"
     )
     predictor_gate["selected_p_all"] = selected
-    predictor_gate["gates"] = {
+    predictor_gate["provisional_frozen_checkpoint_winner"] = provisional_selected
+    frozen_checkpoint_gates = {
         name: {
             "status": result.status,
             "passed": result.passed,
@@ -1170,12 +1226,33 @@ def refresh_cost_precision_evaluations(
         }
         for name, result in gate_results.items()
     }
+    predictor_gate["frozen_checkpoint_gates"] = frozen_checkpoint_gates
+    predictor_gate["gates"] = (
+        frozen_checkpoint_gates
+        if checkpoint_selection_verified
+        else {
+            name: {
+                "status": "CHECKPOINT_SELECTION_UNVERIFIED_EXACT_COST",
+                "passed": False,
+                "reasons": [
+                    (
+                        "checkpoint update was selected before exact-cost prefix "
+                        "masks changed"
+                    )
+                ],
+            }
+            for name in gate_results
+        }
+    )
     predictor_gate["validation_prefix_library_sha256"] = sha256_file(
         stored_library_path
     )
     predictor_gate["cost_precision"] = "FLOAT64_NATIVE_PIXEL_FRACTIONS"
-    predictor_gate["checkpoint_selection_history"] = (
-        "UPDATE_SELECTED_WITH_FLOAT32_COSTS; FROZEN_CHECKPOINT_REEVALUATED_WITH_FLOAT64_COSTS"
+    predictor_gate["checkpoint_selection_history"] = checkpoint_selection_history
+    predictor_gate["checkpoint_selection_status"] = (
+        "VERIFIED_EXACT_COST"
+        if checkpoint_selection_verified
+        else "INVALID_UNVERIFIED_AFTER_EXACT_COST_INPUT_CHANGE"
     )
     write_csv(output / "predictor_comparison.csv", comparison_rows)
     write_json(gate_path, predictor_gate)
@@ -1210,14 +1287,44 @@ def refresh_cost_precision_evaluations(
             [(str(manifest["model"]), metrics, int(manifest["parameter_count"]))]
         )[1][str(manifest["model"])]
         manifest["metrics"] = metrics
-        manifest["gate"] = {
+        manifest["frozen_checkpoint_gate"] = {
             "status": gate.status,
             "passed": gate.passed,
             "reasons": gate.reasons,
         }
-        manifest["readiness_status"] = gate.status
-        manifest["readiness_reasons"] = gate.reasons
-        all_oof_ready = all_oof_ready and gate.passed
+        manifest["gate"] = (
+            manifest["frozen_checkpoint_gate"]
+            if checkpoint_selection_verified
+            else {
+                "status": "CHECKPOINT_SELECTION_UNVERIFIED_EXACT_COST",
+                "passed": False,
+                "reasons": [
+                    (
+                        "checkpoint update was selected before exact-cost prefix "
+                        "masks changed"
+                    )
+                ],
+            }
+        )
+        manifest["readiness_status"] = (
+            gate.status
+            if checkpoint_selection_verified
+            else "CHECKPOINT_SELECTION_UNVERIFIED_EXACT_COST"
+        )
+        manifest["readiness_reasons"] = (
+            gate.reasons
+            if checkpoint_selection_verified
+            else [
+                *gate.reasons,
+                (
+                    "checkpoint update was selected with a validation library "
+                    "whose exact-cost masks later changed"
+                ),
+            ]
+        )
+        all_oof_ready = (
+            all_oof_ready and gate.passed and checkpoint_selection_verified
+        )
         oof_deltas.append(
             {
                 "fold": manifest["fold"],
@@ -1231,31 +1338,66 @@ def refresh_cost_precision_evaluations(
         "REWARD_MODELS_READY" if all_oof_ready else "REWARD_MODELS_NOT_READY"
     )
     oof["cost_precision"] = "FLOAT64_NATIVE_PIXEL_FRACTIONS"
-    oof["checkpoint_selection_history"] = (
-        "UPDATE_SELECTED_WITH_FLOAT32_COSTS; FROZEN_CHECKPOINT_REEVALUATED_WITH_FLOAT64_COSTS"
-    )
+    oof["checkpoint_selection_history"] = checkpoint_selection_history
+    oof["checkpoint_selection_status"] = predictor_gate[
+        "checkpoint_selection_status"
+    ]
     write_json(oof_path, oof)
     payload = {
         "status": (
             "EXACT_NATIVE_COST_REEVALUATION_COMPLETE"
-            if selected == previous_selected and all_oof_ready
-            else "EXACT_NATIVE_COST_REEVALUATION_BLOCKED"
+            if checkpoint_selection_verified
+            and selected == previous_selected
+            and all_oof_ready
+            else "CHECKPOINT_SELECTION_INVALIDATED_EXACT_COST_INPUT_CHANGED"
         ),
         "optimizer_updates": 0,
         "previous_selected_p_all": previous_selected,
         "exact_selected_p_all": selected,
-        "validation_rows_with_mask_change": int(np.sum(changed_rows)),
-        "validation_specimens_with_mask_change": len(
-            set(exact_library.specimen_indices[changed_rows].tolist())
+        "provisional_frozen_checkpoint_winner": provisional_selected,
+        "checkpoint_selection_verified": checkpoint_selection_verified,
+        "validation_rows_with_mask_change": historical_changed_rows,
+        "validation_specimens_with_mask_change": historical_changed_specimens,
+        "maximum_stored_cost_delta": maximum_stored_cost_delta,
+        "original_candidate_metric_deltas": previous_audit.get(
+            "original_candidate_metric_deltas",
+            previous_audit.get("candidate_metric_deltas", []),
         ),
-        "maximum_stored_cost_delta": float(
-            np.max(np.abs(stored_costs - exact_library.costs))
+        "original_oof_metric_deltas": previous_audit.get(
+            "original_oof_metric_deltas",
+            previous_audit.get("oof_metric_deltas", []),
         ),
         "candidate_metric_deltas": candidate_deltas,
         "oof_metric_deltas": oof_deltas,
         "model_parameters_changed": False,
         "test_labels_or_metrics_used": False,
     }
+    if not checkpoint_selection_verified:
+        payload["invalidation_reason"] = (
+            "Only the previously selected checkpoints were retained. Re-evaluating "
+            "them cannot prove which training update minimizes the exact-cost "
+            "validation objective after three prefix masks changed."
+        )
+        payload["invalidated_scientific_scope"] = [
+            "W2 common-predictor checkpoint selection",
+            "W2 OOF reward-predictor checkpoint selection",
+            "W3 policy pilot",
+            "W4 GDFS pilot",
+        ]
+        expansion_path = output / "policy_expansion.json"
+        expansion = (
+            json.loads(expansion_path.read_text(encoding="utf-8"))
+            if expansion_path.is_file()
+            else {}
+        )
+        payload["resource_recovery"] = {
+            "registered_w2_replay_upper_bound_updates": 12000,
+            "optimizer_updates_remaining_lower_bound": expansion.get(
+                "optimizer_updates_remaining"
+            ),
+            "status": "RESOURCE_LIMITED",
+        }
+        _invalidate_downstream_after_checkpoint_selection(output)
     write_json(output / "cost_precision_audit.json", payload)
     _append_ledger(
         root / "results/cai_agent_v3/compute_ledger.jsonl",
@@ -1267,11 +1409,57 @@ def refresh_cost_precision_evaluations(
             "status": payload["status"],
         },
     )
-    if payload["status"] != "EXACT_NATIVE_COST_REEVALUATION_COMPLETE":
-        raise ValueError(
-            "exact native-cost reevaluation changed a W2 readiness decision"
-        )
     return payload
+
+
+def _invalidate_downstream_after_checkpoint_selection(output: Path) -> None:
+    reason = (
+        "upstream W2 checkpoint updates were selected with float32 validation "
+        "costs before exact-cost prefix masks changed"
+    )
+    specifications = (
+        (
+            "policy_pilot_gate.json",
+            "INVALIDATED_UPSTREAM_PREDICTOR_CHECKPOINT_SELECTION",
+        ),
+        ("gdfs_pilot.json", "INVALIDATED_UPSTREAM_PREDICTOR_CHECKPOINT_SELECTION"),
+    )
+    for filename, status in specifications:
+        path = output / filename
+        if not path.is_file():
+            continue
+        value = json.loads(path.read_text(encoding="utf-8"))
+        if not str(value.get("status", "")).startswith("INVALIDATED_UPSTREAM"):
+            value["status_before_invalidation"] = value.get("status")
+        value["status"] = status
+        if "passed" in value:
+            value["passed"] = False
+        value["scientific_use"] = "DIAGNOSTIC_ONLY_INVALIDATED"
+        value["invalidation_reason"] = reason
+        write_json(path, value)
+
+    expansion_path = output / "policy_expansion.json"
+    if expansion_path.is_file():
+        expansion = json.loads(expansion_path.read_text(encoding="utf-8"))
+        if "status_before_upstream_invalidation" not in expansion:
+            expansion["status_before_upstream_invalidation"] = expansion.get("status")
+        expansion["status"] = "NOT_EXECUTED_UPSTREAM_NOT_READY_AND_RESOURCE_LIMITED"
+        expansion["upstream_status"] = "PREDICTOR_NOT_READY"
+        write_json(expansion_path, expansion)
+
+
+def _checkpoint_selection_is_verified(
+    *,
+    current_changed_rows: int,
+    historical_changed_rows: int,
+    checkpoint_selection_history: str,
+) -> bool:
+    if current_changed_rows > 0:
+        return False
+    return not (
+        historical_changed_rows > 0
+        and checkpoint_selection_history != _EXACT_CHECKPOINT_SELECTION_HISTORY
+    )
 
 
 __all__ = [
