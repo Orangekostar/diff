@@ -1,0 +1,7 @@
+{
+  "actual_optimizer_updates": 1,
+  "predictor_parameters_unchanged": true,
+  "progress_rows": 1,
+  "status": "GDFS_INTERFACE_PRECHECK_PASSED",
+  "validation_episode_rows": 50
+}

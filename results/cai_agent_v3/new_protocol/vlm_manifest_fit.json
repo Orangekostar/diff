@@ -1,0 +1,38 @@
+{
+  "actor_features_path": "results/cai_agent_v3/new_protocol/vlm_actor_features_fit.csv",
+  "actor_features_sha256": "1211adee61cab9c26fd5b93cac0d77bf5de40069a751d61af647f3c661bc76d6",
+  "actual_calls_this_command": 127,
+  "cache_hits_this_command": 88,
+  "cache_path": "results/cai_agent_v3/new_protocol/vlm_surface_percepts.jsonl",
+  "cache_sha256": "d271c832ec820b062482f4791bdace2caa39c1b335d7e2deaedf4621f1d3e180",
+  "confidence_cell_counts": {
+    "0.3333333432674408": 61,
+    "0.6666666865348816": 770,
+    "1.0": 33
+  },
+  "cumulative_failed_calls": 12,
+  "cumulative_new_valid_calls": 155,
+  "cumulative_v3_calls": 167,
+  "elapsed_seconds": 1640.295929396525,
+  "model_repository": "Qwen/Qwen2.5-VL-7B-Instruct",
+  "model_revision": "cc594898137f460bfe9f0759e9844b3ce807cfb5",
+  "no_reliable_cue_count": 0,
+  "prompt_sha256": "07ba97c242f8f8ab4ec0b742d64aec231dace2455bb275e285174381c1e79ce0",
+  "render_version": "b341e99fb74d9f815be810b2e8b1d91e59f236540072577c244313c584281f40",
+  "repair_calls_this_command": 0,
+  "schema_version_surface_percept": 2,
+  "scope": "fit",
+  "specimen_count": 211,
+  "status": "REAL_FROZEN_VLM_PERCEPTION_COMPLETE",
+  "test_outcomes_used": false,
+  "vlm_available_count": 205,
+  "vlm_unavailable_count": 6,
+  "vlm_unavailable_specimen_keys": [
+    "cgtnjyggtm:q24-28",
+    "xcmzfsbd9t:c24-47",
+    "yfxyg8jm46:c16-24",
+    "ykhs7s2dck:q8-22",
+    "ykhs7s2dck:q8-35",
+    "ykhs7s2dck:q8-37"
+  ]
+}

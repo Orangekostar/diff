@@ -1,0 +1,57 @@
+{
+  "authorized_candidate_count": 276,
+  "capture_group_count": 259,
+  "domain_split_specimen_counts": {
+    "74t7kcdgkr": {
+      "TEST": 11,
+      "TRAIN": 25,
+      "VALID": 9
+    },
+    "cgtnjyggtm": {
+      "TEST": 11,
+      "TRAIN": 29,
+      "VALID": 9
+    },
+    "w68dtmpfyf": {
+      "TEST": 10,
+      "TRAIN": 25,
+      "VALID": 8
+    },
+    "xcmzfsbd9t": {
+      "TEST": 15,
+      "TRAIN": 35,
+      "VALID": 9
+    },
+    "yfxyg8jm46": {
+      "TEST": 9,
+      "TRAIN": 25,
+      "VALID": 8
+    },
+    "ykhs7s2dck": {
+      "TEST": 9,
+      "TRAIN": 22,
+      "VALID": 7
+    }
+  },
+  "excluded_specimen_count": 0,
+  "included_specimen_count": 276,
+  "label_source": "AUTHOR_WORKBOOK CAI_STRENGTH MPa",
+  "multi_specimen_capture_group_count": 17,
+  "protocol": "INTERNAL_REUSED_COHORT_V3",
+  "split_capture_group_counts": {
+    "TEST": 59,
+    "TRAIN": 152,
+    "VALID": 48
+  },
+  "split_specimen_counts": {
+    "TEST": 65,
+    "TRAIN": 161,
+    "VALID": 50
+  },
+  "status": "COHORT_READY",
+  "test_role": "INTERNAL_REUSED_COHORT_V3_NOT_UNTOUCHED_CONFIRMATION",
+  "v2_member_count": 60,
+  "v2_oof_label_crosscheck_counts": {
+    "MATCH": 276
+  }
+}

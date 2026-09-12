@@ -1,0 +1,93 @@
+{
+  "cell_token_shape": [
+    276,
+    64,
+    512
+  ],
+  "cscan_registration": "P0R_REGISTERED_CSCAN_CROP_NO_ADDITIONAL_ROTATION",
+  "diagnostic_full_token_shape": [
+    276,
+    512
+  ],
+  "diagnostic_full_tokens_for_actor": false,
+  "elapsed_seconds": 541.4637089865282,
+  "encoder": {
+    "architecture_sha256": "118174aa09d19fc2d298a6065dc6a20b54b70a2925068377db1759df046d8aef",
+    "batch_size": 32,
+    "device": "cuda:1",
+    "embedding_dimension": 512,
+    "encoder": "torchvision_resnet18",
+    "frozen": true,
+    "model_state_sha256": "cbf2e5609c31f76c589acd162bf0bd55e89d8d297c84d2c3c3334dcea0be8b50",
+    "runtime": {
+      "cuda_matmul_tf32": false,
+      "cudnn_benchmark": false,
+      "cudnn_deterministic": true,
+      "cudnn_tf32": false,
+      "deterministic_algorithms": true,
+      "float32_matmul_precision": "highest"
+    },
+    "torch_version": "2.12.1+cu130",
+    "torchvision_version": "0.27.1+cu130",
+    "transform_sha256": "4cb561ea8d1466a2c98b2b717843c19a3e7888ba6ffc715a503751226c41e3a7",
+    "weight_path": "paper_v3/assets/resnet18-f37072fd.pth",
+    "weights": "ResNet18_Weights.IMAGENET1K_V1",
+    "weights_bytes": 46830571,
+    "weights_filename": "resnet18-f37072fd.pth",
+    "weights_sha256": "f37072fd47e89c5e827621c5baffa7500819f7896bbacec160b1a16c560e07ec",
+    "weights_url": "https://download.pytorch.org/models/resnet18-f37072fd.pth"
+  },
+  "encoder_execution_root": "/home/ww/paper3/cmc_damage_inference",
+  "full_diagnostic_encoded_specimen_count": 276,
+  "newly_encoded_specimen_count": 216,
+  "schema_version": 3,
+  "shards": [
+    {
+      "bytes": 9361594,
+      "dataset_id": "74t7kcdgkr",
+      "sha256": "3b209bf44d3dd5db4e7f1ce9389f26305bcf472b59b6b275307b54b64b1f8cdf",
+      "shard_path": "results/cai_agent_v3/new_protocol/feature_bank_74t7kcdgkr.npz",
+      "specimen_count": 45
+    },
+    {
+      "bytes": 10170435,
+      "dataset_id": "cgtnjyggtm",
+      "sha256": "ed3b34419ea8b9f0469230caf39c38b1de7b7b881266adc6e2481d6aa8c5fb3a",
+      "shard_path": "results/cai_agent_v3/new_protocol/feature_bank_cgtnjyggtm.npz",
+      "specimen_count": 49
+    },
+    {
+      "bytes": 8907665,
+      "dataset_id": "w68dtmpfyf",
+      "sha256": "fc10bbc5041bd35da39f7c64e61618367cbdd4f4858ce0598fb99388619e0f04",
+      "shard_path": "results/cai_agent_v3/new_protocol/feature_bank_w68dtmpfyf.npz",
+      "specimen_count": 43
+    },
+    {
+      "bytes": 12373119,
+      "dataset_id": "xcmzfsbd9t",
+      "sha256": "9614f001a51fe68b2319d1f98fda28b1f2f272bc9e2f38494a1c2fe607edb7e7",
+      "shard_path": "results/cai_agent_v3/new_protocol/feature_bank_xcmzfsbd9t.npz",
+      "specimen_count": 59
+    },
+    {
+      "bytes": 8810074,
+      "dataset_id": "yfxyg8jm46",
+      "sha256": "c229d59cb7167b6b5cb60d86c1ce7fc82a644600167d42ed07d6850771d25ba0",
+      "shard_path": "results/cai_agent_v3/new_protocol/feature_bank_yfxyg8jm46.npz",
+      "specimen_count": 42
+    },
+    {
+      "bytes": 7874776,
+      "dataset_id": "ykhs7s2dck",
+      "sha256": "bbe03aa9fd58709b17c42c70d3bc277192a442bc73865523df4e79ea6d300c02",
+      "shard_path": "results/cai_agent_v3/new_protocol/feature_bank_ykhs7s2dck.npz",
+      "specimen_count": 38
+    }
+  ],
+  "specimen_count": 276,
+  "status": "FEATURE_BANK_READY",
+  "surface_registration": "CLOCKWISE_90_ONCE_MAX_EDGE_1024",
+  "test_target_redacted_in_feature_bank": true,
+  "v2_reused_specimen_count": 60
+}

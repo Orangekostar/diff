@@ -1,0 +1,9 @@
+{
+  "actual_optimizer_updates": 0,
+  "optimizer_update_limit": 28100,
+  "optimizer_updates_remaining": 5836,
+  "optimizer_updates_used_upper_bound": 22264,
+  "planned_expansion_updates": 9000,
+  "status": "RESOURCE_LIMITED",
+  "test_accessed": false
+}

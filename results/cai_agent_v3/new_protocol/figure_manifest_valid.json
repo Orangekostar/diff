@@ -1,0 +1,56 @@
+{
+  "action_trace_path": "results/cai_agent_v3/new_protocol/policy_valid_action_trace.csv",
+  "action_trace_sha256": "a4d8510f3795930913589c9e08ebcbc59949ab29db75d04825c6867cecf641ee",
+  "case_count": 3,
+  "maximum_allowed_cases": 3,
+  "records": [
+    {
+      "dataset_id": "74t7kcdgkr",
+      "file": "results/cai_agent_v3/new_protocol/figures/case_valid_74t7kcdgkr_c8-16.png",
+      "full_cscan_panel_is_post_hoc": true,
+      "main_method": "VLM_SPATIAL_FEEDBACK",
+      "pixel_size": [
+        3240,
+        1620
+      ],
+      "seed_panel": 1,
+      "selection_rule": "minimum SHA256(cai-agent-v3-figure|scope|domain|specimen) in each of first three sorted domains",
+      "sha256": "ffd5184098e4a5606900a80712404c2700ea6b9046b2716ded824dea371665b2",
+      "specimen_key": "74t7kcdgkr:c8-16",
+      "split": "VALID"
+    },
+    {
+      "dataset_id": "cgtnjyggtm",
+      "file": "results/cai_agent_v3/new_protocol/figures/case_valid_cgtnjyggtm_q24-48.png",
+      "full_cscan_panel_is_post_hoc": true,
+      "main_method": "VLM_SPATIAL_FEEDBACK",
+      "pixel_size": [
+        3240,
+        1620
+      ],
+      "seed_panel": 1,
+      "selection_rule": "minimum SHA256(cai-agent-v3-figure|scope|domain|specimen) in each of first three sorted domains",
+      "sha256": "d96fe70181b6cef1bf4e2684f5805524d4b17d0ea5043a4057adfd7a49856a83",
+      "specimen_key": "cgtnjyggtm:q24-48",
+      "split": "VALID"
+    },
+    {
+      "dataset_id": "w68dtmpfyf",
+      "file": "results/cai_agent_v3/new_protocol/figures/case_valid_w68dtmpfyf_q16-29.png",
+      "full_cscan_panel_is_post_hoc": true,
+      "main_method": "VLM_SPATIAL_FEEDBACK",
+      "pixel_size": [
+        3240,
+        1620
+      ],
+      "seed_panel": 1,
+      "selection_rule": "minimum SHA256(cai-agent-v3-figure|scope|domain|specimen) in each of first three sorted domains",
+      "sha256": "3120db468d4755276b1f4caa83fd48b41d318e83e64f48c1f5667937b78f1856",
+      "specimen_key": "w68dtmpfyf:q16-29",
+      "split": "VALID"
+    }
+  ],
+  "schema_version": 3,
+  "scope": "VALID",
+  "selection_uses_outcomes": false
+}

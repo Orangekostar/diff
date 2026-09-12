@@ -1,0 +1,20 @@
+{
+  "review_mode": "SELF_CHECK_WITH_EXTERNAL_NUMERIC_ORACLE",
+  "stage": "W2_PREDICTOR_AND_OOF_GATE",
+  "blocker_failures": 0,
+  "predictor_status": "PREDICTOR_READY",
+  "selected_p_all": "MEAN_SC",
+  "reward_model_status": "REWARD_MODELS_READY",
+  "cost_precision_status": "EXACT_NATIVE_COST_REEVALUATION_COMPLETE",
+  "cost_precision_optimizer_updates": 0,
+  "predictor_or_reward_model_identity_changed": false,
+  "actual_optimizer_updates_cumulative": 10753,
+  "requirements": [
+    {"requirement_id": "A01", "status": "PASS", "severity": "BLOCKER"},
+    {"requirement_id": "A04", "status": "PASS", "severity": "BLOCKER"},
+    {"requirement_id": "A06", "status": "PASS", "severity": "BLOCKER"},
+    {"requirement_id": "A07", "status": "PASS", "severity": "BLOCKER"},
+    {"requirement_id": "A11", "status": "PASS", "severity": "BLOCKER"},
+    {"requirement_id": "A12", "status": "PASS", "severity": "BLOCKER"}
+  ]
+}

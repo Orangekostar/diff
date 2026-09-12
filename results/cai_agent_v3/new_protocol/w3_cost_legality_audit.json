@@ -1,0 +1,47 @@
+{
+  "schema_version": 3,
+  "status": "FIXED_AND_INVALIDATED_PRIOR_W3_RUN",
+  "contract": "hard rollout legality uses exact native-raster cell fractions without a float32 cumulative-cost round trip",
+  "affected_reachable_state_audit": {
+    "train_physical_n": 161,
+    "train_specimens_with_a_reachable_legality_difference": 18,
+    "valid_physical_n": 50,
+    "valid_specimens_with_a_reachable_legality_difference": 5
+  },
+  "invalidated_checkpoints": [
+    {
+      "method": "VLM_SPATIAL_FEEDBACK",
+      "seed_panel": 1,
+      "sha256": "639d701431e092b0e3e1a178e07ef6f7d67c42edcb1de6aac9c5be9310054e6b",
+      "optimizer_updates": 1250
+    },
+    {
+      "method": "NO_VLM_SPATIAL_FEEDBACK",
+      "seed_panel": 1,
+      "sha256": "d3584efecf9ffde96e4de41b2367f73310961db972cd3a31a04d131643c8d9b3",
+      "optimizer_updates": 1250
+    },
+    {
+      "method": "VLM_SPATIAL_OPEN_LOOP",
+      "seed_panel": 1,
+      "sha256": "97ced5f09288b40e229837ea35125647b104613df3e6c80ae8d80e36054fb34c",
+      "optimizer_updates": 1250
+    }
+  ],
+  "interrupted_job": {
+    "method": "LEARNED_STATIC_TRUE",
+    "seed_panel": 1,
+    "optimizer_updates": null,
+    "optimizer_updates_upper_bound": 750,
+    "reason": "the original trainer had no durable per-update counter"
+  },
+  "corrected_symbols": [
+    "src/cmc_bbdm/cai_agent_v3/actor_training.py::_legal_action_mask",
+    "src/cmc_bbdm/cai_agent_v3/actor_training.py::_training_rollout_loss",
+    "src/cmc_bbdm/cai_agent_v3/gdfs_training.py::_gdfs_training_loss",
+    "src/cmc_bbdm/cai_agent_v3/gdfs_training.py::_validation_soft_hard_proxy"
+  ],
+  "regression_test": "tests/test_cai_agent_v3.py::test_policy_legality_uses_exact_native_pixel_cost_not_float32_round_trip",
+  "test_result": "35 passed",
+  "test_accessed": false
+}

@@ -1,0 +1,39 @@
+{
+  "actual_optimizer_updates": 1250,
+  "manifest": {
+    "adaptation_identity": "FROZEN_PREDICTOR_VLM_COST_GROUPED_CONCRETE_GREEDY_RELAXATION",
+    "checkpoint_path": "results/cai_agent_v3/new_protocol/models/gdfs_adapted_frozen_predictor_seed1.pt",
+    "checkpoint_sha256": "eb38225d47766666875be4d5785ed682efa89e074345de17b6a23ea3a2161716",
+    "concrete_gamma": 0.2,
+    "elapsed_seconds": 747.251412447542,
+    "method": "GDFS_ADAPTED_FROZEN_PREDICTOR_S1",
+    "parameter_count": 378978,
+    "predictor_hashes_after": {
+      "oof_fold0": "d90828548245fca3824d3b9a328c10523dfc97c34af9ef96a232eeb32276fa32",
+      "oof_fold1": "1b74fa47bc0aa8471b63da219e1ea57bbc80bae205a9f1438d48709c0ad8b4c0",
+      "oof_fold2": "d20a5e1961614e7854efd36aeb53f2c044fe0f1d0b48537d448334b7b6efc709",
+      "p_all": "232f0f9131868cbc79e663542a8bbf6d7004325a4c91d8f634054741c1e2951d"
+    },
+    "predictor_hashes_before": {
+      "oof_fold0": "d90828548245fca3824d3b9a328c10523dfc97c34af9ef96a232eeb32276fa32",
+      "oof_fold1": "1b74fa47bc0aa8471b63da219e1ea57bbc80bae205a9f1438d48709c0ad8b4c0",
+      "oof_fold2": "d20a5e1961614e7854efd36aeb53f2c044fe0f1d0b48537d448334b7b6efc709",
+      "p_all": "232f0f9131868cbc79e663542a8bbf6d7004325a4c91d8f634054741c1e2951d"
+    },
+    "predictor_parameters_unchanged": true,
+    "seed_panel": 1,
+    "selected_update": 500,
+    "selector_observation": "hard-visible only",
+    "source_commit": "e2b6f7403fdac4d217ac2ec5dea96acd60240b60",
+    "state_dict_sha256": "4363b6aec24205dfa5e02c2d43a9f940ff20f9e235d4cf5e3a1ba28a1e886183",
+    "temperature_schedule": "geometric 1.0 to 0.1",
+    "training_relaxation": "full hidden C-scan tokens only through one 64x1 Concrete group mask",
+    "training_seed": 2026091401,
+    "updates_completed": 1250,
+    "validation_acquisition": "hard",
+    "validation_hard_area_mpa": 46.33555333764619
+  },
+  "scientific_role": "learning-method diagnostic outside the three main comparisons",
+  "status": "GDFS_ADAPTER_COMPLETE",
+  "test_accessed": false
+}

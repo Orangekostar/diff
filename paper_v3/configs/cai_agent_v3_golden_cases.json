@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "trajectory_cases": [
+    {
+      "id": "LEFT_NOT_TRAPEZOID",
+      "costs": [0.0, 0.125, 0.25],
+      "predictions": [190.0, 194.0, 198.0],
+      "target": 200.0,
+      "budget": 0.25,
+      "terminal_weight": 0.25,
+      "expected_area": 8.0,
+      "expected_objective": 8.5,
+      "expected_cost_to_go": [8.5, 3.5]
+    },
+    {
+      "id": "UNUSED_BUDGET_TAIL",
+      "costs": [0.0, 0.1, 0.2],
+      "predictions": [190.0, 196.0, 198.0],
+      "target": 200.0,
+      "budget": 0.25,
+      "terminal_weight": 0.25,
+      "expected_area": 6.0,
+      "expected_objective": 6.5,
+      "expected_cost_to_go": [6.5, 2.5]
+    },
+    {
+      "id": "NO_AFFORDABLE_ACTION",
+      "costs": [0.0],
+      "predictions": [190.0],
+      "target": 200.0,
+      "budget": 0.01,
+      "terminal_weight": 0.25,
+      "expected_area": 10.0,
+      "expected_objective": 12.5,
+      "expected_cost_to_go": []
+    }
+  ]
+}

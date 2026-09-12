@@ -1,0 +1,57 @@
+{
+  "candidate_metric_deltas": [
+    {
+      "exact_full_mae_mpa": 41.14089569091797,
+      "exact_valid_area_mpa": 48.3125710093265,
+      "model": "MEAN_SC",
+      "old_full_mae_mpa": 41.14089721679687,
+      "old_valid_area_mpa": 48.3125844153495,
+      "valid_area_delta_mpa": -1.3406023001039102e-05
+    },
+    {
+      "exact_full_mae_mpa": 49.5180908203125,
+      "exact_valid_area_mpa": 55.73975906801906,
+      "model": "SPATIAL_SC",
+      "old_full_mae_mpa": 49.51810668945313,
+      "old_valid_area_mpa": 55.74039513382431,
+      "valid_area_delta_mpa": -0.0006360658052457779
+    },
+    {
+      "exact_full_mae_mpa": 59.31563354492187,
+      "exact_valid_area_mpa": 66.92088231586527,
+      "model": "SPATIAL_C",
+      "old_full_mae_mpa": 59.315149841308596,
+      "old_valid_area_mpa": 66.92075909057638,
+      "valid_area_delta_mpa": 0.00012322528888830675
+    }
+  ],
+  "exact_selected_p_all": "MEAN_SC",
+  "maximum_stored_cost_delta": 0.00036981701850891113,
+  "model_parameters_changed": false,
+  "oof_metric_deltas": [
+    {
+      "exact_valid_area_mpa": 54.632430902660936,
+      "fold": 0,
+      "old_valid_area_mpa": 54.63243257799414,
+      "valid_area_delta_mpa": -1.6753332019447953e-06
+    },
+    {
+      "exact_valid_area_mpa": 53.4263493645936,
+      "fold": 1,
+      "old_valid_area_mpa": 53.42633042899353,
+      "valid_area_delta_mpa": 1.8935600067493397e-05
+    },
+    {
+      "exact_valid_area_mpa": 48.66192263451879,
+      "fold": 2,
+      "old_valid_area_mpa": 48.661891181964556,
+      "valid_area_delta_mpa": 3.1452554232203056e-05
+    }
+  ],
+  "optimizer_updates": 0,
+  "previous_selected_p_all": "MEAN_SC",
+  "status": "EXACT_NATIVE_COST_REEVALUATION_COMPLETE",
+  "test_labels_or_metrics_used": false,
+  "validation_rows_with_mask_change": 3,
+  "validation_specimens_with_mask_change": 3
+}

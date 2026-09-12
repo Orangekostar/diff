@@ -1,0 +1,115 @@
+{
+  "candidate_manifests": [
+    {
+      "architecture": "MeanSCPredictor(\n  (surface): Linear(in_features=512, out_features=64, bias=True)\n  (cscan): Linear(in_features=512, out_features=64, bias=True)\n  (cell): Sequential(\n    (0): Linear(in_features=131, out_features=64, bias=True)\n    (1): GELU(approximate='none')\n    (2): Linear(in_features=64, out_features=64, bias=True)\n    (3): GELU(approximate='none')\n  )\n  (head): Sequential(\n    (0): Linear(in_features=129, out_features=64, bias=True)\n    (1): GELU(approximate='none')\n    (2): Linear(in_features=64, out_features=1, bias=True)\n  )\n)",
+      "checkpoint_path": "results/cai_agent_v3/new_protocol/models/predictor_mean_sc.pt",
+      "checkpoint_sha256": "1f5ee806875c98bcfcbaa3b87f393774f8adef4950fc7a73a4a6d0155b99a493",
+      "elapsed_seconds": 32.39785613398999,
+      "fit_capture_group_n": 152,
+      "fit_physical_n": 161,
+      "metrics": {
+        "center_endpoint_mae_mpa": 47.74592926025391,
+        "full_mae_mpa": 41.14089569091797,
+        "full_mse_mpa2": 2827.6855511994336,
+        "full_r2": 0.7187200586518252,
+        "full_rmse_mpa": 53.175986602971776,
+        "geometry_endpoint_mae_mpa": 46.680419006347655,
+        "train_mean_full_mse_mpa2": 10052.94650467202,
+        "train_median_full_mae_mpa": 74.48850311279297,
+        "valid_area_mpa": 48.3125710093265,
+        "zero_mae_mpa": 58.25840545654297
+      },
+      "model": "MEAN_SC",
+      "parameter_count": 86657,
+      "seed": 2026091201,
+      "selected_update": 1750,
+      "state_dict_sha256": "232f0f9131868cbc79e663542a8bbf6d7004325a4c91d8f634054741c1e2951d",
+      "updates_completed": 2000
+    },
+    {
+      "architecture": "SpatialPredictor(\n  (surface): Linear(in_features=512, out_features=48, bias=True)\n  (cscan): Linear(in_features=512, out_features=64, bias=True)\n  (cell): Sequential(\n    (0): Linear(in_features=115, out_features=128, bias=True)\n    (1): GELU(approximate='none')\n    (2): LayerNorm((128,), eps=1e-05, elementwise_affine=True, bias=True)\n  )\n  (query): Sequential(\n    (0): Linear(in_features=2, out_features=128, bias=True)\n    (1): GELU(approximate='none')\n    (2): LayerNorm((128,), eps=1e-05, elementwise_affine=True, bias=True)\n  )\n  (contextualizer): TransformerEncoder(\n    (layers): ModuleList(\n      (0-1): 2 x TransformerEncoderLayer(\n        (self_attn): MultiheadAttention(\n          (out_proj): NonDynamicallyQuantizableLinear(in_features=128, out_features=128, bias=True)\n        )\n        (linear1): Linear(in_features=128, out_features=256, bias=True)\n        (dropout): Dropout(p=0.1, inplace=False)\n        (linear2): Linear(in_features=256, out_features=128, bias=True)\n        (norm1): LayerNorm((128,), eps=1e-05, elementwise_affine=True, bias=True)\n        (norm2): LayerNorm((128,), eps=1e-05, elementwise_affine=True, bias=True)\n        (dropout1): Dropout(p=0.1, inplace=False)\n        (dropout2): Dropout(p=0.1, inplace=False)\n      )\n    )\n  )\n  (head): Sequential(\n    (0): Linear(in_features=128, out_features=128, bias=True)\n    (1): GELU(approximate='none')\n    (2): Linear(in_features=128, out_features=1, bias=True)\n  )\n)",
+      "checkpoint_path": "results/cai_agent_v3/new_protocol/models/predictor_spatial_sc.pt",
+      "checkpoint_sha256": "3e0318c844a770189c1d1844eca52d5684e67192028c9e88ff7fff58fcdf29c6",
+      "elapsed_seconds": 46.83407310396433,
+      "fit_capture_group_n": 152,
+      "fit_physical_n": 161,
+      "metrics": {
+        "center_endpoint_mae_mpa": 52.115255737304686,
+        "full_mae_mpa": 49.5180908203125,
+        "full_mse_mpa2": 4319.58358433187,
+        "full_r2": 0.5703156538271983,
+        "full_rmse_mpa": 65.72353904296291,
+        "geometry_endpoint_mae_mpa": 56.33442047119141,
+        "train_mean_full_mse_mpa2": 10052.94650467202,
+        "train_median_full_mae_mpa": 74.48850311279297,
+        "valid_area_mpa": 55.73975906801906,
+        "zero_mae_mpa": 59.29933319091797
+      },
+      "model": "SPATIAL_SC",
+      "parameter_count": 355313,
+      "seed": 2026091202,
+      "selected_update": 500,
+      "state_dict_sha256": "508a7e6c0b7e2bb45757314993392bd34e0974919026d681878d7a1734af0a70",
+      "updates_completed": 1500
+    },
+    {
+      "architecture": "SpatialPredictor(\n  (cscan): Linear(in_features=512, out_features=64, bias=True)\n  (cell): Sequential(\n    (0): Linear(in_features=67, out_features=128, bias=True)\n    (1): GELU(approximate='none')\n    (2): LayerNorm((128,), eps=1e-05, elementwise_affine=True, bias=True)\n  )\n  (query): Sequential(\n    (0): Linear(in_features=2, out_features=128, bias=True)\n    (1): GELU(approximate='none')\n    (2): LayerNorm((128,), eps=1e-05, elementwise_affine=True, bias=True)\n  )\n  (contextualizer): TransformerEncoder(\n    (layers): ModuleList(\n      (0-1): 2 x TransformerEncoderLayer(\n        (self_attn): MultiheadAttention(\n          (out_proj): NonDynamicallyQuantizableLinear(in_features=128, out_features=128, bias=True)\n        )\n        (linear1): Linear(in_features=128, out_features=256, bias=True)\n        (dropout): Dropout(p=0.1, inplace=False)\n        (linear2): Linear(in_features=256, out_features=128, bias=True)\n        (norm1): LayerNorm((128,), eps=1e-05, elementwise_affine=True, bias=True)\n        (norm2): LayerNorm((128,), eps=1e-05, elementwise_affine=True, bias=True)\n        (dropout1): Dropout(p=0.1, inplace=False)\n        (dropout2): Dropout(p=0.1, inplace=False)\n      )\n    )\n  )\n  (head): Sequential(\n    (0): Linear(in_features=128, out_features=128, bias=True)\n    (1): GELU(approximate='none')\n    (2): Linear(in_features=128, out_features=1, bias=True)\n  )\n)",
+      "checkpoint_path": "results/cai_agent_v3/new_protocol/models/predictor_spatial_c.pt",
+      "checkpoint_sha256": "0cfe827c6140c9e567a107d2cb7dd05a9f1b9639c246261e65cc9e760805b872",
+      "elapsed_seconds": 39.91986369155347,
+      "fit_capture_group_n": 152,
+      "fit_physical_n": 161,
+      "metrics": {
+        "center_endpoint_mae_mpa": 61.576109619140624,
+        "full_mae_mpa": 59.31563354492187,
+        "full_mse_mpa2": 6287.702712445502,
+        "full_r2": 0.37453984251493866,
+        "full_rmse_mpa": 79.2950358625652,
+        "geometry_endpoint_mae_mpa": 62.00086730957031,
+        "train_mean_full_mse_mpa2": 10052.94650467202,
+        "train_median_full_mae_mpa": 74.48850311279297,
+        "valid_area_mpa": 66.92088231586527,
+        "zero_mae_mpa": 74.32992889404296
+      },
+      "model": "SPATIAL_C",
+      "parameter_count": 324545,
+      "seed": 2026091203,
+      "selected_update": 500,
+      "state_dict_sha256": "fa09feb7976bafc77d994b80ceb41e9dea112b50d339d79f48ba2c1647fcb11b",
+      "updates_completed": 1500
+    }
+  ],
+  "checkpoint_selection_history": "UPDATE_SELECTED_WITH_FLOAT32_COSTS; FROZEN_CHECKPOINT_REEVALUATED_WITH_FLOAT64_COSTS",
+  "constants": {
+    "train_mean_full_mae_mpa": 77.45799786680233,
+    "train_mean_full_mse_mpa2": 10052.94650467202,
+    "train_median_full_mae_mpa": 74.48850311279297,
+    "train_median_full_mse_mpa2": 10902.021282326836,
+    "train_target_mean_mpa": 292.38298086794265,
+    "train_target_median_mpa": 263.08990478515625,
+    "train_target_std_mpa": 101.93511207018967
+  },
+  "cost_precision": "FLOAT64_NATIVE_PIXEL_FRACTIONS",
+  "gates": {
+    "MEAN_SC": {
+      "passed": true,
+      "reasons": [],
+      "status": "PREDICTOR_READY"
+    },
+    "SPATIAL_C": {
+      "passed": true,
+      "reasons": [],
+      "status": "PREDICTOR_READY"
+    },
+    "SPATIAL_SC": {
+      "passed": true,
+      "reasons": [],
+      "status": "PREDICTOR_READY"
+    }
+  },
+  "selected_p_all": "MEAN_SC",
+  "selection_rule": "MIN_VALID_PREFIX_AREA_THEN_PARAMETERS_THEN_NAME",
+  "status": "PREDICTOR_READY",
+  "test_labels_or_metrics_used": false,
+  "validation_prefix_library_sha256": "fa96a48e02802fafd793e8273298795a1a7aecb6c8f8e1c132bfcae95036809b"
+}

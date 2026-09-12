@@ -1,0 +1,32 @@
+{
+  "review_mode": "SELF_CHECK_WITH_EXTERNAL_NUMERIC_ORACLE",
+  "stage": "W3_W7_FINAL_REVIEW",
+  "blocker_failures": 0,
+  "implementation_status": "COMPLETE_THROUGH_AUTHORIZED_RESOURCE_GATE",
+  "protocol_conformance": "CONFORMANT_AFTER_NATIVE_COST_PRECISION_REMEDIATION",
+  "scientific_evidence": "SEED1_INTERNAL_VALID_PILOT_SUPPORTED; FORMAL_THREE_SEED_TEST_NOT_EXECUTED",
+  "engineering_status": "ENGINEERING_ACCURACY_CRITERION_NOT_SPECIFIED",
+  "policy_pilot_status": "POLICY_PILOT_SUPPORTED",
+  "gdfs_status": "GDFS_ADAPTER_COMPLETE",
+  "policy_expansion_status": "RESOURCE_LIMITED",
+  "test_vlm_calls": 0,
+  "test_labels_accessed": false,
+  "known_optimizer_updates": 21514,
+  "unknown_invalid_run_optimizer_updates_upper_bound": 750,
+  "optimizer_updates_used_upper_bound": 22264,
+  "optimizer_update_limit": 28100,
+  "requirements": [
+    {"requirement_id": "A01", "status": "PASS", "severity": "BLOCKER"},
+    {"requirement_id": "A02", "status": "PASS", "severity": "BLOCKER"},
+    {"requirement_id": "A03", "status": "PASS", "severity": "BLOCKER"},
+    {"requirement_id": "A04", "status": "PASS", "severity": "BLOCKER"},
+    {"requirement_id": "A05", "status": "PASS", "severity": "BLOCKER"},
+    {"requirement_id": "A06", "status": "PASS", "severity": "BLOCKER"},
+    {"requirement_id": "A07", "status": "PASS", "severity": "BLOCKER"},
+    {"requirement_id": "A08", "status": "PASS", "severity": "BLOCKER"},
+    {"requirement_id": "A09", "status": "PASS", "severity": "BLOCKER"},
+    {"requirement_id": "A10", "status": "PASS", "severity": "BLOCKER"},
+    {"requirement_id": "A11", "status": "PASS", "severity": "BLOCKER"},
+    {"requirement_id": "A12", "status": "PASS", "severity": "BLOCKER"}
+  ]
+}

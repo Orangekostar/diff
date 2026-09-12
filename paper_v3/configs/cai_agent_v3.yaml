@@ -1,0 +1,96 @@
+schema_version: 3
+stage: CAI_AGENT_V3_CONTROLLED_REUSE
+repository_base_sha: 4f2b26b0f5e1593c8883b6ab78a6f7fdf700043d
+configuration_frozen: true
+
+sources:
+  p0r_surface_manifest:
+    path: results/agentic_task_driven_nde/p0r_author_registration/surface_manifest.csv
+    sha256: e3274cacfb50b5b136e81ed3c107ac79d134e37d5d14ccc296b4e1ae2a51b44b
+  author_measurements:
+    path: results/hasebe_reference_evidence/v1/author_measurements.csv
+    sha256: ce435a86a67f661905f7ca2f3c8fc246bfbbb5baa3b366427a1a1af768d7587d
+  v2_label_crosscheck:
+    path: results/multiview/e1_audit/oof_predictions.csv
+    sha256: 1d65d9f7c40f561727329ab6b7f922973765cc57f6ae36b5a94c572b20e8b054
+  v2_trajectories:
+    path: results/cai_active_image/v2/trajectories.csv
+    sha256: 96d58069a85a71ff57276e9f6f2cbf0515f0678cec2d453382f04b8125e57dd4
+  v2_test_episodes:
+    path: results/cai_active_image/v2/test_episodes.csv
+    sha256: 09ab84786bfd9cb14b7a11fb6a75e01c68c446c1a999f4827d612bc2b05b8885
+  v2_feature_bank:
+    path: results/cai_active_image/v2/feature_bank.npz
+    sha256: d6688ca704f231ef5d6928e6b5baf5ba0bb3e459bd675c70fc36ff58d15707aa
+  vlm_cache:
+    path: results/learned_cscan_same_perception/surface_percepts.jsonl
+    sha256: 85f400119093b362e2eb76489c9ae158ecdd453ce84ad04b6dfab7f04384693e
+  vlm_manifest:
+    path: results/learned_cscan_same_perception/perception_manifest.json
+    sha256: b87b85240ee96c31b7fd9f8b46e0ca2338c7e11065fe531bd1f9e286aa942454
+  resnet18_weights:
+    path: paper_v3/assets/resnet18-f37072fd.pth
+    sha256: f37072fd47e89c5e827621c5baffa7500819f7896bbacec160b1a16c560e07ec
+
+cohort:
+  protocol: INTERNAL_REUSED_COHORT_V3
+  split_hash_prefix: cai-agent-v3
+  split_group_fractions: [0.6, 0.2, 0.2]
+  domains: [74t7kcdgkr, cgtnjyggtm, w68dtmpfyf, xcmzfsbd9t, yfxyg8jm46, ykhs7s2dck]
+
+acquisition:
+  protocol: NATIVE_8X8_FULL_CELL_V1
+  grid_shape: [8, 8]
+  early_budget: 0.0625
+  endpoint_budget: 0.25
+  report_budgets: [0.0, 0.0625, 0.125, 0.1875, 0.25]
+  first_action_rule: HIGHEST_RELIABLE_CONFIDENCE_C0_THEN_UNLOCK_V1
+
+predictors:
+  candidates: [MEAN_SC, SPATIAL_SC, SPATIAL_C]
+  updates_per_candidate: 2000
+  oof_folds: 3
+  updates_per_oof_model: 2000
+  batch_size: 32
+  validation_interval: 250
+  validation_patience: 4
+  learning_rate: 0.0003
+  weight_decay: 0.0001
+  gradient_clip: 1.0
+  huber_delta: 1.0
+  spatial_dropout: 0.1
+
+actors:
+  pilot_updates: 1250
+  static_pilot_updates: 750
+  batch_size: 16
+  seeds: [1, 2, 3]
+  entropy_start: 0.01
+  entropy_end: 0.0
+  value_weight: 0.5
+  terminal_error_weight: 0.25
+
+gdfs_adapter:
+  enabled_after_completed_w3: true
+  source_repository: https://github.com/iancovert/dynamic-selection
+  source_commit: e2b6f7403fdac4d217ac2ec5dea96acd60240b60
+  updates: 1250
+  seed: 1
+  concrete_gamma: 0.2
+  temperature_start: 1.0
+  temperature_end: 0.1
+  predictor_frozen: true
+  selector_observation: hard_visible
+  validation_acquisition: hard
+  training_relaxation: grouped_64x1_soft_mask
+
+resources:
+  gpu_count: 1
+  cpu_workers: 4
+  gpu_hour_limit: 12
+  optimizer_update_limit: 28100
+  default_device: cuda:0
+
+outputs:
+  results: results/cai_agent_v3
+  artifacts: artifacts/cai_agent_v3

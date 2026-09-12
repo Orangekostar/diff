@@ -1,0 +1,46 @@
+{
+  "actual_optimizer_updates": 5,
+  "models": [
+    {
+      "elapsed_seconds": 5.333525930531323,
+      "method": "VLM_SPATIAL_FEEDBACK",
+      "progress_rows": 1,
+      "updates_completed": 1,
+      "validation_area_mpa": 47.0356673641269,
+      "validation_episode_rows": 50
+    },
+    {
+      "elapsed_seconds": 4.184145416133106,
+      "method": "NO_VLM_SPATIAL_FEEDBACK",
+      "progress_rows": 1,
+      "updates_completed": 1,
+      "validation_area_mpa": 45.80449519467933,
+      "validation_episode_rows": 50
+    },
+    {
+      "elapsed_seconds": 4.309525196440518,
+      "method": "VLM_SPATIAL_OPEN_LOOP",
+      "progress_rows": 1,
+      "updates_completed": 1,
+      "validation_area_mpa": 45.090923314040346,
+      "validation_episode_rows": 50
+    },
+    {
+      "elapsed_seconds": 2.2551287868991494,
+      "method": "LEARNED_STATIC_TRUE",
+      "progress_rows": 1,
+      "updates_completed": 1,
+      "validation_area_mpa": 49.026643210366224,
+      "validation_episode_rows": 50
+    },
+    {
+      "elapsed_seconds": 3.3782631009817123,
+      "method": "VLM_MEAN_FEEDBACK",
+      "progress_rows": 1,
+      "updates_completed": 1,
+      "validation_area_mpa": 46.106817311179356,
+      "validation_episode_rows": 50
+    }
+  ],
+  "status": "POLICY_INTERFACE_PRECHECK_PASSED"
+}

@@ -1,0 +1,19 @@
+{
+  "review_mode": "SELF_CHECK_WITH_EXTERNAL_NUMERIC_ORACLE",
+  "stage": "W0_W1_PRE_OPTIMIZATION",
+  "blocker_failures": 0,
+  "requirements": [
+    {"requirement_id": "A01", "status": "PASS", "severity": "BLOCKER"},
+    {"requirement_id": "A02", "status": "PASS", "severity": "BLOCKER"},
+    {"requirement_id": "A03", "status": "NOT_APPLICABLE_YET", "severity": "BLOCKER"},
+    {"requirement_id": "A04", "status": "PASS", "severity": "BLOCKER"},
+    {"requirement_id": "A05", "status": "NOT_APPLICABLE_YET", "severity": "BLOCKER"},
+    {"requirement_id": "A06", "status": "PASS", "severity": "BLOCKER"},
+    {"requirement_id": "A07", "status": "PASS", "severity": "BLOCKER"},
+    {"requirement_id": "A08", "status": "PASS", "severity": "BLOCKER"},
+    {"requirement_id": "A09", "status": "PASS", "severity": "BLOCKER"},
+    {"requirement_id": "A10", "status": "NOT_APPLICABLE_YET", "severity": "BLOCKER"},
+    {"requirement_id": "A11", "status": "PASS", "severity": "BLOCKER"},
+    {"requirement_id": "A12", "status": "NOT_APPLICABLE_YET", "severity": "BLOCKER"}
+  ]
+}

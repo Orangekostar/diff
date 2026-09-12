@@ -1,0 +1,25 @@
+{
+  "actual_optimizer_updates": 3,
+  "device": "cuda:1",
+  "models": [
+    {
+      "actual_optimizer_updates": 1,
+      "finite_metrics": true,
+      "model": "MEAN_SC",
+      "parameter_count": 86657
+    },
+    {
+      "actual_optimizer_updates": 1,
+      "finite_metrics": true,
+      "model": "SPATIAL_SC",
+      "parameter_count": 355313
+    },
+    {
+      "actual_optimizer_updates": 1,
+      "finite_metrics": true,
+      "model": "SPATIAL_C",
+      "parameter_count": 324545
+    }
+  ],
+  "status": "PREDICTOR_PRECHECK_PASS"
+}

@@ -1,0 +1,33 @@
+{
+  "review_mode": "SELF_CHECK_WITH_EXTERNAL_NUMERIC_ORACLE",
+  "stage": "W3_POLICY_PILOT_GATE",
+  "status": "CORE_REVIEW_PASS",
+  "blocker_failures": 0,
+  "protocol_conformance": "CONFORMANT_AFTER_NATIVE_COST_PRECISION_REMEDIATION",
+  "scientific_evidence": "POLICY_PILOT_SUPPORTED_ON_INTERNAL_VALID_SEED1",
+  "policy_status": "POLICY_PILOT_SUPPORTED",
+  "main_validation_area_mpa": 44.6276373035391,
+  "best_nonadaptive": "GEOMETRY_SPREAD",
+  "best_nonadaptive_validation_area_mpa": 46.96714982215848,
+  "open_loop_validation_area_mpa": 44.85292681512477,
+  "no_vlm_validation_early_area_mpa": 49.89686434028377,
+  "main_validation_early_area_mpa": 48.90797545210756,
+  "test_accessed": false,
+  "exact_cost_episode_audit": {
+    "status": "PASS",
+    "episode_count": 650,
+    "action_count": 10265
+  },
+  "remediation_audit": "results/cai_agent_v3/new_protocol/w3_cost_legality_audit.json",
+  "requirements": [
+    {"requirement_id": "A03", "status": "PASS", "severity": "BLOCKER"},
+    {"requirement_id": "A05", "status": "PASS", "severity": "BLOCKER"},
+    {"requirement_id": "A06", "status": "PASS", "severity": "BLOCKER"},
+    {"requirement_id": "A07", "status": "PASS", "severity": "BLOCKER"},
+    {"requirement_id": "A08", "status": "PASS", "severity": "BLOCKER"},
+    {"requirement_id": "A09", "status": "PASS", "severity": "BLOCKER"},
+    {"requirement_id": "A10", "status": "PASS", "severity": "BLOCKER"},
+    {"requirement_id": "A11", "status": "PASS", "severity": "BLOCKER"},
+    {"requirement_id": "A12", "status": "PASS", "severity": "BLOCKER"}
+  ]
+}
