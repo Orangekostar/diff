@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "result_commit": "81ab1e367ea63a397ad62fdda680f9bb467b4f55",
+  "verified_local": "81ab1e367ea63a397ad62fdda680f9bb467b4f55",
+  "verified_upstream": "81ab1e367ea63a397ad62fdda680f9bb467b4f55",
+  "verified_remote": "81ab1e367ea63a397ad62fdda680f9bb467b4f55",
+  "branch": "research/cai-vlm-agent-v3-controlled-reuse",
+  "result_files_in_remote_tree": 55,
+  "new_png": 6,
+  "new_svg": 6,
+  "no_new_model_files": true,
+  "original_case_images": "21 existing tracked source PNG referenced without copying",
+  "worktree_clean_at_verification": true,
+  "verification": "Successful git push plus matching local/upstream/ls-remote; full result tree tracked as ordinary Git blobs",
+  "note": "Containing final documentation commit is separately verified and reported in final response; no self-referential commit loop."
+}

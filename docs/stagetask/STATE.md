@@ -99,3 +99,8 @@ W3_PILOT_HANDOFF.md、RESULTS_AND_CLAIM_BOUNDARIES.md及final review已写；剩
 
 代码83cfa90后一次真实analyze成功：650最终轨迹、10227事件、50件full原序连接，full MAE41.690010；599公共断点，q41..61与21完整锚点，两网格共840行。5000共享bootstrap仅生成一次；独立区间重算最大差1.78e-15，原五预算指标一致。147未达到/43负节省/54零分母行保留。主网格示例50%而非75%；细网格另列且反弹不平滑；全部九部分方法未达full质量。
 六类PNG/SVG/PDF已生成并通过最终视觉/PDF文字碰撞QA；引用旧21案例图不改原图。论文Results/Methods/限制/claim矩阵/图注及交接已写。最终8项新测试、Ruff通过；原DATA/W2/W3/A3未改，ledger仅追加CPU零更新一条，累计39014不变。下一步仅P5精确提交全部新证据与实际push、三方SHA和A8交付核对，不执行新实验。
+
+
+## 论文证据完整交付完成
+
+结果提交 `81ab1e367ea63a397ad62fdda680f9bb467b4f55` 已push同一v3分支；local/upstream/remote一致，55个新RUN文件含六类PNG/SVG/PDF与全部派生表已在远端树。A1–A8最终通过，final_manifest协议PASS；材料范围仍POSTHOC_FROZEN_VALID_SINGLE_SEED，不变成独立确认或工程非劣。原数据/模型/轨迹/review未改，零更新ledger追加一次，累计39014保持。没有待训练/待预算或缺失分析项。此核验记录随文档提交上传，最终包含记录的SHA在回复报告。

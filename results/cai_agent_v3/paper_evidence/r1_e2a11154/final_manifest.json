@@ -3,7 +3,7 @@
   "source_commit": "e2a1115468da6e8695321204a13fa9a5322ea809",
   "analysis_code_commit": "83cfa90",
   "implementation_status": "PAPER_EVIDENCE_ASSEMBLY_COMPLETE",
-  "protocol_conformance": "LOCAL_PASS_PENDING_REMOTE_DELIVERY",
+  "protocol_conformance": "PASS",
   "evidence_scope": "POSTHOC_FROZEN_VALID_SINGLE_SEED",
   "independent_confirmation": "NOT_PERFORMED",
   "noninferiority_status": "NO_PRESPECIFIED_MARGIN",
@@ -34,5 +34,7 @@
   "cumulative_cap": 40014,
   "analysis_processing_seconds": 1.0522455107420683,
   "incomplete_items": [],
-  "review_path": "artifacts/cai_agent_v3/paper_evidence/r1_e2a11154/REQUIREMENTS_REVIEW.json"
+  "review_path": "artifacts/cai_agent_v3/paper_evidence/r1_e2a11154/REQUIREMENTS_REVIEW.json",
+  "delivery_status": "PUSHED_AND_VERIFIED",
+  "delivery_evidence": "artifacts/cai_agent_v3/paper_evidence/r1_e2a11154/GIT_DELIVERY.json"
 }

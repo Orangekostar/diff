@@ -7,7 +7,7 @@
   "new_forwards": 0,
   "new_TEST_access": 0,
   "old_outputs_unchanged": true,
-  "delivery": "PENDING_PUSH",
+  "delivery": "PASS",
   "requirements": [
     {
       "requirement_id": "A1",
@@ -77,9 +77,11 @@
       "section": "§7/8.2",
       "symbol": "table_fragments/export/Git",
       "independent_expected": "CSV/MD/TeX match; six readable unit-correct figures; actual push",
-      "evidence": "SAVED_EVIDENCE_REVIEW.json table cells equal; FIGURE_QA.json six PDF checks + visual inspection PASS; Git push remains final pending item",
-      "status": "LOCAL_PASS_PENDING_PUSH",
+      "evidence": "SAVED_EVIDENCE_REVIEW.json table cells equal; FIGURE_QA.json six PDF checks + visual inspection PASS; Git push remains final pending item; GIT_DELIVERY.json: 55 derived RUN files and writing artifacts in pushed result commit, three-way SHA verified",
+      "status": "PASS",
       "gaps": []
     }
-  ]
+  ],
+  "result_commit": "81ab1e367ea63a397ad62fdda680f9bb467b4f55",
+  "final_code_sha": "81ab1e367ea63a397ad62fdda680f9bb467b4f55"
 }
