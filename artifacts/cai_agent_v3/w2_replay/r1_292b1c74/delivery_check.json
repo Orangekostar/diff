@@ -1,5 +1,5 @@
 {
-  "status": "LOCAL_DELIVERY_PASS",
+  "status": "DELIVERY_PASS",
   "tracked_run_files": 131,
   "candidate_weights": 44,
   "selected_weights": 6,
@@ -8,5 +8,10 @@
   "largest_file_bytes": 4398476,
   "old_results_and_actor_models_gates_unchanged": true,
   "staged_scope_pass": true,
-  "remote_status": "PENDING_PUSH"
+  "remote_status": "PUSH_VERIFIED",
+  "verified_result_commit": "215df7a33fd05208d345de6e23e814806e4ad914",
+  "local_sha": "215df7a33fd05208d345de6e23e814806e4ad914",
+  "upstream_sha": "215df7a33fd05208d345de6e23e814806e4ad914",
+  "remote_sha": "215df7a33fd05208d345de6e23e814806e4ad914",
+  "verification_scope": "Result commit with all real artifacts; subsequent documentation-only completion commit SHA reported in final response"
 }

@@ -44,3 +44,9 @@ A4/A5/A6 PASS：首250运行时证据见first_checkpoint_A_MEAN_SC.json；三模
 
 `audit_saved_evidence.py B`实际通过；同A无模型前向或优化。OOF三折真实准备均通过，但无工程误差限，不宣布工程达标或Agent收益。两PNG已视觉检查，标识VALID与TRAIN OOF，单位/图例完整、无裁切。
 规范§0–9核对：任务续接、隔离、C01–C10薄适配、34264/12000/6h授权、P0、A、条件B、结果表图、有限review均完成。§9剩余动作仅实际跟踪所有模型和push/SHA核验。历史37份权重仍缺，不伪造补齐；新44点不追认旧W2–W4。
+
+
+## Git实际交付核验
+
+A8 PASS。包含全部真实产物的结果提交 `215df7a33fd05208d345de6e23e814806e4ad914` 已实际push；local/upstream/ls-remote三方一致，核验时工作树干净。131个RUN文件全部被跟踪，包括44个参选权重、6个赢家、6个latest状态和44份同次预测NPZ，最大单文件4,398,476字节。delivery_check.json保存该次真实核验；本段随文档完成提交上传，最终文档提交SHA在回复中另报，不循环自引用。
+最终A1–A8均PASS；规范§0–9已完成到位。准备通过仅针对本次W2，未将旧W2–W4、Agent收益或工程准确度改为有效。
