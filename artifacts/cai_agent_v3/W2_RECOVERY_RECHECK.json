@@ -1,0 +1,92 @@
+{
+  "task_id": "W2_ZERO_TRAINING_RECHECK_0f18001",
+  "entry_head": "0f18001c8fa25e83b6fd3ece2fa6c7cd74e6c5ff",
+  "specified_base": "00ac8fb8800e3a3b908532d077af37f09aee90da",
+  "entry_upstream": "0e11452ac6590b3b2b694364bd4d1cef7c9315cf",
+  "actual_spec_paths": [
+    "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/docs/cai/v3/CODEX_CAI_AGENT_V3_EXECUTION.md",
+    "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/docs/cai/v3/CAI_AGENT_V3_SOURCE_BINDINGS.md",
+    "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/docs/cai/v3/CODEX_CAI_AGENT_V3_REVIEW.md",
+    "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/docs/cai/v3/metric_reference.py",
+    "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/docs/cai/v3/golden_cases.json"
+  ],
+  "source_copies_identical": true,
+  "actual_ledger_path": "results/cai_agent_v3/compute_ledger.jsonl",
+  "ledger_sha256": "4bf525b6661b968e9e0bfe1f5762d38de8fa362013e80d10ab9d4b36fbc24ee1",
+  "ledger_rows": 174,
+  "base_ledger_preserved_as_prefix": true,
+  "known_updates": 38264,
+  "unknown_upper_bound": 750,
+  "used_upper_bound": 39014,
+  "updates_by_recorded_task": {
+    "historical": 21514,
+    "W2_EXACT_COST_REPLAY_R1_292b1c74": 11000,
+    "W3_VALID_PILOT_R1_0e11452a": 5750
+  },
+  "pending_reservations": [],
+  "current_registered_cap": 40014,
+  "registered_remaining": 1000,
+  "registered_cap_source": "docs/cai/w3_valid_pilot/W3_PILOT_AUTHORIZATION.json (existing historical registration, not new authorization)",
+  "historical_checkpoint_count": 6,
+  "historical_selection_points": 43,
+  "historical_missing": 37,
+  "historical_weights_unchanged": true,
+  "historical_selection_recoverable": false,
+  "checked_model_roots": [
+    "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/new_protocol/models",
+    "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/w2_replay/r1_292b1c74/models"
+  ],
+  "new_replay_archives": [
+    {
+      "path": "results/cai_agent_v3/w2_replay/r1_292b1c74/models/selection_history/predictor_mean_sc/selection.json",
+      "status": "COMPLETE",
+      "count": 8,
+      "selected_update": 1750,
+      "validation_identity": "3d74cb3fa57f05a4821a0942c982616c30b445ba5540b069063532d598faa40d"
+    },
+    {
+      "path": "results/cai_agent_v3/w2_replay/r1_292b1c74/models/selection_history/predictor_spatial_c/selection.json",
+      "status": "COMPLETE",
+      "count": 6,
+      "selected_update": 500,
+      "validation_identity": "3d74cb3fa57f05a4821a0942c982616c30b445ba5540b069063532d598faa40d"
+    },
+    {
+      "path": "results/cai_agent_v3/w2_replay/r1_292b1c74/models/selection_history/predictor_spatial_sc/selection.json",
+      "status": "COMPLETE",
+      "count": 7,
+      "selected_update": 750,
+      "validation_identity": "3d74cb3fa57f05a4821a0942c982616c30b445ba5540b069063532d598faa40d"
+    },
+    {
+      "path": "results/cai_agent_v3/w2_replay/r1_292b1c74/models/selection_history/reward_mean_sc_fold0/selection.json",
+      "status": "COMPLETE",
+      "count": 8,
+      "selected_update": 1250,
+      "validation_identity": "3d74cb3fa57f05a4821a0942c982616c30b445ba5540b069063532d598faa40d"
+    },
+    {
+      "path": "results/cai_agent_v3/w2_replay/r1_292b1c74/models/selection_history/reward_mean_sc_fold1/selection.json",
+      "status": "COMPLETE",
+      "count": 7,
+      "selected_update": 750,
+      "validation_identity": "3d74cb3fa57f05a4821a0942c982616c30b445ba5540b069063532d598faa40d"
+    },
+    {
+      "path": "results/cai_agent_v3/w2_replay/r1_292b1c74/models/selection_history/reward_mean_sc_fold2/selection.json",
+      "status": "COMPLETE",
+      "count": 8,
+      "selected_update": 1000,
+      "validation_identity": "3d74cb3fa57f05a4821a0942c982616c30b445ba5540b069063532d598faa40d"
+    }
+  ],
+  "new_replay_inspection_scope": "metadata, schedules, ranking and candidate file SHA; no new real-model scoring; not recovery of historical missing weights",
+  "this_task_real_updates": 0,
+  "this_task_new_vlm_calls": 0,
+  "this_task_new_test_perception_or_scores": 0,
+  "this_task_new_W3_GDFS_or_seed_runs": 0,
+  "validation": "28 passed, 24 deselected in 5.73s; only targeted W2 recovery/cost/gates/resource tests",
+  "review_mode": "SELF_CHECK_WITH_EXTERNAL_NUMERIC_ORACLE",
+  "preexisting_uncommitted_ledger_preserved": true,
+  "execution_note": "First ad-hoc inspection stopped at package import after source/old-checkpoint checks; retried with existing wrapper package-path convention, no production changes."
+}

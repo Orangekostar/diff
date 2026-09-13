@@ -39,3 +39,13 @@ W2-A三个共同预测器各≤2000；A准备通过才W2-B固定三个OOF各≤2
 任务ID=W3_VALID_PILOT_R1_0e11452a。DATA=new_protocol只读，W2=w2_replay/r1_292b1c74只读，RUN=results/cai_agent_v3/w3_pilot/r1_0e11452a，ART=artifacts/cai_agent_v3/w3_pilot/r1_0e11452a。根均相对实际工作树。
 本轮五个固定seed1：主/无VLM/开环/均值各1250，真实静态750，总新增≤5750（包括失败/重试），单GPU≤21600秒，CPU≤4；累计≤40014，旧W2余额1000不挪用，历史已用33264和未知750保留。W2训练/VLM新调用/编码/GDFS/STOP/seed2、3/TEST均0。
 阶段P0接线和有限检查→训练前commit→P1固定四方法→P2五个seed1（每job首250即时核验，同次真实轨迹全部保存）→P3只读汇总与最多3个固定VALID案例→P4最终八项review、全部真实权重/轨迹/图稿/交接commit/push。正常650最终episode；正负结果均交付，不自动扩展。缺原图只阻塞图稿，资源终止保留真实未完成状态。
+
+
+## 当前生效任务：W2 零训练恢复复核（入口 0f18001）
+
+本轮以用户重新明确的 W2 exact-cost checkpoint 任务为准；上方 W2 重放和 W3 任务卡保留为既往记录，不据其启动新计算。
+实际工作树 `/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse`；分支 `research/cai-vlm-agent-v3-controlled-reuse`；入口 HEAD `0f18001c8fa25e83b6fd3ece2fa6c7cd74e6c5ff`，fetch 后 upstream `0e11452ac6590b3b2b694364bd4d1cef7c9315cf`，均为用户指定 `00ac8fb8800e3a3b908532d077af37f09aee90da` 的后代。两笔本地 W3 接线提交和现有未提交 W3 产物保留，不 reset、切换或覆盖。
+主规范：`/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/docs/cai/v3/CODEX_CAI_AGENT_V3_EXECUTION.md`。
+配套：同目录 `CAI_AGENT_V3_SOURCE_BINDINGS.md`、`CODEX_CAI_AGENT_V3_REVIEW.md`、`metric_reference.py`、`golden_cases.json`；五份已与 `/home/ww/diff/docs/CODEX_HANDOFF_CAI_AGENT_V3/` 实际来源逐字核对。未重建规范。
+阶段：已有 W2 恢复实现的零训练复核与交付。完成条件：五类定向检查、历史/新增候选分离、实际账目与复用清单更新、保留旧失效报告、本轮文档提交并实际 push 同分支核对三方 SHA。
+训练更新/VLM/TEST/W3/GDFS/扩 seed 新执行均为 0。不得因后续正式重放已有完整归档而声称找回旧 checkpoint；不得以本任务追认既有未交付 W3 科学结论。证据及当前资源见 `artifacts/cai_agent_v3/W2_RECOVERY_RECHECK.json` 和 `W2_RECOVERY_HANDOFF.md` 的本轮增补。
