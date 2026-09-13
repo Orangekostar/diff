@@ -55,3 +55,9 @@ W2-A三个共同预测器各≤2000；A准备通过才W2-B固定三个OOF各≤2
 
 本次用户再次明确继续 `/home/ww/diff/docs/W3 seed1受控实验` 的完整目标。主规范仍为本工作树 `docs/cai/w3_valid_pilot/CODEX_CAI_V3_W3_PILOT_EXECUTION.md`（绝对路径见上方W3卡），ID=W3_VALID_PILOT_R1_0e11452a，基点0e11452，训练代码0f18001；接续入口b00c2e8。W2复核记录保留为历史，不作为阻断本次已授权W3交付的理由。
 五job5750更新已全部完成，禁止重复训练或额外优化；本次P4完成保存证据/视觉QA/资源核对、最终review/交接并上传RUN全部权重/轨迹/图表。科学边界、5750与40014上限、W2余额不挪用、下游禁止均按原W3包不变。完成条件仍为原包全部交付和三方Git SHA一致，不缩成W2复核或准备状态。
+
+## 当前任务：冻结论文证据制作
+
+ID=CAI_V3_PAPER_EVIDENCE_R1_e2a11154；工作树 `/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse`，分支research/cai-vlm-agent-v3-controlled-reuse，入口HEAD/upstream=e2a1115468da6e8695321204a13fa9a5322ea809（fetch无前进）。主规范绝对路径 `/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/docs/cai/paper_evidence/CODEX_CAI_V3_PAPER_EVIDENCE_EXECUTION.md`；来源用户ZIP `/home/ww/diff/docs/paper Prepare/CAI_V3_PAPER_EVIDENCE_CODEX_PACKAGE.zip`，同目录8份包文件完整复制。
+本任务冻结DATA/W2/W3/A3，只从650轨迹与同模型50全输入NPZ产生同预算/等质量/探索性分组区间/真实过程/论文表图和文字；RUN=results/cai_agent_v3/paper_evidence/r1_e2a11154，ART=artifacts/cai_agent_v3/paper_evidence/r1_e2a11154。新训练、所有模型前向、GPU、VLM、TEST、拟合/新基线均0。CPU≤4，历史39014/40014不重置。
+阶段P0纯数值与输入绑定→P1共同预算与一次5000 bootstrap→P2共同断点/完整q网格及全部21锚点→P3真实机制和负向边界→P4六类PNG/SVG及CSV/MD/TeX和写作证据→P5八类有限review、零更新ledger、完整commit/push三方SHA。已有W3目标完成；本任务不是新训练准备，无需预算阻塞。

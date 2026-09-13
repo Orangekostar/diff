@@ -1,0 +1,146 @@
+{
+  "schema_version": 1,
+  "task_id": "CAI_V3_PAPER_EVIDENCE_R1_e2a11154",
+  "status": "TASK_SPECIFICATION_NOT_EXECUTED",
+  "authority": "Becomes the task scope when the user sends this package to Codex for execution; not evidence of completed work.",
+  "source_commit": "e2a1115468da6e8695321204a13fa9a5322ea809",
+  "repository": "Orangekostar/diff",
+  "branch": "research/cai-vlm-agent-v3-controlled-reuse",
+  "scope": "FROZEN_VALID_PAPER_EVIDENCE_ONLY",
+  "source_roots": {
+    "data": "results/cai_agent_v3/new_protocol",
+    "w2": "results/cai_agent_v3/w2_replay/r1_292b1c74",
+    "w3": "results/cai_agent_v3/w3_pilot/r1_0e11452a",
+    "w3_artifacts": "artifacts/cai_agent_v3/w3_pilot/r1_0e11452a"
+  },
+  "output_roots": {
+    "results": "results/cai_agent_v3/paper_evidence/r1_e2a11154",
+    "artifacts": "artifacts/cai_agent_v3/paper_evidence/r1_e2a11154"
+  },
+  "expected_input_counts": {
+    "valid_specimens": 50,
+    "valid_capture_groups": 48,
+    "domains": 6,
+    "final_episodes": 650,
+    "learned_seed_panels": 1
+  },
+  "main_method": "VLM_SPATIAL_FEEDBACK",
+  "methods": [
+    "CENTER_FIRST",
+    "GEOMETRY_SPREAD",
+    "SERPENTINE",
+    "RANDOM",
+    "LEARNED_STATIC_TRUE",
+    "NO_VLM_SPATIAL_FEEDBACK",
+    "VLM_MEAN_FEEDBACK",
+    "VLM_SPATIAL_FEEDBACK",
+    "VLM_SPATIAL_OPEN_LOOP"
+  ],
+  "full_reference": {
+    "name": "FULL_SCAN_P_ALL",
+    "cost_support": [
+      1.0
+    ],
+    "trajectory_area": null,
+    "pointer": "results/cai_agent_v3/w3_pilot/r1_0e11452a/p_all_saved_reference.json",
+    "fields": [
+      "full_specimen_indices",
+      "full_predictions_mpa",
+      "full_targets_mpa"
+    ],
+    "use_original_feature_index_order": true,
+    "not_industrial_best_model_claim": true
+  },
+  "costs": {
+    "unit": "UNIQUE_NATIVE_RASTER_FRACTION",
+    "primary_budgets": [
+      0.0,
+      0.0625,
+      0.125,
+      0.1875,
+      0.25
+    ],
+    "observed_partial_horizon": [
+      0.0,
+      0.25
+    ],
+    "early_end": 0.0625,
+    "secondary_grid": "UNION_OF_ALL_SAVED_IN_RANGE_EPISODE_COST_BREAKPOINTS_PLUS_ENDPOINTS",
+    "no_extrapolation_between_025_and_1": true,
+    "compare_budget_caps_and_report_actual_usage": true
+  },
+  "equal_quality": {
+    "metric": "POOLED_PHYSICAL_SPECIMEN_MAE_MPA",
+    "operation": "AGGREGATE_AT_COMMON_BUDGET_THEN_FIND_MINIMUM_OBSERVED_BUDGET",
+    "primary_grid": "ORIGINAL_FIVE_BUDGETS",
+    "secondary_grid": "COMMON_OBSERVED_EVENT_GRID",
+    "q_grid_step_mpa": 1.0,
+    "q_grid_range": "FLOOR_MIN_TO_CEIL_MAX_OF_ALL_OBSERVED_METHOD_AND_FULL_REFERENCE_MAES",
+    "anchor_targets": "ALL_FIVE_NONADAPTIVE_METHODS_AT_ALL_FOUR_NONZERO_PRIMARY_BUDGETS_AND_FULL_MAE",
+    "not_reached": null,
+    "zero_denominator_saving": null,
+    "smoothing": false,
+    "per_specimen_oracle_stop": false,
+    "noninferiority_margin": null,
+    "status": "POSTHOC_EMPIRICAL_NOT_DEPLOYABLE_STOP"
+  },
+  "uncertainty": {
+    "type": "PAIRED_CAPTURE_GROUP_BOOTSTRAP_WITHIN_FIXED_DOMAINS",
+    "replicates": 5000,
+    "seed": 2026091401,
+    "confidence": 0.95,
+    "simultaneous": false,
+    "interval_scope": "POSTHOC_SELECTED_VALID_CONDITIONAL_POINTWISE",
+    "metrics": [
+      "SAME_COST_MAE_DIFFERENCES",
+      "FOUR_EXISTING_MECHANISM_AREA_CONTRASTS"
+    ],
+    "no_selection_bias_correction_claim": true,
+    "no_new_success_gate": true
+  },
+  "permissions": {
+    "new_training_updates": 0,
+    "new_model_forwards": 0,
+    "new_vlm_calls": 0,
+    "new_test_access": 0,
+    "new_models_or_baselines": 0,
+    "gpu_jobs": 0,
+    "hardware_profiling": false,
+    "new_input_interventions": false,
+    "write_source_results": false,
+    "cpu_threads_max": 4,
+    "allowed": [
+      "READ_SAVED_PREDICTIONS",
+      "READ_SAVED_TRAJECTORIES",
+      "DERIVED_STATISTICS",
+      "EXISTING_CASE_FIGURE_PROCESSING",
+      "MANUSCRIPT_EVIDENCE_TEXT",
+      "RELATED_CODE_TESTS",
+      "GIT_COMMIT_PUSH"
+    ]
+  },
+  "cases": [
+    "74t7kcdgkr:c8-16",
+    "cgtnjyggtm:q24-48",
+    "w68dtmpfyf:q16-29"
+  ],
+  "new_summary_figure_types_max": 6,
+  "historical_compute_reference": {
+    "used_upper_bound": 39014,
+    "cap": 40014,
+    "new_allocation": 0,
+    "unspent_w2_allowance_not_reassigned": 1000
+  },
+  "scientific_scope": "POSTHOC_FROZEN_VALID_SINGLE_SEED",
+  "independent_confirmation": "NOT_PERFORMED",
+  "engineering_margin": "NOT_SPECIFIED",
+  "handoff": "CODEX_HANDOFF_CAI_V3_PAPER_EVIDENCE.md",
+  "delivery": {
+    "actual_commit_and_push": true,
+    "same_branch": true,
+    "pull_request": false,
+    "merge": false,
+    "force_push": false,
+    "three_way_sha_verification": true
+  }
+}

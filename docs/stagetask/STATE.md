@@ -90,3 +90,7 @@ W3_PILOT_HANDOFF.md、RESULTS_AND_CLAIM_BOUNDARIES.md及final review已写；剩
 ## W3完整目标交付完成
 
 结果提交 `8c78fe436c0624f0d6796e7415ae9f4668e73437` 已实际push到同一v3分支，local/upstream/remote三方一致；107个RUN文件含33权重、23候选轨迹、21PNG全部在远端Git树，核验时工作树干净。A1–A8最终通过，final_manifest协议状态PASS；科学结论仍仅VALID pilot，VLM早期负结果保留。原目标的训练/比较/图稿/交接全部完成，无待执行训练或自动下游。此记录随独立文档提交上传，最终包含记录的三方SHA在回复报告。
+
+## 论文证据任务已绑定：P0
+
+用户明确停止新实验；新包8文件已读取并复制，当前e2a11154与远端一致，W3工作树原干净。只读冻结结果，所有前向/训练/GPU为0；从独立数值预期开始实现。旧下游待授权不阻塞纯分析。
