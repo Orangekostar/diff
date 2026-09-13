@@ -71,14 +71,16 @@
       "section": "§6/9",
       "symbol": "summarize/export_figures/Git",
       "independent_expectation": "650真实最终episode、各参选归档与真实结果/图稿/远端SHA均须完成后检验",
-      "evidence": "Local PASS: 650 episodes/50 specimens/48 groups; saved_evidence_final.json + FINAL_SCOPE_REVIEW.json; 33 weights,23 candidate episode files,21 visually inspected PNG; only actual remote delivery pending",
-      "status": "BLOCKED",
-      "real_execution_pending": false,
-      "remaining": "Git push and matching local/upstream/remote plus tracked file coverage"
+      "evidence": "saved_evidence_final.json + FINAL_SCOPE_REVIEW.json + GIT_DELIVERY.json: all numeric/trajectory/model/figure checks pass; 107 RUN files including33 .pt,23 candidate traces,21 PNG exist in pushed result commit 8c78fe436c0624f0d6796e7415ae9f4668e73437",
+      "status": "PASS",
+      "real_execution_pending": false
     }
   ],
-  "final_local_review": "PASS_PENDING_GIT_DELIVERY",
+  "final_local_review": "PASS",
   "implementation_status": "EXECUTION_COMPLETE",
   "scientific_evidence": "VALID_ONLY_PILOT_NOT_INDEPENDENT_CONFIRMATION",
-  "engineering_status": "ENGINEERING_ACCURACY_CRITERION_NOT_SPECIFIED"
+  "engineering_status": "ENGINEERING_ACCURACY_CRITERION_NOT_SPECIFIED",
+  "protocol_conformance": "PASS",
+  "git_delivery_evidence": "GIT_DELIVERY.json",
+  "all_requirements_complete": true
 }

@@ -26,6 +26,7 @@
   "visual_qa": "PASS: inspected 3x7 contact sheet; true surface/cues/first action, masked measured k1/4/8/16, actual next cell/call and post-step prediction with scoring-only target; no clipping or unobserved C-scan disclosure",
   "real_model_forwards": 0,
   "optimizer_updates_for_audit": 0,
-  "git_delivery": "PENDING_PUSH",
-  "audit_note": "First bounded check passed ledger/scope/file counts, then corrected ZIP container directory mapping; no input file changed."
+  "git_delivery": "PASS",
+  "audit_note": "First bounded check passed ledger/scope/file counts, then corrected ZIP container directory mapping; no input file changed.",
+  "verified_result_commit": "8c78fe436c0624f0d6796e7415ae9f4668e73437"
 }

@@ -1,12 +1,15 @@
 {
   "VALID_physical_n": 50,
   "actual_updates": 5750,
+  "checkpoint_selection_status": "COMPLETE_ALL_23_ACTUAL_CANDIDATES",
   "completed_jobs": 5,
   "cumulative_cap": 40014,
   "cumulative_used_upper_bound": 39014,
   "downstream_authorization": "NOT_AUTHORIZED_BEYOND_W3_SEED1_VALID",
   "engineering_status": "ENGINEERING_ACCURACY_CRITERION_NOT_SPECIFIED",
+  "figures_status": "21_PNG_VISUALLY_CHECKED",
   "final_episodes": 650,
+  "git_delivery_evidence": "artifacts/cai_agent_v3/w3_pilot/r1_0e11452a/GIT_DELIVERY.json",
   "gpu_seconds_cap": 21600,
   "historical_invalidated_results": "UNCHANGED",
   "implementation_status": "EXECUTION_COMPLETE",
@@ -21,7 +24,8 @@
     "new_VLM_calls": 0,
     "seed2_or_3": 0
   },
-  "protocol_conformance": "PENDING_FINAL_REVIEW",
+  "protocol_conformance": "PASS",
+  "review_mode": "SELF_CHECK_WITH_EXTERNAL_NUMERIC_ORACLE",
   "scientific_evidence": "VALID_ONLY_PILOT_NOT_INDEPENDENT_CONFIRMATION",
   "task_id": "W3_VALID_PILOT_R1_0e11452a",
   "task_used_upper_bound": 5750
