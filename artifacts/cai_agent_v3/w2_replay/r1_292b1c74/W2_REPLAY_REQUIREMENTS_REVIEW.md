@@ -21,3 +21,26 @@ OMP_NUM_THREADS=4 OPENBLAS_NUM_THREADS=4 MKL_NUM_THREADS=4 PYTHONPATH=src python
 python -m ruff check src/cmc_bbdm/cai_agent_v3/w2_replay.py src/cmc_bbdm/cai_agent_v3/w2_replay_results.py src/cmc_bbdm/cai_agent_v3/predictor_training.py tests/test_cai_agent_v3_w2_replay.py scripts/run_cai_agent_v3_w2_replay.py
 ```
 实际输出：`9 passed in 5.85s`；`All checks passed!`。继承前轮28项结果，不运行Actor前向或全库测试。prepare-run已执行，固定输入计数/VALID身份见RUN/input_reuse_manifest.json。
+
+
+## A完成检查
+
+A4/A5/A6 PASS：首250运行时证据见first_checkpoint_A_MEAN_SC.json；三模型21份完整归档，选中权重逐tensor与对应参选文件相等。`audit_saved_evidence.py A`实际执行通过，逐状态保存预测独立复算所有参选指标，最大绝对差1.42e-14；未额外前向。见saved_evidence_review_A.json与RUN/preparation_conditions_A.csv。
+三模型准备均通过，P_all按固定A为MEAN_SC@1750。A7 PASS：实际5250，GPU209.116秒，累计27514；B自身6000可以分配，不再次要求12000。
+
+
+## B完成及最终需求核对
+
+| ID | 最终证据 | 结论 |
+|---|---|---|
+| A1 | A5250/B5750；累计33264<34264；各阶段<6000；旧Actor/gates/models文件无diff | PASS |
+| A2 | 新RUN全部产物；git diff 292b1c74 -- new_protocol为空，旧失效产物保留；入口main未跟踪docs保留 | PASS |
+| A3 | 44点保存预测独立复算，最大差1.42e-14；硬成本float64、固定VALID身份一致；未改阈值/汇总口径 | PASS |
+| A4 | 六个固定seed/结构，fit常量独立核对、参数量记录；A实际2000/1750/1500，B2000/1750/2000，均正常完成或合法早停 | PASS |
+| A5 | 44点完整归档、44份同次预测、6赢家逐tensor匹配、6latest optimizer/RNG；首250即时证据均真实 | PASS |
+| A6 | 新P_all=MEAN_SC@1750；B按新RUN证据进入，3折fit/query组隔离与常量核对通过；OOF query覆盖TRAIN161、无TEST key | PASS |
+| A7 | 旧ledger77行逐字保留；新6次预留逐一结算，无未结算新job；actual11000，累计33264，GPU323.883882秒<21600 | PASS |
+| A8 | 真实VALID/OOF表和两PNG、final_manifest/结果指针/交接齐；旧史不改、无下游操作；Git跟踪与push待最后核验 | LOCAL_PASS / REMOTE_PENDING |
+
+`audit_saved_evidence.py B`实际通过；同A无模型前向或优化。OOF三折真实准备均通过，但无工程误差限，不宣布工程达标或Agent收益。两PNG已视觉检查，标识VALID与TRAIN OOF，单位/图例完整、无裁切。
+规范§0–9核对：任务续接、隔离、C01–C10薄适配、34264/12000/6h授权、P0、A、条件B、结果表图、有限review均完成。§9剩余动作仅实际跟踪所有模型和push/SHA核验。历史37份权重仍缺，不伪造补齐；新44点不追认旧W2–W4。

@@ -1,0 +1,27 @@
+{
+  "actor_forward_or_training": 0,
+  "checkpoint_selection_status": {
+    "common_predictors": "COMPLETE",
+    "oof_predictors": "COMPLETE"
+  },
+  "cumulative_cap": 34264,
+  "cumulative_used_upper_bound": 33264,
+  "downstream_authorization": "NOT_AUTHORIZED_W2_ONLY",
+  "engineering_status": "ENGINEERING_ACCURACY_CRITERION_NOT_SPECIFIED",
+  "implementation_status": "W2_EXECUTION_COMPLETE",
+  "new_actual_updates": 11000,
+  "new_gpu_seconds": 323.88388204574585,
+  "new_gpu_seconds_cap": 21600,
+  "new_test_predictions_or_scores": 0,
+  "new_updates_cap": 12000,
+  "new_used_upper_bound": 11000,
+  "new_vlm_calls": 0,
+  "oof_readiness_path": "results/cai_agent_v3/w2_replay/r1_292b1c74/oof_readiness.json",
+  "predictor_gate_path": "results/cai_agent_v3/w2_replay/r1_292b1c74/predictor_gate.json",
+  "predictor_readiness": "PREDICTOR_READY",
+  "replay_id": "W2_EXACT_COST_REPLAY_R1_292b1c74",
+  "reward_readiness": "REWARD_MODELS_READY",
+  "scientific_scope": "W2 TRAIN/VALID only; historical W2-W4 remain invalidated",
+  "selected_p_all": "MEAN_SC",
+  "status": "W2_READY_FOR_FUTURE_POLICY_TASK"
+}

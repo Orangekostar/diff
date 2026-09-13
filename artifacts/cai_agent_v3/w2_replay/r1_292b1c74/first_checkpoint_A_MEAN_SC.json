@@ -1,0 +1,20 @@
+{
+  "archive_status": "INCOMPLETE",
+  "checkpoint": "results/cai_agent_v3/w2_replay/r1_292b1c74/models/selection_history/predictor_mean_sc/update_000250.pt",
+  "metrics": {
+    "center_endpoint_mae_mpa": 61.57710205078125,
+    "full_mae_mpa": 63.43698699951172,
+    "full_mse_mpa2": 6973.0368641007835,
+    "full_r2": 0.3063672163543918,
+    "full_rmse_mpa": 83.50471162815175,
+    "geometry_endpoint_mae_mpa": 66.13125885009765,
+    "train_mean_full_mse_mpa2": 10052.94650467202,
+    "train_median_full_mae_mpa": 74.48850311279297,
+    "valid_area_mpa": 69.31802376460773,
+    "zero_mae_mpa": 73.59941864013672
+  },
+  "run_id": "0faf6f60ea504aa591e71135bd2f6a77",
+  "sha256": "fed6865523d4ca92aef6b69231c3cfeced26424f76061c8e55f3c1a798bd88b4",
+  "status": "FIRST_250_ARCHIVE_CONFIRMED",
+  "validation_identity": "3d74cb3fa57f05a4821a0942c982616c30b445ba5540b069063532d598faa40d"
+}

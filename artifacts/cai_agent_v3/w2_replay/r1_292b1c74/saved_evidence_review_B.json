@@ -1,0 +1,36 @@
+{
+  "model_forward_calls": 0,
+  "models": [
+    {
+      "archive_candidates": 8,
+      "fit_constants_verified": true,
+      "max_metric_absolute_difference": 1.4210854715202004e-14,
+      "model": "fold0",
+      "ready": true,
+      "selected_update": 1250,
+      "weight_reload_equal": true
+    },
+    {
+      "archive_candidates": 7,
+      "fit_constants_verified": true,
+      "max_metric_absolute_difference": 0.0,
+      "model": "fold1",
+      "ready": true,
+      "selected_update": 750,
+      "weight_reload_equal": true
+    },
+    {
+      "archive_candidates": 8,
+      "fit_constants_verified": true,
+      "max_metric_absolute_difference": 1.4210854715202004e-14,
+      "model": "fold2",
+      "ready": true,
+      "selected_update": 1000,
+      "weight_reload_equal": true
+    }
+  ],
+  "optimizer_updates": 0,
+  "stage": "B",
+  "status": "SAVED_EVIDENCE_PASS",
+  "test_predictions": 0
+}

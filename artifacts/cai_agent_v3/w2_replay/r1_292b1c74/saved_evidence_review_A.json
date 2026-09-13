@@ -1,0 +1,36 @@
+{
+  "model_forward_calls": 0,
+  "models": [
+    {
+      "archive_candidates": 8,
+      "fit_constants_verified": true,
+      "max_metric_absolute_difference": 0.0,
+      "model": "MEAN_SC",
+      "ready": true,
+      "selected_update": 1750,
+      "weight_reload_equal": true
+    },
+    {
+      "archive_candidates": 7,
+      "fit_constants_verified": true,
+      "max_metric_absolute_difference": 0.0,
+      "model": "SPATIAL_SC",
+      "ready": true,
+      "selected_update": 750,
+      "weight_reload_equal": true
+    },
+    {
+      "archive_candidates": 6,
+      "fit_constants_verified": true,
+      "max_metric_absolute_difference": 1.4210854715202004e-14,
+      "model": "SPATIAL_C",
+      "ready": true,
+      "selected_update": 500,
+      "weight_reload_equal": true
+    }
+  ],
+  "optimizer_updates": 0,
+  "stage": "A",
+  "status": "SAVED_EVIDENCE_PASS",
+  "test_predictions": 0
+}

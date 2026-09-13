@@ -1,0 +1,20 @@
+{
+  "archive_status": "INCOMPLETE",
+  "checkpoint": "results/cai_agent_v3/w2_replay/r1_292b1c74/models/selection_history/predictor_spatial_sc/update_000250.pt",
+  "metrics": {
+    "center_endpoint_mae_mpa": 51.976383666992184,
+    "full_mae_mpa": 49.539172973632816,
+    "full_mse_mpa2": 3871.3293212579565,
+    "full_r2": 0.6149051000522276,
+    "full_rmse_mpa": 62.22000740322968,
+    "geometry_endpoint_mae_mpa": 55.52075714111328,
+    "train_mean_full_mse_mpa2": 10052.94650467202,
+    "train_median_full_mae_mpa": 74.48850311279297,
+    "valid_area_mpa": 56.07245927291115,
+    "zero_mae_mpa": 60.00225830078125
+  },
+  "run_id": "b488d66ef4354bc78fe4d4e139f6ed83",
+  "sha256": "31d5ff4b97c2d40d0dc0b1018244129c82a01fd4ef278cba728b7c2aa08c827f",
+  "status": "FIRST_250_ARCHIVE_CONFIRMED",
+  "validation_identity": "3d74cb3fa57f05a4821a0942c982616c30b445ba5540b069063532d598faa40d"
+}

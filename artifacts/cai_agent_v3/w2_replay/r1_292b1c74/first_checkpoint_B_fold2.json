@@ -1,0 +1,20 @@
+{
+  "archive_status": "INCOMPLETE",
+  "checkpoint": "results/cai_agent_v3/w2_replay/r1_292b1c74/models/selection_history/reward_mean_sc_fold2/update_000250.pt",
+  "metrics": {
+    "center_endpoint_mae_mpa": 62.17339569091797,
+    "full_mae_mpa": 63.37199310302734,
+    "full_mse_mpa2": 6920.845452221888,
+    "full_r2": 0.3115588817663917,
+    "full_rmse_mpa": 83.19161888208384,
+    "geometry_endpoint_mae_mpa": 65.20226776123047,
+    "train_mean_full_mse_mpa2": 10068.021896561775,
+    "train_median_full_mae_mpa": 74.37175140380859,
+    "valid_area_mpa": 69.60534606086192,
+    "zero_mae_mpa": 72.31428375244141
+  },
+  "run_id": "32da3fa59a1543819798e034ca7429ad",
+  "sha256": "8ed41203d55bd22868363cdad898a5d7c46356e708240ee2477d528159665f15",
+  "status": "FIRST_250_ARCHIVE_CONFIRMED",
+  "validation_identity": "3d74cb3fa57f05a4821a0942c982616c30b445ba5540b069063532d598faa40d"
+}

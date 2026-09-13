@@ -1,0 +1,12 @@
+{
+  "status": "LOCAL_DELIVERY_PASS",
+  "tracked_run_files": 131,
+  "candidate_weights": 44,
+  "selected_weights": 6,
+  "latest_training_states": 6,
+  "same_forward_prediction_npz": 44,
+  "largest_file_bytes": 4398476,
+  "old_results_and_actor_models_gates_unchanged": true,
+  "staged_scope_pass": true,
+  "remote_status": "PENDING_PUSH"
+}
