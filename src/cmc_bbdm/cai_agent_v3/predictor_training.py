@@ -276,6 +276,7 @@ def evaluate_predictor(
     constants: Mapping[str, float],
     *,
     device: str,
+    details_callback=None,
 ) -> dict[str, float]:
     predictions = _predict_batches(
         model,
@@ -365,6 +366,18 @@ def evaluate_predictor(
             )
         }
     )
+    if details_callback is not None:
+        details_callback({
+            "specimen_indices": library.specimen_indices,
+            "route_names": np.asarray(library.route_names),
+            "state_indices": library.state_indices,
+            "costs": library.costs,
+            "predictions_mpa": predictions,
+            "targets_mpa": bank.targets_mpa[library.specimen_indices],
+            "full_specimen_indices": valid_indices,
+            "full_predictions_mpa": full_predictions,
+            "full_targets_mpa": targets,
+        })
     return result
 
 
@@ -571,7 +584,17 @@ def _train_candidate(
     validation_interval: int = _VALIDATION_INTERVAL,
     validation_patience: int = _VALIDATION_PATIENCE,
     archive_dir: Path | None = None,
+    run_context=None,
+    job_key: str | None = None,
 ) -> tuple[nn.Module, dict[str, object], list[dict[str, object]]]:
+    bound_validation = validation_identity(bank, library) if archive_dir is not None else None
+    if run_context is not None:
+        if bound_validation != run_context.binding:
+            raise ValueError("prepared VALID identity changed before training")
+        cached = run_context.cached_job(job_key, device=device)
+        if cached is not None:
+            return cached
+        run_context.start_job(job_key)
     if archive_dir is not None:
         _require_exact_validation(bank, library, cell_costs)
     seed = _MODEL_SEEDS[name] if seed_override is None else seed_override
@@ -594,7 +617,7 @@ def _train_candidate(
         archive = CheckpointArchive(
             archive_dir,
             model_name=name,
-            validation=validation_identity(bank, library),
+            validation=bound_validation,
             max_updates=max_updates,
             validation_interval=validation_interval,
             validation_patience=validation_patience,
@@ -613,6 +636,8 @@ def _train_candidate(
     stale = 0
     started = time.perf_counter()
     for update in range(1, max_updates + 1):
+        if run_context is not None:
+            run_context.before_update(job_key, update)
         indices = _sample_specimens(rng, bank, domains, _BATCH_SIZE)
         masks = _sample_training_masks(rng, batch_size=_BATCH_SIZE)
         costs = np.sum(cell_costs[indices] * masks, axis=1).astype(np.float32)
@@ -633,7 +658,13 @@ def _train_candidate(
         torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
         optimizer.step()
         if update % validation_interval == 0 or update == max_updates:
-            metrics = evaluate_predictor(model, bank, library, constants, device=device)
+            metrics = evaluate_predictor(
+                model, bank, library, constants, device=device,
+                details_callback=(
+                    (lambda details, current_update=update: run_context.save_details(job_key, current_update, details))
+                    if run_context is not None else None
+                ),
+            )
             if archive is not None:
                 archive.record(update, model.state_dict(), metrics)
             model.train()
@@ -652,6 +683,11 @@ def _train_candidate(
                 stale = 0
             else:
                 stale += 1
+            if run_context is not None:
+                run_context.checkpoint(
+                    job_key, archive, model, optimizer, rng, update,
+                    best_update, best_area, stale,
+                )
             if stale >= validation_patience:
                 break
     if best_state is None:
@@ -687,6 +723,8 @@ def _train_candidate(
         manifest["selection_archive"] = str(archive.directory)
         manifest["validation_identity"] = archive.manifest["validation"]
         manifest["checkpoint_selection_history"] = _EXACT_CHECKPOINT_SELECTION_HISTORY
+    if run_context is not None:
+        run_context.complete_job(job_key, manifest, progress)
     return model, manifest, progress
 
 
@@ -775,15 +813,17 @@ def load_predictor_checkpoint(
 
 
 def run_predictor_candidates(
-    *, project_root: str | Path, device: str
+    *, project_root: str | Path, device: str, run_context=None
 ) -> dict[str, object]:
     root = Path(project_root).resolve(strict=True)
-    output = root / "results/cai_agent_v3/new_protocol"
-    from .actor_training import _optimizer_update_upper_bound
-
-    used = _optimizer_update_upper_bound(root / "results/cai_agent_v3/compute_ledger.jsonl")
-    if 28100 - used < 12000:
-        raise ValueError("RESOURCE_LIMITED: registered W2 replay requires up to 12000 updates")
+    output = run_context.output if run_context is not None else root / "results/cai_agent_v3/new_protocol"
+    if run_context is not None:
+        run_context.begin_stage("A")
+    else:
+        from .actor_training import _optimizer_update_upper_bound
+        used = _optimizer_update_upper_bound(root / "results/cai_agent_v3/compute_ledger.jsonl")
+        if 28100 - used < 12000:
+            raise ValueError("RESOURCE_LIMITED: registered W2 replay requires up to 12000 updates")
     model_dir = output / "models"
     model_dir.mkdir(parents=True, exist_ok=True)
     ledger = root / "results/cai_agent_v3/compute_ledger.jsonl"
@@ -799,48 +839,52 @@ def run_predictor_candidates(
         masks=library.masks,
         costs=library.costs,
     )
-    ridge_started = time.perf_counter()
-    ridge_rows = fit_ridge_diagnostics(bank, library, cell_costs)
-    write_csv(output / "ridge_diagnostics.csv", ridge_rows)
-    _append_ledger(
-        ledger,
-        {
-            "job": "fixed_ridge_diagnostics",
-            "stage": "W2",
-            "device": "cpu",
-            "cpu_workers": 4,
-            "actual_optimizer_updates": 0,
-            "ridge_fit_count": 4,
-            "elapsed_seconds": time.perf_counter() - ridge_started,
-            "status": "COMPLETED",
-            "recorded_at": _utc_now(),
-        },
-    )
+    if run_context is None:
+        ridge_started = time.perf_counter()
+        ridge_rows = fit_ridge_diagnostics(bank, library, cell_costs)
+        write_csv(output / "ridge_diagnostics.csv", ridge_rows)
+        if run_context is None:
+            _append_ledger(
+                ledger,
+                {
+                    "job": "fixed_ridge_diagnostics",
+                    "stage": "W2",
+                    "device": "cpu",
+                    "cpu_workers": 4,
+                    "actual_optimizer_updates": 0,
+                    "ridge_fit_count": 4,
+                    "elapsed_seconds": time.perf_counter() - ridge_started,
+                    "status": "COMPLETED",
+                    "recorded_at": _utc_now(),
+                },
+            )
     manifests = []
     all_progress: list[dict[str, object]] = []
     for name in ("MEAN_SC", "SPATIAL_SC", "SPATIAL_C"):
         job_started = _utc_now()
         run_id = uuid4().hex
-        _append_ledger(
-            ledger,
-            {
-                "job": f"predictor_candidate_{name}",
-                "run_id": run_id,
-                "stage": "W2",
-                "device": device,
-                "actual_optimizer_updates": 0,
-                "status": "STARTED",
-                "optimizer_update_reservation": _CANDIDATE_UPDATES,
-                "started_at": job_started,
-            },
-        )
+        if run_context is None:
+            _append_ledger(
+                ledger,
+                {
+                    "job": f"predictor_candidate_{name}",
+                    "run_id": run_id,
+                    "stage": "W2",
+                    "device": device,
+                    "actual_optimizer_updates": 0,
+                    "status": "STARTED",
+                    "optimizer_update_reservation": _CANDIDATE_UPDATES,
+                    "started_at": job_started,
+                },
+            )
         model, manifest, progress = _train_candidate(
             name, bank, library, cell_costs, constants,
             device=device,
+            run_context=run_context, job_key=name,
             archive_dir=model_dir / "selection_history" / f"predictor_{name.lower()}",
         )
         manifest["selection_archive"] = (
-            Path(manifest["selection_archive"]).relative_to(root).as_posix()
+            (root / Path(manifest["selection_archive"])).relative_to(root).as_posix()
         )
         checkpoint = model_dir / f"predictor_{name.lower()}.pt"
         torch.save(
@@ -856,21 +900,22 @@ def run_predictor_candidates(
         manifest["checkpoint_sha256"] = sha256_file(checkpoint)
         manifests.append(manifest)
         all_progress.extend(progress)
-        _append_ledger(
-            ledger,
-            {
-                "job": f"predictor_candidate_{name}",
-                "run_id": run_id,
-                "stage": "W2",
-                "device": device,
-                "actual_optimizer_updates": manifest["updates_completed"],
-                "status": "COMPLETED",
-                "started_at": job_started,
-                "ended_at": _utc_now(),
-                "elapsed_seconds": manifest["elapsed_seconds"],
-                "checkpoint_sha256": manifest["checkpoint_sha256"],
-            },
-        )
+        if run_context is None:
+            _append_ledger(
+                ledger,
+                {
+                    "job": f"predictor_candidate_{name}",
+                    "run_id": run_id,
+                    "stage": "W2",
+                    "device": device,
+                    "actual_optimizer_updates": manifest["updates_completed"],
+                    "status": "COMPLETED",
+                    "started_at": job_started,
+                    "ended_at": _utc_now(),
+                    "elapsed_seconds": manifest["elapsed_seconds"],
+                    "checkpoint_sha256": manifest["checkpoint_sha256"],
+                },
+            )
     candidates = [
         (
             str(manifest["model"]),
@@ -892,6 +937,8 @@ def run_predictor_candidates(
                 "gate_status": gate.status,
                 "gate_reasons": ";".join(gate.reasons),
                 "parameter_count": manifest["parameter_count"],
+                "fit_physical_n": manifest["fit_physical_n"],
+                "fit_capture_group_n": manifest["fit_capture_group_n"],
                 "updates_completed": manifest["updates_completed"],
                 "selected_update": manifest["selected_update"],
                 **metrics,
@@ -951,10 +998,10 @@ def _oof_assignments(bank: V3FeatureBank) -> dict[int, int]:
 
 
 def run_oof_reward_predictors(
-    *, project_root: str | Path, device: str
+    *, project_root: str | Path, device: str, run_context=None
 ) -> dict[str, object]:
     root = Path(project_root).resolve(strict=True)
-    output = root / "results/cai_agent_v3/new_protocol"
+    output = run_context.output if run_context is not None else root / "results/cai_agent_v3/new_protocol"
     gate = json.loads((output / "predictor_gate.json").read_text(encoding="utf-8"))
     if gate.get("status") != "PREDICTOR_READY" or not gate.get("selected_p_all"):
         payload = {
@@ -964,10 +1011,12 @@ def run_oof_reward_predictors(
         }
         write_json(output / "oof_readiness.json", payload)
         return payload
+    if run_context is not None:
+        run_context.begin_stage("B")
     bank = load_feature_bank(project_root=root)
     cell_costs = _cell_costs(bank)
     valid_library = build_validation_library(bank, cell_costs)
-    require_predictor_selection_evidence(root, bank, include_oof=False)
+    require_predictor_selection_evidence(root, bank, include_oof=False, output_dir=output)
     assignments = _oof_assignments(bank)
     fold_rows = [
         {
@@ -1004,19 +1053,20 @@ def run_oof_reward_predictors(
         started_at = _utc_now()
         job = f"oof_reward_predictor_{selected}_fold{fold}"
         run_id = uuid4().hex
-        _append_ledger(
-            ledger,
-            {
-                "job": job,
-                "run_id": run_id,
-                "stage": "W2",
-                "device": device,
-                "actual_optimizer_updates": 0,
-                "status": "STARTED",
-                "optimizer_update_reservation": _CANDIDATE_UPDATES,
-                "started_at": started_at,
-            },
-        )
+        if run_context is None:
+            _append_ledger(
+                ledger,
+                {
+                    "job": job,
+                    "run_id": run_id,
+                    "stage": "W2",
+                    "device": device,
+                    "actual_optimizer_updates": 0,
+                    "status": "STARTED",
+                    "optimizer_update_reservation": _CANDIDATE_UPDATES,
+                    "started_at": started_at,
+                },
+            )
         model, manifest, progress = _train_candidate(
             selected,
             bank,
@@ -1026,12 +1076,13 @@ def run_oof_reward_predictors(
             device=device,
             fit_indices=fit,
             seed_override=2026091211 + fold,
+            run_context=run_context, job_key=f"fold{fold}",
             archive_dir=(
                 model_dir / "selection_history" / f"reward_{selected.lower()}_fold{fold}"
             ),
         )
         manifest["selection_archive"] = (
-            Path(manifest["selection_archive"]).relative_to(root).as_posix()
+            (root / Path(manifest["selection_archive"])).relative_to(root).as_posix()
         )
         checkpoint = model_dir / f"reward_predictor_{selected.lower()}_fold{fold}.pt"
         torch.save(
@@ -1119,21 +1170,22 @@ def run_oof_reward_predictors(
                     "state_role": "FULL_INPUT_DIAGNOSTIC",
                 }
             )
-        _append_ledger(
-            ledger,
-            {
-                "job": job,
-                "run_id": run_id,
-                "stage": "W2",
-                "device": device,
-                "actual_optimizer_updates": manifest["updates_completed"],
-                "status": "COMPLETED",
-                "started_at": started_at,
-                "ended_at": _utc_now(),
-                "elapsed_seconds": manifest["elapsed_seconds"],
-                "checkpoint_sha256": manifest["checkpoint_sha256"],
-            },
-        )
+        if run_context is None:
+            _append_ledger(
+                ledger,
+                {
+                    "job": job,
+                    "run_id": run_id,
+                    "stage": "W2",
+                    "device": device,
+                    "actual_optimizer_updates": manifest["updates_completed"],
+                    "status": "COMPLETED",
+                    "started_at": started_at,
+                    "ended_at": _utc_now(),
+                    "elapsed_seconds": manifest["elapsed_seconds"],
+                    "checkpoint_sha256": manifest["checkpoint_sha256"],
+                },
+            )
     write_csv(output / "oof_predictor_training_progress.csv", progress_rows)
     write_csv(output / "oof_state_predictions.csv", state_rows)
     payload = {
@@ -1211,9 +1263,9 @@ def _manifest_selection_verified(
         return False
 
 
-def require_predictor_selection_evidence(root, bank, *, include_oof=True) -> None:
+def require_predictor_selection_evidence(root, bank, *, include_oof=True, output_dir=None) -> None:
     """Stop dependent optimization when actual selection evidence is unavailable."""
-    output = root / "results/cai_agent_v3/new_protocol"
+    output = Path(output_dir) if output_dir is not None else root / "results/cai_agent_v3/new_protocol"
     gate = json.loads((output / "predictor_gate.json").read_text())
     manifests = gate.get("candidate_manifests", [])
     if (

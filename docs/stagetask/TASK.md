@@ -19,3 +19,15 @@
 | R6 | artifacts/cai_agent_v3/W2_RECOVERY_HANDOFF.md | 交接复用/重放/资源请求；实际commit/push同一分支 | local/upstream/remote一致 |
 
 执行顺序：定向核对→独立失败测试→最小保存/选择修复→五类直接验证→交接与Git交付。CPU≤4；不运行正式训练预检。完成条件允许历史checkpoint未找回，但必须明确恢复缺口，代码准备与科学有效性分开报告。本轮已有授权，不重复询问。
+
+
+## 当前任务：W2正式重放（替代上方零训练执行限制）
+
+用户明确将 `/home/ww/diff/docs/W2正式重放/CAI_V3_W2_FORMAL_REPLAY_CODEX_PACKAGE.zip` 作为执行任务。
+主规范实际路径：`/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/docs/cai/w2_formal_replay/CODEX_CAI_V3_W2_REPLAY_EXECUTION.md`。
+配套同目录 `CODEX_CAI_V3_W2_REPLAY_REVIEW.md`、`W2_REPLAY_SOURCE_BINDINGS.md`、`W2_REPLAY_AUTHORIZATION.json`、`basis/`；原v3科学定义仍由 `docs/cai/v3/` 约束。
+分支不变，入口HEAD `292b1c74b27bb344af370f6738ac9c493cfd137d` 是原00ac8fb后的恢复交付；已fetch核对，无reset或覆盖。
+本轮ID `W2_EXACT_COST_REPLAY_R1_292b1c74`；RUN=`results/cai_agent_v3/w2_replay/r1_292b1c74/`，ART=`artifacts/cai_agent_v3/w2_replay/r1_292b1c74/`。
+W2-A三个共同预测器各≤2000；A准备通过才W2-B固定三个OOF各≤2000。总新增≤12000、累计≤34264（纠正旧交接34464），旧未知750保留；新增GPU活动≤21600秒，物理GPU1/logical cuda:0、CPU≤4。不做独立真实优化预检，不自动重启未完成job。
+必须训练前commit，首250步真实归档核实；全部实际参选权重/同次预测/选中快照/最小optimizer-RNG状态保留。科学参数、固定VALID和OOF组不变。任何科学未就绪也如实交付，不改门槛。
+完成条件：A真实完成，条件B完成或明确跳过/资源停止；A1–A8有限审查；实际结果、最多2PNG、全部模型、交接及任务状态commit/push同分支，三方SHA一致。W3/GDFS/Actor任何前向/VLM新增/TEST仍禁止，旧W2–W4失效报告保持。

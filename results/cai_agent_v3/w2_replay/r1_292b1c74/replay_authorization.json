@@ -1,0 +1,112 @@
+{
+  "allowed_stages": [
+    "W2_A_COMMON_PREDICTOR_REPLAY",
+    "W2_B_OOF_REPLAY_IF_A_READY",
+    "W2_REVIEW_AND_DELIVERY"
+  ],
+  "approval_identity_note": "Codex records the actual user-assigned task reference; do not invent a signature or pre-execution PASS.",
+  "blocked_stages": [
+    "W0_REPLAY",
+    "W1_REBUILD",
+    "VLM_NEW_CALLS",
+    "CNN_REENCODING",
+    "ACTOR_FORWARD_OR_TRAINING",
+    "STOP",
+    "GDFS",
+    "SEED_EXPANSION",
+    "TEST_PERCEPTION",
+    "TEST_TARGET_JOIN",
+    "TEST_SCORING"
+  ],
+  "branch": "research/cai-vlm-agent-v3-controlled-reuse",
+  "budget": {
+    "cumulative_category_caps": {
+      "common_predictors": 11000,
+      "gdfs_diagnostic": 1250,
+      "historical_optimization_prechecks": 14,
+      "main_no_vlm_open_loop_actors": 7500,
+      "mean_actor_diagnostic": 1250,
+      "oof_reward_predictors": 11750,
+      "static_actors_including_unknown_upper": 1500
+    },
+    "failures_and_retries_count": true,
+    "historical_known_updates": 21514,
+    "historical_reservation_not_released": true,
+    "historical_unknown_upper_bound": 750,
+    "historical_used_upper_bound": 22264,
+    "independent_optimization_precheck_updates": 0,
+    "max_updates_per_model": 2000,
+    "net_added_cumulative_capacity": 6164,
+    "new_cumulative_cap": 34264,
+    "new_replay_updates_cap": 12000,
+    "new_stage_a_updates_cap": 6000,
+    "new_stage_b_updates_cap": 6000,
+    "old_cumulative_cap": 28100,
+    "old_handoff_total_34464_is_arithmetic_error": true,
+    "old_remaining_lower_bound": 5836,
+    "old_remaining_w2_categories": 1250,
+    "transfer_other_unused_categories_to_w2": 4586
+  },
+  "checkpoint_output_policy": "Every actual selection time point retained; selected checkpoint reloaded from stored weights.",
+  "cost": {
+    "edges": "rint(linspace(0, native_dimension, 9))",
+    "endpoint_budget": 0.25,
+    "geometry": "NATIVE_8X8_FULL_CELL_V1",
+    "hard_cost_dtype": "float64",
+    "legality_tolerance": 1e-12,
+    "model_input_cost_dtype": "float32",
+    "selection_metric": "fixed_four_route_left_area_domain_mean_mpa"
+  },
+  "document_kind": "PROSPECTIVE_EXECUTION_AUTHORIZATION",
+  "downstream_authorization": "NOT_AUTHORIZED_W2_ONLY",
+  "effective_when": "User assigns CODEX_CAI_V3_W2_REPLAY_EXECUTION.md for execution; this file itself does not launch training.",
+  "evidence_base_sha": "292b1c74b27bb344af370f6738ac9c493cfd137d",
+  "execution_binding": {
+    "actual_starting_upper_bound": 22264,
+    "arithmetic_correction": "28100+6164=34264; old handoff 34464 retained as historical error",
+    "code_sha_at_prepare": "292b1c74b27bb344af370f6738ac9c493cfd137d",
+    "ledger_start_bytes": 16769,
+    "ledger_start_lines": 77,
+    "task_source": "User assigned CAI_V3_W2_FORMAL_REPLAY_CODEX_PACKAGE.zip"
+  },
+  "global_ledger_path": "results/cai_agent_v3/compute_ledger.jsonl",
+  "output_artifact_root": "artifacts/cai_agent_v3/w2_replay/r1_292b1c74",
+  "output_result_root": "results/cai_agent_v3/w2_replay/r1_292b1c74",
+  "preserve_historical_results": true,
+  "replay_id": "W2_EXACT_COST_REPLAY_R1_292b1c74",
+  "repository": "Orangekostar/diff",
+  "schema_version": 1,
+  "source_result_root": "results/cai_agent_v3/new_protocol",
+  "time": {
+    "covers": "All new W2 training and necessary GPU validation; not a prediction of completion time.",
+    "does_not_claim_remaining_time_under_old_cap": true,
+    "historical_gpu_seconds_recorded_lower_bound": 8383.222302116454,
+    "historical_gpu_time_incomplete": true,
+    "max_cpu_threads": 4,
+    "max_simultaneous_gpus": 1,
+    "new_gpu_seconds_cap": 21600
+  },
+  "training": {
+    "batch_size": 32,
+    "candidate_seeds": {
+      "MEAN_SC": 2026091201,
+      "SPATIAL_C": 2026091203,
+      "SPATIAL_SC": 2026091202
+    },
+    "checkpoint_improvement_tolerance": 1e-12,
+    "gradient_clip": 1,
+    "learning_rate": 0.0003,
+    "loss": "Huber delta=1 on fit-TRAIN-standardized CAI MPa",
+    "max_archive_candidates_if_no_early_stop": 48,
+    "oof_seeds": [
+      2026091211,
+      2026091212,
+      2026091213
+    ],
+    "resume_old_winners": false,
+    "structure_tie_tolerance": 1e-08,
+    "validation_interval_updates": 250,
+    "validation_patience": 4,
+    "weight_decay": 0.0001
+  }
+}
