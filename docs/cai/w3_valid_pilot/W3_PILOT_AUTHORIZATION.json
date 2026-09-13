@@ -1,0 +1,201 @@
+{
+  "task_id": "W3_VALID_PILOT_R1_0e11452a",
+  "authorization_semantics": "A proposed execution authorization that becomes operative when the user assigns this package to Codex. This file alone does not execute or claim completion.",
+  "repository": "Orangekostar/diff",
+  "branch": "research/cai-vlm-agent-v3-controlled-reuse",
+  "evidence_base_commit": "0e11452ac6590b3b2b694364bd4d1cef7c9315cf",
+  "scope": "W3_ONLY_SEED1_TRAIN_AND_VALID",
+  "roots": {
+    "data": "results/cai_agent_v3/new_protocol",
+    "predictors": "results/cai_agent_v3/w2_replay/r1_292b1c74",
+    "output": "results/cai_agent_v3/w3_pilot/r1_0e11452a",
+    "artifacts": "artifacts/cai_agent_v3/w3_pilot/r1_0e11452a",
+    "global_ledger": "results/cai_agent_v3/compute_ledger.jsonl"
+  },
+  "allowed": [
+    "thin_W3_integration",
+    "fixed_policy_VALID_forward",
+    "five_seed1_actor_training",
+    "saved_trajectory_summarization",
+    "at_most_three_VALID_case_figures",
+    "targeted_review",
+    "git_commit_and_push"
+  ],
+  "prohibited": [
+    "W2_training",
+    "new_VLM_call",
+    "CNN_encoding_or_finetuning",
+    "new_GDFS_training_or_forward",
+    "seed2_or_seed3",
+    "TEST_prediction_or_label_join",
+    "STOP",
+    "new_architecture_or_hyperparameter_search",
+    "global_test_or_security_sweep",
+    "PR_merge_force_push"
+  ],
+  "cohort": {
+    "physical_n": 276,
+    "capture_groups": 259,
+    "train_n": 161,
+    "train_groups": 152,
+    "valid_n": 50,
+    "valid_groups": 48,
+    "test_n": 65,
+    "test_groups": 59,
+    "role": "FROZEN_INTERNAL_REUSED_COHORT",
+    "test_scoring_allowed": false
+  },
+  "geometry": {
+    "name": "NATIVE_8X8_FULL_CELL_V1",
+    "hard_cost_dtype": "float64",
+    "neural_input_dtype": "float32",
+    "budget": 0.25,
+    "early_budget": 0.0625,
+    "legality_tolerance": 1e-12,
+    "free_warm_start": false
+  },
+  "models": [
+    {
+      "method": "VLM_SPATIAL_FEEDBACK",
+      "seed_panel": 1,
+      "training_seed": 2026091301,
+      "max_updates": 1250
+    },
+    {
+      "method": "NO_VLM_SPATIAL_FEEDBACK",
+      "seed_panel": 1,
+      "training_seed": 2026091302,
+      "max_updates": 1250
+    },
+    {
+      "method": "VLM_SPATIAL_OPEN_LOOP",
+      "seed_panel": 1,
+      "training_seed": 2026091303,
+      "max_updates": 1250
+    },
+    {
+      "method": "LEARNED_STATIC_TRUE",
+      "seed_panel": 1,
+      "training_seed": 2026091304,
+      "max_updates": 750
+    },
+    {
+      "method": "VLM_MEAN_FEEDBACK",
+      "seed_panel": 1,
+      "training_seed": 2026091305,
+      "max_updates": 1250
+    }
+  ],
+  "fixed_methods": [
+    "CENTER_FIRST",
+    "GEOMETRY_SPREAD",
+    "SERPENTINE",
+    "RANDOM"
+  ],
+  "random_repeat_seeds": [
+    2026091250,
+    2026091251,
+    2026091252,
+    2026091253,
+    2026091254
+  ],
+  "training": {
+    "batch_size": 16,
+    "optimizer": "AdamW",
+    "lr": 0.0003,
+    "weight_decay": 0.0001,
+    "gradient_clip": 1.0,
+    "discount_gamma": 1.0,
+    "terminal_error_weight": 0.25,
+    "value_loss_weight": 0.5,
+    "entropy_start": 0.01,
+    "entropy_end": 0.0,
+    "validation_interval": 250,
+    "patience": 4,
+    "checkpoint_improvement_tolerance": 1e-12,
+    "seed_before_model_construction": true,
+    "warm_start_old_actor": false,
+    "predictor_frozen": true
+  },
+  "evaluation": {
+    "checkpoint_metric": "domain_equal_left_error_area_mpa",
+    "endpoint_aggregation": "physical_pooled_errors_repeat_averaged_not_prediction_ensemble",
+    "cost_points": [
+      0.0,
+      0.0625,
+      0.125,
+      0.1875,
+      0.25
+    ],
+    "formal_significance_test": false,
+    "scope": "VALID_PILOT_SELECTED_ON_SAME_VALID_NOT_INDEPENDENT_CONFIRMATION"
+  },
+  "continuation_recommendation": {
+    "main_area_at_most": "0.98 * best_nonadaptive_area",
+    "main_area_strictly_below": "vlm_open_loop_area",
+    "automatically_execute_next_stage": false,
+    "vlm_early_gain_is_separately_reported": true
+  },
+  "budget": {
+    "historical_used_upper_bound": 33264,
+    "previous_global_cap": 34264,
+    "unused_previous_W2_budget": 1000,
+    "transfer_unused_W2_budget_to_W3": false,
+    "new_W3_updates_cap_including_failures": 5750,
+    "additional_global_authorization": 5750,
+    "new_global_cap": 40014,
+    "maximum_used_after_normal_W3": 39014,
+    "new_gpu_seconds_cap": 21600,
+    "old_GPU_duration_is_not_assumed_known": true,
+    "max_visible_gpus": 1,
+    "max_cpu_threads": 4,
+    "extra_real_optimizer_precheck_updates": 0
+  },
+  "cumulative_categories": {
+    "common_predictors": {
+      "cap": 11000,
+      "used_before": 10250,
+      "new_authorized": 0
+    },
+    "OOF_predictors": {
+      "cap": 11750,
+      "used_before": 11500,
+      "new_authorized": 0
+    },
+    "main_noVLM_openLoop_actors": {
+      "cap": 11250,
+      "used_before": 7500,
+      "new_authorized": 3750
+    },
+    "static_actors": {
+      "cap": 2250,
+      "used_before": 1500,
+      "new_authorized": 750
+    },
+    "mean_actor_diagnostic": {
+      "cap": 2500,
+      "used_before": 1250,
+      "new_authorized": 1250
+    },
+    "GDFS_diagnostic": {
+      "cap": 1250,
+      "used_before": 1250,
+      "new_authorized": 0
+    },
+    "historical_optimization_precheck": {
+      "cap": 14,
+      "used_before": 14,
+      "new_authorized": 0
+    }
+  },
+  "delivery": {
+    "handoff": "W3_PILOT_HANDOFF.md",
+    "all_actual_candidate_weights": true,
+    "all_same_evaluation_trajectories": true,
+    "retain_historical_invalidated_results": true,
+    "git_push_required": true,
+    "PR": false,
+    "merge": false,
+    "force_push": false
+  }
+}

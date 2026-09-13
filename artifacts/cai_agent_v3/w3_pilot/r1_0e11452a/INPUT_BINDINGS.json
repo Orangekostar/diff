@@ -1,0 +1,107 @@
+{
+  "capture_groups": {
+    "TEST": 59,
+    "TRAIN": 152,
+    "VALID": 48
+  },
+  "data_metadata": {
+    "feature_bank_index.csv": "4376a3e55af5a8fdca3ae4c4075744133badaf70c70af4999c81da5c59770890",
+    "feature_bank_manifest.json": "01c8dc791dc9f7088aa818c816e529fc9d0621de274aa31b07ac7d497c45bb12",
+    "oof_fold_manifest.csv": "d9d2f852742d7d73099efde5799ad9c323d487e61787bc3816786e3eb0c290ba",
+    "ridge_diagnostics.csv": "f257cf338a1a326340eb9e4b012d6b9c354c65eeb7c218d265910344b35dcd56",
+    "split_manifest.csv": "38439b563ce21c4c9540baa9e71dae24135af5198fbe06e6b505ff46bd045f2d",
+    "validation_prefix_library.npz": "fa96a48e02802fafd793e8273298795a1a7aecb6c8f8e1c132bfcae95036809b"
+  },
+  "data_root": "results/cai_agent_v3/new_protocol",
+  "feature_shards": [
+    {
+      "bytes": 9361594,
+      "dataset_id": "74t7kcdgkr",
+      "sha256": "3b209bf44d3dd5db4e7f1ce9389f26305bcf472b59b6b275307b54b64b1f8cdf",
+      "shard_path": "results/cai_agent_v3/new_protocol/feature_bank_74t7kcdgkr.npz",
+      "specimen_count": 45
+    },
+    {
+      "bytes": 10170435,
+      "dataset_id": "cgtnjyggtm",
+      "sha256": "ed3b34419ea8b9f0469230caf39c38b1de7b7b881266adc6e2481d6aa8c5fb3a",
+      "shard_path": "results/cai_agent_v3/new_protocol/feature_bank_cgtnjyggtm.npz",
+      "specimen_count": 49
+    },
+    {
+      "bytes": 8907665,
+      "dataset_id": "w68dtmpfyf",
+      "sha256": "fc10bbc5041bd35da39f7c64e61618367cbdd4f4858ce0598fb99388619e0f04",
+      "shard_path": "results/cai_agent_v3/new_protocol/feature_bank_w68dtmpfyf.npz",
+      "specimen_count": 43
+    },
+    {
+      "bytes": 12373119,
+      "dataset_id": "xcmzfsbd9t",
+      "sha256": "9614f001a51fe68b2319d1f98fda28b1f2f272bc9e2f38494a1c2fe607edb7e7",
+      "shard_path": "results/cai_agent_v3/new_protocol/feature_bank_xcmzfsbd9t.npz",
+      "specimen_count": 59
+    },
+    {
+      "bytes": 8810074,
+      "dataset_id": "yfxyg8jm46",
+      "sha256": "c229d59cb7167b6b5cb60d86c1ce7fc82a644600167d42ed07d6850771d25ba0",
+      "shard_path": "results/cai_agent_v3/new_protocol/feature_bank_yfxyg8jm46.npz",
+      "specimen_count": 42
+    },
+    {
+      "bytes": 7874776,
+      "dataset_id": "ykhs7s2dck",
+      "sha256": "bbe03aa9fd58709b17c42c70d3bc277192a442bc73865523df4e79ea6d300c02",
+      "shard_path": "results/cai_agent_v3/new_protocol/feature_bank_ykhs7s2dck.npz",
+      "specimen_count": 38
+    }
+  ],
+  "physical_n": {
+    "TEST": 65,
+    "TRAIN": 161,
+    "VALID": 50
+  },
+  "predictor_root": "results/cai_agent_v3/w2_replay/r1_292b1c74",
+  "predictors": [
+    {
+      "checkpoint_path": "results/cai_agent_v3/w2_replay/r1_292b1c74/models/predictor_mean_sc.pt",
+      "checkpoint_sha256": "f67e912bd5faa26ae5cff8a9a0241439797fccef8cec825f43ebe5dc9f9d57ff",
+      "model": "MEAN_SC",
+      "selected_update": 1750
+    },
+    {
+      "checkpoint_path": "results/cai_agent_v3/w2_replay/r1_292b1c74/models/reward_predictor_mean_sc_fold0.pt",
+      "checkpoint_sha256": "a376a921d7a69a3fd560a2f33b9ec569d0f152687d0d283340dc269227de083e",
+      "model": "MEAN_SC",
+      "selected_update": 1250
+    },
+    {
+      "checkpoint_path": "results/cai_agent_v3/w2_replay/r1_292b1c74/models/reward_predictor_mean_sc_fold1.pt",
+      "checkpoint_sha256": "20fb5f464c268ca7e6d4073f2a8e03239a0d4350fd8e7cba0c50ff2abe93c084",
+      "model": "MEAN_SC",
+      "selected_update": 750
+    },
+    {
+      "checkpoint_path": "results/cai_agent_v3/w2_replay/r1_292b1c74/models/reward_predictor_mean_sc_fold2.pt",
+      "checkpoint_sha256": "fd9d25b14d10cad946198ac1f2d30c43d605161a70e37b77dbb1a77b5a0ffdc1",
+      "model": "MEAN_SC",
+      "selected_update": 1000
+    }
+  ],
+  "upstream_selection_evidence": "VERIFIED_ONCE_NO_MODEL_FORWARD",
+  "validation_identity": "3d74cb3fa57f05a4821a0942c982616c30b445ba5540b069063532d598faa40d",
+  "vlm_cache_sha256": "d271c832ec820b062482f4791bdace2caa39c1b335d7e2deaedf4621f1d3e180",
+  "vlm_features_sha256": "1211adee61cab9c26fd5b93cac0d77bf5de40069a751d61af647f3c661bc76d6",
+  "vlm_manifest_sha256": "8ce5d4cf1921e3b63e3cd6193c0198cd0b423e6af0fd1b960a9baba9a1998a82",
+  "vlm_unavailable_specimen_keys": [
+    "cgtnjyggtm:q24-28",
+    "xcmzfsbd9t:c24-47",
+    "yfxyg8jm46:c16-24",
+    "ykhs7s2dck:q8-22",
+    "ykhs7s2dck:q8-35",
+    "ykhs7s2dck:q8-37"
+  ],
+  "w2_fold_identity": "d9d2f852742d7d73099efde5799ad9c323d487e61787bc3816786e3eb0c290ba",
+  "w2_input_identity": "691fcab3f4d0abe6fa55e67e7e874211f1f0d3d2791e688e6fc384a6b8ef4bb3"
+}

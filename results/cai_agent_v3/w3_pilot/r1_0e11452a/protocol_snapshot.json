@@ -1,0 +1,108 @@
+{
+  "downstream": "NOT_AUTHORIZED_BEYOND_W3_SEED1_VALID",
+  "evaluation": {
+    "checkpoint_metric": "domain_equal_left_error_area_mpa",
+    "cost_points": [
+      0.0,
+      0.0625,
+      0.125,
+      0.1875,
+      0.25
+    ],
+    "endpoint_aggregation": "physical_pooled_errors_repeat_averaged_not_prediction_ensemble",
+    "formal_significance_test": false,
+    "scope": "VALID_PILOT_SELECTED_ON_SAME_VALID_NOT_INDEPENDENT_CONFIRMATION"
+  },
+  "fixed_methods": [
+    "CENTER_FIRST",
+    "GEOMETRY_SPREAD",
+    "SERPENTINE",
+    "RANDOM"
+  ],
+  "geometry": {
+    "budget": 0.25,
+    "early_budget": 0.0625,
+    "free_warm_start": false,
+    "hard_cost_dtype": "float64",
+    "legality_tolerance": 1e-12,
+    "name": "NATIVE_8X8_FULL_CELL_V1",
+    "neural_input_dtype": "float32"
+  },
+  "identity": "c89c60162469e2379cf9b51c711694bda12e79d74a009feab61f289b1707cbab",
+  "inputs_identity": "093a0e5cf9b68283d213596e93153db0060fdd79a81a869149f0162158a3badc",
+  "models": [
+    {
+      "max_updates": 1250,
+      "method": "VLM_SPATIAL_FEEDBACK",
+      "seed_panel": 1,
+      "training_seed": 2026091301
+    },
+    {
+      "max_updates": 1250,
+      "method": "NO_VLM_SPATIAL_FEEDBACK",
+      "seed_panel": 1,
+      "training_seed": 2026091302
+    },
+    {
+      "max_updates": 1250,
+      "method": "VLM_SPATIAL_OPEN_LOOP",
+      "seed_panel": 1,
+      "training_seed": 2026091303
+    },
+    {
+      "max_updates": 750,
+      "method": "LEARNED_STATIC_TRUE",
+      "seed_panel": 1,
+      "training_seed": 2026091304
+    },
+    {
+      "max_updates": 1250,
+      "method": "VLM_MEAN_FEEDBACK",
+      "seed_panel": 1,
+      "training_seed": 2026091305
+    }
+  ],
+  "preparation_base_sha": "0e11452ac6590b3b2b694364bd4d1cef7c9315cf",
+  "random_repeat_seeds": [
+    2026091250,
+    2026091251,
+    2026091252,
+    2026091253,
+    2026091254
+  ],
+  "single_visible_gpu": true,
+  "source_code_sha256": {
+    "actor_selection.py": "e1fce4baa0b1f9937cd6b964b4da9797c0540643482a84c85f9afba912a7ef2d",
+    "actor_training.py": "09c10cf064a90b52fca5b4bab1b453d4eb86a3f2e9faddf8c11eed43f89cb5fb",
+    "metrics.py": "a4fbb45cdbaa7e7245ba9af408cfca478b4f01654b19c53894d78f1fcd608620",
+    "models.py": "e4528d49c64f45cb7de6cf2da435ebb6cdbbff00072f30e486f84f320103c3f3",
+    "policy.py": "730abb7cf34dc896e91fad9e21c9b5a0b93217722b025211384c0879a974bea8",
+    "w3_pilot.py": "6c55f05c8e6ee4e5fcac974d21901cd28fafab799a3d84a62b0b48f05004c3e0"
+  },
+  "task_id": "W3_VALID_PILOT_R1_0e11452a",
+  "torch_threads": 4,
+  "training": {
+    "batch_size": 16,
+    "checkpoint_improvement_tolerance": 1e-12,
+    "discount_gamma": 1.0,
+    "entropy_end": 0.0,
+    "entropy_start": 0.01,
+    "gradient_clip": 1.0,
+    "lr": 0.0003,
+    "optimizer": "AdamW",
+    "patience": 4,
+    "predictor_frozen": true,
+    "seed_before_model_construction": true,
+    "terminal_error_weight": 0.25,
+    "validation_interval": 250,
+    "value_loss_weight": 0.5,
+    "warm_start_old_actor": false,
+    "weight_decay": 0.0001
+  },
+  "versions": {
+    "cuda": "13.0",
+    "numpy": "2.5.1",
+    "python": "3.13.13",
+    "torch": "2.12.1+cu130"
+  }
+}

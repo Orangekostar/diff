@@ -1,0 +1,208 @@
+{
+  "allowed": [
+    "thin_W3_integration",
+    "fixed_policy_VALID_forward",
+    "five_seed1_actor_training",
+    "saved_trajectory_summarization",
+    "at_most_three_VALID_case_figures",
+    "targeted_review",
+    "git_commit_and_push"
+  ],
+  "authorization_semantics": "A proposed execution authorization that becomes operative when the user assigns this package to Codex. This file alone does not execute or claim completion.",
+  "branch": "research/cai-vlm-agent-v3-controlled-reuse",
+  "budget": {
+    "additional_global_authorization": 5750,
+    "extra_real_optimizer_precheck_updates": 0,
+    "historical_used_upper_bound": 33264,
+    "max_cpu_threads": 4,
+    "max_visible_gpus": 1,
+    "maximum_used_after_normal_W3": 39014,
+    "new_W3_updates_cap_including_failures": 5750,
+    "new_global_cap": 40014,
+    "new_gpu_seconds_cap": 21600,
+    "old_GPU_duration_is_not_assumed_known": true,
+    "previous_global_cap": 34264,
+    "transfer_unused_W2_budget_to_W3": false,
+    "unused_previous_W2_budget": 1000
+  },
+  "cohort": {
+    "capture_groups": 259,
+    "physical_n": 276,
+    "role": "FROZEN_INTERNAL_REUSED_COHORT",
+    "test_groups": 59,
+    "test_n": 65,
+    "test_scoring_allowed": false,
+    "train_groups": 152,
+    "train_n": 161,
+    "valid_groups": 48,
+    "valid_n": 50
+  },
+  "continuation_recommendation": {
+    "automatically_execute_next_stage": false,
+    "main_area_at_most": "0.98 * best_nonadaptive_area",
+    "main_area_strictly_below": "vlm_open_loop_area",
+    "vlm_early_gain_is_separately_reported": true
+  },
+  "cumulative_categories": {
+    "GDFS_diagnostic": {
+      "cap": 1250,
+      "new_authorized": 0,
+      "used_before": 1250
+    },
+    "OOF_predictors": {
+      "cap": 11750,
+      "new_authorized": 0,
+      "used_before": 11500
+    },
+    "common_predictors": {
+      "cap": 11000,
+      "new_authorized": 0,
+      "used_before": 10250
+    },
+    "historical_optimization_precheck": {
+      "cap": 14,
+      "new_authorized": 0,
+      "used_before": 14
+    },
+    "main_noVLM_openLoop_actors": {
+      "cap": 11250,
+      "new_authorized": 3750,
+      "used_before": 7500
+    },
+    "mean_actor_diagnostic": {
+      "cap": 2500,
+      "new_authorized": 1250,
+      "used_before": 1250
+    },
+    "static_actors": {
+      "cap": 2250,
+      "new_authorized": 750,
+      "used_before": 1500
+    }
+  },
+  "delivery": {
+    "PR": false,
+    "all_actual_candidate_weights": true,
+    "all_same_evaluation_trajectories": true,
+    "force_push": false,
+    "git_push_required": true,
+    "handoff": "W3_PILOT_HANDOFF.md",
+    "merge": false,
+    "retain_historical_invalidated_results": true
+  },
+  "evaluation": {
+    "checkpoint_metric": "domain_equal_left_error_area_mpa",
+    "cost_points": [
+      0.0,
+      0.0625,
+      0.125,
+      0.1875,
+      0.25
+    ],
+    "endpoint_aggregation": "physical_pooled_errors_repeat_averaged_not_prediction_ensemble",
+    "formal_significance_test": false,
+    "scope": "VALID_PILOT_SELECTED_ON_SAME_VALID_NOT_INDEPENDENT_CONFIRMATION"
+  },
+  "evidence_base_commit": "0e11452ac6590b3b2b694364bd4d1cef7c9315cf",
+  "execution_binding": {
+    "actual_starting_upper_bound": 33264,
+    "ledger_start_bytes": 30939,
+    "ledger_start_lines": 137,
+    "protocol_identity": "c89c60162469e2379cf9b51c711694bda12e79d74a009feab61f289b1707cbab",
+    "task_source": "/home/ww/diff/docs/W3 seed1\u53d7\u63a7\u5b9e\u9a8c/CAI_V3_W3_VALID_PILOT_CODEX_PACKAGE.zip"
+  },
+  "fixed_methods": [
+    "CENTER_FIRST",
+    "GEOMETRY_SPREAD",
+    "SERPENTINE",
+    "RANDOM"
+  ],
+  "geometry": {
+    "budget": 0.25,
+    "early_budget": 0.0625,
+    "free_warm_start": false,
+    "hard_cost_dtype": "float64",
+    "legality_tolerance": 1e-12,
+    "name": "NATIVE_8X8_FULL_CELL_V1",
+    "neural_input_dtype": "float32"
+  },
+  "models": [
+    {
+      "max_updates": 1250,
+      "method": "VLM_SPATIAL_FEEDBACK",
+      "seed_panel": 1,
+      "training_seed": 2026091301
+    },
+    {
+      "max_updates": 1250,
+      "method": "NO_VLM_SPATIAL_FEEDBACK",
+      "seed_panel": 1,
+      "training_seed": 2026091302
+    },
+    {
+      "max_updates": 1250,
+      "method": "VLM_SPATIAL_OPEN_LOOP",
+      "seed_panel": 1,
+      "training_seed": 2026091303
+    },
+    {
+      "max_updates": 750,
+      "method": "LEARNED_STATIC_TRUE",
+      "seed_panel": 1,
+      "training_seed": 2026091304
+    },
+    {
+      "max_updates": 1250,
+      "method": "VLM_MEAN_FEEDBACK",
+      "seed_panel": 1,
+      "training_seed": 2026091305
+    }
+  ],
+  "prohibited": [
+    "W2_training",
+    "new_VLM_call",
+    "CNN_encoding_or_finetuning",
+    "new_GDFS_training_or_forward",
+    "seed2_or_seed3",
+    "TEST_prediction_or_label_join",
+    "STOP",
+    "new_architecture_or_hyperparameter_search",
+    "global_test_or_security_sweep",
+    "PR_merge_force_push"
+  ],
+  "random_repeat_seeds": [
+    2026091250,
+    2026091251,
+    2026091252,
+    2026091253,
+    2026091254
+  ],
+  "repository": "Orangekostar/diff",
+  "roots": {
+    "artifacts": "artifacts/cai_agent_v3/w3_pilot/r1_0e11452a",
+    "data": "results/cai_agent_v3/new_protocol",
+    "global_ledger": "results/cai_agent_v3/compute_ledger.jsonl",
+    "output": "results/cai_agent_v3/w3_pilot/r1_0e11452a",
+    "predictors": "results/cai_agent_v3/w2_replay/r1_292b1c74"
+  },
+  "scope": "W3_ONLY_SEED1_TRAIN_AND_VALID",
+  "task_id": "W3_VALID_PILOT_R1_0e11452a",
+  "training": {
+    "batch_size": 16,
+    "checkpoint_improvement_tolerance": 1e-12,
+    "discount_gamma": 1.0,
+    "entropy_end": 0.0,
+    "entropy_start": 0.01,
+    "gradient_clip": 1.0,
+    "lr": 0.0003,
+    "optimizer": "AdamW",
+    "patience": 4,
+    "predictor_frozen": true,
+    "seed_before_model_construction": true,
+    "terminal_error_weight": 0.25,
+    "validation_interval": 250,
+    "value_loss_weight": 0.5,
+    "warm_start_old_actor": false,
+    "weight_decay": 0.0001
+  }
+}

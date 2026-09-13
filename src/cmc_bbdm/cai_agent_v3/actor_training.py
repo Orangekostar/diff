@@ -6,6 +6,7 @@ import copy
 import hashlib
 import json
 import math
+import random
 import time
 from collections import defaultdict
 from pathlib import Path
@@ -161,6 +162,19 @@ def _actor(method: str, *, target_mean: float, target_scale: float) -> nn.Module
     if method == "VLM_MEAN_FEEDBACK":
         return MeanFeedbackActor(**kwargs)
     raise ValueError(f"unknown Actor method: {method}")
+
+
+def seeded_actor(method, *, target_mean, target_scale, seed, device):
+    """Set every used RNG before any parameter initialization."""
+    random.seed(seed)
+    np.random.seed(seed % (2**32))
+    rng = np.random.default_rng(seed)
+    torch.manual_seed(seed)
+    if str(device).startswith("cuda"):
+        torch.cuda.manual_seed_all(seed)
+    model = _actor(method, target_mean=target_mean, target_scale=target_scale).to(device)
+    model.train()
+    return model, rng
 
 
 def _uses_vlm(method: str) -> bool:
@@ -398,6 +412,7 @@ def _evaluate_one(
     device: str,
     random_seed: int = 0,
     target_mpa: float | None = None,
+    action_callback=None,
 ) -> tuple[float, tuple[int, ...], tuple[float, ...], tuple[float, ...]]:
     surface = torch.from_numpy(bank.surface_tokens[specimen : specimen + 1]).to(device)
     cscan = torch.from_numpy(bank.cscan_tokens[specimen : specimen + 1]).to(device)
@@ -424,12 +439,15 @@ def _evaluate_one(
         else ()
     )
     cursor = 0
+    actor_calls = 0
     while True:
         legal_np = (~measured.cpu().numpy()[0]) & (
             costs[-1] + cell_costs[specimen] <= _ENDPOINT_BUDGET + 1e-12
         )
         if not bool(legal_np.any()):
             break
+        reason = "FIXED_ORDER"
+        proposal_np = legal_np
         if actor is None:
             while cursor < len(order) and not legal_np[order[cursor]]:
                 cursor += 1
@@ -439,7 +457,7 @@ def _evaluate_one(
             cursor += 1
         else:
             legal = torch.from_numpy(legal_np[None, :]).to(device)
-            proposal, _ = vlm_first_action_mask(
+            proposal, reasons = vlm_first_action_mask(
                 legal=legal,
                 use_vlm=_uses_vlm(method),
                 action_count=torch.tensor([len(cells)], device=device),
@@ -448,6 +466,9 @@ def _evaluate_one(
                 available=available,
                 no_reliable=no_reliable,
             )
+            reason = reasons[0]
+            proposal_np = proposal[0].cpu().numpy()
+            actor_calls += 1
             with torch.inference_mode():
                 scores, _ = _actor_forward(
                     actor,
@@ -479,6 +500,21 @@ def _evaluate_one(
                 )[0]
             )
         predictions.append(prediction)
+        if action_callback is not None:
+            pixel_total = int(np.prod(bank.native_shapes[specimen]))
+            action_callback({
+                "actor_call_index": actor_calls if actor is not None else None,
+                "action_index": len(cells), "cell": cell,
+                "visible_cells_before": cells[:-1].copy(),
+                "environment_legal": "".join("1" if x else "0" for x in legal_np),
+                "proposal_legal": "".join("1" if x else "0" for x in proposal_np),
+                "c0_reason": reason,
+                "before_cost": costs[-2], "after_cost": costs[-1],
+                "new_pixels": round(float(cell_costs[specimen, cell]) * pixel_total),
+                "cumulative_pixels": round(costs[-1] * pixel_total),
+                "before_prediction_mpa": predictions[-2],
+                "after_prediction_mpa": prediction,
+            })
     target = (
         float(bank.targets_mpa[specimen]) if target_mpa is None else float(target_mpa)
     )
@@ -499,6 +535,7 @@ def evaluate_policy(
     device: str,
     split: str = "VALID",
     targets_mpa: np.ndarray | None = None,
+    execution_identity: dict | None = None,
 ) -> tuple[float, list[dict[str, object]]]:
     target_values = bank.targets_mpa if targets_mpa is None else np.asarray(targets_mpa)
     if target_values.shape != (len(bank.specimen_keys),):
@@ -510,6 +547,7 @@ def evaluate_policy(
         if not math.isfinite(target):
             raise ValueError("policy evaluation target is not finite")
         for run in runs:
+            trace = []
             area, cells, costs, predictions = _evaluate_one(
                 actor,
                 method,
@@ -521,6 +559,7 @@ def evaluate_policy(
                 device=device,
                 random_seed=2026091250 + run,
                 target_mpa=target,
+                action_callback=trace.append if execution_identity is not None else None,
             )
             rows.append(
                 {
@@ -554,6 +593,11 @@ def evaluate_policy(
                     ),
                 }
             )
+            if execution_identity is not None:
+                rows[-1].update(execution_identity)
+                rows[-1]["execution_trace"] = json.dumps(trace, separators=(",", ":"))
+                rows[-1]["native_pixels"] = int(np.prod(bank.native_shapes[int(specimen)]))
+                rows[-1]["new_pixels"] = ";".join(str(t["new_pixels"]) for t in trace)
     score = _domain_equal_episode_score(rows, "left_error_area_mpa")
     return score, rows
 
@@ -571,14 +615,15 @@ def _domain_equal_episode_score(rows: list[dict[str, object]], metric: str) -> f
 
 
 def _load_oof_predictors(
-    root: Path, *, device: str
+    root: Path, *, device: str, predictor_root: Path | None = None, bank=None, verify=True
 ) -> tuple[dict[int, nn.Module], np.ndarray]:
-    output = root / "results/cai_agent_v3/new_protocol"
+    output = predictor_root if predictor_root is not None else root / "results/cai_agent_v3/new_protocol"
     readiness = json.loads((output / "oof_readiness.json").read_text(encoding="utf-8"))
     if readiness.get("status") != "REWARD_MODELS_READY":
         raise ValueError("reward predictor gate is not ready")
-    bank = load_feature_bank(project_root=root)
-    require_predictor_selection_evidence(root, bank)
+    bank = bank if bank is not None else load_feature_bank(project_root=root)
+    if verify:
+        require_predictor_selection_evidence(root, bank, output_dir=output)
     predictors = {}
     for manifest in readiness["fold_manifests"]:
         model, _ = load_predictor_checkpoint(
@@ -609,19 +654,23 @@ def _train_actor(
     seed_panel: int,
     training_seed: int,
     device: str,
+    run_context=None,
 ) -> tuple[
     nn.Module, dict[str, object], list[dict[str, object]], list[dict[str, object]]
 ]:
     train_targets = bank.targets_mpa[bank.indices("TRAIN")]
     target_mean = float(np.mean(train_targets))
     target_scale = max(float(np.std(train_targets)), 1.0)
-    actor = _actor(method, target_mean=target_mean, target_scale=target_scale).to(
-        device
-    )
-    rng = np.random.default_rng(training_seed)
-    torch.manual_seed(training_seed)
-    if torch.cuda.is_available():
-        torch.cuda.manual_seed_all(training_seed)
+    if run_context is not None:
+        cached = run_context.cached_job(method, bank, device=device)
+        if cached is not None:
+            return cached
+        run_context.start_job(method, max_updates, training_seed)
+    actor, rng = seeded_actor(method, target_mean=target_mean, target_scale=target_scale,
+                              seed=training_seed, device=device)
+    initial_sha = _state_dict_sha256(actor.state_dict())
+    if run_context is not None:
+        run_context.open_archive(method, actor, initial_sha)
     optimizer = torch.optim.AdamW(actor.parameters(), lr=3e-4, weight_decay=1e-4)
     best_score = math.inf
     best_state = None
@@ -631,6 +680,8 @@ def _train_actor(
     best_rows: list[dict[str, object]] = []
     started = time.perf_counter()
     for update in range(1, max_updates + 1):
+        if run_context is not None:
+            run_context.before_update(method, update)
         indices = _sample_specimens(rng, bank, batch_size=_BATCH_SIZE)
         entropy_weight = 0.01 * (1.0 - (update - 1) / max(max_updates - 1, 1))
         loss, terms = _training_rollout_loss(
@@ -660,7 +711,11 @@ def _train_actor(
                 features,
                 cell_costs,
                 device=device,
+                execution_identity=(run_context.evaluation_identity(method, update, actor)
+                                    if run_context is not None else None),
             )
+            if run_context is not None:
+                run_context.record(method, update, actor, validation_rows, score)
             actor.train()
             progress.append(
                 {
@@ -682,10 +737,15 @@ def _train_actor(
                 stale = 0
             else:
                 stale += 1
+            if run_context is not None:
+                run_context.checkpoint(method, update, actor, optimizer, rng,
+                                       best_update, best_score, stale)
             if stale >= _PATIENCE:
                 break
     if best_state is None:
         raise ValueError("Actor pilot produced no checkpoint")
+    if run_context is not None:
+        best_state, best_rows = run_context.finish_archive(method, update, best_update)
     actor.load_state_dict(best_state)
     actor.eval()
     for row in best_rows:
@@ -706,7 +766,10 @@ def _train_actor(
         "elapsed_seconds": time.perf_counter() - started,
         "architecture": repr(actor),
         "target_scale_mpa": target_scale,
+        "initial_state_dict_sha256": initial_sha,
     }
+    if run_context is not None:
+        run_context.complete_job(method, actor, manifest, progress, best_rows)
     return actor, manifest, progress, best_rows
 
 

@@ -1,0 +1,65 @@
+{
+  "files": [
+    {
+      "path": "CODEX_CAI_V3_W3_PILOT_EXECUTION.md",
+      "bytes": 25976,
+      "sha256": "18fcb4226259dbfeebae1875e61187531ab546ab2dd91eea4e8306ffc25122f1"
+    },
+    {
+      "path": "CODEX_CAI_V3_W3_PILOT_REVIEW.md",
+      "bytes": 5194,
+      "sha256": "d918296fd3bbb2cd6cc0971e247071c31d5c41e5cd1ee6f512686b0f55f56641"
+    },
+    {
+      "path": "PACKAGE_SELF_CHECK.json",
+      "bytes": 692,
+      "sha256": "2bfc2b19fcac83e588bcb094d52991de953034e8aa8d93c88b28c259970cfc24"
+    },
+    {
+      "path": "README_START.md",
+      "bytes": 3183,
+      "sha256": "513a9045a7688acf84fd78b941c8d4ca32cdff5e748aa96e5ffb4d72eddfa35c"
+    },
+    {
+      "path": "W3_HAND_COMPUTED_CASES.json",
+      "bytes": 1923,
+      "sha256": "4bbbe9dd36deaec1d918a2727bd03719d4e4b21cc9008803e9ede01927f36e71"
+    },
+    {
+      "path": "W3_PILOT_AUTHORIZATION.json",
+      "bytes": 5501,
+      "sha256": "31877bd2e7615f8ceaed490966665ea1dfc81c8161811d572327ebf3d395dba2"
+    },
+    {
+      "path": "W3_PILOT_SOURCE_BINDINGS.md",
+      "bytes": 10851,
+      "sha256": "15941dfe3b2b85fa1552e5b32734267ad7076522017b4a78b72b451739239a20"
+    },
+    {
+      "path": "basis/CAI_AGENT_V3_SOURCE_BINDINGS.md",
+      "bytes": 14850,
+      "sha256": "8a7d593b295e90b03cb6b0b30427e9ecd038e2cefa47b8e4cd07b607e99c8a58"
+    },
+    {
+      "path": "basis/CODEX_CAI_AGENT_V3_EXECUTION.md",
+      "bytes": 31989,
+      "sha256": "dde0fdab562a1d6511b16aaa4aff5fb63765ce018e2ea4fb3df0483c62dbb5d8"
+    },
+    {
+      "path": "basis/CODEX_CAI_AGENT_V3_REVIEW.md",
+      "bytes": 6286,
+      "sha256": "9b4c04024f0035d003aa8868befba0e05f51a2afda6a9f8454110d2324cbc9c5"
+    },
+    {
+      "path": "basis/golden_cases.json",
+      "bytes": 2255,
+      "sha256": "e6287363cc16e572ea4de32c0b84094ca4b89de091e4da493e1a9bdae17ae157"
+    },
+    {
+      "path": "basis/metric_reference.py",
+      "bytes": 6822,
+      "sha256": "1f7ed941c926173217353b52265ba4f703e145d51d462328527f7febb597fb5d"
+    }
+  ],
+  "note": "Content identities for this prompt bundle only; does not validate research outputs."
+}

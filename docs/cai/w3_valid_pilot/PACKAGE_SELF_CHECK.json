@@ -1,0 +1,19 @@
+{
+  "status": "PROMPT_PACKAGE_SELF_CHECK_PASS",
+  "scope": "Only the generated prompt package: numeric oracle, authorization arithmetic, copies and formatting. No user repository execution, model inference, training or push.",
+  "basis_oracle_fixture_checks": 7,
+  "package_check_groups": [
+    "left_not_trapezoid",
+    "tail_only_once",
+    "early_has_no_future_prediction",
+    "independent_repeat_losses",
+    "domain_not_pooled_aggregation",
+    "global_local_category_budget_consistency",
+    "candidate_and_episode_counts",
+    "nondivisible_native_cost_example",
+    "basis_exact_copies",
+    "markdown_fences"
+  ],
+  "research_tests_executed": 0,
+  "research_optimizer_updates": 0
+}

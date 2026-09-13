@@ -31,3 +31,11 @@
 W2-A三个共同预测器各≤2000；A准备通过才W2-B固定三个OOF各≤2000。总新增≤12000、累计≤34264（纠正旧交接34464），旧未知750保留；新增GPU活动≤21600秒，物理GPU1/logical cuda:0、CPU≤4。不做独立真实优化预检，不自动重启未完成job。
 必须训练前commit，首250步真实归档核实；全部实际参选权重/同次预测/选中快照/最小optimizer-RNG状态保留。科学参数、固定VALID和OOF组不变。任何科学未就绪也如实交付，不改门槛。
 完成条件：A真实完成，条件B完成或明确跳过/资源停止；A1–A8有限审查；实际结果、最多2PNG、全部模型、交接及任务状态commit/push同分支，三方SHA一致。W3/GDFS/Actor任何前向/VLM新增/TEST仍禁止，旧W2–W4失效报告保持。
+
+
+## 当前任务：W3 seed1受控实验
+
+用户指定 `/home/ww/diff/docs/W3 seed1受控实验/CAI_V3_W3_VALID_PILOT_CODEX_PACKAGE.zip`。主规范 `/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/docs/cai/w3_valid_pilot/CODEX_CAI_V3_W3_PILOT_EXECUTION.md`；同目录AUTHORIZATION、REVIEW、SOURCE_BINDINGS、HAND_COMPUTED_CASES和basis为配套。实际分支research/cai-vlm-agent-v3-controlled-reuse；入口HEAD=0e11452ac6590b3b2b694364bd4d1cef7c9315cf，fetch后无前进，保留历史。
+任务ID=W3_VALID_PILOT_R1_0e11452a。DATA=new_protocol只读，W2=w2_replay/r1_292b1c74只读，RUN=results/cai_agent_v3/w3_pilot/r1_0e11452a，ART=artifacts/cai_agent_v3/w3_pilot/r1_0e11452a。根均相对实际工作树。
+本轮五个固定seed1：主/无VLM/开环/均值各1250，真实静态750，总新增≤5750（包括失败/重试），单GPU≤21600秒，CPU≤4；累计≤40014，旧W2余额1000不挪用，历史已用33264和未知750保留。W2训练/VLM新调用/编码/GDFS/STOP/seed2、3/TEST均0。
+阶段P0接线和有限检查→训练前commit→P1固定四方法→P2五个seed1（每job首250即时核验，同次真实轨迹全部保存）→P3只读汇总与最多3个固定VALID案例→P4最终八项review、全部真实权重/轨迹/图稿/交接commit/push。正常650最终episode；正负结果均交付，不自动扩展。缺原图只阻塞图稿，资源终止保留真实未完成状态。

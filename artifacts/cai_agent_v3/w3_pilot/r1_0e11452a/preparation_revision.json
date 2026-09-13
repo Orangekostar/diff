@@ -1,0 +1,7 @@
+{
+  "status": "PRE_TRAINING_PRE_SCORE_CORRECTION",
+  "old_protocol_identity": "162734020b58c7c0edf94f2f8b3118ee9a0b5f20ace90ce222900b75eda17f36",
+  "new_protocol_identity": "c89c60162469e2379cf9b51c711694bda12e79d74a009feab61f289b1707cbab",
+  "reason": "Found existing figure_manifest_valid.json; prefer its three frozen VALID cases over fallback hash list",
+  "actual_updates": 0
+}
