@@ -1,0 +1,5 @@
+{
+  "actor_manifests": "results/cai_agent_v3/w3_pilot/r1_0e11452a/actor_manifests.json",
+  "downstream_authorization": "NOT_AUTHORIZED_BEYOND_W3_SEED1_VALID",
+  "final_manifest": "results/cai_agent_v3/w3_pilot/r1_0e11452a/final_manifest.json"
+}

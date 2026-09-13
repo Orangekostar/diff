@@ -1,0 +1,141 @@
+method,training_seed,initial_state_dict_sha256,parameter_count,architecture
+LEARNED_STATIC_TRUE,2026091304,a62dfc37108b0c6953c5008fa33d70df23d9b0aec72ed098e0f832fb000e330d,64,TrueStaticActor()
+NO_VLM_SPATIAL_FEEDBACK,2026091302,c619fe2631b18bfea21b1b12b7b923b04277a40aa1b8d411156e8f3784ebffa0,378978,"SpatialCAIActor(
+  (surface): Linear(in_features=512, out_features=48, bias=True)
+  (cscan): Linear(in_features=512, out_features=48, bias=True)
+  (cell): Sequential(
+    (0): Linear(in_features=102, out_features=128, bias=True)
+    (1): GELU(approximate='none')
+    (2): LayerNorm((128,), eps=1e-05, elementwise_affine=True, bias=True)
+  )
+  (query): Sequential(
+    (0): Linear(in_features=6, out_features=128, bias=True)
+    (1): GELU(approximate='none')
+    (2): LayerNorm((128,), eps=1e-05, elementwise_affine=True, bias=True)
+  )
+  (contextualizer): TransformerEncoder(
+    (layers): ModuleList(
+      (0-1): 2 x TransformerEncoderLayer(
+        (self_attn): MultiheadAttention(
+          (out_proj): NonDynamicallyQuantizableLinear(in_features=128, out_features=128, bias=True)
+        )
+        (linear1): Linear(in_features=128, out_features=256, bias=True)
+        (dropout): Dropout(p=0.0, inplace=False)
+        (linear2): Linear(in_features=256, out_features=128, bias=True)
+        (norm1): LayerNorm((128,), eps=1e-05, elementwise_affine=True, bias=True)
+        (norm2): LayerNorm((128,), eps=1e-05, elementwise_affine=True, bias=True)
+        (dropout1): Dropout(p=0.0, inplace=False)
+        (dropout2): Dropout(p=0.0, inplace=False)
+      )
+    )
+  )
+  (action_scorer): Sequential(
+    (0): Linear(in_features=256, out_features=128, bias=True)
+    (1): GELU(approximate='none')
+    (2): Linear(in_features=128, out_features=1, bias=True)
+  )
+  (value_head): Sequential(
+    (0): Linear(in_features=128, out_features=128, bias=True)
+    (1): GELU(approximate='none')
+    (2): Linear(in_features=128, out_features=1, bias=True)
+  )
+)"
+VLM_MEAN_FEEDBACK,2026091305,4d1e11af64860a24d2a0502809ddc3b134c15dd69cde1e263379530c94d8dff8,91650,"MeanFeedbackActor(
+  (surface): Linear(in_features=512, out_features=64, bias=True)
+  (cscan): Linear(in_features=512, out_features=64, bias=True)
+  (local): Sequential(
+    (0): Linear(in_features=134, out_features=64, bias=True)
+    (1): GELU(approximate='none')
+    (2): Linear(in_features=64, out_features=64, bias=True)
+  )
+  (score): Sequential(
+    (0): Linear(in_features=133, out_features=64, bias=True)
+    (1): GELU(approximate='none')
+    (2): Linear(in_features=64, out_features=1, bias=True)
+  )
+  (value): Sequential(
+    (0): Linear(in_features=69, out_features=64, bias=True)
+    (1): GELU(approximate='none')
+    (2): Linear(in_features=64, out_features=1, bias=True)
+  )
+)"
+VLM_SPATIAL_FEEDBACK,2026091301,b5b46cc0ead0a7a3076918c50624923f002cca55f9e5ab6c4cb797064623f794,378978,"SpatialCAIActor(
+  (surface): Linear(in_features=512, out_features=48, bias=True)
+  (cscan): Linear(in_features=512, out_features=48, bias=True)
+  (cell): Sequential(
+    (0): Linear(in_features=102, out_features=128, bias=True)
+    (1): GELU(approximate='none')
+    (2): LayerNorm((128,), eps=1e-05, elementwise_affine=True, bias=True)
+  )
+  (query): Sequential(
+    (0): Linear(in_features=6, out_features=128, bias=True)
+    (1): GELU(approximate='none')
+    (2): LayerNorm((128,), eps=1e-05, elementwise_affine=True, bias=True)
+  )
+  (contextualizer): TransformerEncoder(
+    (layers): ModuleList(
+      (0-1): 2 x TransformerEncoderLayer(
+        (self_attn): MultiheadAttention(
+          (out_proj): NonDynamicallyQuantizableLinear(in_features=128, out_features=128, bias=True)
+        )
+        (linear1): Linear(in_features=128, out_features=256, bias=True)
+        (dropout): Dropout(p=0.0, inplace=False)
+        (linear2): Linear(in_features=256, out_features=128, bias=True)
+        (norm1): LayerNorm((128,), eps=1e-05, elementwise_affine=True, bias=True)
+        (norm2): LayerNorm((128,), eps=1e-05, elementwise_affine=True, bias=True)
+        (dropout1): Dropout(p=0.0, inplace=False)
+        (dropout2): Dropout(p=0.0, inplace=False)
+      )
+    )
+  )
+  (action_scorer): Sequential(
+    (0): Linear(in_features=256, out_features=128, bias=True)
+    (1): GELU(approximate='none')
+    (2): Linear(in_features=128, out_features=1, bias=True)
+  )
+  (value_head): Sequential(
+    (0): Linear(in_features=128, out_features=128, bias=True)
+    (1): GELU(approximate='none')
+    (2): Linear(in_features=128, out_features=1, bias=True)
+  )
+)"
+VLM_SPATIAL_OPEN_LOOP,2026091303,95b30b385358e491dfe0666a64c35ff16410a40ff16fba080bcf44fd7b34ecd5,378978,"SpatialCAIActor(
+  (surface): Linear(in_features=512, out_features=48, bias=True)
+  (cscan): Linear(in_features=512, out_features=48, bias=True)
+  (cell): Sequential(
+    (0): Linear(in_features=102, out_features=128, bias=True)
+    (1): GELU(approximate='none')
+    (2): LayerNorm((128,), eps=1e-05, elementwise_affine=True, bias=True)
+  )
+  (query): Sequential(
+    (0): Linear(in_features=6, out_features=128, bias=True)
+    (1): GELU(approximate='none')
+    (2): LayerNorm((128,), eps=1e-05, elementwise_affine=True, bias=True)
+  )
+  (contextualizer): TransformerEncoder(
+    (layers): ModuleList(
+      (0-1): 2 x TransformerEncoderLayer(
+        (self_attn): MultiheadAttention(
+          (out_proj): NonDynamicallyQuantizableLinear(in_features=128, out_features=128, bias=True)
+        )
+        (linear1): Linear(in_features=128, out_features=256, bias=True)
+        (dropout): Dropout(p=0.0, inplace=False)
+        (linear2): Linear(in_features=256, out_features=128, bias=True)
+        (norm1): LayerNorm((128,), eps=1e-05, elementwise_affine=True, bias=True)
+        (norm2): LayerNorm((128,), eps=1e-05, elementwise_affine=True, bias=True)
+        (dropout1): Dropout(p=0.0, inplace=False)
+        (dropout2): Dropout(p=0.0, inplace=False)
+      )
+    )
+  )
+  (action_scorer): Sequential(
+    (0): Linear(in_features=256, out_features=128, bias=True)
+    (1): GELU(approximate='none')
+    (2): Linear(in_features=128, out_features=1, bias=True)
+  )
+  (value_head): Sequential(
+    (0): Linear(in_features=128, out_features=128, bias=True)
+    (1): GELU(approximate='none')
+    (2): Linear(in_features=128, out_features=1, bias=True)
+  )
+)"

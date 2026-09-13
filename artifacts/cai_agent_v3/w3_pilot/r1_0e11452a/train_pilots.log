@@ -1,0 +1,27 @@
+{"method": "VLM_SPATIAL_FEEDBACK", "update": 250, "validation_area": 45.110376551662455}
+{"method": "VLM_SPATIAL_FEEDBACK", "update": 500, "validation_area": 45.253131241935115}
+{"method": "VLM_SPATIAL_FEEDBACK", "update": 750, "validation_area": 45.13496861684303}
+{"method": "VLM_SPATIAL_FEEDBACK", "update": 1000, "validation_area": 46.40930258239404}
+{"method": "VLM_SPATIAL_FEEDBACK", "update": 1250, "validation_area": 46.03399988581193}
+{"method": "NO_VLM_SPATIAL_FEEDBACK", "update": 250, "validation_area": 47.276329196739816}
+{"method": "NO_VLM_SPATIAL_FEEDBACK", "update": 500, "validation_area": 46.46120171311171}
+{"method": "NO_VLM_SPATIAL_FEEDBACK", "update": 750, "validation_area": 44.91105786170531}
+{"method": "NO_VLM_SPATIAL_FEEDBACK", "update": 1000, "validation_area": 43.59708783510903}
+{"method": "NO_VLM_SPATIAL_FEEDBACK", "update": 1250, "validation_area": 44.450568694817356}
+{"method": "VLM_SPATIAL_OPEN_LOOP", "update": 250, "validation_area": 49.693201019349864}
+{"method": "VLM_SPATIAL_OPEN_LOOP", "update": 500, "validation_area": 47.59035518524066}
+{"method": "VLM_SPATIAL_OPEN_LOOP", "update": 750, "validation_area": 46.50098123538941}
+{"method": "VLM_SPATIAL_OPEN_LOOP", "update": 1000, "validation_area": 48.80583116608844}
+{"method": "VLM_SPATIAL_OPEN_LOOP", "update": 1250, "validation_area": 48.142465588563084}
+{"method": "LEARNED_STATIC_TRUE", "update": 250, "validation_area": 47.97672118557994}
+{"method": "LEARNED_STATIC_TRUE", "update": 500, "validation_area": 48.52681000877259}
+{"method": "LEARNED_STATIC_TRUE", "update": 750, "validation_area": 48.703328367777516}
+{"method": "VLM_MEAN_FEEDBACK", "update": 250, "validation_area": 45.26256559134052}
+{"method": "VLM_MEAN_FEEDBACK", "update": 500, "validation_area": 46.509205955688834}
+{"method": "VLM_MEAN_FEEDBACK", "update": 750, "validation_area": 46.75162216597664}
+{"method": "VLM_MEAN_FEEDBACK", "update": 1000, "validation_area": 45.93637053263999}
+{"method": "VLM_MEAN_FEEDBACK", "update": 1250, "validation_area": 45.503603248032796}
+{
+  "status": "FIVE_PILOTS_COMPLETE",
+  "actual_updates": 5750
+}

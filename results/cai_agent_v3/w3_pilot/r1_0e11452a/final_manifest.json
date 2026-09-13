@@ -1,0 +1,28 @@
+{
+  "VALID_physical_n": 50,
+  "actual_updates": 5750,
+  "completed_jobs": 5,
+  "cumulative_cap": 40014,
+  "cumulative_used_upper_bound": 39014,
+  "downstream_authorization": "NOT_AUTHORIZED_BEYOND_W3_SEED1_VALID",
+  "engineering_status": "ENGINEERING_ACCURACY_CRITERION_NOT_SPECIFIED",
+  "final_episodes": 650,
+  "gpu_seconds_cap": 21600,
+  "historical_invalidated_results": "UNCHANGED",
+  "implementation_status": "EXECUTION_COMPLETE",
+  "new_gpu_seconds": 2595.7536749839783,
+  "pilot_expansion_condition_met": true,
+  "prohibited_stage_counts": {
+    "CNN_encoding": 0,
+    "GDFS": 0,
+    "STOP": 0,
+    "TEST_prediction_or_label_join": 0,
+    "W2_training": 0,
+    "new_VLM_calls": 0,
+    "seed2_or_3": 0
+  },
+  "protocol_conformance": "PENDING_FINAL_REVIEW",
+  "scientific_evidence": "VALID_ONLY_PILOT_NOT_INDEPENDENT_CONFIRMATION",
+  "task_id": "W3_VALID_PILOT_R1_0e11452a",
+  "task_used_upper_bound": 5750
+}

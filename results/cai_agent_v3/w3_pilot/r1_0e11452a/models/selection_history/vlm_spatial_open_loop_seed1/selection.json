@@ -1,0 +1,99 @@
+{
+  "candidates": [
+    {
+      "checkpoint": "update_000250.pt",
+      "checkpoint_sha256": "d82469f3a170dc087fc8d378ca1a06b9218a1529bb432c1cbb64e929f36e2039",
+      "episode_count": 50,
+      "episodes": "../../../candidate_episodes/vlm_spatial_open_loop_seed1/update_000250.csv.gz",
+      "episodes_sha256": "78ef2fea5c3ee41289d14f8d95a57bd6fd48e0b5ed59c554b7724445f9f65f05",
+      "metrics": {
+        "early_left_error_area_mpa": 53.094340071493804,
+        "final_error_mpa": 47.08804608400536,
+        "left_error_area_mpa": 49.693201019349864,
+        "trajectory_objective_mpa": 61.465212540351196
+      },
+      "update": 250
+    },
+    {
+      "checkpoint": "update_000500.pt",
+      "checkpoint_sha256": "e4da81596bdb5844c743c08466132637cf50ce93dc338ada6bfcf68bce084bc3",
+      "episode_count": 50,
+      "episodes": "../../../candidate_episodes/vlm_spatial_open_loop_seed1/update_000500.csv.gz",
+      "episodes_sha256": "1e29084ff44b4af649c0cff02aeab466c4444be36c0b1e50f8c2ba92809810a6",
+      "metrics": {
+        "early_left_error_area_mpa": 53.8675943545332,
+        "final_error_mpa": 44.26030134776283,
+        "left_error_area_mpa": 47.59035518524066,
+        "trajectory_objective_mpa": 58.65543052218137
+      },
+      "update": 500
+    },
+    {
+      "checkpoint": "update_000750.pt",
+      "checkpoint_sha256": "dbcfacdcacadb3ed6d7d7e84f932d3314c5e4655e7ed66e5d4566730aac6037f",
+      "episode_count": 50,
+      "episodes": "../../../candidate_episodes/vlm_spatial_open_loop_seed1/update_000750.csv.gz",
+      "episodes_sha256": "39e84cc7c10c787ff0e394a82631be31b3b4ee737614d1915c3517dba54eb6bd",
+      "metrics": {
+        "early_left_error_area_mpa": 51.04797462878782,
+        "final_error_mpa": 43.84450451280705,
+        "left_error_area_mpa": 46.50098123538941,
+        "trajectory_objective_mpa": 57.46210736359117
+      },
+      "update": 750
+    },
+    {
+      "checkpoint": "update_001000.pt",
+      "checkpoint_sha256": "596bf7be05eef8a02fc5972e3871d200de04e3da6be47c4a65caeb0f8e5e14bb",
+      "episode_count": 50,
+      "episodes": "../../../candidate_episodes/vlm_spatial_open_loop_seed1/update_001000.csv.gz",
+      "episodes_sha256": "03f9892b2ada6ada2092b8b9a90831bfb7dd82b70d7cd49b17f9c2f34d993a79",
+      "metrics": {
+        "early_left_error_area_mpa": 52.82808699348771,
+        "final_error_mpa": 45.48114821015212,
+        "left_error_area_mpa": 48.80583116608844,
+        "trajectory_objective_mpa": 60.17611821862647
+      },
+      "update": 1000
+    },
+    {
+      "checkpoint": "update_001250.pt",
+      "checkpoint_sha256": "3113492fac32da08e3cce133e7e91c32d6d02277b2059f236e48538ac52ccba4",
+      "episode_count": 50,
+      "episodes": "../../../candidate_episodes/vlm_spatial_open_loop_seed1/update_001250.csv.gz",
+      "episodes_sha256": "9c99e7c4901703a43e1b6b3f68e1e0141e632a3e732c259372449bcd0c256034",
+      "metrics": {
+        "early_left_error_area_mpa": 52.313930901510844,
+        "final_error_mpa": 45.35477837052925,
+        "left_error_area_mpa": 48.142465588563084,
+        "trajectory_objective_mpa": 59.481160181195385
+      },
+      "update": 1250
+    }
+  ],
+  "environment": {
+    "execution_code_sha": "0f18001c8fa25e83b6fd3ece2fa6c7cd74e6c5ff",
+    "method": "VLM_SPATIAL_OPEN_LOOP",
+    "protocol_identity": "c89c60162469e2379cf9b51c711694bda12e79d74a009feab61f289b1707cbab",
+    "training_seed": 2026091303
+  },
+  "max_updates": 1250,
+  "metadata": {
+    "architecture": "SpatialCAIActor(\n  (surface): Linear(in_features=512, out_features=48, bias=True)\n  (cscan): Linear(in_features=512, out_features=48, bias=True)\n  (cell): Sequential(\n    (0): Linear(in_features=102, out_features=128, bias=True)\n    (1): GELU(approximate='none')\n    (2): LayerNorm((128,), eps=1e-05, elementwise_affine=True, bias=True)\n  )\n  (query): Sequential(\n    (0): Linear(in_features=6, out_features=128, bias=True)\n    (1): GELU(approximate='none')\n    (2): LayerNorm((128,), eps=1e-05, elementwise_affine=True, bias=True)\n  )\n  (contextualizer): TransformerEncoder(\n    (layers): ModuleList(\n      (0-1): 2 x TransformerEncoderLayer(\n        (self_attn): MultiheadAttention(\n          (out_proj): NonDynamicallyQuantizableLinear(in_features=128, out_features=128, bias=True)\n        )\n        (linear1): Linear(in_features=128, out_features=256, bias=True)\n        (dropout): Dropout(p=0.0, inplace=False)\n        (linear2): Linear(in_features=256, out_features=128, bias=True)\n        (norm1): LayerNorm((128,), eps=1e-05, elementwise_affine=True, bias=True)\n        (norm2): LayerNorm((128,), eps=1e-05, elementwise_affine=True, bias=True)\n        (dropout1): Dropout(p=0.0, inplace=False)\n        (dropout2): Dropout(p=0.0, inplace=False)\n      )\n    )\n  )\n  (action_scorer): Sequential(\n    (0): Linear(in_features=256, out_features=128, bias=True)\n    (1): GELU(approximate='none')\n    (2): Linear(in_features=128, out_features=1, bias=True)\n  )\n  (value_head): Sequential(\n    (0): Linear(in_features=128, out_features=128, bias=True)\n    (1): GELU(approximate='none')\n    (2): Linear(in_features=128, out_features=1, bias=True)\n  )\n)",
+    "initial_state_dict_sha256": "95b30b385358e491dfe0666a64c35ff16410a40ff16fba080bcf44fd7b34ecd5",
+    "input_flags": {
+      "use_feedback": false,
+      "use_surface": true,
+      "use_vlm": true
+    },
+    "parameter_count": 378978
+  },
+  "method": "VLM_SPATIAL_OPEN_LOOP",
+  "patience": 4,
+  "run_id": "e88440f97bb445cd992e9eae7bdcb666",
+  "seed": 2026091303,
+  "selected_update": 750,
+  "status": "COMPLETE",
+  "updates_completed": 1250,
+  "validation_interval": 250
+}

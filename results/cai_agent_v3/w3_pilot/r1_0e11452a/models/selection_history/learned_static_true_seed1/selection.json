@@ -1,0 +1,71 @@
+{
+  "candidates": [
+    {
+      "checkpoint": "update_000250.pt",
+      "checkpoint_sha256": "8fe1eb963527b24d0e6a1eda6454bbd07392d06655536d5aedc0ffa5bcce4bd3",
+      "episode_count": 50,
+      "episodes": "../../../candidate_episodes/learned_static_true_seed1/update_000250.csv.gz",
+      "episodes_sha256": "3d9e8d7d2563375edff155c306beb4cffb665e1dfd4f283eede9366f44f300d2",
+      "metrics": {
+        "early_left_error_area_mpa": 52.94560607583583,
+        "final_error_mpa": 46.01109615204826,
+        "left_error_area_mpa": 47.97672118557994,
+        "trajectory_objective_mpa": 59.47949522359202
+      },
+      "update": 250
+    },
+    {
+      "checkpoint": "update_000500.pt",
+      "checkpoint_sha256": "aea0c42907e30de6e7337ff9f39c41f7eb589e4870979971bc6a4dab99915997",
+      "episode_count": 50,
+      "episodes": "../../../candidate_episodes/learned_static_true_seed1/update_000500.csv.gz",
+      "episodes_sha256": "5d0a2d22811485b80aeb2965e838f48d78b0b11a3671b761ccd849be99cf84c3",
+      "metrics": {
+        "early_left_error_area_mpa": 50.25772142826063,
+        "final_error_mpa": 46.71681235076258,
+        "left_error_area_mpa": 48.52681000877259,
+        "trajectory_objective_mpa": 60.20601309646324
+      },
+      "update": 500
+    },
+    {
+      "checkpoint": "update_000750.pt",
+      "checkpoint_sha256": "9a6a5f28e19269030ae76b42ad9f079e996fbe57e1f632f4cccba7789118b82a",
+      "episode_count": 50,
+      "episodes": "../../../candidate_episodes/learned_static_true_seed1/update_000750.csv.gz",
+      "episodes_sha256": "ca6efbea3f190414825de1b2bf5873324ad3c37f204bc5bc79bf4651a5bf3a6a",
+      "metrics": {
+        "early_left_error_area_mpa": 52.68857926437499,
+        "final_error_mpa": 45.68092842202969,
+        "left_error_area_mpa": 48.703328367777516,
+        "trajectory_objective_mpa": 60.12356047328495
+      },
+      "update": 750
+    }
+  ],
+  "environment": {
+    "execution_code_sha": "0f18001c8fa25e83b6fd3ece2fa6c7cd74e6c5ff",
+    "method": "LEARNED_STATIC_TRUE",
+    "protocol_identity": "c89c60162469e2379cf9b51c711694bda12e79d74a009feab61f289b1707cbab",
+    "training_seed": 2026091304
+  },
+  "max_updates": 750,
+  "metadata": {
+    "architecture": "TrueStaticActor()",
+    "initial_state_dict_sha256": "a62dfc37108b0c6953c5008fa33d70df23d9b0aec72ed098e0f832fb000e330d",
+    "input_flags": {
+      "use_feedback": false,
+      "use_surface": false,
+      "use_vlm": false
+    },
+    "parameter_count": 64
+  },
+  "method": "LEARNED_STATIC_TRUE",
+  "patience": 4,
+  "run_id": "17bab87ac71d40abbc1bdf10b2054ebd",
+  "seed": 2026091304,
+  "selected_update": 250,
+  "status": "COMPLETE",
+  "updates_completed": 750,
+  "validation_interval": 250
+}

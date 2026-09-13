@@ -1,0 +1,53 @@
+{
+  "candidate_count": 23,
+  "final_episode_count": 650,
+  "final_table_verified": true,
+  "fixed_scores": {
+    "CENTER_FIRST": 48.475340629691196,
+    "GEOMETRY_SPREAD": 47.310644799814476,
+    "RANDOM": 49.59439193122932,
+    "SERPENTINE": 48.91141600813801
+  },
+  "max_metric_absolute_difference": 5.684341886080802e-14,
+  "model_forward_calls": 0,
+  "models": [
+    {
+      "actual_updates": 1250,
+      "candidate_count": 5,
+      "method": "VLM_SPATIAL_FEEDBACK",
+      "selected_update": 250,
+      "weight_reload_equal": true
+    },
+    {
+      "actual_updates": 1250,
+      "candidate_count": 5,
+      "method": "NO_VLM_SPATIAL_FEEDBACK",
+      "selected_update": 1000,
+      "weight_reload_equal": true
+    },
+    {
+      "actual_updates": 1250,
+      "candidate_count": 5,
+      "method": "VLM_SPATIAL_OPEN_LOOP",
+      "selected_update": 750,
+      "weight_reload_equal": true
+    },
+    {
+      "actual_updates": 750,
+      "candidate_count": 3,
+      "method": "LEARNED_STATIC_TRUE",
+      "selected_update": 250,
+      "weight_reload_equal": true
+    },
+    {
+      "actual_updates": 1250,
+      "candidate_count": 5,
+      "method": "VLM_MEAN_FEEDBACK",
+      "selected_update": 250,
+      "weight_reload_equal": true
+    }
+  ],
+  "optimizer_updates": 0,
+  "pilot_gate_independently_verified": true,
+  "status": "SAVED_EVIDENCE_PASS"
+}

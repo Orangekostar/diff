@@ -1,0 +1,76 @@
+{
+  "environment": {
+    "execution_code_sha": "0f18001c8fa25e83b6fd3ece2fa6c7cd74e6c5ff",
+    "method": "LEARNED_STATIC_TRUE",
+    "protocol_identity": "c89c60162469e2379cf9b51c711694bda12e79d74a009feab61f289b1707cbab",
+    "training_seed": 2026091304
+  },
+  "manifest": {
+    "architecture": "TrueStaticActor()",
+    "checkpoint_path": "results/cai_agent_v3/w3_pilot/r1_0e11452a/models/actor_learned_static_true_seed1.pt",
+    "checkpoint_sha256": "10f755e21ac57d6f7e56f1f3cd09ca101eb426c35d5acc1124d2a284083c4da4",
+    "elapsed_seconds": 237.23324726242572,
+    "initial_state_dict_sha256": "a62dfc37108b0c6953c5008fa33d70df23d9b0aec72ed098e0f832fb000e330d",
+    "method": "LEARNED_STATIC_TRUE",
+    "parameter_count": 64,
+    "seed_panel": 1,
+    "selected_episodes": "results/cai_agent_v3/w3_pilot/r1_0e11452a/candidate_episodes/learned_static_true_seed1/update_000250.csv.gz",
+    "selected_update": 250,
+    "selection_archive": "results/cai_agent_v3/w3_pilot/r1_0e11452a/models/selection_history/learned_static_true_seed1",
+    "state_dict_sha256": "765cd6d720ddcd6061e220fb901d5d41c417841282eac8674b64c3e1afde5166",
+    "target_scale_mpa": 101.93511199951172,
+    "training_seed": 2026091304,
+    "updates_completed": 750,
+    "validation_area_mpa": 47.97672118557994,
+    "validation_early_area_mpa": 52.94560607583583
+  },
+  "progress": [
+    {
+      "actor_loss": -20.778697290920398,
+      "entropy": 4.027346611022949,
+      "entropy_weight": 0.006675567423230975,
+      "max_action_count": 16.0,
+      "mean_scaled_objective": 0.5142820379927933,
+      "method": "LEARNED_STATIC_TRUE",
+      "min_action_count": 15.0,
+      "seed_panel": 1,
+      "total_loss": -20.80558211495795,
+      "training_seed": 2026091304,
+      "update": 250,
+      "validation_area_mpa": 47.97672118557994,
+      "value_loss": 0.0
+    },
+    {
+      "actor_loss": -13.304252357424216,
+      "entropy": 4.027063846588135,
+      "entropy_weight": 0.0033377837116154874,
+      "max_action_count": 16.0,
+      "mean_scaled_objective": 0.3435186341684865,
+      "method": "LEARNED_STATIC_TRUE",
+      "min_action_count": 15.0,
+      "seed_panel": 1,
+      "total_loss": -13.317693826013224,
+      "training_seed": 2026091304,
+      "update": 500,
+      "validation_area_mpa": 48.52681000877259,
+      "value_loss": 0.0
+    },
+    {
+      "actor_loss": -22.84328620265871,
+      "entropy": 4.02795934677124,
+      "entropy_weight": 0.0,
+      "max_action_count": 16.0,
+      "mean_scaled_objective": 0.5733789792647765,
+      "method": "LEARNED_STATIC_TRUE",
+      "min_action_count": 15.0,
+      "seed_panel": 1,
+      "total_loss": -22.84328620265871,
+      "training_seed": 2026091304,
+      "update": 750,
+      "validation_area_mpa": 48.703328367777516,
+      "value_loss": 0.0
+    }
+  ],
+  "protocol_identity": "c89c60162469e2379cf9b51c711694bda12e79d74a009feab61f289b1707cbab",
+  "run_id": "17bab87ac71d40abbc1bdf10b2054ebd"
+}

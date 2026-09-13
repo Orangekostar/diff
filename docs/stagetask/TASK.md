@@ -49,3 +49,9 @@ W2-A三个共同预测器各≤2000；A准备通过才W2-B固定三个OOF各≤2
 配套：同目录 `CAI_AGENT_V3_SOURCE_BINDINGS.md`、`CODEX_CAI_AGENT_V3_REVIEW.md`、`metric_reference.py`、`golden_cases.json`；五份已与 `/home/ww/diff/docs/CODEX_HANDOFF_CAI_AGENT_V3/` 实际来源逐字核对。未重建规范。
 阶段：已有 W2 恢复实现的零训练复核与交付。完成条件：五类定向检查、历史/新增候选分离、实际账目与复用清单更新、保留旧失效报告、本轮文档提交并实际 push 同分支核对三方 SHA。
 训练更新/VLM/TEST/W3/GDFS/扩 seed 新执行均为 0。不得因后续正式重放已有完整归档而声称找回旧 checkpoint；不得以本任务追认既有未交付 W3 科学结论。证据及当前资源见 `artifacts/cai_agent_v3/W2_RECOVERY_RECHECK.json` 和 `W2_RECOVERY_HANDOFF.md` 的本轮增补。
+
+
+## 当前生效任务：继续完成 W3 seed1 原目标
+
+本次用户再次明确继续 `/home/ww/diff/docs/W3 seed1受控实验` 的完整目标。主规范仍为本工作树 `docs/cai/w3_valid_pilot/CODEX_CAI_V3_W3_PILOT_EXECUTION.md`（绝对路径见上方W3卡），ID=W3_VALID_PILOT_R1_0e11452a，基点0e11452，训练代码0f18001；接续入口b00c2e8。W2复核记录保留为历史，不作为阻断本次已授权W3交付的理由。
+五job5750更新已全部完成，禁止重复训练或额外优化；本次P4完成保存证据/视觉QA/资源核对、最终review/交接并上传RUN全部权重/轨迹/图表。科学边界、5750与40014上限、W2余额不挪用、下游禁止均按原W3包不变。完成条件仍为原包全部交付和三方Git SHA一致，不缩成W2复核或准备状态。

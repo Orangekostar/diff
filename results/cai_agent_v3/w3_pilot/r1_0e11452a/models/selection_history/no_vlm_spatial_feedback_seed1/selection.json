@@ -1,0 +1,99 @@
+{
+  "candidates": [
+    {
+      "checkpoint": "update_000250.pt",
+      "checkpoint_sha256": "396ea50986b1e3d053d1e383253bd4081e62f02e8236f40f6b2a20ad9694303b",
+      "episode_count": 50,
+      "episodes": "../../../candidate_episodes/no_vlm_spatial_feedback_seed1/update_000250.csv.gz",
+      "episodes_sha256": "c5c330c847b6547ced637954f499b23b8554cf27d2097062136e8dca9124486c",
+      "metrics": {
+        "early_left_error_area_mpa": 50.53961456626592,
+        "final_error_mpa": 43.59746751835738,
+        "left_error_area_mpa": 47.276329196739816,
+        "trajectory_objective_mpa": 58.17569607632915
+      },
+      "update": 250
+    },
+    {
+      "checkpoint": "update_000500.pt",
+      "checkpoint_sha256": "f79f4ceea7b9d1644ec38b0df96cb07b7ff69f2677e0234a52b1cd3c8b949803",
+      "episode_count": 50,
+      "episodes": "../../../candidate_episodes/no_vlm_spatial_feedback_seed1/update_000500.csv.gz",
+      "episodes_sha256": "2b7eaed7911a04fc7d89843b7cd22a6156d57ef59f144f686f6df49851798db4",
+      "metrics": {
+        "early_left_error_area_mpa": 51.13975743499916,
+        "final_error_mpa": 43.46031932225302,
+        "left_error_area_mpa": 46.46120171311171,
+        "trajectory_objective_mpa": 57.32628154367498
+      },
+      "update": 500
+    },
+    {
+      "checkpoint": "update_000750.pt",
+      "checkpoint_sha256": "d114448804caf1b63921ace18a645314b865f8235dbd2af0569d662d0ddb19b9",
+      "episode_count": 50,
+      "episodes": "../../../candidate_episodes/no_vlm_spatial_feedback_seed1/update_000750.csv.gz",
+      "episodes_sha256": "04339c76da79241327329b038899bbd34ccd78228f720c974893429e3d9ea1da",
+      "metrics": {
+        "early_left_error_area_mpa": 48.27932541711876,
+        "final_error_mpa": 43.175783687167694,
+        "left_error_area_mpa": 44.91105786170531,
+        "trajectory_objective_mpa": 55.70500378349723
+      },
+      "update": 750
+    },
+    {
+      "checkpoint": "update_001000.pt",
+      "checkpoint_sha256": "8af2f7b7a65299e7403286ae66cebe372dadeeb89ea993753ffe96d55b2937f6",
+      "episode_count": 50,
+      "episodes": "../../../candidate_episodes/no_vlm_spatial_feedback_seed1/update_001000.csv.gz",
+      "episodes_sha256": "f2c1b3f22edf353ccdba4087b551d0f2f1e252ada275e3436c7e2643fc2b3aba",
+      "metrics": {
+        "early_left_error_area_mpa": 48.77083689123591,
+        "final_error_mpa": 41.62924696402575,
+        "left_error_area_mpa": 43.59708783510903,
+        "trajectory_objective_mpa": 54.004399576115475
+      },
+      "update": 1000
+    },
+    {
+      "checkpoint": "update_001250.pt",
+      "checkpoint_sha256": "f685e0d79070fc37008ebf241c3311d735c9d9170bbc3b407ab78fffd9c30713",
+      "episode_count": 50,
+      "episodes": "../../../candidate_episodes/no_vlm_spatial_feedback_seed1/update_001250.csv.gz",
+      "episodes_sha256": "a0eff7e243f5edebdf19a3da83dc8a0be947b4f1f7d85a2951066c7c8bb7ee15",
+      "metrics": {
+        "early_left_error_area_mpa": 49.14281418681629,
+        "final_error_mpa": 42.01077705464035,
+        "left_error_area_mpa": 44.450568694817356,
+        "trajectory_objective_mpa": 54.953262958477445
+      },
+      "update": 1250
+    }
+  ],
+  "environment": {
+    "execution_code_sha": "0f18001c8fa25e83b6fd3ece2fa6c7cd74e6c5ff",
+    "method": "NO_VLM_SPATIAL_FEEDBACK",
+    "protocol_identity": "c89c60162469e2379cf9b51c711694bda12e79d74a009feab61f289b1707cbab",
+    "training_seed": 2026091302
+  },
+  "max_updates": 1250,
+  "metadata": {
+    "architecture": "SpatialCAIActor(\n  (surface): Linear(in_features=512, out_features=48, bias=True)\n  (cscan): Linear(in_features=512, out_features=48, bias=True)\n  (cell): Sequential(\n    (0): Linear(in_features=102, out_features=128, bias=True)\n    (1): GELU(approximate='none')\n    (2): LayerNorm((128,), eps=1e-05, elementwise_affine=True, bias=True)\n  )\n  (query): Sequential(\n    (0): Linear(in_features=6, out_features=128, bias=True)\n    (1): GELU(approximate='none')\n    (2): LayerNorm((128,), eps=1e-05, elementwise_affine=True, bias=True)\n  )\n  (contextualizer): TransformerEncoder(\n    (layers): ModuleList(\n      (0-1): 2 x TransformerEncoderLayer(\n        (self_attn): MultiheadAttention(\n          (out_proj): NonDynamicallyQuantizableLinear(in_features=128, out_features=128, bias=True)\n        )\n        (linear1): Linear(in_features=128, out_features=256, bias=True)\n        (dropout): Dropout(p=0.0, inplace=False)\n        (linear2): Linear(in_features=256, out_features=128, bias=True)\n        (norm1): LayerNorm((128,), eps=1e-05, elementwise_affine=True, bias=True)\n        (norm2): LayerNorm((128,), eps=1e-05, elementwise_affine=True, bias=True)\n        (dropout1): Dropout(p=0.0, inplace=False)\n        (dropout2): Dropout(p=0.0, inplace=False)\n      )\n    )\n  )\n  (action_scorer): Sequential(\n    (0): Linear(in_features=256, out_features=128, bias=True)\n    (1): GELU(approximate='none')\n    (2): Linear(in_features=128, out_features=1, bias=True)\n  )\n  (value_head): Sequential(\n    (0): Linear(in_features=128, out_features=128, bias=True)\n    (1): GELU(approximate='none')\n    (2): Linear(in_features=128, out_features=1, bias=True)\n  )\n)",
+    "initial_state_dict_sha256": "c619fe2631b18bfea21b1b12b7b923b04277a40aa1b8d411156e8f3784ebffa0",
+    "input_flags": {
+      "use_feedback": true,
+      "use_surface": true,
+      "use_vlm": false
+    },
+    "parameter_count": 378978
+  },
+  "method": "NO_VLM_SPATIAL_FEEDBACK",
+  "patience": 4,
+  "run_id": "1ec5fb3a19c648a4aa7bc579049d7748",
+  "seed": 2026091302,
+  "selected_update": 1000,
+  "status": "COMPLETE",
+  "updates_completed": 1250,
+  "validation_interval": 250
+}

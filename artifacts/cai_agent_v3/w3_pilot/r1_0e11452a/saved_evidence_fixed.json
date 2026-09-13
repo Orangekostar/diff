@@ -1,0 +1,12 @@
+{
+  "fixed_scores": {
+    "CENTER_FIRST": 48.475340629691196,
+    "GEOMETRY_SPREAD": 47.310644799814476,
+    "RANDOM": 49.59439193122932,
+    "SERPENTINE": 48.91141600813801
+  },
+  "max_metric_absolute_difference": 5.684341886080802e-14,
+  "model_forward_calls": 0,
+  "optimizer_updates": 0,
+  "status": "SAVED_EVIDENCE_PASS"
+}

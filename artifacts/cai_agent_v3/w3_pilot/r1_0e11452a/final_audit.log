@@ -1,0 +1,53 @@
+{
+  "fixed_scores": {
+    "CENTER_FIRST": 48.475340629691196,
+    "GEOMETRY_SPREAD": 47.310644799814476,
+    "SERPENTINE": 48.91141600813801,
+    "RANDOM": 49.59439193122932
+  },
+  "model_forward_calls": 0,
+  "optimizer_updates": 0,
+  "models": [
+    {
+      "method": "VLM_SPATIAL_FEEDBACK",
+      "candidate_count": 5,
+      "selected_update": 250,
+      "actual_updates": 1250,
+      "weight_reload_equal": true
+    },
+    {
+      "method": "NO_VLM_SPATIAL_FEEDBACK",
+      "candidate_count": 5,
+      "selected_update": 1000,
+      "actual_updates": 1250,
+      "weight_reload_equal": true
+    },
+    {
+      "method": "VLM_SPATIAL_OPEN_LOOP",
+      "candidate_count": 5,
+      "selected_update": 750,
+      "actual_updates": 1250,
+      "weight_reload_equal": true
+    },
+    {
+      "method": "LEARNED_STATIC_TRUE",
+      "candidate_count": 3,
+      "selected_update": 250,
+      "actual_updates": 750,
+      "weight_reload_equal": true
+    },
+    {
+      "method": "VLM_MEAN_FEEDBACK",
+      "candidate_count": 5,
+      "selected_update": 250,
+      "actual_updates": 1250,
+      "weight_reload_equal": true
+    }
+  ],
+  "candidate_count": 23,
+  "final_episode_count": 650,
+  "final_table_verified": true,
+  "pilot_gate_independently_verified": true,
+  "status": "SAVED_EVIDENCE_PASS",
+  "max_metric_absolute_difference": 5.684341886080802e-14
+}

@@ -1,0 +1,51 @@
+{
+  "cases": [
+    {
+      "new_model_forwards": 0,
+      "paths": [
+        "results/cai_agent_v3/w3_pilot/r1_0e11452a/figures/74t7kcdgkr_c8-16_surface_cues.png",
+        "results/cai_agent_v3/w3_pilot/r1_0e11452a/figures/74t7kcdgkr_c8-16_first_action.png",
+        "results/cai_agent_v3/w3_pilot/r1_0e11452a/figures/74t7kcdgkr_c8-16_measured_1.png",
+        "results/cai_agent_v3/w3_pilot/r1_0e11452a/figures/74t7kcdgkr_c8-16_measured_4.png",
+        "results/cai_agent_v3/w3_pilot/r1_0e11452a/figures/74t7kcdgkr_c8-16_measured_8.png",
+        "results/cai_agent_v3/w3_pilot/r1_0e11452a/figures/74t7kcdgkr_c8-16_measured_16.png",
+        "results/cai_agent_v3/w3_pilot/r1_0e11452a/figures/74t7kcdgkr_c8-16_prediction.png"
+      ],
+      "source": "SAVED_REAL_EXECUTION_TRACE",
+      "specimen_key": "74t7kcdgkr:c8-16",
+      "status": "FIGURES_EXPORTED"
+    },
+    {
+      "new_model_forwards": 0,
+      "paths": [
+        "results/cai_agent_v3/w3_pilot/r1_0e11452a/figures/cgtnjyggtm_q24-48_surface_cues.png",
+        "results/cai_agent_v3/w3_pilot/r1_0e11452a/figures/cgtnjyggtm_q24-48_first_action.png",
+        "results/cai_agent_v3/w3_pilot/r1_0e11452a/figures/cgtnjyggtm_q24-48_measured_1.png",
+        "results/cai_agent_v3/w3_pilot/r1_0e11452a/figures/cgtnjyggtm_q24-48_measured_4.png",
+        "results/cai_agent_v3/w3_pilot/r1_0e11452a/figures/cgtnjyggtm_q24-48_measured_8.png",
+        "results/cai_agent_v3/w3_pilot/r1_0e11452a/figures/cgtnjyggtm_q24-48_measured_16.png",
+        "results/cai_agent_v3/w3_pilot/r1_0e11452a/figures/cgtnjyggtm_q24-48_prediction.png"
+      ],
+      "source": "SAVED_REAL_EXECUTION_TRACE",
+      "specimen_key": "cgtnjyggtm:q24-48",
+      "status": "FIGURES_EXPORTED"
+    },
+    {
+      "new_model_forwards": 0,
+      "paths": [
+        "results/cai_agent_v3/w3_pilot/r1_0e11452a/figures/w68dtmpfyf_q16-29_surface_cues.png",
+        "results/cai_agent_v3/w3_pilot/r1_0e11452a/figures/w68dtmpfyf_q16-29_first_action.png",
+        "results/cai_agent_v3/w3_pilot/r1_0e11452a/figures/w68dtmpfyf_q16-29_measured_1.png",
+        "results/cai_agent_v3/w3_pilot/r1_0e11452a/figures/w68dtmpfyf_q16-29_measured_4.png",
+        "results/cai_agent_v3/w3_pilot/r1_0e11452a/figures/w68dtmpfyf_q16-29_measured_8.png",
+        "results/cai_agent_v3/w3_pilot/r1_0e11452a/figures/w68dtmpfyf_q16-29_measured_16.png",
+        "results/cai_agent_v3/w3_pilot/r1_0e11452a/figures/w68dtmpfyf_q16-29_prediction.png"
+      ],
+      "source": "SAVED_REAL_EXECUTION_TRACE",
+      "specimen_key": "w68dtmpfyf:q16-29",
+      "status": "FIGURES_EXPORTED"
+    }
+  ],
+  "new_model_forwards": 0,
+  "status": "FIGURES_COMPLETE"
+}

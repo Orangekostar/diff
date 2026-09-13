@@ -1,0 +1,14 @@
+{
+  "archive_status": "INCOMPLETE",
+  "checkpoint": "results/cai_agent_v3/w3_pilot/r1_0e11452a/models/selection_history/learned_static_true_seed1/update_000250.pt",
+  "environment": {
+    "execution_code_sha": "0f18001c8fa25e83b6fd3ece2fa6c7cd74e6c5ff",
+    "method": "LEARNED_STATIC_TRUE",
+    "protocol_identity": "c89c60162469e2379cf9b51c711694bda12e79d74a009feab61f289b1707cbab",
+    "training_seed": 2026091304
+  },
+  "episodes_sha256": "3d9e8d7d2563375edff155c306beb4cffb665e1dfd4f283eede9366f44f300d2",
+  "rng_unchanged": true,
+  "run_id": "17bab87ac71d40abbc1bdf10b2054ebd",
+  "status": "FIRST_250_CONFIRMED"
+}

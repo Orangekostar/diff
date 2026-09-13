@@ -1,7 +1,7 @@
 {
   "mode": "SELF_CHECK_WITH_EXTERNAL_NUMERIC_ORACLE",
   "preflight_status": "PASS",
-  "formal_updates_so_far": 0,
+  "formal_updates_so_far": 5750,
   "checks": [
     {
       "requirement_id": "A1",
@@ -53,27 +53,32 @@
       "section": "§5",
       "symbol": "ActorArchive/_train_actor/PilotContext",
       "independent_expectation": "不同路径候选正常选择，缺非赢家拒绝；临时真实训练接线禁用optimizer.step，完成job零更新复用且RNG不变",
-      "evidence": "archive、training_wiring tests；真实首250尚未到达",
+      "evidence": "first_250_*.json all five confirmed, RNG unchanged; saved_evidence_final.json: 23 candidates/5 actual winners equal, latest optimizer/RNG complete; dynamic paths independently priced",
       "status": "PASS",
-      "real_execution_pending": true
+      "real_execution_pending": false
     },
     {
       "requirement_id": "A7",
       "section": "§8",
       "symbol": "check_budget/PilotContext/main",
       "independent_expectation": "W35750独立限额，不占W2余额1000；超方法/总量拒绝；入口仅五动作，gate不执行扩展",
-      "evidence": "task_cap、training_wiring tests；actual ledger starting33264",
+      "evidence": "174-row ledger original137 prefix unchanged; 5 STARTED/5 COMPLETED unique matches,23 PROGRESS increments0;5750 task,39014 cumulative;2 GPU sessions2595.753675s; FINAL_SCOPE_REVIEW.json; no forbidden entry called",
       "status": "PASS",
-      "real_execution_pending": true
+      "real_execution_pending": false
     },
     {
       "requirement_id": "A8",
       "section": "§6/9",
       "symbol": "summarize/export_figures/Git",
       "independent_expectation": "650真实最终episode、各参选归档与真实结果/图稿/远端SHA均须完成后检验",
-      "evidence": "NOT_APPLICABLE：尚未正式执行",
-      "status": "NOT_APPLICABLE",
-      "real_execution_pending": true
+      "evidence": "Local PASS: 650 episodes/50 specimens/48 groups; saved_evidence_final.json + FINAL_SCOPE_REVIEW.json; 33 weights,23 candidate episode files,21 visually inspected PNG; only actual remote delivery pending",
+      "status": "BLOCKED",
+      "real_execution_pending": false,
+      "remaining": "Git push and matching local/upstream/remote plus tracked file coverage"
     }
-  ]
+  ],
+  "final_local_review": "PASS_PENDING_GIT_DELIVERY",
+  "implementation_status": "EXECUTION_COMPLETE",
+  "scientific_evidence": "VALID_ONLY_PILOT_NOT_INDEPENDENT_CONFIRMATION",
+  "engineering_status": "ENGINEERING_ACCURACY_CRITERION_NOT_SPECIFIED"
 }

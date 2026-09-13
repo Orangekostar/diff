@@ -1,0 +1,14 @@
+{
+  "archive_status": "INCOMPLETE",
+  "checkpoint": "results/cai_agent_v3/w3_pilot/r1_0e11452a/models/selection_history/no_vlm_spatial_feedback_seed1/update_000250.pt",
+  "environment": {
+    "execution_code_sha": "0f18001c8fa25e83b6fd3ece2fa6c7cd74e6c5ff",
+    "method": "NO_VLM_SPATIAL_FEEDBACK",
+    "protocol_identity": "c89c60162469e2379cf9b51c711694bda12e79d74a009feab61f289b1707cbab",
+    "training_seed": 2026091302
+  },
+  "episodes_sha256": "c5c330c847b6547ced637954f499b23b8554cf27d2097062136e8dca9124486c",
+  "rng_unchanged": true,
+  "run_id": "1ec5fb3a19c648a4aa7bc579049d7748",
+  "status": "FIRST_250_CONFIRMED"
+}

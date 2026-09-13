@@ -1,0 +1,7 @@
+{
+  "automatically_execute_next_stage": false,
+  "best_nonadaptive": "GEOMETRY_SPREAD",
+  "pilot_expansion_condition_met": true,
+  "reasons": [],
+  "status": "POLICY_PILOT_SUPPORTED"
+}

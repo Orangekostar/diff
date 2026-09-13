@@ -1,0 +1,14 @@
+{
+  "archive_status": "INCOMPLETE",
+  "checkpoint": "results/cai_agent_v3/w3_pilot/r1_0e11452a/models/selection_history/vlm_mean_feedback_seed1/update_000250.pt",
+  "environment": {
+    "execution_code_sha": "0f18001c8fa25e83b6fd3ece2fa6c7cd74e6c5ff",
+    "method": "VLM_MEAN_FEEDBACK",
+    "protocol_identity": "c89c60162469e2379cf9b51c711694bda12e79d74a009feab61f289b1707cbab",
+    "training_seed": 2026091305
+  },
+  "episodes_sha256": "757b9fb178a91944ec3b00a8bdf94986f312bbdb7f9827361c8e8b12f2c043ab",
+  "rng_unchanged": true,
+  "run_id": "297b21918e4648ef897f24569f2a8282",
+  "status": "FIRST_250_CONFIRMED"
+}
