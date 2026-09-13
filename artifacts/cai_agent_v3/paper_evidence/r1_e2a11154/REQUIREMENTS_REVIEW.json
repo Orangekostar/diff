@@ -1,0 +1,85 @@
+{
+  "task_id": "CAI_V3_PAPER_EVIDENCE_R1_e2a11154",
+  "analysis_code_sha": "83cfa90",
+  "source_sha": "e2a1115468da6e8695321204a13fa9a5322ea809",
+  "mode": "SELF_CHECK_WITH_EXTERNAL_NUMERIC_ORACLE",
+  "new_updates": 0,
+  "new_forwards": 0,
+  "new_TEST_access": 0,
+  "old_outputs_unchanged": true,
+  "delivery": "PENDING_PUSH",
+  "requirements": [
+    {
+      "requirement_id": "A1",
+      "section": "§1/3",
+      "symbol": "Evidence.__init__/map_full",
+      "independent_expected": "650/9/50/48/6, original index full50, reversed index rejected",
+      "evidence": "INPUT_BINDINGS.json; full_scan_predictions.csv; test_full_original_order_and_labels_reject_permutation",
+      "status": "PASS",
+      "gaps": []
+    },
+    {
+      "requirement_id": "A2",
+      "section": "§4.2/4.3",
+      "symbol": "aggregate/weighted/bootstrap_weights",
+      "independent_expected": "Repeat losses not ensemble; pooled and domain-equal estimands; preserve group members",
+      "evidence": "8 direct tests; analysis_validation.json exact prior five-budget match; SAVED_EVIDENCE_REVIEW.json:5000x50 shared weights, maxCI difference1.78e-15",
+      "status": "PASS",
+      "gaps": []
+    },
+    {
+      "requirement_id": "A3",
+      "section": "§4.1/5.1",
+      "symbol": "held/area/curves",
+      "independent_expected": "A8, tail6, no future query, refuse b>.25; actual pixel budget stats",
+      "evidence": "test_left_step_and_horizon; 599x9 exact event curves, unchanged original costs; T1 actual mean/min/max",
+      "status": "PASS",
+      "gaps": []
+    },
+    {
+      "requirement_id": "A4",
+      "section": "§3.2/4.2",
+      "symbol": "map_full/full_scan_reference",
+      "independent_expected": "Same predictor @1750 full_* original-order50; full only cost1/area null",
+      "evidence": "full_scan_predictions.csv; full_scan_reference.json:MAE41.6900100708 RMSE53.9440398105 R2.7105359831 identical source; full_scan_gap.csv",
+      "status": "PASS",
+      "gaps": []
+    },
+    {
+      "requirement_id": "A5",
+      "section": "§5",
+      "symbol": "first_quality/saving/Evidence.quality",
+      "independent_expected": "Both earliest, no per-specimen STOP, all q/anchors, null/zero/negative/recross",
+      "evidence": "SAVED_EVIDENCE_REVIEW.json independently reconstructs840 rows;147 not-reached,43 negative-saving,54 zero-denominator; fixed anchor .0625/.125/.0625",
+      "status": "PASS",
+      "gaps": []
+    },
+    {
+      "requirement_id": "A6",
+      "section": "§6/7",
+      "symbol": "validate_episode/mechanisms/texts",
+      "independent_expected": "Only actual callback; retain VLM negative, mean better MAE and worse RMSE, heterogeneous domains and badcase",
+      "evidence": "10227 acquisition events validated; claim matrix E1-E7; all9 methods and3cases; RESULTS draft/limitations manually checked, recorded C0 reason explicitly distinguished from real restriction",
+      "status": "PASS",
+      "gaps": []
+    },
+    {
+      "requirement_id": "A7",
+      "section": "§0/1/8",
+      "symbol": "analyze/export/CLI",
+      "independent_expected": "No model/checkpoint/featurebank/TEST/GPU/fit; frozen roots read-only; one shared bootstrap",
+      "evidence": "Source review: math/CSV/JSON/NPZ only; entry+exit necessary input hashes equal; Git diff old roots empty; ledger zero-update append; source review scope flags remain explicit",
+      "status": "PASS",
+      "gaps": []
+    },
+    {
+      "requirement_id": "A8",
+      "section": "§7/8.2",
+      "symbol": "table_fragments/export/Git",
+      "independent_expected": "CSV/MD/TeX match; six readable unit-correct figures; actual push",
+      "evidence": "SAVED_EVIDENCE_REVIEW.json table cells equal; FIGURE_QA.json six PDF checks + visual inspection PASS; Git push remains final pending item",
+      "status": "LOCAL_PASS_PENDING_PUSH",
+      "gaps": []
+    }
+  ]
+}

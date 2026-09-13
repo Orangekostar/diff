@@ -1,0 +1,85 @@
+{
+  "figures": [
+    {
+      "figure": "F1_mae_cost",
+      "source": "cost_error_event_curves.csv; full_scan_reference.json",
+      "formats": [
+        "png",
+        "svg",
+        "pdf"
+      ],
+      "width_inches": 7.2,
+      "height_inches": 5.0,
+      "alignment": "NOT_APPLICABLE_SINGLE_AXES",
+      "scope": "POSTHOC_FROZEN_VALID_SINGLE_SEED"
+    },
+    {
+      "figure": "F2_rmse_cost",
+      "source": "cost_error_event_curves.csv; full_scan_reference.json",
+      "formats": [
+        "png",
+        "svg",
+        "pdf"
+      ],
+      "width_inches": 7.2,
+      "height_inches": 5.0,
+      "alignment": "NOT_APPLICABLE_SINGLE_AXES",
+      "scope": "POSTHOC_FROZEN_VALID_SINGLE_SEED"
+    },
+    {
+      "figure": "F3_r2_cost",
+      "source": "cost_error_event_curves.csv; full_scan_reference.json",
+      "formats": [
+        "png",
+        "svg",
+        "pdf"
+      ],
+      "width_inches": 7.2,
+      "height_inches": 5.0,
+      "alignment": "NOT_APPLICABLE_SINGLE_AXES",
+      "scope": "POSTHOC_FROZEN_VALID_SINGLE_SEED"
+    },
+    {
+      "figure": "F4_equal_quality",
+      "source": "equal_quality_grid.csv (PRIMARY_FIVE_BUDGETS; missing = not reached)",
+      "formats": [
+        "png",
+        "svg",
+        "pdf"
+      ],
+      "width_inches": 7.2,
+      "height_inches": 5.0,
+      "alignment": "NOT_APPLICABLE_SINGLE_AXES",
+      "scope": "POSTHOC_FROZEN_VALID_SINGLE_SEED"
+    },
+    {
+      "figure": "F5_mechanism_effects",
+      "source": "mechanism_area_intervals.csv",
+      "formats": [
+        "png",
+        "svg",
+        "pdf"
+      ],
+      "width_inches": 7.2,
+      "height_inches": 5.0,
+      "alignment": "NOT_APPLICABLE_SINGLE_AXES",
+      "scope": "POSTHOC_FROZEN_VALID_SINGLE_SEED"
+    },
+    {
+      "figure": "F6_full_scan_gap",
+      "source": "cost_error_event_curves.csv; full_scan_reference.json",
+      "formats": [
+        "png",
+        "svg",
+        "pdf"
+      ],
+      "width_inches": 7.2,
+      "height_inches": 5.0,
+      "alignment": "NOT_APPLICABLE_SINGLE_AXES",
+      "scope": "POSTHOC_FROZEN_VALID_SINGLE_SEED"
+    }
+  ],
+  "count": 6,
+  "old_case_figures": "case_figure_reuse.csv (21 unchanged source PNG)",
+  "new_model_forwards": 0
+}

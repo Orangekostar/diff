@@ -1061,7 +1061,7 @@ class Evidence:
             ),
             (
                 "E6",
-                "空间结构面积略低但终点误差高于均值结构",
+                "空间结构面积略低，终点MAE更高但RMSE略低于均值结构",
                 "VLM_MEAN_FEEDBACK",
                 "area",
             ),
@@ -1234,7 +1234,7 @@ def export(root):
 
     def new(ylabel, title):
         fig, ax = plt.subplots(figsize=(7.2, 5.0))
-        fig.subplots_adjust(left=0.13, right=0.97, bottom=0.32, top=0.90)
+        fig.subplots_adjust(left=0.13, right=0.97, bottom=0.38, top=0.90)
         ax.set(
             xlabel="Native-raster acquisition fraction (budget cap)",
             ylabel=ylabel,
@@ -1248,9 +1248,13 @@ def export(root):
 
     def save(fig, ax, name, source, legend=True):
         if legend:
-            ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.23), ncol=3)
+            ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.27), ncol=2)
         for extension in ("png", "svg", "pdf"):
             fig.savefig(figdir / f"{name}.{extension}", dpi=300)
+        svg = figdir / f"{name}.svg"
+        svg.write_text(
+            "\n".join(line.rstrip() for line in svg.read_text().splitlines()) + "\n"
+        )
         outputs.append(
             {
                 "figure": name,

@@ -1,0 +1,13 @@
+\begin{tabular}{llllllllll}
+\hline
+claim\_id & proposed\_sentence & estimand & estimate\_mpa & source\_file & row\_key & support\_level & scope & limitations & display \\
+\hline
+E1 & 有限投入下主方法相对固定路线的误差较低 & area & 2.200268 & mechanism\_effects.csv & GEOMETRY\_SPREAD & DESCRIPTIVE\_FROZEN\_VALID & POSTHOC\_FROZEN\_VALID\_SINGLE\_SEED & No causal/independent/industrial/STOP claim; selected VALID, single seed; retain adverse endpoint and domain effects & F5/T2 \\
+E2 & 主方法比同VLM开环有较低面积误差 & area & 1.390605 & mechanism\_effects.csv & VLM\_SPATIAL\_OPEN\_LOOP & DESCRIPTIVE\_FROZEN\_VALID & POSTHOC\_FROZEN\_VALID\_SINGLE\_SEED & No causal/independent/industrial/STOP claim; selected VALID, single seed; retain adverse endpoint and domain effects & F5/T2 \\
+E3 & 学习反馈策略比共享静态排序有较低面积误差 & area & 2.866345 & mechanism\_effects.csv & LEARNED\_STATIC\_TRUE & DESCRIPTIVE\_FROZEN\_VALID & POSTHOC\_FROZEN\_VALID\_SINGLE\_SEED & No causal/independent/industrial/STOP claim; selected VALID, single seed; retain adverse endpoint and domain effects & F5/T2 \\
+E4 & 实际日志记录取得观测后再调用选择下一位置 & ACTUAL\_EVENT\_SEQUENCE & NA & acquisition\_events.csv & method=VLM\_SPATIAL\_FEEDBACK & DESCRIPTIVE\_FROZEN\_VALID & POSTHOC\_FROZEN\_VALID\_SINGLE\_SEED & No causal/independent/industrial/STOP claim; selected VALID, single seed; retain adverse endpoint and domain effects & case figures/process table \\
+E5 & 本面板未显示VLM带来额外早期或全程收益 & early\_area & -0.871600 & mechanism\_effects.csv & NO\_VLM\_SPATIAL\_FEEDBACK & DESCRIPTIVE\_FROZEN\_VALID & POSTHOC\_FROZEN\_VALID\_SINGLE\_SEED & No causal/independent/industrial/STOP claim; selected VALID, single seed; retain adverse endpoint and domain effects & F5/T2 \\
+E6 & 空间结构面积略低，终点MAE更高但RMSE略低于均值结构 & area & 0.152189 & mechanism\_effects.csv & VLM\_MEAN\_FEEDBACK & DESCRIPTIVE\_FROZEN\_VALID & POSTHOC\_FROZEN\_VALID\_SINGLE\_SEED & No causal/independent/industrial/STOP claim; selected VALID, single seed; retain adverse endpoint and domain effects & F5/T2 \\
+E7 & 主方法25\%成本上限仍有完整输入质量差距 & MAE\_MAIN\_025\_MINUS\_FULL\_1 & 2.595789 & full\_scan\_gap.csv & FULL\_SCAN\_P\_ALL & DESCRIPTIVE\_FROZEN\_VALID & POSTHOC\_FROZEN\_VALID\_SINGLE\_SEED & No causal/independent/industrial/STOP claim; selected VALID, single seed; retain adverse endpoint and domain effects & F6/T1 \\
+\hline
+\end{tabular}

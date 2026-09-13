@@ -1,0 +1,14 @@
+{
+  "episode_count": 650,
+  "event_count": 10227,
+  "event_grid_points": 599,
+  "quality_grid_targets": 21,
+  "anchor_targets": 21,
+  "methods": 9,
+  "full_reference": {
+    "mae": 41.69001007080078,
+    "mse": 2909.959431077675,
+    "rmse": 53.94403981050803,
+    "r2": 0.7105359831287097
+  }
+}

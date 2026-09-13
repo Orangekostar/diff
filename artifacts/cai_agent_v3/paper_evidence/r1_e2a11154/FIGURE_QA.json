@@ -1,0 +1,23 @@
+{
+  "status": "PASS_RENDERED_QA",
+  "summary_figures": 6,
+  "formats": [
+    "PNG 300dpi",
+    "SVG editable text",
+    "PDF TrueType"
+  ],
+  "minimum_rendered_font_pt": 8,
+  "all_six_pdf_text_exit_codes": 0,
+  "all_six_collision_exit_codes": 0,
+  "collision_warnings": 0,
+  "visual_inspection": "All six final figures viewed together; F1 full-resolution checked. First three-column legend overlap fixed to two columns before final PDF/visual checks. No source data or bootstrap changed. All curves and adverse controls present; no .25-to-1 acquisition curve.",
+  "alignment": "NOT_APPLICABLE_SIX_SINGLE_AXES_FIGURES",
+  "static_validator_limitations": {
+    "FONT-FAMILY": "Heuristic did not recognize explicit DejaVu Sans; rendered PDFs use embedded DejaVuSans, >=8pt.",
+    "EXPORT-VECTOR/EXPORT-RASTER": "Heuristic cannot infer extension loop; six actual PNG/SVG/PDF triplets exist and were viewed/audited.",
+    "RASTER-DPI": "300dpi selected and stated; above publication floor, lower than skill default600. SVG/PDF also supplied.",
+    "UNCERTAINTY-ENCODING": "F1-F4/F6 are requested point estimates; F5 explicit horizontal CI segments verified against 4-row CI CSV. No missing uncertainty claim."
+  },
+  "new_model_forwards": 0,
+  "svg_delivery_normalization": "Removed Matplotlib trailing line whitespace; parsed XML element/attribute/text signatures unchanged. No change to figure geometry, PNG or audited PDF."
+}

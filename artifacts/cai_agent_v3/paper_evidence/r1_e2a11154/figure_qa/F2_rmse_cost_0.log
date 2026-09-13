@@ -1,0 +1,8 @@
+Nature Figure PDF Text Audit
+pdf: results/cai_agent_v3/paper_evidence/r1_e2a11154/figures/F2_rmse_cost.pdf
+minimum required: 5 pt
+minimum found: 8 pt
+text runs: 24
+below minimum: 0
+verdict: PASS
+note: Tf scanning does not replace final-size visual inspection or account for every PDF transform

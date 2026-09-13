@@ -1,0 +1,27 @@
+{
+  "status": "PASS",
+  "full_source_mae": 41.69001007080078,
+  "frozen_episode_count": 650,
+  "capture_groups": 48,
+  "same_cost_rows": 46,
+  "paired_rows": 2000,
+  "paired_summary_rows": 40,
+  "shared_bootstrap_shape": [
+    5000,
+    50
+  ],
+  "max_interval_recompute_difference": 1.7763568394002505e-15,
+  "quality_grid_range": [
+    41,
+    61
+  ],
+  "quality_rows_total": 840,
+  "not_reached_rows": 147,
+  "negative_saving_rows": 43,
+  "zero_denominator_rows": 54,
+  "table_markdown_latex_rows_match": true,
+  "old_outputs_unchanged": true,
+  "new_model_forwards": 0,
+  "new_bootstrap_draws_in_review": 0,
+  "review_mode": "SELF_CHECK_WITH_EXTERNAL_NUMERIC_ORACLE"
+}

@@ -1,0 +1,14 @@
+{
+  "frozen_five_budget_max_difference": 2.1316282072803006e-14,
+  "full_reference_max_difference": 0.0,
+  "independent_quality_anchor": {
+    "target": 46.9099169921875,
+    "costs": {
+      "VLM_SPATIAL_FEEDBACK": 0.0625,
+      "GEOMETRY_SPREAD": 0.125,
+      "LEARNED_STATIC_TRUE": 0.0625
+    },
+    "relative_saving_vs_geometry": 0.5,
+    "relative_saving_vs_static": 0.0
+  }
+}

@@ -1,0 +1,10 @@
+Nature Figure Rendered Collision Audit
+pdf: results/cai_agent_v3/paper_evidence/r1_e2a11154/figures/F3_r2_cost.pdf
+pages: 1
+visible text boxes: 26
+stroke paths: 41
+
+
+summary: 0 fail, 0 warn, 0 contained fill overlays, 0 contained image overlays
+verdict: PASS
+note: contained overlays can be intentional; WARN findings need final-size visual review

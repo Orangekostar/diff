@@ -1,0 +1,28 @@
+{
+  "method": "FULL_SCAN_P_ALL",
+  "cost_support": [
+    1.0
+  ],
+  "area": null,
+  "mae": 41.69001007080078,
+  "mse": 2909.959431077675,
+  "rmse": 53.94403981050803,
+  "r2": 0.7105359831287097,
+  "source": {
+    "scope": "W2_SAVED_VALID_REFERENCE_NOT_ACTOR_RESULT",
+    "checkpoint_path": "results/cai_agent_v3/w2_replay/r1_292b1c74/models/predictor_mean_sc.pt",
+    "checkpoint_sha256": "f67e912bd5faa26ae5cff8a9a0241439797fccef8cec825f43ebe5dc9f9d57ff",
+    "selected_update": 1750,
+    "source_gate": "results/cai_agent_v3/w2_replay/r1_292b1c74/predictor_gate.json",
+    "source_predictions": "results/cai_agent_v3/w2_replay/r1_292b1c74/candidate_state_predictions/A_MEAN_SC/update_001750.npz",
+    "physical_n": 50,
+    "zero_mae_mpa": 58.550993041992186,
+    "full_mae_mpa": 41.69001007080078,
+    "full_rmse_mpa": 53.94403981050803,
+    "full_r2": 0.7105359831287097,
+    "new_model_forward_calls": 0,
+    "note": "W2 saved batched inference reference; W3 uses the same weights with existing per-episode inference. The W2 four-route A is not the best fixed W3 comparator."
+  },
+  "input": "FULL_CSCAN_PLUS_EXISTING_SURFACE",
+  "physical_n": 50
+}
