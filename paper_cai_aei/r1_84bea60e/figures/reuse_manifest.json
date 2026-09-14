@@ -1,0 +1,236 @@
+[
+  {
+    "output": "figures/Fig2_mae.pdf",
+    "source": "results/cai_agent_v3/paper_evidence/r1_e2a11154/figures/F1_mae_cost.pdf",
+    "sha256": "8516001d6bb7232d18345409d36d51b8396954a4eb02dd129bc05ad3f43451ea",
+    "mode": "UNCHANGED_COPY"
+  },
+  {
+    "output": "figures/Fig2_mae.svg",
+    "source": "results/cai_agent_v3/paper_evidence/r1_e2a11154/figures/F1_mae_cost.svg",
+    "sha256": "3032f6bf6b23d4462c4862cf0c8b93cc90df648c6fba08b47264d88f5f465f60",
+    "mode": "UNCHANGED_COPY"
+  },
+  {
+    "output": "figures/Fig2_mae.png",
+    "source": "results/cai_agent_v3/paper_evidence/r1_e2a11154/figures/F1_mae_cost.png",
+    "sha256": "f9f0c20db41befaec515d2b9c4cfbc0bfeb3f0f9581e1a566b0359b6207d72ec",
+    "mode": "UNCHANGED_COPY"
+  },
+  {
+    "output": "figures/Fig3_contrasts.pdf",
+    "source": "results/cai_agent_v3/paper_evidence/r1_e2a11154/figures/F5_mechanism_effects.pdf",
+    "sha256": "fd0e85df11c097064bd2e36bb438563750fbe4c3cc3a8b2e8b153c8f5a55b87b",
+    "mode": "UNCHANGED_COPY"
+  },
+  {
+    "output": "figures/Fig3_contrasts.svg",
+    "source": "results/cai_agent_v3/paper_evidence/r1_e2a11154/figures/F5_mechanism_effects.svg",
+    "sha256": "ba9a018fa44c6a0001eef0e3500b142af9cddd03e215a1fea8913a2e75210d1a",
+    "mode": "UNCHANGED_COPY"
+  },
+  {
+    "output": "figures/Fig3_contrasts.png",
+    "source": "results/cai_agent_v3/paper_evidence/r1_e2a11154/figures/F5_mechanism_effects.png",
+    "sha256": "ef2eb62cbaa2ce4cec25ffa41e0bed2caef1616a90c79bf457e37d10fc9fb756",
+    "mode": "UNCHANGED_COPY"
+  },
+  {
+    "output": "figures/Fig6_quality.pdf",
+    "source": "results/cai_agent_v3/paper_evidence/r1_e2a11154/figures/F4_equal_quality.pdf",
+    "sha256": "b42486140b435cb1eae2a553b20b43ebd8f50edc280e4c7e1ba80b5f851325be",
+    "mode": "UNCHANGED_COPY"
+  },
+  {
+    "output": "figures/Fig6_quality.svg",
+    "source": "results/cai_agent_v3/paper_evidence/r1_e2a11154/figures/F4_equal_quality.svg",
+    "sha256": "61425b214417aac72583423a61126b4fa0e4eb702c8dcb852feab2bd83804242",
+    "mode": "UNCHANGED_COPY"
+  },
+  {
+    "output": "figures/Fig6_quality.png",
+    "source": "results/cai_agent_v3/paper_evidence/r1_e2a11154/figures/F4_equal_quality.png",
+    "sha256": "448adf4579cc3cb2d40a853fea39fd8be1c6c7b8c322aa38d7a8bcfde80d0058",
+    "mode": "UNCHANGED_COPY"
+  },
+  {
+    "output": "figures/FigS1_rmse.pdf",
+    "source": "results/cai_agent_v3/paper_evidence/r1_e2a11154/figures/F2_rmse_cost.pdf",
+    "sha256": "d7b9a1138c02b6ea2957f9486b86d5ac31afb4431c4bb1c65866b7a50626110f",
+    "mode": "UNCHANGED_COPY"
+  },
+  {
+    "output": "figures/FigS1_rmse.svg",
+    "source": "results/cai_agent_v3/paper_evidence/r1_e2a11154/figures/F2_rmse_cost.svg",
+    "sha256": "efddee4811cbb5abda332fe0b5beab5ef02a25e27c367e798a50e2ef4f7e9fdf",
+    "mode": "UNCHANGED_COPY"
+  },
+  {
+    "output": "figures/FigS1_rmse.png",
+    "source": "results/cai_agent_v3/paper_evidence/r1_e2a11154/figures/F2_rmse_cost.png",
+    "sha256": "8c0a421b6aee8ba9df748dbd3b86cca8441497808214d0ad31f7e7cf787478cf",
+    "mode": "UNCHANGED_COPY"
+  },
+  {
+    "output": "figures/FigS2_r2.pdf",
+    "source": "results/cai_agent_v3/paper_evidence/r1_e2a11154/figures/F3_r2_cost.pdf",
+    "sha256": "924aa7f6ef669e5edb8ed7b6c03dbd7606df9a4da8da5364d5a907230714231f",
+    "mode": "UNCHANGED_COPY"
+  },
+  {
+    "output": "figures/FigS2_r2.svg",
+    "source": "results/cai_agent_v3/paper_evidence/r1_e2a11154/figures/F3_r2_cost.svg",
+    "sha256": "e9f2ec639e0451f9c76b254595152bae1b96977f55c0560fc1da139d35658020",
+    "mode": "UNCHANGED_COPY"
+  },
+  {
+    "output": "figures/FigS2_r2.png",
+    "source": "results/cai_agent_v3/paper_evidence/r1_e2a11154/figures/F3_r2_cost.png",
+    "sha256": "cf58afe6b3da38c8759448b87e202daf56035ea7d2006b546768b7991aa3e39a",
+    "mode": "UNCHANGED_COPY"
+  },
+  {
+    "output": "figures/FigS3_gap.pdf",
+    "source": "results/cai_agent_v3/paper_evidence/r1_e2a11154/figures/F6_full_scan_gap.pdf",
+    "sha256": "85bc5bdf24eceab5fcf99e50387524e62ea6f2a57cc326f9336f550f53657d09",
+    "mode": "UNCHANGED_COPY"
+  },
+  {
+    "output": "figures/FigS3_gap.svg",
+    "source": "results/cai_agent_v3/paper_evidence/r1_e2a11154/figures/F6_full_scan_gap.svg",
+    "sha256": "e8129f88df93ec81904fe185e8c40e486cc899123f6e3d19c7040f54e0ac871e",
+    "mode": "UNCHANGED_COPY"
+  },
+  {
+    "output": "figures/FigS3_gap.png",
+    "source": "results/cai_agent_v3/paper_evidence/r1_e2a11154/figures/F6_full_scan_gap.png",
+    "sha256": "fc77338970e3419f0ad09021cdf7d5a6709653eccb678c65d320ed002217e524",
+    "mode": "UNCHANGED_COPY"
+  },
+  {
+    "output": "figures/74t7kcdgkr_c8-16_surface_cues.png",
+    "source": "results/cai_agent_v3/w3_pilot/r1_0e11452a/figures/74t7kcdgkr_c8-16_surface_cues.png",
+    "sha256": "6844cfd2fc33d8f7373f18e596f6a58a66931e89f492c0d569257bb21643fa04",
+    "mode": "UNCHANGED_COPY"
+  },
+  {
+    "output": "figures/74t7kcdgkr_c8-16_first_action.png",
+    "source": "results/cai_agent_v3/w3_pilot/r1_0e11452a/figures/74t7kcdgkr_c8-16_first_action.png",
+    "sha256": "2950cc68b4311006c3b637750ad8b39a62ba9d8b5aa00f7df7890956b2255f3d",
+    "mode": "UNCHANGED_COPY"
+  },
+  {
+    "output": "figures/74t7kcdgkr_c8-16_measured_1.png",
+    "source": "results/cai_agent_v3/w3_pilot/r1_0e11452a/figures/74t7kcdgkr_c8-16_measured_1.png",
+    "sha256": "1ad95c0a4c686c06cfc94eb1c716e2d1a13276d845128d4760653b9962668d24",
+    "mode": "UNCHANGED_COPY"
+  },
+  {
+    "output": "figures/74t7kcdgkr_c8-16_measured_4.png",
+    "source": "results/cai_agent_v3/w3_pilot/r1_0e11452a/figures/74t7kcdgkr_c8-16_measured_4.png",
+    "sha256": "7d43716a35cc3cd800d0cc9bf8f1ea71f7b5e7bd8197f8f374522e01698c3c59",
+    "mode": "UNCHANGED_COPY"
+  },
+  {
+    "output": "figures/74t7kcdgkr_c8-16_measured_8.png",
+    "source": "results/cai_agent_v3/w3_pilot/r1_0e11452a/figures/74t7kcdgkr_c8-16_measured_8.png",
+    "sha256": "57a9d093f20e64ae7c04fe9972213d4d5cf1d9c4f952f5b12f8e384f0f378184",
+    "mode": "UNCHANGED_COPY"
+  },
+  {
+    "output": "figures/74t7kcdgkr_c8-16_measured_16.png",
+    "source": "results/cai_agent_v3/w3_pilot/r1_0e11452a/figures/74t7kcdgkr_c8-16_measured_16.png",
+    "sha256": "792b2b2df0d2e32e9737d9cf9cd5252470264f2723e06296db988d511c2b5789",
+    "mode": "UNCHANGED_COPY"
+  },
+  {
+    "output": "figures/74t7kcdgkr_c8-16_prediction.png",
+    "source": "results/cai_agent_v3/w3_pilot/r1_0e11452a/figures/74t7kcdgkr_c8-16_prediction.png",
+    "sha256": "7ef1ac031bb741e6c661281314c4d555c30d4fb9aecdc162f3f1b3f5db7f9170",
+    "mode": "UNCHANGED_COPY"
+  },
+  {
+    "output": "figures/cgtnjyggtm_q24-48_surface_cues.png",
+    "source": "results/cai_agent_v3/w3_pilot/r1_0e11452a/figures/cgtnjyggtm_q24-48_surface_cues.png",
+    "sha256": "1a9017621117e682a411801ef3574f815a60d0fb5e32900afbb251fa2561725b",
+    "mode": "UNCHANGED_COPY"
+  },
+  {
+    "output": "figures/cgtnjyggtm_q24-48_first_action.png",
+    "source": "results/cai_agent_v3/w3_pilot/r1_0e11452a/figures/cgtnjyggtm_q24-48_first_action.png",
+    "sha256": "51636508f4e0ac662b5630632cb4383b58a9065c94054d63858b5e6a0c7cf2ec",
+    "mode": "UNCHANGED_COPY"
+  },
+  {
+    "output": "figures/cgtnjyggtm_q24-48_measured_1.png",
+    "source": "results/cai_agent_v3/w3_pilot/r1_0e11452a/figures/cgtnjyggtm_q24-48_measured_1.png",
+    "sha256": "e88581a4a384a6b2a661e8f677f5327f96aebcc3d4e49b85addb6bc4658956d7",
+    "mode": "UNCHANGED_COPY"
+  },
+  {
+    "output": "figures/cgtnjyggtm_q24-48_measured_4.png",
+    "source": "results/cai_agent_v3/w3_pilot/r1_0e11452a/figures/cgtnjyggtm_q24-48_measured_4.png",
+    "sha256": "cdb1642c2baf697e20e22340bd9a5286c537a87ee5556adef7acc0df3ba5c637",
+    "mode": "UNCHANGED_COPY"
+  },
+  {
+    "output": "figures/cgtnjyggtm_q24-48_measured_8.png",
+    "source": "results/cai_agent_v3/w3_pilot/r1_0e11452a/figures/cgtnjyggtm_q24-48_measured_8.png",
+    "sha256": "adb9a64e3bad338970093c57ef0d0c9768dfbba867907b4c56c12983cda5788b",
+    "mode": "UNCHANGED_COPY"
+  },
+  {
+    "output": "figures/cgtnjyggtm_q24-48_measured_16.png",
+    "source": "results/cai_agent_v3/w3_pilot/r1_0e11452a/figures/cgtnjyggtm_q24-48_measured_16.png",
+    "sha256": "9b61b0f517cebb882478e923a388e56ca7d3e9adad662d378977579652d75131",
+    "mode": "UNCHANGED_COPY"
+  },
+  {
+    "output": "figures/cgtnjyggtm_q24-48_prediction.png",
+    "source": "results/cai_agent_v3/w3_pilot/r1_0e11452a/figures/cgtnjyggtm_q24-48_prediction.png",
+    "sha256": "f0f8f13db6701cfa0fc73584086ca5a847712d0325fa17aed4e4211549186c4f",
+    "mode": "UNCHANGED_COPY"
+  },
+  {
+    "output": "figures/w68dtmpfyf_q16-29_surface_cues.png",
+    "source": "results/cai_agent_v3/w3_pilot/r1_0e11452a/figures/w68dtmpfyf_q16-29_surface_cues.png",
+    "sha256": "a9571fc9cd09faad3bccadad974b77074fd608b6e1298337945f15b5890dc267",
+    "mode": "UNCHANGED_COPY"
+  },
+  {
+    "output": "figures/w68dtmpfyf_q16-29_first_action.png",
+    "source": "results/cai_agent_v3/w3_pilot/r1_0e11452a/figures/w68dtmpfyf_q16-29_first_action.png",
+    "sha256": "15c2ccb17fe72b03e2472520b866d8671aae1b45a84b0947b43280141322bfb0",
+    "mode": "UNCHANGED_COPY"
+  },
+  {
+    "output": "figures/w68dtmpfyf_q16-29_measured_1.png",
+    "source": "results/cai_agent_v3/w3_pilot/r1_0e11452a/figures/w68dtmpfyf_q16-29_measured_1.png",
+    "sha256": "5d4556e6bf5792b1273fe3677f63f9e7db970d17605c0f123b702e8e0afdb28c",
+    "mode": "UNCHANGED_COPY"
+  },
+  {
+    "output": "figures/w68dtmpfyf_q16-29_measured_4.png",
+    "source": "results/cai_agent_v3/w3_pilot/r1_0e11452a/figures/w68dtmpfyf_q16-29_measured_4.png",
+    "sha256": "4db8a2bcdec69fe31fada54a5cd4f619c00a092de2c52d03ba10c42e5835bc04",
+    "mode": "UNCHANGED_COPY"
+  },
+  {
+    "output": "figures/w68dtmpfyf_q16-29_measured_8.png",
+    "source": "results/cai_agent_v3/w3_pilot/r1_0e11452a/figures/w68dtmpfyf_q16-29_measured_8.png",
+    "sha256": "7a11aa7fff0c1eb84d652be5c7554a37e903ffc6c3bbc0b2165d537b7fa3e3f2",
+    "mode": "UNCHANGED_COPY"
+  },
+  {
+    "output": "figures/w68dtmpfyf_q16-29_measured_16.png",
+    "source": "results/cai_agent_v3/w3_pilot/r1_0e11452a/figures/w68dtmpfyf_q16-29_measured_16.png",
+    "sha256": "692623336ef472ae835c745f0a8c72966507cae0be83628a2188bce6a291cbcf",
+    "mode": "UNCHANGED_COPY"
+  },
+  {
+    "output": "figures/w68dtmpfyf_q16-29_prediction.png",
+    "source": "results/cai_agent_v3/w3_pilot/r1_0e11452a/figures/w68dtmpfyf_q16-29_prediction.png",
+    "sha256": "89be4a02a0be64ab7876b28f76423c683b8194f9318f1b9c287144a2c15fcd37",
+    "mode": "UNCHANGED_COPY"
+  }
+]

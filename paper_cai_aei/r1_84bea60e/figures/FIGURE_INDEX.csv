@@ -1,0 +1,7 @@
+figure,file,source,row_key,mode
+Fig1,figures/Fig1_framework.pdf,src/cmc_bbdm/cai_agent_v3/models.py; src/cmc_bbdm/cai_agent_v3/policy.py; src/cmc_bbdm/cai_agent_v3/feature_bank.py,code-defined workflow,NEW_DETERMINISTIC_SCHEMATIC
+Fig2,figures/Fig2_mae.pdf,results/cai_agent_v3/paper_evidence/r1_e2a11154/figures/F1_mae_cost.pdf,cost_error_event_curves.csv,UNCHANGED
+Fig3,figures/Fig3_contrasts.pdf,results/cai_agent_v3/paper_evidence/r1_e2a11154/figures/F5_mechanism_effects.pdf,mechanism_area_intervals.csv,UNCHANGED
+Fig4,figures/Fig4_timing.pdf,analysis/timing_contributions.csv,9methods x4stages,NEW_SAVED_DATA_PLOT
+Fig5,figures/74t7kcdgkr_c8-16_measured_4.png,results/cai_agent_v3/paper_evidence/r1_e2a11154/case_figure_reuse.csv,74t7kcdgkr:c8-16; step4,UNCHANGED
+Fig6,figures/Fig6_quality.pdf,results/cai_agent_v3/paper_evidence/r1_e2a11154/figures/F4_equal_quality.pdf,equal_quality_grid.csv; primary grid,UNCHANGED

@@ -1,0 +1,41 @@
+{
+  "status": "PASS",
+  "scope": "DESCRIPTIVE_ALGEBRAIC_DECOMPOSITION_OF_FROZEN_VALID",
+  "episodes": 650,
+  "events": 10227,
+  "methods": 9,
+  "physical_n": 50,
+  "max_episode_identity_residual": 2.842170943040401e-14,
+  "aggregate_minus_saved_area": {
+    "CENTER_FIRST": 0.0,
+    "GEOMETRY_SPREAD": 0.0,
+    "SERPENTINE": 0.0,
+    "RANDOM": -7.105427357601002e-15,
+    "LEARNED_STATIC_TRUE": 0.0,
+    "NO_VLM_SPATIAL_FEEDBACK": -7.105427357601002e-15,
+    "VLM_MEAN_FEEDBACK": 0.0,
+    "VLM_SPATIAL_FEEDBACK": -7.105427357601002e-15,
+    "VLM_SPATIAL_OPEN_LOOP": 0.0
+  },
+  "comparison_identity_residual": {
+    "CENTER_FIRST": 3.552713678800501e-15,
+    "GEOMETRY_SPREAD": 3.552713678800501e-15,
+    "SERPENTINE": 5.329070518200751e-15,
+    "RANDOM": 0.0,
+    "LEARNED_STATIC_TRUE": 5.329070518200751e-15,
+    "NO_VLM_SPATIAL_FEEDBACK": -3.552713678800501e-15,
+    "VLM_MEAN_FEEDBACK": 3.552713678800501e-15,
+    "VLM_SPATIAL_FEEDBACK": 0.0,
+    "VLM_SPATIAL_OPEN_LOOP": 7.105427357601002e-15
+  },
+  "bins": "right_closed_by_action_completion_cost",
+  "aggregation": "episode_sum_then_repeat_mean_then_within_domain_specimen_mean_then_domain_equal",
+  "model_calls": 0,
+  "bootstrap_replicates": 0,
+  "optimizer_updates": 0,
+  "inputs": {
+    "acquisition_events.csv": "1b8c44581e9ebdf5521801a8cef722de0bd933a71e8d04b8a8f80b63034f42e6",
+    "frozen_episode_index.csv": "b8dc9f5234f39be9ca94095d6c7294461169b791d3bd302e9b816bbf303443ab",
+    "method_summary.csv": "4da4ee3092f894c6899c76f7875395484e8cf7739bf434d8f6ff5eb6fd817cf7"
+  }
+}

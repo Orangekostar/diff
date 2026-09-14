@@ -61,3 +61,16 @@ W2-A三个共同预测器各≤2000；A准备通过才W2-B固定三个OOF各≤2
 ID=CAI_V3_PAPER_EVIDENCE_R1_e2a11154；工作树 `/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse`，分支research/cai-vlm-agent-v3-controlled-reuse，入口HEAD/upstream=e2a1115468da6e8695321204a13fa9a5322ea809（fetch无前进）。主规范绝对路径 `/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/docs/cai/paper_evidence/CODEX_CAI_V3_PAPER_EVIDENCE_EXECUTION.md`；来源用户ZIP `/home/ww/diff/docs/paper Prepare/CAI_V3_PAPER_EVIDENCE_CODEX_PACKAGE.zip`，同目录8份包文件完整复制。
 本任务冻结DATA/W2/W3/A3，只从650轨迹与同模型50全输入NPZ产生同预算/等质量/探索性分组区间/真实过程/论文表图和文字；RUN=results/cai_agent_v3/paper_evidence/r1_e2a11154，ART=artifacts/cai_agent_v3/paper_evidence/r1_e2a11154。新训练、所有模型前向、GPU、VLM、TEST、拟合/新基线均0。CPU≤4，历史39014/40014不重置。
 阶段P0纯数值与输入绑定→P1共同预算与一次5000 bootstrap→P2共同断点/完整q网格及全部21锚点→P3真实机制和负向边界→P4六类PNG/SVG及CSV/MD/TeX和写作证据→P5八类有限review、零更新ledger、完整commit/push三方SHA。已有W3目标完成；本任务不是新训练准备，无需预算阻塞。
+
+## 当前生效任务：AEI完整六章论文初稿
+
+ID=CAI_AEI_MANUSCRIPT_R1_84bea60e。用户指定ZIP `/home/ww/paper3/CAI_AEI_MANUSCRIPT_CODEX_PACKAGE.zip`，已原样解包到本工作树 `docs/cai/aei_manuscript/`。主规范绝对路径 `/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/docs/cai/aei_manuscript/CODEX_AEI_MANUSCRIPT_EXECUTION.md`。入口HEAD=84bea60e3fd2016b0b18379cd2a2a473200c2b4d，工作树干净，一次fetch成功；现有研究分支保持。
+PAPER=paper_cai_aei/r1_84bea60e；WART=artifacts/cai_agent_v3/manuscript/r1_84bea60e。冻结DATA/W2/W3/EVID/EART只读。当前阶段P0来源核对，后续3→4→5→2→1→6→前置材料/SI→一次审查/修订→Git交付。nature-writing轴为manuscript/methods/zh-to-en/generic，AEI规则独立核实。六章已授权，不新增大纲审批。
+允许文献核实、正文/辅助稿、确定性流程图、保存事件的一次时机恒等分解及至多一幅派生图、已有工具链编译。禁止新研究训练/前向/VLM/编码/TEST/seed/基线/bootstrap/设备评测。CPU≤4。终点为完整英文MD、LaTeX/BibTeX、可编译PDF、SI、中文导读、作者事项、有限review与handoff，实际commit/push当前分支并核对三方SHA；不PR/merge/force push/投稿。
+
+
+## AEI六章论文初稿交付阶段（2026-09-14）
+
+已完成任务CAI_AEI_MANUSCRIPT_R1_84bea60e的六章英文稿、207词摘要、约6779词正文、19引用、6主图、4主表+信息权限表、SI及作者/投稿草稿。主稿20页与SI21页实际编译/渲染完成；一次内部审查和局部修订完成。原研究源码/证据未改，唯一保存事件分解闭合，其余研究计算0。当前状态MANUSCRIPT_DRAFT_COMPLETE / AUTHOR_REVIEW_PENDING / JOURNAL_FORMAT_VERIFICATION_PENDING。
+
+交接：artifacts/cai_agent_v3/manuscript/r1_84bea60e/CODEX_HANDOFF_CAI_AEI_MANUSCRIPT.md。正文入口：paper_cai_aei/r1_84bea60e/build/main.pdf。下一步仅普通commit/push本分支并记录真实三方SHA，不需要作者再次授权；作者信息与格式待确认不阻塞本轮稿件交付。

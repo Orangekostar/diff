@@ -1,0 +1,27 @@
+{
+  "unchanged_reused_figures": true,
+  "reused_figure_files": 39,
+  "unchanged_source_tables": true,
+  "citation_keys_resolved": true,
+  "cited_references": 19,
+  "bib_entries": 19,
+  "main_table_nine_methods_numeric_match": true,
+  "mechanism_interval_rows": 4,
+  "timing_identity_status": "PASS",
+  "six_main_sections": true,
+  "pdfs": {
+    "main": {
+      "pages": 20,
+      "bytes": 325011,
+      "sha256": "f2cbac9eda6ab20a21dc44e4133d664d0ae453678a1d0d5123ebb7c34fc2345c",
+      "no_missing_glyph_overflow_undefined": true
+    },
+    "supplementary": {
+      "pages": 21,
+      "bytes": 2100963,
+      "sha256": "f37e6c085d86fc13bb86ecb5f9fa1672aed9c25106755476c347999a747bf9bb",
+      "no_missing_glyph_overflow_undefined": true
+    }
+  },
+  "all_required_direct_checks": true
+}

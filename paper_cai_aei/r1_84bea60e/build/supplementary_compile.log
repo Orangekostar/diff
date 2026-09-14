@@ -1,0 +1,302 @@
+Rc files read (in order):
+  NONE
+Latexmk: This is Latexmk, John Collins, 9 March 2026. Version 4.88.
+Latexmk: applying rule 'lualatex'...
+Rule 'lualatex':  Reasons for rerun
+Changed files or newly in use/created:
+  supplementary.tex
+Category 'changed_user':
+  supplementary.tex
+
+------------
+Run number 1 of rule 'lualatex'
+------------
+------------
+Running 'lualatex  -interaction=nonstopmode -halt-on-error -recorder -output-directory="build"  "supplementary.tex"'
+------------
+This is LuaHBTeX, Version 1.24.0 (TeX Live 2026) 
+ restricted system commands enabled.
+(./supplementary.tex
+LaTeX2e <2026-06-01>
+L3 programming layer <2026-06-18>
+ (/home/ww/.local/texlive/2026/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2025/01/22 v1.4n Standard LaTeX document class
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/base/size11.clo))
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/geometry/geometry.sty
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/graphics/keyval.sty)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/generic/iftex/ifvtex.sty
+(/home/ww/.local/texlive/2026/texmf-dist/tex/generic/iftex/iftex.sty)))
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/fontspec/fontspec.sty
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/l3packages/xparse/xparse.sty
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/l3kernel/expl3.sty
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/l3backend/l3backend-luatex.d
+ef)))
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/fontspec/fontspec-luatex.sty
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/base/fontenc.sty)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/fontspec/fontspec.cfg)))
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/amsmath/amsmath.sty
+For additional information on amsmath, use the `?' option.
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/amsmath/amstext.sty
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/amsmath/amsgen.sty))
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/amsmath/amsbsy.sty)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/amsmath/amsopn.sty))
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/amsfonts/amssymb.sty
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/amsfonts/amsfonts.sty))
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/graphics/graphicx.sty
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/graphics/graphics.sty
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/graphics/trig.sty)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/graphics-cfg/graphics.cfg)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/graphics-def/luatex.def)))
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/booktabs/booktabs.sty)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/tools/longtable.sty)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/tools/array.sty)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/tools/calc.sty)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/etoolbox/etoolbox.sty)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/natbib/natbib.sty)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/hyperref/hyperref.sty
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.
+sty)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/generic/pdfescape/pdfescape.sty
+(/home/ww/.local/texlive/2026/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
+(/home/ww/.local/texlive/2026/texmf-dist/tex/generic/infwarerr/infwarerr.sty)))
+ (/home/ww/.local/texlive/2026/texmf-dist/tex/latex/hycolor/hycolor.sty)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/hyperref/nameref.sty
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/refcount/refcount.sty)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/generic/gettitlestring/gettitlestr
+ing.sty
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/kvoptions/kvoptions.sty)))
+(/home/ww/.local/texlive/2026/texmf-dist/tex/generic/stringenc/stringenc.sty)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/hyperref/pd1enc.def)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/generic/intcalc/intcalc.sty)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/hyperref/puenc.def)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/url/url.sty)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/generic/bitset/bitset.sty
+(/home/ww/.local/texlive/2026/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty)
+)) (/home/ww/.local/texlive/2026/texmf-dist/tex/latex/hyperref/hluatex.def
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/rerunfilecheck/rerunfilechec
+k.sty
+(/home/ww/.local/texlive/2026/texmf-dist/tex/generic/uniquecounter/uniquecounte
+r.sty))) (/home/ww/.local/texlive/2026/texmf-dist/tex/latex/caption/caption.sty
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/caption/caption3.sty)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/caption/ltcaption.sty))
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/float/float.sty)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/fancyvrb/fancyvrb.sty)
+(./build/supplementary.aux)
+*geometry* driver: auto-detecting
+*geometry* detected driver: luatex
+(/home/ww/.local/texlive/2026/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.s
+ty
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+)) (./build/supplementary.out) (./build/supplementary.out)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsa.fd)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsb.fd) [1{/home/w
+w/.local/texlive/2026/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2]
+[3] [4] [5] [6] [7] [8<./figures/FigS1_rmse.pdf>] [9<./figures/FigS2_r2.pdf>]
+[10<./figures/FigS3_gap.pdf>] [11<./figures/74t7kcdgkr_c8-16_surface_cues.png>]
+[12<./figures/74t7kcdgkr_c8-16_measured_16.png>] [13<./figures/74t7kcdgkr_c8-16
+_prediction.png>] [14<./figures/w68dtmpfyf_q16-29_surface_cues.png>] [15<./figu
+res/w68dtmpfyf_q16-29_measured_16.png>] [16<./figures/w68dtmpfyf_q16-29_predict
+ion.png>] [17<./figures/cgtnjyggtm_q24-48_surface_cues.png>] [18<./figures/cgtn
+jyggtm_q24-48_measured_16.png>] [19<./figures/cgtnjyggtm_q24-48_prediction.png>
+] (./build/supplementary.bbl [20]) [21] (./build/supplementary.aux)
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+)
+ 596 words of node memory still in use:
+   6 hlist, 2 vlist, 2 rule, 2 glue, 4 kern, 1 glyph, 13 attribute, 64 glue_spe
+c, 13 attribute_list, 1 write, 4 pdf_action nodes
+   avail lists: 2:1255,3:463,4:20,5:522,6:172,7:11312,8:57,9:1250,10:18,11:774
+</home/ww/.local/texlive/2026/texmf-dist/fonts/opentype/public/lm/lmmono10-regu
+lar.otf></home/ww/.local/texlive/2026/texmf-dist/fonts/opentype/public/lm/lmrom
+an10-italic.otf></home/ww/.local/texlive/2026/texmf-dist/fonts/opentype/public/
+lm/lmroman10-bold.otf></home/ww/.local/texlive/2026/texmf-dist/fonts/opentype/p
+ublic/lm/lmroman10-regular.otf></home/ww/.local/texlive/2026/texmf-dist/fonts/o
+pentype/public/lm/lmroman12-bold.otf></home/ww/.local/texlive/2026/texmf-dist/f
+onts/type1/public/amsfonts/cm/cmex10.pfb></home/ww/.local/texlive/2026/texmf-di
+st/fonts/type1/public/amsfonts/cm/cmmi10.pfb></home/ww/.local/texlive/2026/texm
+f-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></home/ww/.local/texlive/2026/t
+exmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></home/ww/.local/texlive/202
+6/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></home/ww/.local/texlive/2
+026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></home/ww/.local/texlive
+/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></home/ww/.local/tex
+live/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></home/ww/.local/
+texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb>
+Output written on supplementary.pdf (21 pages, 2100963 bytes).
+Transcript written on supplementary.log.
+Latexmk: Getting log file 'build/supplementary.log'
+Latexmk: Examining 'build/supplementary.fls'
+Latexmk: Examining 'build/supplementary.log'
+Latexmk: Found input bbl file 'build/supplementary.bbl'
+Latexmk: Found input bbl file 'build/supplementary.bbl'
+Latexmk: Found input bbl file 'build/supplementary.bbl'
+Latexmk: Found input bbl file 'build/supplementary.bbl'
+Latexmk: References changed.
+Latexmk: References changed.
+Latexmk: Log file says output to 'supplementary.pdf'
+Latexmk: Using bibtex to make bibliography file(s).
+  ===Source file 'build/supplementary.bbl' for 'lualatex'
+Latexmk: Found bibliography file(s):
+  ./references.bib
+Latexmk: applying rule 'bibtex build/supplementary'...
+Rule 'bibtex build/supplementary':  Reasons for rerun
+Changed files or newly in use/created:
+  build/supplementary.aux
+
+------------
+Run number 1 of rule 'bibtex build/supplementary'
+------------
+====== ENV{BIBINPUTS} changed to '/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/paper_cai_aei/r1_84bea60e:build:/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/paper_cai_aei/r1_84bea60e/build:'
+Latexmk: Change directory to 'build/'.
+To assist finding of files in document directory, I set
+  BIBINPUTS='/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/paper_cai_aei/r1_84bea60e:build:/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/paper_cai_aei/r1_84bea60e/build:'
+  BSTINPUTS='/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/paper_cai_aei/r1_84bea60e:'.
+------------
+Running 'bibtex  "supplementary.aux"'
+------------
+This is BibTeX, Version 0.99e (TeX Live 2026)
+The top-level auxiliary file: supplementary.aux
+The style file: unsrtnat.bst
+Database file #1: references.bib
+Latexmk: Change directory back to '/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/paper_cai_aei/r1_84bea60e'
+Latexmk: applying rule 'lualatex'...
+Rule 'lualatex':  Reasons for rerun
+Changed files or newly in use/created:
+  build/supplementary.aux
+
+------------
+Run number 2 of rule 'lualatex'
+------------
+------------
+Running 'lualatex  -interaction=nonstopmode -halt-on-error -recorder -output-directory="build"  "supplementary.tex"'
+------------
+This is LuaHBTeX, Version 1.24.0 (TeX Live 2026) 
+ restricted system commands enabled.
+(./supplementary.tex
+LaTeX2e <2026-06-01>
+L3 programming layer <2026-06-18>
+ (/home/ww/.local/texlive/2026/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2025/01/22 v1.4n Standard LaTeX document class
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/base/size11.clo))
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/geometry/geometry.sty
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/graphics/keyval.sty)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/generic/iftex/ifvtex.sty
+(/home/ww/.local/texlive/2026/texmf-dist/tex/generic/iftex/iftex.sty)))
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/fontspec/fontspec.sty
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/l3packages/xparse/xparse.sty
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/l3kernel/expl3.sty
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/l3backend/l3backend-luatex.d
+ef)))
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/fontspec/fontspec-luatex.sty
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/base/fontenc.sty)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/fontspec/fontspec.cfg)))
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/amsmath/amsmath.sty
+For additional information on amsmath, use the `?' option.
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/amsmath/amstext.sty
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/amsmath/amsgen.sty))
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/amsmath/amsbsy.sty)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/amsmath/amsopn.sty))
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/amsfonts/amssymb.sty
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/amsfonts/amsfonts.sty))
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/graphics/graphicx.sty
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/graphics/graphics.sty
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/graphics/trig.sty)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/graphics-cfg/graphics.cfg)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/graphics-def/luatex.def)))
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/booktabs/booktabs.sty)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/tools/longtable.sty)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/tools/array.sty)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/tools/calc.sty)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/etoolbox/etoolbox.sty)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/natbib/natbib.sty)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/hyperref/hyperref.sty
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.
+sty)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/generic/pdfescape/pdfescape.sty
+(/home/ww/.local/texlive/2026/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
+(/home/ww/.local/texlive/2026/texmf-dist/tex/generic/infwarerr/infwarerr.sty)))
+ (/home/ww/.local/texlive/2026/texmf-dist/tex/latex/hycolor/hycolor.sty)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/hyperref/nameref.sty
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/refcount/refcount.sty)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/generic/gettitlestring/gettitlestr
+ing.sty
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/kvoptions/kvoptions.sty)))
+(/home/ww/.local/texlive/2026/texmf-dist/tex/generic/stringenc/stringenc.sty)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/hyperref/pd1enc.def)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/generic/intcalc/intcalc.sty)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/hyperref/puenc.def)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/url/url.sty)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/generic/bitset/bitset.sty
+(/home/ww/.local/texlive/2026/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty)
+)) (/home/ww/.local/texlive/2026/texmf-dist/tex/latex/hyperref/hluatex.def
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/rerunfilecheck/rerunfilechec
+k.sty
+(/home/ww/.local/texlive/2026/texmf-dist/tex/generic/uniquecounter/uniquecounte
+r.sty))) (/home/ww/.local/texlive/2026/texmf-dist/tex/latex/caption/caption.sty
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/caption/caption3.sty)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/caption/ltcaption.sty))
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/float/float.sty)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/fancyvrb/fancyvrb.sty)
+(./build/supplementary.aux)
+*geometry* driver: auto-detecting
+*geometry* detected driver: luatex
+(/home/ww/.local/texlive/2026/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.s
+ty
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+)) (./build/supplementary.out) (./build/supplementary.out)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsa.fd)
+(/home/ww/.local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsb.fd) [1{/home/w
+w/.local/texlive/2026/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2]
+[3] [4] [5] [6] [7] [8<./figures/FigS1_rmse.pdf>] [9<./figures/FigS2_r2.pdf>]
+[10<./figures/FigS3_gap.pdf>] [11<./figures/74t7kcdgkr_c8-16_surface_cues.png>]
+[12<./figures/74t7kcdgkr_c8-16_measured_16.png>] [13<./figures/74t7kcdgkr_c8-16
+_prediction.png>] [14<./figures/w68dtmpfyf_q16-29_surface_cues.png>] [15<./figu
+res/w68dtmpfyf_q16-29_measured_16.png>] [16<./figures/w68dtmpfyf_q16-29_predict
+ion.png>] [17<./figures/cgtnjyggtm_q24-48_surface_cues.png>] [18<./figures/cgtn
+jyggtm_q24-48_measured_16.png>] [19<./figures/cgtnjyggtm_q24-48_prediction.png>
+] (./build/supplementary.bbl [20]) [21] (./build/supplementary.aux))
+ 596 words of node memory still in use:
+   6 hlist, 2 vlist, 2 rule, 2 glue, 4 kern, 1 glyph, 13 attribute, 64 glue_spe
+c, 13 attribute_list, 1 write, 4 pdf_action nodes
+   avail lists: 2:1255,3:463,4:20,5:522,6:172,7:11312,8:57,9:1250,10:18,11:774
+</home/ww/.local/texlive/2026/texmf-dist/fonts/opentype/public/lm/lmmono10-regu
+lar.otf></home/ww/.local/texlive/2026/texmf-dist/fonts/opentype/public/lm/lmrom
+an10-italic.otf></home/ww/.local/texlive/2026/texmf-dist/fonts/opentype/public/
+lm/lmroman10-bold.otf></home/ww/.local/texlive/2026/texmf-dist/fonts/opentype/p
+ublic/lm/lmroman10-regular.otf></home/ww/.local/texlive/2026/texmf-dist/fonts/o
+pentype/public/lm/lmroman12-bold.otf></home/ww/.local/texlive/2026/texmf-dist/f
+onts/type1/public/amsfonts/cm/cmex10.pfb></home/ww/.local/texlive/2026/texmf-di
+st/fonts/type1/public/amsfonts/cm/cmmi10.pfb></home/ww/.local/texlive/2026/texm
+f-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></home/ww/.local/texlive/2026/t
+exmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></home/ww/.local/texlive/202
+6/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></home/ww/.local/texlive/2
+026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></home/ww/.local/texlive
+/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></home/ww/.local/tex
+live/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></home/ww/.local/
+texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb>
+Output written on supplementary.pdf (21 pages, 2100963 bytes).
+Transcript written on supplementary.log.
+Latexmk: Getting log file 'build/supplementary.log'
+Latexmk: Examining 'build/supplementary.fls'
+Latexmk: Examining 'build/supplementary.log'
+Latexmk: Found input bbl file 'build/supplementary.bbl'
+Latexmk: Found input bbl file 'build/supplementary.bbl'
+Latexmk: Found input bbl file 'build/supplementary.bbl'
+Latexmk: Found input bbl file 'build/supplementary.bbl'
+Latexmk: Log file says output to 'supplementary.pdf'
+Latexmk: Using bibtex to make bibliography file(s).
+  ===Source file 'build/supplementary.bbl' for 'lualatex'
+Latexmk: Found bibliography file(s):
+  ./references.bib
+Latexmk: All targets (build/supplementary.pdf) are up-to-date
+

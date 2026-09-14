@@ -1,0 +1,17 @@
+__pycache__/
+build/*
+!build/main.pdf
+!build/supplementary.pdf
+!build/main.log
+!build/supplementary.log
+!build/main_compile.log
+!build/supplementary_compile.log
+!build/main_contact.png
+!build/supplementary_contact.png
+!build/source_sync.json
+!build/Fig1_framework_font.json
+!build/Fig1_framework_collision.json
+!build/Fig4_timing_font.json
+!build/Fig4_timing_collision.json
+!build/figure_source_qa.json
+!build/FIGURE_QA_REVIEW.md

@@ -104,3 +104,26 @@ W3_PILOT_HANDOFF.md、RESULTS_AND_CLAIM_BOUNDARIES.md及final review已写；剩
 ## 论文证据完整交付完成
 
 结果提交 `81ab1e367ea63a397ad62fdda680f9bb467b4f55` 已push同一v3分支；local/upstream/remote一致，55个新RUN文件含六类PNG/SVG/PDF与全部派生表已在远端树。A1–A8最终通过，final_manifest协议PASS；材料范围仍POSTHOC_FROZEN_VALID_SINGLE_SEED，不变成独立确认或工程非劣。原数据/模型/轨迹/review未改，零更新ledger追加一次，累计39014保持。没有待训练/待预算或缺失分析项。此核验记录随文档提交上传，最终包含记录的SHA在回复报告。
+
+## AEI写作已绑定：P0进行中（2026-09-14）
+
+当前任务CAI_AEI_MANUSCRIPT_R1_84bea60e覆盖旧证据包“不写全文”的任务范围。已解包并读取主规范、六章蓝图、适配、来源和有限审查；定位正确工作树，入口84bea60e与研究冻结点一致，工作树原干净，fetch成功。已读取现有结果草稿、方法事实、限制及证据交接，继续定向核对源码和表格后起草第3/4/5章。没有上一目标执行轮可供判为无进展；本轮已产生真实任务绑定和来源证据。
+写作输出根paper_cai_aei/r1_84bea60e，交接根artifacts/cai_agent_v3/manuscript/r1_84bea60e；全部研究新增计算0。完整稿尚未完成，不将任务准备冒称交付。
+
+## AEI写作：方法初稿与唯一新增分析完成
+
+第3章连续英文初稿已写入paper_cai_aei/r1_84bea60e/sections/03_framework.md；已建立紧凑论证图、术语表和结果分配表。定向读取models/policy/metrics/actor训练/feature裁格/VLM映射/cohort代码，尚待全文引用与版式整合。
+六类预定数值检查先确认实现缺失导致失败，后全部通过。唯一真实时机分解已一次处理650 episode/10227 event/9方法/50试样；最大逐episode闭合残差2.842170943040401e-14，聚合A和全部对照差与冻结表一致（≤7.11e-15）。结果analysis/timing_contributions.csv和timing_identity_checks.json已保存，脚本拒绝覆盖重跑；后续仅读取派生CSV制图。主法四阶段11.031294、0.960204、−0.091071、0.037915 MPa；相对开环差主要落于第二完成阶段，不能笼统写所有收益均来自早期。无模型/新bootstrap/训练调用。
+AEI官方Guide本轮一次访问仍403，JOURNAL_PROFILE记UNKNOWN；PMLR动态特征选择已读方法相关页，Fuentes/直接CAI最近邻摘要与元数据已读取，全文路线尚待有限补查。pdflatex和latexmk现有可用，pandoc未发现。后续完成4/5章、文献2/1章、6/摘要、SI与图稿、同源TeX生成/实际编译、一次review修订及commit/push。不得据本阶段状态标完整稿完成。
+
+## AEI正文继续：第3/4/5章连续初稿已写
+
+sections/03_framework.md、04_experimental_design.md、05_results.md共5329空白分词（含表/算法，非最终纯正文计数）。主九方法+full表、四区间表、时机解释、50%/0%主网格与细网格反弹、全输入差距和负方向均正文可见。尚需实际图嵌入、Table2内容、引文、数据配置核实和一轮正式review。
+文献核实发现两类真实纠正：AEI104518作者Crossref为Mack等7人而非机构库Tan等4人；Hasebe数据文卷号应2022=43、2025=60，不能沿用旧inventory的42/58。详情references/verification_notes.md。原研究目录保持只读。后续工作完整保留：文献台账/BibTeX、2/1/6/摘要、SI、图、源码/PDF、作者材料、review修订、Git交付。
+
+
+## AEI六章论文初稿交付阶段（2026-09-14）
+
+已完成任务CAI_AEI_MANUSCRIPT_R1_84bea60e的六章英文稿、207词摘要、约6779词正文、19引用、6主图、4主表+信息权限表、SI及作者/投稿草稿。主稿20页与SI21页实际编译/渲染完成；一次内部审查和局部修订完成。原研究源码/证据未改，唯一保存事件分解闭合，其余研究计算0。当前状态MANUSCRIPT_DRAFT_COMPLETE / AUTHOR_REVIEW_PENDING / JOURNAL_FORMAT_VERIFICATION_PENDING。
+
+交接：artifacts/cai_agent_v3/manuscript/r1_84bea60e/CODEX_HANDOFF_CAI_AEI_MANUSCRIPT.md。正文入口：paper_cai_aei/r1_84bea60e/build/main.pdf。下一步仅普通commit/push本分支并记录真实三方SHA，不需要作者再次授权；作者信息与格式待确认不阻塞本轮稿件交付。

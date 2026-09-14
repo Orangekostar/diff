@@ -1,0 +1,106 @@
+{
+  "task_id": "CAI_AEI_MANUSCRIPT_R1_84bea60e",
+  "repository": "Orangekostar/diff",
+  "branch": "research/cai-vlm-agent-v3-controlled-reuse",
+  "evidence_sha": "84bea60e3fd2016b0b18379cd2a2a473200c2b4d",
+  "nature_skills_reference_sha": "9ea7330a17813a15421fe843778a776c258b9001",
+  "output_root": "paper_cai_aei/r1_84bea60e",
+  "handoff_root": "artifacts/cai_agent_v3/manuscript/r1_84bea60e",
+  "manuscript_language": "en",
+  "working_notes_language": "zh",
+  "target_journal": "Advanced Engineering Informatics",
+  "skill_axes": {
+    "task": "manuscript",
+    "paper_type": "methods",
+    "language": "zh-to-en",
+    "journal": "generic"
+  },
+  "main_sections": [
+    "Introduction",
+    "Related work",
+    "Task-driven multimodal inspection framework",
+    "Experimental design",
+    "Results and discussion",
+    "Conclusions"
+  ],
+  "article_category_note": "Methods is a skill routing value, not a verified AEI article-type label.",
+  "guide_for_authors_status": "LIVE_ACCESS_403_NEEDS_OFFICIAL_VERIFICATION",
+  "word_targets_not_journal_limits": {
+    "main_min": 6000,
+    "main_max": 7500,
+    "abstract_min": 200,
+    "abstract_max": 230
+  },
+  "permissions": {
+    "literature_verification": true,
+    "read_frozen_results": true,
+    "write_full_draft": true,
+    "new_timing_decomposition_from_saved_events": true,
+    "latex_compile_if_available": true,
+    "deterministic_method_schematic": true,
+    "commit_and_push_existing_branch": true,
+    "journal_submission": false
+  },
+  "prohibited": {
+    "new_research_training": true,
+    "new_research_model_forward": true,
+    "new_vlm_calls": true,
+    "new_cnn_encoding": true,
+    "new_test_access": true,
+    "new_seeds": true,
+    "new_baseline": true,
+    "gdfs": true,
+    "stop_training": true,
+    "new_bootstrap": true,
+    "hardware_benchmark": true,
+    "new_expert_labels": true,
+    "generative_specimen_images": true,
+    "force_push_or_merge_or_pr": true
+  },
+  "fixed_analysis_scope": {
+    "physical_n": 50,
+    "capture_group_n": 48,
+    "domain_n": 6,
+    "policy_seed_panels": 1,
+    "checkpoint_selection_split": "VALID",
+    "independent_confirmation": "NOT_PERFORMED",
+    "partial_horizon": 0.25,
+    "main_budget_grid": [
+      0,
+      0.0625,
+      0.125,
+      0.1875,
+      0.25
+    ],
+    "full_input_support": [
+      1.0
+    ]
+  },
+  "timing_analysis": {
+    "budget": 0.25,
+    "terminal_weight": 0.25,
+    "bins": [
+      0,
+      0.0625,
+      0.125,
+      0.1875,
+      0.25
+    ],
+    "assignment": "right_closed_by_action_completion_cost",
+    "signed": true,
+    "aggregate": "episode_sum_then_repeat_mean_then_within_domain_specimen_mean_then_domain_equal",
+    "replicates": 0,
+    "new_model_calls": 0,
+    "scope": "DESCRIPTIVE_ALGEBRAIC_DECOMPOSITION_OF_FROZEN_VALID"
+  },
+  "resource_rules": {
+    "cpu_threads_max": 4,
+    "research_gpu_seconds": 0,
+    "research_optimizer_updates": 0,
+    "primary_internal_review_passes": 1,
+    "targeted_revision_passes": 1,
+    "new_aggregate_analysis_figures_max": 1,
+    "new_method_schematics_max": 1
+  },
+  "final_authorization_boundary": "Complete draft and repository delivery only; author scientific review, declarations, format verification and actual submission remain human decisions."
+}

@@ -1,0 +1,55 @@
+{
+  "kind": "CODEX_WRITING_INSTRUCTIONS_NOT_RESEARCH_OUTPUT",
+  "files": [
+    {
+      "path": "AEI_SIX_SECTION_BLUEPRINT.md",
+      "bytes": 10719,
+      "sha256": "798b4edd7142b248a8a4fc9c6b39bc71a118dd88a25a9a0a6f00e2bf5b853fdc"
+    },
+    {
+      "path": "AEI_WRITING_SOURCE_BINDINGS.md",
+      "bytes": 10089,
+      "sha256": "36f50dbbd07dfbf9ca0a8cf696bae8939e6755975eda70b2bcd21a79f7f11ab1"
+    },
+    {
+      "path": "CODEX_AEI_MANUSCRIPT_EXECUTION.md",
+      "bytes": 22789,
+      "sha256": "15c9f93d553f08cd793fff9c73e2562c218a913096cf67872a08e6b36f05e6b3"
+    },
+    {
+      "path": "CODEX_AEI_WRITING_REVIEW.md",
+      "bytes": 4260,
+      "sha256": "202eba4f82dbcbe01a708b04dce06e631f1ab1ce90b92f066fe74650f9617138"
+    },
+    {
+      "path": "NATURE_SKILLS_AEI_ADAPTER.md",
+      "bytes": 7147,
+      "sha256": "658dc200eb172b894897edfda53d1c02e1176946e6809dd30c074d05210fb34b"
+    },
+    {
+      "path": "PACKAGE_NOTES.md",
+      "bytes": 1104,
+      "sha256": "8ba9d42b8fcbb3c8a7a85072ccd40d5842bebbe8e48e854aebb0270b102628dd"
+    },
+    {
+      "path": "README_START.md",
+      "bytes": 3507,
+      "sha256": "189768d3ba0d041e6052533d6116069df610953b54cc536a6614a758b81a008e"
+    },
+    {
+      "path": "REFERENCE_SEARCH_SEEDS.md",
+      "bytes": 4267,
+      "sha256": "1fcd2004064e88ccf962510614d92c0034710d8447fb71f2d29a118d3e5a6441"
+    },
+    {
+      "path": "WRITING_SCOPE.json",
+      "bytes": 3252,
+      "sha256": "e56fcd8328dfbad87d50713fa26368eebb1694135c19ae9505e1426b4cb94963"
+    },
+    {
+      "path": "reference/timing_identity_reference.py",
+      "bytes": 3660,
+      "sha256": "25e409f61b663a121ba5c21739fac420d44cc622d12fe50dc78883f433a835c9"
+    }
+  ]
+}
