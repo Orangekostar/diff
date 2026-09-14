@@ -56,3 +56,5 @@
 原build脚本朴素计数为6772（Framework2194），多出的7个token来自两处排版宏/围栏；未为字数改造构建器。新增真实方法细节与压缩叙事基本抵消，总体篇幅稳定。
 
 作者待决定项集中于P/AUTHOR_INPUTS.md。TARGETED_MANUSCRIPT_REVISION_COMPLETE不等于投稿就绪、作者已批准或获得独立测试验证。
+
+Q8 Git闭合：结果提交`664ce6dd08fa29579857a37c21392ab307d3adb9`已推送；三方SHA相同，整稿及两个实际PDF均在该提交，工作树当时干净。最终文档记录提交由最终回复提供。

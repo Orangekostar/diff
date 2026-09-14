@@ -1,0 +1,29 @@
+{
+  "status": "TARGETED_MANUSCRIPT_REVISION_COMPLETE",
+  "result_commit": "664ce6dd08fa29579857a37c21392ab307d3adb9",
+  "result_upstream": "664ce6dd08fa29579857a37c21392ab307d3adb9",
+  "result_remote_ref": "664ce6dd08fa29579857a37c21392ab307d3adb9",
+  "branch": "research/cai-vlm-agent-v3-controlled-reuse",
+  "result_three_way_equal": true,
+  "result_worktree_clean": true,
+  "tracked_pushed_deliverables": {
+    "paper_cai_aei/r1_84bea60e/manuscript.md": {
+      "git_blob": "3eb69521b66d29a2bf1324b877eeda5b89787699",
+      "bytes": 61667
+    },
+    "paper_cai_aei/r1_84bea60e/build/main.pdf": {
+      "git_blob": "fbba4fbdf56d0dec3c35e828b29b0af60dc31078",
+      "bytes": 346955
+    },
+    "paper_cai_aei/r1_84bea60e/build/supplementary.pdf": {
+      "git_blob": "e7df50cb02df1e6c2c23fc24bc8aaeef07ff02ec",
+      "bytes": 2126718
+    },
+    "artifacts/cai_agent_v3/manuscript_revision/r2_f4758829/CODEX_HANDOFF_CAI_AEI_REVISION_R2.md": {
+      "git_blob": "fc717be4bf8b4842a01dd5c7623b3fa7329ed83b",
+      "bytes": 3832
+    }
+  },
+  "record_commit_note": "This file is added by one following documentation-only commit. The final containing commit and its three-way remote equality are reported in the final assistant response; no self-referential SHA loop.",
+  "research_compute_zero": true
+}

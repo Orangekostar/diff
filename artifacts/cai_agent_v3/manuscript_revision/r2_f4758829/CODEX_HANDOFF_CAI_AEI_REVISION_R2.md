@@ -40,3 +40,5 @@ PANDOC是实际可执行路径，不是永久系统安装承诺；其他环境�
 AUTHOR_INPUTS.md集中保留署名/机构/贡献、基金/利益冲突、数据图像归属和公开许可、代码版本/归档、作者科学审核、真实投稿声明、AEI官方格式。OpenAI Codex实际辅助用途已披露，精确底层型号待运行记录核实；研究Qwen2.5-VL-7B-Instruct单独说明。未代作者确认任何批准，未实际投稿。
 
 Git按原分支普通commit/push，不PR/merge/force push/reset。结果提交后核对其HEAD、upstream与远端ref；记录提交另作一次文档闭合，最终三方SHA由最终回复给出。
+
+实际结果提交：`664ce6dd08fa29579857a37c21392ab307d3adb9`，已正常推送，结果HEAD/upstream/远端ref一致；上述整稿、两PDF及本交接的已提交blob与本地字节一致。此行及GIT_DELIVERY.json由随后唯一文档记录提交闭合。
