@@ -1,0 +1,12 @@
+{
+  "checked_utc": "2026-09-14T12:40:03.715890+00:00",
+  "branch": "research/cai-vlm-agent-v3-controlled-reuse",
+  "manuscript_commit": "6379ad4fe3e67110b313ccce4b7f258c1223ee16",
+  "upstream_at_check": "6379ad4fe3e67110b313ccce4b7f258c1223ee16",
+  "remote_at_check": "6379ad4fe3e67110b313ccce4b7f258c1223ee16",
+  "three_way_match": true,
+  "push_command": "git push origin research/cai-vlm-agent-v3-controlled-reuse",
+  "push_exit_code": 0,
+  "worktree_clean_at_check": true,
+  "note": "This record is committed afterwards; the final record-containing SHA is reported separately to avoid self-reference."
+}
