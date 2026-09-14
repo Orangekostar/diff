@@ -1,4 +1,4 @@
-This is LuaHBTeX, Version 1.24.0 (TeX Live 2026)  (format=lualatex 2026.7.29)  14 SEP 2026 12:26
+This is LuaHBTeX, Version 1.24.0 (TeX Live 2026)  (format=lualatex 2026.7.29)  14 SEP 2026 14:30
  restricted system commands enabled.
 **supplementary.tex
 (./supplementary.tex
@@ -673,14 +673,14 @@ Package hyperref Info: Link coloring OFF on input line 39.
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: float package is loaded.
 Package caption Info: End \AtBeginDocument code.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 104
-.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 97.
+
 
 (/home/ww/.local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 104
-.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 97.
+
 
 (/home/ww/.local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
@@ -688,128 +688,135 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 
 {/home/ww/.local/texlive/2026/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2
 ]
-[3] [4] [5] [6]
-<figures/FigS1_rmse.pdf, id=174, 520.344pt x 361.35pt>
+[3] [4] [5] [6] [7]
+<figures/FigS1_rmse.pdf, id=181, 520.344pt x 361.35pt>
 File: figures/FigS1_rmse.pdf Graphic file (type pdf)
 <use figures/FigS1_rmse.pdf>
-Package luatex.def Info: figures/FigS1_rmse.pdf  used on input line 483.
+Package luatex.def Info: figures/FigS1_rmse.pdf  used on input line 524.
 (luatex.def)             Requested size: 472.33867pt x 328.01299pt.
- [7]
-<figures/FigS2_r2.pdf, id=181, 520.344pt x 361.35pt>
+ [8]
+<figures/FigS2_r2.pdf, id=188, 520.344pt x 361.35pt>
 File: figures/FigS2_r2.pdf Graphic file (type pdf)
 <use figures/FigS2_r2.pdf>
-Package luatex.def Info: figures/FigS2_r2.pdf  used on input line 489.
+Package luatex.def Info: figures/FigS2_r2.pdf  used on input line 530.
 (luatex.def)             Requested size: 472.33867pt x 328.01299pt.
- [8<./figures/FigS1_rmse.pdf>]
-<figures/FigS3_gap.pdf, id=199, 520.344pt x 361.35pt>
+ [9<./figures/FigS1_rmse.pdf>]
+<figures/FigS3_gap.pdf, id=206, 520.344pt x 361.35pt>
 File: figures/FigS3_gap.pdf Graphic file (type pdf)
 <use figures/FigS3_gap.pdf>
-Package luatex.def Info: figures/FigS3_gap.pdf  used on input line 495.
+Package luatex.def Info: figures/FigS3_gap.pdf  used on input line 536.
 (luatex.def)             Requested size: 472.33867pt x 328.01299pt.
- [9<./figures/FigS2_r2.pdf>]
-<figures/74t7kcdgkr_c8-16_surface_cues.png, id=217, 292.4526pt x 307.8702pt>
+ [10<./figures/FigS2_r2.pdf>]
+<figures/Fig3_contrasts.pdf, id=224, 520.344pt x 361.35pt>
+File: figures/Fig3_contrasts.pdf Graphic file (type pdf)
+<use figures/Fig3_contrasts.pdf>
+Package luatex.def Info: figures/Fig3_contrasts.pdf  used on input line 542.
+(luatex.def)             Requested size: 472.33867pt x 328.01299pt.
+ [11<./figures/FigS3_gap.pdf>]
+<figures/74t7kcdgkr_c8-16_surface_cues.png, id=250, 292.4526pt x 307.8702pt>
 File: figures/74t7kcdgkr_c8-16_surface_cues.png Graphic file (type png)
 <use figures/74t7kcdgkr_c8-16_surface_cues.png>
 Package luatex.def Info: figures/74t7kcdgkr_c8-16_surface_cues.png  used on inp
-ut line 505.
+ut line 552.
 (luatex.def)             Requested size: 425.09856pt x 447.50899pt.
-
-[10<./figures/FigS3_gap.pdf>]
-<figures/74t7kcdgkr_c8-16_measured_16.png, id=242, 294.3798pt x 314.1336pt>
+ [12<./figures/Fig3_contrasts.pdf>]
+<figures/74t7kcdgkr_c8-16_measured_16.png, id=275, 294.3798pt x 314.1336pt>
 File: figures/74t7kcdgkr_c8-16_measured_16.png Graphic file (type png)
 <use figures/74t7kcdgkr_c8-16_measured_16.png>
 Package luatex.def Info: figures/74t7kcdgkr_c8-16_measured_16.png  used on inpu
-t line 511.
+t line 558.
 (luatex.def)             Requested size: 425.08345pt x 453.60788pt.
- [11<./figures/74t7kcdgkr_c8-16_surface_cues.png>]
-<figures/74t7kcdgkr_c8-16_prediction.png, id=250, 373.395pt x 255.354pt>
+ [13<./figures/74t7kcdgkr_c8-16_surface_cues.png>]
+<figures/74t7kcdgkr_c8-16_prediction.png, id=282, 373.395pt x 255.354pt>
 File: figures/74t7kcdgkr_c8-16_prediction.png Graphic file (type png)
 <use figures/74t7kcdgkr_c8-16_prediction.png>
 Package luatex.def Info: figures/74t7kcdgkr_c8-16_prediction.png  used on input
- line 517.
+ line 564.
 (luatex.def)             Requested size: 425.09927pt x 290.71304pt.
-[12<./figures/74t7kcdgkr_c8-16_measured_16.png>]
-<figures/w68dtmpfyf_q16-29_surface_cues.png, id=257, 292.4526pt x 307.8702pt>
+ [14<./figures/74t7kcdgkr_c8-16_measured_16.png>]
+<figures/w68dtmpfyf_q16-29_surface_cues.png, id=289, 292.4526pt x 307.8702pt>
 File: figures/w68dtmpfyf_q16-29_surface_cues.png Graphic file (type png)
 <use figures/w68dtmpfyf_q16-29_surface_cues.png>
 Package luatex.def Info: figures/w68dtmpfyf_q16-29_surface_cues.png  used on in
-put line 523.
+put line 570.
 (luatex.def)             Requested size: 425.09856pt x 447.50899pt.
- [13<./figures/74t7kcdgkr_c8-16_prediction.png>]
-<figures/w68dtmpfyf_q16-29_measured_16.png, id=264, 292.9344pt x 323.2878pt>
+ [15<./figures/74t7kcdgkr_c8-16_prediction.png>]
+<figures/w68dtmpfyf_q16-29_measured_16.png, id=296, 292.9344pt x 323.2878pt>
 File: figures/w68dtmpfyf_q16-29_measured_16.png Graphic file (type png)
 <use figures/w68dtmpfyf_q16-29_measured_16.png>
 Package luatex.def Info: figures/w68dtmpfyf_q16-29_measured_16.png  used on inp
-ut line 529.
+ut line 576.
 (luatex.def)             Requested size: 425.11946pt x 469.16966pt.
- [14<./figures/w68dtmpfyf_q16-29_surface_cues.png>]
-<figures/w68dtmpfyf_q16-29_prediction.png, id=271, 373.395pt x 255.354pt>
+ [16<./figures/w68dtmpfyf_q16-29_surface_cues.png>]
+<figures/w68dtmpfyf_q16-29_prediction.png, id=304, 373.395pt x 255.354pt>
 File: figures/w68dtmpfyf_q16-29_prediction.png Graphic file (type png)
 <use figures/w68dtmpfyf_q16-29_prediction.png>
 Package luatex.def Info: figures/w68dtmpfyf_q16-29_prediction.png  used on inpu
-t line 535.
+t line 582.
 (luatex.def)             Requested size: 425.09927pt x 290.71304pt.
- [15<./figures/w68dtmpfyf_q16-29_measured_16.png>]
-<figures/cgtnjyggtm_q24-48_surface_cues.png, id=278, 292.4526pt x 307.8702pt>
+ [17<./figures/w68dtmpfyf_q16-29_measured_16.png>]
+<figures/cgtnjyggtm_q24-48_surface_cues.png, id=311, 292.4526pt x 307.8702pt>
 File: figures/cgtnjyggtm_q24-48_surface_cues.png Graphic file (type png)
 <use figures/cgtnjyggtm_q24-48_surface_cues.png>
 Package luatex.def Info: figures/cgtnjyggtm_q24-48_surface_cues.png  used on in
-put line 541.
+put line 588.
 (luatex.def)             Requested size: 425.09856pt x 447.50899pt.
- [16<./figures/w68dtmpfyf_q16-29_prediction.png>]
-<figures/cgtnjyggtm_q24-48_measured_16.png, id=285, 292.9344pt x 323.2878pt>
+[18<./figures/w68dtmpfyf_q16-29_prediction.png>]
+<figures/cgtnjyggtm_q24-48_measured_16.png, id=318, 292.9344pt x 323.2878pt>
 File: figures/cgtnjyggtm_q24-48_measured_16.png Graphic file (type png)
 <use figures/cgtnjyggtm_q24-48_measured_16.png>
 Package luatex.def Info: figures/cgtnjyggtm_q24-48_measured_16.png  used on inp
-ut line 547.
+ut line 594.
 (luatex.def)             Requested size: 425.11946pt x 469.16966pt.
- [17<./figures/cgtnjyggtm_q24-48_surface_cues.png>]
-<figures/cgtnjyggtm_q24-48_prediction.png, id=292, 373.395pt x 255.354pt>
+ [19<./figures/cgtnjyggtm_q24-48_surface_cues.png>]
+<figures/cgtnjyggtm_q24-48_prediction.png, id=325, 373.395pt x 255.354pt>
 File: figures/cgtnjyggtm_q24-48_prediction.png Graphic file (type png)
 <use figures/cgtnjyggtm_q24-48_prediction.png>
 Package luatex.def Info: figures/cgtnjyggtm_q24-48_prediction.png  used on inpu
-t line 553.
+t line 600.
 (luatex.def)             Requested size: 425.09927pt x 290.71304pt.
- [18<./figures/cgtnjyggtm_q24-48_measured_16.png>] [19<./figures/cgtnjyggtm_q24-
-48_prediction.png>] (./build/supplementary.bbl [20]) [21] (./build/supplementar
-y.aux)
+ [20<./figures/cgtnjyggtm_q24-48_measured_16.png>] [21<./figures/cgtnjyggtm_q24-
+48_prediction.png>] (./build/supplementary.bbl [22])
+[23] (./build/supplementary.aux)
  ***********
 LaTeX2e <2026-06-01>
 L3 programming layer <2026-06-18>
  ***********
 Package rerunfilecheck Info: File `supplementary.out' has not changed.
-(rerunfilecheck)             Checksum: F13B7E1A59F74E92C8184DCF1FDAB4C2;4834.
+(rerunfilecheck)             Checksum: 0D284B1F0BCE44A10F8F944794928F49;4667.
 )
 
 Here is how much of LuaTeX's memory you used:
- 15592 strings out of 475704
+ 15607 strings out of 475704
  125036,953878 words of node,token memory allocated
  596 words of node memory still in use:
    6 hlist, 2 vlist, 2 rule, 2 glue, 4 kern, 1 glyph, 13 attribute, 64 glue_spec
 , 13 attribute_list, 1 write, 4 pdf_action nodes
-   avail lists: 2:1255,3:463,4:20,5:522,6:172,7:11312,8:57,9:1250,10:18,11:774
- 38040 multiletter control sequences out of 65536+600000
+   avail lists: 2:1255,3:483,4:20,5:526,6:174,7:12328,8:57,9:1296,10:18,11:866
+ 38048 multiletter control sequences out of 65536+600000
  91 fonts using 8190807 bytes
  73i,8n,92p,695b,530s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </home/ww/.local/texlive/2026/texmf-dist/fonts/opentype/public/lm/lmmono10-regul
 ar.otf></home/ww/.local/texlive/2026/texmf-dist/fonts/opentype/public/lm/lmroman
 10-italic.otf></home/ww/.local/texlive/2026/texmf-dist/fonts/opentype/public/lm/
-lmroman10-bold.otf></home/ww/.local/texlive/2026/texmf-dist/fonts/opentype/publi
-c/lm/lmroman10-regular.otf></home/ww/.local/texlive/2026/texmf-dist/fonts/openty
-pe/public/lm/lmroman12-bold.otf></home/ww/.local/texlive/2026/texmf-dist/fonts/t
-ype1/public/amsfonts/cm/cmex10.pfb></home/ww/.local/texlive/2026/texmf-dist/font
-s/type1/public/amsfonts/cm/cmmi10.pfb></home/ww/.local/texlive/2026/texmf-dist/f
-onts/type1/public/amsfonts/cm/cmmi8.pfb></home/ww/.local/texlive/2026/texmf-dist
-/fonts/type1/public/amsfonts/cm/cmr10.pfb></home/ww/.local/texlive/2026/texmf-di
-st/fonts/type1/public/amsfonts/cm/cmr7.pfb></home/ww/.local/texlive/2026/texmf-d
-ist/fonts/type1/public/amsfonts/cm/cmr8.pfb></home/ww/.local/texlive/2026/texmf-
-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></home/ww/.local/texlive/2026/tex
-mf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></home/ww/.local/texlive/2026/t
-exmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb>
-Output written on supplementary.pdf (21 pages, 2100963 bytes).
+lmroman8-regular.otf></home/ww/.local/texlive/2026/texmf-dist/fonts/opentype/pub
+lic/lm/lmroman7-regular.otf></home/ww/.local/texlive/2026/texmf-dist/fonts/opent
+ype/public/lm/lmroman10-bold.otf></home/ww/.local/texlive/2026/texmf-dist/fonts/
+opentype/public/lm/lmroman10-regular.otf></home/ww/.local/texlive/2026/texmf-dis
+t/fonts/opentype/public/lm/lmroman12-bold.otf></home/ww/.local/texlive/2026/texm
+f-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></home/ww/.local/texlive/2026/t
+exmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></home/ww/.local/texlive/202
+6/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></home/ww/.local/texlive/2
+026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></home/ww/.local/texlive
+/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></home/ww/.local/texliv
+e/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></home/ww/.local/texli
+ve/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></home/ww/.local/te
+xlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></home/ww/.local/
+texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb>
+Output written on supplementary.pdf (23 pages, 2126718 bytes).
 
-PDF statistics: 412 PDF objects out of 1000 (max. 8388607)
- 319 compressed objects within 4 object streams
- 89 named destinations out of 1000 (max. 1048576)
+PDF statistics: 457 PDF objects out of 1000 (max. 8388607)
+ 349 compressed objects within 4 object streams
+ 93 named destinations out of 1000 (max. 1048576)
  185 words of extra memory for PDF output out of 10000 (max. 100000000)
 

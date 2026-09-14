@@ -1,0 +1,12 @@
+{
+  "main": {
+    "pages": 19,
+    "algorithm_pages": [
+      8
+    ]
+  },
+  "supplementary": {
+    "pages": 23,
+    "algorithm_pages": []
+  }
+}

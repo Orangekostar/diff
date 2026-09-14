@@ -129,3 +129,13 @@ sections/03_framework.md、04_experimental_design.md、05_results.md共5329空�
 交接：artifacts/cai_agent_v3/manuscript/r1_84bea60e/CODEX_HANDOFF_CAI_AEI_MANUSCRIPT.md。正文入口：paper_cai_aei/r1_84bea60e/build/main.pdf。下一步仅普通commit/push本分支并记录真实三方SHA，不需要作者再次授权；作者信息与格式待确认不阻塞本轮稿件交付。
 
 AEI稿件提交 `6379ad4fe3e67110b313ccce4b7f258c1223ee16` 已实际推送且三方SHA一致，初稿交付完成；此同步记录随后单独提交。作者科学审核与期刊格式核实保持待完成，不自动启动新研究。
+
+
+## AEI定向修订R2已绑定
+
+任务CAI_AEI_TARGETED_REVISION_R2_f4758829，主规范paper_cai_aei/CODEX_AEI_TARGETED_REVISION_R2.md，入口HEAD/upstream均f4758829c621fa02a83595f1549e41dabe9e1c64，仅规范文件原先未跟踪。按R0—R9在现有PAPER修改呈现，研究代码/结果/时机分析冻结。配置methods/zh-to-en/generic；声明源、预测器训练、状态算法、预算前缀、时机解释、过程图与引用同步后重建两PDF，一次Q1—Q8复核并普通commit/push同分支。研究训练/前向/VLM/编码/TEST/bootstrap/GPU均0；CPU线程≤4。无需新大纲批准。新交接根artifacts/cai_agent_v3/manuscript_revision/r2_f4758829/。
+
+
+## CAI AEI R2 completion
+
+TARGETED_MANUSCRIPT_REVISION_COMPLETE。R0—R9与一次Q1—Q8定向自查闭合；主稿19页/SI23页，零研究计算。交接：artifacts/cai_agent_v3/manuscript_revision/r2_f4758829/CODEX_HANDOFF_CAI_AEI_REVISION_R2.md；Git结果见同目录GIT_DELIVERY.json及最终回复。作者审核和AEI正式格式仍待确认。

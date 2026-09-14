@@ -203,127 +203,101 @@ what to inspect: Task-driven multimodal C-scan acquisition for
 compression-after-impact assessment</h1>
 <p>Author-review draft. Author metadata pending.</p>
 <h2 id="abstract">Abstract</h2>
-<p>Estimating compression-after-impact strength from incomplete internal
-observations requires deciding which information to acquire and when to
-acquire it. We formulate C-scan image acquisition as a sequential
-assessment task in which surface information is initially available and
-internal cells are revealed under a native-pixel budget. A frozen
-vision-language model supplies surface-region priors, a learned spatial
-actor updates acquisition decisions from visible evidence, and a
-separate frozen predictor estimates strength. Policy learning combines
-normalized trajectory error with terminal absolute error. We compare
-nine acquisition strategies through offline image replay on 50
-validation specimens from six domains, using the same predictor and
-checkpoints selected on that validation set. Under a 25% acquisition
-cap, the main policy achieved a mean absolute error of 44.286 MPa,
-compared with 46.910 MPa for geometry-spread. A signed decomposition of
-saved prediction changes identifies how acquisition timing contributes
-to trajectory quality. Component comparisons were mixed: feedback
-without the vision-language prior performed better, and all four
-component-related exploratory intervals included zero. Complete input
-achieved 41.690 MPa, a quality level not reached by the
-partial-acquisition policies. Matched-quality acquisition reductions
-depended on the target and comparator. The framework connects
-observation allocation to mechanical assessment while distinguishing
-observed image-acquisition trade-offs from independent validation and
-physical inspection-time savings.</p>
+<p>Assessing compression-after-impact strength from partial C-scan
+observations requires allocating measurements that support the evolving
+strength estimate. We organize this acquisition process around
+prediction quality throughout a fixed budget, rather than only after
+acquisition ends. A frozen vision-language model supplies surface-region
+priors, and a state-dependent actor combines those priors with acquired
+internal descriptors and the current prediction to select subsequent
+cells. A separate frozen predictor maps the visible evidence to
+strength, while policy learning minimizes normalized trajectory error
+plus terminal error. Nine acquisition strategies are compared through
+offline image replay on 50 validation specimens from six domains, with
+checkpoints selected on the same validation set. Under a 25%
+native-pixel acquisition cap, the main policy achieved 44.286 MPa mean
+absolute error, compared with 46.910 MPa for geometry-spread. Its
+trajectory error area was 45.110 MPa, compared with 46.501 MPa for the
+surface-conditioned open-loop policy. Signed timing contributions place
+the largest positive main-versus-open-loop difference in the second
+acquisition-completion stage, after initial internal observations become
+available. Later negative differences and mixed component comparisons
+qualify this pattern. The framework connects state-dependent observation
+allocation to CAI assessment and shows how acquired subsets and their
+availability over time shape quality–acquisition trade-offs within the
+evaluated replay setting.</p>
 <p>Keywords: compression after impact; task-driven acquisition; C-scan;
 multimodal inspection; sequential decision making</p>
 <h1 id="introduction">1 Introduction</h1>
 <p>Estimating the remaining compressive strength of an impacted
 composite requires connecting observable damage to a mechanical
 assessment. Surface appearances, internal damage images and
-compression-after-impact (CAI) strength measurements describe different
-aspects of that problem. Public composite-impact datasets make these
-observations available in corresponding specimen records <span
+compression-after-impact (CAI) strength measurements provide
+complementary information about that problem. Public composite-impact
+datasets associate these observations with corresponding specimens <span
 class="citation" data-cites="hasebe2022data hasebe2025data">(Hasebe et
-al. 2022a, 2025a)</span>. They also make it possible to ask how much of
-an internal image is useful for a given assessment task. When internal
-observations are acquired incrementally, prediction quality depends on
-both the available evidence and the choice of what to observe next.</p>
-<p>A C-scan image can supply spatial information to a strength regressor
-once that image has been obtained. Recent work in Advanced Engineering
-Informatics directly predicts CAI strength and impact energy from C-scan
-images using a convolutional model <span class="citation"
-data-cites="mack2026">(Mack et al. 2026)</span>. This supports a route
-from image content to mechanical assessment. An additional decision
-arises when the internal image is not initially available in full: which
-region should be acquired before the others, and how should that choice
-change after a measurement? A good complete-input regressor does not by
-itself specify an acquisition sequence or the quality of predictions
-along that sequence. Conversely, a spatially economical order is useful
-for assessment only if the acquired evidence supports the target
-prediction.</p>
-<p>Adaptive inspection addresses parts of this decision problem.
-Autonomous ultrasonic work has used sequential observations to build
-damage-indication fields and guide subsequent measurements <span
-class="citation" data-cites="fuentes2020">(Fuentes et al. 2020)</span>.
-More generally, dynamic feature-acquisition methods select information
-according to a prediction objective and an acquisition cost <span
-class="citation" data-cites="shim2018 janisch2019 covert2023">(Shim et
-al. 2018; Janisch et al. 2017; Covert et al. 2023)</span>. These ideas
-motivate making the downstream task explicit. For CAI assessment, the
-objective considered here is the error of the predicted strength over a
-limited acquisition range, together with its final error. The question
-is therefore not simply whether an observed region looks damaged, but
-whether the selected observations form a useful evidence sequence for
-this particular assessment model.</p>
-<p>The available modalities create a natural information hierarchy. A
-surface image can be available before the internal examination, giving
-an inexpensive prior within the replay protocol. Internal C-scan content
-becomes visible only where acquisition has been completed. The next
-decision can then combine the initial surface information with the
-current observed subset and strength prediction. This organization
-requires care: storing complete images for offline evaluation must not
-allow the policy to use hidden internal content, and using strength
-labels to train the policy must not expose those labels during
-acquisition. Without explicit visibility rules, an apparent acquisition
-advantage could instead reflect information that would not have been
-available when the decision was made.</p>
-<p>We formulate this process as task-driven multimodal C-scan
-acquisition. A frozen surface vision-language model (VLM) proposes
-candidate regions and ordinal confidence, which provide an initial
-spatial prior. A learned actor makes the acquisition decisions, updating
-its state after each newly observed internal cell. A separate frozen CAI
-predictor converts the currently available surface and internal evidence
-into a strength estimate. The VLM is therefore a source of surface
-priors rather than the controller of each step. The learning objective
-combines normalized error area across the acquisition budget with
-terminal absolute error, so it distinguishes early useful observations
-from the same prediction change obtained later.</p>
-<p>To make the resulting comparison interpretable, all evaluated
-acquisition policies share the same downstream predictor and legal
-whole-cell budget rule. Fixed orders, a learned shared ranking, a
-specimen-conditioned open-loop policy and feedback policies represent
-different ways to organize observation. Additional comparisons remove
-the VLM prior or replace spatial interactions with mean feedback.
-Complete internal input provides a separate quality reference at full
-acquisition. This arrangement asks where state dependence helps in the
-observed trajectories while retaining cases in which an added component
-does not improve the estimate. It avoids attributing all differences
-between separately trained policies to a single architectural
-factor.</p>
-<p>The study makes three contributions. First, it specifies a sequential
-CAI-assessment task with explicit surface availability, hidden internal
-regions, native-pixel acquisition costs and a common prediction model.
-Second, it develops an acquisition policy that conditions successive
-choices on permitted multimodal evidence and is trained by the
-downstream trajectory loss rather than an action demonstration. Third,
-it characterizes quality under matched acquisition caps, acquisition
-requirements at matched empirical quality and the timing-weighted error
-changes in the saved trajectories. The timing decomposition is an
-algebraic explanation of the loss, not a causal test of damage
-mechanisms.</p>
-<p>We evaluate this framework by offline replay on 50 validation
-specimens from six source domains, with checkpoints selected on that
-same validation set. The paper therefore reports an exploratory
-within-cohort comparison, not independent deployment validation. Results
-address the linked questions of same-cap prediction quality, shared
-versus adaptive ordering, the stages at which error changes contribute,
-and the remaining gap to complete input. This evidence supports a
-concrete assessment of the acquisition method while keeping physical
-scan time, autonomous stopping and generalization to new specimen
-populations as distinct questions beyond the evaluated protocol.</p>
+al. 2022a, 2025a)</span>. They support image-based strength assessment
+and a further question: which internal observations should be acquired
+when only part of the image will be available? The value of an
+observation then depends on its contribution to an evolving strength
+estimate.</p>
+<p>C-scan image regression establishes a route from internal damage
+information to mechanical assessment. Recent work directly predicts CAI
+strength and impact energy from C-scan images using a convolutional
+model <span class="citation" data-cites="mack2026">(Mack et al.
+2026)</span>. Selective acquisition adds a decision before that mapping
+can be applied to complete input. A policy must choose which missing
+region to observe next using evidence already available. Two sequences
+can eventually acquire the same subset yet provide different
+intermediate predictions because useful information becomes available at
+different stages. Assessing only the final estimate would overlook this
+distinction between observation content and availability.</p>
+<p>Adaptive ultrasonic inspection provides a precedent for choosing
+subsequent measurements from earlier observations <span class="citation"
+data-cites="fuentes2020">(Fuentes et al. 2020)</span>. Dynamic
+feature-acquisition methods more generally connect information requests
+with prediction utility and acquisition cost <span class="citation"
+data-cites="shim2018 janisch2019 covert2023">(Shim et al. 2018; Janisch
+et al. 2019; Covert et al. 2023)</span>. For CAI assessment, the
+relevant utility is how the acquired evidence changes a strength
+estimate. Visually conspicuous damage may guide an initial observation,
+but its predictive value must be assessed together with other available
+information. This motivates a sequential objective that accounts for
+prediction error throughout acquisition as well as at the endpoint.</p>
+<p>The modalities supply different information at different stages. A
+surface image is available initially, whereas internal content enters
+the state only after its region has been acquired. Surface cues can
+therefore initialize a search, and subsequent internal observations can
+change both the predicted strength and the next acquisition decision.
+Implementing this progression requires an explicit state interface. The
+policy must distinguish observed from unobserved regions and relate each
+permitted descriptor to its location, acquisition history and remaining
+budget. This interface connects evidence availability to the task
+objective rather than treating the next region as a fixed function of
+surface appearance alone.</p>
+<p>We develop a state-dependent multimodal acquisition method with three
+distinct roles. A frozen vision-language model (VLM) supplies
+surface-region priors, a learned actor selects each internal cell, and a
+separate frozen predictor estimates CAI strength from the current
+observation set. The actor is trained using normalized trajectory error
+area together with terminal absolute error. At each acquisition step,
+the new internal descriptor and updated prediction enter its state,
+while the model parameters remain fixed. A common predictor across
+strategies holds the assessment mapping constant, enabling comparison of
+the subsets supplied and the timing of their availability.</p>
+<p>The study makes three contributions. First, it formulates sequential
+C-scan acquisition around CAI prediction quality over the acquisition
+process, rather than only complete-image regression. Second, it connects
+surface priors, observed internal descriptors and the current strength
+estimate to subsequent acquisition through a state-dependent policy.
+Third, it characterizes this policy under a common predictor through
+same-cap quality, signed timing contributions and matched-quality
+acquisition requirements. Offline replay on 50 validation specimens
+compares shared, surface-conditioned and feedback-driven orders. The
+analysis asks where the resulting prediction value is accumulated and
+how that process relates to the cost of attaining an empirical quality
+target; the selection and evaluation scope is specified in Section
+4.</p>
 <h1 id="related-work">2 Related work</h1>
 <h2 id="image-based-residual-strength-assessment">2.1 Image-based
 residual-strength assessment</h2>
@@ -343,11 +317,10 @@ estimate.</p>
 <p>A direct journal neighbour is Mack et al.’s ResNet18-based framework
 for predicting impact energy and CAI strength from C-scan damage images
 <span class="citation" data-cites="mack2026">(Mack et al. 2026)</span>.
-The authors’ institutional abstract describes direct image
-interpretation and an analysis of feature-importance maps. This
-establishes image-to-strength regression as an existing research
-direction. The distinction in the present study is the sequential
-allocation of partial observations and the associated
+Their framework combines direct image interpretation with an analysis of
+feature-importance maps. This establishes image-to-strength regression
+as an existing research direction. The distinction in the present study
+is the sequential allocation of partial observations and the associated
 quality–acquisition trajectory. We do not compare their reported R²
 numerically with ours because the data preparation and evaluation
 protocols differ.</p>
@@ -367,23 +340,20 @@ acquisition for nondestructive inspection</h2>
 conceptual precedent. Fuentes et al. formulate the selection of
 inspection locations through Bayesian optimization and robust outlier
 analysis <span class="citation" data-cites="fuentes2020">(Fuentes et al.
-2020)</span>. Their institutional abstract describes sequentially
-updating a two-dimensional field of novelty indices and selecting
-locations with evidence of damage, with component damage probability as
-an output. Thus, choosing the next ultrasonic observation from
-information acquired so far is not introduced by the present work. The
-pertinent difference is the task endpoint: we optimize a CAI regression
-trajectory under an image-pixel budget rather than the reported
-damage-indication objective.</p>
+2020)</span>. Their method sequentially updates a two-dimensional field
+of novelty indices to select locations with evidence of damage and
+estimate component damage probability. The pertinent difference is the
+task endpoint: we optimize a CAI regression trajectory under an
+image-pixel budget rather than the reported damage-indication
+objective.</p>
 <p>This distinction also clarifies the status of the fixed controls. A
 geometry-spread order measures broad spatial coverage, while
 center-first concentrates observations near the image centre. Neither
 reproduces an entire autonomous inspection system, and serpentine image
 order alone does not model robotic travel efficiency. The controls
 instead provide transparent alternatives under identical replay rules.
-The literature motivates adaptive inspection; the empirical comparison
-in this paper concerns the specified nine acquisition strategies and
-their shared strength predictor.</p>
+The controls isolate acquisition ordering under a common strength
+predictor.</p>
 <h2 id="task-driven-sequential-information-acquisition">2.3 Task-driven
 sequential information acquisition</h2>
 <p>Dynamic feature acquisition provides the broader learning
@@ -393,7 +363,7 @@ either acquire information or stop and predict <span class="citation"
 data-cites="shim2018">(Shim et al. 2018)</span>. Janisch et
 al. formulate costly-feature classification as sequential decision
 making, with feature requests and classification actions <span
-class="citation" data-cites="janisch2019">(Janisch et al. 2017)</span>.
+class="citation" data-cites="janisch2019">(Janisch et al. 2019)</span>.
 Their formulations show that prediction quality and information cost can
 be optimized together. The present policy instead uses a fixed
 acquisition cap and a frozen regression model, without a learned
@@ -419,22 +389,29 @@ surface-derived starting prior with evidence-dependent internal
 acquisition, then evaluates both intermediate quality and the final
 strength estimate. This connection is useful precisely because damage
 indication, classification utility and CAI regression error need not
-assign the same value to an observation. The closest-work matrix in the
-supplementary material records the verified comparison dimensions and
-leaves inaccessible details explicitly unverified.</p>
+assign the same value to an observation. The supplementary closest-work
+matrix compares the task endpoints, available information and cost
+formulations.</p>
 <h1 id="task-driven-multimodal-inspection-framework">3 Task-driven
 multimodal inspection framework</h1>
 <h2 id="problem-formulation">3.1 Problem formulation</h2>
 <p>The inspection task is to acquire a limited subset of an internal
 C-scan image while maintaining an estimate of compression-after-impact
-(CAI) strength. For each specimen, let S denote the available surface
-image, X the internal image, and y the measured CAI strength in MPa. We
-partition each image into an 8×8 grid with index set I={1,…,64}. An
-action acquires one previously unobserved internal cell. Thus, the
-decision concerns a region of an existing image in offline replay; it
-does not specify an individual acoustic waveform, probe displacement or
-physical scan command. The surface image is available before internal
-acquisition begins.</p>
+(CAI) strength. Let <span class="math inline">\(I^S\)</span> and <span
+class="math inline">\(I^X\)</span> denote the raw surface and internal
+images, and let <span class="math inline">\(y\)</span> denote measured
+CAI strength in MPa. Each image is partitioned into an 8×8 grid indexed
+by <span class="math inline">\(\mathcal{I}=\{0,\ldots,63\}\)</span>.
+Independent cell encoding produces surface descriptors <span
+class="math inline">\(S\in\mathbb{R}^{64\times512}\)</span> and internal
+descriptors <span
+class="math inline">\(X\in\mathbb{R}^{64\times512}\)</span>. An action
+reveals one previously unobserved internal descriptor. The raw images
+define the regions and native-pixel costs; <span
+class="math inline">\(S\)</span> and <span
+class="math inline">\(X\)</span> denote features throughout the decision
+model. All surface descriptors are available before internal acquisition
+begins.</p>
 <p>After t actions, the observed set is <span
 class="math inline">\(\Omega_t\)</span> and its binary indicator is
 <span class="math inline">\(M_t\)</span>. The cumulative acquisition
@@ -447,17 +424,19 @@ B=0.25, the legal action set contains only unobserved cells whose
 complete acquisition keeps <span class="math inline">\(c_t\)</span>
 within B. Acquisition ends when this set is empty. This rule defines a
 budget-limited experiment without a learned stopping decision.</p>
-<p>A frozen predictor produces <span
-class="math inline">\(\hat{y}_t=P_{\mathrm{all}}(S,M_t\odot
-X,M_t,c_t)\)</span>. The policy selects the next cell from the currently
-legal set using surface information and, for feedback policies, the
-acquired internal evidence and current prediction. The true strength y
-is available to training and retrospective scoring, but is excluded from
-the decision state. This separation allows the acquisition policy to be
-trained for a downstream assessment objective without supplying the
-answer when selecting an observation. The comparison then asks which
-policy supplies a useful sequence of observations to the same
-predictor.</p>
+<p>Let <span class="math inline">\(X_{\mathrm{obs},t}=M_t\odot
+X\)</span> denote the logical visible buffer, with the cell mask
+broadcast across descriptor dimensions. A frozen predictor produces
+<span
+class="math inline">\(\hat{y}_t=P_{\mathrm{all}}(S,X_{\mathrm{obs},t},M_t,c_t)\)</span>.
+The policy selects the next cell from the currently legal set using
+surface information and, for feedback policies, the acquired internal
+evidence and current prediction. The true strength y is available to
+training and retrospective scoring, but is excluded from the decision
+state. This separation allows the acquisition policy to be trained for a
+downstream assessment objective without supplying the answer when
+selecting an observation. The comparison then asks which policy supplies
+a useful sequence of observations to the same predictor.</p>
 <p>We evaluate both the trajectory and its final estimate. Let <span
 class="math inline">\(e_t=|\hat{y}_t-y|\)</span> and let e(c) hold the
 most recently available error constant until the next acquisition
@@ -474,12 +453,12 @@ cost by ending below the cap. This formulation couples what is acquired
 with when its effect becomes available.</p>
 <figure id="fig:framework">
 <img src="figures/Fig1_framework.png" style="width:100.0%"
-alt="Multimodal acquisition workflow. Only requested internal descriptors enter the visible state. The frozen VLM supplies a cached surface prior; the actor makes each acquisition decision. Codex (GPT-6, OpenAI) assisted in writing the deterministic plotting code; author scientific review is pending." />
+alt="Multimodal acquisition workflow. Only requested internal descriptors enter the visible state. The frozen VLM supplies a cached surface prior; the actor makes each acquisition decision. OpenAI Codex assisted in writing the deterministic plotting code." />
 <figcaption aria-hidden="true">Multimodal acquisition workflow. Only
 requested internal descriptors enter the visible state. The frozen VLM
 supplies a cached surface prior; the actor makes each acquisition
-decision. Codex (GPT-6, OpenAI) assisted in writing the deterministic
-plotting code; author scientific review is pending.</figcaption>
+decision. OpenAI Codex assisted in writing the deterministic plotting
+code.</figcaption>
 </figure>
 <h2 id="multimodal-inspection-state-representation">3.2 Multimodal
 inspection-state representation</h2>
@@ -624,14 +603,37 @@ are available at different costs. This property gives the trajectory
 comparison its interpretation: changes in prediction quality arise
 through supplied observations and their timing, under a fixed assessment
 mapping.</p>
-<p>The predictor used for reported validation results was selected at
-update 1750 and then frozen. During policy learning, rewards instead use
-three frozen cross-fitted predictors. Each training specimen is
-evaluated by the model assigned to its fold, trained with its capture
-group excluded. These models provide out-of-fold training feedback; they
-are not averaged into a three-model ensemble for the reported validation
-predictions. The complete-input reference also uses the common selected
-predictor, with all internal cells and the same surface information.</p>
+<p>Predictor training covers both sparse and dense observation sets. A
+random mask draw selects zero cells with probability 0.10, 1–16 cells
+with probability 0.60, 17–48 cells with probability 0.20, and all 64
+cells with probability 0.10. Small sets use prefixes of Random,
+Center-first, Geometry-spread or Serpentine routes; larger partial sets
+use random permutations. These are sampling probabilities rather than
+fixed batch proportions. Specimens are sampled uniformly by domain and
+then within domain. Each batch contains 32 specimens and minimizes mean
+Huber loss on <span class="math inline">\((\hat{y}-y)/s\)</span>, with
+delta one and <span
+class="math inline">\(s=\max(\operatorname{std}(y_{\mathrm{fit}}),1\,\mathrm{MPa})\)</span>.
+The same fit-derived mean and scale map the regression head to MPa. This
+strength supervision differs from the actor’s trajectory cost. AdamW
+uses learning rate 0.0003, weight decay 0.0001 and gradient-norm
+clipping at one. Checkpoints are evaluated every 250 updates, with at
+most 2000 updates and patience four. The candidate comparison evaluates
+fixed validation prefixes independently of actor trajectories. It
+selected MEAN_SC at update 1750 as <span
+class="math inline">\(P_{\mathrm{all}}\)</span>, rather than assigning
+it in advance. Dense training masks provide predictor input coverage
+without extending the actor’s 0.25 acquisition budget.</p>
+<p>During policy learning, a specimen in training fold <span
+class="math inline">\(k\)</span> receives feedback from a frozen
+predictor <span class="math inline">\(P_{-k}\)</span> fitted with its
+capture group excluded. Three such models use the selected architecture
+and fold-specific fit means and scales. Their checkpoints are still
+selected using the common validation library, so cross-fitting removes
+group overlap in fitting rather than all selection dependence.
+Evaluation in Algorithm 1 and the complete-input reference instead use
+<span class="math inline">\(P_{\mathrm{all}}\)</span> alone. The
+out-of-fold predictors are not averaged into a deployment ensemble.</p>
 <h2 id="state-dependent-acquisition-policy">3.4 State-dependent
 acquisition policy</h2>
 <p>The spatial actor represents each candidate location jointly with the
@@ -682,21 +684,39 @@ used to choose a cell from that used to assess the specimen
 afterwards.</p>
 <p><strong>Algorithm 1. Budget-limited task-driven
 acquisition</strong></p>
-<pre class="text"><code>Input: surface features S, cached surface prior V, frozen actor pi and predictor P
-Set observed mask M=0, history H=0 and native-pixel cost c=0
-Compute the initial CAI prediction p=P(S, masked_X, M, c)
-Repeat:
-    Construct L from unobserved cells affordable under B=0.25
-    If L is empty, terminate
-    On the first step, restrict L to the highest reliable C0 if feasible
-    Build the permitted actor state from S, V, M, H, p and budget
-    Score legal cells and choose a=argmax pi(state) over L
-    Reveal internal descriptor X[a] from the replay environment
-    Update M, H and c using the newly acquired native pixels
-    Update p=P(S, masked_X, M, c)
-    Record the state and proceed with unchanged model parameters
-Return the acquisition sequence and partial-observation predictions
-Use y only outside this loop to calculate evaluation errors</code></pre>
+<pre class="text"><code>Input: surface descriptors S; cached VLM features V;
+       frozen actor pi_theta; evaluation predictor P_all;
+       replay environment E; native cell costs d; total budget B=0.25
+Initialize M=0, H=0, X_obs=0, c=0, t=0
+p = P_all(S, X_obs, M, c)
+while True:
+    L = {i in {0,...,63}: M[i]=0 and c+d[i] &lt;= B}
+    if L is empty: break
+    C = L
+    if t=0 and highest-reliable VLM candidates overlap L:
+        C = L intersect C0
+    z = (S, X_obs, M, H, V, p, c, B-c)
+    scores, _ = pi_theta(z)
+    a = argmax of scores over C
+    x_a = E.acquire(a)
+    X_obs[a] = x_a
+    M[a] = 1
+    t = t+1
+    H[a] = t/64
+    c = sum of native cell costs over measured cells
+    p = P_all(S, X_obs, M, c)
+    Record action, observation state, cost and prediction
+Return acquisition sequence and predictions
+Compute errors with y only on the training/scoring side</code></pre>
+<p>The algorithm exposes a logical observation buffer. The replay
+implementation stores the full descriptor array in the environment but
+masks unobserved content before model mixing, giving the same
+visible-information interface. The actor substitutes its learned
+unknown-cell vector wherever M is zero. At evaluation, each observation
+updates the prediction and decision state while both networks’ weights
+remain fixed. The value-head output is unused for action selection.
+Native-cost comparisons use the floating-point tolerance specified in
+Supplementary Section S1.</p>
 <h2 id="acquisition-timing-and-task-cost">3.5 Acquisition timing and
 task cost</h2>
 <p>The trajectory objective admits a direct decomposition using saved
@@ -956,11 +976,18 @@ protocol</h2>
 <p>Perception and assessment were frozen before the evaluated policy
 runs. The fit-side VLM cache contains 211 specimen records, of which 205
 are available and six are terminally unavailable. The latter remain
-distinct from valid no-cue responses. The common predictor was selected
-at update 1750; the three cross-fitted training-feedback predictors were
-selected at updates 1250, 750 and 1000. Policy evaluation uses the
-common predictor only. No VLM inference, feature encoding or model
-fitting was repeated to prepare the manuscript analyses.</p>
+distinct from valid no-cue responses. Three common-predictor candidates
+were trained: MEAN_SC, a spatial surface-plus-internal predictor and a
+spatial internal-only predictor. All passed the predefined
+prediction-quality eligibility checks. Selection minimized area over the
+fixed validation-prefix library, averaging four routes within specimen,
+then within domain and equally across domains. Ties within <span
+class="math inline">\(10^{-8}\)</span> were resolved by parameter count
+and then model name. This procedure selected MEAN_SC at update 1750; the
+three cross-fitted training-feedback predictors were selected at updates
+1250, 750 and 1000. Policy evaluation uses the common predictor only.
+Predictor-specific settings and eligibility checks are listed separately
+from actor settings in Supplementary Section S1.</p>
 <p>Policies were optimized with AdamW <span class="citation"
 data-cites="loshchilov2019">(Loshchilov and Hutter 2019)</span>,
 learning rate 3×<span class="math inline">\(10^{-4}\)</span>, weight
@@ -987,14 +1014,20 @@ are not additional independent observations. Detailed training settings
 and software versions are retained in the supplementary material.</p>
 <h2 id="cost-quality-and-statistical-analysis">4.4 Cost, quality and
 statistical analysis</h2>
-<p>The main common-cap grid is {0,0.0625,0.125,0.1875,0.25}. At each
-cap, we use the last prediction whose acquisition cost is at or below
-that cap. Actual fractions are reported separately because complete
-native cells may leave an unspent remainder. A supplementary event grid
-contains the 599 shared breakpoints obtained from saved episodes. Both
-grids retain current-state prediction reversals, with no monotonic
-correction or extrapolation beyond 0.25. Full-input quality is supported
-only at fraction 1.0.</p>
+<p>The main common-cap grid is {0,0.0625,0.125,0.1875,0.25}. All
+lower-cap estimates are queried from prefixes of trajectories generated
+with a total acquisition budget of 0.25; the policy is neither retrained
+nor rerun with a different total budget for each reported cap. The actor
+therefore receives remaining budget <span
+class="math inline">\(0.25-c_t\)</span>, rather than a remaining budget
+defined by the queried cap. At each cap, we use the last prediction
+whose acquisition cost is at or below that cap. Actual fractions are
+reported separately because complete native cells may leave an unspent
+remainder. A supplementary event grid contains the 599 shared
+breakpoints obtained from saved episodes. Both grids retain
+current-state prediction reversals, with no monotonic correction or
+extrapolation beyond 0.25. Full-input quality is supported only at
+fraction 1.0.</p>
 <p>At each cap, absolute and squared losses are averaged across Random
 repeats within each physical specimen and then pooled over the 50
 specimens. RMSE is the square root of pooled MSE. R² is computed across
@@ -1014,10 +1047,10 @@ conditional on selected validation checkpoints. They do not correct
 checkpoint selection, repeated historical use, post hoc analysis choices
 or multiple comparisons. We report their numerical ranges rather than
 interpreting them as independent confirmatory tests.</p>
-<p>Matched-quality analysis first computes each method’s group-level MAE
-curve and then finds its earliest supported cap b*(q) satisfying <span
-class="math inline">\(\operatorname{MAE}(b)\le q\)</span>. Relative
-acquisition reduction against a control is <span
+<p>Matched-quality analysis first computes each method’s cohort-level
+MAE curve and then finds its earliest supported cap b*(q) satisfying
+<span class="math inline">\(\operatorname{MAE}(b)\le q\)</span>.
+Relative acquisition reduction against a control is <span
 class="math inline">\(1-b^*_{\mathrm{main}}(q)/b^*_{\mathrm{control}}(q)\)</span>,
 when both are reached and the control denominator is positive. The
 integer targets 41–61 MPa and 21 source-labelled anchors, including
@@ -1027,12 +1060,6 @@ results remain separate. Unreached targets, zero denominators, negative
 reductions and later recrossings are retained. The calculation compares
 population curves; it does not choose a label-informed stopping time for
 individual specimens.</p>
-<p>Reproducible data visualization and manuscript preparation were
-assisted by Codex (GPT-6, OpenAI). The added timing figure reads the
-saved numerical decomposition, and the workflow schematic is drawn with
-deterministic Python code; neither uses generated specimen imagery. The
-authors must review the scientific content and finalize the disclosure
-before submission.</p>
 <h1 id="results-and-discussion">5 Results and discussion</h1>
 <h2 id="prediction-quality-under-matched-acquisition-caps">5.1
 Prediction quality under matched acquisition caps</h2>
@@ -1241,7 +1268,7 @@ same assessment model.</p>
 values favour the main policy for the stated measure. All four intervals
 contain zero. Intervals use the existing paired within-domain
 capture-group bootstrap and are conditional on selected validation
-checkpoints. Figure 3 displays these same signed contrasts; the VLM
+checkpoints. Supplementary Figure S4 displays these contrasts; the VLM
 contrast uses early A rather than full-range A.</p>
 <p>The no-VLM feedback policy obtained lower full-range A and endpoint
 MAE than the main policy, at 43.597 and 42.385 MPa, respectively. Its
@@ -1253,87 +1280,79 @@ by 0.495 MPa, but its endpoint MAE was higher by 0.675 MPa. These
 results support keeping the components conceptually distinct instead of
 treating architectural complexity as evidence of a uniform performance
 gain.</p>
-<figure>
-<img src="figures/Fig3_contrasts.png" style="width:100.0%"
-alt="Signed component-related differences and existing 95% pointwise exploratory intervals. Positive differences favour the main policy. The VLM comparison concerns early area; the other contrasts concern full-range area. All four intervals contain zero." />
-<figcaption aria-hidden="true">Signed component-related differences and
-existing 95% pointwise exploratory intervals. Positive differences
-favour the main policy. The VLM comparison concerns early area; the
-other contrasts concern full-range area. All four intervals contain
-zero.</figcaption>
-</figure>
-<h2 id="where-in-the-trajectory-are-gains-accumulated">5.3 Where in the
-trajectory are gains accumulated?</h2>
-<p>The saved-event decomposition makes the timing of observed error
-changes explicit. All methods shared an initial domain-equal error of
-57.049 MPa. For the main policy, the timing-weighted contributions
-grouped by the four acquisition-completion stages were 11.031, 0.960,
-−0.091 and 0.038 MPa. Their sum, 11.938 MPa, subtracts from the common
-initial error to recover A=45.110 MPa. Across all 650 episodes, the
-largest discrepancy between direct integration and this identity was
-below 3×<span class="math inline">\(10^{-14}\)</span> MPa. Aggregating
-the contributions reproduced every method’s saved area and every
-contrast with the main policy to floating-point precision.</p>
-<p>Although the main policy’s largest absolute contribution was assigned
-to the first stage, its difference from open-loop was concentrated in
-the second stage. Open-loop contributions were 10.616, −0.336, 0.132 and
-0.135 MPa. Thus, the main-minus-open-loop stage differences were
-approximately 0.415, 1.296, −0.223 and −0.097 MPa, summing to the 1.391
-MPa area improvement. The first-stage contribution describes early
-observations that influence much of the remaining trajectory; it is not
-an estimate of improvement confined to the first 6.25% interval. The
-second-stage contrast shows why a blanket explanation based only on a
-better starting region would be incomplete.</p>
-<p>Geometry-spread displayed a different timing pattern, with
-contributions of 7.143, 2.672, −0.124 and 0.048 MPa. Relative to that
-rule, the main policy gained more from first-stage completions but less
-from the second stage. Learned-static also accumulated a substantial
-first-stage contribution, 9.729 MPa, followed by a negative second-stage
-contribution of −1.058 MPa. Figure 4 displays all nine policies and
-retains negative stage totals. These patterns express how their actual
-prediction changes enter the loss; they do not isolate the mechanical
-importance of particular cells or prove that a counterfactual swap in
-acquisition order would have the same effect.</p>
+<h2 id="when-acquired-evidence-contributes-to-prediction-quality">5.3
+When acquired evidence contributes to prediction quality</h2>
+<p>The largest positive timing difference between feedback and open-loop
+acquisition occurred after the initial internal observations had become
+available. Main-minus-open-loop contributions across the four completion
+stages were +0.415, +1.296, −0.223 and −0.097 MPa. Their net sum
+corresponds to the main policy’s 1.391 MPa lower error area. The second
+stage, spanning completion fractions above 0.0625 and up to 0.125,
+provided the largest positive difference. Thus, the observed trajectory
+difference cannot be summarized solely as selecting a better starting
+region.</p>
+<p>The common predictor gives this comparison a specific interpretation.
+Each acquired subset changes the evidence supplied to the same
+regression mapping, and the completion time determines how long that
+updated estimate enters the area objective. Contributions assigned to
+the second stage are weighted over the remaining interval to B; the
+1.296 MPa difference is not a local integral reduction confined to that
+stage. The main policy’s absolute stage contributions were 11.031,
+0.960, −0.091 and 0.038 MPa. Subtracting their sum from the common
+domain-equal initial error of 57.049 MPa gives A=45.110 MPa. This
+initial error differs from the pooled initial MAE of 58.551 MPa because
+the two estimands weight domains differently.</p>
+<p>The timing pattern also distinguishes feedback from broad spatial
+coverage and a learned shared order. Geometry-spread obtained first- and
+second-stage contributions of 7.143 and 2.672 MPa; its smaller
+first-stage value was partly offset in the second stage. Learned-static
+obtained 9.729 MPa in the first stage, followed by −1.058 MPa in the
+second. Against open-loop, the main policy’s second-stage contribution
+was positive while the control’s was negative. This pattern is
+consistent with useful evidence-dependent allocation once initial
+internal information is available. The separately trained policies
+nevertheless differ in initialization and visited states, so the
+decomposition accounts for observed prediction changes rather than
+assigning a causal share to feedback.</p>
 <figure>
 <img src="figures/Fig4_timing.png" style="width:100.0%"
-alt="Timing-weighted error contributions grouped by acquisition completion stage. All nine methods and negative values are retained. Totals use episode sums, specimen repeat means, within-domain means and equal domain weighting, with 50 physical specimens. No new intervals were calculated; these are descriptive algebraic contributions, not causal effects." />
+alt="Timing-weighted error contributions grouped by acquisition completion stage. All nine methods and negative values are retained. Episode sums are averaged over repeats within specimen, within domain and equally across six domains, with 50 physical specimens. Contributions affect the remaining budget interval after completion; they are not stage-local error integrals." />
 <figcaption aria-hidden="true">Timing-weighted error contributions
 grouped by acquisition completion stage. All nine methods and negative
-values are retained. Totals use episode sums, specimen repeat means,
-within-domain means and equal domain weighting, with 50 physical
-specimens. No new intervals were calculated; these are descriptive
-algebraic contributions, not causal effects.</figcaption>
+values are retained. Episode sums are averaged over repeats within
+specimen, within domain and equally across six domains, with 50 physical
+specimens. Contributions affect the remaining budget interval after
+completion; they are not stage-local error integrals.</figcaption>
 </figure>
-<p>The event records also show why useful sequential acquisition should
-not be equated with improvement at every step. Among 793 main-policy
-observations, 381 increased absolute error. A newly observed descriptor
-changes the input of a finite learned regressor and can move an
-individual estimate away from its label even when the overall
-acquisition sequence performs well. The signed accounting retains these
-reversals instead of replacing current predictions with the best
-historical estimate. This distinction is relevant to interpreting both
-the area curves and empirical quality crossings.</p>
-<p>Three previously fixed specimens, c8-16, q16-29 and q24-48, provide
-the process illustrations. Their source-domain identifiers and exact
-image paths are retained in the supplementary case index. The
-illustrations show the available surface prior, actual first action,
-acquired regions at selected steps and the corresponding prediction
-trajectory. The higher-error q24-48 case is included alongside the other
-two. The main policy’s first proposal was genuinely narrower than the
-environment legal set for 45 of 50 specimens; subsequent actions were
-selected after the hard first-step restriction had been released. The
-diagrams document executed choices and visible-state updates, without
-assigning language reasoning, attention maps or damage-ground-truth
-explanations to those choices.</p>
+<p>Later observations qualified the earlier improvement. The final two
+main-versus-open-loop differences were negative, and 381 of the main
+policy’s 793 acquisitions increased individual absolute error. Revealing
+a descriptor can move a finite regressor’s estimate away from the
+measured strength, even within a sequence with lower overall area.
+Retaining these signed changes makes the accounting compatible with the
+reversals in the quality curves. Useful state-dependent acquisition
+therefore concerns the resulting evidence sequence, rather than
+guaranteed error reduction after every action.</p>
+<p>Figure 4 follows the existing c8-16 case after one and eight
+acquisitions, showing how the measured set and actual next action change
+as evidence accumulates. The first proposal was narrower than the
+ordinary legal set for 45 of 50 main-policy specimens; subsequent
+decisions used the expanded legal set and updated state. These panels
+illustrate that progression without changing the original observed
+content. The same three fixed cases remain in the supplement, including
+the higher-error q24-48 case and their prediction trajectories. Case
+images document executed choices; the timing comparison above summarizes
+their cohort-level prediction consequences.</p>
 <figure>
-<img src="figures/74t7kcdgkr_c8-16_measured_4.png" style="width:100.0%"
-alt="An executed partial-observation state for the preselected c8-16 case after four acquisitions. Grey regions remain unobserved; the outlined next cell and acquired-state overlay are copied unchanged from the frozen case figure. All three fixed cases, including q24-48, are retained in the supplement. Source imagery: Hasebe et al., version-1 dataset, CC BY 4.0; local registered overlay reused unchanged." />
-<figcaption aria-hidden="true">An executed partial-observation state for
-the preselected c8-16 case after four acquisitions. Grey regions remain
-unobserved; the outlined next cell and acquired-state overlay are copied
-unchanged from the frozen case figure. All three fixed cases, including
-q24-48, are retained in the supplement. Source imagery: Hasebe et al.,
-version-1 dataset, CC BY 4.0; local registered overlay reused
+<img src="figures/Fig4_case_process.png" style="width:100.0%"
+alt="Acquisition progression for the preselected c8-16 specimen after one and eight acquisitions, ordered left to right. Both panels preserve the original native-cost annotations, next-cell identifier and observed/unobserved colors; grey cells remain unobserved. Panels show acquisition steps, not a matched-cost performance comparison. Source imagery: Hasebe et al., version-1 dataset, CC BY 4.0; the registered overlays are assembled unchanged." />
+<figcaption aria-hidden="true">Acquisition progression for the
+preselected c8-16 specimen after one and eight acquisitions, ordered
+left to right. Both panels preserve the original native-cost
+annotations, next-cell identifier and observed/unobserved colors; grey
+cells remain unobserved. Panels show acquisition steps, not a
+matched-cost performance comparison. Source imagery: Hasebe et al.,
+version-1 dataset, CC BY 4.0; the registered overlays are assembled
 unchanged.</figcaption>
 </figure>
 <h2 id="acquisition-requirements-at-matched-empirical-quality">5.4
@@ -1357,7 +1376,7 @@ rose above the target. We retain this event-grid result in the
 supplementary analysis, separately from the primary 50% and 0%
 comparisons, because grid resolution and first-passage reversals
 materially change its interpretation.</p>
-<p>Figure 6 presents the full main-grid target range rather than a
+<p>Figure 5 presents the full main-grid target range rather than a
 single favourable threshold. Supplementary tables retain all integer
 targets and source-labelled anchors on both grids, including unreached
 targets and negative or undefined ratios. This representation answers a
@@ -1369,11 +1388,11 @@ strength, and the present first-passage calculation does not provide
 that capability.</p>
 <figure>
 <img src="figures/Fig6_quality.png" style="width:100.0%"
-alt="Earliest supported cap at each empirical MAE target on the primary five-cap grid. Missing points denote unreached quality; the finer event-grid results remain separate. The curves summarize group-level first passages, not a specimen stopping policy." />
+alt="Earliest supported cap at each empirical MAE target on the primary five-cap grid. Missing points denote unreached quality; the finer event-grid results remain separate. The curves summarize cohort-level first passages, not a specimen stopping policy." />
 <figcaption aria-hidden="true">Earliest supported cap at each empirical
 MAE target on the primary five-cap grid. Missing points denote unreached
 quality; the finer event-grid results remain separate. The curves
-summarize group-level first passages, not a specimen stopping
+summarize cohort-level first passages, not a specimen stopping
 policy.</figcaption>
 </figure>
 <h2 id="full-information-trade-off-and-engineering-interpretation">5.5
@@ -1389,13 +1408,14 @@ between fractions 0.25 and 1.0.</p>
 <p>The engineering contribution is the explicit coupling between an
 assessment objective and the organization of acquired information. A
 policy can be compared at a shared cap, through its complete observed
-error trajectory, and at a shared empirical quality target. The
-agreement or disagreement among these views is informative: a lower area
-does not ensure a lower terminal MAE, and one threshold can show a
-reduction against geometry while showing none against a learned shared
-order. The framework makes those distinctions measurable rather than
-expressing inspection efficiency as a single percentage detached from a
-quality requirement.</p>
+error trajectory, and at a shared empirical quality target. The timing
+contrast explains why area and terminal MAE need not agree: an
+observation changes the error over the remaining acquisition interval,
+not just at the endpoint. Together with target-dependent first passages,
+this connects sequential information acquisition to the image-based
+assessment objective. The contribution is a way to organize and evaluate
+observations according to that objective, rather than a new regression
+architecture or a universal acquisition-reduction percentage.</p>
 <p>Domain-level results further bound the comparison. Against
 geometry-spread, the main policy’s area difference favoured it in three
 domains and favoured the control in three. Against open-loop, five
@@ -1412,49 +1432,46 @@ deployment remains a separate question because native image pixels omit
 probe travel, coupling, setup and measurement latency; a 25% image
 fraction cannot be translated directly into a 75% time saving. A single
 policy-seed panel and validation-based selection also limit inference
-about reproducibility and transport to new specimens. Independent
-specimen evaluation and instrument-linked acquisition costs would
-resolve those specific uncertainties. Within the present scope, the
-method supplies a reproducible way to examine which information is
-acquired, when it affects CAI prediction and where partial observation
-leaves a remaining quality gap.</p>
+about reproducibility and transport to new specimens. The results
+establish the observed quality–acquisition relationships within that
+replay protocol; their transfer to independent specimens and physical
+inspection operations remains to be evaluated.</p>
 <h1 id="conclusions">6 Conclusions</h1>
-<p>This study formulated partial C-scan acquisition as a sequential
-decision problem for compression-after-impact assessment. A surface
-prior, a state-dependent acquisition actor and a separate frozen CAI
-predictor organize the flow from currently visible evidence to the next
-internal observation. The common-predictor design permits comparisons of
-acquisition policies without changing the assessment mapping, while the
-trajectory objective accounts for both prediction quality and the stage
-at which observations become available.</p>
-<p>On 50 selected validation specimens, the main policy achieved 44.286
-MPa MAE under a 25% acquisition cap, compared with 46.910 MPa for
-geometry-spread, and a lower trajectory area than the shared static and
-open-loop policies. The signed timing decomposition recovered these area
-differences from saved events and located the largest
-main-versus-open-loop contribution difference in the second completion
-stage. Component results were mixed: no-VLM feedback performed better,
-all four reported component-related intervals crossed zero, and partial
-acquisition did not reach the 41.690 MPa complete-input MAE.</p>
-<p>The resulting contribution is a reproducible way to connect
-observation allocation with a mechanical assessment objective and to
-report its quality–acquisition trade-offs. The observed comparisons
-apply to offline image replay with validation-based checkpoint selection
-and one policy-seed panel. Instrument-linked costs and independent
-specimen evaluation remain necessary before interpreting these
-image-fraction results as physical inspection-efficiency gains.</p>
+<p>State-dependent acquisition connects the choice of internal
+observations to the evolving compression-after-impact assessment. The
+method combines surface priors, acquired C-scan descriptors and the
+current strength estimate to select subsequent cells. A separate frozen
+predictor keeps the assessment mapping common across strategies, while
+the learning objective values prediction quality throughout the
+acquisition budget and at its endpoint.</p>
+<p>Offline replay on 50 validation specimens produced a main-policy MAE
+of 44.286 MPa under the 25% cap, compared with 46.910 MPa for
+geometry-spread. Relative to surface-conditioned open-loop acquisition,
+the largest positive timing contribution difference occurred in the
+second completion stage. This locates the observed advantage beyond
+initialization, while later negative differences show that improvement
+was not sustained at every stage. Component comparisons remained mixed,
+and partial acquisition did not reach the 41.690 MPa complete-input
+MAE.</p>
+<p>The framework characterizes how acquired subsets and their
+availability over time shape CAI prediction quality. Same-cap
+comparisons, signed timing contributions and matched-quality
+requirements provide complementary views of that relationship. The
+results are conditional on validation-based checkpoint selection and one
+policy-seed panel; they describe image-acquisition trade-offs rather
+than independently validated physical inspection savings.</p>
 <h1 id="declarations">Declarations</h1>
-<p>Author names, affiliations, corresponding-author details, funding,
-CRediT contributions and competing-interest statements require author
-confirmation before submission. Public source datasets are cited in the
-manuscript. The code and derived-result release location and permission
-checks remain pending; no public release is asserted here.</p>
-<p>During manuscript preparation, the authors used OpenAI Codex (GPT-6)
-to assist with drafting, organization, reference screening, figure code
-and document preparation. The authors must review and verify all content
-and take responsibility for the final manuscript. Research use of the
-vision-language model is described in Section 3. The detailed draft
-declaration is provided in the submission materials.</p>
+<p>Author details, contributions, funding, competing interests and final
+data/code release information: [to be completed by the authors; see
+AUTHOR_INPUTS.md]. Public source datasets and version-specific DOIs are
+cited in the manuscript.</p>
+<p>During manuscript preparation, OpenAI Codex assisted with drafting,
+organization, English expression, reference screening and verification
+support, figure-programming assistance and document preparation. The
+exact underlying model identifier remains to be verified. Research use
+of Qwen2.5-VL is described separately in Section 3. Human scientific
+review and approval of the final manuscript remain pending; the authors
+retain responsibility for the submitted content.</p>
 <h1 class="unnumbered" id="references">References</h1>
 <div id="refs" class="references csl-bib-body hanging-indent"
 role="list">
@@ -1548,11 +1565,11 @@ Recognition</span>.”</span> <em>arXiv</em>, ahead of print. <a
 href="https://doi.org/10.48550/arXiv.1512.03385">https://doi.org/10.48550/arXiv.1512.03385</a>.
 </div>
 <div id="ref-janisch2019" class="csl-entry" role="listitem">
-Janisch, Jaromír, Tomáš Pevný, and Viliam Lisý. 2017. <span>“<span
-class="nocase">Classification with Costly Features using Deep
-Reinforcement Learning</span>.”</span> <em>arXiv</em>, ahead of print.
-<a
-href="https://doi.org/10.48550/arXiv.1711.07364">https://doi.org/10.48550/arXiv.1711.07364</a>.
+Janisch, Jaromír, Tomáš Pevný, and Viliam Lisý. 2019. <span>“<span
+class="nocase">Classification with Costly Features Using Deep
+Reinforcement Learning</span>.”</span> <em>Proceedings of the AAAI
+Conference on Artificial Intelligence</em> 33 (01): 3959–66. <a
+href="https://doi.org/10.1609/aaai.v33i01.33013959">https://doi.org/10.1609/aaai.v33i01.33013959</a>.
 </div>
 <div id="ref-loshchilov2019" class="csl-entry" role="listitem">
 Loshchilov, Ilya, and Frank Hutter. 2019. <span>“<span>Decoupled Weight

@@ -1,0 +1,17 @@
+{
+  "X_obs=0": true,
+  "X_obs[a] = x_a": true,
+  "H[a] = t/64": true,
+  "total budget B=0.25": true,
+  "32 specimens": true,
+  "All lower-cap estimates": true,
+  "cohort-level MAE curve": true,
+  "57.049": true,
+  "58.551": true,
+  "1.296": true,
+  "OpenAI Codex": true,
+  "3959\u20133966": true,
+  "si_predictor_actor_distinct": true,
+  "algorithm_one_page": true,
+  "no_bad_build_diagnostics": true
+}

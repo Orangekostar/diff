@@ -10,6 +10,4 @@ Source post-impact image datasets are available from Mendeley Data under version
 
 ## Declaration of generative AI and AI-assisted technologies in manuscript preparation
 
-During preparation of this manuscript, the authors used OpenAI Codex (GPT-6) to assist with drafting, organization, English expression, reference screening and verification support, figure-programming assistance and document preparation. [After completing human review, confirm the following statement.] The authors reviewed and edited the content and take full responsibility for the final publication. Use of Qwen2.5-VL in the research procedure is reported separately in the Methods.
-
-The framework diagram was drawn from implemented code facts using deterministic plotting code with Codex assistance, as disclosed in its caption. Quantitative plots use retained source numbers; no specimen or ultrasound imagery was generated. The accompanying AI_USE_RECORD states the actual available model identifiers and pending review status.
+The canonical draft disclosure is maintained in `../declarations.md` and is included in the generated manuscript. It records substantive writing, organization, reference-verification support, figure-programming and document-preparation assistance by OpenAI Codex. The underlying model identifier and human review/approval remain pending. Research Qwen2.5-VL use is reported in Methods. See `../AI_USE_RECORD.md` for scope and `../AUTHOR_INPUTS.md` for author decisions. This file does not pre-assert completed author review.

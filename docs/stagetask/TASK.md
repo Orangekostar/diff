@@ -74,3 +74,13 @@ PAPER=paper_cai_aei/r1_84bea60e；WART=artifacts/cai_agent_v3/manuscript/r1_84be
 已完成任务CAI_AEI_MANUSCRIPT_R1_84bea60e的六章英文稿、207词摘要、约6779词正文、19引用、6主图、4主表+信息权限表、SI及作者/投稿草稿。主稿20页与SI21页实际编译/渲染完成；一次内部审查和局部修订完成。原研究源码/证据未改，唯一保存事件分解闭合，其余研究计算0。当前状态MANUSCRIPT_DRAFT_COMPLETE / AUTHOR_REVIEW_PENDING / JOURNAL_FORMAT_VERIFICATION_PENDING。
 
 交接：artifacts/cai_agent_v3/manuscript/r1_84bea60e/CODEX_HANDOFF_CAI_AEI_MANUSCRIPT.md。正文入口：paper_cai_aei/r1_84bea60e/build/main.pdf。下一步仅普通commit/push本分支并记录真实三方SHA，不需要作者再次授权；作者信息与格式待确认不阻塞本轮稿件交付。
+
+
+## AEI定向修订R2已绑定
+
+任务CAI_AEI_TARGETED_REVISION_R2_f4758829，主规范paper_cai_aei/CODEX_AEI_TARGETED_REVISION_R2.md，入口HEAD/upstream均f4758829c621fa02a83595f1549e41dabe9e1c64，仅规范文件原先未跟踪。按R0—R9在现有PAPER修改呈现，研究代码/结果/时机分析冻结。配置methods/zh-to-en/generic；声明源、预测器训练、状态算法、预算前缀、时机解释、过程图与引用同步后重建两PDF，一次Q1—Q8复核并普通commit/push同分支。研究训练/前向/VLM/编码/TEST/bootstrap/GPU均0；CPU线程≤4。无需新大纲批准。新交接根artifacts/cai_agent_v3/manuscript_revision/r2_f4758829/。
+
+
+## CAI AEI R2 completion
+
+TARGETED_MANUSCRIPT_REVISION_COMPLETE。R0—R9与一次Q1—Q8定向自查闭合；主稿19页/SI23页，零研究计算。交接：artifacts/cai_agent_v3/manuscript_revision/r2_f4758829/CODEX_HANDOFF_CAI_AEI_REVISION_R2.md；Git结果见同目录GIT_DELIVERY.json及最终回复。作者审核和AEI正式格式仍待确认。

@@ -23,12 +23,7 @@ title, abstract, keywords = parts[0].lstrip('# '), parts[1], parts[2]
 sources = sorted((P/'sections').glob('0[1-6]_*.md'))
 assert len(sources) == 6
 body = '\n\n'.join(s.read_text().strip() for s in sources)
-declarations = '''# Declarations
-
-Author names, affiliations, corresponding-author details, funding, CRediT contributions and competing-interest statements require author confirmation before submission. Public source datasets are cited in the manuscript. The code and derived-result release location and permission checks remain pending; no public release is asserted here.
-
-During manuscript preparation, the authors used OpenAI Codex (GPT-6) to assist with drafting, organization, reference screening, figure code and document preparation. The authors must review and verify all content and take responsibility for the final manuscript. Research use of the vision-language model is described in Section 3. The detailed draft declaration is provided in the submission materials.
-'''
+declarations = (P/'declarations.md').read_text()
 md = '# '+title+'\n\nAuthor-review draft. Author metadata pending.\n\n## Abstract\n\n'+abstract+'\n\n'+keywords+'\n\n'+body+'\n\n'+declarations+'\n\n# References\n\n'
 # The Markdown includes a readable reference list; TeX uses the canonical BibTeX.
 with (P/'references/reference_ledger.csv').open() as f:

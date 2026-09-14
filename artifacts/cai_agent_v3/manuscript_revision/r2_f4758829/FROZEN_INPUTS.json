@@ -1,0 +1,20 @@
+{
+  "paper_cai_aei/r1_84bea60e/analysis/timing_contributions.csv": "f0cb87c3803ab5617066b0b5ad9aa141f1c1ef324110e1a23a498256b1310127",
+  "paper_cai_aei/r1_84bea60e/analysis/timing_identity_checks.json": "d52bafffbce1da49433c8788632d563d7f0c3b698d872aba3202441f85cfe795",
+  "paper_cai_aei/r1_84bea60e/tables/case_figure_reuse.csv": "f0a9e4e32082deb2e0509bbdc130153cd8be9f65fee5b37697094433ecf6ae7e",
+  "paper_cai_aei/r1_84bea60e/tables/case_same_cost_states.csv": "4982b5cfa83220ac7ccf053dd5c353f3814dbfc7c38ebd357c08ae1e4e33d85a",
+  "paper_cai_aei/r1_84bea60e/tables/equal_quality_anchors.csv": "794d7f733cd36b57d9d6870321c80ce1b5bbcdaaecda1653fb819f609bf11d93",
+  "paper_cai_aei/r1_84bea60e/tables/equal_quality_grid.csv": "3759f1f34e71139d85128d45573a8c390ba0273e6487eb603480753bcc9861aa",
+  "paper_cai_aei/r1_84bea60e/tables/full_scan_gap.csv": "5a99bcec39f320e1296484418023bc61b730b1fc0beef9a4bf58c8b02efffcec",
+  "paper_cai_aei/r1_84bea60e/tables/full_scan_reference.json": "1e0bc0b1770123f30be98cd84118ef3fdd3672c5bbb5f7c60f58f96cac394563",
+  "paper_cai_aei/r1_84bea60e/tables/mechanism_area_intervals.csv": "e221eb8a2dcf4bdb5ad4c09e1e2844060501e38dc5ab251b5310c6d0d5f2c7e6",
+  "paper_cai_aei/r1_84bea60e/tables/mechanism_effects.csv": "4767d1119013bf1c415b970ccc2c38f66588427044defb198c898acfa5c261e4",
+  "paper_cai_aei/r1_84bea60e/tables/method_summary.csv": "4da4ee3092f894c6899c76f7875395484e8cf7739bf434d8f6ff5eb6fd817cf7",
+  "paper_cai_aei/r1_84bea60e/tables/quality_targets.csv": "6c79600777203364b36f41735ecf855bded7a4f7220d536f7554513a66369174",
+  "paper_cai_aei/r1_84bea60e/tables/same_cost_metrics.csv": "7643125256011e1f67ae6e986ac1e8095e5cd7a9237faac75c7811cef4ae0e2d",
+  "paper_cai_aei/r1_84bea60e/tables/same_cost_metrics_by_domain.csv": "81d03574206412a2584c8ef3816e2f897f65cd03338728c8a03e539b24746d1b",
+  "paper_cai_aei/r1_84bea60e/tables/same_cost_paired_summary.csv": "518b5009ffe56cf1b06a2a99a2d1ede1bd0d81228636aff1a83d973c8a762d28",
+  "paper_cai_aei/r1_84bea60e/figures/74t7kcdgkr_c8-16_measured_1.png": "1ad95c0a4c686c06cfc94eb1c716e2d1a13276d845128d4760653b9962668d24",
+  "paper_cai_aei/r1_84bea60e/figures/74t7kcdgkr_c8-16_measured_4.png": "7d43716a35cc3cd800d0cc9bf8f1ea71f7b5e7bd8197f8f374522e01698c3c59",
+  "paper_cai_aei/r1_84bea60e/figures/74t7kcdgkr_c8-16_measured_8.png": "57a9d093f20e64ae7c04fe9972213d4d5cf1d9c4f952f5b12f8e384f0f378184"
+}

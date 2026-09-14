@@ -1,4 +1,4 @@
-This is LuaHBTeX, Version 1.24.0 (TeX Live 2026)  (format=lualatex 2026.7.29)  14 SEP 2026 12:34
+This is LuaHBTeX, Version 1.24.0 (TeX Live 2026)  (format=lualatex 2026.7.29)  14 SEP 2026 14:31
  restricted system commands enabled.
 **main.tex
 (./main.tex
@@ -676,77 +676,71 @@ Package caption Info: End \AtBeginDocument code.
  (./sections/01_introduction.tex
 [1
 
-{/home/ww/.local/texlive/2026/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]) (./sections/02_related_work.tex [2] [3]) (./sections/03_framework.tex
-LaTeX Font Info:    Trying to load font information for U+msa on input line 8.
+{/home/ww/.local/texlive/2026/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]) (./sections/02_related_work.tex [2]) (./sections/03_framework.tex
+LaTeX Font Info:    Trying to load font information for U+msa on input line 6.
 
 (/home/ww/.local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 8.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 6.
 
 (/home/ww/.local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-) [4]
-<figures/Fig1_framework.pdf, id=153, 520.344pt x 325.215pt>
+) [3]
+<figures/Fig1_framework.pdf, id=143, 520.344pt x 325.215pt>
 File: figures/Fig1_framework.pdf Graphic file (type pdf)
 <use figures/Fig1_framework.pdf>
 Package luatex.def Info: figures/Fig1_framework.pdf  used on input line 20.
 (luatex.def)             Requested size: 472.33867pt x 295.21167pt.
 
-[5<./figures/Fig1_framework.pdf>] [6] [7])
+[4] [5<./figures/Fig1_framework.pdf>] [6] [7])
 (./sections/04_experimental_design.tex [8] [9] [10]) (./sections/05_results.tex
 [11]
-<figures/Fig2_mae.pdf, id=239, 520.344pt x 361.35pt>
+<figures/Fig2_mae.pdf, id=238, 520.344pt x 361.35pt>
 File: figures/Fig2_mae.pdf Graphic file (type pdf)
 <use figures/Fig2_mae.pdf>
 Package luatex.def Info: figures/Fig2_mae.pdf  used on input line 55.
 (luatex.def)             Requested size: 472.33867pt x 328.01299pt.
- [12<./figures/Fig2_mae.pdf>]
-<figures/Fig3_contrasts.pdf, id=257, 520.344pt x 361.35pt>
-File: figures/Fig3_contrasts.pdf Graphic file (type pdf)
-<use figures/Fig3_contrasts.pdf>
-Package luatex.def Info: figures/Fig3_contrasts.pdf  used on input line 100.
-(luatex.def)             Requested size: 472.33867pt x 328.01299pt.
- [13]
-<figures/Fig4_timing.pdf, id=262, 520.344pt x 383.031pt>
+ [12] [13<./figures/Fig2_mae.pdf>]
+<figures/Fig4_timing.pdf, id=260, 520.344pt x 383.031pt>
 File: figures/Fig4_timing.pdf Graphic file (type pdf)
 <use figures/Fig4_timing.pdf>
-Package luatex.def Info: figures/Fig4_timing.pdf  used on input line 114.
+Package luatex.def Info: figures/Fig4_timing.pdf  used on input line 108.
 (luatex.def)             Requested size: 472.33867pt x 347.69376pt.
-<figures/74t7kcdgkr_c8-16_measured_4.png, id=263, 294.3798pt x 314.1336pt>
-File: figures/74t7kcdgkr_c8-16_measured_4.png Graphic file (type png)
-<use figures/74t7kcdgkr_c8-16_measured_4.png>
-Package luatex.def Info: figures/74t7kcdgkr_c8-16_measured_4.png  used on input
- line 124.
-(luatex.def)             Requested size: 472.31993pt x 504.01407pt.
- [14<./figures/Fig3_contrasts.pdf>]
-[15<./figures/Fig4_timing.pdf>] [16<./figures/74t7kcdgkr_c8-16_measured_4.png>]
-<figures/Fig6_quality.pdf, id=319, 520.344pt x 361.35pt>
+<figures/Fig4_case_process.pdf, id=261, 472.28445pt x 278.2395pt>
+File: figures/Fig4_case_process.pdf Graphic file (type pdf)
+<use figures/Fig4_case_process.pdf>
+Package luatex.def Info: figures/Fig4_case_process.pdf  used on input line 118.
+
+(luatex.def)             Requested size: 472.31212pt x 278.25578pt.
+ [14]
+<figures/Fig6_quality.pdf, id=266, 520.344pt x 361.35pt>
 File: figures/Fig6_quality.pdf Graphic file (type pdf)
 <use figures/Fig6_quality.pdf>
-Package luatex.def Info: figures/Fig6_quality.pdf  used on input line 138.
+Package luatex.def Info: figures/Fig6_quality.pdf  used on input line 132.
 (luatex.def)             Requested size: 472.33867pt x 328.01299pt.
-[17<./figures/Fig6_quality.pdf>]) (./sections/06_conclusions.tex)
-(./build/main.bbl [18] [19]) [20] (./build/main.aux)
+ [15<./figures/Fig4_timing.pdf>])
+(./sections/06_conclusions.tex [16<./figures/Fig4_case_process.pdf>]) [17<./figu
+res/Fig6_quality.pdf>] (./build/main.bbl [18]) [19] (./build/main.aux)
  ***********
 LaTeX2e <2026-06-01>
 L3 programming layer <2026-06-18>
  ***********
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: E83D12FEE55EB5932604E9308A6D872C;6025.
+(rerunfilecheck)             Checksum: 79EDE3E9B3C0CFF1C5D44DA6158AB0DE;6075.
 )
 
 Here is how much of LuaTeX's memory you used:
- 15585 strings out of 475704
+ 15573 strings out of 475704
  125036,953878 words of node,token memory allocated
  622 words of node memory still in use:
    6 hlist, 2 vlist, 2 rule, 2 glue, 4 kern, 1 glyph, 15 attribute, 64 glue_spec
 , 15 attribute_list, 1 write, 7 pdf_action nodes
-   avail lists: 1:1,2:1242,3:528,4:22,5:575,6:159,7:12825,8:81,9:1048,10:19,11:1
-260
- 38033 multiletter control sequences out of 65536+600000
+   avail lists: 1:1,2:1252,3:471,4:24,5:585,6:180,7:12270,8:81,9:1184,10:20,11:1
+229
+ 38026 multiletter control sequences out of 65536+600000
  95 fonts using 8711959 bytes
- 73i,11n,92p,1625b,502s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 73i,11n,92p,1581b,483s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </home/ww/.local/texlive/2026/texmf-dist/fonts/opentype/public/lm/lmmono10-regul
 ar.otf></home/ww/.local/texlive/2026/texmf-dist/fonts/opentype/public/lm/lmroman
 10-italic.otf></home/ww/.local/texlive/2026/texmf-dist/fonts/opentype/public/lm/
@@ -763,11 +757,13 @@ cal/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></home/ww/.
 local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></home/ww
 /.local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></home/w
 w/.local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></hom
-e/ww/.local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb>
-Output written on main.pdf (20 pages, 325011 bytes).
+e/ww/.local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></h
+ome/ww/.local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10
+.pfb>
+Output written on main.pdf (19 pages, 346955 bytes).
 
-PDF statistics: 479 PDF objects out of 1000 (max. 8388607)
- 378 compressed objects within 4 object streams
- 71 named destinations out of 1000 (max. 1048576)
+PDF statistics: 472 PDF objects out of 1000 (max. 8388607)
+ 373 compressed objects within 4 object streams
+ 69 named destinations out of 1000 (max. 1048576)
  193 words of extra memory for PDF output out of 10000 (max. 100000000)
 

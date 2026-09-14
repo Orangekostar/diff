@@ -1,0 +1,13 @@
+{
+  "source": "paper_cai_aei/r1_84bea60e/analysis/timing_contributions.csv",
+  "main_minus_open_loop_stages_mpa": [
+    0.41497781033178605,
+    1.2959465499970255,
+    -0.22346444316459158,
+    -0.09685523343726493
+  ],
+  "sum_mpa": 1.390604683726955,
+  "largest_positive_stage": 2,
+  "events_reread": false,
+  "analysis_rerun": false
+}

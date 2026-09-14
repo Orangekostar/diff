@@ -1,0 +1,15 @@
+{
+  "identical_after_repeat_build": {
+    "paper_cai_aei/r1_84bea60e/manuscript.md": true,
+    "paper_cai_aei/r1_84bea60e/manuscript.html": true,
+    "paper_cai_aei/r1_84bea60e/main.tex": true,
+    "paper_cai_aei/r1_84bea60e/supplementary.tex": true,
+    "paper_cai_aei/r1_84bea60e/sections/06_conclusions.tex": true,
+    "paper_cai_aei/r1_84bea60e/sections/01_introduction.tex": true,
+    "paper_cai_aei/r1_84bea60e/sections/03_framework.tex": true,
+    "paper_cai_aei/r1_84bea60e/sections/04_experimental_design.tex": true,
+    "paper_cai_aei/r1_84bea60e/sections/05_results.tex": true,
+    "paper_cai_aei/r1_84bea60e/sections/02_related_work.tex": true
+  },
+  "algorithm_raw_latex_fences": "correct; algorithm is rendered as Verbatim, not raw Markdown"
+}

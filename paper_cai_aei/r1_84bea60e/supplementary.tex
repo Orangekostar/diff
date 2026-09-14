@@ -41,13 +41,13 @@
 
 Learning what to inspect: Task-driven multimodal C-scan acquisition for compression-after-impact assessment
 
-Author-review draft. Results are frozen selected-validation estimates, with 50 physical specimens, 48 capture groups and six domains. This supplement adds no new model execution, training, labels or bootstrap samples.
+Supplement to the offline validation study on 50 physical specimens, 48 capture groups and six domains.
 
 \subsection{S1 Data provenance and reproducibility}\label{s1-data-provenance-and-reproducibility}
 
 Surface and internal images come from six version-1 post-impact datasets; the CAI-strength source is the version-3 compression-after-impact dataset. Original records are published under CC BY 4.0. The study's registered crops, overlays and feature representations are derived assets, and their release requires correct attribution and author confirmation of the intended release scope. Source version and specimen correspondence are recorded independently of filenames; a layer count is not used to infer a per-specimen thickness. In particular, photographs taken after compression in the CAI dataset are not substituted for the post-impact surface input.
 
-The source authors are Saki Hasebe, Ryo Higuchi, Tomohiro Yokozeki and Shin-ichi Takeda. The image and mechanical datasets are described in their Data in Brief articles \citep{hasebe2022data, hasebe2025data}. Table S1 maps the exact dataset versions. The local cohort contains 276 specimens in 259 source-related capture groups, split as 161/152 TRAIN, 50/48 VALID and 65/59 reserved TEST physical specimens/groups. No reserved TEST performance is reported.
+The source authors are Saki Hasebe, Ryo Higuchi, Tomohiro Yokozeki and Shin-ichi Takeda. The image and mechanical datasets are described in their Data in Brief articles \citep{hasebe2022data, hasebe2025data}. Table S1 maps the exact dataset versions. The local cohort contains 276 specimens in 259 source-related capture groups, split as 161/152 TRAIN, 50/48 VALID and 65/59 reserved TEST physical specimens/groups. The reserved TEST partition was not evaluated.
 
 { % do not increment counter
 \begin{longtable}[]{@{}
@@ -82,11 +82,50 @@ The predictor uses frozen 64×512 surface and internal descriptors, 64-dimension
 
 { % do not increment counter
 \begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.3500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.6500}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Predictor training item
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Saved setting
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Supervision & CAI strength in MPa; mean Huber loss of \((\hat y-y)/s\) against zero, delta 1 \\
+Residual and output normalization & Fit-target mean; \(s=\max(\operatorname{std}(y_{\mathrm{fit}}),1\,\mathrm{MPa})\); OOF constants fitted separately \\
+Batch / specimen sampling & 32; uniform domain, then uniform physical specimen within domain \\
+Mask sampling probabilities & 10\% zero; 60\% 1--16 cells; 20\% 17--48 cells; 10\% full 64 \\
+Partial-mask routes & 1--16: Random/Center-first/Geometry-spread/Serpentine prefixes; 17--48: random permutation \\
+Optimizer / learning rate / weight decay & AdamW / 0.0003 / 0.0001 \\
+Gradient-norm clipping & 1 \\
+Maximum updates / validation interval / patience & 2000 / 250 / 4; checkpoint improvement tolerance \(10^{-12}\) \\
+Common candidate seeds & MEAN\_SC 2026091201; SPATIAL\_SC 2026091202; SPATIAL\_C 2026091203 \\
+Common selected / completed updates & MEAN\_SC 1750/2000; SPATIAL\_SC 750/1750; SPATIAL\_C 500/1500 \\
+Validation library & Zero state and affordable prefixes of four fixed routes on the same 50 VALID specimens; budget 0.25 \\
+Selection measure & Route mean within specimen, specimen mean within domain, equal mean over six domains of A \\
+Candidate choice & Minimum eligible validation area; ties within \(10^{-8}\) use fewer parameters, then name \\
+OOF seeds / selected updates & 2026091211--2026091213 / 1250, 750, 1000 \\
+OOF completed updates & 2000, 1750, 2000 \\
+OOF fit / query physical counts & 104/57, 108/53, 110/51; no fit/query capture-group overlap \\
+\end{longtable}
+}
+
+\textbf{Predictor-specific settings.} Mask probabilities describe independent random draws, not enforced batch counts. Each source-related training group is assigned to one of three folds within its domain, with groups kept intact. A query specimen uses the predictor fitted outside its fold. The validation library is shared for checkpoint selection, including OOF models; group exclusion from fitting does not imply independent checkpoint validation. Fixed-route validation prefixes are distinct from the later actor trajectories.
+
+Eligibility required finite metrics; full-input MAE below the fit-median constant predictor, full-input MSE below the fit-mean constant predictor, and at least 2\% lower full-input MAE than zero-input MAE. Center-first and Geometry-spread endpoint MAEs also had to improve on zero-input MAE. Constants are computed from fitting labels and evaluated on VALID. All three common candidates satisfied these checks before their validation areas were compared.
+
+Native cell costs and the legal acquisition test use float64 arithmetic with tolerance \(10^{-12}\) at budget 0.25. The feature-model cost channel is float32, while legal decisions retain native float64 costs. After an action, cost is the sum of measured-cell costs and history at that cell is its one-based acquisition step divided by 64. Cell identifiers themselves are zero-based, from 0 to 63. The logical \(X_{\mathrm{obs}}\) buffer is zero in unobserved cells; model-specific masking prevents the environment's stored full array from becoming visible input.
+
+{ % do not increment counter
+\begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5000}}
   >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5000}}@{}}
 \toprule\noalign{}
 \begin{minipage}[b]{\linewidth}\raggedright
-Training item
+Actor training item
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
 Saved setting
 \end{minipage} \\
@@ -110,7 +149,7 @@ Saved research environment & Python 3.13.13; NumPy 2.5.1; PyTorch 2.12.1+cu130; 
 \end{longtable}
 }
 
-\textbf{Reproducibility settings.} Software versions above are from the saved research protocol, not a claim that manuscript rendering executed the models. Training counts refer to the completed experiment. Manuscript preparation added zero research updates.
+\textbf{Reproducibility settings.} Software versions above are from the saved research protocol, not a claim that manuscript rendering executed the models. Training counts refer to the completed experiment.
 
 Each separately cropped image cell is converted to luminance using RGB coefficients (0.299, 0.587, 0.114), resized to 224×224 with bilinear interpolation (antialiasing enabled, align\_corners disabled), replicated across three channels and normalized using ImageNet means (0.485, 0.456, 0.406) and standard deviations (0.229, 0.224, 0.225). The frozen encoder returns one 512-dimensional descriptor per cell. This preprocessing is applied after cell cropping, so it does not mix neighbouring internal cells.
 
@@ -126,7 +165,7 @@ Because \(e_t=e_0-\sum_{j=1}^{t}\delta_j\), substituting the cumulative error ch
 
 \[A(B)=e_0-\frac{1}{B}\sum_{j=1}^{T}(B-c_j)\delta_j=e_0-\sum_{j=1}^{T}g_j.\]
 
-Each \(\delta_j\) remains in the held error for the interval from \(c_j\) to B, which gives its coefficient. This derivation includes the final holding interval even when \(c_T\)\textless B. At \(c_j\)=B the area coefficient is zero; J additionally includes \(0.25e_T\), so an endpoint observation can still change J. Negative \(\delta_j\) values are not clipped. The formula also holds for an empty trajectory with A=\(e_0\).
+Each \(\delta_j\) remains in the held error for the interval from \(c_j\) to B, which gives its coefficient. This derivation includes the final holding interval even when \(c_T\)\textless B. At \(c_j=B\) the area coefficient is zero; J additionally includes \(0.25e_T\), so an endpoint observation can still change J. Negative \(\delta_j\) values are not clipped. The formula also holds for an empty trajectory with A=\(e_0\).
 
 Completion stages are right-closed: (0,0.0625{]}, (0.0625,0.125{]}, (0.125,0.1875{]} and (0.1875,0.25{]}. Episode contributions are summed within a stage before Random repeats are averaged within a physical specimen. Specimens are then averaged within domains, followed by equal weighting of the six domains. This avoids giving Random's five runs or longer action sequences more specimen weight. For two methods with unequal initial errors, the contrast is
 
@@ -135,6 +174,8 @@ Completion stages are right-closed: (0,0.0625{]}, (0.0625,0.125{]}, (0.125,0.187
 All nine saved methods have the same domain-equal initial error, 57.048718 MPa. The identity was checked on all 650 episodes and reproduced saved method areas and paired differences. Maximum episode discrepancy was 2.8422×\(10^{-14}\) MPa and maximum method-area discrepancy was 7.1054×\(10^{-15}\) MPa. These checks verify arithmetic and aggregation; they do not create independent evidence for a component's causal effect. The complete 36-row contribution table and machine-readable identity checks accompany the manuscript.
 
 \subsection{S3 Complete same-cap results}\label{s3-complete-same-cap-results}
+
+All reported caps query prefixes of trajectories generated with total budget 0.25, using actor remaining budget \(0.25-c_t\). No separate policy is trained or rerun for a smaller displayed cap. Cohort-level MAE pools physical-specimen losses after within-specimen repeat averaging.
 
 Table S2 retains the original five-cap estimates and actual mean and range of unique native-pixel acquisition fractions for every method. Areas are provided once per method in the main table; they do not vary with a queried cap. The complete-input row is separate at fraction 1.0, without an area. Machine-readable source data retain unrounded values, native-pixel counts, unused budgets and aggregation labels.
 
@@ -304,7 +345,7 @@ Complete input at fraction 1.0: MAE 41.690 MPa, RMSE 53.944 MPa, R² 0.711; all 
 
 \subsection{S4 Paired comparisons, domain results and quality targets}\label{s4-paired-comparisons-domain-results-and-quality-targets}
 
-Table S3 gives all eight control-minus-main contrasts for full-range area, early area and endpoint quality. Positive values favour the main policy. Only the four prespecified descriptive component contrasts have the existing area intervals displayed in the main text. Additional point-estimate contrasts are not assigned invented intervals. The complete same-cap paired CSV retains 40 MAE comparisons with their saved exploratory intervals; the bootstrap was not repeated for this manuscript.
+Table S3 gives all eight control-minus-main contrasts for full-range area, early area and endpoint quality. Positive values favour the main policy. The four descriptive component contrasts have the existing area intervals displayed in the main text. Additional point-estimate contrasts are not assigned invented intervals. The complete same-cap paired CSV retains 40 MAE comparisons with their saved exploratory intervals.
 
 { % do not increment counter
 \begin{longtable}[]{@{}
@@ -496,6 +537,12 @@ At the geometry endpoint anchor q=46.909917 MPa, the primary-grid main/geometry/
 \caption{MAE difference from the common predictor's complete-input reference. Zero is a quality-gap reference, not a prespecified noninferiority margin. No partial method reaches complete-input MAE in the observed range.}
 \end{figure}
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio,alt={Signed component-related differences and existing 95\% pointwise exploratory intervals. Positive differences favour the main policy. The VLM comparison concerns early area; the other contrasts concern full-range area. All four intervals contain zero.}]{figures/Fig3_contrasts.pdf}
+\caption{Signed component-related differences and existing 95\% pointwise exploratory intervals. Positive differences favour the main policy. The VLM comparison concerns early area; the other contrasts concern full-range area. All four intervals contain zero.}
+\end{figure}
+
 \subsection{S5 Fixed case illustrations}\label{s5-fixed-case-illustrations}
 
 The three cases were selected before the manuscript timing analysis. Each case below reuses its surface-cue image, final acquired-state overlay and prediction trajectory. The full original seven-image set per case remains in the figure directory with source hashes in the reuse manifest. These are process illustrations, not three independent replications or model-generated explanations. All source specimen imagery derives from the corresponding Hasebe version-1 dataset, licensed CC BY 4.0; registered overlays are copied unchanged. No damage-mask ground truth or language reasoning was added.
@@ -585,7 +632,7 @@ Verified evidence and distinction
 Mack et al.~(2026) & CAI strength / impact energy regression & C-scan damage image input & ResNet18 regression described; acquisition feedback unverified & Acquisition-cost protocol unverified & Institutional abstract only; predictor input established, no module-level absence claim \\
 Fuentes et al.~(2020) & Damage indication / component damage probability & Measurements collected at selected locations & Sequential novelty-index field and Bayesian optimization & Reduces observation count; exact termination unverified & Institutional abstract only; differs in endpoint, not a reproduced baseline \\
 Shim et al.~(2018) & Cost-sensitive classification & Acquired feature set & Joint classifier/acquirer with set encoding & Acquire or stop/predict; specified feature costs & PDF pp1--4, Section 3; differs from fixed-cap frozen-regressor evaluation \\
-Janisch et al.~(arXiv 2017; conference version read) & Costly-feature classification & Currently acquired features & Deep RL; optional external classifier described & Feature requests or classification actions & Author PDF pp1--3, Problem definition; no claim of CAI evaluation \\
+Janisch et al.~(2019) & Costly-feature classification & Currently acquired features & Deep RL; optional external classifier described & Feature requests or classification actions & Author PDF pp1--3, Problem definition; no claim of CAI evaluation \\
 Covert et al.~(2023) & Dynamic predictive feature selection & Observed feature subset & Greedy CMI / amortized optimization & Fixed feature count, uniform costs in formulation & PDF Sec2--4; squared-loss regression conditions do not establish this loss's optimality \\
 This study & CAI trajectory and endpoint error & Surface, numerical prior, acquired internal descriptors & Frozen regressor with learned acquisition actor & Native-pixel cap; whole-cell affordability termination & Local model/policy/metric code and saved selected-VALID trajectories \\
 \end{longtable}
@@ -593,7 +640,7 @@ This study & CAI trajectory and endpoint error & Surface, numerical prior, acqui
 
 No source is marked FULLTEXT\_READ when only its abstract or selected sections were read. Three algorithmic neighbours were read at the sections supporting the comparisons; unavailable engineering-neighbour details remain unverified. No cross-study accuracy leaderboard is constructed.
 
-\subsection{S7 Source-data index and remaining author decisions}\label{s7-source-data-index-and-remaining-author-decisions}
+\subsection{S7 Source-data index}\label{s7-source-data-index}
 
 { % do not increment counter
 \begin{longtable}[]{@{}lll@{}}
@@ -620,8 +667,6 @@ case\_figure\_reuse.csv & 21 & Unchanged frozen source \\
 }
 
 The analysis/ directory supplies timing\_contributions.csv (36 rows), timing\_identity\_checks.json, timing\_analysis.py and six prescribed numerical checks. No original event, model or feature cache is duplicated in this manuscript package.
-
-Authors must confirm identities, affiliations, contributions, funding, competing interests, source attribution and final release/disclosure wording before submission. The AEI-specific guide could not be retrieved from its official page during preparation; the present article layout and auxiliary materials are review drafts, not a certification of journal-format compliance. The scientific scope remains offline selected-validation analysis with one policy-seed panel and without independently evaluated TEST outcomes.
 
 \bibliographystyle{unsrtnat}
 \bibliography{references}

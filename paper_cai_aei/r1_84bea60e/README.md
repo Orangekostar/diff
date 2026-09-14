@@ -1,34 +1,25 @@
-# CAI—AEI完整作者审阅稿
+# CAI—AEI定向修订 R2
 
-状态：MANUSCRIPT_DRAFT_COMPLETE；AUTHOR_REVIEW_PENDING；JOURNAL_FORMAT_VERIFICATION_PENDING。
+状态：TARGETED_MANUSCRIPT_REVISION_COMPLETE；AUTHOR_REVIEW_PENDING；JOURNAL_FORMAT_VERIFICATION_PENDING。
 
-入口：
-- `build/main.pdf`：完整英文主稿，20页。
-- `build/supplementary.pdf`：补充材料，21页。
-- `manuscript.md` / `manuscript.html`：整稿可读版本；HTML公式使用MathJax。
-- `sections/*.md`、`abstract.md`：唯一正文编辑基准。
-- `main.tex`、`sections/*.tex`、`supplementary.tex`、`references.bib`：可编辑LaTeX。
-- `AUTHOR_READING_GUIDE_ZH.md`：两页结构的中文论证导读；`AUTHOR_INPUTS.md`：作者确认项。
-- `EVIDENCE_MAP.csv`、`figures/FIGURE_INDEX.csv`、`figures/reuse_manifest.json`：段落、图、源数值映射。
-- `submission_drafts/`：highlights、cover letter、可用性/AI声明和图形摘要brief，均未提交。
+- `build/main.pdf`：英文主稿，19页；`build/supplementary.pdf`：SI，23页。
+- `manuscript.md` / `manuscript.html`：整稿；HTML公式使用MathJax。
+- `abstract.md`、六份`sections/*.md`、`supplementary.md`、`declarations.md`：编辑源。TeX/HTML/整稿MD由脚本生成。
+- `AUTHOR_READING_GUIDE_ZH.md`、`AUTHOR_INPUTS.md`：论证导读与待确认项。
+- `EVIDENCE_MAP.csv`、`RESULT_ALLOCATION.csv`、`figures/FIGURE_INDEX.csv`：证据及呈现分配；主文5图、SI13图。
+- `references.bib`与`references/reference_ledger.csv`须同步编辑；现有19条引用，读取范围如实保留。
 
-配置：manuscript / methods / zh-to-en / generic，按AEI六章与作者规定范围适配。正文约6779词（排除表格、公式和图注的近似计数），摘要207词。19条真实引用；来源读取范围见台账。当前article模板只用于作者审阅。
+配置：methods / zh-to-en / generic，服从AEI定向修订要求。摘要203词，六章科学文本约6765词；原构建脚本计数6772，额外7个token来自算法排版宏，均非期刊正式字数。当前article版式供作者审阅。
 
-从仓库根重建正文（需要Pandoc；本次使用临时安装的3.9二进制，具体运行版本见交接）：
+从仓库根构建（已验证Pandoc 3.9、LuaLaTeX；本机Pandoc路径如下，迁移机器时替换PANDOC）：
 
 ```bash
-PANDOC=/path/to/pandoc python paper_cai_aei/r1_84bea60e/build_manuscript.py
-cd paper_cai_aei/r1_84bea60e
-latexmk -lualatex -interaction=nonstopmode -halt-on-error -outdir=build main.tex
-latexmk -lualatex -interaction=nonstopmode -halt-on-error -outdir=build supplementary.tex
+export OMP_NUM_THREADS=4 OPENBLAS_NUM_THREADS=4 MKL_NUM_THREADS=4
+PANDOC=/tmp/cai_pandoc/pypandoc/files/pandoc python paper_cai_aei/r1_84bea60e/build_manuscript.py
+latexmk -lualatex -interaction=nonstopmode -halt-on-error -cd -outdir=build paper_cai_aei/r1_84bea60e/main.tex
+latexmk -lualatex -interaction=nonstopmode -halt-on-error -cd -outdir=build paper_cai_aei/r1_84bea60e/supplementary.tex
 ```
 
-只验证六类玩具数学检查（从仓库根）：
+`figures/compose_case_r2.py`仅组合既定c8-16第1/8步原图。依赖本机nature-figure面板检查脚本，其他机器可用PANEL_ALIGNMENT_TOOL指定；无需重绘未改图。R2未重跑timing_analysis.py、数学测试或任何研究计算。
 
-```bash
-python paper_cai_aei/r1_84bea60e/analysis/test_timing.py
-```
-
-唯一真实事件分解已完成并保存；不要删除检查结果后重复运行timing_analysis.py。图稿重建脚本只读取已保存36行贡献，不读模型或新事件。冻结研究根保持只读。
-
-完整交接位于 `artifacts/cai_agent_v3/manuscript/r1_84bea60e/CODEX_HANDOFF_CAI_AEI_MANUSCRIPT.md`（相对仓库根）。Git最终同步身份由同目录GIT_DELIVERY.json及最终回复记录。
+R2交接（相对仓库根）：`artifacts/cai_agent_v3/manuscript_revision/r2_f4758829/CODEX_HANDOFF_CAI_AEI_REVISION_R2.md`。原稿与原审查保留于Git基点f4758829及原交接目录，不回写历史结论。

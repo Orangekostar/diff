@@ -2,11 +2,11 @@
 
 ## 3.1 Problem formulation
 
-The inspection task is to acquire a limited subset of an internal C-scan image while maintaining an estimate of compression-after-impact (CAI) strength. For each specimen, let S denote the available surface image, X the internal image, and y the measured CAI strength in MPa. We partition each image into an 8×8 grid with index set I={1,…,64}. An action acquires one previously unobserved internal cell. Thus, the decision concerns a region of an existing image in offline replay; it does not specify an individual acoustic waveform, probe displacement or physical scan command. The surface image is available before internal acquisition begins.
+The inspection task is to acquire a limited subset of an internal C-scan image while maintaining an estimate of compression-after-impact (CAI) strength. Let $I^S$ and $I^X$ denote the raw surface and internal images, and let $y$ denote measured CAI strength in MPa. Each image is partitioned into an 8×8 grid indexed by $\mathcal{I}=\{0,\ldots,63\}$. Independent cell encoding produces surface descriptors $S\in\mathbb{R}^{64\times512}$ and internal descriptors $X\in\mathbb{R}^{64\times512}$. An action reveals one previously unobserved internal descriptor. The raw images define the regions and native-pixel costs; $S$ and $X$ denote features throughout the decision model. All surface descriptors are available before internal acquisition begins.
 
 After t actions, the observed set is $\Omega_t$ and its binary indicator is $M_t$. The cumulative acquisition fraction $c_t$ is the number of unique acquired native image pixels divided by the number of pixels in the complete internal image. Grid boundaries are rounded on the native image, so cell costs need not be identical. We retain these actual pixel counts when checking affordability and evaluating a trajectory. With B=0.25, the legal action set contains only unobserved cells whose complete acquisition keeps $c_t$ within B. Acquisition ends when this set is empty. This rule defines a budget-limited experiment without a learned stopping decision.
 
-A frozen predictor produces $\hat{y}_t=P_{\mathrm{all}}(S,M_t\odot X,M_t,c_t)$. The policy selects the next cell from the currently legal set using surface information and, for feedback policies, the acquired internal evidence and current prediction. The true strength y is available to training and retrospective scoring, but is excluded from the decision state. This separation allows the acquisition policy to be trained for a downstream assessment objective without supplying the answer when selecting an observation. The comparison then asks which policy supplies a useful sequence of observations to the same predictor.
+Let $X_{\mathrm{obs},t}=M_t\odot X$ denote the logical visible buffer, with the cell mask broadcast across descriptor dimensions. A frozen predictor produces $\hat{y}_t=P_{\mathrm{all}}(S,X_{\mathrm{obs},t},M_t,c_t)$. The policy selects the next cell from the currently legal set using surface information and, for feedback policies, the acquired internal evidence and current prediction. The true strength y is available to training and retrospective scoring, but is excluded from the decision state. This separation allows the acquisition policy to be trained for a downstream assessment objective without supplying the answer when selecting an observation. The comparison then asks which policy supplies a useful sequence of observations to the same predictor.
 
 We evaluate both the trajectory and its final estimate. Let $e_t=|\hat{y}_t-y|$ and let e(c) hold the most recently available error constant until the next acquisition completes. The normalized trajectory error and objective are
 
@@ -14,7 +14,7 @@ $$A(B)=\frac{1}{B}\int_0^B e(c)\,dc,\qquad J=A(B)+0.25e_T.$$
 
 Both terms are measured in MPa and lower values are preferable. A(B) measures prediction quality over the available acquisition range, whereas the terminal term retains an explicit incentive for final quality. The last prediction is held from $c_T$ to B if no remaining whole cell is affordable. Consequently, a trajectory cannot avoid its final holding cost by ending below the cap. This formulation couples what is acquired with when its effect becomes available.
 
-![Multimodal acquisition workflow. Only requested internal descriptors enter the visible state. The frozen VLM supplies a cached surface prior; the actor makes each acquisition decision. Codex (GPT-6, OpenAI) assisted in writing the deterministic plotting code; author scientific review is pending.](figures/Fig1_framework.pdf){#fig:framework width=100%}
+![Multimodal acquisition workflow. Only requested internal descriptors enter the visible state. The frozen VLM supplies a cached surface prior; the actor makes each acquisition decision. OpenAI Codex assisted in writing the deterministic plotting code.](figures/Fig1_framework.pdf){#fig:framework width=100%}
 
 ## 3.2 Multimodal inspection-state representation
 
@@ -47,7 +47,9 @@ The predictor forms two summaries: the mean over all 64 fused cell representatio
 
 Neither the policy identifier nor the acquisition order enters this predictor. Therefore, for the same surface, observed cells and cost, its output is identical regardless of the policy that produced the state. Different acquisition sequences can still have different A(B), even when they eventually reveal the same subset, because intermediate predictions are available at different costs. This property gives the trajectory comparison its interpretation: changes in prediction quality arise through supplied observations and their timing, under a fixed assessment mapping.
 
-The predictor used for reported validation results was selected at update 1750 and then frozen. During policy learning, rewards instead use three frozen cross-fitted predictors. Each training specimen is evaluated by the model assigned to its fold, trained with its capture group excluded. These models provide out-of-fold training feedback; they are not averaged into a three-model ensemble for the reported validation predictions. The complete-input reference also uses the common selected predictor, with all internal cells and the same surface information.
+Predictor training covers both sparse and dense observation sets. A random mask draw selects zero cells with probability 0.10, 1–16 cells with probability 0.60, 17–48 cells with probability 0.20, and all 64 cells with probability 0.10. Small sets use prefixes of Random, Center-first, Geometry-spread or Serpentine routes; larger partial sets use random permutations. These are sampling probabilities rather than fixed batch proportions. Specimens are sampled uniformly by domain and then within domain. Each batch contains 32 specimens and minimizes mean Huber loss on $(\hat{y}-y)/s$, with delta one and $s=\max(\operatorname{std}(y_{\mathrm{fit}}),1\,\mathrm{MPa})$. The same fit-derived mean and scale map the regression head to MPa. This strength supervision differs from the actor's trajectory cost. AdamW uses learning rate 0.0003, weight decay 0.0001 and gradient-norm clipping at one. Checkpoints are evaluated every 250 updates, with at most 2000 updates and patience four. The candidate comparison evaluates fixed validation prefixes independently of actor trajectories. It selected MEAN_SC at update 1750 as $P_{\mathrm{all}}$, rather than assigning it in advance. Dense training masks provide predictor input coverage without extending the actor's 0.25 acquisition budget.
+
+During policy learning, a specimen in training fold $k$ receives feedback from a frozen predictor $P_{-k}$ fitted with its capture group excluded. Three such models use the selected architecture and fold-specific fit means and scales. Their checkpoints are still selected using the common validation library, so cross-fitting removes group overlap in fitting rather than all selection dependence. Evaluation in Algorithm 1 and the complete-input reference instead use $P_{\mathrm{all}}$ alone. The out-of-fold predictors are not averaged into a deployment ensemble.
 
 ## 3.4 State-dependent acquisition policy
 
@@ -59,25 +61,44 @@ Policy-gradient learning [@williams1992] minimizes the expected trajectory objec
 
 During training, actions are sampled from the legal categorical distribution. During evaluation, the highest-scoring legal action is selected and the actor is evaluated again after the observation update. Parameters remain frozen during this sequence. The open-loop diagnostic removes internal descriptors and the current prediction from the decision computation but retains surface features, location, prior, acquisition history and budget. Its downstream predictor still incorporates the acquired internal information. The no-VLM diagnostic retains surface and internal feedback while removing the VLM features and initial restriction. These distinctions separate the information used to choose a cell from that used to assess the specimen afterwards.
 
+```{=latex}
+\begin{minipage}{\linewidth}
+```
+
 **Algorithm 1. Budget-limited task-driven acquisition**
 
 ```text
-Input: surface features S, cached surface prior V, frozen actor pi and predictor P
-Set observed mask M=0, history H=0 and native-pixel cost c=0
-Compute the initial CAI prediction p=P(S, masked_X, M, c)
-Repeat:
-    Construct L from unobserved cells affordable under B=0.25
-    If L is empty, terminate
-    On the first step, restrict L to the highest reliable C0 if feasible
-    Build the permitted actor state from S, V, M, H, p and budget
-    Score legal cells and choose a=argmax pi(state) over L
-    Reveal internal descriptor X[a] from the replay environment
-    Update M, H and c using the newly acquired native pixels
-    Update p=P(S, masked_X, M, c)
-    Record the state and proceed with unchanged model parameters
-Return the acquisition sequence and partial-observation predictions
-Use y only outside this loop to calculate evaluation errors
+Input: surface descriptors S; cached VLM features V;
+       frozen actor pi_theta; evaluation predictor P_all;
+       replay environment E; native cell costs d; total budget B=0.25
+Initialize M=0, H=0, X_obs=0, c=0, t=0
+p = P_all(S, X_obs, M, c)
+while True:
+    L = {i in {0,...,63}: M[i]=0 and c+d[i] <= B}
+    if L is empty: break
+    C = L
+    if t=0 and highest-reliable VLM candidates overlap L:
+        C = L intersect C0
+    z = (S, X_obs, M, H, V, p, c, B-c)
+    scores, _ = pi_theta(z)
+    a = argmax of scores over C
+    x_a = E.acquire(a)
+    X_obs[a] = x_a
+    M[a] = 1
+    t = t+1
+    H[a] = t/64
+    c = sum of native cell costs over measured cells
+    p = P_all(S, X_obs, M, c)
+    Record action, observation state, cost and prediction
+Return acquisition sequence and predictions
+Compute errors with y only on the training/scoring side
 ```
+
+```{=latex}
+\end{minipage}
+```
+
+The algorithm exposes a logical observation buffer. The replay implementation stores the full descriptor array in the environment but masks unobserved content before model mixing, giving the same visible-information interface. The actor substitutes its learned unknown-cell vector wherever M is zero. At evaluation, each observation updates the prediction and decision state while both networks' weights remain fixed. The value-head output is unused for action selection. Native-cost comparisons use the floating-point tolerance specified in Supplementary Section S1.
 
 ## 3.5 Acquisition timing and task cost
 
