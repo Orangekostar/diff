@@ -147,3 +147,5 @@ TARGETED_MANUSCRIPT_REVISION_COMPLETE。R0—R9与一次Q1—Q8定向自查闭�
 ## VLM grounding pilot W2—W4
 
 6件×4主回答实际完成，21首次合同有效、3跨region重复经一次原格式修复有效。27次生成/2508实际Qwen forward/2508输出token，GPU0一次加载332.806秒，峰值29.100GiB。其他研究模型/训练/attention/TEST=0。30组候选PNG和序数图、全部raw/token-ID、C0/变化CSV、HTML/作者PENDING模板已导出；浏览器与有限检查已通过。正在完成报告比较表示修正验证和原分支Git交付；人评状态PENDING_HUMAN_REVIEW，不声称定位改善或改变生产。
+
+VLM_GROUNDING_PILOT_R1_e8d9ef01交付完成：结果提交42e89a30dd30d7c3d9cdbebaebf7bc612e0bf06c已推送并核对三方一致；377个OUT文件全部实际追踪。状态RUN_COMPLETE_REVIEW_PENDING，旧生产/论文未改。后续唯一交接记录提交不更改实验产物；不自动启动新调用。
