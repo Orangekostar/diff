@@ -1,0 +1,19 @@
+```json
+{
+  "no_reliable_cue": false,
+  "regions": [
+    {
+      "cells": [28, 29, 30, 31],
+      "cue": "环形结构",
+      "alternative": "可能是由于拍摄角度造成的阴影效果",
+      "confidence": "medium"
+    },
+    {
+      "cells": [52, 53, 54, 55],
+      "cue": "细长条状结构",
+      "alternative": "可能是由于光线反射造成的条纹",
+      "confidence": "low"
+    }
+  ]
+}
+```

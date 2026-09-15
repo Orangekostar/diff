@@ -1,0 +1,18 @@
+{
+  "task_id": "VLM_GROUNDING_PILOT_R1_e8d9ef01",
+  "run_id": "878fe4bd-3f83-4c49-8b0d-2fa76bf76c9e",
+  "pid": 2354920,
+  "started_unix": 1789479239.764735,
+  "status": "RUN_COMPLETE_REVIEW_PENDING",
+  "budget_seconds": 1800,
+  "device": "cuda:0",
+  "physical_gpu": "0",
+  "elapsed_seconds": 332.8062775461003,
+  "generation_calls": 27,
+  "actual_qwen_forward_calls": 2508,
+  "peak_allocated_gib": 29.100101470947266,
+  "training_updates": 0,
+  "other_research_model_forwards": 0,
+  "attention_forwards": 0,
+  "test_access": 0
+}

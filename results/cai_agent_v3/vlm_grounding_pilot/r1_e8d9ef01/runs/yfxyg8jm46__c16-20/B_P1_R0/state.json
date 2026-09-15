@@ -1,0 +1,130 @@
+{
+  "specimen_key": "yfxyg8jm46:c16-20",
+  "variant": "B_P1_R0",
+  "signature": "525eba988118e7c290e2f351f74565d779002da1eb3e78af9e957f842a4c4fb5",
+  "status": "VALID_FIRST_PASS",
+  "attempts": [
+    {
+      "attempt_number": 1,
+      "kind": "PRIMARY",
+      "status": "COMPLETED",
+      "started_unix": 1789479478.8811939,
+      "prompt_sha256": "b41e7809ee112084dfcb4166fa92534a0baceb5edb1d32fda854017e140275cf",
+      "text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [35, 36, 37],\n      \"cue\": \"细长的白色痕迹\",\n      \"alternative\": \"可能是反光或灰尘\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "generated_token_ids": [
+        73594,
+        2236,
+        198,
+        515,
+        220,
+        330,
+        2152,
+        1288,
+        50330,
+        666,
+        361,
+        788,
+        895,
+        345,
+        220,
+        330,
+        57708,
+        788,
+        2278,
+        262,
+        341,
+        414,
+        330,
+        36691,
+        788,
+        508,
+        18,
+        20,
+        11,
+        220,
+        18,
+        21,
+        11,
+        220,
+        18,
+        22,
+        1259,
+        414,
+        330,
+        31724,
+        788,
+        330,
+        99338,
+        45861,
+        9370,
+        102440,
+        109246,
+        756,
+        414,
+        330,
+        76995,
+        788,
+        330,
+        104560,
+        94443,
+        99225,
+        57191,
+        114267,
+        756,
+        414,
+        330,
+        81929,
+        788,
+        330,
+        26086,
+        698,
+        262,
+        456,
+        220,
+        5133,
+        532,
+        73594,
+        151645
+      ],
+      "input_tokens": 3123,
+      "output_tokens": 73,
+      "forward_calls": 73,
+      "input_metadata": "input_1.json",
+      "chat_text": "chat_1.txt",
+      "parser_valid": true,
+      "contract_valid": true,
+      "error": null,
+      "percept": {
+        "regions": [
+          {
+            "cells": [
+              35,
+              36,
+              37
+            ],
+            "cue": "细长的白色痕迹",
+            "alternative": "可能是反光或灰尘",
+            "confidence": "medium"
+          }
+        ],
+        "no_reliable_cue": false
+      },
+      "elapsed_seconds": 9.489060394465923
+    }
+  ],
+  "final_percept": {
+    "regions": [
+      {
+        "cells": [
+          35,
+          36,
+          37
+        ],
+        "cue": "细长的白色痕迹",
+        "alternative": "可能是反光或灰尘",
+        "confidence": "medium"
+      }
+    ],
+    "no_reliable_cue": false
+  }
+}

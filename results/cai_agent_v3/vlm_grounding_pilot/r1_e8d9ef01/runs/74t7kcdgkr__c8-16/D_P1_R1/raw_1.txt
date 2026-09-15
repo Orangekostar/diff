@@ -1,0 +1,13 @@
+```json
+{
+  "no_reliable_cue": false,
+  "regions": [
+    {
+      "cells": [35, 36],
+      "cue": "中心的圆形轮廓",
+      "alternative": "可能是标记或划痕",
+      "confidence": "medium"
+    }
+  ]
+}
+```

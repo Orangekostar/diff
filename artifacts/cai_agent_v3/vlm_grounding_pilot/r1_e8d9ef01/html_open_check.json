@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "file_protocol": true,
+  "cases": 6,
+  "panels": 30,
+  "images_loaded": 78,
+  "all_relative_links_exist": true,
+  "first_case_hide_candidates_switch_actual_input": true,
+  "desktop_no_overflow": true,
+  "mobile_390_no_overflow": true,
+  "page_errors": []
+}

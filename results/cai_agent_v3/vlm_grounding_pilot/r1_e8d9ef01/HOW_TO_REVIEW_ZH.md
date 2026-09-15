@@ -1,0 +1,7 @@
+# 作者评价方法
+
+打开index.html，先看clean，逐区域核对cue是否可见及是否覆盖所报cells；切换真实编号图检查格号。分别评价两类线索，不只看讨论中的线条。
+
+在human_review_template.csv填写reviewer_alias、visible_cue_match和cell_location_match（MATCH/PARTIAL/MISMATCH/UNCERTAIN），以及annotation_artifact_suspected、可选reference_cells_optional、notes，真实完成后将review_status由PENDING改为CONFIRMED。无区域行用于记录漏报或不确定；空reference不是空GT。
+
+先看首次raw回答，再看格式修复后回答；修复可能改变内容。H00只有历史最终回答，不能假设历史首次回答可得。候选变化、no-cue增多、C0大小都不是准确率；C0为预算0.25、空已测集合、action_count=0的CPU规则结果，不是新动作。当前未收到真实人评，不自动选择赢家或接入生产。

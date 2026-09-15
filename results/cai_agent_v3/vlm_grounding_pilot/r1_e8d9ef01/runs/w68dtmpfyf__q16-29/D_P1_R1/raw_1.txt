@@ -1,0 +1,13 @@
+```json
+{
+  "no_reliable_cue": false,
+  "regions": [
+    {
+      "cells": [28, 29],
+      "cue": "中心有一个圆形的痕迹",
+      "alternative": "可能是由于轻微的划痕或磨损造成的",
+      "confidence": "medium"
+    }
+  ]
+}
+```

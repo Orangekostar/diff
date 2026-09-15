@@ -1,0 +1,42 @@
+{
+  "cache_key": "c4e38c6288f1ce789a14fe1d295b45493edd7ad7295c6ef1055868915aaa47ed",
+  "call_count": 1,
+  "input_tokens": 2767,
+  "latency_seconds": 9.202564042061567,
+  "output_tokens": 106,
+  "percept": {
+    "no_reliable_cue": false,
+    "regions": [
+      {
+        "alternative": "可能是一个标记或缺陷",
+        "cells": [
+          35,
+          36
+        ],
+        "confidence": "medium",
+        "cue": "circle"
+      },
+      {
+        "alternative": "可能是一个标记或缺陷",
+        "cells": [
+          37,
+          38
+        ],
+        "confidence": "medium",
+        "cue": "circle"
+      }
+    ]
+  },
+  "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [35, 36],\n      \"cue\": \"circle\",\n      \"alternative\": \"可能是一个标记或缺陷\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [37, 38],\n      \"cue\": \"circle\",\n      \"alternative\": \"可能是一个标记或缺陷\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+  "record_type": "surface_percept",
+  "repaired": false,
+  "request": {
+    "clean_image_sha256": "bae76556ef388489255bf1f2d5e2638aa7a81a951a6c0b834c01dfb778ac903f",
+    "gridded_image_sha256": "e7afd5be06042d1e6b6f955463dbdd163f200bcfef36a969a2818f5c14b95e39",
+    "model_revision": "cc594898137f460bfe9f0759e9844b3ce807cfb5",
+    "prompt_sha256": "07ba97c242f8f8ab4ec0b742d64aec231dace2455bb275e285174381c1e79ce0",
+    "render_version": "b341e99fb74d9f815be810b2e8b1d91e59f236540072577c244313c584281f40",
+    "schema_version": 2
+  },
+  "schema_version": 2
+}

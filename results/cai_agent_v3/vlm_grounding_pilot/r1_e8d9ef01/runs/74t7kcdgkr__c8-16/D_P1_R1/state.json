@@ -1,0 +1,123 @@
+{
+  "specimen_key": "74t7kcdgkr:c8-16",
+  "variant": "D_P1_R1",
+  "signature": "fcacda0aeca5dd3164b3777af7c2a1d66cb5f355123e6d4eb1ef68f63d9fcf20",
+  "status": "VALID_FIRST_PASS",
+  "attempts": [
+    {
+      "attempt_number": 1,
+      "kind": "PRIMARY",
+      "status": "COMPLETED",
+      "started_unix": 1789479367.4476306,
+      "prompt_sha256": "b41e7809ee112084dfcb4166fa92534a0baceb5edb1d32fda854017e140275cf",
+      "text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [35, 36],\n      \"cue\": \"中心的圆形轮廓\",\n      \"alternative\": \"可能是标记或划痕\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "generated_token_ids": [
+        73594,
+        2236,
+        198,
+        515,
+        220,
+        330,
+        2152,
+        1288,
+        50330,
+        666,
+        361,
+        788,
+        895,
+        345,
+        220,
+        330,
+        57708,
+        788,
+        2278,
+        262,
+        341,
+        414,
+        330,
+        36691,
+        788,
+        508,
+        18,
+        20,
+        11,
+        220,
+        18,
+        21,
+        1259,
+        414,
+        330,
+        31724,
+        788,
+        330,
+        99488,
+        9370,
+        110344,
+        115079,
+        756,
+        414,
+        330,
+        76995,
+        788,
+        330,
+        104560,
+        113743,
+        57191,
+        99492,
+        101629,
+        756,
+        414,
+        330,
+        81929,
+        788,
+        330,
+        26086,
+        698,
+        262,
+        456,
+        220,
+        5133,
+        532,
+        73594,
+        151645
+      ],
+      "input_tokens": 3123,
+      "output_tokens": 68,
+      "forward_calls": 68,
+      "input_metadata": "input_1.json",
+      "chat_text": "chat_1.txt",
+      "parser_valid": true,
+      "contract_valid": true,
+      "error": null,
+      "percept": {
+        "regions": [
+          {
+            "cells": [
+              35,
+              36
+            ],
+            "cue": "中心的圆形轮廓",
+            "alternative": "可能是标记或划痕",
+            "confidence": "medium"
+          }
+        ],
+        "no_reliable_cue": false
+      },
+      "elapsed_seconds": 12.355444091372192
+    }
+  ],
+  "final_percept": {
+    "regions": [
+      {
+        "cells": [
+          35,
+          36
+        ],
+        "cue": "中心的圆形轮廓",
+        "alternative": "可能是标记或划痕",
+        "confidence": "medium"
+      }
+    ],
+    "no_reliable_cue": false
+  }
+}

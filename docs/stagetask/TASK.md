@@ -84,3 +84,7 @@ PAPER=paper_cai_aei/r1_84bea60e；WART=artifacts/cai_agent_v3/manuscript/r1_84be
 ## CAI AEI R2 completion
 
 TARGETED_MANUSCRIPT_REVISION_COMPLETE。R0—R9与一次Q1—Q8定向自查闭合；主稿19页/SI23页，零研究计算。交接：artifacts/cai_agent_v3/manuscript_revision/r2_f4758829/CODEX_HANDOFF_CAI_AEI_REVISION_R2.md；Git结果见同目录GIT_DELIVERY.json及最终回复。作者审核和AEI正式格式仍待确认。
+
+## 当前任务：VLM_GROUNDING_PILOT_R1_e8d9ef01
+
+主规范：artifacts/cai_agent_v3/vlm_grounding_pilot/r1_e8d9ef01/spec/CODEX_VLM_GROUNDING_PILOT_EXECUTION.md（来自用户docs/0915任务包）。基点e8d9ef0171ab6d0e1d14187a56cdbd7ecc579750，同分支既有隔离工作树。固定6件×4配置，≤24主生成/48总尝试；GPU0单卡≤1800秒、每生成≤120秒、CPU≤4；训练/其他研究模型/attention/TEST=0。仅新增scripts/results/artifacts下vlm_grounding_pilot、本任务状态及全局ledger一行。不用旧resolve，不换例/配置，不覆盖旧研究或论文；缺人评照常导出并推送。

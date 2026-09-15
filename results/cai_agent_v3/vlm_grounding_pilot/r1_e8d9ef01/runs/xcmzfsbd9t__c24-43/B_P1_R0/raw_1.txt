@@ -1,0 +1,13 @@
+```json
+{
+  "no_reliable_cue": false,
+  "regions": [
+    {
+      "cells": [36, 37],
+      "cue": "中心处的裂纹",
+      "alternative": "可能是材料表面的自然划痕",
+      "confidence": "high"
+    }
+  ]
+}
+```

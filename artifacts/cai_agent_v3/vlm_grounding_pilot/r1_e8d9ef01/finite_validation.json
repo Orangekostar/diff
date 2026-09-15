@@ -1,0 +1,28 @@
+{
+  "passed": true,
+  "Q1_Q3": {
+    "passed": true,
+    "Q1": "six exact cases, no TEST, all six R0 historical hashes match",
+    "Q2": "24 fake backend deliveries: actual prompt and actual image bytes; 24 unique full signatures",
+    "Q3": "384 label boxes inside cells and unchanged pixels outside declared mark masks; odd-size synthetic contract separately passed",
+    "Q4": "valid no-cue no repair; format-only once repair test; interrupted/failed/finished no reissue; changed signature rejected",
+    "new_research_generations": 0
+  },
+  "Q4": {
+    "primary": 24,
+    "repairs": 3,
+    "attempts": 27,
+    "output_token_files_match": true,
+    "elapsed_seconds": 332.8062775461003
+  },
+  "Q5": {
+    "summary_rows": 24,
+    "paired_changes": 30,
+    "human_review": "PENDING_HUMAN_REVIEW"
+  },
+  "Q6": {
+    "protected_hashes_unchanged": true,
+    "ledger_prefix_unchanged": true,
+    "git_delivery": "verified separately at commit/push"
+  }
+}

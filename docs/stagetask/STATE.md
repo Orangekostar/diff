@@ -139,3 +139,11 @@ AEI稿件提交 `6379ad4fe3e67110b313ccce4b7f258c1223ee16` 已实际推送且三
 ## CAI AEI R2 completion
 
 TARGETED_MANUSCRIPT_REVISION_COMPLETE。R0—R9与一次Q1—Q8定向自查闭合；主稿19页/SI23页，零研究计算。交接：artifacts/cai_agent_v3/manuscript_revision/r2_f4758829/CODEX_HANDOFF_CAI_AEI_REVISION_R2.md；Git结果见同目录GIT_DELIVERY.json及最终回复。作者审核和AEI正式格式仍待确认。
+
+## VLM grounding pilot W0
+
+已完整读取新spec，核对HEAD/upstream=e8d9ef0171ab6d0e1d14187a56cdbd7ecc579750；开始独立准备与CPU合同测试。GPU0当前空闲45490MiB，原成功环境torch2.12.1+cu130/transformers4.49.0/Pillow12.3.0。尚无本轮模型加载或生成。
+
+## VLM grounding pilot W2—W4
+
+6件×4主回答实际完成，21首次合同有效、3跨region重复经一次原格式修复有效。27次生成/2508实际Qwen forward/2508输出token，GPU0一次加载332.806秒，峰值29.100GiB。其他研究模型/训练/attention/TEST=0。30组候选PNG和序数图、全部raw/token-ID、C0/变化CSV、HTML/作者PENDING模板已导出；浏览器与有限检查已通过。正在完成报告比较表示修正验证和原分支Git交付；人评状态PENDING_HUMAN_REVIEW，不声称定位改善或改变生产。

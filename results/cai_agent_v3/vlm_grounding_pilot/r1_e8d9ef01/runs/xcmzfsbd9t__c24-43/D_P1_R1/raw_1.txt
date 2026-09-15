@@ -1,0 +1,13 @@
+```json
+{
+  "no_reliable_cue": false,
+  "regions": [
+    {
+      "cells": [28, 29, 30, 31],
+      "cue": "中心区域的划痕",
+      "alternative": "可能是由于划伤造成的表面损伤",
+      "confidence": "high"
+    }
+  ]
+}
+```

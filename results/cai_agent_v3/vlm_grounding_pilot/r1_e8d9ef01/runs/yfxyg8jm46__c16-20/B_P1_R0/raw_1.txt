@@ -1,0 +1,13 @@
+```json
+{
+  "no_reliable_cue": false,
+  "regions": [
+    {
+      "cells": [35, 36, 37],
+      "cue": "细长的白色痕迹",
+      "alternative": "可能是反光或灰尘",
+      "confidence": "medium"
+    }
+  ]
+}
+```

@@ -1,0 +1,128 @@
+{
+  "specimen_key": "w68dtmpfyf:q16-29",
+  "variant": "D_P1_R1",
+  "signature": "2dedd02f9148b38da476ffec1c704593987df90ae8397cd0e3de209fb7fd7928",
+  "status": "VALID_FIRST_PASS",
+  "attempts": [
+    {
+      "attempt_number": 1,
+      "kind": "PRIMARY",
+      "status": "COMPLETED",
+      "started_unix": 1789479413.9031694,
+      "prompt_sha256": "b41e7809ee112084dfcb4166fa92534a0baceb5edb1d32fda854017e140275cf",
+      "text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [28, 29],\n      \"cue\": \"中心有一个圆形的痕迹\",\n      \"alternative\": \"可能是由于轻微的划痕或磨损造成的\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+      "generated_token_ids": [
+        73594,
+        2236,
+        198,
+        515,
+        220,
+        330,
+        2152,
+        1288,
+        50330,
+        666,
+        361,
+        788,
+        895,
+        345,
+        220,
+        330,
+        57708,
+        788,
+        2278,
+        262,
+        341,
+        414,
+        330,
+        36691,
+        788,
+        508,
+        17,
+        23,
+        11,
+        220,
+        17,
+        24,
+        1259,
+        414,
+        330,
+        31724,
+        788,
+        330,
+        99488,
+        104133,
+        110344,
+        9370,
+        109246,
+        756,
+        414,
+        330,
+        76995,
+        788,
+        330,
+        104560,
+        101887,
+        112578,
+        9370,
+        99492,
+        101629,
+        57191,
+        113951,
+        105998,
+        756,
+        414,
+        330,
+        81929,
+        788,
+        330,
+        26086,
+        698,
+        262,
+        456,
+        220,
+        5133,
+        532,
+        73594,
+        151645
+      ],
+      "input_tokens": 3123,
+      "output_tokens": 73,
+      "forward_calls": 73,
+      "input_metadata": "input_1.json",
+      "chat_text": "chat_1.txt",
+      "parser_valid": true,
+      "contract_valid": true,
+      "error": null,
+      "percept": {
+        "regions": [
+          {
+            "cells": [
+              28,
+              29
+            ],
+            "cue": "中心有一个圆形的痕迹",
+            "alternative": "可能是由于轻微的划痕或磨损造成的",
+            "confidence": "medium"
+          }
+        ],
+        "no_reliable_cue": false
+      },
+      "elapsed_seconds": 9.352970301173627
+    }
+  ],
+  "final_percept": {
+    "regions": [
+      {
+        "cells": [
+          28,
+          29
+        ],
+        "cue": "中心有一个圆形的痕迹",
+        "alternative": "可能是由于轻微的划痕或磨损造成的",
+        "confidence": "medium"
+      }
+    ],
+    "no_reliable_cue": false
+  }
+}

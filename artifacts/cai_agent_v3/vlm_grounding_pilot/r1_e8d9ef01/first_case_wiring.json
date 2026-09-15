@@ -1,0 +1,26 @@
+{
+  "case": "cgtnjyggtm:q24-48",
+  "checks": [
+    {
+      "variant": "A_P0_R0",
+      "state": "VALID_FIRST_PASS",
+      "wiring_and_saved_files_checked": true
+    },
+    {
+      "variant": "B_P1_R0",
+      "state": "VALID_FIRST_PASS",
+      "wiring_and_saved_files_checked": true
+    },
+    {
+      "variant": "C_P0_R1",
+      "state": "VALID_FIRST_PASS",
+      "wiring_and_saved_files_checked": true
+    },
+    {
+      "variant": "D_P1_R1",
+      "state": "VALID_FIRST_PASS",
+      "wiring_and_saved_files_checked": true
+    }
+  ],
+  "semantic_quality_not_a_gate": true
+}

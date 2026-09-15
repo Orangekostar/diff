@@ -1,0 +1,5 @@
+{
+  "query": "0, GPU-03bdcf8a-2211-c497-06f1-6fa2e0b4ce40, NVIDIA A40, 45490 MiB, 46068 MiB\n1, GPU-7432ef4c-50a1-f860-4edd-bcda281170fb, NVIDIA A40, 45490 MiB, 46068 MiB\n2, GPU-41ba4cb6-edfe-ed30-c047-a19d9f23d0a8, NVIDIA A40, 45490 MiB, 46068 MiB\n",
+  "CUDA_VISIBLE_DEVICES": "0",
+  "minimum_free_gib": 34
+}

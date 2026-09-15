@@ -1,0 +1,1525 @@
+{
+  "task_id": "VLM_GROUNDING_PILOT_R1_e8d9ef01",
+  "base_commit": "e8d9ef0171ab6d0e1d14187a56cdbd7ecc579750",
+  "cases": [
+    {
+      "specimen_key": "cgtnjyggtm:q24-48",
+      "dataset_id": "cgtnjyggtm",
+      "split": "VALID",
+      "capture_group_id": "cg_5549ad4618fa66a9",
+      "impacted_surface_path": "data/public/hasebe/raw/cgtnjyggtm/v1/impacted surface image/q24-48.png",
+      "surface_sha256": "89090ab85a001ed26f3133af555ebe6f56fe894068bb0330eef57c45759673cb",
+      "identity_status": "PASS_EXACT_SPECIMEN_ID_AND_HASH",
+      "p0r_roster_status": "AUTHORIZED",
+      "registered_cscan_height_px": "674",
+      "registered_cscan_width_px": "675",
+      "selection": "FIXED_VALID",
+      "selection_hash": "d4aa56e6640f8b28736386147f4921851440808d1b410ab88aefbecb0f64d9c9",
+      "source_path_resolved": "/home/ww/paper3/cmc_damage_inference/data/public/hasebe/raw/cgtnjyggtm/v1/impacted surface image/q24-48.png",
+      "historical_cache_available": true,
+      "input_status": "READY",
+      "clean_sha256": "c4d3d9badaaa6b9ff0b351685a1833a8dab13443b79642d4f6353ef3f6fdf0c9",
+      "R0_sha256": "27d40ac5937960d91439d15a6f928dde9e834da4fcd826f540678530e314da8b",
+      "R1_sha256": "eb4aec31d2fafcb5e36e51458d2256c15dca22e4a9191fc9138551cca15bfb5c",
+      "width": 1024,
+      "height": 1024,
+      "historical_input_hash_match": true
+    },
+    {
+      "specimen_key": "74t7kcdgkr:c8-16",
+      "dataset_id": "74t7kcdgkr",
+      "split": "VALID",
+      "capture_group_id": "cg_f6941b7d17a6b65f",
+      "impacted_surface_path": "data/public/hasebe/raw/74t7kcdgkr/v1/impacted surface image/c8-16.png",
+      "surface_sha256": "bf5971dfb981f6c3302d850db26b26785c575f3d51249a5e6625919bd101845a",
+      "identity_status": "PASS_EXACT_SPECIMEN_ID_AND_HASH",
+      "p0r_roster_status": "AUTHORIZED",
+      "registered_cscan_height_px": "338",
+      "registered_cscan_width_px": "352",
+      "selection": "FIXED_VALID",
+      "selection_hash": "95f96980ad949f24ddd627d4657ea34639624d6bfd645e7a0bb4a31f6fd08a56",
+      "source_path_resolved": "/home/ww/paper3/cmc_damage_inference/data/public/hasebe/raw/74t7kcdgkr/v1/impacted surface image/c8-16.png",
+      "historical_cache_available": true,
+      "input_status": "READY",
+      "clean_sha256": "bae76556ef388489255bf1f2d5e2638aa7a81a951a6c0b834c01dfb778ac903f",
+      "R0_sha256": "e7afd5be06042d1e6b6f955463dbdd163f200bcfef36a969a2818f5c14b95e39",
+      "R1_sha256": "a457dc1fdb389fe3b690e68b1e1c17a61467744b9cc6710b6e46210a3ed36280",
+      "width": 1024,
+      "height": 1024,
+      "historical_input_hash_match": true
+    },
+    {
+      "specimen_key": "w68dtmpfyf:q16-29",
+      "dataset_id": "w68dtmpfyf",
+      "split": "VALID",
+      "capture_group_id": "cg_94a031a5fc453cba",
+      "impacted_surface_path": "data/public/hasebe/raw/w68dtmpfyf/v1/impacted surface image/q16-29.png",
+      "surface_sha256": "b0d65ad1e8f61ac7d95e6e0d38d26ed31e5552866f9dca70b478be7e133d4008",
+      "identity_status": "PASS_EXACT_SPECIMEN_ID_AND_HASH",
+      "p0r_roster_status": "AUTHORIZED",
+      "registered_cscan_height_px": "674",
+      "registered_cscan_width_px": "675",
+      "selection": "FIXED_VALID",
+      "selection_hash": "6332f6fc20d063905a1db5752289f611f2d30a6da430bb452e6e3b28d3888188",
+      "source_path_resolved": "/home/ww/paper3/cmc_damage_inference/data/public/hasebe/raw/w68dtmpfyf/v1/impacted surface image/q16-29.png",
+      "historical_cache_available": true,
+      "input_status": "READY",
+      "clean_sha256": "e03d1e800bd0d8aa219541870ba8121090d0d050de12641abe00516de8de86d0",
+      "R0_sha256": "83570d331a080bf22af0368f0a73097ed1859a92d86c9499b5a4961d1eb98646",
+      "R1_sha256": "69b2d8f859db33f5da96f918b654142b6852ec990e9316284787a86e2f86dae1",
+      "width": 1024,
+      "height": 1024,
+      "historical_input_hash_match": true
+    },
+    {
+      "specimen_key": "xcmzfsbd9t:c24-43",
+      "dataset_id": "xcmzfsbd9t",
+      "split": "TRAIN",
+      "capture_group_id": "cg_af6c8dc793b64fe8",
+      "impacted_surface_path": "data/public/hasebe/raw/xcmzfsbd9t/v1/impacted surface image/c24-43.png",
+      "surface_sha256": "f9e395d81ee5aedda75c7652db77578533d9203045b3ec7fae659c57d18908aa",
+      "identity_status": "PASS_EXACT_SPECIMEN_ID_AND_HASH",
+      "p0r_roster_status": "AUTHORIZED",
+      "registered_cscan_height_px": "674",
+      "registered_cscan_width_px": "675",
+      "selection": "HASH_MIN_TRAIN",
+      "selection_hash": "0f60d222eb91d4e33fd7f7cbb6f3c664f208683b77c826c470b98cb36933de89",
+      "source_path_resolved": "/home/ww/paper3/cmc_damage_inference/data/public/hasebe/raw/xcmzfsbd9t/v1/impacted surface image/c24-43.png",
+      "historical_cache_available": true,
+      "input_status": "READY",
+      "clean_sha256": "7e94c1f0631c112c5bee6dd910190e170d048c2da821f4acf49c4234ba6744c3",
+      "R0_sha256": "4bfecb1625891d160ac5164a2869ab13f9867abf3132addd71c2210986277e43",
+      "R1_sha256": "2487ace7a401fb0c21358f986119fab108d14c3e9f592b8054d251ac7a8ba88e",
+      "width": 1024,
+      "height": 1024,
+      "historical_input_hash_match": true
+    },
+    {
+      "specimen_key": "yfxyg8jm46:c16-20",
+      "dataset_id": "yfxyg8jm46",
+      "split": "TRAIN",
+      "capture_group_id": "cg_4b0a76b955d3af98",
+      "impacted_surface_path": "data/public/hasebe/raw/yfxyg8jm46/v1/impacted surface image/c16-20.png",
+      "surface_sha256": "26ebc0ef70cdca42762065b7befd66530f36bbea032a4f1aa6e213525a04895b",
+      "identity_status": "PASS_EXACT_SPECIMEN_ID_AND_HASH",
+      "p0r_roster_status": "AUTHORIZED",
+      "registered_cscan_height_px": "674",
+      "registered_cscan_width_px": "675",
+      "selection": "HASH_MIN_TRAIN",
+      "selection_hash": "062d1160c318e48b4b9b2bab0e1c570f2b41e75f53d5c62ac54919ca4f736bee",
+      "source_path_resolved": "/home/ww/paper3/cmc_damage_inference/data/public/hasebe/raw/yfxyg8jm46/v1/impacted surface image/c16-20.png",
+      "historical_cache_available": true,
+      "input_status": "READY",
+      "clean_sha256": "464894d79f9a00318d0dabc11ded1c0da8dd5ace89bf101777cbffffc4ed6233",
+      "R0_sha256": "c0dbcb670708600bd93eff5d7d1562ebde405a44b176cdbfbef7c57b601a1d41",
+      "R1_sha256": "ce8fad3cfe7beff613ed0243074ac6df0cc2465d29bb5bd394220891449945ad",
+      "width": 1024,
+      "height": 1024,
+      "historical_input_hash_match": true
+    },
+    {
+      "specimen_key": "ykhs7s2dck:q8-3",
+      "dataset_id": "ykhs7s2dck",
+      "split": "TRAIN",
+      "capture_group_id": "cg_7b3e8dd7366a7945",
+      "impacted_surface_path": "data/public/hasebe/raw/ykhs7s2dck/v1/impacted surface image/q8-3.png",
+      "surface_sha256": "1b3c826a54a682511c1afae4a670bc8591fcb89024c6316ffc12f3993738379b",
+      "identity_status": "PASS_EXACT_SPECIMEN_ID_AND_HASH",
+      "p0r_roster_status": "AUTHORIZED",
+      "registered_cscan_height_px": "674",
+      "registered_cscan_width_px": "675",
+      "selection": "HASH_MIN_TRAIN",
+      "selection_hash": "04f7c0521668a7047f8774892dd614405bec0b41035cafa109430752b5a13164",
+      "source_path_resolved": "/home/ww/paper3/cmc_damage_inference/data/public/hasebe/raw/ykhs7s2dck/v1/impacted surface image/q8-3.png",
+      "historical_cache_available": true,
+      "input_status": "READY",
+      "clean_sha256": "e96bdba4f9c25724296c3635893426ccf1da8fd82d0cb74bed1dc331439736f5",
+      "R0_sha256": "028c896f2365e719464e8b5794e176358cbdf77b2e6533cc804d806e11278ebe",
+      "R1_sha256": "caf5a15eaa8d8c38e20f0e833114b1ccf9d046a1ea915392333cd5874b9e2bc4",
+      "width": 1024,
+      "height": 1024,
+      "historical_input_hash_match": true
+    }
+  ],
+  "jobs": [
+    {
+      "specimen_key": "cgtnjyggtm:q24-48",
+      "variant": "A_P0_R0",
+      "prompt_id": "P0",
+      "render_id": "R0",
+      "signature": "cff8e820abf412802af3613216324a5e5decb93efb06c021c380cb5a71c685ba",
+      "signature_data": {
+        "model_repository": "Qwen/Qwen2.5-VL-7B-Instruct",
+        "model_revision": "cc594898137f460bfe9f0759e9844b3ce807cfb5",
+        "model_path": "/mnt/shared/ww/models/huggingface/Qwen--Qwen2.5-VL-7B-Instruct/cc594898137f460bfe9f0759e9844b3ce807cfb5",
+        "dtype": "bfloat16",
+        "attention": "sdpa",
+        "processor": {
+          "use_fast": false,
+          "min_pixels": 200704,
+          "max_pixels": 1003520
+        },
+        "generation": {
+          "max_new_tokens": 500,
+          "do_sample": false,
+          "temperature": null,
+          "use_cache": true
+        },
+        "batch_size": 1,
+        "image_order": [
+          "clean",
+          "numbered"
+        ],
+        "chat_template": "{% set image_count = namespace(value=0) %}{% set video_count = namespace(value=0) %}{% for message in messages %}{% if loop.first and message['role'] != 'system' %}<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n{% endif %}<|im_start|>{{ message['role'] }}\n{% if message['content'] is string %}{{ message['content'] }}<|im_end|>\n{% else %}{% for content in message['content'] %}{% if content['type'] == 'image' or 'image' in content or 'image_url' in content %}{% set image_count.value = image_count.value + 1 %}{% if add_vision_id %}Picture {{ image_count.value }}: {% endif %}<|vision_start|><|image_pad|><|vision_end|>{% elif content['type'] == 'video' or 'video' in content %}{% set video_count.value = video_count.value + 1 %}{% if add_vision_id %}Video {{ video_count.value }}: {% endif %}<|vision_start|><|video_pad|><|vision_end|>{% elif 'text' in content %}{{ content['text'] }}{% endif %}{% endfor %}<|im_end|>\n{% endif %}{% endfor %}{% if add_generation_prompt %}<|im_start|>assistant\n{% endif %}",
+        "chat_template_sha256": "a0bc6f6fc7a29a80017a433e8f03a1cc1236e838a944a2d034295a60c4f2fddb",
+        "versions": {
+          "torch": "2.12.1",
+          "transformers": "4.49.0",
+          "Pillow": "12.2.0",
+          "numpy": "2.5.0"
+        },
+        "repair_sha256": "899e5022489c3ae858c9ccc0cda07b96b0ba3671365e4e24f0606ccca87cc2ab",
+        "prompt_sha256": "166ecae74d83e97d3a3779f68760f146ebbe85b99c334d069dd585dd0b3cf658",
+        "clean_sha256": "c4d3d9badaaa6b9ff0b351685a1833a8dab13443b79642d4f6353ef3f6fdf0c9",
+        "numbered_sha256": "27d40ac5937960d91439d15a6f928dde9e834da4fcd826f540678530e314da8b",
+        "render_id": "R0",
+        "render_config": {
+          "implementation": "original render_surface_inputs"
+        }
+      }
+    },
+    {
+      "specimen_key": "cgtnjyggtm:q24-48",
+      "variant": "B_P1_R0",
+      "prompt_id": "P1",
+      "render_id": "R0",
+      "signature": "982c00b15dadc2a14ac1e51b3608a3e447c3badede6b83581aa073702923452c",
+      "signature_data": {
+        "model_repository": "Qwen/Qwen2.5-VL-7B-Instruct",
+        "model_revision": "cc594898137f460bfe9f0759e9844b3ce807cfb5",
+        "model_path": "/mnt/shared/ww/models/huggingface/Qwen--Qwen2.5-VL-7B-Instruct/cc594898137f460bfe9f0759e9844b3ce807cfb5",
+        "dtype": "bfloat16",
+        "attention": "sdpa",
+        "processor": {
+          "use_fast": false,
+          "min_pixels": 200704,
+          "max_pixels": 1003520
+        },
+        "generation": {
+          "max_new_tokens": 500,
+          "do_sample": false,
+          "temperature": null,
+          "use_cache": true
+        },
+        "batch_size": 1,
+        "image_order": [
+          "clean",
+          "numbered"
+        ],
+        "chat_template": "{% set image_count = namespace(value=0) %}{% set video_count = namespace(value=0) %}{% for message in messages %}{% if loop.first and message['role'] != 'system' %}<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n{% endif %}<|im_start|>{{ message['role'] }}\n{% if message['content'] is string %}{{ message['content'] }}<|im_end|>\n{% else %}{% for content in message['content'] %}{% if content['type'] == 'image' or 'image' in content or 'image_url' in content %}{% set image_count.value = image_count.value + 1 %}{% if add_vision_id %}Picture {{ image_count.value }}: {% endif %}<|vision_start|><|image_pad|><|vision_end|>{% elif content['type'] == 'video' or 'video' in content %}{% set video_count.value = video_count.value + 1 %}{% if add_vision_id %}Video {{ video_count.value }}: {% endif %}<|vision_start|><|video_pad|><|vision_end|>{% elif 'text' in content %}{{ content['text'] }}{% endif %}{% endfor %}<|im_end|>\n{% endif %}{% endfor %}{% if add_generation_prompt %}<|im_start|>assistant\n{% endif %}",
+        "chat_template_sha256": "a0bc6f6fc7a29a80017a433e8f03a1cc1236e838a944a2d034295a60c4f2fddb",
+        "versions": {
+          "torch": "2.12.1",
+          "transformers": "4.49.0",
+          "Pillow": "12.2.0",
+          "numpy": "2.5.0"
+        },
+        "repair_sha256": "899e5022489c3ae858c9ccc0cda07b96b0ba3671365e4e24f0606ccca87cc2ab",
+        "prompt_sha256": "b41e7809ee112084dfcb4166fa92534a0baceb5edb1d32fda854017e140275cf",
+        "clean_sha256": "c4d3d9badaaa6b9ff0b351685a1833a8dab13443b79642d4f6353ef3f6fdf0c9",
+        "numbered_sha256": "27d40ac5937960d91439d15a6f928dde9e834da4fcd826f540678530e314da8b",
+        "render_id": "R0",
+        "render_config": {
+          "implementation": "original render_surface_inputs"
+        }
+      }
+    },
+    {
+      "specimen_key": "cgtnjyggtm:q24-48",
+      "variant": "C_P0_R1",
+      "prompt_id": "P0",
+      "render_id": "R1",
+      "signature": "6cf30c364bb69a5bcb5981da40a2baeb30098b8764cf3ca283933a0bc94be647",
+      "signature_data": {
+        "model_repository": "Qwen/Qwen2.5-VL-7B-Instruct",
+        "model_revision": "cc594898137f460bfe9f0759e9844b3ce807cfb5",
+        "model_path": "/mnt/shared/ww/models/huggingface/Qwen--Qwen2.5-VL-7B-Instruct/cc594898137f460bfe9f0759e9844b3ce807cfb5",
+        "dtype": "bfloat16",
+        "attention": "sdpa",
+        "processor": {
+          "use_fast": false,
+          "min_pixels": 200704,
+          "max_pixels": 1003520
+        },
+        "generation": {
+          "max_new_tokens": 500,
+          "do_sample": false,
+          "temperature": null,
+          "use_cache": true
+        },
+        "batch_size": 1,
+        "image_order": [
+          "clean",
+          "numbered"
+        ],
+        "chat_template": "{% set image_count = namespace(value=0) %}{% set video_count = namespace(value=0) %}{% for message in messages %}{% if loop.first and message['role'] != 'system' %}<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n{% endif %}<|im_start|>{{ message['role'] }}\n{% if message['content'] is string %}{{ message['content'] }}<|im_end|>\n{% else %}{% for content in message['content'] %}{% if content['type'] == 'image' or 'image' in content or 'image_url' in content %}{% set image_count.value = image_count.value + 1 %}{% if add_vision_id %}Picture {{ image_count.value }}: {% endif %}<|vision_start|><|image_pad|><|vision_end|>{% elif content['type'] == 'video' or 'video' in content %}{% set video_count.value = video_count.value + 1 %}{% if add_vision_id %}Video {{ video_count.value }}: {% endif %}<|vision_start|><|video_pad|><|vision_end|>{% elif 'text' in content %}{{ content['text'] }}{% endif %}{% endfor %}<|im_end|>\n{% endif %}{% endfor %}{% if add_generation_prompt %}<|im_start|>assistant\n{% endif %}",
+        "chat_template_sha256": "a0bc6f6fc7a29a80017a433e8f03a1cc1236e838a944a2d034295a60c4f2fddb",
+        "versions": {
+          "torch": "2.12.1",
+          "transformers": "4.49.0",
+          "Pillow": "12.2.0",
+          "numpy": "2.5.0"
+        },
+        "repair_sha256": "899e5022489c3ae858c9ccc0cda07b96b0ba3671365e4e24f0606ccca87cc2ab",
+        "prompt_sha256": "166ecae74d83e97d3a3779f68760f146ebbe85b99c334d069dd585dd0b3cf658",
+        "clean_sha256": "c4d3d9badaaa6b9ff0b351685a1833a8dab13443b79642d4f6353ef3f6fdf0c9",
+        "numbered_sha256": "eb4aec31d2fafcb5e36e51458d2256c15dca22e4a9191fc9138551cca15bfb5c",
+        "render_id": "R1",
+        "render_config": {
+          "font_path": "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+          "font_name": [
+            "DejaVu Sans",
+            "Book"
+          ],
+          "font_sha256": "ae7b7855e115a5966d8b1b3f80f254ccc117ec86f9965e202ee2940453837280",
+          "font_size": 24,
+          "inset": 10,
+          "panel_rgba": [
+            0,
+            0,
+            0,
+            170
+          ],
+          "text_rgba": [
+            255,
+            255,
+            255,
+            230
+          ]
+        }
+      }
+    },
+    {
+      "specimen_key": "cgtnjyggtm:q24-48",
+      "variant": "D_P1_R1",
+      "prompt_id": "P1",
+      "render_id": "R1",
+      "signature": "099805100c72e50439cc45e999c29376ee6cc2f9953ceab347a39f350e78d790",
+      "signature_data": {
+        "model_repository": "Qwen/Qwen2.5-VL-7B-Instruct",
+        "model_revision": "cc594898137f460bfe9f0759e9844b3ce807cfb5",
+        "model_path": "/mnt/shared/ww/models/huggingface/Qwen--Qwen2.5-VL-7B-Instruct/cc594898137f460bfe9f0759e9844b3ce807cfb5",
+        "dtype": "bfloat16",
+        "attention": "sdpa",
+        "processor": {
+          "use_fast": false,
+          "min_pixels": 200704,
+          "max_pixels": 1003520
+        },
+        "generation": {
+          "max_new_tokens": 500,
+          "do_sample": false,
+          "temperature": null,
+          "use_cache": true
+        },
+        "batch_size": 1,
+        "image_order": [
+          "clean",
+          "numbered"
+        ],
+        "chat_template": "{% set image_count = namespace(value=0) %}{% set video_count = namespace(value=0) %}{% for message in messages %}{% if loop.first and message['role'] != 'system' %}<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n{% endif %}<|im_start|>{{ message['role'] }}\n{% if message['content'] is string %}{{ message['content'] }}<|im_end|>\n{% else %}{% for content in message['content'] %}{% if content['type'] == 'image' or 'image' in content or 'image_url' in content %}{% set image_count.value = image_count.value + 1 %}{% if add_vision_id %}Picture {{ image_count.value }}: {% endif %}<|vision_start|><|image_pad|><|vision_end|>{% elif content['type'] == 'video' or 'video' in content %}{% set video_count.value = video_count.value + 1 %}{% if add_vision_id %}Video {{ video_count.value }}: {% endif %}<|vision_start|><|video_pad|><|vision_end|>{% elif 'text' in content %}{{ content['text'] }}{% endif %}{% endfor %}<|im_end|>\n{% endif %}{% endfor %}{% if add_generation_prompt %}<|im_start|>assistant\n{% endif %}",
+        "chat_template_sha256": "a0bc6f6fc7a29a80017a433e8f03a1cc1236e838a944a2d034295a60c4f2fddb",
+        "versions": {
+          "torch": "2.12.1",
+          "transformers": "4.49.0",
+          "Pillow": "12.2.0",
+          "numpy": "2.5.0"
+        },
+        "repair_sha256": "899e5022489c3ae858c9ccc0cda07b96b0ba3671365e4e24f0606ccca87cc2ab",
+        "prompt_sha256": "b41e7809ee112084dfcb4166fa92534a0baceb5edb1d32fda854017e140275cf",
+        "clean_sha256": "c4d3d9badaaa6b9ff0b351685a1833a8dab13443b79642d4f6353ef3f6fdf0c9",
+        "numbered_sha256": "eb4aec31d2fafcb5e36e51458d2256c15dca22e4a9191fc9138551cca15bfb5c",
+        "render_id": "R1",
+        "render_config": {
+          "font_path": "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+          "font_name": [
+            "DejaVu Sans",
+            "Book"
+          ],
+          "font_sha256": "ae7b7855e115a5966d8b1b3f80f254ccc117ec86f9965e202ee2940453837280",
+          "font_size": 24,
+          "inset": 10,
+          "panel_rgba": [
+            0,
+            0,
+            0,
+            170
+          ],
+          "text_rgba": [
+            255,
+            255,
+            255,
+            230
+          ]
+        }
+      }
+    },
+    {
+      "specimen_key": "74t7kcdgkr:c8-16",
+      "variant": "A_P0_R0",
+      "prompt_id": "P0",
+      "render_id": "R0",
+      "signature": "372b786c3d47224e3b32bd95ed02f91f4af5fb608f4887d01477134130bbda24",
+      "signature_data": {
+        "model_repository": "Qwen/Qwen2.5-VL-7B-Instruct",
+        "model_revision": "cc594898137f460bfe9f0759e9844b3ce807cfb5",
+        "model_path": "/mnt/shared/ww/models/huggingface/Qwen--Qwen2.5-VL-7B-Instruct/cc594898137f460bfe9f0759e9844b3ce807cfb5",
+        "dtype": "bfloat16",
+        "attention": "sdpa",
+        "processor": {
+          "use_fast": false,
+          "min_pixels": 200704,
+          "max_pixels": 1003520
+        },
+        "generation": {
+          "max_new_tokens": 500,
+          "do_sample": false,
+          "temperature": null,
+          "use_cache": true
+        },
+        "batch_size": 1,
+        "image_order": [
+          "clean",
+          "numbered"
+        ],
+        "chat_template": "{% set image_count = namespace(value=0) %}{% set video_count = namespace(value=0) %}{% for message in messages %}{% if loop.first and message['role'] != 'system' %}<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n{% endif %}<|im_start|>{{ message['role'] }}\n{% if message['content'] is string %}{{ message['content'] }}<|im_end|>\n{% else %}{% for content in message['content'] %}{% if content['type'] == 'image' or 'image' in content or 'image_url' in content %}{% set image_count.value = image_count.value + 1 %}{% if add_vision_id %}Picture {{ image_count.value }}: {% endif %}<|vision_start|><|image_pad|><|vision_end|>{% elif content['type'] == 'video' or 'video' in content %}{% set video_count.value = video_count.value + 1 %}{% if add_vision_id %}Video {{ video_count.value }}: {% endif %}<|vision_start|><|video_pad|><|vision_end|>{% elif 'text' in content %}{{ content['text'] }}{% endif %}{% endfor %}<|im_end|>\n{% endif %}{% endfor %}{% if add_generation_prompt %}<|im_start|>assistant\n{% endif %}",
+        "chat_template_sha256": "a0bc6f6fc7a29a80017a433e8f03a1cc1236e838a944a2d034295a60c4f2fddb",
+        "versions": {
+          "torch": "2.12.1",
+          "transformers": "4.49.0",
+          "Pillow": "12.2.0",
+          "numpy": "2.5.0"
+        },
+        "repair_sha256": "899e5022489c3ae858c9ccc0cda07b96b0ba3671365e4e24f0606ccca87cc2ab",
+        "prompt_sha256": "166ecae74d83e97d3a3779f68760f146ebbe85b99c334d069dd585dd0b3cf658",
+        "clean_sha256": "bae76556ef388489255bf1f2d5e2638aa7a81a951a6c0b834c01dfb778ac903f",
+        "numbered_sha256": "e7afd5be06042d1e6b6f955463dbdd163f200bcfef36a969a2818f5c14b95e39",
+        "render_id": "R0",
+        "render_config": {
+          "implementation": "original render_surface_inputs"
+        }
+      }
+    },
+    {
+      "specimen_key": "74t7kcdgkr:c8-16",
+      "variant": "B_P1_R0",
+      "prompt_id": "P1",
+      "render_id": "R0",
+      "signature": "7c56f0b5958841073e4d9957280403a4309c8fcbb2201c48e9fa3115578e3e97",
+      "signature_data": {
+        "model_repository": "Qwen/Qwen2.5-VL-7B-Instruct",
+        "model_revision": "cc594898137f460bfe9f0759e9844b3ce807cfb5",
+        "model_path": "/mnt/shared/ww/models/huggingface/Qwen--Qwen2.5-VL-7B-Instruct/cc594898137f460bfe9f0759e9844b3ce807cfb5",
+        "dtype": "bfloat16",
+        "attention": "sdpa",
+        "processor": {
+          "use_fast": false,
+          "min_pixels": 200704,
+          "max_pixels": 1003520
+        },
+        "generation": {
+          "max_new_tokens": 500,
+          "do_sample": false,
+          "temperature": null,
+          "use_cache": true
+        },
+        "batch_size": 1,
+        "image_order": [
+          "clean",
+          "numbered"
+        ],
+        "chat_template": "{% set image_count = namespace(value=0) %}{% set video_count = namespace(value=0) %}{% for message in messages %}{% if loop.first and message['role'] != 'system' %}<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n{% endif %}<|im_start|>{{ message['role'] }}\n{% if message['content'] is string %}{{ message['content'] }}<|im_end|>\n{% else %}{% for content in message['content'] %}{% if content['type'] == 'image' or 'image' in content or 'image_url' in content %}{% set image_count.value = image_count.value + 1 %}{% if add_vision_id %}Picture {{ image_count.value }}: {% endif %}<|vision_start|><|image_pad|><|vision_end|>{% elif content['type'] == 'video' or 'video' in content %}{% set video_count.value = video_count.value + 1 %}{% if add_vision_id %}Video {{ video_count.value }}: {% endif %}<|vision_start|><|video_pad|><|vision_end|>{% elif 'text' in content %}{{ content['text'] }}{% endif %}{% endfor %}<|im_end|>\n{% endif %}{% endfor %}{% if add_generation_prompt %}<|im_start|>assistant\n{% endif %}",
+        "chat_template_sha256": "a0bc6f6fc7a29a80017a433e8f03a1cc1236e838a944a2d034295a60c4f2fddb",
+        "versions": {
+          "torch": "2.12.1",
+          "transformers": "4.49.0",
+          "Pillow": "12.2.0",
+          "numpy": "2.5.0"
+        },
+        "repair_sha256": "899e5022489c3ae858c9ccc0cda07b96b0ba3671365e4e24f0606ccca87cc2ab",
+        "prompt_sha256": "b41e7809ee112084dfcb4166fa92534a0baceb5edb1d32fda854017e140275cf",
+        "clean_sha256": "bae76556ef388489255bf1f2d5e2638aa7a81a951a6c0b834c01dfb778ac903f",
+        "numbered_sha256": "e7afd5be06042d1e6b6f955463dbdd163f200bcfef36a969a2818f5c14b95e39",
+        "render_id": "R0",
+        "render_config": {
+          "implementation": "original render_surface_inputs"
+        }
+      }
+    },
+    {
+      "specimen_key": "74t7kcdgkr:c8-16",
+      "variant": "C_P0_R1",
+      "prompt_id": "P0",
+      "render_id": "R1",
+      "signature": "5df8ecc76e66ca2e3050201322a18bd2f6dbff6ac76f184922d4acd5b4191c36",
+      "signature_data": {
+        "model_repository": "Qwen/Qwen2.5-VL-7B-Instruct",
+        "model_revision": "cc594898137f460bfe9f0759e9844b3ce807cfb5",
+        "model_path": "/mnt/shared/ww/models/huggingface/Qwen--Qwen2.5-VL-7B-Instruct/cc594898137f460bfe9f0759e9844b3ce807cfb5",
+        "dtype": "bfloat16",
+        "attention": "sdpa",
+        "processor": {
+          "use_fast": false,
+          "min_pixels": 200704,
+          "max_pixels": 1003520
+        },
+        "generation": {
+          "max_new_tokens": 500,
+          "do_sample": false,
+          "temperature": null,
+          "use_cache": true
+        },
+        "batch_size": 1,
+        "image_order": [
+          "clean",
+          "numbered"
+        ],
+        "chat_template": "{% set image_count = namespace(value=0) %}{% set video_count = namespace(value=0) %}{% for message in messages %}{% if loop.first and message['role'] != 'system' %}<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n{% endif %}<|im_start|>{{ message['role'] }}\n{% if message['content'] is string %}{{ message['content'] }}<|im_end|>\n{% else %}{% for content in message['content'] %}{% if content['type'] == 'image' or 'image' in content or 'image_url' in content %}{% set image_count.value = image_count.value + 1 %}{% if add_vision_id %}Picture {{ image_count.value }}: {% endif %}<|vision_start|><|image_pad|><|vision_end|>{% elif content['type'] == 'video' or 'video' in content %}{% set video_count.value = video_count.value + 1 %}{% if add_vision_id %}Video {{ video_count.value }}: {% endif %}<|vision_start|><|video_pad|><|vision_end|>{% elif 'text' in content %}{{ content['text'] }}{% endif %}{% endfor %}<|im_end|>\n{% endif %}{% endfor %}{% if add_generation_prompt %}<|im_start|>assistant\n{% endif %}",
+        "chat_template_sha256": "a0bc6f6fc7a29a80017a433e8f03a1cc1236e838a944a2d034295a60c4f2fddb",
+        "versions": {
+          "torch": "2.12.1",
+          "transformers": "4.49.0",
+          "Pillow": "12.2.0",
+          "numpy": "2.5.0"
+        },
+        "repair_sha256": "899e5022489c3ae858c9ccc0cda07b96b0ba3671365e4e24f0606ccca87cc2ab",
+        "prompt_sha256": "166ecae74d83e97d3a3779f68760f146ebbe85b99c334d069dd585dd0b3cf658",
+        "clean_sha256": "bae76556ef388489255bf1f2d5e2638aa7a81a951a6c0b834c01dfb778ac903f",
+        "numbered_sha256": "a457dc1fdb389fe3b690e68b1e1c17a61467744b9cc6710b6e46210a3ed36280",
+        "render_id": "R1",
+        "render_config": {
+          "font_path": "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+          "font_name": [
+            "DejaVu Sans",
+            "Book"
+          ],
+          "font_sha256": "ae7b7855e115a5966d8b1b3f80f254ccc117ec86f9965e202ee2940453837280",
+          "font_size": 24,
+          "inset": 10,
+          "panel_rgba": [
+            0,
+            0,
+            0,
+            170
+          ],
+          "text_rgba": [
+            255,
+            255,
+            255,
+            230
+          ]
+        }
+      }
+    },
+    {
+      "specimen_key": "74t7kcdgkr:c8-16",
+      "variant": "D_P1_R1",
+      "prompt_id": "P1",
+      "render_id": "R1",
+      "signature": "fcacda0aeca5dd3164b3777af7c2a1d66cb5f355123e6d4eb1ef68f63d9fcf20",
+      "signature_data": {
+        "model_repository": "Qwen/Qwen2.5-VL-7B-Instruct",
+        "model_revision": "cc594898137f460bfe9f0759e9844b3ce807cfb5",
+        "model_path": "/mnt/shared/ww/models/huggingface/Qwen--Qwen2.5-VL-7B-Instruct/cc594898137f460bfe9f0759e9844b3ce807cfb5",
+        "dtype": "bfloat16",
+        "attention": "sdpa",
+        "processor": {
+          "use_fast": false,
+          "min_pixels": 200704,
+          "max_pixels": 1003520
+        },
+        "generation": {
+          "max_new_tokens": 500,
+          "do_sample": false,
+          "temperature": null,
+          "use_cache": true
+        },
+        "batch_size": 1,
+        "image_order": [
+          "clean",
+          "numbered"
+        ],
+        "chat_template": "{% set image_count = namespace(value=0) %}{% set video_count = namespace(value=0) %}{% for message in messages %}{% if loop.first and message['role'] != 'system' %}<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n{% endif %}<|im_start|>{{ message['role'] }}\n{% if message['content'] is string %}{{ message['content'] }}<|im_end|>\n{% else %}{% for content in message['content'] %}{% if content['type'] == 'image' or 'image' in content or 'image_url' in content %}{% set image_count.value = image_count.value + 1 %}{% if add_vision_id %}Picture {{ image_count.value }}: {% endif %}<|vision_start|><|image_pad|><|vision_end|>{% elif content['type'] == 'video' or 'video' in content %}{% set video_count.value = video_count.value + 1 %}{% if add_vision_id %}Video {{ video_count.value }}: {% endif %}<|vision_start|><|video_pad|><|vision_end|>{% elif 'text' in content %}{{ content['text'] }}{% endif %}{% endfor %}<|im_end|>\n{% endif %}{% endfor %}{% if add_generation_prompt %}<|im_start|>assistant\n{% endif %}",
+        "chat_template_sha256": "a0bc6f6fc7a29a80017a433e8f03a1cc1236e838a944a2d034295a60c4f2fddb",
+        "versions": {
+          "torch": "2.12.1",
+          "transformers": "4.49.0",
+          "Pillow": "12.2.0",
+          "numpy": "2.5.0"
+        },
+        "repair_sha256": "899e5022489c3ae858c9ccc0cda07b96b0ba3671365e4e24f0606ccca87cc2ab",
+        "prompt_sha256": "b41e7809ee112084dfcb4166fa92534a0baceb5edb1d32fda854017e140275cf",
+        "clean_sha256": "bae76556ef388489255bf1f2d5e2638aa7a81a951a6c0b834c01dfb778ac903f",
+        "numbered_sha256": "a457dc1fdb389fe3b690e68b1e1c17a61467744b9cc6710b6e46210a3ed36280",
+        "render_id": "R1",
+        "render_config": {
+          "font_path": "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+          "font_name": [
+            "DejaVu Sans",
+            "Book"
+          ],
+          "font_sha256": "ae7b7855e115a5966d8b1b3f80f254ccc117ec86f9965e202ee2940453837280",
+          "font_size": 24,
+          "inset": 10,
+          "panel_rgba": [
+            0,
+            0,
+            0,
+            170
+          ],
+          "text_rgba": [
+            255,
+            255,
+            255,
+            230
+          ]
+        }
+      }
+    },
+    {
+      "specimen_key": "w68dtmpfyf:q16-29",
+      "variant": "A_P0_R0",
+      "prompt_id": "P0",
+      "render_id": "R0",
+      "signature": "68af9da60bd2a467a91d415bfda0ce86360dec314e3297bb42c9e8b2558457b6",
+      "signature_data": {
+        "model_repository": "Qwen/Qwen2.5-VL-7B-Instruct",
+        "model_revision": "cc594898137f460bfe9f0759e9844b3ce807cfb5",
+        "model_path": "/mnt/shared/ww/models/huggingface/Qwen--Qwen2.5-VL-7B-Instruct/cc594898137f460bfe9f0759e9844b3ce807cfb5",
+        "dtype": "bfloat16",
+        "attention": "sdpa",
+        "processor": {
+          "use_fast": false,
+          "min_pixels": 200704,
+          "max_pixels": 1003520
+        },
+        "generation": {
+          "max_new_tokens": 500,
+          "do_sample": false,
+          "temperature": null,
+          "use_cache": true
+        },
+        "batch_size": 1,
+        "image_order": [
+          "clean",
+          "numbered"
+        ],
+        "chat_template": "{% set image_count = namespace(value=0) %}{% set video_count = namespace(value=0) %}{% for message in messages %}{% if loop.first and message['role'] != 'system' %}<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n{% endif %}<|im_start|>{{ message['role'] }}\n{% if message['content'] is string %}{{ message['content'] }}<|im_end|>\n{% else %}{% for content in message['content'] %}{% if content['type'] == 'image' or 'image' in content or 'image_url' in content %}{% set image_count.value = image_count.value + 1 %}{% if add_vision_id %}Picture {{ image_count.value }}: {% endif %}<|vision_start|><|image_pad|><|vision_end|>{% elif content['type'] == 'video' or 'video' in content %}{% set video_count.value = video_count.value + 1 %}{% if add_vision_id %}Video {{ video_count.value }}: {% endif %}<|vision_start|><|video_pad|><|vision_end|>{% elif 'text' in content %}{{ content['text'] }}{% endif %}{% endfor %}<|im_end|>\n{% endif %}{% endfor %}{% if add_generation_prompt %}<|im_start|>assistant\n{% endif %}",
+        "chat_template_sha256": "a0bc6f6fc7a29a80017a433e8f03a1cc1236e838a944a2d034295a60c4f2fddb",
+        "versions": {
+          "torch": "2.12.1",
+          "transformers": "4.49.0",
+          "Pillow": "12.2.0",
+          "numpy": "2.5.0"
+        },
+        "repair_sha256": "899e5022489c3ae858c9ccc0cda07b96b0ba3671365e4e24f0606ccca87cc2ab",
+        "prompt_sha256": "166ecae74d83e97d3a3779f68760f146ebbe85b99c334d069dd585dd0b3cf658",
+        "clean_sha256": "e03d1e800bd0d8aa219541870ba8121090d0d050de12641abe00516de8de86d0",
+        "numbered_sha256": "83570d331a080bf22af0368f0a73097ed1859a92d86c9499b5a4961d1eb98646",
+        "render_id": "R0",
+        "render_config": {
+          "implementation": "original render_surface_inputs"
+        }
+      }
+    },
+    {
+      "specimen_key": "w68dtmpfyf:q16-29",
+      "variant": "B_P1_R0",
+      "prompt_id": "P1",
+      "render_id": "R0",
+      "signature": "65aeaeb21e5e350d678d44ba7ff64fc289ec7e44895575e4b149d43247f9019f",
+      "signature_data": {
+        "model_repository": "Qwen/Qwen2.5-VL-7B-Instruct",
+        "model_revision": "cc594898137f460bfe9f0759e9844b3ce807cfb5",
+        "model_path": "/mnt/shared/ww/models/huggingface/Qwen--Qwen2.5-VL-7B-Instruct/cc594898137f460bfe9f0759e9844b3ce807cfb5",
+        "dtype": "bfloat16",
+        "attention": "sdpa",
+        "processor": {
+          "use_fast": false,
+          "min_pixels": 200704,
+          "max_pixels": 1003520
+        },
+        "generation": {
+          "max_new_tokens": 500,
+          "do_sample": false,
+          "temperature": null,
+          "use_cache": true
+        },
+        "batch_size": 1,
+        "image_order": [
+          "clean",
+          "numbered"
+        ],
+        "chat_template": "{% set image_count = namespace(value=0) %}{% set video_count = namespace(value=0) %}{% for message in messages %}{% if loop.first and message['role'] != 'system' %}<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n{% endif %}<|im_start|>{{ message['role'] }}\n{% if message['content'] is string %}{{ message['content'] }}<|im_end|>\n{% else %}{% for content in message['content'] %}{% if content['type'] == 'image' or 'image' in content or 'image_url' in content %}{% set image_count.value = image_count.value + 1 %}{% if add_vision_id %}Picture {{ image_count.value }}: {% endif %}<|vision_start|><|image_pad|><|vision_end|>{% elif content['type'] == 'video' or 'video' in content %}{% set video_count.value = video_count.value + 1 %}{% if add_vision_id %}Video {{ video_count.value }}: {% endif %}<|vision_start|><|video_pad|><|vision_end|>{% elif 'text' in content %}{{ content['text'] }}{% endif %}{% endfor %}<|im_end|>\n{% endif %}{% endfor %}{% if add_generation_prompt %}<|im_start|>assistant\n{% endif %}",
+        "chat_template_sha256": "a0bc6f6fc7a29a80017a433e8f03a1cc1236e838a944a2d034295a60c4f2fddb",
+        "versions": {
+          "torch": "2.12.1",
+          "transformers": "4.49.0",
+          "Pillow": "12.2.0",
+          "numpy": "2.5.0"
+        },
+        "repair_sha256": "899e5022489c3ae858c9ccc0cda07b96b0ba3671365e4e24f0606ccca87cc2ab",
+        "prompt_sha256": "b41e7809ee112084dfcb4166fa92534a0baceb5edb1d32fda854017e140275cf",
+        "clean_sha256": "e03d1e800bd0d8aa219541870ba8121090d0d050de12641abe00516de8de86d0",
+        "numbered_sha256": "83570d331a080bf22af0368f0a73097ed1859a92d86c9499b5a4961d1eb98646",
+        "render_id": "R0",
+        "render_config": {
+          "implementation": "original render_surface_inputs"
+        }
+      }
+    },
+    {
+      "specimen_key": "w68dtmpfyf:q16-29",
+      "variant": "C_P0_R1",
+      "prompt_id": "P0",
+      "render_id": "R1",
+      "signature": "b45982b1f9d0ab121842f04ba399cd3c2b67185cd3109d237a9868415960c22c",
+      "signature_data": {
+        "model_repository": "Qwen/Qwen2.5-VL-7B-Instruct",
+        "model_revision": "cc594898137f460bfe9f0759e9844b3ce807cfb5",
+        "model_path": "/mnt/shared/ww/models/huggingface/Qwen--Qwen2.5-VL-7B-Instruct/cc594898137f460bfe9f0759e9844b3ce807cfb5",
+        "dtype": "bfloat16",
+        "attention": "sdpa",
+        "processor": {
+          "use_fast": false,
+          "min_pixels": 200704,
+          "max_pixels": 1003520
+        },
+        "generation": {
+          "max_new_tokens": 500,
+          "do_sample": false,
+          "temperature": null,
+          "use_cache": true
+        },
+        "batch_size": 1,
+        "image_order": [
+          "clean",
+          "numbered"
+        ],
+        "chat_template": "{% set image_count = namespace(value=0) %}{% set video_count = namespace(value=0) %}{% for message in messages %}{% if loop.first and message['role'] != 'system' %}<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n{% endif %}<|im_start|>{{ message['role'] }}\n{% if message['content'] is string %}{{ message['content'] }}<|im_end|>\n{% else %}{% for content in message['content'] %}{% if content['type'] == 'image' or 'image' in content or 'image_url' in content %}{% set image_count.value = image_count.value + 1 %}{% if add_vision_id %}Picture {{ image_count.value }}: {% endif %}<|vision_start|><|image_pad|><|vision_end|>{% elif content['type'] == 'video' or 'video' in content %}{% set video_count.value = video_count.value + 1 %}{% if add_vision_id %}Video {{ video_count.value }}: {% endif %}<|vision_start|><|video_pad|><|vision_end|>{% elif 'text' in content %}{{ content['text'] }}{% endif %}{% endfor %}<|im_end|>\n{% endif %}{% endfor %}{% if add_generation_prompt %}<|im_start|>assistant\n{% endif %}",
+        "chat_template_sha256": "a0bc6f6fc7a29a80017a433e8f03a1cc1236e838a944a2d034295a60c4f2fddb",
+        "versions": {
+          "torch": "2.12.1",
+          "transformers": "4.49.0",
+          "Pillow": "12.2.0",
+          "numpy": "2.5.0"
+        },
+        "repair_sha256": "899e5022489c3ae858c9ccc0cda07b96b0ba3671365e4e24f0606ccca87cc2ab",
+        "prompt_sha256": "166ecae74d83e97d3a3779f68760f146ebbe85b99c334d069dd585dd0b3cf658",
+        "clean_sha256": "e03d1e800bd0d8aa219541870ba8121090d0d050de12641abe00516de8de86d0",
+        "numbered_sha256": "69b2d8f859db33f5da96f918b654142b6852ec990e9316284787a86e2f86dae1",
+        "render_id": "R1",
+        "render_config": {
+          "font_path": "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+          "font_name": [
+            "DejaVu Sans",
+            "Book"
+          ],
+          "font_sha256": "ae7b7855e115a5966d8b1b3f80f254ccc117ec86f9965e202ee2940453837280",
+          "font_size": 24,
+          "inset": 10,
+          "panel_rgba": [
+            0,
+            0,
+            0,
+            170
+          ],
+          "text_rgba": [
+            255,
+            255,
+            255,
+            230
+          ]
+        }
+      }
+    },
+    {
+      "specimen_key": "w68dtmpfyf:q16-29",
+      "variant": "D_P1_R1",
+      "prompt_id": "P1",
+      "render_id": "R1",
+      "signature": "2dedd02f9148b38da476ffec1c704593987df90ae8397cd0e3de209fb7fd7928",
+      "signature_data": {
+        "model_repository": "Qwen/Qwen2.5-VL-7B-Instruct",
+        "model_revision": "cc594898137f460bfe9f0759e9844b3ce807cfb5",
+        "model_path": "/mnt/shared/ww/models/huggingface/Qwen--Qwen2.5-VL-7B-Instruct/cc594898137f460bfe9f0759e9844b3ce807cfb5",
+        "dtype": "bfloat16",
+        "attention": "sdpa",
+        "processor": {
+          "use_fast": false,
+          "min_pixels": 200704,
+          "max_pixels": 1003520
+        },
+        "generation": {
+          "max_new_tokens": 500,
+          "do_sample": false,
+          "temperature": null,
+          "use_cache": true
+        },
+        "batch_size": 1,
+        "image_order": [
+          "clean",
+          "numbered"
+        ],
+        "chat_template": "{% set image_count = namespace(value=0) %}{% set video_count = namespace(value=0) %}{% for message in messages %}{% if loop.first and message['role'] != 'system' %}<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n{% endif %}<|im_start|>{{ message['role'] }}\n{% if message['content'] is string %}{{ message['content'] }}<|im_end|>\n{% else %}{% for content in message['content'] %}{% if content['type'] == 'image' or 'image' in content or 'image_url' in content %}{% set image_count.value = image_count.value + 1 %}{% if add_vision_id %}Picture {{ image_count.value }}: {% endif %}<|vision_start|><|image_pad|><|vision_end|>{% elif content['type'] == 'video' or 'video' in content %}{% set video_count.value = video_count.value + 1 %}{% if add_vision_id %}Video {{ video_count.value }}: {% endif %}<|vision_start|><|video_pad|><|vision_end|>{% elif 'text' in content %}{{ content['text'] }}{% endif %}{% endfor %}<|im_end|>\n{% endif %}{% endfor %}{% if add_generation_prompt %}<|im_start|>assistant\n{% endif %}",
+        "chat_template_sha256": "a0bc6f6fc7a29a80017a433e8f03a1cc1236e838a944a2d034295a60c4f2fddb",
+        "versions": {
+          "torch": "2.12.1",
+          "transformers": "4.49.0",
+          "Pillow": "12.2.0",
+          "numpy": "2.5.0"
+        },
+        "repair_sha256": "899e5022489c3ae858c9ccc0cda07b96b0ba3671365e4e24f0606ccca87cc2ab",
+        "prompt_sha256": "b41e7809ee112084dfcb4166fa92534a0baceb5edb1d32fda854017e140275cf",
+        "clean_sha256": "e03d1e800bd0d8aa219541870ba8121090d0d050de12641abe00516de8de86d0",
+        "numbered_sha256": "69b2d8f859db33f5da96f918b654142b6852ec990e9316284787a86e2f86dae1",
+        "render_id": "R1",
+        "render_config": {
+          "font_path": "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+          "font_name": [
+            "DejaVu Sans",
+            "Book"
+          ],
+          "font_sha256": "ae7b7855e115a5966d8b1b3f80f254ccc117ec86f9965e202ee2940453837280",
+          "font_size": 24,
+          "inset": 10,
+          "panel_rgba": [
+            0,
+            0,
+            0,
+            170
+          ],
+          "text_rgba": [
+            255,
+            255,
+            255,
+            230
+          ]
+        }
+      }
+    },
+    {
+      "specimen_key": "xcmzfsbd9t:c24-43",
+      "variant": "A_P0_R0",
+      "prompt_id": "P0",
+      "render_id": "R0",
+      "signature": "ac4182f974dca93c90bb6403c5116315c0d6371a03b763e04cd3081b0f3fb4f9",
+      "signature_data": {
+        "model_repository": "Qwen/Qwen2.5-VL-7B-Instruct",
+        "model_revision": "cc594898137f460bfe9f0759e9844b3ce807cfb5",
+        "model_path": "/mnt/shared/ww/models/huggingface/Qwen--Qwen2.5-VL-7B-Instruct/cc594898137f460bfe9f0759e9844b3ce807cfb5",
+        "dtype": "bfloat16",
+        "attention": "sdpa",
+        "processor": {
+          "use_fast": false,
+          "min_pixels": 200704,
+          "max_pixels": 1003520
+        },
+        "generation": {
+          "max_new_tokens": 500,
+          "do_sample": false,
+          "temperature": null,
+          "use_cache": true
+        },
+        "batch_size": 1,
+        "image_order": [
+          "clean",
+          "numbered"
+        ],
+        "chat_template": "{% set image_count = namespace(value=0) %}{% set video_count = namespace(value=0) %}{% for message in messages %}{% if loop.first and message['role'] != 'system' %}<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n{% endif %}<|im_start|>{{ message['role'] }}\n{% if message['content'] is string %}{{ message['content'] }}<|im_end|>\n{% else %}{% for content in message['content'] %}{% if content['type'] == 'image' or 'image' in content or 'image_url' in content %}{% set image_count.value = image_count.value + 1 %}{% if add_vision_id %}Picture {{ image_count.value }}: {% endif %}<|vision_start|><|image_pad|><|vision_end|>{% elif content['type'] == 'video' or 'video' in content %}{% set video_count.value = video_count.value + 1 %}{% if add_vision_id %}Video {{ video_count.value }}: {% endif %}<|vision_start|><|video_pad|><|vision_end|>{% elif 'text' in content %}{{ content['text'] }}{% endif %}{% endfor %}<|im_end|>\n{% endif %}{% endfor %}{% if add_generation_prompt %}<|im_start|>assistant\n{% endif %}",
+        "chat_template_sha256": "a0bc6f6fc7a29a80017a433e8f03a1cc1236e838a944a2d034295a60c4f2fddb",
+        "versions": {
+          "torch": "2.12.1",
+          "transformers": "4.49.0",
+          "Pillow": "12.2.0",
+          "numpy": "2.5.0"
+        },
+        "repair_sha256": "899e5022489c3ae858c9ccc0cda07b96b0ba3671365e4e24f0606ccca87cc2ab",
+        "prompt_sha256": "166ecae74d83e97d3a3779f68760f146ebbe85b99c334d069dd585dd0b3cf658",
+        "clean_sha256": "7e94c1f0631c112c5bee6dd910190e170d048c2da821f4acf49c4234ba6744c3",
+        "numbered_sha256": "4bfecb1625891d160ac5164a2869ab13f9867abf3132addd71c2210986277e43",
+        "render_id": "R0",
+        "render_config": {
+          "implementation": "original render_surface_inputs"
+        }
+      }
+    },
+    {
+      "specimen_key": "xcmzfsbd9t:c24-43",
+      "variant": "B_P1_R0",
+      "prompt_id": "P1",
+      "render_id": "R0",
+      "signature": "39f58e2a2df1f8480e43c5adca85adde93294a029be7430c785a88f392f237f6",
+      "signature_data": {
+        "model_repository": "Qwen/Qwen2.5-VL-7B-Instruct",
+        "model_revision": "cc594898137f460bfe9f0759e9844b3ce807cfb5",
+        "model_path": "/mnt/shared/ww/models/huggingface/Qwen--Qwen2.5-VL-7B-Instruct/cc594898137f460bfe9f0759e9844b3ce807cfb5",
+        "dtype": "bfloat16",
+        "attention": "sdpa",
+        "processor": {
+          "use_fast": false,
+          "min_pixels": 200704,
+          "max_pixels": 1003520
+        },
+        "generation": {
+          "max_new_tokens": 500,
+          "do_sample": false,
+          "temperature": null,
+          "use_cache": true
+        },
+        "batch_size": 1,
+        "image_order": [
+          "clean",
+          "numbered"
+        ],
+        "chat_template": "{% set image_count = namespace(value=0) %}{% set video_count = namespace(value=0) %}{% for message in messages %}{% if loop.first and message['role'] != 'system' %}<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n{% endif %}<|im_start|>{{ message['role'] }}\n{% if message['content'] is string %}{{ message['content'] }}<|im_end|>\n{% else %}{% for content in message['content'] %}{% if content['type'] == 'image' or 'image' in content or 'image_url' in content %}{% set image_count.value = image_count.value + 1 %}{% if add_vision_id %}Picture {{ image_count.value }}: {% endif %}<|vision_start|><|image_pad|><|vision_end|>{% elif content['type'] == 'video' or 'video' in content %}{% set video_count.value = video_count.value + 1 %}{% if add_vision_id %}Video {{ video_count.value }}: {% endif %}<|vision_start|><|video_pad|><|vision_end|>{% elif 'text' in content %}{{ content['text'] }}{% endif %}{% endfor %}<|im_end|>\n{% endif %}{% endfor %}{% if add_generation_prompt %}<|im_start|>assistant\n{% endif %}",
+        "chat_template_sha256": "a0bc6f6fc7a29a80017a433e8f03a1cc1236e838a944a2d034295a60c4f2fddb",
+        "versions": {
+          "torch": "2.12.1",
+          "transformers": "4.49.0",
+          "Pillow": "12.2.0",
+          "numpy": "2.5.0"
+        },
+        "repair_sha256": "899e5022489c3ae858c9ccc0cda07b96b0ba3671365e4e24f0606ccca87cc2ab",
+        "prompt_sha256": "b41e7809ee112084dfcb4166fa92534a0baceb5edb1d32fda854017e140275cf",
+        "clean_sha256": "7e94c1f0631c112c5bee6dd910190e170d048c2da821f4acf49c4234ba6744c3",
+        "numbered_sha256": "4bfecb1625891d160ac5164a2869ab13f9867abf3132addd71c2210986277e43",
+        "render_id": "R0",
+        "render_config": {
+          "implementation": "original render_surface_inputs"
+        }
+      }
+    },
+    {
+      "specimen_key": "xcmzfsbd9t:c24-43",
+      "variant": "C_P0_R1",
+      "prompt_id": "P0",
+      "render_id": "R1",
+      "signature": "8af772e571e55acf9a33750eea5c0fc746e92b04d6fabeccef798917ffb64940",
+      "signature_data": {
+        "model_repository": "Qwen/Qwen2.5-VL-7B-Instruct",
+        "model_revision": "cc594898137f460bfe9f0759e9844b3ce807cfb5",
+        "model_path": "/mnt/shared/ww/models/huggingface/Qwen--Qwen2.5-VL-7B-Instruct/cc594898137f460bfe9f0759e9844b3ce807cfb5",
+        "dtype": "bfloat16",
+        "attention": "sdpa",
+        "processor": {
+          "use_fast": false,
+          "min_pixels": 200704,
+          "max_pixels": 1003520
+        },
+        "generation": {
+          "max_new_tokens": 500,
+          "do_sample": false,
+          "temperature": null,
+          "use_cache": true
+        },
+        "batch_size": 1,
+        "image_order": [
+          "clean",
+          "numbered"
+        ],
+        "chat_template": "{% set image_count = namespace(value=0) %}{% set video_count = namespace(value=0) %}{% for message in messages %}{% if loop.first and message['role'] != 'system' %}<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n{% endif %}<|im_start|>{{ message['role'] }}\n{% if message['content'] is string %}{{ message['content'] }}<|im_end|>\n{% else %}{% for content in message['content'] %}{% if content['type'] == 'image' or 'image' in content or 'image_url' in content %}{% set image_count.value = image_count.value + 1 %}{% if add_vision_id %}Picture {{ image_count.value }}: {% endif %}<|vision_start|><|image_pad|><|vision_end|>{% elif content['type'] == 'video' or 'video' in content %}{% set video_count.value = video_count.value + 1 %}{% if add_vision_id %}Video {{ video_count.value }}: {% endif %}<|vision_start|><|video_pad|><|vision_end|>{% elif 'text' in content %}{{ content['text'] }}{% endif %}{% endfor %}<|im_end|>\n{% endif %}{% endfor %}{% if add_generation_prompt %}<|im_start|>assistant\n{% endif %}",
+        "chat_template_sha256": "a0bc6f6fc7a29a80017a433e8f03a1cc1236e838a944a2d034295a60c4f2fddb",
+        "versions": {
+          "torch": "2.12.1",
+          "transformers": "4.49.0",
+          "Pillow": "12.2.0",
+          "numpy": "2.5.0"
+        },
+        "repair_sha256": "899e5022489c3ae858c9ccc0cda07b96b0ba3671365e4e24f0606ccca87cc2ab",
+        "prompt_sha256": "166ecae74d83e97d3a3779f68760f146ebbe85b99c334d069dd585dd0b3cf658",
+        "clean_sha256": "7e94c1f0631c112c5bee6dd910190e170d048c2da821f4acf49c4234ba6744c3",
+        "numbered_sha256": "2487ace7a401fb0c21358f986119fab108d14c3e9f592b8054d251ac7a8ba88e",
+        "render_id": "R1",
+        "render_config": {
+          "font_path": "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+          "font_name": [
+            "DejaVu Sans",
+            "Book"
+          ],
+          "font_sha256": "ae7b7855e115a5966d8b1b3f80f254ccc117ec86f9965e202ee2940453837280",
+          "font_size": 24,
+          "inset": 10,
+          "panel_rgba": [
+            0,
+            0,
+            0,
+            170
+          ],
+          "text_rgba": [
+            255,
+            255,
+            255,
+            230
+          ]
+        }
+      }
+    },
+    {
+      "specimen_key": "xcmzfsbd9t:c24-43",
+      "variant": "D_P1_R1",
+      "prompt_id": "P1",
+      "render_id": "R1",
+      "signature": "493efa4b4e64a3c030930be946589a4a07b3e37ca88af24a570b1a716c1c6795",
+      "signature_data": {
+        "model_repository": "Qwen/Qwen2.5-VL-7B-Instruct",
+        "model_revision": "cc594898137f460bfe9f0759e9844b3ce807cfb5",
+        "model_path": "/mnt/shared/ww/models/huggingface/Qwen--Qwen2.5-VL-7B-Instruct/cc594898137f460bfe9f0759e9844b3ce807cfb5",
+        "dtype": "bfloat16",
+        "attention": "sdpa",
+        "processor": {
+          "use_fast": false,
+          "min_pixels": 200704,
+          "max_pixels": 1003520
+        },
+        "generation": {
+          "max_new_tokens": 500,
+          "do_sample": false,
+          "temperature": null,
+          "use_cache": true
+        },
+        "batch_size": 1,
+        "image_order": [
+          "clean",
+          "numbered"
+        ],
+        "chat_template": "{% set image_count = namespace(value=0) %}{% set video_count = namespace(value=0) %}{% for message in messages %}{% if loop.first and message['role'] != 'system' %}<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n{% endif %}<|im_start|>{{ message['role'] }}\n{% if message['content'] is string %}{{ message['content'] }}<|im_end|>\n{% else %}{% for content in message['content'] %}{% if content['type'] == 'image' or 'image' in content or 'image_url' in content %}{% set image_count.value = image_count.value + 1 %}{% if add_vision_id %}Picture {{ image_count.value }}: {% endif %}<|vision_start|><|image_pad|><|vision_end|>{% elif content['type'] == 'video' or 'video' in content %}{% set video_count.value = video_count.value + 1 %}{% if add_vision_id %}Video {{ video_count.value }}: {% endif %}<|vision_start|><|video_pad|><|vision_end|>{% elif 'text' in content %}{{ content['text'] }}{% endif %}{% endfor %}<|im_end|>\n{% endif %}{% endfor %}{% if add_generation_prompt %}<|im_start|>assistant\n{% endif %}",
+        "chat_template_sha256": "a0bc6f6fc7a29a80017a433e8f03a1cc1236e838a944a2d034295a60c4f2fddb",
+        "versions": {
+          "torch": "2.12.1",
+          "transformers": "4.49.0",
+          "Pillow": "12.2.0",
+          "numpy": "2.5.0"
+        },
+        "repair_sha256": "899e5022489c3ae858c9ccc0cda07b96b0ba3671365e4e24f0606ccca87cc2ab",
+        "prompt_sha256": "b41e7809ee112084dfcb4166fa92534a0baceb5edb1d32fda854017e140275cf",
+        "clean_sha256": "7e94c1f0631c112c5bee6dd910190e170d048c2da821f4acf49c4234ba6744c3",
+        "numbered_sha256": "2487ace7a401fb0c21358f986119fab108d14c3e9f592b8054d251ac7a8ba88e",
+        "render_id": "R1",
+        "render_config": {
+          "font_path": "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+          "font_name": [
+            "DejaVu Sans",
+            "Book"
+          ],
+          "font_sha256": "ae7b7855e115a5966d8b1b3f80f254ccc117ec86f9965e202ee2940453837280",
+          "font_size": 24,
+          "inset": 10,
+          "panel_rgba": [
+            0,
+            0,
+            0,
+            170
+          ],
+          "text_rgba": [
+            255,
+            255,
+            255,
+            230
+          ]
+        }
+      }
+    },
+    {
+      "specimen_key": "yfxyg8jm46:c16-20",
+      "variant": "A_P0_R0",
+      "prompt_id": "P0",
+      "render_id": "R0",
+      "signature": "30efc4c2c974653c7448093a4716085de91cbd253053d7f8daa09f40d30a668d",
+      "signature_data": {
+        "model_repository": "Qwen/Qwen2.5-VL-7B-Instruct",
+        "model_revision": "cc594898137f460bfe9f0759e9844b3ce807cfb5",
+        "model_path": "/mnt/shared/ww/models/huggingface/Qwen--Qwen2.5-VL-7B-Instruct/cc594898137f460bfe9f0759e9844b3ce807cfb5",
+        "dtype": "bfloat16",
+        "attention": "sdpa",
+        "processor": {
+          "use_fast": false,
+          "min_pixels": 200704,
+          "max_pixels": 1003520
+        },
+        "generation": {
+          "max_new_tokens": 500,
+          "do_sample": false,
+          "temperature": null,
+          "use_cache": true
+        },
+        "batch_size": 1,
+        "image_order": [
+          "clean",
+          "numbered"
+        ],
+        "chat_template": "{% set image_count = namespace(value=0) %}{% set video_count = namespace(value=0) %}{% for message in messages %}{% if loop.first and message['role'] != 'system' %}<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n{% endif %}<|im_start|>{{ message['role'] }}\n{% if message['content'] is string %}{{ message['content'] }}<|im_end|>\n{% else %}{% for content in message['content'] %}{% if content['type'] == 'image' or 'image' in content or 'image_url' in content %}{% set image_count.value = image_count.value + 1 %}{% if add_vision_id %}Picture {{ image_count.value }}: {% endif %}<|vision_start|><|image_pad|><|vision_end|>{% elif content['type'] == 'video' or 'video' in content %}{% set video_count.value = video_count.value + 1 %}{% if add_vision_id %}Video {{ video_count.value }}: {% endif %}<|vision_start|><|video_pad|><|vision_end|>{% elif 'text' in content %}{{ content['text'] }}{% endif %}{% endfor %}<|im_end|>\n{% endif %}{% endfor %}{% if add_generation_prompt %}<|im_start|>assistant\n{% endif %}",
+        "chat_template_sha256": "a0bc6f6fc7a29a80017a433e8f03a1cc1236e838a944a2d034295a60c4f2fddb",
+        "versions": {
+          "torch": "2.12.1",
+          "transformers": "4.49.0",
+          "Pillow": "12.2.0",
+          "numpy": "2.5.0"
+        },
+        "repair_sha256": "899e5022489c3ae858c9ccc0cda07b96b0ba3671365e4e24f0606ccca87cc2ab",
+        "prompt_sha256": "166ecae74d83e97d3a3779f68760f146ebbe85b99c334d069dd585dd0b3cf658",
+        "clean_sha256": "464894d79f9a00318d0dabc11ded1c0da8dd5ace89bf101777cbffffc4ed6233",
+        "numbered_sha256": "c0dbcb670708600bd93eff5d7d1562ebde405a44b176cdbfbef7c57b601a1d41",
+        "render_id": "R0",
+        "render_config": {
+          "implementation": "original render_surface_inputs"
+        }
+      }
+    },
+    {
+      "specimen_key": "yfxyg8jm46:c16-20",
+      "variant": "B_P1_R0",
+      "prompt_id": "P1",
+      "render_id": "R0",
+      "signature": "525eba988118e7c290e2f351f74565d779002da1eb3e78af9e957f842a4c4fb5",
+      "signature_data": {
+        "model_repository": "Qwen/Qwen2.5-VL-7B-Instruct",
+        "model_revision": "cc594898137f460bfe9f0759e9844b3ce807cfb5",
+        "model_path": "/mnt/shared/ww/models/huggingface/Qwen--Qwen2.5-VL-7B-Instruct/cc594898137f460bfe9f0759e9844b3ce807cfb5",
+        "dtype": "bfloat16",
+        "attention": "sdpa",
+        "processor": {
+          "use_fast": false,
+          "min_pixels": 200704,
+          "max_pixels": 1003520
+        },
+        "generation": {
+          "max_new_tokens": 500,
+          "do_sample": false,
+          "temperature": null,
+          "use_cache": true
+        },
+        "batch_size": 1,
+        "image_order": [
+          "clean",
+          "numbered"
+        ],
+        "chat_template": "{% set image_count = namespace(value=0) %}{% set video_count = namespace(value=0) %}{% for message in messages %}{% if loop.first and message['role'] != 'system' %}<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n{% endif %}<|im_start|>{{ message['role'] }}\n{% if message['content'] is string %}{{ message['content'] }}<|im_end|>\n{% else %}{% for content in message['content'] %}{% if content['type'] == 'image' or 'image' in content or 'image_url' in content %}{% set image_count.value = image_count.value + 1 %}{% if add_vision_id %}Picture {{ image_count.value }}: {% endif %}<|vision_start|><|image_pad|><|vision_end|>{% elif content['type'] == 'video' or 'video' in content %}{% set video_count.value = video_count.value + 1 %}{% if add_vision_id %}Video {{ video_count.value }}: {% endif %}<|vision_start|><|video_pad|><|vision_end|>{% elif 'text' in content %}{{ content['text'] }}{% endif %}{% endfor %}<|im_end|>\n{% endif %}{% endfor %}{% if add_generation_prompt %}<|im_start|>assistant\n{% endif %}",
+        "chat_template_sha256": "a0bc6f6fc7a29a80017a433e8f03a1cc1236e838a944a2d034295a60c4f2fddb",
+        "versions": {
+          "torch": "2.12.1",
+          "transformers": "4.49.0",
+          "Pillow": "12.2.0",
+          "numpy": "2.5.0"
+        },
+        "repair_sha256": "899e5022489c3ae858c9ccc0cda07b96b0ba3671365e4e24f0606ccca87cc2ab",
+        "prompt_sha256": "b41e7809ee112084dfcb4166fa92534a0baceb5edb1d32fda854017e140275cf",
+        "clean_sha256": "464894d79f9a00318d0dabc11ded1c0da8dd5ace89bf101777cbffffc4ed6233",
+        "numbered_sha256": "c0dbcb670708600bd93eff5d7d1562ebde405a44b176cdbfbef7c57b601a1d41",
+        "render_id": "R0",
+        "render_config": {
+          "implementation": "original render_surface_inputs"
+        }
+      }
+    },
+    {
+      "specimen_key": "yfxyg8jm46:c16-20",
+      "variant": "C_P0_R1",
+      "prompt_id": "P0",
+      "render_id": "R1",
+      "signature": "1eab8e668d046a58e43ec8e9fec78e5a9b6ab985c528d69ea5473ac9eb1cef65",
+      "signature_data": {
+        "model_repository": "Qwen/Qwen2.5-VL-7B-Instruct",
+        "model_revision": "cc594898137f460bfe9f0759e9844b3ce807cfb5",
+        "model_path": "/mnt/shared/ww/models/huggingface/Qwen--Qwen2.5-VL-7B-Instruct/cc594898137f460bfe9f0759e9844b3ce807cfb5",
+        "dtype": "bfloat16",
+        "attention": "sdpa",
+        "processor": {
+          "use_fast": false,
+          "min_pixels": 200704,
+          "max_pixels": 1003520
+        },
+        "generation": {
+          "max_new_tokens": 500,
+          "do_sample": false,
+          "temperature": null,
+          "use_cache": true
+        },
+        "batch_size": 1,
+        "image_order": [
+          "clean",
+          "numbered"
+        ],
+        "chat_template": "{% set image_count = namespace(value=0) %}{% set video_count = namespace(value=0) %}{% for message in messages %}{% if loop.first and message['role'] != 'system' %}<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n{% endif %}<|im_start|>{{ message['role'] }}\n{% if message['content'] is string %}{{ message['content'] }}<|im_end|>\n{% else %}{% for content in message['content'] %}{% if content['type'] == 'image' or 'image' in content or 'image_url' in content %}{% set image_count.value = image_count.value + 1 %}{% if add_vision_id %}Picture {{ image_count.value }}: {% endif %}<|vision_start|><|image_pad|><|vision_end|>{% elif content['type'] == 'video' or 'video' in content %}{% set video_count.value = video_count.value + 1 %}{% if add_vision_id %}Video {{ video_count.value }}: {% endif %}<|vision_start|><|video_pad|><|vision_end|>{% elif 'text' in content %}{{ content['text'] }}{% endif %}{% endfor %}<|im_end|>\n{% endif %}{% endfor %}{% if add_generation_prompt %}<|im_start|>assistant\n{% endif %}",
+        "chat_template_sha256": "a0bc6f6fc7a29a80017a433e8f03a1cc1236e838a944a2d034295a60c4f2fddb",
+        "versions": {
+          "torch": "2.12.1",
+          "transformers": "4.49.0",
+          "Pillow": "12.2.0",
+          "numpy": "2.5.0"
+        },
+        "repair_sha256": "899e5022489c3ae858c9ccc0cda07b96b0ba3671365e4e24f0606ccca87cc2ab",
+        "prompt_sha256": "166ecae74d83e97d3a3779f68760f146ebbe85b99c334d069dd585dd0b3cf658",
+        "clean_sha256": "464894d79f9a00318d0dabc11ded1c0da8dd5ace89bf101777cbffffc4ed6233",
+        "numbered_sha256": "ce8fad3cfe7beff613ed0243074ac6df0cc2465d29bb5bd394220891449945ad",
+        "render_id": "R1",
+        "render_config": {
+          "font_path": "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+          "font_name": [
+            "DejaVu Sans",
+            "Book"
+          ],
+          "font_sha256": "ae7b7855e115a5966d8b1b3f80f254ccc117ec86f9965e202ee2940453837280",
+          "font_size": 24,
+          "inset": 10,
+          "panel_rgba": [
+            0,
+            0,
+            0,
+            170
+          ],
+          "text_rgba": [
+            255,
+            255,
+            255,
+            230
+          ]
+        }
+      }
+    },
+    {
+      "specimen_key": "yfxyg8jm46:c16-20",
+      "variant": "D_P1_R1",
+      "prompt_id": "P1",
+      "render_id": "R1",
+      "signature": "d05e5ba6df01c0133b009cf731b4e177a40a237884b27a2d369dc1ea2e32909b",
+      "signature_data": {
+        "model_repository": "Qwen/Qwen2.5-VL-7B-Instruct",
+        "model_revision": "cc594898137f460bfe9f0759e9844b3ce807cfb5",
+        "model_path": "/mnt/shared/ww/models/huggingface/Qwen--Qwen2.5-VL-7B-Instruct/cc594898137f460bfe9f0759e9844b3ce807cfb5",
+        "dtype": "bfloat16",
+        "attention": "sdpa",
+        "processor": {
+          "use_fast": false,
+          "min_pixels": 200704,
+          "max_pixels": 1003520
+        },
+        "generation": {
+          "max_new_tokens": 500,
+          "do_sample": false,
+          "temperature": null,
+          "use_cache": true
+        },
+        "batch_size": 1,
+        "image_order": [
+          "clean",
+          "numbered"
+        ],
+        "chat_template": "{% set image_count = namespace(value=0) %}{% set video_count = namespace(value=0) %}{% for message in messages %}{% if loop.first and message['role'] != 'system' %}<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n{% endif %}<|im_start|>{{ message['role'] }}\n{% if message['content'] is string %}{{ message['content'] }}<|im_end|>\n{% else %}{% for content in message['content'] %}{% if content['type'] == 'image' or 'image' in content or 'image_url' in content %}{% set image_count.value = image_count.value + 1 %}{% if add_vision_id %}Picture {{ image_count.value }}: {% endif %}<|vision_start|><|image_pad|><|vision_end|>{% elif content['type'] == 'video' or 'video' in content %}{% set video_count.value = video_count.value + 1 %}{% if add_vision_id %}Video {{ video_count.value }}: {% endif %}<|vision_start|><|video_pad|><|vision_end|>{% elif 'text' in content %}{{ content['text'] }}{% endif %}{% endfor %}<|im_end|>\n{% endif %}{% endfor %}{% if add_generation_prompt %}<|im_start|>assistant\n{% endif %}",
+        "chat_template_sha256": "a0bc6f6fc7a29a80017a433e8f03a1cc1236e838a944a2d034295a60c4f2fddb",
+        "versions": {
+          "torch": "2.12.1",
+          "transformers": "4.49.0",
+          "Pillow": "12.2.0",
+          "numpy": "2.5.0"
+        },
+        "repair_sha256": "899e5022489c3ae858c9ccc0cda07b96b0ba3671365e4e24f0606ccca87cc2ab",
+        "prompt_sha256": "b41e7809ee112084dfcb4166fa92534a0baceb5edb1d32fda854017e140275cf",
+        "clean_sha256": "464894d79f9a00318d0dabc11ded1c0da8dd5ace89bf101777cbffffc4ed6233",
+        "numbered_sha256": "ce8fad3cfe7beff613ed0243074ac6df0cc2465d29bb5bd394220891449945ad",
+        "render_id": "R1",
+        "render_config": {
+          "font_path": "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+          "font_name": [
+            "DejaVu Sans",
+            "Book"
+          ],
+          "font_sha256": "ae7b7855e115a5966d8b1b3f80f254ccc117ec86f9965e202ee2940453837280",
+          "font_size": 24,
+          "inset": 10,
+          "panel_rgba": [
+            0,
+            0,
+            0,
+            170
+          ],
+          "text_rgba": [
+            255,
+            255,
+            255,
+            230
+          ]
+        }
+      }
+    },
+    {
+      "specimen_key": "ykhs7s2dck:q8-3",
+      "variant": "A_P0_R0",
+      "prompt_id": "P0",
+      "render_id": "R0",
+      "signature": "887e328b51e48101432f4f059862a285d7fd025c34b0ad9ab4a7641d6a46be38",
+      "signature_data": {
+        "model_repository": "Qwen/Qwen2.5-VL-7B-Instruct",
+        "model_revision": "cc594898137f460bfe9f0759e9844b3ce807cfb5",
+        "model_path": "/mnt/shared/ww/models/huggingface/Qwen--Qwen2.5-VL-7B-Instruct/cc594898137f460bfe9f0759e9844b3ce807cfb5",
+        "dtype": "bfloat16",
+        "attention": "sdpa",
+        "processor": {
+          "use_fast": false,
+          "min_pixels": 200704,
+          "max_pixels": 1003520
+        },
+        "generation": {
+          "max_new_tokens": 500,
+          "do_sample": false,
+          "temperature": null,
+          "use_cache": true
+        },
+        "batch_size": 1,
+        "image_order": [
+          "clean",
+          "numbered"
+        ],
+        "chat_template": "{% set image_count = namespace(value=0) %}{% set video_count = namespace(value=0) %}{% for message in messages %}{% if loop.first and message['role'] != 'system' %}<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n{% endif %}<|im_start|>{{ message['role'] }}\n{% if message['content'] is string %}{{ message['content'] }}<|im_end|>\n{% else %}{% for content in message['content'] %}{% if content['type'] == 'image' or 'image' in content or 'image_url' in content %}{% set image_count.value = image_count.value + 1 %}{% if add_vision_id %}Picture {{ image_count.value }}: {% endif %}<|vision_start|><|image_pad|><|vision_end|>{% elif content['type'] == 'video' or 'video' in content %}{% set video_count.value = video_count.value + 1 %}{% if add_vision_id %}Video {{ video_count.value }}: {% endif %}<|vision_start|><|video_pad|><|vision_end|>{% elif 'text' in content %}{{ content['text'] }}{% endif %}{% endfor %}<|im_end|>\n{% endif %}{% endfor %}{% if add_generation_prompt %}<|im_start|>assistant\n{% endif %}",
+        "chat_template_sha256": "a0bc6f6fc7a29a80017a433e8f03a1cc1236e838a944a2d034295a60c4f2fddb",
+        "versions": {
+          "torch": "2.12.1",
+          "transformers": "4.49.0",
+          "Pillow": "12.2.0",
+          "numpy": "2.5.0"
+        },
+        "repair_sha256": "899e5022489c3ae858c9ccc0cda07b96b0ba3671365e4e24f0606ccca87cc2ab",
+        "prompt_sha256": "166ecae74d83e97d3a3779f68760f146ebbe85b99c334d069dd585dd0b3cf658",
+        "clean_sha256": "e96bdba4f9c25724296c3635893426ccf1da8fd82d0cb74bed1dc331439736f5",
+        "numbered_sha256": "028c896f2365e719464e8b5794e176358cbdf77b2e6533cc804d806e11278ebe",
+        "render_id": "R0",
+        "render_config": {
+          "implementation": "original render_surface_inputs"
+        }
+      }
+    },
+    {
+      "specimen_key": "ykhs7s2dck:q8-3",
+      "variant": "B_P1_R0",
+      "prompt_id": "P1",
+      "render_id": "R0",
+      "signature": "34a831ef7f0021c437ed138c2cc73fcf10c46f03d21a90d6928a0de1cdb5c41a",
+      "signature_data": {
+        "model_repository": "Qwen/Qwen2.5-VL-7B-Instruct",
+        "model_revision": "cc594898137f460bfe9f0759e9844b3ce807cfb5",
+        "model_path": "/mnt/shared/ww/models/huggingface/Qwen--Qwen2.5-VL-7B-Instruct/cc594898137f460bfe9f0759e9844b3ce807cfb5",
+        "dtype": "bfloat16",
+        "attention": "sdpa",
+        "processor": {
+          "use_fast": false,
+          "min_pixels": 200704,
+          "max_pixels": 1003520
+        },
+        "generation": {
+          "max_new_tokens": 500,
+          "do_sample": false,
+          "temperature": null,
+          "use_cache": true
+        },
+        "batch_size": 1,
+        "image_order": [
+          "clean",
+          "numbered"
+        ],
+        "chat_template": "{% set image_count = namespace(value=0) %}{% set video_count = namespace(value=0) %}{% for message in messages %}{% if loop.first and message['role'] != 'system' %}<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n{% endif %}<|im_start|>{{ message['role'] }}\n{% if message['content'] is string %}{{ message['content'] }}<|im_end|>\n{% else %}{% for content in message['content'] %}{% if content['type'] == 'image' or 'image' in content or 'image_url' in content %}{% set image_count.value = image_count.value + 1 %}{% if add_vision_id %}Picture {{ image_count.value }}: {% endif %}<|vision_start|><|image_pad|><|vision_end|>{% elif content['type'] == 'video' or 'video' in content %}{% set video_count.value = video_count.value + 1 %}{% if add_vision_id %}Video {{ video_count.value }}: {% endif %}<|vision_start|><|video_pad|><|vision_end|>{% elif 'text' in content %}{{ content['text'] }}{% endif %}{% endfor %}<|im_end|>\n{% endif %}{% endfor %}{% if add_generation_prompt %}<|im_start|>assistant\n{% endif %}",
+        "chat_template_sha256": "a0bc6f6fc7a29a80017a433e8f03a1cc1236e838a944a2d034295a60c4f2fddb",
+        "versions": {
+          "torch": "2.12.1",
+          "transformers": "4.49.0",
+          "Pillow": "12.2.0",
+          "numpy": "2.5.0"
+        },
+        "repair_sha256": "899e5022489c3ae858c9ccc0cda07b96b0ba3671365e4e24f0606ccca87cc2ab",
+        "prompt_sha256": "b41e7809ee112084dfcb4166fa92534a0baceb5edb1d32fda854017e140275cf",
+        "clean_sha256": "e96bdba4f9c25724296c3635893426ccf1da8fd82d0cb74bed1dc331439736f5",
+        "numbered_sha256": "028c896f2365e719464e8b5794e176358cbdf77b2e6533cc804d806e11278ebe",
+        "render_id": "R0",
+        "render_config": {
+          "implementation": "original render_surface_inputs"
+        }
+      }
+    },
+    {
+      "specimen_key": "ykhs7s2dck:q8-3",
+      "variant": "C_P0_R1",
+      "prompt_id": "P0",
+      "render_id": "R1",
+      "signature": "1fe874d6f066aec3177e2b83c74d31071bd38aa286f0307b78a6ab0992bcde1d",
+      "signature_data": {
+        "model_repository": "Qwen/Qwen2.5-VL-7B-Instruct",
+        "model_revision": "cc594898137f460bfe9f0759e9844b3ce807cfb5",
+        "model_path": "/mnt/shared/ww/models/huggingface/Qwen--Qwen2.5-VL-7B-Instruct/cc594898137f460bfe9f0759e9844b3ce807cfb5",
+        "dtype": "bfloat16",
+        "attention": "sdpa",
+        "processor": {
+          "use_fast": false,
+          "min_pixels": 200704,
+          "max_pixels": 1003520
+        },
+        "generation": {
+          "max_new_tokens": 500,
+          "do_sample": false,
+          "temperature": null,
+          "use_cache": true
+        },
+        "batch_size": 1,
+        "image_order": [
+          "clean",
+          "numbered"
+        ],
+        "chat_template": "{% set image_count = namespace(value=0) %}{% set video_count = namespace(value=0) %}{% for message in messages %}{% if loop.first and message['role'] != 'system' %}<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n{% endif %}<|im_start|>{{ message['role'] }}\n{% if message['content'] is string %}{{ message['content'] }}<|im_end|>\n{% else %}{% for content in message['content'] %}{% if content['type'] == 'image' or 'image' in content or 'image_url' in content %}{% set image_count.value = image_count.value + 1 %}{% if add_vision_id %}Picture {{ image_count.value }}: {% endif %}<|vision_start|><|image_pad|><|vision_end|>{% elif content['type'] == 'video' or 'video' in content %}{% set video_count.value = video_count.value + 1 %}{% if add_vision_id %}Video {{ video_count.value }}: {% endif %}<|vision_start|><|video_pad|><|vision_end|>{% elif 'text' in content %}{{ content['text'] }}{% endif %}{% endfor %}<|im_end|>\n{% endif %}{% endfor %}{% if add_generation_prompt %}<|im_start|>assistant\n{% endif %}",
+        "chat_template_sha256": "a0bc6f6fc7a29a80017a433e8f03a1cc1236e838a944a2d034295a60c4f2fddb",
+        "versions": {
+          "torch": "2.12.1",
+          "transformers": "4.49.0",
+          "Pillow": "12.2.0",
+          "numpy": "2.5.0"
+        },
+        "repair_sha256": "899e5022489c3ae858c9ccc0cda07b96b0ba3671365e4e24f0606ccca87cc2ab",
+        "prompt_sha256": "166ecae74d83e97d3a3779f68760f146ebbe85b99c334d069dd585dd0b3cf658",
+        "clean_sha256": "e96bdba4f9c25724296c3635893426ccf1da8fd82d0cb74bed1dc331439736f5",
+        "numbered_sha256": "caf5a15eaa8d8c38e20f0e833114b1ccf9d046a1ea915392333cd5874b9e2bc4",
+        "render_id": "R1",
+        "render_config": {
+          "font_path": "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+          "font_name": [
+            "DejaVu Sans",
+            "Book"
+          ],
+          "font_sha256": "ae7b7855e115a5966d8b1b3f80f254ccc117ec86f9965e202ee2940453837280",
+          "font_size": 24,
+          "inset": 10,
+          "panel_rgba": [
+            0,
+            0,
+            0,
+            170
+          ],
+          "text_rgba": [
+            255,
+            255,
+            255,
+            230
+          ]
+        }
+      }
+    },
+    {
+      "specimen_key": "ykhs7s2dck:q8-3",
+      "variant": "D_P1_R1",
+      "prompt_id": "P1",
+      "render_id": "R1",
+      "signature": "9802319a976be5841eb4ee4bfdd883c868df97e79d77cfc2828f886531fc64c5",
+      "signature_data": {
+        "model_repository": "Qwen/Qwen2.5-VL-7B-Instruct",
+        "model_revision": "cc594898137f460bfe9f0759e9844b3ce807cfb5",
+        "model_path": "/mnt/shared/ww/models/huggingface/Qwen--Qwen2.5-VL-7B-Instruct/cc594898137f460bfe9f0759e9844b3ce807cfb5",
+        "dtype": "bfloat16",
+        "attention": "sdpa",
+        "processor": {
+          "use_fast": false,
+          "min_pixels": 200704,
+          "max_pixels": 1003520
+        },
+        "generation": {
+          "max_new_tokens": 500,
+          "do_sample": false,
+          "temperature": null,
+          "use_cache": true
+        },
+        "batch_size": 1,
+        "image_order": [
+          "clean",
+          "numbered"
+        ],
+        "chat_template": "{% set image_count = namespace(value=0) %}{% set video_count = namespace(value=0) %}{% for message in messages %}{% if loop.first and message['role'] != 'system' %}<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n{% endif %}<|im_start|>{{ message['role'] }}\n{% if message['content'] is string %}{{ message['content'] }}<|im_end|>\n{% else %}{% for content in message['content'] %}{% if content['type'] == 'image' or 'image' in content or 'image_url' in content %}{% set image_count.value = image_count.value + 1 %}{% if add_vision_id %}Picture {{ image_count.value }}: {% endif %}<|vision_start|><|image_pad|><|vision_end|>{% elif content['type'] == 'video' or 'video' in content %}{% set video_count.value = video_count.value + 1 %}{% if add_vision_id %}Video {{ video_count.value }}: {% endif %}<|vision_start|><|video_pad|><|vision_end|>{% elif 'text' in content %}{{ content['text'] }}{% endif %}{% endfor %}<|im_end|>\n{% endif %}{% endfor %}{% if add_generation_prompt %}<|im_start|>assistant\n{% endif %}",
+        "chat_template_sha256": "a0bc6f6fc7a29a80017a433e8f03a1cc1236e838a944a2d034295a60c4f2fddb",
+        "versions": {
+          "torch": "2.12.1",
+          "transformers": "4.49.0",
+          "Pillow": "12.2.0",
+          "numpy": "2.5.0"
+        },
+        "repair_sha256": "899e5022489c3ae858c9ccc0cda07b96b0ba3671365e4e24f0606ccca87cc2ab",
+        "prompt_sha256": "b41e7809ee112084dfcb4166fa92534a0baceb5edb1d32fda854017e140275cf",
+        "clean_sha256": "e96bdba4f9c25724296c3635893426ccf1da8fd82d0cb74bed1dc331439736f5",
+        "numbered_sha256": "caf5a15eaa8d8c38e20f0e833114b1ccf9d046a1ea915392333cd5874b9e2bc4",
+        "render_id": "R1",
+        "render_config": {
+          "font_path": "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+          "font_name": [
+            "DejaVu Sans",
+            "Book"
+          ],
+          "font_sha256": "ae7b7855e115a5966d8b1b3f80f254ccc117ec86f9965e202ee2940453837280",
+          "font_size": 24,
+          "inset": 10,
+          "panel_rgba": [
+            0,
+            0,
+            0,
+            170
+          ],
+          "text_rgba": [
+            255,
+            255,
+            255,
+            230
+          ]
+        }
+      }
+    }
+  ],
+  "config": {
+    "model_repository": "Qwen/Qwen2.5-VL-7B-Instruct",
+    "model_revision": "cc594898137f460bfe9f0759e9844b3ce807cfb5",
+    "model_path": "/mnt/shared/ww/models/huggingface/Qwen--Qwen2.5-VL-7B-Instruct/cc594898137f460bfe9f0759e9844b3ce807cfb5",
+    "dtype": "bfloat16",
+    "attention": "sdpa",
+    "processor": {
+      "use_fast": false,
+      "min_pixels": 200704,
+      "max_pixels": 1003520
+    },
+    "generation": {
+      "max_new_tokens": 500,
+      "do_sample": false,
+      "temperature": null,
+      "use_cache": true
+    },
+    "batch_size": 1,
+    "image_order": [
+      "clean",
+      "numbered"
+    ],
+    "chat_template": "{% set image_count = namespace(value=0) %}{% set video_count = namespace(value=0) %}{% for message in messages %}{% if loop.first and message['role'] != 'system' %}<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n{% endif %}<|im_start|>{{ message['role'] }}\n{% if message['content'] is string %}{{ message['content'] }}<|im_end|>\n{% else %}{% for content in message['content'] %}{% if content['type'] == 'image' or 'image' in content or 'image_url' in content %}{% set image_count.value = image_count.value + 1 %}{% if add_vision_id %}Picture {{ image_count.value }}: {% endif %}<|vision_start|><|image_pad|><|vision_end|>{% elif content['type'] == 'video' or 'video' in content %}{% set video_count.value = video_count.value + 1 %}{% if add_vision_id %}Video {{ video_count.value }}: {% endif %}<|vision_start|><|video_pad|><|vision_end|>{% elif 'text' in content %}{{ content['text'] }}{% endif %}{% endfor %}<|im_end|>\n{% endif %}{% endfor %}{% if add_generation_prompt %}<|im_start|>assistant\n{% endif %}",
+    "chat_template_sha256": "a0bc6f6fc7a29a80017a433e8f03a1cc1236e838a944a2d034295a60c4f2fddb",
+    "versions": {
+      "torch": "2.12.1",
+      "transformers": "4.49.0",
+      "Pillow": "12.2.0",
+      "numpy": "2.5.0"
+    },
+    "repair_sha256": "899e5022489c3ae858c9ccc0cda07b96b0ba3671365e4e24f0606ccca87cc2ab"
+  },
+  "limits": {
+    "primary": 24,
+    "attempts": 48,
+    "per_job": 2,
+    "gpu_seconds": 1800,
+    "attempt_seconds": 120
+  },
+  "modules": {
+    "cmc_bbdm.learned_cscan.perception": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/src/cmc_bbdm/learned_cscan/perception.py",
+    "cmc_bbdm.vlm_cscan.runtime": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/src/cmc_bbdm/vlm_cscan/runtime.py",
+    "cmc_bbdm.vlm_cscan.vlm": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/src/cmc_bbdm/vlm_cscan/vlm.py",
+    "cmc_bbdm.cai_agent_v3.vlm_perception": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/src/cmc_bbdm/cai_agent_v3/vlm_perception.py",
+    "cmc_bbdm.cai_agent_v3.policy": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/src/cmc_bbdm/cai_agent_v3/policy.py"
+  },
+  "review_status": "PENDING_HUMAN_REVIEW"
+}

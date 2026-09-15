@@ -1,0 +1,25 @@
+Loading checkpoint shards:   0%|          | 0/5 [00:00<?, ?it/s]Loading checkpoint shards:  20%|██        | 1/5 [00:00<00:01,  2.77it/s]Loading checkpoint shards:  40%|████      | 2/5 [00:00<00:01,  2.99it/s]Loading checkpoint shards:  60%|██████    | 3/5 [00:00<00:00,  3.08it/s]Loading checkpoint shards:  80%|████████  | 4/5 [00:01<00:00,  3.14it/s]Loading checkpoint shards: 100%|██████████| 5/5 [00:01<00:00,  3.21it/s]Loading checkpoint shards: 100%|██████████| 5/5 [00:01<00:00,  3.13it/s]
+{"case": "cgtnjyggtm:q24-48", "variant": "A_P0_R0", "status": "VALID_FIRST_PASS", "calls": 1, "elapsed": 23.245873138308525}
+{"case": "cgtnjyggtm:q24-48", "variant": "B_P1_R0", "status": "VALID_FIRST_PASS", "calls": 2, "elapsed": 35.353044748306274}
+{"case": "cgtnjyggtm:q24-48", "variant": "C_P0_R1", "status": "VALID_FIRST_PASS", "calls": 3, "elapsed": 47.264657862484455}
+{"case": "cgtnjyggtm:q24-48", "variant": "D_P1_R1", "status": "VALID_FIRST_PASS", "calls": 4, "elapsed": 60.04962389823049}
+{"case": "74t7kcdgkr:c8-16", "variant": "A_P0_R0", "status": "VALID_FIRST_PASS", "calls": 5, "elapsed": 77.16988325770944}
+{"case": "74t7kcdgkr:c8-16", "variant": "B_P1_R0", "status": "VALID_FIRST_PASS", "calls": 6, "elapsed": 94.10064479988068}
+{"case": "74t7kcdgkr:c8-16", "variant": "C_P0_R1", "status": "VALID_AFTER_REPAIR", "calls": 8, "elapsed": 123.61930627189577}
+{"case": "74t7kcdgkr:c8-16", "variant": "D_P1_R1", "status": "VALID_FIRST_PASS", "calls": 9, "elapsed": 140.03916959371418}
+{"case": "w68dtmpfyf:q16-29", "variant": "A_P0_R0", "status": "VALID_FIRST_PASS", "calls": 10, "elapsed": 151.45405552908778}
+{"case": "w68dtmpfyf:q16-29", "variant": "B_P1_R0", "status": "VALID_FIRST_PASS", "calls": 11, "elapsed": 161.93916258309036}
+{"case": "w68dtmpfyf:q16-29", "variant": "C_P0_R1", "status": "VALID_FIRST_PASS", "calls": 12, "elapsed": 173.22928616404533}
+{"case": "w68dtmpfyf:q16-29", "variant": "D_P1_R1", "status": "VALID_FIRST_PASS", "calls": 13, "elapsed": 183.49228511750698}
+{"case": "xcmzfsbd9t:c24-43", "variant": "A_P0_R0", "status": "VALID_FIRST_PASS", "calls": 14, "elapsed": 194.72777843475342}
+{"case": "xcmzfsbd9t:c24-43", "variant": "B_P1_R0", "status": "VALID_FIRST_PASS", "calls": 15, "elapsed": 204.98330294154584}
+{"case": "xcmzfsbd9t:c24-43", "variant": "C_P0_R1", "status": "VALID_FIRST_PASS", "calls": 16, "elapsed": 216.21776647027582}
+{"case": "xcmzfsbd9t:c24-43", "variant": "D_P1_R1", "status": "VALID_FIRST_PASS", "calls": 17, "elapsed": 226.8283418342471}
+{"case": "yfxyg8jm46:c16-20", "variant": "A_P0_R0", "status": "VALID_FIRST_PASS", "calls": 18, "elapsed": 238.03286911733449}
+{"case": "yfxyg8jm46:c16-20", "variant": "B_P1_R0", "status": "VALID_FIRST_PASS", "calls": 19, "elapsed": 248.60648349765688}
+{"case": "yfxyg8jm46:c16-20", "variant": "C_P0_R1", "status": "VALID_AFTER_REPAIR", "calls": 21, "elapsed": 269.0845798756927}
+{"case": "yfxyg8jm46:c16-20", "variant": "D_P1_R1", "status": "VALID_AFTER_REPAIR", "calls": 23, "elapsed": 289.5598501134664}
+{"case": "ykhs7s2dck:q8-3", "variant": "A_P0_R0", "status": "VALID_FIRST_PASS", "calls": 24, "elapsed": 301.00973695889115}
+{"case": "ykhs7s2dck:q8-3", "variant": "B_P1_R0", "status": "VALID_FIRST_PASS", "calls": 25, "elapsed": 311.01192433573306}
+{"case": "ykhs7s2dck:q8-3", "variant": "C_P0_R1", "status": "VALID_FIRST_PASS", "calls": 26, "elapsed": 322.5091643901542}
+{"case": "ykhs7s2dck:q8-3", "variant": "D_P1_R1", "status": "VALID_FIRST_PASS", "calls": 27, "elapsed": 332.8062387853861}

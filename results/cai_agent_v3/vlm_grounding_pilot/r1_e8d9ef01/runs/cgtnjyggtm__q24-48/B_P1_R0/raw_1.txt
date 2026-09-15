@@ -1,0 +1,19 @@
+```json
+{
+  "no_reliable_cue": false,
+  "regions": [
+    {
+      "cells": [36, 37],
+      "cue": "环形结构",
+      "alternative": "可能是由于拍摄角度造成的反光",
+      "confidence": "medium"
+    },
+    {
+      "cells": [52, 53],
+      "cue": "细长条状结构",
+      "alternative": "可能是灰尘或微小划痕",
+      "confidence": "low"
+    }
+  ]
+}
+```

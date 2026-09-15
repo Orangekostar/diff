@@ -1,0 +1,1243 @@
+{
+  "status": "RUN_COMPLETE_REVIEW_PENDING",
+  "cases": [
+    {
+      "specimen_key": "cgtnjyggtm:q24-48",
+      "split": "VALID",
+      "clean": "inputs/cgtnjyggtm__q24-48/clean.png",
+      "R0": "inputs/cgtnjyggtm__q24-48/R0.png",
+      "R1": "inputs/cgtnjyggtm__q24-48/R1.png",
+      "panels": [
+        {
+          "variant": "A_P0_R0",
+          "status": "VALID_FIRST_PASS",
+          "overlay": "overlays/cgtnjyggtm__q24-48/A_P0_R0.png",
+          "numbered": "inputs/cgtnjyggtm__q24-48/R0.png",
+          "regions": [
+            {
+              "cells": [
+                36,
+                37
+              ],
+              "cue": "circle with white speckles",
+              "alternative": "dust or debris accumulation",
+              "confidence": "medium"
+            },
+            {
+              "cells": [
+                59,
+                60
+              ],
+              "cue": "line",
+              "alternative": "scratch or mark on the surface",
+              "confidence": "medium"
+            }
+          ],
+          "c0": [
+            36,
+            37,
+            59,
+            60
+          ],
+          "c0_reason": "HIGHEST_RELIABLE_CONFIDENCE_C0",
+          "raw_links": [
+            "runs/cgtnjyggtm__q24-48/A_P0_R0/raw_1.txt"
+          ],
+          "features": "overlays/cgtnjyggtm__q24-48/A_P0_R0_features_64.csv",
+          "ordinal": "overlays/cgtnjyggtm__q24-48/A_P0_R0_ordinal.png",
+          "first_pass_status": "CONTRACT_VALID",
+          "repair_dependent": false,
+          "no_reliable_cue": false,
+          "first_pass_detail": "{\n  \"regions\": [\n    {\n      \"cells\": [\n        36,\n        37\n      ],\n      \"cue\": \"circle with white speckles\",\n      \"alternative\": \"dust or debris accumulation\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [\n        59,\n        60\n      ],\n      \"cue\": \"line\",\n      \"alternative\": \"scratch or mark on the surface\",\n      \"confidence\": \"medium\"\n    }\n  ],\n  \"no_reliable_cue\": false\n}"
+        },
+        {
+          "variant": "B_P1_R0",
+          "status": "VALID_FIRST_PASS",
+          "overlay": "overlays/cgtnjyggtm__q24-48/B_P1_R0.png",
+          "numbered": "inputs/cgtnjyggtm__q24-48/R0.png",
+          "regions": [
+            {
+              "cells": [
+                36,
+                37
+              ],
+              "cue": "环形结构",
+              "alternative": "可能是由于拍摄角度造成的反光",
+              "confidence": "medium"
+            },
+            {
+              "cells": [
+                52,
+                53
+              ],
+              "cue": "细长条状结构",
+              "alternative": "可能是灰尘或微小划痕",
+              "confidence": "low"
+            }
+          ],
+          "c0": [
+            36,
+            37
+          ],
+          "c0_reason": "HIGHEST_RELIABLE_CONFIDENCE_C0",
+          "raw_links": [
+            "runs/cgtnjyggtm__q24-48/B_P1_R0/raw_1.txt"
+          ],
+          "features": "overlays/cgtnjyggtm__q24-48/B_P1_R0_features_64.csv",
+          "ordinal": "overlays/cgtnjyggtm__q24-48/B_P1_R0_ordinal.png",
+          "first_pass_status": "CONTRACT_VALID",
+          "repair_dependent": false,
+          "no_reliable_cue": false,
+          "first_pass_detail": "{\n  \"regions\": [\n    {\n      \"cells\": [\n        36,\n        37\n      ],\n      \"cue\": \"环形结构\",\n      \"alternative\": \"可能是由于拍摄角度造成的反光\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [\n        52,\n        53\n      ],\n      \"cue\": \"细长条状结构\",\n      \"alternative\": \"可能是灰尘或微小划痕\",\n      \"confidence\": \"low\"\n    }\n  ],\n  \"no_reliable_cue\": false\n}"
+        },
+        {
+          "variant": "C_P0_R1",
+          "status": "VALID_FIRST_PASS",
+          "overlay": "overlays/cgtnjyggtm__q24-48/C_P0_R1.png",
+          "numbered": "inputs/cgtnjyggtm__q24-48/R1.png",
+          "regions": [
+            {
+              "cells": [
+                27,
+                28,
+                29
+              ],
+              "cue": "环形结构",
+              "alternative": "可能是由于风力作用形成的尘土漩涡",
+              "confidence": "medium"
+            },
+            {
+              "cells": [
+                52,
+                53,
+                54
+              ],
+              "cue": "未知",
+              "alternative": "无相关信息",
+              "confidence": "unknown"
+            }
+          ],
+          "c0": [
+            27,
+            28,
+            29
+          ],
+          "c0_reason": "HIGHEST_RELIABLE_CONFIDENCE_C0",
+          "raw_links": [
+            "runs/cgtnjyggtm__q24-48/C_P0_R1/raw_1.txt"
+          ],
+          "features": "overlays/cgtnjyggtm__q24-48/C_P0_R1_features_64.csv",
+          "ordinal": "overlays/cgtnjyggtm__q24-48/C_P0_R1_ordinal.png",
+          "first_pass_status": "CONTRACT_VALID",
+          "repair_dependent": false,
+          "no_reliable_cue": false,
+          "first_pass_detail": "{\n  \"regions\": [\n    {\n      \"cells\": [\n        27,\n        28,\n        29\n      ],\n      \"cue\": \"环形结构\",\n      \"alternative\": \"可能是由于风力作用形成的尘土漩涡\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [\n        52,\n        53,\n        54\n      ],\n      \"cue\": \"未知\",\n      \"alternative\": \"无相关信息\",\n      \"confidence\": \"unknown\"\n    }\n  ],\n  \"no_reliable_cue\": false\n}"
+        },
+        {
+          "variant": "D_P1_R1",
+          "status": "VALID_FIRST_PASS",
+          "overlay": "overlays/cgtnjyggtm__q24-48/D_P1_R1.png",
+          "numbered": "inputs/cgtnjyggtm__q24-48/R1.png",
+          "regions": [
+            {
+              "cells": [
+                28,
+                29,
+                30,
+                31
+              ],
+              "cue": "环形结构",
+              "alternative": "可能是由于拍摄角度造成的阴影效果",
+              "confidence": "medium"
+            },
+            {
+              "cells": [
+                52,
+                53,
+                54,
+                55
+              ],
+              "cue": "细长条状结构",
+              "alternative": "可能是由于光线反射造成的条纹",
+              "confidence": "low"
+            }
+          ],
+          "c0": [
+            28,
+            29,
+            30,
+            31
+          ],
+          "c0_reason": "HIGHEST_RELIABLE_CONFIDENCE_C0",
+          "raw_links": [
+            "runs/cgtnjyggtm__q24-48/D_P1_R1/raw_1.txt"
+          ],
+          "features": "overlays/cgtnjyggtm__q24-48/D_P1_R1_features_64.csv",
+          "ordinal": "overlays/cgtnjyggtm__q24-48/D_P1_R1_ordinal.png",
+          "first_pass_status": "CONTRACT_VALID",
+          "repair_dependent": false,
+          "no_reliable_cue": false,
+          "first_pass_detail": "{\n  \"regions\": [\n    {\n      \"cells\": [\n        28,\n        29,\n        30,\n        31\n      ],\n      \"cue\": \"环形结构\",\n      \"alternative\": \"可能是由于拍摄角度造成的阴影效果\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [\n        52,\n        53,\n        54,\n        55\n      ],\n      \"cue\": \"细长条状结构\",\n      \"alternative\": \"可能是由于光线反射造成的条纹\",\n      \"confidence\": \"low\"\n    }\n  ],\n  \"no_reliable_cue\": false\n}"
+        },
+        {
+          "variant": "H00_CACHED",
+          "status": "HISTORICAL_CACHED",
+          "overlay": "overlays/cgtnjyggtm__q24-48/H00_CACHED.png",
+          "numbered": "inputs/cgtnjyggtm__q24-48/R0.png",
+          "regions": [
+            {
+              "cells": [
+                36,
+                37
+              ],
+              "cue": "circle with white speckles",
+              "alternative": "dust or debris accumulation",
+              "confidence": "medium"
+            },
+            {
+              "cells": [
+                59,
+                60
+              ],
+              "cue": "line",
+              "alternative": "scratch or mark on the surface",
+              "confidence": "medium"
+            }
+          ],
+          "c0": [
+            36,
+            37,
+            59,
+            60
+          ],
+          "c0_reason": "HIGHEST_RELIABLE_CONFIDENCE_C0",
+          "raw_links": [
+            "inputs/cgtnjyggtm__q24-48/H00_raw.txt"
+          ],
+          "features": "overlays/cgtnjyggtm__q24-48/H00_CACHED_features_64.csv",
+          "ordinal": "overlays/cgtnjyggtm__q24-48/H00_CACHED_ordinal.png",
+          "first_pass_status": "HISTORICAL_FINAL_ONLY",
+          "repair_dependent": false,
+          "no_reliable_cue": false,
+          "first_pass_detail": "H00只有历史最终回答；未重建历史首答"
+        }
+      ]
+    },
+    {
+      "specimen_key": "74t7kcdgkr:c8-16",
+      "split": "VALID",
+      "clean": "inputs/74t7kcdgkr__c8-16/clean.png",
+      "R0": "inputs/74t7kcdgkr__c8-16/R0.png",
+      "R1": "inputs/74t7kcdgkr__c8-16/R1.png",
+      "panels": [
+        {
+          "variant": "A_P0_R0",
+          "status": "VALID_FIRST_PASS",
+          "overlay": "overlays/74t7kcdgkr__c8-16/A_P0_R0.png",
+          "numbered": "inputs/74t7kcdgkr__c8-16/R0.png",
+          "regions": [
+            {
+              "cells": [
+                35,
+                36
+              ],
+              "cue": "circle",
+              "alternative": "可能是一个标记或缺陷",
+              "confidence": "medium"
+            },
+            {
+              "cells": [
+                37,
+                38
+              ],
+              "cue": "circle",
+              "alternative": "可能是一个标记或缺陷",
+              "confidence": "medium"
+            }
+          ],
+          "c0": [
+            35,
+            36,
+            37,
+            38
+          ],
+          "c0_reason": "HIGHEST_RELIABLE_CONFIDENCE_C0",
+          "raw_links": [
+            "runs/74t7kcdgkr__c8-16/A_P0_R0/raw_1.txt"
+          ],
+          "features": "overlays/74t7kcdgkr__c8-16/A_P0_R0_features_64.csv",
+          "ordinal": "overlays/74t7kcdgkr__c8-16/A_P0_R0_ordinal.png",
+          "first_pass_status": "CONTRACT_VALID",
+          "repair_dependent": false,
+          "no_reliable_cue": false,
+          "first_pass_detail": "{\n  \"regions\": [\n    {\n      \"cells\": [\n        35,\n        36\n      ],\n      \"cue\": \"circle\",\n      \"alternative\": \"可能是一个标记或缺陷\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [\n        37,\n        38\n      ],\n      \"cue\": \"circle\",\n      \"alternative\": \"可能是一个标记或缺陷\",\n      \"confidence\": \"medium\"\n    }\n  ],\n  \"no_reliable_cue\": false\n}"
+        },
+        {
+          "variant": "B_P1_R0",
+          "status": "VALID_FIRST_PASS",
+          "overlay": "overlays/74t7kcdgkr__c8-16/B_P1_R0.png",
+          "numbered": "inputs/74t7kcdgkr__c8-16/R0.png",
+          "regions": [
+            {
+              "cells": [
+                35,
+                36
+              ],
+              "cue": "中心的圆形轮廓",
+              "alternative": "可能是标记或划痕",
+              "confidence": "medium"
+            }
+          ],
+          "c0": [
+            35,
+            36
+          ],
+          "c0_reason": "HIGHEST_RELIABLE_CONFIDENCE_C0",
+          "raw_links": [
+            "runs/74t7kcdgkr__c8-16/B_P1_R0/raw_1.txt"
+          ],
+          "features": "overlays/74t7kcdgkr__c8-16/B_P1_R0_features_64.csv",
+          "ordinal": "overlays/74t7kcdgkr__c8-16/B_P1_R0_ordinal.png",
+          "first_pass_status": "CONTRACT_VALID",
+          "repair_dependent": false,
+          "no_reliable_cue": false,
+          "first_pass_detail": "{\n  \"regions\": [\n    {\n      \"cells\": [\n        35,\n        36\n      ],\n      \"cue\": \"中心的圆形轮廓\",\n      \"alternative\": \"可能是标记或划痕\",\n      \"confidence\": \"medium\"\n    }\n  ],\n  \"no_reliable_cue\": false\n}"
+        },
+        {
+          "variant": "C_P0_R1",
+          "status": "VALID_AFTER_REPAIR",
+          "overlay": "overlays/74t7kcdgkr__c8-16/C_P0_R1.png",
+          "numbered": "inputs/74t7kcdgkr__c8-16/R1.png",
+          "regions": [
+            {
+              "cells": [
+                35,
+                36
+              ],
+              "cue": "circle",
+              "alternative": "可能是一个标记点或缺陷指示器",
+              "confidence": "medium"
+            }
+          ],
+          "c0": [
+            35,
+            36
+          ],
+          "c0_reason": "HIGHEST_RELIABLE_CONFIDENCE_C0",
+          "raw_links": [
+            "runs/74t7kcdgkr__c8-16/C_P0_R1/raw_1.txt",
+            "runs/74t7kcdgkr__c8-16/C_P0_R1/raw_2.txt"
+          ],
+          "features": "overlays/74t7kcdgkr__c8-16/C_P0_R1_features_64.csv",
+          "ordinal": "overlays/74t7kcdgkr__c8-16/C_P0_R1_ordinal.png",
+          "first_pass_status": "INVALID_OR_FAILED",
+          "repair_dependent": true,
+          "no_reliable_cue": false,
+          "first_pass_detail": "{\n  \"regions\": [\n    {\n      \"cells\": [\n        35,\n        36\n      ],\n      \"cue\": \"circle\",\n      \"alternative\": \"可能是一个标记点或缺陷指示器\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [\n        35,\n        36\n      ],\n      \"cue\": \"circle\",\n      \"alternative\": \"可能是一个标记点或缺陷指示器\",\n      \"confidence\": \"medium\"\n    }\n  ],\n  \"no_reliable_cue\": false\n}"
+        },
+        {
+          "variant": "D_P1_R1",
+          "status": "VALID_FIRST_PASS",
+          "overlay": "overlays/74t7kcdgkr__c8-16/D_P1_R1.png",
+          "numbered": "inputs/74t7kcdgkr__c8-16/R1.png",
+          "regions": [
+            {
+              "cells": [
+                35,
+                36
+              ],
+              "cue": "中心的圆形轮廓",
+              "alternative": "可能是标记或划痕",
+              "confidence": "medium"
+            }
+          ],
+          "c0": [
+            35,
+            36
+          ],
+          "c0_reason": "HIGHEST_RELIABLE_CONFIDENCE_C0",
+          "raw_links": [
+            "runs/74t7kcdgkr__c8-16/D_P1_R1/raw_1.txt"
+          ],
+          "features": "overlays/74t7kcdgkr__c8-16/D_P1_R1_features_64.csv",
+          "ordinal": "overlays/74t7kcdgkr__c8-16/D_P1_R1_ordinal.png",
+          "first_pass_status": "CONTRACT_VALID",
+          "repair_dependent": false,
+          "no_reliable_cue": false,
+          "first_pass_detail": "{\n  \"regions\": [\n    {\n      \"cells\": [\n        35,\n        36\n      ],\n      \"cue\": \"中心的圆形轮廓\",\n      \"alternative\": \"可能是标记或划痕\",\n      \"confidence\": \"medium\"\n    }\n  ],\n  \"no_reliable_cue\": false\n}"
+        },
+        {
+          "variant": "H00_CACHED",
+          "status": "HISTORICAL_CACHED",
+          "overlay": "overlays/74t7kcdgkr__c8-16/H00_CACHED.png",
+          "numbered": "inputs/74t7kcdgkr__c8-16/R0.png",
+          "regions": [
+            {
+              "cells": [
+                35,
+                36
+              ],
+              "cue": "circle",
+              "alternative": "可能是一个标记或缺陷",
+              "confidence": "medium"
+            },
+            {
+              "cells": [
+                37,
+                38
+              ],
+              "cue": "circle",
+              "alternative": "可能是一个标记或缺陷",
+              "confidence": "medium"
+            }
+          ],
+          "c0": [
+            35,
+            36,
+            37,
+            38
+          ],
+          "c0_reason": "HIGHEST_RELIABLE_CONFIDENCE_C0",
+          "raw_links": [
+            "inputs/74t7kcdgkr__c8-16/H00_raw.txt"
+          ],
+          "features": "overlays/74t7kcdgkr__c8-16/H00_CACHED_features_64.csv",
+          "ordinal": "overlays/74t7kcdgkr__c8-16/H00_CACHED_ordinal.png",
+          "first_pass_status": "HISTORICAL_FINAL_ONLY",
+          "repair_dependent": false,
+          "no_reliable_cue": false,
+          "first_pass_detail": "H00只有历史最终回答；未重建历史首答"
+        }
+      ]
+    },
+    {
+      "specimen_key": "w68dtmpfyf:q16-29",
+      "split": "VALID",
+      "clean": "inputs/w68dtmpfyf__q16-29/clean.png",
+      "R0": "inputs/w68dtmpfyf__q16-29/R0.png",
+      "R1": "inputs/w68dtmpfyf__q16-29/R1.png",
+      "panels": [
+        {
+          "variant": "A_P0_R0",
+          "status": "VALID_FIRST_PASS",
+          "overlay": "overlays/w68dtmpfyf__q16-29/A_P0_R0.png",
+          "numbered": "inputs/w68dtmpfyf__q16-29/R0.png",
+          "regions": [
+            {
+              "cells": [
+                27,
+                28
+              ],
+              "cue": "circle",
+              "alternative": "可能是一个小的划痕或污渍",
+              "confidence": "medium"
+            },
+            {
+              "cells": [
+                59,
+                60
+              ],
+              "cue": "unknown",
+              "alternative": "无明显线索",
+              "confidence": "low"
+            }
+          ],
+          "c0": [
+            27,
+            28
+          ],
+          "c0_reason": "HIGHEST_RELIABLE_CONFIDENCE_C0",
+          "raw_links": [
+            "runs/w68dtmpfyf__q16-29/A_P0_R0/raw_1.txt"
+          ],
+          "features": "overlays/w68dtmpfyf__q16-29/A_P0_R0_features_64.csv",
+          "ordinal": "overlays/w68dtmpfyf__q16-29/A_P0_R0_ordinal.png",
+          "first_pass_status": "CONTRACT_VALID",
+          "repair_dependent": false,
+          "no_reliable_cue": false,
+          "first_pass_detail": "{\n  \"regions\": [\n    {\n      \"cells\": [\n        27,\n        28\n      ],\n      \"cue\": \"circle\",\n      \"alternative\": \"可能是一个小的划痕或污渍\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [\n        59,\n        60\n      ],\n      \"cue\": \"unknown\",\n      \"alternative\": \"无明显线索\",\n      \"confidence\": \"low\"\n    }\n  ],\n  \"no_reliable_cue\": false\n}"
+        },
+        {
+          "variant": "B_P1_R0",
+          "status": "VALID_FIRST_PASS",
+          "overlay": "overlays/w68dtmpfyf__q16-29/B_P1_R0.png",
+          "numbered": "inputs/w68dtmpfyf__q16-29/R0.png",
+          "regions": [
+            {
+              "cells": [
+                28,
+                29
+              ],
+              "cue": "微小的圆形痕迹",
+              "alternative": "可能是轻微的划痕或污渍",
+              "confidence": "low"
+            }
+          ],
+          "c0": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63
+          ],
+          "c0_reason": "NO_MEDIUM_OR_HIGH_CONFIDENCE",
+          "raw_links": [
+            "runs/w68dtmpfyf__q16-29/B_P1_R0/raw_1.txt"
+          ],
+          "features": "overlays/w68dtmpfyf__q16-29/B_P1_R0_features_64.csv",
+          "ordinal": "overlays/w68dtmpfyf__q16-29/B_P1_R0_ordinal.png",
+          "first_pass_status": "CONTRACT_VALID",
+          "repair_dependent": false,
+          "no_reliable_cue": false,
+          "first_pass_detail": "{\n  \"regions\": [\n    {\n      \"cells\": [\n        28,\n        29\n      ],\n      \"cue\": \"微小的圆形痕迹\",\n      \"alternative\": \"可能是轻微的划痕或污渍\",\n      \"confidence\": \"low\"\n    }\n  ],\n  \"no_reliable_cue\": false\n}"
+        },
+        {
+          "variant": "C_P0_R1",
+          "status": "VALID_FIRST_PASS",
+          "overlay": "overlays/w68dtmpfyf__q16-29/C_P0_R1.png",
+          "numbered": "inputs/w68dtmpfyf__q16-29/R1.png",
+          "regions": [
+            {
+              "cells": [
+                27,
+                59
+              ],
+              "cue": "unknown",
+              "alternative": "可能的划痕或磨损",
+              "confidence": "medium"
+            },
+            {
+              "cells": [
+                36,
+                58
+              ],
+              "cue": "unknown",
+              "alternative": "可能的划痕或磨损",
+              "confidence": "medium"
+            }
+          ],
+          "c0": [
+            27,
+            36,
+            58,
+            59
+          ],
+          "c0_reason": "HIGHEST_RELIABLE_CONFIDENCE_C0",
+          "raw_links": [
+            "runs/w68dtmpfyf__q16-29/C_P0_R1/raw_1.txt"
+          ],
+          "features": "overlays/w68dtmpfyf__q16-29/C_P0_R1_features_64.csv",
+          "ordinal": "overlays/w68dtmpfyf__q16-29/C_P0_R1_ordinal.png",
+          "first_pass_status": "CONTRACT_VALID",
+          "repair_dependent": false,
+          "no_reliable_cue": false,
+          "first_pass_detail": "{\n  \"regions\": [\n    {\n      \"cells\": [\n        27,\n        59\n      ],\n      \"cue\": \"unknown\",\n      \"alternative\": \"可能的划痕或磨损\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [\n        36,\n        58\n      ],\n      \"cue\": \"unknown\",\n      \"alternative\": \"可能的划痕或磨损\",\n      \"confidence\": \"medium\"\n    }\n  ],\n  \"no_reliable_cue\": false\n}"
+        },
+        {
+          "variant": "D_P1_R1",
+          "status": "VALID_FIRST_PASS",
+          "overlay": "overlays/w68dtmpfyf__q16-29/D_P1_R1.png",
+          "numbered": "inputs/w68dtmpfyf__q16-29/R1.png",
+          "regions": [
+            {
+              "cells": [
+                28,
+                29
+              ],
+              "cue": "中心有一个圆形的痕迹",
+              "alternative": "可能是由于轻微的划痕或磨损造成的",
+              "confidence": "medium"
+            }
+          ],
+          "c0": [
+            28,
+            29
+          ],
+          "c0_reason": "HIGHEST_RELIABLE_CONFIDENCE_C0",
+          "raw_links": [
+            "runs/w68dtmpfyf__q16-29/D_P1_R1/raw_1.txt"
+          ],
+          "features": "overlays/w68dtmpfyf__q16-29/D_P1_R1_features_64.csv",
+          "ordinal": "overlays/w68dtmpfyf__q16-29/D_P1_R1_ordinal.png",
+          "first_pass_status": "CONTRACT_VALID",
+          "repair_dependent": false,
+          "no_reliable_cue": false,
+          "first_pass_detail": "{\n  \"regions\": [\n    {\n      \"cells\": [\n        28,\n        29\n      ],\n      \"cue\": \"中心有一个圆形的痕迹\",\n      \"alternative\": \"可能是由于轻微的划痕或磨损造成的\",\n      \"confidence\": \"medium\"\n    }\n  ],\n  \"no_reliable_cue\": false\n}"
+        },
+        {
+          "variant": "H00_CACHED",
+          "status": "HISTORICAL_CACHED",
+          "overlay": "overlays/w68dtmpfyf__q16-29/H00_CACHED.png",
+          "numbered": "inputs/w68dtmpfyf__q16-29/R0.png",
+          "regions": [
+            {
+              "cells": [
+                27,
+                28
+              ],
+              "cue": "circle",
+              "alternative": "可能是一个小的划痕或污渍",
+              "confidence": "medium"
+            },
+            {
+              "cells": [
+                59,
+                60
+              ],
+              "cue": "unknown",
+              "alternative": "无明显线索",
+              "confidence": "low"
+            }
+          ],
+          "c0": [
+            27,
+            28
+          ],
+          "c0_reason": "HIGHEST_RELIABLE_CONFIDENCE_C0",
+          "raw_links": [
+            "inputs/w68dtmpfyf__q16-29/H00_raw.txt"
+          ],
+          "features": "overlays/w68dtmpfyf__q16-29/H00_CACHED_features_64.csv",
+          "ordinal": "overlays/w68dtmpfyf__q16-29/H00_CACHED_ordinal.png",
+          "first_pass_status": "HISTORICAL_FINAL_ONLY",
+          "repair_dependent": false,
+          "no_reliable_cue": false,
+          "first_pass_detail": "H00只有历史最终回答；未重建历史首答"
+        }
+      ]
+    },
+    {
+      "specimen_key": "xcmzfsbd9t:c24-43",
+      "split": "TRAIN",
+      "clean": "inputs/xcmzfsbd9t__c24-43/clean.png",
+      "R0": "inputs/xcmzfsbd9t__c24-43/R0.png",
+      "R1": "inputs/xcmzfsbd9t__c24-43/R1.png",
+      "panels": [
+        {
+          "variant": "A_P0_R0",
+          "status": "VALID_FIRST_PASS",
+          "overlay": "overlays/xcmzfsbd9t__c24-43/A_P0_R0.png",
+          "numbered": "inputs/xcmzfsbd9t__c24-43/R0.png",
+          "regions": [
+            {
+              "cells": [
+                36
+              ],
+              "cue": "crack",
+              "alternative": "划痕",
+              "confidence": "high"
+            },
+            {
+              "cells": [
+                27,
+                28,
+                29
+              ],
+              "cue": "scratch",
+              "alternative": "划痕",
+              "confidence": "medium"
+            }
+          ],
+          "c0": [
+            36
+          ],
+          "c0_reason": "HIGHEST_RELIABLE_CONFIDENCE_C0",
+          "raw_links": [
+            "runs/xcmzfsbd9t__c24-43/A_P0_R0/raw_1.txt"
+          ],
+          "features": "overlays/xcmzfsbd9t__c24-43/A_P0_R0_features_64.csv",
+          "ordinal": "overlays/xcmzfsbd9t__c24-43/A_P0_R0_ordinal.png",
+          "first_pass_status": "CONTRACT_VALID",
+          "repair_dependent": false,
+          "no_reliable_cue": false,
+          "first_pass_detail": "{\n  \"regions\": [\n    {\n      \"cells\": [\n        36\n      ],\n      \"cue\": \"crack\",\n      \"alternative\": \"划痕\",\n      \"confidence\": \"high\"\n    },\n    {\n      \"cells\": [\n        27,\n        28,\n        29\n      ],\n      \"cue\": \"scratch\",\n      \"alternative\": \"划痕\",\n      \"confidence\": \"medium\"\n    }\n  ],\n  \"no_reliable_cue\": false\n}"
+        },
+        {
+          "variant": "B_P1_R0",
+          "status": "VALID_FIRST_PASS",
+          "overlay": "overlays/xcmzfsbd9t__c24-43/B_P1_R0.png",
+          "numbered": "inputs/xcmzfsbd9t__c24-43/R0.png",
+          "regions": [
+            {
+              "cells": [
+                36,
+                37
+              ],
+              "cue": "中心处的裂纹",
+              "alternative": "可能是材料表面的自然划痕",
+              "confidence": "high"
+            }
+          ],
+          "c0": [
+            36,
+            37
+          ],
+          "c0_reason": "HIGHEST_RELIABLE_CONFIDENCE_C0",
+          "raw_links": [
+            "runs/xcmzfsbd9t__c24-43/B_P1_R0/raw_1.txt"
+          ],
+          "features": "overlays/xcmzfsbd9t__c24-43/B_P1_R0_features_64.csv",
+          "ordinal": "overlays/xcmzfsbd9t__c24-43/B_P1_R0_ordinal.png",
+          "first_pass_status": "CONTRACT_VALID",
+          "repair_dependent": false,
+          "no_reliable_cue": false,
+          "first_pass_detail": "{\n  \"regions\": [\n    {\n      \"cells\": [\n        36,\n        37\n      ],\n      \"cue\": \"中心处的裂纹\",\n      \"alternative\": \"可能是材料表面的自然划痕\",\n      \"confidence\": \"high\"\n    }\n  ],\n  \"no_reliable_cue\": false\n}"
+        },
+        {
+          "variant": "C_P0_R1",
+          "status": "VALID_FIRST_PASS",
+          "overlay": "overlays/xcmzfsbd9t__c24-43/C_P0_R1.png",
+          "numbered": "inputs/xcmzfsbd9t__c24-43/R1.png",
+          "regions": [
+            {
+              "cells": [
+                27,
+                28
+              ],
+              "cue": "crack",
+              "alternative": "划痕",
+              "confidence": "medium"
+            },
+            {
+              "cells": [
+                59,
+                60
+              ],
+              "cue": "unknown",
+              "alternative": "未知",
+              "confidence": "unknown"
+            }
+          ],
+          "c0": [
+            27,
+            28
+          ],
+          "c0_reason": "HIGHEST_RELIABLE_CONFIDENCE_C0",
+          "raw_links": [
+            "runs/xcmzfsbd9t__c24-43/C_P0_R1/raw_1.txt"
+          ],
+          "features": "overlays/xcmzfsbd9t__c24-43/C_P0_R1_features_64.csv",
+          "ordinal": "overlays/xcmzfsbd9t__c24-43/C_P0_R1_ordinal.png",
+          "first_pass_status": "CONTRACT_VALID",
+          "repair_dependent": false,
+          "no_reliable_cue": false,
+          "first_pass_detail": "{\n  \"regions\": [\n    {\n      \"cells\": [\n        27,\n        28\n      ],\n      \"cue\": \"crack\",\n      \"alternative\": \"划痕\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [\n        59,\n        60\n      ],\n      \"cue\": \"unknown\",\n      \"alternative\": \"未知\",\n      \"confidence\": \"unknown\"\n    }\n  ],\n  \"no_reliable_cue\": false\n}"
+        },
+        {
+          "variant": "D_P1_R1",
+          "status": "VALID_FIRST_PASS",
+          "overlay": "overlays/xcmzfsbd9t__c24-43/D_P1_R1.png",
+          "numbered": "inputs/xcmzfsbd9t__c24-43/R1.png",
+          "regions": [
+            {
+              "cells": [
+                28,
+                29,
+                30,
+                31
+              ],
+              "cue": "中心区域的划痕",
+              "alternative": "可能是由于划伤造成的表面损伤",
+              "confidence": "high"
+            }
+          ],
+          "c0": [
+            28,
+            29,
+            30,
+            31
+          ],
+          "c0_reason": "HIGHEST_RELIABLE_CONFIDENCE_C0",
+          "raw_links": [
+            "runs/xcmzfsbd9t__c24-43/D_P1_R1/raw_1.txt"
+          ],
+          "features": "overlays/xcmzfsbd9t__c24-43/D_P1_R1_features_64.csv",
+          "ordinal": "overlays/xcmzfsbd9t__c24-43/D_P1_R1_ordinal.png",
+          "first_pass_status": "CONTRACT_VALID",
+          "repair_dependent": false,
+          "no_reliable_cue": false,
+          "first_pass_detail": "{\n  \"regions\": [\n    {\n      \"cells\": [\n        28,\n        29,\n        30,\n        31\n      ],\n      \"cue\": \"中心区域的划痕\",\n      \"alternative\": \"可能是由于划伤造成的表面损伤\",\n      \"confidence\": \"high\"\n    }\n  ],\n  \"no_reliable_cue\": false\n}"
+        },
+        {
+          "variant": "H00_CACHED",
+          "status": "HISTORICAL_CACHED",
+          "overlay": "overlays/xcmzfsbd9t__c24-43/H00_CACHED.png",
+          "numbered": "inputs/xcmzfsbd9t__c24-43/R0.png",
+          "regions": [
+            {
+              "cells": [
+                36
+              ],
+              "cue": "crack",
+              "alternative": "划痕",
+              "confidence": "high"
+            },
+            {
+              "cells": [
+                27,
+                28,
+                29
+              ],
+              "cue": "scratch",
+              "alternative": "划痕",
+              "confidence": "medium"
+            }
+          ],
+          "c0": [
+            36
+          ],
+          "c0_reason": "HIGHEST_RELIABLE_CONFIDENCE_C0",
+          "raw_links": [
+            "inputs/xcmzfsbd9t__c24-43/H00_raw.txt"
+          ],
+          "features": "overlays/xcmzfsbd9t__c24-43/H00_CACHED_features_64.csv",
+          "ordinal": "overlays/xcmzfsbd9t__c24-43/H00_CACHED_ordinal.png",
+          "first_pass_status": "HISTORICAL_FINAL_ONLY",
+          "repair_dependent": false,
+          "no_reliable_cue": false,
+          "first_pass_detail": "H00只有历史最终回答；未重建历史首答"
+        }
+      ]
+    },
+    {
+      "specimen_key": "yfxyg8jm46:c16-20",
+      "split": "TRAIN",
+      "clean": "inputs/yfxyg8jm46__c16-20/clean.png",
+      "R0": "inputs/yfxyg8jm46__c16-20/R0.png",
+      "R1": "inputs/yfxyg8jm46__c16-20/R1.png",
+      "panels": [
+        {
+          "variant": "A_P0_R0",
+          "status": "VALID_FIRST_PASS",
+          "overlay": "overlays/yfxyg8jm46__c16-20/A_P0_R0.png",
+          "numbered": "inputs/yfxyg8jm46__c16-20/R0.png",
+          "regions": [
+            {
+              "cells": [
+                35,
+                36
+              ],
+              "cue": "划痕",
+              "alternative": "表面磨损或划痕",
+              "confidence": "medium"
+            },
+            {
+              "cells": [
+                37,
+                38
+              ],
+              "cue": "划痕",
+              "alternative": "表面磨损或划痕",
+              "confidence": "medium"
+            }
+          ],
+          "c0": [
+            35,
+            36,
+            37,
+            38
+          ],
+          "c0_reason": "HIGHEST_RELIABLE_CONFIDENCE_C0",
+          "raw_links": [
+            "runs/yfxyg8jm46__c16-20/A_P0_R0/raw_1.txt"
+          ],
+          "features": "overlays/yfxyg8jm46__c16-20/A_P0_R0_features_64.csv",
+          "ordinal": "overlays/yfxyg8jm46__c16-20/A_P0_R0_ordinal.png",
+          "first_pass_status": "CONTRACT_VALID",
+          "repair_dependent": false,
+          "no_reliable_cue": false,
+          "first_pass_detail": "{\n  \"regions\": [\n    {\n      \"cells\": [\n        35,\n        36\n      ],\n      \"cue\": \"划痕\",\n      \"alternative\": \"表面磨损或划痕\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [\n        37,\n        38\n      ],\n      \"cue\": \"划痕\",\n      \"alternative\": \"表面磨损或划痕\",\n      \"confidence\": \"medium\"\n    }\n  ],\n  \"no_reliable_cue\": false\n}"
+        },
+        {
+          "variant": "B_P1_R0",
+          "status": "VALID_FIRST_PASS",
+          "overlay": "overlays/yfxyg8jm46__c16-20/B_P1_R0.png",
+          "numbered": "inputs/yfxyg8jm46__c16-20/R0.png",
+          "regions": [
+            {
+              "cells": [
+                35,
+                36,
+                37
+              ],
+              "cue": "细长的白色痕迹",
+              "alternative": "可能是反光或灰尘",
+              "confidence": "medium"
+            }
+          ],
+          "c0": [
+            35,
+            36,
+            37
+          ],
+          "c0_reason": "HIGHEST_RELIABLE_CONFIDENCE_C0",
+          "raw_links": [
+            "runs/yfxyg8jm46__c16-20/B_P1_R0/raw_1.txt"
+          ],
+          "features": "overlays/yfxyg8jm46__c16-20/B_P1_R0_features_64.csv",
+          "ordinal": "overlays/yfxyg8jm46__c16-20/B_P1_R0_ordinal.png",
+          "first_pass_status": "CONTRACT_VALID",
+          "repair_dependent": false,
+          "no_reliable_cue": false,
+          "first_pass_detail": "{\n  \"regions\": [\n    {\n      \"cells\": [\n        35,\n        36,\n        37\n      ],\n      \"cue\": \"细长的白色痕迹\",\n      \"alternative\": \"可能是反光或灰尘\",\n      \"confidence\": \"medium\"\n    }\n  ],\n  \"no_reliable_cue\": false\n}"
+        },
+        {
+          "variant": "C_P0_R1",
+          "status": "VALID_AFTER_REPAIR",
+          "overlay": "overlays/yfxyg8jm46__c16-20/C_P0_R1.png",
+          "numbered": "inputs/yfxyg8jm46__c16-20/R1.png",
+          "regions": [
+            {
+              "cells": [
+                35,
+                36
+              ],
+              "cue": "划痕",
+              "alternative": "表面磨损或划痕",
+              "confidence": "medium"
+            }
+          ],
+          "c0": [
+            35,
+            36
+          ],
+          "c0_reason": "HIGHEST_RELIABLE_CONFIDENCE_C0",
+          "raw_links": [
+            "runs/yfxyg8jm46__c16-20/C_P0_R1/raw_1.txt",
+            "runs/yfxyg8jm46__c16-20/C_P0_R1/raw_2.txt"
+          ],
+          "features": "overlays/yfxyg8jm46__c16-20/C_P0_R1_features_64.csv",
+          "ordinal": "overlays/yfxyg8jm46__c16-20/C_P0_R1_ordinal.png",
+          "first_pass_status": "INVALID_OR_FAILED",
+          "repair_dependent": true,
+          "no_reliable_cue": false,
+          "first_pass_detail": "{\n  \"regions\": [\n    {\n      \"cells\": [\n        35,\n        36\n      ],\n      \"cue\": \"划痕\",\n      \"alternative\": \"表面磨损或划痕\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [\n        34,\n        35\n      ],\n      \"cue\": \"划痕\",\n      \"alternative\": \"表面磨损或划痕\",\n      \"confidence\": \"medium\"\n    }\n  ],\n  \"no_reliable_cue\": false\n}"
+        },
+        {
+          "variant": "D_P1_R1",
+          "status": "VALID_AFTER_REPAIR",
+          "overlay": "overlays/yfxyg8jm46__c16-20/D_P1_R1.png",
+          "numbered": "inputs/yfxyg8jm46__c16-20/R1.png",
+          "regions": [
+            {
+              "cells": [
+                35,
+                36
+              ],
+              "cue": "细长的划痕",
+              "alternative": "可能的划痕或磨损",
+              "confidence": "medium"
+            }
+          ],
+          "c0": [
+            35,
+            36
+          ],
+          "c0_reason": "HIGHEST_RELIABLE_CONFIDENCE_C0",
+          "raw_links": [
+            "runs/yfxyg8jm46__c16-20/D_P1_R1/raw_1.txt",
+            "runs/yfxyg8jm46__c16-20/D_P1_R1/raw_2.txt"
+          ],
+          "features": "overlays/yfxyg8jm46__c16-20/D_P1_R1_features_64.csv",
+          "ordinal": "overlays/yfxyg8jm46__c16-20/D_P1_R1_ordinal.png",
+          "first_pass_status": "INVALID_OR_FAILED",
+          "repair_dependent": true,
+          "no_reliable_cue": false,
+          "first_pass_detail": "{\n  \"regions\": [\n    {\n      \"cells\": [\n        35,\n        36\n      ],\n      \"cue\": \"细长的划痕\",\n      \"alternative\": \"可能的划痕或磨损\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [\n        35,\n        37\n      ],\n      \"cue\": \"细长的划痕\",\n      \"alternative\": \"可能的划痕或磨损\",\n      \"confidence\": \"medium\"\n    }\n  ],\n  \"no_reliable_cue\": false\n}"
+        },
+        {
+          "variant": "H00_CACHED",
+          "status": "HISTORICAL_CACHED",
+          "overlay": "overlays/yfxyg8jm46__c16-20/H00_CACHED.png",
+          "numbered": "inputs/yfxyg8jm46__c16-20/R0.png",
+          "regions": [
+            {
+              "cells": [
+                35,
+                36
+              ],
+              "cue": "划痕",
+              "alternative": "表面磨损或划痕",
+              "confidence": "medium"
+            },
+            {
+              "cells": [
+                37,
+                38
+              ],
+              "cue": "划痕",
+              "alternative": "表面磨损或划痕",
+              "confidence": "medium"
+            }
+          ],
+          "c0": [
+            35,
+            36,
+            37,
+            38
+          ],
+          "c0_reason": "HIGHEST_RELIABLE_CONFIDENCE_C0",
+          "raw_links": [
+            "inputs/yfxyg8jm46__c16-20/H00_raw.txt"
+          ],
+          "features": "overlays/yfxyg8jm46__c16-20/H00_CACHED_features_64.csv",
+          "ordinal": "overlays/yfxyg8jm46__c16-20/H00_CACHED_ordinal.png",
+          "first_pass_status": "HISTORICAL_FINAL_ONLY",
+          "repair_dependent": false,
+          "no_reliable_cue": false,
+          "first_pass_detail": "H00只有历史最终回答；未重建历史首答"
+        }
+      ]
+    },
+    {
+      "specimen_key": "ykhs7s2dck:q8-3",
+      "split": "TRAIN",
+      "clean": "inputs/ykhs7s2dck__q8-3/clean.png",
+      "R0": "inputs/ykhs7s2dck__q8-3/R0.png",
+      "R1": "inputs/ykhs7s2dck__q8-3/R1.png",
+      "panels": [
+        {
+          "variant": "A_P0_R0",
+          "status": "VALID_FIRST_PASS",
+          "overlay": "overlays/ykhs7s2dck__q8-3/A_P0_R0.png",
+          "numbered": "inputs/ykhs7s2dck__q8-3/R0.png",
+          "regions": [
+            {
+              "cells": [
+                35,
+                36
+              ],
+              "cue": "小圆点",
+              "alternative": "可能是污渍或划痕",
+              "confidence": "medium"
+            },
+            {
+              "cells": [
+                59,
+                60
+              ],
+              "cue": "未知",
+              "alternative": "无明显线索",
+              "confidence": "unknown"
+            }
+          ],
+          "c0": [
+            35,
+            36
+          ],
+          "c0_reason": "HIGHEST_RELIABLE_CONFIDENCE_C0",
+          "raw_links": [
+            "runs/ykhs7s2dck__q8-3/A_P0_R0/raw_1.txt"
+          ],
+          "features": "overlays/ykhs7s2dck__q8-3/A_P0_R0_features_64.csv",
+          "ordinal": "overlays/ykhs7s2dck__q8-3/A_P0_R0_ordinal.png",
+          "first_pass_status": "CONTRACT_VALID",
+          "repair_dependent": false,
+          "no_reliable_cue": false,
+          "first_pass_detail": "{\n  \"regions\": [\n    {\n      \"cells\": [\n        35,\n        36\n      ],\n      \"cue\": \"小圆点\",\n      \"alternative\": \"可能是污渍或划痕\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [\n        59,\n        60\n      ],\n      \"cue\": \"未知\",\n      \"alternative\": \"无明显线索\",\n      \"confidence\": \"unknown\"\n    }\n  ],\n  \"no_reliable_cue\": false\n}"
+        },
+        {
+          "variant": "B_P1_R0",
+          "status": "VALID_FIRST_PASS",
+          "overlay": "overlays/ykhs7s2dck__q8-3/B_P1_R0.png",
+          "numbered": "inputs/ykhs7s2dck__q8-3/R0.png",
+          "regions": [
+            {
+              "cells": [
+                35,
+                36
+              ],
+              "cue": "小圆点",
+              "alternative": "可能是灰尘或污渍",
+              "confidence": "medium"
+            }
+          ],
+          "c0": [
+            35,
+            36
+          ],
+          "c0_reason": "HIGHEST_RELIABLE_CONFIDENCE_C0",
+          "raw_links": [
+            "runs/ykhs7s2dck__q8-3/B_P1_R0/raw_1.txt"
+          ],
+          "features": "overlays/ykhs7s2dck__q8-3/B_P1_R0_features_64.csv",
+          "ordinal": "overlays/ykhs7s2dck__q8-3/B_P1_R0_ordinal.png",
+          "first_pass_status": "CONTRACT_VALID",
+          "repair_dependent": false,
+          "no_reliable_cue": false,
+          "first_pass_detail": "{\n  \"regions\": [\n    {\n      \"cells\": [\n        35,\n        36\n      ],\n      \"cue\": \"小圆点\",\n      \"alternative\": \"可能是灰尘或污渍\",\n      \"confidence\": \"medium\"\n    }\n  ],\n  \"no_reliable_cue\": false\n}"
+        },
+        {
+          "variant": "C_P0_R1",
+          "status": "VALID_FIRST_PASS",
+          "overlay": "overlays/ykhs7s2dck__q8-3/C_P0_R1.png",
+          "numbered": "inputs/ykhs7s2dck__q8-3/R1.png",
+          "regions": [
+            {
+              "cells": [
+                35,
+                36
+              ],
+              "cue": "小圆点",
+              "alternative": "可能是轻微的划痕或污渍",
+              "confidence": "medium"
+            },
+            {
+              "cells": [
+                59,
+                60
+              ],
+              "cue": "未知",
+              "alternative": "无明显线索",
+              "confidence": "unknown"
+            }
+          ],
+          "c0": [
+            35,
+            36
+          ],
+          "c0_reason": "HIGHEST_RELIABLE_CONFIDENCE_C0",
+          "raw_links": [
+            "runs/ykhs7s2dck__q8-3/C_P0_R1/raw_1.txt"
+          ],
+          "features": "overlays/ykhs7s2dck__q8-3/C_P0_R1_features_64.csv",
+          "ordinal": "overlays/ykhs7s2dck__q8-3/C_P0_R1_ordinal.png",
+          "first_pass_status": "CONTRACT_VALID",
+          "repair_dependent": false,
+          "no_reliable_cue": false,
+          "first_pass_detail": "{\n  \"regions\": [\n    {\n      \"cells\": [\n        35,\n        36\n      ],\n      \"cue\": \"小圆点\",\n      \"alternative\": \"可能是轻微的划痕或污渍\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [\n        59,\n        60\n      ],\n      \"cue\": \"未知\",\n      \"alternative\": \"无明显线索\",\n      \"confidence\": \"unknown\"\n    }\n  ],\n  \"no_reliable_cue\": false\n}"
+        },
+        {
+          "variant": "D_P1_R1",
+          "status": "VALID_FIRST_PASS",
+          "overlay": "overlays/ykhs7s2dck__q8-3/D_P1_R1.png",
+          "numbered": "inputs/ykhs7s2dck__q8-3/R1.png",
+          "regions": [
+            {
+              "cells": [
+                35,
+                36
+              ],
+              "cue": "中心有一个小圆形痕迹",
+              "alternative": "可能是轻微的划痕或污渍",
+              "confidence": "medium"
+            }
+          ],
+          "c0": [
+            35,
+            36
+          ],
+          "c0_reason": "HIGHEST_RELIABLE_CONFIDENCE_C0",
+          "raw_links": [
+            "runs/ykhs7s2dck__q8-3/D_P1_R1/raw_1.txt"
+          ],
+          "features": "overlays/ykhs7s2dck__q8-3/D_P1_R1_features_64.csv",
+          "ordinal": "overlays/ykhs7s2dck__q8-3/D_P1_R1_ordinal.png",
+          "first_pass_status": "CONTRACT_VALID",
+          "repair_dependent": false,
+          "no_reliable_cue": false,
+          "first_pass_detail": "{\n  \"regions\": [\n    {\n      \"cells\": [\n        35,\n        36\n      ],\n      \"cue\": \"中心有一个小圆形痕迹\",\n      \"alternative\": \"可能是轻微的划痕或污渍\",\n      \"confidence\": \"medium\"\n    }\n  ],\n  \"no_reliable_cue\": false\n}"
+        },
+        {
+          "variant": "H00_CACHED",
+          "status": "HISTORICAL_CACHED",
+          "overlay": "overlays/ykhs7s2dck__q8-3/H00_CACHED.png",
+          "numbered": "inputs/ykhs7s2dck__q8-3/R0.png",
+          "regions": [
+            {
+              "cells": [
+                35,
+                36
+              ],
+              "cue": "小圆点",
+              "alternative": "可能是污渍或划痕",
+              "confidence": "medium"
+            },
+            {
+              "cells": [
+                59,
+                60
+              ],
+              "cue": "未知",
+              "alternative": "无明显线索",
+              "confidence": "unknown"
+            }
+          ],
+          "c0": [
+            35,
+            36
+          ],
+          "c0_reason": "HIGHEST_RELIABLE_CONFIDENCE_C0",
+          "raw_links": [
+            "inputs/ykhs7s2dck__q8-3/H00_raw.txt"
+          ],
+          "features": "overlays/ykhs7s2dck__q8-3/H00_CACHED_features_64.csv",
+          "ordinal": "overlays/ykhs7s2dck__q8-3/H00_CACHED_ordinal.png",
+          "first_pass_status": "HISTORICAL_FINAL_ONLY",
+          "repair_dependent": false,
+          "no_reliable_cue": false,
+          "first_pass_detail": "H00只有历史最终回答；未重建历史首答"
+        }
+      ]
+    }
+  ]
+}

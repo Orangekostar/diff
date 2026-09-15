@@ -1,0 +1,147 @@
+{
+  "task_id": "VLM_GROUNDING_PILOT_R1_e8d9ef01",
+  "task_type": "bounded_prompt_and_render_localization_diagnostic",
+  "repository": "Orangekostar/diff",
+  "branch": "research/cai-vlm-agent-v3-controlled-reuse",
+  "inspected_base_commit": "e8d9ef0171ab6d0e1d14187a56cdbd7ecc579750",
+  "execute_after_user_supplies_this_package": true,
+  "output_root": "results/cai_agent_v3/vlm_grounding_pilot/r1_e8d9ef01",
+  "artifact_root": "artifacts/cai_agent_v3/vlm_grounding_pilot/r1_e8d9ef01",
+  "script_root": "scripts/vlm_grounding_pilot",
+  "case_selection": {
+    "max_physical_specimens": 6,
+    "fixed_diagnostic_cases": [
+      "cgtnjyggtm:q24-48",
+      "74t7kcdgkr:c8-16",
+      "w68dtmpfyf:q16-29"
+    ],
+    "additional_train_domains": [
+      "xcmzfsbd9t",
+      "yfxyg8jm46",
+      "ykhs7s2dck"
+    ],
+    "additional_per_domain": 1,
+    "rank_by": "sha256(UTF8(\"VLM_GROUNDING_PILOT_R1|\" + specimen_key)).hexdigest(), specimen_key",
+    "filter_before_rank": "split == TRAIN and dataset_id == requested_domain",
+    "ignore_prior_vlm_success_or_quality": true,
+    "freeze_before_first_new_generation": true,
+    "replace_missing_or_bad_cases": false,
+    "test_images_or_labels": false,
+    "independent_confirmation_claim": false
+  },
+  "variants": [
+    {
+      "id": "A_P0_R0",
+      "prompt": "P0_original",
+      "render": "R0_original"
+    },
+    {
+      "id": "B_P1_R0",
+      "prompt": "P1_spatial_grounding",
+      "render": "R0_original"
+    },
+    {
+      "id": "C_P0_R1",
+      "prompt": "P0_original",
+      "render": "R1_readable_labels"
+    },
+    {
+      "id": "D_P1_R1",
+      "prompt": "P1_spatial_grounding",
+      "render": "R1_readable_labels"
+    }
+  ],
+  "historical_reference": {
+    "id": "H00_CACHED",
+    "new_generation_calls": 0,
+    "not_a_matched_current_run": true
+  },
+  "model": {
+    "repository": "Qwen/Qwen2.5-VL-7B-Instruct",
+    "revision": "cc594898137f460bfe9f0759e9844b3ce807cfb5",
+    "path_from": "src/cmc_bbdm/cai_agent_v3/vlm_perception.py::_MODEL_PATH",
+    "dtype": "bfloat16",
+    "attention_implementation": "sdpa",
+    "use_fast": false,
+    "min_visual_tokens": 256,
+    "max_visual_tokens": 1280,
+    "min_pixels": 200704,
+    "max_pixels": 1003520,
+    "max_new_tokens_per_generation": 500,
+    "do_sample": false,
+    "temperature": null,
+    "use_cache": true,
+    "batch_size": 1,
+    "image_order": [
+      "clean_rotated",
+      "numbered_same_orientation"
+    ],
+    "change_chat_template_or_add_vision_id": false,
+    "return_scores_or_attentions": false
+  },
+  "new_render": {
+    "input": "exact frozen clean render; NEVER call rotation again",
+    "grid_shape": [
+      8,
+      8
+    ],
+    "cell_id": "8*row+column",
+    "origin": "upper_left",
+    "change_clean_pixels_or_shape": false,
+    "change_grid_edges_or_lines": false,
+    "font_target_px": "max(12, round(24*min_cell_side/128))",
+    "inset_px": "max(3, round(10*min_cell_side/128))",
+    "label_panel": "white explicit-font digits on a compact semi-transparent dark background, fully inside cell",
+    "layout_freeze": "font and geometry fixed before model output; geometry-only downsize if necessary",
+    "distribute_font_files": false
+  },
+  "scope": {
+    "primary_jobs": 24,
+    "max_generation_attempts_including_repair_and_failure": 48,
+    "max_attempts_per_case_variant": 2,
+    "repair_only_for_format_or_schema_failure": true,
+    "repair_prompt": "existing FORMAT_REPAIR_PROMPT + exact invalid raw response context, same rule for all arms",
+    "semantic_wrong_answer_retry": false,
+    "extra_temperature_seed_model_search": false,
+    "gpu_wall_seconds_total_cap": 1800,
+    "time_includes_load_generation_repair_failed_attempts": true,
+    "one_generation_wall_seconds_cap": 120,
+    "gpu_count": 1,
+    "cpu_threads_max": 4,
+    "recommended_free_vram_gib_before_load": 34,
+    "generation_calls_are_not_model_forward_calls": true,
+    "max_output_token_upper_bound": 24000,
+    "new_training_updates": 0,
+    "actor_cai_resnet_reader_stop_forwards": 0,
+    "new_attention_or_attribution_forwards": 0,
+    "new_test_access": 0,
+    "cscan_image_inputs": 0,
+    "bootstrap_or_cai_performance_rescoring": 0,
+    "production_prompt_or_cache_replacement": false,
+    "manuscript_changes": false
+  },
+  "review": {
+    "human_review_required_for_localization_improvement_claim": true,
+    "human_review_missing_blocks_export": false,
+    "unknown_or_empty_reference_is_not_ground_truth": true,
+    "attention_is_not_ground_truth": true,
+    "no_vlm_first_action_is_not_ground_truth": true,
+    "hypothesis_case_cells_must_not_enter_model_prompt": true,
+    "diagnostic_c0_only": true
+  },
+  "delivery": {
+    "required_handoff": "CODEX_HANDOFF_VLM_GROUNDING_PILOT.md",
+    "commit_and_push_original_branch": true,
+    "verify_local_upstream_remote": true,
+    "create_pr": false,
+    "merge": false,
+    "force_push": false,
+    "do_not_upload": [
+      "font files",
+      "model weights",
+      "environment",
+      "browser binaries",
+      "unneeded full resolution source duplicates"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "files": {
+    "results/cai_agent_v3/new_protocol/vlm_surface_percepts.jsonl": "d271c832ec820b062482f4791bdace2caa39c1b335d7e2deaedf4621f1d3e180",
+    "results/cai_agent_v3/new_protocol/vlm_actor_features_fit.csv": "1211adee61cab9c26fd5b93cac0d77bf5de40069a751d61af647f3c661bc76d6",
+    "src/cmc_bbdm/learned_cscan/perception.py": "e38d31f673c3bcba737a775db00100c7e52da2a014e4dab4f4efeb227194b43d",
+    "src/cmc_bbdm/vlm_cscan/runtime.py": "b1a6a459cebf4ca1628434ed6600b595c613ce048ac70ab70a201b805e62d6b0",
+    "src/cmc_bbdm/vlm_cscan/vlm.py": "b9bc1967a124a1629b8490b6a320882c18812ffbef4fdeb15795c16b56c5adbc",
+    "src/cmc_bbdm/cai_agent_v3/vlm_perception.py": "67c0e4537a2a67a974fd9dba4b4edb111c9035a2bc4cc4a916035caa41041c55",
+    "src/cmc_bbdm/cai_agent_v3/policy.py": "730abb7cf34dc896e91fad9e21c9b5a0b93217722b025211384c0879a974bea8"
+  },
+  "ledger_bytes": 40358,
+  "ledger_sha256": "384a60275c36e811c92249c4ede00737d6f4a5c898517fbfc96f0b2f06a989d6"
+}

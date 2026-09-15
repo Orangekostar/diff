@@ -1,0 +1,19 @@
+```json
+{
+  "no_reliable_cue": false,
+  "regions": [
+    {
+      "cells": [35, 36],
+      "cue": "小圆点",
+      "alternative": "可能是污渍或划痕",
+      "confidence": "medium"
+    },
+    {
+      "cells": [59, 60],
+      "cue": "未知",
+      "alternative": "无明显线索",
+      "confidence": "unknown"
+    }
+  ]
+}
+```

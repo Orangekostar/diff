@@ -1,0 +1,42 @@
+{
+  "cache_key": "4a513c18b92791b21e08e167d0f78a53ea891d5935b6adcaaf5d1c26919f044c",
+  "call_count": 1,
+  "input_tokens": 2767,
+  "latency_seconds": 9.552721336483955,
+  "output_tokens": 108,
+  "percept": {
+    "no_reliable_cue": false,
+    "regions": [
+      {
+        "alternative": "可能是一个小的划痕或污渍",
+        "cells": [
+          27,
+          28
+        ],
+        "confidence": "medium",
+        "cue": "circle"
+      },
+      {
+        "alternative": "无明显线索",
+        "cells": [
+          59,
+          60
+        ],
+        "confidence": "low",
+        "cue": "unknown"
+      }
+    ]
+  },
+  "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [27, 28],\n      \"cue\": \"circle\",\n      \"alternative\": \"可能是一个小的划痕或污渍\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [59, 60],\n      \"cue\": \"unknown\",\n      \"alternative\": \"无明显线索\",\n      \"confidence\": \"low\"\n    }\n  ]\n}\n```",
+  "record_type": "surface_percept",
+  "repaired": false,
+  "request": {
+    "clean_image_sha256": "e03d1e800bd0d8aa219541870ba8121090d0d050de12641abe00516de8de86d0",
+    "gridded_image_sha256": "83570d331a080bf22af0368f0a73097ed1859a92d86c9499b5a4961d1eb98646",
+    "model_revision": "cc594898137f460bfe9f0759e9844b3ce807cfb5",
+    "prompt_sha256": "07ba97c242f8f8ab4ec0b742d64aec231dace2455bb275e285174381c1e79ce0",
+    "render_version": "b341e99fb74d9f815be810b2e8b1d91e59f236540072577c244313c584281f40",
+    "schema_version": 2
+  },
+  "schema_version": 2
+}

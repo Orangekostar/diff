@@ -1,0 +1,6 @@
+findfont: Failed to find font weight normal, now using 500.
+findfont: Failed to find font weight normal, now using 500.
+findfont: Failed to find font weight normal, now using 500.
+findfont: Failed to find font weight normal, now using 500.
+findfont: Failed to find font weight normal, now using 500.
+{"task_id": "VLM_GROUNDING_PILOT_R1_e8d9ef01", "status": "RUN_COMPLETE_REVIEW_PENDING", "human_review": "PENDING_HUMAN_REVIEW", "case_count": 6, "primary_jobs": 24, "generation_attempts": 27, "repair_calls": 3}

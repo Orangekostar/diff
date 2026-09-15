@@ -1,0 +1,40 @@
+{
+  "package": "VLM_GROUNDING_PILOT_CODEX_PACKAGE",
+  "date": "2026-09-15",
+  "source_commit": "e8d9ef0171ab6d0e1d14187a56cdbd7ecc579750",
+  "local_checks": "JSON parsing, call-budget arithmetic, distinct cases and four variants, P1 synchronized/no case-answer injection, balanced fences, ZIP byte equality",
+  "repository_execution": false,
+  "model_execution": false,
+  "files": [
+    {
+      "path": "CODEX_VLM_GROUNDING_PILOT_EXECUTION.md",
+      "bytes": 31051,
+      "sha256": "2253c400cae9e7115e1e31656ae73826d474634c00eca19bde72da48ae5a742d"
+    },
+    {
+      "path": "README_START.md",
+      "bytes": 2719,
+      "sha256": "61252018d7323a508a397906f82c0419bac52119439c52c60128033f0a346e46"
+    },
+    {
+      "path": "VLM_GROUNDING_REVIEW.md",
+      "bytes": 4025,
+      "sha256": "e185e687db62c0f374bd61564421925eb6a504a5330d6cbaeea8dd63589e36ba"
+    },
+    {
+      "path": "VLM_GROUNDING_SCOPE.json",
+      "bytes": 5048,
+      "sha256": "ee3865e50a39546f0cb595c250cea2e15794f82a17598d5e7b1d307cdc9a637c"
+    },
+    {
+      "path": "VLM_GROUNDING_SOURCE_BINDINGS.md",
+      "bytes": 7448,
+      "sha256": "a8724d3747be45f240f874d1be6762df4aa9705ea4c2055fb5525de693e9e039"
+    },
+    {
+      "path": "prompts/P1_SPATIAL_GROUNDING_ZH.txt",
+      "bytes": 2127,
+      "sha256": "1d2398e759e7b6f40d7d6514016a29ddd96d5b37d36e35a5f9989a42254c8b35"
+    }
+  ]
+}
