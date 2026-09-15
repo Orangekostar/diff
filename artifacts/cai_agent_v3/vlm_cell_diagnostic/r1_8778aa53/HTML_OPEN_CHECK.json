@@ -1,0 +1,75 @@
+{
+  "browser": "Playwright Chromium, file://, no server",
+  "loaded_pngs": [
+    {
+      "src": "01_source_surface.png",
+      "width": 3357,
+      "height": 3357,
+      "complete": true
+    },
+    {
+      "src": "02_vlm_clean_input.png",
+      "width": 1024,
+      "height": 1024,
+      "complete": true
+    },
+    {
+      "src": "03_vlm_numbered_input.png",
+      "width": 1024,
+      "height": 1024,
+      "complete": true
+    },
+    {
+      "src": "04_readable_grid_reference.png",
+      "width": 900,
+      "height": 963,
+      "complete": true
+    },
+    {
+      "src": "05_cached_confidence_8x8.png",
+      "width": 1329,
+      "height": 1100,
+      "complete": true
+    },
+    {
+      "src": "06_raw_ids_on_numbered_input.png",
+      "width": 900,
+      "height": 990,
+      "complete": true
+    },
+    {
+      "src": "07_parsed_and_feature_cells.png",
+      "width": 900,
+      "height": 990,
+      "complete": true
+    },
+    {
+      "src": "08_c0_and_historical_action.png",
+      "width": 1892,
+      "height": 771,
+      "complete": true
+    },
+    {
+      "src": "09_pre_cell_attention_clean.png",
+      "width": 1800,
+      "height": 975,
+      "complete": true
+    },
+    {
+      "src": "10_pre_cell_attention_numbered.png",
+      "width": 1800,
+      "height": 975,
+      "complete": true
+    },
+    {
+      "src": "11_attention_with_raw_cells.png",
+      "width": 1800,
+      "height": 1020,
+      "complete": true
+    }
+  ],
+  "all_local_links_exist": true,
+  "mobile_no_horizontal_overflow": true,
+  "page_errors": [],
+  "status": "PASS"
+}

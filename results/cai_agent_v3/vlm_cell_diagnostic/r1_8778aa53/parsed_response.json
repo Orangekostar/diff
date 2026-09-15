@@ -1,0 +1,23 @@
+{
+  "no_reliable_cue": false,
+  "regions": [
+    {
+      "cells": [
+        36,
+        37
+      ],
+      "cue": "circle with white speckles",
+      "alternative": "dust or debris accumulation",
+      "confidence": "medium"
+    },
+    {
+      "cells": [
+        59,
+        60
+      ],
+      "cue": "line",
+      "alternative": "scratch or mark on the surface",
+      "confidence": "medium"
+    }
+  ]
+}

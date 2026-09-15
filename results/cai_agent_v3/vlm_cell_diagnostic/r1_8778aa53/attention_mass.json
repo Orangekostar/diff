@@ -1,0 +1,7 @@
+{
+  "clean": 0.0313977487385273,
+  "numbered": 0.16951552033424377,
+  "non_visual": 0.7990867495536804,
+  "total": 1.0,
+  "scale": "raw probability mass, summed after head/layer mean; images NOT individually normalized"
+}

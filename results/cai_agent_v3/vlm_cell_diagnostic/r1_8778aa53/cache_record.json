@@ -1,0 +1,42 @@
+{
+  "cache_key": "d11f57f3d3ba2e96339d1857e31f3f9192074a624682d7bf4faa29cd04345773",
+  "call_count": 1,
+  "input_tokens": 2767,
+  "latency_seconds": 9.686793443746865,
+  "output_tokens": 112,
+  "percept": {
+    "no_reliable_cue": false,
+    "regions": [
+      {
+        "alternative": "dust or debris accumulation",
+        "cells": [
+          36,
+          37
+        ],
+        "confidence": "medium",
+        "cue": "circle with white speckles"
+      },
+      {
+        "alternative": "scratch or mark on the surface",
+        "cells": [
+          59,
+          60
+        ],
+        "confidence": "medium",
+        "cue": "line"
+      }
+    ]
+  },
+  "raw_text": "```json\n{\n  \"no_reliable_cue\": false,\n  \"regions\": [\n    {\n      \"cells\": [36, 37],\n      \"cue\": \"circle with white speckles\",\n      \"alternative\": \"dust or debris accumulation\",\n      \"confidence\": \"medium\"\n    },\n    {\n      \"cells\": [59, 60],\n      \"cue\": \"line\",\n      \"alternative\": \"scratch or mark on the surface\",\n      \"confidence\": \"medium\"\n    }\n  ]\n}\n```",
+  "record_type": "surface_percept",
+  "repaired": false,
+  "request": {
+    "clean_image_sha256": "c4d3d9badaaa6b9ff0b351685a1833a8dab13443b79642d4f6353ef3f6fdf0c9",
+    "gridded_image_sha256": "27d40ac5937960d91439d15a6f928dde9e834da4fcd826f540678530e314da8b",
+    "model_revision": "cc594898137f460bfe9f0759e9844b3ce807cfb5",
+    "prompt_sha256": "07ba97c242f8f8ab4ec0b742d64aec231dace2455bb275e285174381c1e79ce0",
+    "render_version": "b341e99fb74d9f815be810b2e8b1d91e59f236540072577c244313c584281f40",
+    "schema_version": 2
+  },
+  "schema_version": 2
+}

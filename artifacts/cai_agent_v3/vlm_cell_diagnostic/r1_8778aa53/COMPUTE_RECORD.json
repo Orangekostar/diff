@@ -1,0 +1,19 @@
+{
+  "job": "VLM_CELL_DIAG_R1_8778aa53",
+  "stage": "SINGLE_CASE_DIAGNOSTIC",
+  "specimen_key": "cgtnjyggtm:q24-48",
+  "device": "cuda:0",
+  "actual_optimizer_updates": 0,
+  "actual_vlm_calls": 1,
+  "actual_qwen_forward_attempts": 1,
+  "full_response_generations": 0,
+  "actor_predictor_resnet_reader_stop_forwards": 0,
+  "test_access": 0,
+  "bootstrap_recomputations": 0,
+  "elapsed_seconds": 168.1250597499311,
+  "peak_allocated_gib": 29.098062992095947,
+  "status": "COMPLETED",
+  "attention_implementation": "Explicit FP32 last-query softmax of live post-RoPE repeated-head Q/K; actual SDPA output unchanged; mean all heads then final four decoder layers. No gradients, rollout or candidate interpolation.",
+  "does_not_replace_historical_cache": true,
+  "authorization": "docs/0915/CODEX_VLM_HEATMAP_COORDINATE_DIAGNOSIS.md B; at most 2 forwards, 900 seconds"
+}

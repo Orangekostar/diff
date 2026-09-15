@@ -1,0 +1,60 @@
+{
+  "historical_first_cell": 36,
+  "historical_first_digit_token_id": 18,
+  "historical_token_probability": 0.5148934721946716,
+  "historical_token_rank": 1,
+  "top10": [
+    {
+      "token_id": 18,
+      "decoded": "3",
+      "probability": 0.5148934721946716
+    },
+    {
+      "token_id": 17,
+      "decoded": "2",
+      "probability": 0.4009994566440582
+    },
+    {
+      "token_id": 19,
+      "decoded": "4",
+      "probability": 0.02904830314218998
+    },
+    {
+      "token_id": 20,
+      "decoded": "5",
+      "probability": 0.02904830314218998
+    },
+    {
+      "token_id": 16,
+      "decoded": "1",
+      "probability": 0.010686272755265236
+    },
+    {
+      "token_id": 15,
+      "decoded": "0",
+      "probability": 0.007344560697674751
+    },
+    {
+      "token_id": 21,
+      "decoded": "6",
+      "probability": 0.003931260202080011
+    },
+    {
+      "token_id": 23,
+      "decoded": "8",
+      "probability": 0.0021042521111667156
+    },
+    {
+      "token_id": 22,
+      "decoded": "7",
+      "probability": 0.0009939782321453094
+    },
+    {
+      "token_id": 24,
+      "decoded": "9",
+      "probability": 0.0007741110166534781
+    }
+  ],
+  "status": "REPLAY_FIRST_TOKEN_MATCH",
+  "not_a_new_complete_response": true
+}

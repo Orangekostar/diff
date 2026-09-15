@@ -1,0 +1,51 @@
+{
+  "status": "COORDINATE_EXPORT_COMPLETE",
+  "input_hashes_match": true,
+  "raw_parsed_cache_csv_all_64_equal": true,
+  "c0_matches_trace": true,
+  "first_action_row_col": [
+    4,
+    4
+  ],
+  "native_vs_render_boundary_max_difference_px": [
+    0,
+    0
+  ],
+  "synthetic_roundtrip_64_pass": true,
+  "historical_overlay_comparison": {
+    "surface_cues": {
+      "archived_path": "results/cai_agent_v3/w3_pilot/r1_0e11452a/figures/cgtnjyggtm_q24-48_surface_cues.png",
+      "archived_hash_matches_manifest": true,
+      "same_code_rgb_equal": true,
+      "old_shape": [
+        639,
+        607,
+        3
+      ],
+      "new_shape": [
+        639,
+        607,
+        3
+      ],
+      "max_abs_pixel_difference": 0
+    },
+    "first_action": {
+      "archived_path": "results/cai_agent_v3/w3_pilot/r1_0e11452a/figures/cgtnjyggtm_q24-48_first_action.png",
+      "archived_hash_matches_manifest": true,
+      "same_code_rgb_equal": true,
+      "old_shape": [
+        639,
+        607,
+        3
+      ],
+      "new_shape": [
+        639,
+        607,
+        3
+      ],
+      "max_abs_pixel_difference": 0
+    }
+  },
+  "coordinate_conclusion": "No raw/parsed/CSV cell mismatch; exact row-major surface rectangles; see archived pixel comparison. Surface/C-scan grids use their own dimensions. No permutation mapping called by v3.",
+  "new_model_forwards": 0
+}

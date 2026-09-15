@@ -1,0 +1,48 @@
+{
+  "specimen_key": "cgtnjyggtm:q24-48",
+  "source_identity_note": "已按任务指定q24-48的源图哈希、cache_key、两输入hash、固定案例与历史overlay交叉确认；本轮消息未附新图片，因此未声称与未提供的上传图逐像素匹配。",
+  "source": {
+    "specimen_key": "cgtnjyggtm:q24-48",
+    "split": "VALID",
+    "impacted_surface_path": "data/public/hasebe/raw/cgtnjyggtm/v1/impacted surface image/q24-48.png",
+    "surface_sha256": "89090ab85a001ed26f3133af555ebe6f56fe894068bb0330eef57c45759673cb",
+    "registered_cscan_crop_path": "data/public/hasebe/processed/cgtnjyggtm/internal_cscan/q24-48.png",
+    "registered_cscan_crop_sha256": "891dc75c089b0bd4362492f6c84fe4ddb9ed484b9c4e00c92b69184e1d2b0037",
+    "registered_cscan_height_px": "674",
+    "registered_cscan_width_px": "675"
+  },
+  "source_path_resolved": "/home/ww/paper3/cmc_damage_inference/data/public/hasebe/raw/cgtnjyggtm/v1/impacted surface image/q24-48.png",
+  "source_orientation": "source orientation: original file, no rotation",
+  "render_operation": "RGB -> ROTATE_270 (clockwise 90 once) -> longest-edge <=1024 LANCZOS",
+  "source_size_wh": [
+    3357,
+    3357
+  ],
+  "render_size_wh": [
+    1024,
+    1024
+  ],
+  "cache_key": "d11f57f3d3ba2e96339d1857e31f3f9192074a624682d7bf4faa29cd04345773",
+  "clean_sha256": "c4d3d9badaaa6b9ff0b351685a1833a8dab13443b79642d4f6353ef3f6fdf0c9",
+  "numbered_sha256": "27d40ac5937960d91439d15a6f928dde9e834da4fcd826f540678530e314da8b",
+  "input_identity_exact_png_hash": true,
+  "model_revision": "cc594898137f460bfe9f0759e9844b3ce807cfb5",
+  "historical_call_count": 1,
+  "repaired": false,
+  "historical_attention": "NOT_RECORDED",
+  "original_invalid_answer": "NOT_APPLICABLE_UNREPAIRED",
+  "raw_cells": [
+    36,
+    37,
+    59,
+    60
+  ],
+  "c0": [
+    36,
+    37,
+    59,
+    60
+  ],
+  "historical_first_action": 36,
+  "source_credit": "Hasebe et al., cgtnjyggtm version 1, CC BY 4.0; diagnostic overlays added."
+}

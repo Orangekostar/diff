@@ -1,0 +1,52 @@
+{
+  "vmin": 0,
+  "vmax_shared": 0.007663712836802006,
+  "conditional_normalization": false,
+  "interpolation": "nearest, no Gaussian or bilinear smoothing",
+  "native_npy_meaning": "display-only nearest-neighbour replication, not new pixel-level evidence",
+  "observations": {
+    "clean": {
+      "maximum_token_footprint_xyxy": [
+        146.28571428571428,
+        994.7428571428571,
+        175.54285714285714,
+        1024.0
+      ],
+      "overlapping_cells": [
+        57
+      ],
+      "maximum_token_row": 34,
+      "maximum_token_col": 5,
+      "maximum_token_weight": 0.0015665017999708652,
+      "render_center_xy": [
+        160.9142857142857,
+        1009.3714285714286
+      ],
+      "containing_cell_at_token_center": 57,
+      "interpretation": "descriptive token maximum, NOT best cell, damage GT or CAI value"
+    },
+    "numbered": {
+      "maximum_token_footprint_xyxy": [
+        497.37142857142857,
+        497.37142857142857,
+        526.6285714285714,
+        526.6285714285714
+      ],
+      "overlapping_cells": [
+        27,
+        28,
+        35,
+        36
+      ],
+      "maximum_token_row": 17,
+      "maximum_token_col": 17,
+      "maximum_token_weight": 0.007663712836802006,
+      "render_center_xy": [
+        512.0,
+        512.0
+      ],
+      "containing_cell_at_token_center": 36,
+      "interpretation": "descriptive token maximum, NOT best cell, damage GT or CAI value"
+    }
+  }
+}

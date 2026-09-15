@@ -1,0 +1,11 @@
+{
+  "status": "ATTENTION_EXPORTED",
+  "actual_qwen_forwards": 1,
+  "reason": "True diagnostic query-row attention extracted from one new frozen Qwen forward; not historical saved attention.",
+  "new_other_model_forwards": 0,
+  "replay_token_status": "REPLAY_FIRST_TOKEN_MATCH",
+  "gpu": 0,
+  "elapsed_seconds": 168.1250597499311,
+  "max_allocated_gib": 29.098062992095947,
+  "implementation": "Explicit FP32 last-query softmax of live post-RoPE repeated-head Q/K; actual SDPA output unchanged; mean all heads then final four decoder layers. No gradients, rollout or candidate interpolation."
+}

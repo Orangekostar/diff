@@ -1,0 +1,6 @@
+{
+  "Q1_identity_and_cache": "PASS exact input PNG hashes, named VALID case and raw/parsed/features chain",
+  "Q2_coordinate_chain": "PASS 64-cell native/crop/overlay roundtrip; archived cue and first-action PNG RGB exactly reproduced",
+  "Q3_attention_definition_and_arrays": "PASS strict prefix; query2792; layers24\u201327, all28heads; two35x35 segments; probability and SDPA row consistency; 1 forward",
+  "Q4_viewable_delivery_and_frozen_scope": "PASS PNG decode, 11 HTML images, relative links; production/paper/history unchanged except one authorized ledger append. Browser and Git evidence in separate records."
+}

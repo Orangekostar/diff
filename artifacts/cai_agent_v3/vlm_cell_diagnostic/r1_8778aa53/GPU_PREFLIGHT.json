@@ -1,0 +1,13 @@
+{
+  "gpu": 0,
+  "gpu_snapshot": "0, NVIDIA A40, 33850 MiB, 0 %\n1, NVIDIA A40, 33850 MiB, 0 %\n2, NVIDIA A40, 29474 MiB, 0 %\n",
+  "existing_processes": [
+    "1937823 /home/ww/miniconda3/envs/persist4d/bin/python -m scripts.evaluate_task_memory --variant W-BASE --checkpoint /mnt/shared/ww/persist4d-task-memory-retention-v2/training/formal/W-BASE/update=3000.ckpt --population protocol_b_43_masters_3_orders --data-root /home/ww/paper5/data --rio-metadata /home/ww/3RScan.json --pretrained /mnt/shared/ww/persist4d-node1-7-migration/checkpoints/concerto_base.pth --external-root /mnt/shared/ww/persist4d-task-memory-retention-v2 --device cuda:0 --cache-root /mnt/shared/ww/persist4d-task-memory-retention-v2/evaluation_cache/M5/protocol_b/W-BASE --output artifacts/task_memory_retention_v2/evaluation/M5/protocol_b/W-BASE",
+    "1937827 /home/ww/miniconda3/envs/persist4d/bin/python -m scripts.evaluate_task_memory --variant Q-TALA --checkpoint /mnt/shared/ww/persist4d-task-memory-retention-v2/training/formal/Q-TALA/update=1500.ckpt --population protocol_b_43_masters_3_orders --data-root /home/ww/paper5/data --rio-metadata /home/ww/3RScan.json --pretrained /mnt/shared/ww/persist4d-node1-7-migration/checkpoints/concerto_base.pth --external-root /mnt/shared/ww/persist4d-task-memory-retention-v2 --device cuda:1 --cache-root /mnt/shared/ww/persist4d-task-memory-retention-v2/evaluation_cache/M5/protocol_b/Q-TALA --output artifacts/task_memory_retention_v2/evaluation/M5/protocol_b/Q-TALA",
+    "1899729 /home/ww/miniconda3/envs/persist4d/bin/python -m scripts.evaluate_task_memory --variant FH-CONT --checkpoint /mnt/shared/ww/persist4d-task-memory-retention-v2/training/formal/FH-CONT/update=1500.ckpt --population additional_native_refs --reducers mean --data-root /home/ww/paper5/data --rio-metadata /home/ww/3RScan.json --pretrained /mnt/shared/ww/persist4d-node1-7-migration/checkpoints/concerto_base.pth --external-root /mnt/shared/ww/persist4d-task-memory-retention-v2 --device cuda:2 --cache-root /mnt/shared/ww/persist4d-task-memory-retention-v2/evaluation_cache/M5/independent_native/FH-CONT --output artifacts/task_memory_retention_v2/evaluation/M5/independent_native/FH-CONT"
+  ],
+  "free_mib": 33850.0,
+  "chosen_extra_estimate_gib": 21,
+  "reserve_gib": 8,
+  "existing_jobs_are_evaluation_not_training": true
+}
