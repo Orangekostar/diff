@@ -82,3 +82,5 @@ python scripts/vlm_cell_diagnostic/build_index.py
 源码依据：vlm_cscan/runtime.py::render_surface_inputs/_image_sha256；learned_cscan/perception.py::SURFACE_PERCEPT_PROMPT/parse_surface_percept/SurfacePerceptCache；cai_agent_v3/vlm_perception.py::_features；cai_active_image/environment.py::NativeCellGrid；feature_bank.py::_cell_crops；w3_results.py::export_figures；diagnostics.py::_draw_cells；actor_training.py::_evaluate_one；policy.py::vlm_first_action_mask；本机transformers/models/qwen2_5_vl/modeling_qwen2_5_vl.py和qwen2_vl/image_processing_qwen2_vl.py。
 
 使用本次同分支隔离工作树。只新增独立诊断脚本/输出/交接和一行账目；论文、src生产代码、原缓存/特征/轨迹/统计结果均不修改。实际提交与推送身份见GIT_DELIVERY.json和最终回复；不PR/merge/force push。
+
+Git结果闭合：`5ea9e13ac23e90e1f64e079719a0e2d10db14ed0`已推送；当时local HEAD/upstream/remote三方一致、工作树干净，全部46个OUT文件（含8个.npy）Git blob与本地字节一致。最终交接记录由随后唯一文档提交纳入，最终SHA见最终回复。

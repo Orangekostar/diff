@@ -1,0 +1,245 @@
+{
+  "status": "DIAGNOSTIC_DELIVERY_COMPLETE",
+  "branch": "research/cai-vlm-agent-v3-controlled-reuse",
+  "result_commit": "5ea9e13ac23e90e1f64e079719a0e2d10db14ed0",
+  "result_upstream": "5ea9e13ac23e90e1f64e079719a0e2d10db14ed0",
+  "result_remote": "5ea9e13ac23e90e1f64e079719a0e2d10db14ed0",
+  "result_three_way_equal": true,
+  "all_46_output_blobs_match_worktree": true,
+  "npy_arrays_tracked": 8,
+  "result_worktree_clean": true,
+  "push_note": "Initial SSH publickey failure; SSH identity probe succeeded and ordinary retry push succeeded. No credentials or remote configuration modified.",
+  "outputs": [
+    {
+      "path": "results/cai_agent_v3/vlm_cell_diagnostic/r1_8778aa53/01_source_surface.png",
+      "git_blob": "23e2b29c12cf51242d846ec86e960c35515a3b15",
+      "bytes": 17909700
+    },
+    {
+      "path": "results/cai_agent_v3/vlm_cell_diagnostic/r1_8778aa53/02_vlm_clean_input.png",
+      "git_blob": "a7bdd0380692b48206ed4c96df0ea2cebdc13871",
+      "bytes": 1689818
+    },
+    {
+      "path": "results/cai_agent_v3/vlm_cell_diagnostic/r1_8778aa53/03_vlm_numbered_input.png",
+      "git_blob": "2a90bafd48d4e896f2861631fb4d355c4be11e0e",
+      "bytes": 1703392
+    },
+    {
+      "path": "results/cai_agent_v3/vlm_cell_diagnostic/r1_8778aa53/04_readable_grid_reference.png",
+      "git_blob": "644f3e3645201f1e67e9eb07d89511c0371f0cad",
+      "bytes": 1406707
+    },
+    {
+      "path": "results/cai_agent_v3/vlm_cell_diagnostic/r1_8778aa53/05_cached_confidence_8x8.png",
+      "git_blob": "30a67d24a68bb1f95830ee8556e7cb180fc0b229",
+      "bytes": 101221
+    },
+    {
+      "path": "results/cai_agent_v3/vlm_cell_diagnostic/r1_8778aa53/06_raw_ids_on_numbered_input.png",
+      "git_blob": "e7456d72b2fd1fd079b7dbc498343aa03e8d119e",
+      "bytes": 1394090
+    },
+    {
+      "path": "results/cai_agent_v3/vlm_cell_diagnostic/r1_8778aa53/07_parsed_and_feature_cells.png",
+      "git_blob": "c474c966e0d8eabdc38ff389cf7b0a9d0a402b93",
+      "bytes": 1373414
+    },
+    {
+      "path": "results/cai_agent_v3/vlm_cell_diagnostic/r1_8778aa53/08_c0_and_historical_action.png",
+      "git_blob": "f8c23fe8697d7be89a2400ee93fe0bd3b4ca1b6d",
+      "bytes": 1374791
+    },
+    {
+      "path": "results/cai_agent_v3/vlm_cell_diagnostic/r1_8778aa53/09_pre_cell_attention_clean.png",
+      "git_blob": "d092a74bd549d990173ce36c8805c1c66c8b6480",
+      "bytes": 1118523
+    },
+    {
+      "path": "results/cai_agent_v3/vlm_cell_diagnostic/r1_8778aa53/10_pre_cell_attention_numbered.png",
+      "git_blob": "a69f1c3cd0dbc41c5d3ca20933e9a8c3422af1fa",
+      "bytes": 1135580
+    },
+    {
+      "path": "results/cai_agent_v3/vlm_cell_diagnostic/r1_8778aa53/11_attention_with_raw_cells.png",
+      "git_blob": "19863410b478070d10a0d02425b67dedb9c29012",
+      "bytes": 2012570
+    },
+    {
+      "path": "results/cai_agent_v3/vlm_cell_diagnostic/r1_8778aa53/answer_prefix.txt",
+      "git_blob": "ebd96ab9d76963288e0ac1b8555f5c9028c1190c",
+      "bytes": 75
+    },
+    {
+      "path": "results/cai_agent_v3/vlm_cell_diagnostic/r1_8778aa53/attention_attempts.json",
+      "git_blob": "037e86900dabea4d42c23a1eb29f5e18ba7ec43d",
+      "bytes": 161
+    },
+    {
+      "path": "results/cai_agent_v3/vlm_cell_diagnostic/r1_8778aa53/attention_capture_checks.json",
+      "git_blob": "f53987faddd1dfc00912feb4087c67d29454664a",
+      "bytes": 1663
+    },
+    {
+      "path": "results/cai_agent_v3/vlm_cell_diagnostic/r1_8778aa53/attention_clean.npy",
+      "git_blob": "343d33555308407eea7928ecb53cb768f2bb2870",
+      "bytes": 5028
+    },
+    {
+      "path": "results/cai_agent_v3/vlm_cell_diagnostic/r1_8778aa53/attention_clean_native_nearest.npy",
+      "git_blob": "3431a94d45798b37bb53bc8461ddb6c8a7ab555e",
+      "bytes": 4194432
+    },
+    {
+      "path": "results/cai_agent_v3/vlm_cell_diagnostic/r1_8778aa53/attention_clean_native_unsmoothed.png",
+      "git_blob": "2086af46d1c1cc1d3a97bb4d69dd74f93d89f328",
+      "bytes": 6738
+    },
+    {
+      "path": "results/cai_agent_v3/vlm_cell_diagnostic/r1_8778aa53/attention_display.json",
+      "git_blob": "cf903e93d8e8509f6a75dcd177bb6100b24ef61a",
+      "bytes": 1425
+    },
+    {
+      "path": "results/cai_agent_v3/vlm_cell_diagnostic/r1_8778aa53/attention_headmean_last4.npy",
+      "git_blob": "d0350218d4f2ee9d436cc0d307e425ff1d63a47b",
+      "bytes": 44816
+    },
+    {
+      "path": "results/cai_agent_v3/vlm_cell_diagnostic/r1_8778aa53/attention_mass.json",
+      "git_blob": "beb69e31d19e8c4487fb658cf0e004062475d686",
+      "bytes": 222
+    },
+    {
+      "path": "results/cai_agent_v3/vlm_cell_diagnostic/r1_8778aa53/attention_mean_query.npy",
+      "git_blob": "85500996f72e8aa1258724437864467b12adb7ad",
+      "bytes": 11300
+    },
+    {
+      "path": "results/cai_agent_v3/vlm_cell_diagnostic/r1_8778aa53/attention_numbered.npy",
+      "git_blob": "8cb70fe4b5249adb45caff7192cede966a2f6a81",
+      "bytes": 5028
+    },
+    {
+      "path": "results/cai_agent_v3/vlm_cell_diagnostic/r1_8778aa53/attention_numbered_native_nearest.npy",
+      "git_blob": "0a10317398285fdf15187036412a5d49108d2923",
+      "bytes": 4194432
+    },
+    {
+      "path": "results/cai_agent_v3/vlm_cell_diagnostic/r1_8778aa53/attention_numbered_native_unsmoothed.png",
+      "git_blob": "e703a25311e259523090fd02128f21473af9ee75",
+      "bytes": 8970
+    },
+    {
+      "path": "results/cai_agent_v3/vlm_cell_diagnostic/r1_8778aa53/attention_preflight.json",
+      "git_blob": "1edda8d8b1a7e34e57d0e974c33614c969e0c857",
+      "bytes": 1889
+    },
+    {
+      "path": "results/cai_agent_v3/vlm_cell_diagnostic/r1_8778aa53/attention_status.json",
+      "git_blob": "00a48cdfcf0fbea276da145301edaa183e92040e",
+      "bytes": 594
+    },
+    {
+      "path": "results/cai_agent_v3/vlm_cell_diagnostic/r1_8778aa53/attention_token_mapping.csv",
+      "git_blob": "596c6103e1a03f2bcd934bb75e7fcc715cbf5cfd",
+      "bytes": 294804
+    },
+    {
+      "path": "results/cai_agent_v3/vlm_cell_diagnostic/r1_8778aa53/cache_record.json",
+      "git_blob": "578725aac3f1291ac2879afd9ab24d9a46acbc42",
+      "bytes": 1647
+    },
+    {
+      "path": "results/cai_agent_v3/vlm_cell_diagnostic/r1_8778aa53/chat_prompt.txt",
+      "git_blob": "73e0f4be9202953ab2181a5e585e564d0c954686",
+      "bytes": 1453
+    },
+    {
+      "path": "results/cai_agent_v3/vlm_cell_diagnostic/r1_8778aa53/coordinate_trace.csv",
+      "git_blob": "810f66892e075fbeeb35424add44ac66a5a587ca",
+      "bytes": 12915
+    },
+    {
+      "path": "results/cai_agent_v3/vlm_cell_diagnostic/r1_8778aa53/features_64.csv",
+      "git_blob": "553c3fe2db7044f9c605303ef06f1691b876742f",
+      "bytes": 3610
+    },
+    {
+      "path": "results/cai_agent_v3/vlm_cell_diagnostic/r1_8778aa53/historical_actions.json",
+      "git_blob": "dcbd56ba7d5ec3991c9fc7aaca63515fdd72be2c",
+      "bytes": 7942
+    },
+    {
+      "path": "results/cai_agent_v3/vlm_cell_diagnostic/r1_8778aa53/historical_first_action.png",
+      "git_blob": "d70ae29b86fe24235085ab0e719ab03e7aa3663a",
+      "bytes": 485462
+    },
+    {
+      "path": "results/cai_agent_v3/vlm_cell_diagnostic/r1_8778aa53/historical_surface_cues.png",
+      "git_blob": "a159064d8e086060f0ef1a82709ca5dbb4141232",
+      "bytes": 485759
+    },
+    {
+      "path": "results/cai_agent_v3/vlm_cell_diagnostic/r1_8778aa53/identity.json",
+      "git_blob": "21ed853d71457e1ef3a5bbeb9bfe439340235aea",
+      "bytes": 1974
+    },
+    {
+      "path": "results/cai_agent_v3/vlm_cell_diagnostic/r1_8778aa53/index.html",
+      "git_blob": "f63559bd166e685d70889a312a141fcd0c834b6e",
+      "bytes": 16979
+    },
+    {
+      "path": "results/cai_agent_v3/vlm_cell_diagnostic/r1_8778aa53/input_token_sequence.csv",
+      "git_blob": "4c1b5f24eb1b808c97e6d14dbca9889b2af9c55c",
+      "bytes": 102841
+    },
+    {
+      "path": "results/cai_agent_v3/vlm_cell_diagnostic/r1_8778aa53/next_token.json",
+      "git_blob": "9ee3e5c1241aab19c6775a647961ca8991007352",
+      "bytes": 1242
+    },
+    {
+      "path": "results/cai_agent_v3/vlm_cell_diagnostic/r1_8778aa53/ordinal_confidence.npy",
+      "git_blob": "7c925e7eda890ab8264f3f8c1eaf060f4407d0f8",
+      "bytes": 384
+    },
+    {
+      "path": "results/cai_agent_v3/vlm_cell_diagnostic/r1_8778aa53/parsed_response.json",
+      "git_blob": "4ff694bdc6d429c27b17f92784666dd6b6ee5563",
+      "bytes": 403
+    },
+    {
+      "path": "results/cai_agent_v3/vlm_cell_diagnostic/r1_8778aa53/prompt.txt",
+      "git_blob": "e03968b410b1a0ccd96cc05f25de806a1a01b3b8",
+      "bytes": 1259
+    },
+    {
+      "path": "results/cai_agent_v3/vlm_cell_diagnostic/r1_8778aa53/raw_response.txt",
+      "git_blob": "cc00da74d7920a6e619860a8a5ba32a72de66d6b",
+      "bytes": 366
+    },
+    {
+      "path": "results/cai_agent_v3/vlm_cell_diagnostic/r1_8778aa53/region_indicator.npy",
+      "git_blob": "05c05369452a186f7829d2ed455b767659ec2256",
+      "bytes": 384
+    },
+    {
+      "path": "results/cai_agent_v3/vlm_cell_diagnostic/r1_8778aa53/stage_a.json",
+      "git_blob": "fc2b5ed2b4a017c1d2a2113a38a52b66b48ff7c3",
+      "bytes": 1362
+    },
+    {
+      "path": "results/cai_agent_v3/vlm_cell_diagnostic/r1_8778aa53/synthetic_64_ids.png",
+      "git_blob": "c15ce30d5e29970f3f1daf4befead415eddfbf2c",
+      "bytes": 2419
+    },
+    {
+      "path": "results/cai_agent_v3/vlm_cell_diagnostic/r1_8778aa53/synthetic_roundtrip.csv",
+      "git_blob": "6c68715a9952af43e2014b522fcaea66490381e9",
+      "bytes": 1429
+    }
+  ],
+  "final_record_commit": "The following documentation-only commit contains this record; its final three-way SHA equality is reported in the final response, avoiding a self-SHA commit loop."
+}

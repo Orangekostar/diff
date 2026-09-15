@@ -28,3 +28,5 @@
 最终review未发现需改生产代码的bug。修正的仅是本次诊断脚本：环境已有另一cmc_bbdm editable安装，故绑定当前源码namespace；纯裁剪/绘图函数通过AST加载，避免引入无关缺失旧模块；slow tokenizer不支持offset API，改为原tokenizer的ID前缀/decode边界核对；序数图长标签改为U并解释含义，防止格内文字重叠。以上未触发Qwen前向失败或新增研究执行。
 
 尚不能证明的内容：未提供的上传图与该case的身份；未保存的历史attention/token序列；历史完整数字/回答复现；注意力对表面线索的因果作用；损伤或CAI最优格。这些均未被包装为完成结论，也不是本任务应伪造的产物。
+
+Git结果闭合：`5ea9e13ac23e90e1f64e079719a0e2d10db14ed0`已推送；当时local HEAD/upstream/remote三方一致、工作树干净，全部46个OUT文件（含8个.npy）Git blob与本地字节一致。最终交接记录由随后唯一文档提交纳入，最终SHA见最终回复。
