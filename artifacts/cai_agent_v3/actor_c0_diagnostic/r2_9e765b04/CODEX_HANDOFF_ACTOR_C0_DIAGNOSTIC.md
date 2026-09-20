@@ -2,7 +2,7 @@
 
 - Status: `DIAGNOSTICS_COMPLETE`
 - Task: `CAI_ACTOR_C0_MECHANISM_VIS_R2_9e765b04`
-- Results commit: `d3fde1ac503ff42bf688770a0bd62511637f77ce`
+- Results commit: `53637a33564e11aff1d6da64e8bc1e39af9f37dc`
 - Final handoff commit: enclosing commit
 - Branch: `research/cai-vlm-agent-v3-controlled-reuse`
 - Offline report: `results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/index.html`

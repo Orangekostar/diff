@@ -28,10 +28,10 @@
     "publish": {
       "result": {
         "handoff_commit": "ENCLOSING_COMMIT",
-        "results_commit": "d3fde1ac503ff42bf688770a0bd62511637f77ce",
+        "results_commit": "53637a33564e11aff1d6da64e8bc1e39af9f37dc",
         "status": "DIAGNOSTICS_COMPLETE"
       },
-      "signature": "d3fde1ac503ff42bf688770a0bd62511637f77ce",
+      "signature": "53637a33564e11aff1d6da64e8bc1e39af9f37dc",
       "status": "COMPLETE"
     },
     "render": {

@@ -9,7 +9,7 @@
     "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/ykhs7s2dck_q8-22/s01_b4494e6ca46c/C/attention.npz",
     "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/ykhs7s2dck_q8-22/group_A_initial_gate.png"
   ],
-  "results_commit": "d3fde1ac503ff42bf688770a0bd62511637f77ce",
+  "results_commit": "53637a33564e11aff1d6da64e8bc1e39af9f37dc",
   "results_commit_remote_verified": true,
   "status": "DIAGNOSTICS_COMPLETE",
   "task_id": "CAI_ACTOR_C0_MECHANISM_VIS_R2_9e765b04"
