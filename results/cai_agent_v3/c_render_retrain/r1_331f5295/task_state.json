@@ -27,6 +27,12 @@
       "status": "COMPLETE",
       "test_accessed": false
     },
+    "publish": {
+      "delivery_commit": "ENCLOSING_COMMIT",
+      "release_status": "C_RETRAIN_RELEASE_COMPLETE",
+      "results_commit": "fed06a324896abc3e25df207ea8986eb5c6b9d6d",
+      "status": "COMPLETE"
+    },
     "train": {
       "actual_update_upper_bound": 3750,
       "candidate_count": 15,

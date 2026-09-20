@@ -28,11 +28,19 @@
   },
   "branch": "research/cai-vlm-agent-v3-controlled-reuse",
   "completion_gate": "ENGINEERING_AND_DATA_INTEGRITY_NOT_EFFECT_DIRECTION",
+  "git": {
+    "branch": "research/cai-vlm-agent-v3-controlled-reuse",
+    "delivery_commit": "ENCLOSING_COMMIT",
+    "remote": "origin",
+    "results_commit": "fed06a324896abc3e25df207ea8986eb5c6b9d6d",
+    "results_commit_remote_verified": true,
+    "tracked_required_count": 25
+  },
   "prior_version": "C_P0_R1_GLOBAL_V1",
   "schema_version": 1,
   "scope_sha256": "a32dafb06d3adb01cbc94c1807ea4dc31e6e7a9107905d996956af0c00a01788",
   "source_commit": "331f52952b93bd9442ad2e44243cc71c7d966b4d",
-  "status": "C_RETRAIN_RESULTS_COMPLETE",
+  "status": "C_RETRAIN_RELEASE_COMPLETE",
   "task_id": "CAI_V3_C_RENDER_RETRAIN_RELEASE_R1_331f5295",
   "validation": {
     "Q1_Q2_vlm": {

@@ -7,7 +7,7 @@ The C release satisfies Q1-Q7 and is ready for the bounded Q8 Git delivery. Scie
 - Q5: 500 frozen controls plus 150 new C rows form the 650-row primary matrix; historical A remains separate.
 - Q6: nine-method same-cost, paired, A/C, equal-quality, timing, domain and three-case evidence were recomputed.
 - Q7: six-section C manuscript, HTML, TeX, main PDF and SI PDF were rebuilt and visually checked.
-- Q8: pending publish-stage result commit and push.
+- Q8: results commit fed06a324896abc3e25df207ea8986eb5c6b9d6d.
 
 Actor selection:
 - `VLM_SPATIAL_FEEDBACK`: seed 2026091301, selected update 250, logical 1250, charged upper bound 1250.

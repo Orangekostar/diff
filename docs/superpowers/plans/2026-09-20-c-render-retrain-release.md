@@ -429,7 +429,7 @@ Map every W0-W6, Q1-Q8, required file, cap and prohibition from the instruction
 to current artifacts and command evidence. Passing unit tests alone is not
 completion evidence.
 
-- [ ] **Step 6: Commit results/handoff and publish**
+- [x] **Step 6: Commit results/handoff and publish**
 
 Use targeted staging for all required new weights, records, evidence, paper and
 handoff; inspect LFS pointers and staged diff; create at most two post-
