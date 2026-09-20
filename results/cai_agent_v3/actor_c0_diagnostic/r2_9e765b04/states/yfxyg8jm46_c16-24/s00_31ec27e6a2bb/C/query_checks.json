@@ -1,0 +1,7 @@
+{
+  "logit_difference_is_upper_bound": true,
+  "maximum_attention_row_sum_error": 1.7881393432617188e-07,
+  "maximum_conditional_softmax_error": 0.0,
+  "maximum_instrumented_logit_difference": 5.845838069915772e-05,
+  "recovery_basis": "CACHE_WRITTEN_ONLY_AFTER_INSTRUMENTED_LOGIT_GATE_PASSED"
+}

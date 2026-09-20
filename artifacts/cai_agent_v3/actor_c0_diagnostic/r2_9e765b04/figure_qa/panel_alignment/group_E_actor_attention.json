@@ -1,0 +1,198 @@
+{
+  "schema_version": 1,
+  "applicable": true,
+  "auditable": true,
+  "verdict": "FIX BEFORE DELIVERY",
+  "backend": "python-matplotlib",
+  "summary": {
+    "fail": 2,
+    "warn": 0,
+    "comparisons": 7,
+    "exemptions": 0
+  },
+  "tolerances": {
+    "alignment_pt": 1.5,
+    "gutter_pt": 1.5
+  },
+  "layout": {
+    "schema_version": 1,
+    "backend": "python-matplotlib",
+    "figure": {
+      "width_pt": 619.1999999999999,
+      "height_pt": 410.40000000000003
+    },
+    "panels": [
+      {
+        "id": "a",
+        "bbox_pt": [
+          3.0002399999999994,
+          213.7061172249619,
+          166.70376992507627,
+          377.4096471500382
+        ],
+        "grid_id": "matplotlib-grid-1",
+        "row_start": 0,
+        "row_stop": 1,
+        "col_start": 0,
+        "col_stop": 1
+      },
+      {
+        "id": "b",
+        "bbox_pt": [
+          211.80024000000003,
+          213.7061172249619,
+          375.5037699250763,
+          377.4096471500382
+        ],
+        "grid_id": "matplotlib-grid-1",
+        "row_start": 0,
+        "row_stop": 1,
+        "col_start": 1,
+        "col_stop": 2
+      },
+      {
+        "id": "c",
+        "bbox_pt": [
+          417.00024,
+          213.7061172249619,
+          580.7037699250764,
+          377.4096471500382
+        ],
+        "grid_id": "matplotlib-grid-1",
+        "row_start": 0,
+        "row_stop": 1,
+        "col_start": 2,
+        "col_stop": 3
+      },
+      {
+        "id": "d",
+        "bbox_pt": [
+          3.0002399999999994,
+          16.667529099961865,
+          166.70376992507627,
+          180.37105902503816
+        ],
+        "grid_id": "matplotlib-grid-1",
+        "row_start": 1,
+        "row_stop": 2,
+        "col_start": 0,
+        "col_stop": 1
+      },
+      {
+        "id": "e",
+        "bbox_pt": [
+          211.80024000000003,
+          16.66752909996184,
+          375.5037699250763,
+          180.3710590250382
+        ],
+        "grid_id": "matplotlib-grid-1",
+        "row_start": 1,
+        "row_stop": 2,
+        "col_start": 1,
+        "col_stop": 2
+      },
+      {
+        "id": "f",
+        "bbox_pt": [
+          417.00024,
+          16.66752909996184,
+          580.7037699250764,
+          180.3710590250382
+        ],
+        "grid_id": "matplotlib-grid-1",
+        "row_start": 1,
+        "row_stop": 2,
+        "col_start": 2,
+        "col_stop": 3
+      }
+    ],
+    "row_groups": [
+      {
+        "id": "inferred-row-1",
+        "panels": [
+          "a",
+          "b",
+          "c"
+        ]
+      },
+      {
+        "id": "inferred-row-2",
+        "panels": [
+          "d",
+          "e",
+          "f"
+        ]
+      }
+    ],
+    "column_groups": [
+      {
+        "id": "inferred-column-1",
+        "panels": [
+          "a",
+          "d"
+        ]
+      },
+      {
+        "id": "inferred-column-2",
+        "panels": [
+          "b",
+          "e"
+        ]
+      },
+      {
+        "id": "inferred-column-3",
+        "panels": [
+          "c",
+          "f"
+        ]
+      }
+    ],
+    "boundary_groups": [],
+    "exemptions": []
+  },
+  "findings": [
+    {
+      "severity": "FAIL",
+      "kind": "horizontal-gutter-misalignment",
+      "group": "inferred-row-1",
+      "panels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "message": "Comparable inter-panel gutters are not uniform",
+      "tolerance_pt": 1.5,
+      "metric_spreads_pt": {
+        "gutter": 3.6
+      },
+      "values_pt": {
+        "gutter": {
+          "a->b": 45.09647,
+          "b->c": 41.49647
+        }
+      }
+    },
+    {
+      "severity": "FAIL",
+      "kind": "horizontal-gutter-misalignment",
+      "group": "inferred-row-2",
+      "panels": [
+        "d",
+        "e",
+        "f"
+      ],
+      "message": "Comparable inter-panel gutters are not uniform",
+      "tolerance_pt": 1.5,
+      "metric_spreads_pt": {
+        "gutter": 3.6
+      },
+      "values_pt": {
+        "gutter": {
+          "d->e": 45.09647,
+          "e->f": 41.49647
+        }
+      }
+    }
+  ]
+}

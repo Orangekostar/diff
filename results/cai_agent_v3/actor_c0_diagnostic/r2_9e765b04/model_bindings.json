@@ -1,0 +1,26 @@
+{
+  "C": {
+    "checkpoint": "results/cai_agent_v3/c_render_retrain/r1_331f5295/w3/models/selected/actor_vlm_spatial_feedback_seed1.pt",
+    "checkpoint_sha256": "5bbc6bda8fcb3a256b52d98112e3ea335113a38b844166e0ba04df666ba9e6a1",
+    "format": "C_SCHEMA_1_LOAD_WEIGHT_STATE",
+    "manifest": "results/cai_agent_v3/c_render_retrain/r1_331f5295/w3/models/vlm_spatial_feedback/manifest.json",
+    "method": "VLM_SPATIAL_FEEDBACK",
+    "selected_update": 250
+  },
+  "N": {
+    "checkpoint": "results/cai_agent_v3/w3_pilot/r1_0e11452a/models/actor_no_vlm_spatial_feedback_seed1.pt",
+    "checkpoint_sha256": "0dbf45392c8a06e40b86c7275c1ab46e29ef11352016d9feaf0f31db924a646d",
+    "format": "LEGACY_SCHEMA_3_LOAD_ACTOR_CHECKPOINT",
+    "method": "NO_VLM_SPATIAL_FEEDBACK",
+    "selected_update": 1000,
+    "selection": "results/cai_agent_v3/w3_pilot/r1_0e11452a/models/selection_history/no_vlm_spatial_feedback_seed1/selection.json"
+  },
+  "P_all": {
+    "checkpoint": "results/cai_agent_v3/w2_replay/r1_292b1c74/models/predictor_mean_sc.pt",
+    "checkpoint_sha256": "f67e912bd5faa26ae5cff8a9a0241439797fccef8cec825f43ebe5dc9f9d57ff"
+  },
+  "python": "/home/ww/miniconda3/bin/python3.13",
+  "python_version": "3.13.13",
+  "source_root": "src",
+  "task_id": "CAI_ACTOR_C0_MECHANISM_VIS_R2_9e765b04"
+}

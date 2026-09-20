@@ -1,0 +1,47 @@
+{
+  "cases": [
+    {
+      "clean_sha256": "c4d3d9badaaa6b9ff0b351685a1833a8dab13443b79642d4f6353ef3f6fdf0c9",
+      "source_sha256": "89090ab85a001ed26f3133af555ebe6f56fe894068bb0330eef57c45759673cb",
+      "specimen_key": "cgtnjyggtm:q24-48",
+      "state_count": 9,
+      "status": "PASS"
+    },
+    {
+      "clean_sha256": "bae76556ef388489255bf1f2d5e2638aa7a81a951a6c0b834c01dfb778ac903f",
+      "source_sha256": "bf5971dfb981f6c3302d850db26b26785c575f3d51249a5e6625919bd101845a",
+      "specimen_key": "74t7kcdgkr:c8-16",
+      "state_count": 9,
+      "status": "PASS"
+    },
+    {
+      "clean_sha256": "e03d1e800bd0d8aa219541870ba8121090d0d050de12641abe00516de8de86d0",
+      "source_sha256": "b0d65ad1e8f61ac7d95e6e0d38d26ed31e5552866f9dca70b478be7e133d4008",
+      "specimen_key": "w68dtmpfyf:q16-29",
+      "state_count": 9,
+      "status": "PASS"
+    },
+    {
+      "clean_sha256": "ebe0910524f1ad6f3b27b7f9d56736d48ca7e88f819a6960b9c7788fdf0dc9cb",
+      "source_sha256": "39403db34361de0fd516c10489073c228e98311be9b4605677c254d39ffd9dbd",
+      "specimen_key": "xcmzfsbd9t:c24-9t",
+      "state_count": 9,
+      "status": "PASS"
+    },
+    {
+      "clean_sha256": "eebbd14c265664b24a4b36c819b3ae0bfee838dd46e7ae1fdad5987a82e3b687",
+      "source_sha256": "e0956152babf44f04a5a2715b4ec73696f4cfd29417c013c300cb82c04d75362",
+      "specimen_key": "yfxyg8jm46:c16-24",
+      "state_count": 9,
+      "status": "PASS"
+    },
+    {
+      "clean_sha256": "5d67c5fb1a11bcad6105e41ca04ef099b90de57966608ec5d49768177786eae8",
+      "source_sha256": "0ef06a2f917f965f7bd48f79fd2266874fc1630f2f3707eda8db724e787ece99",
+      "specimen_key": "ykhs7s2dck:q8-22",
+      "state_count": 9,
+      "status": "PASS"
+    }
+  ],
+  "status": "PASS"
+}

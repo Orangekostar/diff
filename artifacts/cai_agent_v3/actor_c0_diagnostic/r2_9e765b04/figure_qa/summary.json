@@ -1,0 +1,18 @@
+{
+  "blank_pngs": [],
+  "minimum_pdf_font_pt": 6.0,
+  "panel_alignment_failures": 0,
+  "panel_alignment_not_applicable": 6,
+  "panel_alignment_report_count": 90,
+  "pdf_collision_failures": [],
+  "pdf_collision_warnings": 0,
+  "pdf_count": 36,
+  "pdf_text_failures": [],
+  "png_count": 120,
+  "status": "PASS",
+  "visual_inspection": {
+    "common_state_contact_sheet": "PASS",
+    "main_contact_sheet": "PASS",
+    "representative_original_panels": "PASS"
+  }
+}

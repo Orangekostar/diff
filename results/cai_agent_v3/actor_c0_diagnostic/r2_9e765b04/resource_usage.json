@@ -1,0 +1,36 @@
+{
+  "backend_fallback": {
+    "count": 1,
+    "from": "GPU_INSTRUMENTED_ATTENTION_BACKEND_EXIT",
+    "scope": "DIAGNOSTIC_ATTENTION_AND_ATTRIBUTION_ONLY",
+    "to": "CPU_FOUR_THREAD_SAME_MATHEMATICAL_PATH"
+  },
+  "counts": {
+    "actor_forward_examples": 900,
+    "autograd_gradient_queries": 316,
+    "bootstrap_draws": 0,
+    "c_no_c0_full_episode_runs": 3,
+    "cnn_forwards": 0,
+    "full_episode_runs": 15,
+    "native_full_episode_runs": 12,
+    "new_qwen_forwards": 0,
+    "new_qwen_generations": 0,
+    "oof_predictor_forwards": 0,
+    "optimizer_updates": 0,
+    "paper_writes": 0,
+    "predictor_forward_examples": 411,
+    "test_access": 0
+  },
+  "sessions": [],
+  "status": "PASS",
+  "task_id": "CAI_ACTOR_C0_MECHANISM_VIS_R2_9e765b04",
+  "timing": {
+    "cpu_compute_seconds_max": 5400,
+    "cpu_compute_seconds_upper_bound": 2246.2236676216125,
+    "gpu_session_seconds_max": 2700,
+    "gpu_session_seconds_upper_bound": 502.8584485054016,
+    "measurement": "CONSERVATIVE_ARTIFACT_MTIME_WALL_ENVELOPES",
+    "note": "Each bound includes setup and non-compute gaps between its bracketing durable artifacts.",
+    "total_task_seconds_upper_bound": 2750.993130683899
+  }
+}

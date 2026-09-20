@@ -1,0 +1,18 @@
+{
+  "branch": "research/cai-vlm-agent-v3-controlled-reuse",
+  "config": "docs/cai/actor_c0_diagnostic/ACTOR_C0_DIAGNOSTIC_SCOPE.json",
+  "config_sha256": "1420357aa6d930d48ae2eed7072b8ec4b04bf0ecd672bcbecfc8abb0d950048f",
+  "feature_bank_index_sha256": "4376a3e55af5a8fdca3ae4c4075744133badaf70c70af4999c81da5c59770890",
+  "head_at_prepare": "9e765b043a62b1d18341aefecc1f704aebbd62f6",
+  "python": "/home/ww/miniconda3/bin/python3.13",
+  "python_runtime": "3.13.13",
+  "scope_sha256": "755d16cc1c5c2354cd3166046e92884b9b0e3a9ea59ef0746c0b5248de4fa789",
+  "source_commit": "9e765b043a62b1d18341aefecc1f704aebbd62f6",
+  "split_counts": {
+    "TEST": 65,
+    "TRAIN": 161,
+    "VALID": 50
+  },
+  "status": "INPUTS_LOCKED",
+  "task_id": "CAI_ACTOR_C0_MECHANISM_VIS_R2_9e765b04"
+}

@@ -1,0 +1,18 @@
+{
+  "maximum_attention_row_sum_error": 2.384185791015625e-07,
+  "maximum_conditional_softmax_error": 1.1102230246251565e-16,
+  "all_instrumented_logits_passed_per_state_allclose_gate": true,
+  "cached_gate_proof_count": 108,
+  "maximum_instrumented_logit_difference": null,
+  "maximum_instrumented_logit_difference_upper_bound": 0.0001364659595489502,
+  "object_count": 108,
+  "owner": "ACTOR_NOT_QWEN",
+  "rollout": "APPROXIMATE_RESIDUAL_HEAD_MEAN_PRODUCT",
+  "shape": [
+    2,
+    4,
+    65,
+    65
+  ],
+  "status": "PASS"
+}

@@ -1,0 +1,8 @@
+{
+  "maximum_forward_logit_difference": 1.9073486328125e-06,
+  "maximum_prediction_difference_mpa": 3.0517578125e-05,
+  "method": "GRADIENT_TIMES_INPUT_MINUS_TRAIN_CELL_MEAN",
+  "object_count": 108,
+  "status": "PASS",
+  "via_definition": "TOTAL_MINUS_DIRECT_ELEMENTWISE"
+}

@@ -1,0 +1,68 @@
+{
+  "phases": {
+    "diagnose": {
+      "result": {
+        "model_state_pairs": 108,
+        "parameter_hashes_unchanged": true,
+        "prior_queries": 54,
+        "probe_forwards": 72,
+        "state_count": 54,
+        "status": "DIAGNOSE_COMPLETE"
+      },
+      "signature": "81280a52232fbaf6ce4aec761eb7fc75614399c6e9387668378ebcdfb90db152",
+      "status": "COMPLETE"
+    },
+    "prepare": {
+      "result": {
+        "case_count": 6,
+        "split_counts": {
+          "TEST": 65,
+          "TRAIN": 161,
+          "VALID": 50
+        },
+        "status": "INPUTS_LOCKED"
+      },
+      "signature": "388752aa9547738fe64b523860281120d01771cfb0dd4ef7b9bca0de5e9ab8ba",
+      "status": "COMPLETE"
+    },
+    "render": {
+      "result": {
+        "figure_count": 90,
+        "html_asset_count": 388,
+        "status": "RENDER_COMPLETE"
+      },
+      "signature": "257eded95cad4b13da56816abf7552be4a05f0bd45d8aa17f90625d5ed7933db",
+      "status": "COMPLETE"
+    },
+    "replay": {
+      "result": {
+        "c_no_c0_full_runs": 3,
+        "common_state_count": 54,
+        "native_reproductions": 12,
+        "parameter_hashes_unchanged": true,
+        "status": "REPLAY_COMPLETE"
+      },
+      "signature": "1e25b3543c4e155079f0a17cf83c2f33dcceb3eb17fd7e70e748dac8932fbbc8",
+      "status": "COMPLETE"
+    },
+    "verify": {
+      "result": {
+        "file_count": 808,
+        "status": "READY_FOR_PUBLISH",
+        "validation": {
+          "Q1": "PASS_MODEL_PRIOR_IDENTITY_FROZEN",
+          "Q2": "PASS_12_NATIVE_ACTION_COST_PREDICTION_REPRODUCTIONS",
+          "Q3": "PASS_54_DEDUPLICATED_NO_FUTURE_COMMON_STATES",
+          "Q4": "PASS_MASK_ONLY_C0_AND_CONDITIONAL_SOFTMAX",
+          "Q5": "PASS_DIRECT_TOTAL_VIA_ATTRIBUTION_AND_72_PROBES",
+          "Q6": "PASS_2X4X65_ACTOR_ATTENTION_AND_LOGIT_GATE",
+          "Q7": "PASS_OFFLINE_HTML_388_ASSETS_AND_120_PNGS",
+          "Q8": "PENDING_COMPUTE_FREE_GIT_PUBLISH"
+        }
+      },
+      "signature": "862cde3e2ae229a5a6150f435861870500ca037c00cc06c4984ddd12e7d09738",
+      "status": "COMPLETE"
+    }
+  },
+  "task_id": "CAI_ACTOR_C0_MECHANISM_VIS_R2_9e765b04"
+}

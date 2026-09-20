@@ -1,0 +1,18 @@
+{
+  "action_count": 1,
+  "current_prediction_mpa": 212.2734375,
+  "exact_cost": 0.015509396636993076,
+  "physical_state_sha256": "b4494e6ca46cda421e60f202efb91724ccc8d8760b5484756fb8a038d36b95a4",
+  "prefix_lengths": [
+    1
+  ],
+  "source_models": [
+    "C"
+  ],
+  "sources": [
+    "C_NATIVE_PREFIX"
+  ],
+  "specimen_key": "ykhs7s2dck:q8-22",
+  "state_id": "s01_b4494e6ca46c",
+  "terminal_view_only": false
+}

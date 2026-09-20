@@ -1,0 +1,981 @@
+{
+  "backend": "python-matplotlib",
+  "figure_count": 90,
+  "figures": [
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/cgtnjyggtm_q24-48/s00_32496b63c4f0/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/cgtnjyggtm_q24-48/s00_32496b63c4f0/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/cgtnjyggtm_q24-48/group_A_initial_gate.png",
+      "pdf": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/cgtnjyggtm_q24-48/group_A_initial_gate.pdf",
+      "pdf_sha256": "f0c53bf895008e2ccd0b0dc30ec7cebd931589f595f5c799362b1a6b92299c30",
+      "sha256": "945bdd8aef4b35161f3b7b45c4d13fe0a50676f9a0d95acb7d90b80ea19dc46e"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/cgtnjyggtm_q24-48/s00_32496b63c4f0/C/surface_attribution.npz",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/cgtnjyggtm_q24-48/s00_32496b63c4f0/N/surface_attribution.npz"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/cgtnjyggtm_q24-48/group_B_surface_attribution.png",
+      "pdf": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/cgtnjyggtm_q24-48/group_B_surface_attribution.pdf",
+      "pdf_sha256": "499fec2aaf2c97c52213db5948235f6e19b372307c5f4ecd27060dd194984fe1",
+      "sha256": "c4ea4e5f44da0cf08ac3e082604260e604dd667ad1e4c7e65e2f11c2f4ca0ae9"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/cgtnjyggtm_q24-48/s00_32496b63c4f0/N/surface_attribution.npz"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/cgtnjyggtm_q24-48/group_B_common_c_action.png",
+      "pdf": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/cgtnjyggtm_q24-48/group_B_common_c_action.pdf",
+      "pdf_sha256": "358f54c9cd9c9c2ce7b902b6af700aa84f9a0beada2472edc11293e590202b59",
+      "sha256": "5bd93ce0b19ee86b1f7d0e08655e76f14be9db2599b6e565931278e088d17e04"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/cgtnjyggtm_q24-48/s00_32496b63c4f0/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/cgtnjyggtm_q24-48/s00_32496b63c4f0/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/cgtnjyggtm_q24-48/group_C_s00_32496b63c4f0.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "0e2ea13c035c3dada67101e0768b449c93fafcf6e14e2836b3dfc6f0c22afa94"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/cgtnjyggtm_q24-48/s01_6a763ec6cc37/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/cgtnjyggtm_q24-48/s01_6a763ec6cc37/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/cgtnjyggtm_q24-48/group_C_s01_6a763ec6cc37.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "5500605194d7db71b754c3199c2badbefd6b45572b1e34f7effb1524ae8b6cd7"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/cgtnjyggtm_q24-48/s02_e26c8b15350c/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/cgtnjyggtm_q24-48/s02_e26c8b15350c/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/cgtnjyggtm_q24-48/group_C_s02_e26c8b15350c.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "a89ed90d2dea71388c2e3de7903ba8c76adbaa235c445b7b094792dcdfaa5e82"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/cgtnjyggtm_q24-48/s03_ba4b52edd4bf/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/cgtnjyggtm_q24-48/s03_ba4b52edd4bf/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/cgtnjyggtm_q24-48/group_C_s03_ba4b52edd4bf.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "1f428cbed512b4fe2d58390b84dde73c7b4aa0c3b0fbaf75d11004ea646ed3de"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/cgtnjyggtm_q24-48/s04_b01e19df2977/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/cgtnjyggtm_q24-48/s04_b01e19df2977/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/cgtnjyggtm_q24-48/group_C_s04_b01e19df2977.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "1e85e52d8bc7ed5f34c6f2c1fa6e9d4cd65b00a1abbe55c34c518c77a2f8600b"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/cgtnjyggtm_q24-48/s05_ce63745479ac/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/cgtnjyggtm_q24-48/s05_ce63745479ac/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/cgtnjyggtm_q24-48/group_C_s05_ce63745479ac.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "a3826edfcc7c74742d11114755d314aabde9a9170d77e9ad4d0b43004c90c2df"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/cgtnjyggtm_q24-48/s06_961e7869f1e5/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/cgtnjyggtm_q24-48/s06_961e7869f1e5/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/cgtnjyggtm_q24-48/group_C_s06_961e7869f1e5.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "8391ac3b6aabe1ba6ca16c663135b7e1865c83fd75c29227ac6f4e90b79baa98"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/cgtnjyggtm_q24-48/s07_e5f96aaadaf7/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/cgtnjyggtm_q24-48/s07_e5f96aaadaf7/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/cgtnjyggtm_q24-48/group_C_s07_e5f96aaadaf7.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "60a5f0e9ae674f127ee267556f79935d5bf21ea146909c0544ac16629bb50179"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/cgtnjyggtm_q24-48/s08_62115a61a187/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/cgtnjyggtm_q24-48/s08_62115a61a187/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/cgtnjyggtm_q24-48/group_C_s08_62115a61a187.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "65d089d7771defb9fb1e9719b95ba60b33bc041475e4e8af3f47d7f2535449b3"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/state_manifest.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/cgtnjyggtm_q24-48/group_D_native_process.png",
+      "pdf": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/cgtnjyggtm_q24-48/group_D_native_process.pdf",
+      "pdf_sha256": "b2b49fe5c0053ca29281467775bec98fb3a69de676a2ed6431492c7440c219c1",
+      "sha256": "f1a516f653e8b480b7ea3072f401eb62c324b6e9179ed32d8c25a66c050c67ff"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/cgtnjyggtm_q24-48/s00_32496b63c4f0/C/attention.npz",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/cgtnjyggtm_q24-48/s00_32496b63c4f0/N/attention.npz"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/cgtnjyggtm_q24-48/group_E_actor_attention.png",
+      "pdf": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/cgtnjyggtm_q24-48/group_E_actor_attention.pdf",
+      "pdf_sha256": "a4a27de3c2015be0093f40811cc2247becf6335434bf97157d4f35e0f7c9024c",
+      "sha256": "cdabbbccef8235573938e237b8b16db9a8f129ddc9a85580866d82f1a68c2e3a"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/trajectories/cgtnjyggtm_q24-48"
+      ],
+      "panel_alignment_verdict": "NOT APPLICABLE",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/cgtnjyggtm_q24-48/group_F_intervention_curves.png",
+      "pdf": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/cgtnjyggtm_q24-48/group_F_intervention_curves.pdf",
+      "pdf_sha256": "b73be56c1aeceecb3790e4596ad0e6a2c119484d68d56d59f8d57e815595748a",
+      "sha256": "95410ad53973b16b2ab9632d462c83c4e64b80af71449f4dbf7468e9b4d16a3b"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/74t7kcdgkr_c8-16/s00_d760add2b16a/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/74t7kcdgkr_c8-16/s00_d760add2b16a/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/74t7kcdgkr_c8-16/group_A_initial_gate.png",
+      "pdf": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/74t7kcdgkr_c8-16/group_A_initial_gate.pdf",
+      "pdf_sha256": "dc94f15c77ee3c929e742f68546eecbf67493998a6458db11ccfd56ac488ae1d",
+      "sha256": "02130ec43a8ad9389e0ca8438bbb8d381b92cc6733f9f902336688423eac3c03"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/74t7kcdgkr_c8-16/s00_d760add2b16a/C/surface_attribution.npz",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/74t7kcdgkr_c8-16/s00_d760add2b16a/N/surface_attribution.npz"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/74t7kcdgkr_c8-16/group_B_surface_attribution.png",
+      "pdf": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/74t7kcdgkr_c8-16/group_B_surface_attribution.pdf",
+      "pdf_sha256": "4aacb516f3d0fa6ff603667f57708b6f14adbf8762fa77a2f9b140717103e374",
+      "sha256": "d964ed04bc27f484ce8b4a61507bc87b110abe8d9a4871787e2d9e3b60ae8913"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/74t7kcdgkr_c8-16/s00_d760add2b16a/N/surface_attribution.npz"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/74t7kcdgkr_c8-16/group_B_common_c_action.png",
+      "pdf": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/74t7kcdgkr_c8-16/group_B_common_c_action.pdf",
+      "pdf_sha256": "d26365046978da5d1a4ae6c20666bc902c7f5453d56686ec82e87ba0ce52716a",
+      "sha256": "9c0a213eefe1419b223430b728ce01cee4a4f1506f70c5827ef0169201b6fc30"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/74t7kcdgkr_c8-16/s00_d760add2b16a/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/74t7kcdgkr_c8-16/s00_d760add2b16a/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/74t7kcdgkr_c8-16/group_C_s00_d760add2b16a.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "d41ccfa9d79729cf7e41ebd0c6f051f0af8782d47dc4314139dfccdaaaec0e69"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/74t7kcdgkr_c8-16/s01_082968232023/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/74t7kcdgkr_c8-16/s01_082968232023/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/74t7kcdgkr_c8-16/group_C_s01_082968232023.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "2724d970c360a7728f172a52c3f0f4ce0663bc22af9a2d185b624fa000001cdc"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/74t7kcdgkr_c8-16/s02_beef2c444dfb/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/74t7kcdgkr_c8-16/s02_beef2c444dfb/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/74t7kcdgkr_c8-16/group_C_s02_beef2c444dfb.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "0dcdde5247b626c8cf06c235f8b0a870d0d57cf67856ff8108bebaf2d38d0fa3"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/74t7kcdgkr_c8-16/s03_998c30e5fca0/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/74t7kcdgkr_c8-16/s03_998c30e5fca0/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/74t7kcdgkr_c8-16/group_C_s03_998c30e5fca0.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "e7b28196c2acfd352e38fc28cbdeb97bbda3f1abf2a52ad3e1bff46b9dbe53cc"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/74t7kcdgkr_c8-16/s04_b3d2c6f62b08/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/74t7kcdgkr_c8-16/s04_b3d2c6f62b08/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/74t7kcdgkr_c8-16/group_C_s04_b3d2c6f62b08.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "71e3fb2869d09142a79200c8cf1b724732fc8a6d8ca69f9b77848457f5ca9b86"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/74t7kcdgkr_c8-16/s05_b5b59c8db5e3/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/74t7kcdgkr_c8-16/s05_b5b59c8db5e3/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/74t7kcdgkr_c8-16/group_C_s05_b5b59c8db5e3.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "dad11161e5ff2cd5d1fbdd15b6c38a1d7ade479d86ad50eb18abfa7e24b4c3a7"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/74t7kcdgkr_c8-16/s06_b37ff81a7144/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/74t7kcdgkr_c8-16/s06_b37ff81a7144/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/74t7kcdgkr_c8-16/group_C_s06_b37ff81a7144.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "f43101fb642451eb54d35893ec2196c0edbce47a804260e87afa35a8d2004d15"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/74t7kcdgkr_c8-16/s07_cec6bed36685/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/74t7kcdgkr_c8-16/s07_cec6bed36685/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/74t7kcdgkr_c8-16/group_C_s07_cec6bed36685.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "ed4bfe0c6bb60769623ed3f98daa06313880fa12bb9180365db6f29695ecbf61"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/74t7kcdgkr_c8-16/s08_154b805610bd/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/74t7kcdgkr_c8-16/s08_154b805610bd/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/74t7kcdgkr_c8-16/group_C_s08_154b805610bd.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "55138cfa2cf4a156f32a8c7c6b2f81ad12e357bddea94d05a4a3ea333cb574b1"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/state_manifest.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/74t7kcdgkr_c8-16/group_D_native_process.png",
+      "pdf": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/74t7kcdgkr_c8-16/group_D_native_process.pdf",
+      "pdf_sha256": "8f722b2e5658e7c2aba96f55bbb436fe9ae026dda3899af3d639b8408c74353b",
+      "sha256": "0cddd94e064b0c5092d4af640ec13d04e51cc6dc51283f7ed207102ba1a62146"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/74t7kcdgkr_c8-16/s00_d760add2b16a/C/attention.npz",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/74t7kcdgkr_c8-16/s00_d760add2b16a/N/attention.npz"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/74t7kcdgkr_c8-16/group_E_actor_attention.png",
+      "pdf": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/74t7kcdgkr_c8-16/group_E_actor_attention.pdf",
+      "pdf_sha256": "c69e6a191437b1142e84c3bd2d38895d1e8fa665967723f36bbaa963c926f15e",
+      "sha256": "71c5354371ec905f530a7511e823c6a00e019897e3d2e1c47d8c930e45cfb210"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/trajectories/74t7kcdgkr_c8-16"
+      ],
+      "panel_alignment_verdict": "NOT APPLICABLE",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/74t7kcdgkr_c8-16/group_F_intervention_curves.png",
+      "pdf": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/74t7kcdgkr_c8-16/group_F_intervention_curves.pdf",
+      "pdf_sha256": "5803b75a0af5adc19492026dc0e3afbc7681d21f67531f1bceed09e715a69412",
+      "sha256": "afd847ba1ee87316e9e86dd96d6cbf8fb5978f98cf11fcd56a89bcfe2ac34f2e"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/w68dtmpfyf_q16-29/s00_190dcec63040/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/w68dtmpfyf_q16-29/s00_190dcec63040/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/w68dtmpfyf_q16-29/group_A_initial_gate.png",
+      "pdf": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/w68dtmpfyf_q16-29/group_A_initial_gate.pdf",
+      "pdf_sha256": "bdde4c2e452785cdf4d6509dbc0ad0aeb3d0e2259a2e8708a8d26bfb9b5b267b",
+      "sha256": "b0d5ff4e2dc284383d1ba8c75fd7797c913462b76540b8c953c9e43e950fbb2a"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/w68dtmpfyf_q16-29/s00_190dcec63040/C/surface_attribution.npz",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/w68dtmpfyf_q16-29/s00_190dcec63040/N/surface_attribution.npz"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/w68dtmpfyf_q16-29/group_B_surface_attribution.png",
+      "pdf": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/w68dtmpfyf_q16-29/group_B_surface_attribution.pdf",
+      "pdf_sha256": "30a21c5442c77fa32e537791dc52705dd7952b10f63cd5ce4dedbaf6dd1cff61",
+      "sha256": "ebea9f5d63817e17b24e10ec11533e5e2edbda7d600a2f0e3b058bed9401b540"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/w68dtmpfyf_q16-29/s00_190dcec63040/N/surface_attribution.npz"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/w68dtmpfyf_q16-29/group_B_common_c_action.png",
+      "pdf": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/w68dtmpfyf_q16-29/group_B_common_c_action.pdf",
+      "pdf_sha256": "7e134bd79c62a9fd7806377d2d17e10094bbe932e93ef3a76e176b8d64f2fea8",
+      "sha256": "3e2e95fd599847f819ecc9186219a05f3c566e26d722550172f0ef16d3d994b0"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/w68dtmpfyf_q16-29/s00_190dcec63040/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/w68dtmpfyf_q16-29/s00_190dcec63040/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/w68dtmpfyf_q16-29/group_C_s00_190dcec63040.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "cfcdb09b2e6e6d977666417004e7395853d079a333a4be1a74fd3bd32cdfca52"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/w68dtmpfyf_q16-29/s01_edb9756f43f7/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/w68dtmpfyf_q16-29/s01_edb9756f43f7/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/w68dtmpfyf_q16-29/group_C_s01_edb9756f43f7.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "cea2fb9bf8329e533dbf995369ecef47c5302d33b754dd0131f5d8f96af88000"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/w68dtmpfyf_q16-29/s02_676163b69261/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/w68dtmpfyf_q16-29/s02_676163b69261/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/w68dtmpfyf_q16-29/group_C_s02_676163b69261.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "8ece2c29d8f8751be0616693d497002023e806b5c097eaf02a299dfc0e0ac120"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/w68dtmpfyf_q16-29/s03_6ca2f74b8abd/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/w68dtmpfyf_q16-29/s03_6ca2f74b8abd/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/w68dtmpfyf_q16-29/group_C_s03_6ca2f74b8abd.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "c3c70fcb70e136d6ea965dabeafbf218f30244a750c03088a5b8d667a6700848"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/w68dtmpfyf_q16-29/s04_bdc89390b5eb/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/w68dtmpfyf_q16-29/s04_bdc89390b5eb/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/w68dtmpfyf_q16-29/group_C_s04_bdc89390b5eb.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "6ced4f171a5113c85978aacde7219617be7c486a7ca10e1477c7f6abb4f151df"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/w68dtmpfyf_q16-29/s05_63834e55e921/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/w68dtmpfyf_q16-29/s05_63834e55e921/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/w68dtmpfyf_q16-29/group_C_s05_63834e55e921.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "bcd184fbbcd8c27be472195c81298db41935a3bdc25d8037e623b40645071965"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/w68dtmpfyf_q16-29/s06_03bb3070f458/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/w68dtmpfyf_q16-29/s06_03bb3070f458/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/w68dtmpfyf_q16-29/group_C_s06_03bb3070f458.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "61693e4483aed9fbfc13e51d09e57ce42811bdc2bbfefdd18e08fd62c38f216b"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/w68dtmpfyf_q16-29/s07_c30ca7e90035/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/w68dtmpfyf_q16-29/s07_c30ca7e90035/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/w68dtmpfyf_q16-29/group_C_s07_c30ca7e90035.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "b6bbc872fb23da5e20b1bb295d1e9a97d2472020af58783beb7c64ec0020ecaf"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/w68dtmpfyf_q16-29/s08_a6a02ff51f83/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/w68dtmpfyf_q16-29/s08_a6a02ff51f83/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/w68dtmpfyf_q16-29/group_C_s08_a6a02ff51f83.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "e0641daca2ca812ea637d76a024c66d19d510798e65c4d0b81c06a04837a345e"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/state_manifest.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/w68dtmpfyf_q16-29/group_D_native_process.png",
+      "pdf": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/w68dtmpfyf_q16-29/group_D_native_process.pdf",
+      "pdf_sha256": "87caaa1a63a861cdd4d3e0c94bff5c39efb7d2da97993ec967d8c3e39f759f66",
+      "sha256": "a54f9fff45851e5db82dfc4dec1a5aa142a7d567f0ca8369968cdf679e2a1e52"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/w68dtmpfyf_q16-29/s00_190dcec63040/C/attention.npz",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/w68dtmpfyf_q16-29/s00_190dcec63040/N/attention.npz"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/w68dtmpfyf_q16-29/group_E_actor_attention.png",
+      "pdf": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/w68dtmpfyf_q16-29/group_E_actor_attention.pdf",
+      "pdf_sha256": "5bfa8b656b73614a887e45db55db6df632099e0cdf2b04942cf6507bec28e285",
+      "sha256": "ce3ab96aff2122ea3914f0acf967c689295365601046fd7c73d46ce35baaf4cb"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/trajectories/w68dtmpfyf_q16-29"
+      ],
+      "panel_alignment_verdict": "NOT APPLICABLE",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/w68dtmpfyf_q16-29/group_F_intervention_curves.png",
+      "pdf": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/w68dtmpfyf_q16-29/group_F_intervention_curves.pdf",
+      "pdf_sha256": "1fe1dd265a9faec0741af0c1229a5995d24c13c78832d6e720b7d8295a210a0a",
+      "sha256": "29e4e81d6f0f5923d4462509a795175401bd1054f6de615ba3f95cfc4007f2fe"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/xcmzfsbd9t_c24-9t/s00_3a313614afe2/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/xcmzfsbd9t_c24-9t/s00_3a313614afe2/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/xcmzfsbd9t_c24-9t/group_A_initial_gate.png",
+      "pdf": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/xcmzfsbd9t_c24-9t/group_A_initial_gate.pdf",
+      "pdf_sha256": "40fba0f25ecad7126310d9eb70efc954936590553406dcafcc82c0174973bbca",
+      "sha256": "9026decb5863dffab513563d7d9e562d6ef589809c6934c40f282c6f8cdb1c73"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/xcmzfsbd9t_c24-9t/s00_3a313614afe2/C/surface_attribution.npz",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/xcmzfsbd9t_c24-9t/s00_3a313614afe2/N/surface_attribution.npz"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/xcmzfsbd9t_c24-9t/group_B_surface_attribution.png",
+      "pdf": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/xcmzfsbd9t_c24-9t/group_B_surface_attribution.pdf",
+      "pdf_sha256": "62cee6ccc3fcb6a2124c643f79395eaaf06d529ee44c59c70de8b5d5f2ea9ba1",
+      "sha256": "2b5a119b32f0b4f4970acc0fb2f5c8a78d56aeeae7b853efa1ac807dd2a3bba8"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/xcmzfsbd9t_c24-9t/s00_3a313614afe2/N/surface_attribution.npz"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/xcmzfsbd9t_c24-9t/group_B_common_c_action.png",
+      "pdf": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/xcmzfsbd9t_c24-9t/group_B_common_c_action.pdf",
+      "pdf_sha256": "e1d246de7b7b3d5f93b0d3678fa68bc00b4c155ea27c168a33480b6c216440cd",
+      "sha256": "21ad589e62928ba7e99f954bddd4760f118a98a586b8669f884afce51039b200"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/xcmzfsbd9t_c24-9t/s00_3a313614afe2/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/xcmzfsbd9t_c24-9t/s00_3a313614afe2/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/xcmzfsbd9t_c24-9t/group_C_s00_3a313614afe2.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "b925d6142b1d5a10ca67fa27cbcb375843c1ccf0193e8f5893c0566ff4722844"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/xcmzfsbd9t_c24-9t/s01_f7645c2f1bde/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/xcmzfsbd9t_c24-9t/s01_f7645c2f1bde/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/xcmzfsbd9t_c24-9t/group_C_s01_f7645c2f1bde.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "53710465a3631af1eef0c5bc3652cc26875bbcd3038b0f82ad2f4bbaf81239d2"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/xcmzfsbd9t_c24-9t/s02_1e5e688a9570/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/xcmzfsbd9t_c24-9t/s02_1e5e688a9570/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/xcmzfsbd9t_c24-9t/group_C_s02_1e5e688a9570.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "d0e5b1c9ae0a8ec4f657e2f1f2aad92ed5904fdc390d167208a3fc57ace75908"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/xcmzfsbd9t_c24-9t/s03_3a0aafeb3c3c/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/xcmzfsbd9t_c24-9t/s03_3a0aafeb3c3c/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/xcmzfsbd9t_c24-9t/group_C_s03_3a0aafeb3c3c.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "99441fe1c7f31a7baf1c883953c435c96e1998342f7315217fc364b8ccffed00"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/xcmzfsbd9t_c24-9t/s04_738efdcc27aa/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/xcmzfsbd9t_c24-9t/s04_738efdcc27aa/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/xcmzfsbd9t_c24-9t/group_C_s04_738efdcc27aa.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "0af4e4573fc911bd75277fb8f41cf063d1daf4d0fdb83a9a984fa4ee835eeacc"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/xcmzfsbd9t_c24-9t/s05_d06055ba2bb3/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/xcmzfsbd9t_c24-9t/s05_d06055ba2bb3/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/xcmzfsbd9t_c24-9t/group_C_s05_d06055ba2bb3.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "fa41c97876c5e0f542c2e50cf35e3b3aae0959e7ed746765da8ed432f515f453"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/xcmzfsbd9t_c24-9t/s06_7313a2997956/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/xcmzfsbd9t_c24-9t/s06_7313a2997956/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/xcmzfsbd9t_c24-9t/group_C_s06_7313a2997956.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "312059ce4d6f8ec4d4ecb0b0e767ccce152b84dbdb215b7d60a9d2ea0d5a9b7b"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/xcmzfsbd9t_c24-9t/s07_30d327b8110c/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/xcmzfsbd9t_c24-9t/s07_30d327b8110c/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/xcmzfsbd9t_c24-9t/group_C_s07_30d327b8110c.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "e0f713ac5eb06aa702880d79ac69e1113a58c2db261a0f9ffadc4ed7ab0e851e"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/xcmzfsbd9t_c24-9t/s08_aa6cff6a8d80/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/xcmzfsbd9t_c24-9t/s08_aa6cff6a8d80/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/xcmzfsbd9t_c24-9t/group_C_s08_aa6cff6a8d80.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "32325855a3b8ea65d9cacd51f9c7d6b5599dade4b181792de6c75ea537248c5c"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/state_manifest.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/xcmzfsbd9t_c24-9t/group_D_native_process.png",
+      "pdf": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/xcmzfsbd9t_c24-9t/group_D_native_process.pdf",
+      "pdf_sha256": "fe60b426528ddbb89eea6888993721fc9721ced5a31c35bf083b69eb12a38c78",
+      "sha256": "a7e36765e19ea36b257b4b40b9b3771ef9fc69ea7c0b18c6b7269b42ac57a786"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/xcmzfsbd9t_c24-9t/s00_3a313614afe2/C/attention.npz",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/xcmzfsbd9t_c24-9t/s00_3a313614afe2/N/attention.npz"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/xcmzfsbd9t_c24-9t/group_E_actor_attention.png",
+      "pdf": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/xcmzfsbd9t_c24-9t/group_E_actor_attention.pdf",
+      "pdf_sha256": "d1caf96f5d881acd20d55255621b5b3716717b66705edb614b1147646ec7dc5a",
+      "sha256": "6ccfbfae89af7c1c3686066efc13767251824cc4703d3f6ab157aff12cf20109"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/trajectories/xcmzfsbd9t_c24-9t"
+      ],
+      "panel_alignment_verdict": "NOT APPLICABLE",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/xcmzfsbd9t_c24-9t/group_F_intervention_curves.png",
+      "pdf": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/xcmzfsbd9t_c24-9t/group_F_intervention_curves.pdf",
+      "pdf_sha256": "4f4930851b94640596e4d4301b559a2d74a29d7cdacaf8da967375c32f5be0d3",
+      "sha256": "875a9b36f948f84ef00bb44e91723a0b89e475260ed3952ee67366d113c549d1"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/yfxyg8jm46_c16-24/s00_31ec27e6a2bb/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/yfxyg8jm46_c16-24/s00_31ec27e6a2bb/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/yfxyg8jm46_c16-24/group_A_initial_gate.png",
+      "pdf": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/yfxyg8jm46_c16-24/group_A_initial_gate.pdf",
+      "pdf_sha256": "93522398f579699cbda9d8bde507a3e39860ec15649e6594379a58a330238dea",
+      "sha256": "d688921dafb687b2f7a6b90f5f8a58cd7cff59e4d19b1ef98fb70a68663fc894"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/yfxyg8jm46_c16-24/s00_31ec27e6a2bb/C/surface_attribution.npz",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/yfxyg8jm46_c16-24/s00_31ec27e6a2bb/N/surface_attribution.npz"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/yfxyg8jm46_c16-24/group_B_surface_attribution.png",
+      "pdf": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/yfxyg8jm46_c16-24/group_B_surface_attribution.pdf",
+      "pdf_sha256": "4b438e203111764e4b3e1f86214cd7e9b2407944d57e4076a073260d8e52a305",
+      "sha256": "18d25317d4cacd46a04e92b2bde23a6bc347cee25573532f04d7ca73f6cbfc76"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/yfxyg8jm46_c16-24/s00_31ec27e6a2bb/N/surface_attribution.npz"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/yfxyg8jm46_c16-24/group_B_common_c_action.png",
+      "pdf": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/yfxyg8jm46_c16-24/group_B_common_c_action.pdf",
+      "pdf_sha256": "17b87248111f0391fa3502aee8d8b624f440d7257adb5d06f0b4f5339235479e",
+      "sha256": "881de7743118a7caf63925ac3f7578b0d1bbec1fa1c9b8b5a334153eff984037"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/yfxyg8jm46_c16-24/s00_31ec27e6a2bb/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/yfxyg8jm46_c16-24/s00_31ec27e6a2bb/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/yfxyg8jm46_c16-24/group_C_s00_31ec27e6a2bb.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "e4a20d9178863c779efed129090767e4fb6075ba8ba0e85813b5d6f45c74cd11"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/yfxyg8jm46_c16-24/s01_014ee29efcaa/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/yfxyg8jm46_c16-24/s01_014ee29efcaa/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/yfxyg8jm46_c16-24/group_C_s01_014ee29efcaa.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "6b9bddcbfc7864e6ec5ffc72de4417c4fd7b93476f876dd096e43a4b7ff33f65"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/yfxyg8jm46_c16-24/s02_631a1086733a/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/yfxyg8jm46_c16-24/s02_631a1086733a/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/yfxyg8jm46_c16-24/group_C_s02_631a1086733a.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "9afcd053620e5dd1efda88a0a45aa7aad6f66d6ddb9e5f02cf363dbf8b438b07"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/yfxyg8jm46_c16-24/s03_6b3ec5aecbaa/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/yfxyg8jm46_c16-24/s03_6b3ec5aecbaa/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/yfxyg8jm46_c16-24/group_C_s03_6b3ec5aecbaa.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "ceed33ecbf6bdb075dc3edc1c72a2f61231170376940c21f33f9e4dc1d68d883"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/yfxyg8jm46_c16-24/s04_1016d287ee48/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/yfxyg8jm46_c16-24/s04_1016d287ee48/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/yfxyg8jm46_c16-24/group_C_s04_1016d287ee48.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "685f24bfee3ac276d096abf687830a202003d4e2b601a7ad1b7947241b66e7a2"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/yfxyg8jm46_c16-24/s05_1814b0959b95/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/yfxyg8jm46_c16-24/s05_1814b0959b95/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/yfxyg8jm46_c16-24/group_C_s05_1814b0959b95.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "15291c146d5d23643208a1f297d2efba3ec0924980ea180a22c720e5fdb41445"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/yfxyg8jm46_c16-24/s06_27d1247921e4/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/yfxyg8jm46_c16-24/s06_27d1247921e4/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/yfxyg8jm46_c16-24/group_C_s06_27d1247921e4.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "8d10df99459adacf43fd1f0d318e1b3e3c33d4708ca5c9df2635ee7c63310b99"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/yfxyg8jm46_c16-24/s07_c19dda26fb5c/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/yfxyg8jm46_c16-24/s07_c19dda26fb5c/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/yfxyg8jm46_c16-24/group_C_s07_c19dda26fb5c.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "37607ffd19dfd552da091fa811d35db760127927a2d4cf3c36bf097baaf33358"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/yfxyg8jm46_c16-24/s08_80df8e27bde9/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/yfxyg8jm46_c16-24/s08_80df8e27bde9/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/yfxyg8jm46_c16-24/group_C_s08_80df8e27bde9.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "fdde55a63c3db2b4371957e30f52058ce274fe0265d913957a255eda84abdcae"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/state_manifest.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/yfxyg8jm46_c16-24/group_D_native_process.png",
+      "pdf": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/yfxyg8jm46_c16-24/group_D_native_process.pdf",
+      "pdf_sha256": "c753528d349252802c4e6fbab38205f43584cb837a5a0d796aaa928d9741b7b8",
+      "sha256": "ee0aae342838fc66b9aa94fb7e54cd02c338cf77937b819e9956fc1f54057a07"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/yfxyg8jm46_c16-24/s00_31ec27e6a2bb/C/attention.npz",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/yfxyg8jm46_c16-24/s00_31ec27e6a2bb/N/attention.npz"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/yfxyg8jm46_c16-24/group_E_actor_attention.png",
+      "pdf": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/yfxyg8jm46_c16-24/group_E_actor_attention.pdf",
+      "pdf_sha256": "21848700ea49c93291ddeef7cb8d1e1f4f3d295a3b3880e4fd78f41a35ee2bd1",
+      "sha256": "316484e8629f693c25823d0a7eaa81458ddfde42f364c2eaf7dd9a946c50e3a8"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/trajectories/yfxyg8jm46_c16-24"
+      ],
+      "panel_alignment_verdict": "NOT APPLICABLE",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/yfxyg8jm46_c16-24/group_F_intervention_curves.png",
+      "pdf": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/yfxyg8jm46_c16-24/group_F_intervention_curves.pdf",
+      "pdf_sha256": "d51014306eb14a8ece8315437cef509505e857c55b4fb67a47bd26fdd9d402d8",
+      "sha256": "5c4bf1b21e8842d0fafba3cc25c28abb59512fc1ee5bce283224aec7ec6aa86d"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/ykhs7s2dck_q8-22/s00_d810eeab3792/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/ykhs7s2dck_q8-22/s00_d810eeab3792/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/ykhs7s2dck_q8-22/group_A_initial_gate.png",
+      "pdf": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/ykhs7s2dck_q8-22/group_A_initial_gate.pdf",
+      "pdf_sha256": "6a77450252753a56be9a39cf796eee19ad797d319f71cd3f6f28c584a30eef5c",
+      "sha256": "f87c6b6ff78a6eea79611840a372460f33ab8fb871f78e5fc695f818383a1fea"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/ykhs7s2dck_q8-22/s00_d810eeab3792/C/surface_attribution.npz",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/ykhs7s2dck_q8-22/s00_d810eeab3792/N/surface_attribution.npz"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/ykhs7s2dck_q8-22/group_B_surface_attribution.png",
+      "pdf": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/ykhs7s2dck_q8-22/group_B_surface_attribution.pdf",
+      "pdf_sha256": "88487f397d507eb99f998506985e525fc5360752d5652c7e043c8bc577037813",
+      "sha256": "b94c3c67389c28a186badba2127cc475f38421e1bce7e4d556e916c3eec8f753"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/ykhs7s2dck_q8-22/s00_d810eeab3792/N/surface_attribution.npz"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/ykhs7s2dck_q8-22/group_B_common_c_action.png",
+      "pdf": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/ykhs7s2dck_q8-22/group_B_common_c_action.pdf",
+      "pdf_sha256": "6c9cb3c9b2711549f78acdad6054e1333735c43868b067ebce8a4ab7d9738f69",
+      "sha256": "1987f2482a0830940b0f0949375d612c6b8abf757df2dd1d8a64098484914bd3"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/ykhs7s2dck_q8-22/s00_d810eeab3792/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/ykhs7s2dck_q8-22/s00_d810eeab3792/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/ykhs7s2dck_q8-22/group_C_s00_d810eeab3792.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "1e35a9cfda6fcd29339223870d0c9e1d6bae9166221ef4f1f76b87b825d853e8"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/ykhs7s2dck_q8-22/s01_b4494e6ca46c/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/ykhs7s2dck_q8-22/s01_b4494e6ca46c/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/ykhs7s2dck_q8-22/group_C_s01_b4494e6ca46c.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "de641523146fcb1c247cfdecff904c1beb82ad450fb16309434745e6d5c6410c"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/ykhs7s2dck_q8-22/s02_ea62032d48bb/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/ykhs7s2dck_q8-22/s02_ea62032d48bb/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/ykhs7s2dck_q8-22/group_C_s02_ea62032d48bb.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "48676c9cadca40b104a7060b891a7f2de2761330b9689ce42a2a631a70657adb"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/ykhs7s2dck_q8-22/s03_10cf2dfe3b7a/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/ykhs7s2dck_q8-22/s03_10cf2dfe3b7a/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/ykhs7s2dck_q8-22/group_C_s03_10cf2dfe3b7a.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "1dd3b915e7c97bf943da03f8edac343392333bee1d1c9cfadeac1bab90865584"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/ykhs7s2dck_q8-22/s04_67ac3fc3a518/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/ykhs7s2dck_q8-22/s04_67ac3fc3a518/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/ykhs7s2dck_q8-22/group_C_s04_67ac3fc3a518.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "419122c36668e6410829fa712393c6fd7f6010deccae0a7062881312e238cf4e"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/ykhs7s2dck_q8-22/s05_46a05e6938b9/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/ykhs7s2dck_q8-22/s05_46a05e6938b9/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/ykhs7s2dck_q8-22/group_C_s05_46a05e6938b9.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "70dc4079ed2fda949f7bb1fe97a328566397f31724c44b30362cab3906ac9f45"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/ykhs7s2dck_q8-22/s06_80d2a5b920b1/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/ykhs7s2dck_q8-22/s06_80d2a5b920b1/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/ykhs7s2dck_q8-22/group_C_s06_80d2a5b920b1.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "c8696f0cac7239e337f652e2ac4ac4052e593173663ebb505574dc5ba22d68f5"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/ykhs7s2dck_q8-22/s07_7f8ac9313a0c/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/ykhs7s2dck_q8-22/s07_7f8ac9313a0c/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/ykhs7s2dck_q8-22/group_C_s07_7f8ac9313a0c.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "dc726cc541df9f139eaabacd5769cc66dfa8ad2a4a5c549938e6e7186c4e1a29"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/ykhs7s2dck_q8-22/s08_f5f976d316b5/C/scores.csv",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/ykhs7s2dck_q8-22/s08_f5f976d316b5/N/scores.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/ykhs7s2dck_q8-22/group_C_s08_f5f976d316b5.png",
+      "pdf": "",
+      "pdf_sha256": "",
+      "sha256": "3d31ff51d43be18f6b299bf58a6efd5515481f1c3e44732194c038e0ec8ab0aa"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/state_manifest.csv"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/ykhs7s2dck_q8-22/group_D_native_process.png",
+      "pdf": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/ykhs7s2dck_q8-22/group_D_native_process.pdf",
+      "pdf_sha256": "3b1f1479fb76645fc4685dc088e3e3a51f18baec7bb7769fe195eeaa3d4abc2a",
+      "sha256": "df7306553f6e93730fdf286087867ff03bebb1de4ef41b7bfdf964d2d5bba972"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/ykhs7s2dck_q8-22/s00_d810eeab3792/C/attention.npz",
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/ykhs7s2dck_q8-22/s00_d810eeab3792/N/attention.npz"
+      ],
+      "panel_alignment_verdict": "PASS",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/ykhs7s2dck_q8-22/group_E_actor_attention.png",
+      "pdf": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/ykhs7s2dck_q8-22/group_E_actor_attention.pdf",
+      "pdf_sha256": "580017da38a7ae8989a6622096d6b3c1f2f6daa358487d6c1cd63d1f2fa6c19c",
+      "sha256": "1882eda1fc05a1b03a74c15185f136675b028d273b2b1e41dfbf1f5344059469"
+    },
+    {
+      "inputs": [
+        "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/trajectories/ykhs7s2dck_q8-22"
+      ],
+      "panel_alignment_verdict": "NOT APPLICABLE",
+      "path": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/ykhs7s2dck_q8-22/group_F_intervention_curves.png",
+      "pdf": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/ykhs7s2dck_q8-22/group_F_intervention_curves.pdf",
+      "pdf_sha256": "ebae168e2aff410e2ab2c6663eb2c3ed1b0c4bbdcd4861fbc17c7c5ade0c6c35",
+      "sha256": "acfe3eb860c9bf078d0c6622c0074fc225a22249b447720eab5fb33d1dac101b"
+    }
+  ],
+  "html_asset_count": 388,
+  "interpolation": "nearest",
+  "status": "PASS"
+}

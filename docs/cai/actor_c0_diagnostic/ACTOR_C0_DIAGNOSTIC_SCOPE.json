@@ -1,0 +1,177 @@
+{
+  "schema_version": 2,
+  "task_id": "CAI_ACTOR_C0_MECHANISM_VIS_R2_9e765b04",
+  "repository": "Orangekostar/diff",
+  "branch": "research/cai-vlm-agent-v3-controlled-reuse",
+  "source_commit": "9e765b043a62b1d18341aefecc1f704aebbd62f6",
+  "replaces": "CODEX_VLM_NO_VLM_ATTENTION_VIS_EXECUTION.md",
+  "scope": "FROZEN_POLICY_DIAGNOSTICS_NOT_TRAINING_OR_PAPER_REVISION",
+  "roots": {
+    "data": "results/cai_agent_v3/new_protocol",
+    "c_release": "results/cai_agent_v3/c_render_retrain/r1_331f5295",
+    "historical_w3": "results/cai_agent_v3/w3_pilot/r1_0e11452a",
+    "predictor": "results/cai_agent_v3/w2_replay/r1_292b1c74/models/predictor_mean_sc.pt",
+    "code": "scripts/cai_actor_c0_diagnostic",
+    "output": "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04",
+    "artifacts": "artifacts/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04",
+    "config": "docs/cai/actor_c0_diagnostic/ACTOR_C0_DIAGNOSTIC_SCOPE.json"
+  },
+  "models": {
+    "C": {
+      "method": "VLM_SPATIAL_FEEDBACK",
+      "selected_update": 250,
+      "checkpoint": "results/cai_agent_v3/c_render_retrain/r1_331f5295/w3/models/selected/actor_vlm_spatial_feedback_seed1.pt",
+      "checkpoint_sha256": "5bbc6bda8fcb3a256b52d98112e3ea335113a38b844166e0ba04df666ba9e6a1",
+      "format": "C_SCHEMA_1_LOAD_WEIGHT_STATE"
+    },
+    "N": {
+      "method": "NO_VLM_SPATIAL_FEEDBACK",
+      "selected_update": 1000,
+      "checkpoint": "results/cai_agent_v3/w3_pilot/r1_0e11452a/models/actor_no_vlm_spatial_feedback_seed1.pt",
+      "checkpoint_sha256": "0dbf45392c8a06e40b86c7275c1ab46e29ef11352016d9feaf0f31db924a646d",
+      "format": "LEGACY_SCHEMA_3_LOAD_ACTOR_CHECKPOINT"
+    },
+    "P_all_sha256": "f67e912bd5faa26ae5cff8a9a0241439797fccef8cec825f43ebe5dc9f9d57ff"
+  },
+  "cases": {
+    "split": "VALID",
+    "max_specimens": 6,
+    "fixed": [
+      "cgtnjyggtm:q24-48",
+      "74t7kcdgkr:c8-16",
+      "w68dtmpfyf:q16-29"
+    ],
+    "remaining_domains": [
+      "xcmzfsbd9t",
+      "yfxyg8jm46",
+      "ykhs7s2dck"
+    ],
+    "selection": "ONE_HASH_MIN_VALID_PER_REMAINING_DOMAIN",
+    "selection_salt": "ACTOR_C0_VIS_V2|",
+    "score_based_selection": false,
+    "missing_case_policy": "REPORT_PARTIAL_NO_SUBSTITUTE_BY_OUTCOME"
+  },
+  "states": {
+    "prefix_lengths": [
+      0,
+      1,
+      2,
+      8
+    ],
+    "include_last_pre_action": true,
+    "terminal_view_only": true,
+    "native_routes": [
+      "C_NATIVE",
+      "N_NATIVE"
+    ],
+    "common_state_sources": [
+      "C_NATIVE_PREFIX",
+      "N_NATIVE_PREFIX"
+    ],
+    "deduplicate_exact_physical_state": true,
+    "maximum_common_states": 54,
+    "maximum_model_state_pairs": 108,
+    "state_identity_excludes_policy_prior_but_includes_observed_content": true
+  },
+  "conditions": {
+    "C_NATIVE": "C_WEIGHTS_C_PRIOR_ORIGINAL_C0",
+    "N_NATIVE": "N_WEIGHTS_NO_VLM_ORIGINAL_LEGAL_MASK",
+    "C_NO_C0": "C_WEIGHTS_C_PRIOR_ONLY_EXTERNAL_C0_DISABLED",
+    "C_ZERO_PRIOR_FIXED_STATE": "C_WEIGHTS_ZERO_ALL_FOUR_VLM_CHANNELS_FULL_ENVIRONMENT_LEGAL_MASK_NO_ROLLOUT"
+  },
+  "action_maps": {
+    "budget": 0.25,
+    "temperature": 1.0,
+    "top_k": 5,
+    "save_raw_logits": true,
+    "plot_centered_logits": true,
+    "pre_c0_distribution": "SOFTMAX_OVER_ENVIRONMENT_LEGAL_CELLS",
+    "post_c0_distribution": "SOFTMAX_OVER_ACTUAL_PROPOSAL_MASK",
+    "argmax_ties": "ORIGINAL_TORCH_ARGMAX_FIRST_INDEX",
+    "c0_mechanical_test_requires_same_scores": true
+  },
+  "attribution": {
+    "method": "GRADIENT_TIMES_INPUT_MINUS_TRAIN_CELL_MEAN",
+    "baseline": "MEAN_OF_161_TRAIN_SURFACE_FEATURES_AT_EACH_GRID_CELL",
+    "target": "LOG_SOFTMAX_OVER_ENVIRONMENT_LEGAL_ACTIONS_OF_FIXED_TARGET_CELL",
+    "targets": [
+      "OWN_ACTUAL_ACTION",
+      "COMMON_C_ACTION_IF_DIFFERENT"
+    ],
+    "paths": [
+      "DIRECT_SURFACE_TO_ACTOR_FIXED_PREDICTION",
+      "SURFACE_VIA_PREDICTOR_PLUS_DIRECT_FIXED_PRIOR_AND_HISTORY"
+    ],
+    "requires_grad_on_inputs_only": true,
+    "differentiate_vlm": false,
+    "differentiate_past_actions": false,
+    "signed_and_l1_magnitude": true,
+    "cell_probe": {
+      "state_prefix": 0,
+      "top_count": 3,
+      "bottom_count": 3,
+      "toward_train_mean_fraction": 0.1,
+      "hold_prediction_fixed": true,
+      "maximum_actor_forwards": 72
+    }
+  },
+  "attention": {
+    "owner": "ACTOR_NOT_QWEN",
+    "layers": 2,
+    "heads": 4,
+    "tokens": 65,
+    "token_order": "QUERY_THEN_64_CELLS",
+    "extract": "ACTUAL_SELF_ATTN_INPUT_QK_RECONSTRUCTION_OR_VERIFIED_PER_HEAD_WEIGHTS",
+    "save_per_head_weights": true,
+    "display_rows": [
+      "QUERY",
+      "TARGET_CELL_PLUS_ONE"
+    ],
+    "rollout": "AUXILIARY_ROW_NORMALIZED_A_PLUS_IDENTITY_PRODUCT_ONLY",
+    "pure_surface_claim": false,
+    "zero_query_mass_renormalization": false
+  },
+  "limits": {
+    "optimizer_updates": 0,
+    "new_qwen_generations": 0,
+    "new_qwen_forwards": 0,
+    "cnn_forwards": 0,
+    "oof_predictor_forwards": 0,
+    "test_access": 0,
+    "paper_writes": 0,
+    "bootstrap_draws": 0,
+    "native_full_episode_runs": 12,
+    "c_no_c0_full_episode_runs": 6,
+    "all_full_episode_runs_max": 18,
+    "actor_forward_examples_including_failures_max": 1600,
+    "predictor_forward_examples_including_failures_max": 800,
+    "autograd_gradient_queries_max": 600,
+    "gpu_devices_max": 1,
+    "cpu_threads_max": 4,
+    "gpu_session_seconds_max": 2700,
+    "cpu_compute_seconds_max": 5400,
+    "one_bounded_backend_fallback": true,
+    "limits_are_one_total_task_not_per_command": true
+  },
+  "acceptance": {
+    "cost_abs_tolerance": 1e-12,
+    "historical_prediction_abs_tolerance_mpa": 0.0001,
+    "instrumented_logits_atol": 1e-05,
+    "instrumented_logits_rtol": 1e-05,
+    "probability_sum_abs_tolerance": 1e-06,
+    "gradient_path_identity_atol": 1e-05,
+    "gradient_path_identity_rtol": 0.0001,
+    "action_match_required": true,
+    "effect_direction_is_not_a_gate": true
+  },
+  "delivery": {
+    "actual_commit_push": true,
+    "same_branch": true,
+    "pr": false,
+    "merge": false,
+    "force_push": false,
+    "tag_or_github_release": false,
+    "human_readable_index": "index.html",
+    "handoff": "CODEX_HANDOFF_ACTOR_C0_DIAGNOSTIC.md"
+  }
+}
