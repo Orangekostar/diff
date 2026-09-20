@@ -1,6 +1,11 @@
+import subprocess
 from pathlib import Path
 
-from scripts.cai_actor_c0_diagnostic.validate import required_delivery_paths
+from scripts.cai_actor_c0_diagnostic.validate import (
+    _commit,
+    _porcelain_paths,
+    required_delivery_paths,
+)
 
 
 def test_required_delivery_inventory_contains_prompt_minimum(tmp_path: Path):
@@ -23,3 +28,31 @@ def test_required_delivery_inventory_contains_prompt_minimum(tmp_path: Path):
         tmp_path / "artifacts" / "FINDINGS_ZH.md",
         tmp_path / "artifacts" / "VERIFICATION.md",
     } <= paths
+
+
+def test_commit_force_adds_manifest_artifact_ignored_by_repository(tmp_path: Path):
+    subprocess.run(["git", "init", "-q"], cwd=tmp_path, check=True)
+    subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=tmp_path, check=True)
+    subprocess.run(["git", "config", "user.name", "Test"], cwd=tmp_path, check=True)
+    (tmp_path / ".gitignore").write_text("*.npz\n", encoding="utf-8")
+    output = tmp_path / "results"
+    output.mkdir()
+    ignored = output / "attention.npz"
+    ignored.write_bytes(b"diagnostic-array")
+
+    commit = _commit(
+        tmp_path,
+        "test forced diagnostic artifact",
+        [tmp_path / ".gitignore", output],
+        force_paths=[ignored],
+    )
+
+    tracked = subprocess.check_output(
+        ["git", "ls-tree", "-r", "--name-only", commit], cwd=tmp_path, text=True
+    ).splitlines()
+    assert "results/attention.npz" in tracked
+
+
+def test_porcelain_parser_preserves_first_path_when_index_column_is_blank():
+    payload = b" M artifacts/report.md\0?? results/new.csv\0"
+    assert _porcelain_paths(payload) == ["artifacts/report.md", "results/new.csv"]

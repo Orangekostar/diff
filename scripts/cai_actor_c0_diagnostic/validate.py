@@ -438,9 +438,20 @@ def _git(root: Path, *arguments: str) -> str:
     ).strip()
 
 
-def _commit(root: Path, message: str, paths: list[Path]) -> str:
+def _commit(
+    root: Path,
+    message: str,
+    paths: list[Path],
+    *,
+    force_paths: list[Path] | None = None,
+) -> str:
     relative = [str(path.relative_to(root)) for path in paths]
     subprocess.run(["git", "add", "--", *relative], cwd=root, check=True)
+    if force_paths:
+        forced_relative = [str(path.relative_to(root)) for path in force_paths]
+        subprocess.run(
+            ["git", "add", "-f", "--", *forced_relative], cwd=root, check=True
+        )
     subprocess.run(["git", "commit", "-m", message], cwd=root, check=True)
     return _git(root, "rev-parse", "HEAD")
 
@@ -455,6 +466,43 @@ def _push(root: Path) -> str:
     return local
 
 
+def _verify_manifest_tree(
+    root: Path, commit: str, output: Path, manifest: dict[str, Any]
+) -> None:
+    output_relative = output.relative_to(root)
+    tracked = set(
+        _git(root, "ls-tree", "-r", "--name-only", commit, "--", str(output_relative)).splitlines()
+    )
+    expected = {
+        str(output_relative / relative) for relative in manifest["output_hashes"]
+    }
+    expected.update(
+        {
+            str(output_relative / "diagnostic_manifest.json"),
+            str(output_relative / "task_state.json"),
+        }
+    )
+    missing = sorted(expected - tracked)
+    if missing:
+        raise ValueError(
+            f"results commit omits {len(missing)} manifest-declared output files; "
+            f"first missing path: {missing[0]}"
+        )
+
+
+def _porcelain_paths(payload: bytes) -> list[str]:
+    paths = []
+    for record in payload.split(b"\0"):
+        if not record:
+            continue
+        if len(record) < 4 or record[2:3] != b" ":
+            raise ValueError("unexpected Git porcelain record")
+        if b"R" in record[:2] or b"C" in record[:2]:
+            raise ValueError("publish does not accept renamed or copied paths")
+        paths.append(os.fsdecode(record[3:]))
+    return paths
+
+
 def publish_stage(context: TaskContext) -> dict[str, Any]:
     """Commit and push existing verified files; this function never imports model code."""
 
@@ -462,7 +510,11 @@ def publish_stage(context: TaskContext) -> dict[str, Any]:
     state = json.loads(context.state_path.read_text(encoding="utf-8"))
     if state.get("phases", {}).get("verify", {}).get("status") != "COMPLETE":
         raise ValueError("verify must complete before publish")
-    pending = [line for line in _git(root, "status", "--porcelain").splitlines() if line]
+    pending = _porcelain_paths(
+        subprocess.check_output(
+            ["git", "status", "--porcelain=v1", "-z"], cwd=root
+        )
+    )
     allowed_prefixes = (
         "docs/cai/actor_c0_diagnostic/",
         "docs/superpowers/plans/2026-09-20-actor-c0-mechanism-diagnostic.md",
@@ -471,8 +523,7 @@ def publish_stage(context: TaskContext) -> dict[str, Any]:
         "results/cai_agent_v3/actor_c0_diagnostic/",
         "artifacts/cai_agent_v3/actor_c0_diagnostic/",
     )
-    for line in pending:
-        path = line[3:]
+    for path in pending:
         if not path.startswith(allowed_prefixes):
             raise ValueError(f"publish found an out-of-scope changed path: {path}")
     first_paths = [
@@ -483,8 +534,20 @@ def publish_stage(context: TaskContext) -> dict[str, Any]:
         output,
         artifacts,
     ]
-    results_commit = _commit(root, "feat(cai): add frozen Actor C0 mechanism diagnostics", first_paths)
+    verified_manifest = json.loads(
+        (output / "diagnostic_manifest.json").read_text(encoding="utf-8")
+    )
+    forced_outputs = [
+        output / relative for relative in verified_manifest["output_hashes"]
+    ]
+    results_commit = _commit(
+        root,
+        "feat(cai): add frozen Actor C0 mechanism diagnostics",
+        first_paths,
+        force_paths=forced_outputs,
+    )
     _push(root)
+    _verify_manifest_tree(root, results_commit, output, verified_manifest)
 
     manifest = json.loads((output / "diagnostic_manifest.json").read_text(encoding="utf-8"))
     manifest["status"] = "DIAGNOSTICS_COMPLETE"

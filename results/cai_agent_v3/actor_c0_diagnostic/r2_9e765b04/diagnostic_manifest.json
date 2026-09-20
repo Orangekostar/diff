@@ -7,13 +7,6 @@
   },
   "case_count": 6,
   "common_state_count": 54,
-  "git": {
-    "branch": "research/cai-vlm-agent-v3-controlled-reuse",
-    "handoff_commit": "ENCLOSING_COMMIT",
-    "remote": "origin",
-    "results_commit": "d3fde1ac503ff42bf688770a0bd62511637f77ce",
-    "results_commit_remote_verified": true
-  },
   "output_file_count_excluding_manifest_and_state": 808,
   "output_hashes": {
     "attention_checks.json": "53e9b9c867400a321b1885559b940177f0b47b751b339826d152e8927c2427f1",
@@ -843,7 +836,7 @@
   },
   "schema_version": 1,
   "scope_sha256": "755d16cc1c5c2354cd3166046e92884b9b0e3a9ea59ef0746c0b5248de4fa789",
-  "status": "DIAGNOSTICS_COMPLETE",
+  "status": "READY_FOR_PUBLISH",
   "task_id": "CAI_ACTOR_C0_MECHANISM_VIS_R2_9e765b04",
   "validation": {
     "Q1": "PASS_MODEL_PRIOR_IDENTITY_FROZEN",
@@ -853,6 +846,6 @@
     "Q5": "PASS_DIRECT_TOTAL_VIA_ATTRIBUTION_AND_72_PROBES",
     "Q6": "PASS_2X4X65_ACTOR_ATTENTION_AND_LOGIT_GATE",
     "Q7": "PASS_OFFLINE_HTML_388_ASSETS_AND_120_PNGS",
-    "Q8": "PASS_RESULTS_AND_HANDOFF_GIT_DELIVERY"
+    "Q8": "PENDING_COMPUTE_FREE_GIT_PUBLISH"
   }
 }
