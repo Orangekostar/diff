@@ -1,0 +1,21 @@
+{
+  "attempt_kind": "PRIMARY",
+  "attempt_number": 1,
+  "forward_calls": 110,
+  "image_sha256": [
+    "00b2b72ca4371c79aef481868ca66d8cbaf3908142f4456c75ff9c306438256d",
+    "d1d2d25b3fa0ee41b8357e34672d9129087a01881d65c8506ae2c3f5ce8a2305"
+  ],
+  "input_tokens": 2767,
+  "output_tokens": 110,
+  "prompt_sha256": "166ecae74d83e97d3a3779f68760f146ebbe85b99c334d069dd585dd0b3cf658",
+  "saved_records": [
+    "results/cai_agent_v3/c_render_retrain/r1_331f5295/vlm/runs/74t7kcdgkr__c8-11/input_1.json",
+    "results/cai_agent_v3/c_render_retrain/r1_331f5295/vlm/runs/74t7kcdgkr__c8-11/prompt_1.txt",
+    "results/cai_agent_v3/c_render_retrain/r1_331f5295/vlm/runs/74t7kcdgkr__c8-11/raw_1.txt",
+    "results/cai_agent_v3/c_render_retrain/r1_331f5295/vlm/runs/74t7kcdgkr__c8-11/generated_token_ids_1.json"
+  ],
+  "specimen_key": "74t7kcdgkr:c8-11",
+  "split": "TRAIN",
+  "status": "PASS"
+}

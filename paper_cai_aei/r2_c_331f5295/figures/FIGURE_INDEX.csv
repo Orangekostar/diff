@@ -1,0 +1,8 @@
+figure,path,evidence,status
+Fig1,figures/Fig1_framework.pdf,frozen architecture and current Methods,REUSED_VERIFIED_STRUCTURE
+Fig2,figures/F1_cost_error_curves.pdf,tables and manifest for F1_cost_error_curves,CURRENT_C_RECOMPUTED
+Fig3,figures/F2_paired_effects.pdf,tables and manifest for F2_paired_effects,CURRENT_C_RECOMPUTED
+Fig4,figures/F3_equal_quality.pdf,tables and manifest for F3_equal_quality,CURRENT_C_RECOMPUTED
+Fig5,figures/F4_timing_contributions.pdf,tables and manifest for F4_timing_contributions,CURRENT_C_RECOMPUTED
+Fig6,figures/F5_domain_results.pdf,tables and manifest for F5_domain_results,CURRENT_C_RECOMPUTED
+Fig7,figures/F6_case_progression.pdf,tables and manifest for F6_case_progression,CURRENT_C_RECOMPUTED

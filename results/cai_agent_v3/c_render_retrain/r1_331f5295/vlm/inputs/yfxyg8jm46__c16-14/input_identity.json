@@ -1,0 +1,33 @@
+{
+  "clean_sha256": "bcea6fe10ca02dc349ba894d30f97a0162944d20288718e5b2739d4dc8ebaa44",
+  "dataset_id": "yfxyg8jm46",
+  "full_inputs_reconstructed_by": "export-inputs",
+  "numbered_sha256": "15b093ee54093ecd9fbb3530f60d1659ea143f859e21126f24e50f61bf14d5b1",
+  "render_config": {
+    "font_name": [
+      "DejaVu Sans",
+      "Book"
+    ],
+    "font_path": "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+    "font_sha256": "ae7b7855e115a5966d8b1b3f80f254ccc117ec86f9965e202ee2940453837280",
+    "font_size": 24,
+    "inset": 10,
+    "panel_rgba": [
+      0,
+      0,
+      0,
+      170
+    ],
+    "text_rgba": [
+      255,
+      255,
+      255,
+      230
+    ]
+  },
+  "signature": "e3bba8e0d7fcc543db6179d70b17c35574b928920b74562320d90f9dadd2338a",
+  "source_path": "data/public/hasebe/raw/yfxyg8jm46/v1/impacted surface image/c16-14.png",
+  "source_sha256": "a8c583a85821118482854b7f618000f11d8b306eae4d6ff98274ab13e2f361bf",
+  "specimen_key": "yfxyg8jm46:c16-14",
+  "split": "VALID"
+}

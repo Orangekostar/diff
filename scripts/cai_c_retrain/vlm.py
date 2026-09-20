@@ -756,12 +756,76 @@ def _load_resource_usage(context: TaskContext) -> tuple[Path, dict[str, Any]]:
     return path, json.loads(path.read_text(encoding="utf-8"))
 
 
+def _write_vlm_contract(
+    context: TaskContext,
+    protocol: dict[str, Any],
+    state_records: list[dict[str, Any]],
+) -> dict[str, str]:
+    vlm_root = context.path("vlm")
+    render_configs = {
+        canonical_json(record["case"].render_config) for record in state_records
+    }
+    if len(render_configs) != 1:
+        raise ValueError("C input records do not share one R1 render configuration")
+    input_rows = []
+    for record in state_records:
+        case = record["case"]
+        state = record["state"]
+        input_rows.append(
+            {
+                "specimen_key": case.specimen_key,
+                "dataset_id": case.dataset_id,
+                "split": case.split,
+                "capture_group_id": case.capture_group_id,
+                "source_path": case.impacted_surface_path,
+                "source_sha256": case.source_sha256,
+                "clean_sha256": case.clean_sha256,
+                "numbered_sha256": case.numbered_sha256,
+                "signature": case.signature,
+                "status": state["status"],
+                "attempts": len(state.get("attempts", [])),
+                "reused_from_pilot": bool(record["reused_from_pilot"]),
+            }
+        )
+    input_manifest = vlm_root / "input_manifest.csv"
+    _atomic_csv(input_manifest, input_rows)
+    config_lock = {
+        "schema_version": 1,
+        "task_id": context.task_id,
+        "prior_version": context.scope["prior_version"],
+        "prompt_sha256": protocol["prompt_sha256"],
+        "repair_sha256": protocol["repair_sha256"],
+        "model_config": protocol["model_config"],
+        "render_id": "R1",
+        "render_config": state_records[0]["case"].render_config,
+        "image_order": ["clean", "numbered"],
+        "cohort": {
+            "rows": len(state_records),
+            "train": sum(record["case"].split == "TRAIN" for record in state_records),
+            "valid": sum(record["case"].split == "VALID" for record in state_records),
+            "test": 0,
+        },
+        "maximum_generation_attempts_per_case": 2,
+        "test_accessed": False,
+    }
+    config_path = vlm_root / "config_lock.json"
+    atomic_json(config_path, config_lock)
+    return {
+        "input_manifest": input_manifest.name,
+        "input_manifest_sha256": sha256_file(input_manifest),
+        "config_lock": config_path.name,
+        "config_lock_sha256": sha256_file(config_path),
+    }
+
+
 def _write_vlm_outputs(
     context: TaskContext,
+    protocol: dict[str, Any],
     rows: list[dict[str, str]],
     state_records: list[dict[str, Any]],
 ) -> dict[str, Any]:
     vlm_root = context.path("vlm")
+    contract = _write_vlm_contract(context, protocol, state_records)
     terminal = sum(
         record["state"]["status"] in TERMINAL_STATUSES for record in state_records
     )
@@ -805,6 +869,7 @@ def _write_vlm_outputs(
         "new_generation_attempts": attempts,
         "new_output_tokens": output_tokens,
         "new_qwen_top_level_forward_calls": forward_calls,
+        **contract,
         "feature_csv": "vlm_actor_features_fit.csv",
         "feature_csv_sha256": None,
         "states": [
@@ -980,7 +1045,7 @@ def vlm_stage(context: TaskContext, backend: Any | None = None) -> dict[str, Any
             resource["status"] = "VLM_SESSION_RECORDED"
             atomic_json(resource_path, resource)
 
-    manifest = _write_vlm_outputs(context, feature_rows, state_records)
+    manifest = _write_vlm_outputs(context, protocol, feature_rows, state_records)
     if manifest["status"] == "C_PRIOR_COMPLETE":
         manifest["first_new_case_wiring"] = _audit_first_new_case(
             context, state_records, protocol["prompt_sha256"]

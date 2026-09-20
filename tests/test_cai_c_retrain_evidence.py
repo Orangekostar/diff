@@ -2,6 +2,13 @@ from __future__ import annotations
 
 import numpy as np
 import pytest
+from PIL import Image
+
+
+def test_submission_raster_dpi_is_300():
+    from scripts.cai_c_retrain.evidence import RASTER_DPI
+
+    assert RASTER_DPI == 300
 
 
 def _episode(prediction: float, run: int = 0) -> dict[str, str]:
@@ -111,3 +118,14 @@ def test_invalid_cost_trajectory_is_rejected():
     row["predictions_mpa"] = "1;1;1"
     with pytest.raises(ValueError, match="cost"):
         curve_metrics([row], [0.1])
+
+
+def test_square_letterbox_preserves_pixels_without_stretching():
+    from scripts.cai_c_retrain.evidence import _square_letterbox
+
+    source = Image.new("RGB", (3, 2), (12, 34, 56))
+    framed = _square_letterbox(source)
+
+    assert framed.size == (3, 3)
+    assert framed.crop((0, 0, 3, 2)).tobytes() == source.tobytes()
+    assert framed.crop((0, 2, 3, 3)).tobytes() == bytes([255, 255, 255] * 3)

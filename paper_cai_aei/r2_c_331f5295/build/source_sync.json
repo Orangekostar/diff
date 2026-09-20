@@ -1,0 +1,20 @@
+{
+  "abstract_words": 188,
+  "body_approx_words_excluding_tables_math_captions": 5921,
+  "section_approx_words": {
+    "01_introduction.md": 560,
+    "02_related_work.md": 679,
+    "03_framework.md": 2287,
+    "04_experimental_design.md": 1346,
+    "05_results.md": 887,
+    "06_conclusions.md": 162
+  },
+  "source_sections": 6,
+  "generated": [
+    "manuscript.md",
+    "manuscript.html",
+    "main.tex",
+    "supplementary.tex",
+    "sections/*.tex"
+  ]
+}

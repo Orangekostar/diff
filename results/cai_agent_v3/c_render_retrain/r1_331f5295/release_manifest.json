@@ -1,0 +1,165 @@
+{
+  "author_review_required": true,
+  "bindings": {
+    "actor_manifests": {
+      "path": "w3/actor_manifests.json",
+      "sha256": "8a24ca5f95d7a717795f9f2c40bf53c4b761d9111562bfa4d46c23fe0e3708b0"
+    },
+    "assembly_manifest": {
+      "path": "w3/assembly_manifest.json",
+      "sha256": "9c7f7753ee3a5241f2d9a645ebe1f581505676d953fdec8459fc71e3b42792d3"
+    },
+    "evidence_manifest": {
+      "path": "evidence/analysis_manifest.json",
+      "sha256": "05ac0a4ff7f6c6e9225e755e332877974e8b081163975f4e7bd9f1222b16dff6"
+    },
+    "paper_manifest": {
+      "path": "paper_cai_aei/r2_c_331f5295/paper_manifest.json",
+      "sha256": "d5f028add81b6be2b424bc088de917a0cb920e0de6be67616ec4ed923a54beff"
+    },
+    "protocol_lock": {
+      "path": "protocol_lock.json",
+      "sha256": "f721e2882a46e29a17a23e08d06f6cd697ad734e9ee7d90ca1baab299b30e0e6"
+    },
+    "vlm_manifest": {
+      "path": "vlm/vlm_manifest_fit.json",
+      "sha256": "dcf751db41066f0ef9f675503de92b488288e54ca0a2d5b181ff91b4bd30c5cf"
+    }
+  },
+  "branch": "research/cai-vlm-agent-v3-controlled-reuse",
+  "completion_gate": "ENGINEERING_AND_DATA_INTEGRITY_NOT_EFFECT_DIRECTION",
+  "prior_version": "C_P0_R1_GLOBAL_V1",
+  "schema_version": 1,
+  "scope_sha256": "a32dafb06d3adb01cbc94c1807ea4dc31e6e7a9107905d996956af0c00a01788",
+  "source_commit": "331f52952b93bd9442ad2e44243cc71c7d966b4d",
+  "status": "C_RETRAIN_RESULTS_COMPLETE",
+  "task_id": "CAI_V3_C_RENDER_RETRAIN_RELEASE_R1_331f5295",
+  "validation": {
+    "Q1_Q2_vlm": {
+      "config_lock_sha256": "8adf76a381b88bfce5159905c71d8ba6fceff7e57f32fb41d5a56ac0d86a4977",
+      "feature_sha256": "0777b3df798dc767028d1dfdf8e08a5197bcffa89676e0b6a51d829e5d128e79",
+      "input_manifest_sha256": "fc6b83e5727fa137f01c6064add91935097d5516eb2e492253e90a4c97337d95",
+      "new_generation_attempts": 251,
+      "new_output_tokens": 27032,
+      "new_qwen_top_level_forward_calls": 27032,
+      "new_unique_primary_jobs": 205,
+      "reused_pilot_rows": 6,
+      "states": {
+        "SCHEMA_INVALID_AFTER_ONE_REPAIR": 20,
+        "VALID_AFTER_REPAIR": 28,
+        "VALID_FIRST_PASS": 163
+      },
+      "status": "PASS"
+    },
+    "Q3_Q4_actors": {
+      "actors": [
+        {
+          "actual_optimizer_updates": 1250,
+          "charged_upper_bound": 1250,
+          "logical_updates": 1250,
+          "lost_updates_upper_bound": 0,
+          "method": "VLM_SPATIAL_FEEDBACK",
+          "seed": 2026091301,
+          "selected_checkpoint": "results/cai_agent_v3/c_render_retrain/r1_331f5295/w3/models/selected/actor_vlm_spatial_feedback_seed1.pt",
+          "selected_checkpoint_sha256": "5bbc6bda8fcb3a256b52d98112e3ea335113a38b844166e0ba04df666ba9e6a1",
+          "selected_update": 250
+        },
+        {
+          "actual_optimizer_updates": 1250,
+          "charged_upper_bound": 1250,
+          "logical_updates": 1250,
+          "lost_updates_upper_bound": 0,
+          "method": "VLM_SPATIAL_OPEN_LOOP",
+          "seed": 2026091303,
+          "selected_checkpoint": "results/cai_agent_v3/c_render_retrain/r1_331f5295/w3/models/selected/actor_vlm_spatial_open_loop_seed1.pt",
+          "selected_checkpoint_sha256": "3fab57e15cde2659147ea85771c944ada662ca9bf9a7610adb907e3118beaa63",
+          "selected_update": 1250
+        },
+        {
+          "actual_optimizer_updates": 1250,
+          "charged_upper_bound": 1250,
+          "logical_updates": 1250,
+          "lost_updates_upper_bound": 0,
+          "method": "VLM_MEAN_FEEDBACK",
+          "seed": 2026091305,
+          "selected_checkpoint": "results/cai_agent_v3/c_render_retrain/r1_331f5295/w3/models/selected/actor_vlm_mean_feedback_seed1.pt",
+          "selected_checkpoint_sha256": "f6215ed013df07825d2f3916c841f9f0e6d0e522dc8dbb98d24cebbc15f045c3",
+          "selected_update": 250
+        }
+      ],
+      "actual_update_upper_bound": 3750,
+      "candidate_episode_rows": 750,
+      "candidate_weights": 15,
+      "input_signature": "f3de4bf695cceea8eb5af05bd9e6c17a60089e307711cedebf32a8edd51aa7b4",
+      "logical_updates": 3750,
+      "selected_episode_rows": 150,
+      "selected_models": 3,
+      "status": "PASS"
+    },
+    "Q5_matrix": {
+      "historical_A_rows": 150,
+      "historical_A_sha256": "e0482b3785b15a19c7f2157b31175f2d7de4f8b20165d848a07d33238784adb9",
+      "method_counts": {
+        "CENTER_FIRST": 50,
+        "GEOMETRY_SPREAD": 50,
+        "LEARNED_STATIC_TRUE": 50,
+        "NO_VLM_SPATIAL_FEEDBACK": 50,
+        "RANDOM": 250,
+        "SERPENTINE": 50,
+        "VLM_MEAN_FEEDBACK": 50,
+        "VLM_SPATIAL_FEEDBACK": 50,
+        "VLM_SPATIAL_OPEN_LOOP": 50
+      },
+      "new_C_rows": 150,
+      "primary_rows": 650,
+      "primary_sha256": "f3dec372ca79571cd45498a8123db0a2bf154934421acd30687e6ab7b84d89a3",
+      "provenance_sha256": "1117d540516ec6da2023a1a1756b723e65812164226c32732a68081602116e41",
+      "reused_control_rows": 500,
+      "status": "PASS"
+    },
+    "Q6_Q7_evidence_paper": {
+      "best_nonadaptive": "GEOMETRY_SPREAD",
+      "case_count": 3,
+      "event_grid_points": 578,
+      "evidence_manifest_sha256": "05ac0a4ff7f6c6e9225e755e332877974e8b081163975f4e7bd9f1222b16dff6",
+      "figure_count": 6,
+      "main_pdf_sha256": "b09577473c9a8e560f60cb919564b38fbfa08a0a7498653460761210737be372",
+      "paper_manifest_sha256": "d5f028add81b6be2b424bc088de917a0cb920e0de6be67616ec4ed923a54beff",
+      "status": "PASS",
+      "supplementary_pdf_sha256": "40818df97c65ea86965f0f9870e0ee9f9ba7b6aa22c43b8a6797ee96e553ce94"
+    },
+    "ledger": {
+      "actual_optimizer_updates": 3750,
+      "current_lines": 192,
+      "historical_prefix_lines": 177,
+      "historical_prefix_sha256": "f759e47036d980c5051f9e5aa22bcc5be65e5b3ce2a0c557fa2ab09f0ca9670a",
+      "lost_or_replayed_upper_bound": 0,
+      "segment_events": 15,
+      "status": "PASS",
+      "unique_event_ids": 15
+    },
+    "resources": {
+      "actor_gpu_seconds": 1589.8782374370057,
+      "cumulative_update_upper_bound": 42764,
+      "global_authorized_cap": 44514,
+      "historical_usage_declared": 39014,
+      "new_actor_update_upper_bound": 3750,
+      "new_actor_updates": 3750,
+      "new_vlm_attempts": 251,
+      "new_vlm_output_tokens": 27032,
+      "new_vlm_primary_jobs": 205,
+      "status": "C_PRIOR_COMPLETE",
+      "task_id": "CAI_V3_C_RENDER_RETRAIN_RELEASE_R1_331f5295",
+      "test_accessed": false,
+      "vlm_gpu_seconds": 3510.916702475006
+    },
+    "scope": {
+      "branch": "research/cai-vlm-agent-v3-controlled-reuse",
+      "changed_path_count": 2428,
+      "immutable_root_violations": [],
+      "source_commit": "331f52952b93bd9442ad2e44243cc71c7d966b4d",
+      "status": "PASS"
+    }
+  },
+  "verified_unix": 1789888462.7007172
+}

@@ -1,0 +1,19 @@
+```json
+{
+  "no_reliable_cue": false,
+  "regions": [
+    {
+      "cells": [35, 36],
+      "cue": "裂纹",
+      "alternative": "表面划痕",
+      "confidence": "medium"
+    },
+    {
+      "cells": [37, 38],
+      "cue": "裂纹",
+      "alternative": "表面划痕",
+      "confidence": "medium"
+    }
+  ]
+}
+```

@@ -1,0 +1,19 @@
+```json
+{
+  "no_reliable_cue": false,
+  "regions": [
+    {
+      "cells": [0, 1, 2, 3],
+      "cue": "uniform texture",
+      "alternative": "smooth surface",
+      "confidence": "medium"
+    },
+    {
+      "cells": [56, 57, 58, 59],
+      "cue": "uniform texture",
+      "alternative": "smooth surface",
+      "confidence": "medium"
+    }
+  ]
+}
+```

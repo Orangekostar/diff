@@ -1,0 +1,39 @@
+{
+  "candidate_updates": [
+    250,
+    500,
+    750,
+    1000,
+    1250
+  ],
+  "files": {
+    "actor_training_source": "09c10cf064a90b52fca5b4bab1b453d4eb86a3f2e9faddf8c11eed43f89cb5fb",
+    "candidate_queue": "9c5131e73703cc78981c745e8db5cb1f3e37c383590db6ab29a819ad4a496845",
+    "cost_precision_audit": "76d973c46e9fb538ee579884ffaa30c993435b538c7466c1dc6339eafc5c5285",
+    "feature_bank_index": "4376a3e55af5a8fdca3ae4c4075744133badaf70c70af4999c81da5c59770890",
+    "feature_bank_manifest": "01c8dc791dc9f7088aa818c816e529fc9d0621de274aa31b07ac7d497c45bb12",
+    "feature_bank_shards": "393a77a4758aa69a291c72bd7454e06c0a6d4852ee465768e7b26aeed354c835",
+    "feature_shard_74t7kcdgkr": "3b209bf44d3dd5db4e7f1ce9389f26305bcf472b59b6b275307b54b64b1f8cdf",
+    "feature_shard_cgtnjyggtm": "ed3b34419ea8b9f0469230caf39c38b1de7b7b881266adc6e2481d6aa8c5fb3a",
+    "feature_shard_w68dtmpfyf": "fc10bbc5041bd35da39f7c64e61618367cbdd4f4858ce0598fb99388619e0f04",
+    "feature_shard_xcmzfsbd9t": "9614f001a51fe68b2319d1f98fda28b1f2f272bc9e2f38494a1c2fe607edb7e7",
+    "feature_shard_yfxyg8jm46": "c229d59cb7167b6b5cb60d86c1ce7fc82a644600167d42ed07d6850771d25ba0",
+    "feature_shard_ykhs7s2dck": "bbe03aa9fd58709b17c42c70d3bc277192a442bc73865523df4e79ea6d300c02",
+    "models_source": "e4528d49c64f45cb7de6cf2da435ebb6cdbbff00072f30e486f84f320103c3f3",
+    "oof_fold_manifest": "d9d2f852742d7d73099efde5799ad9c323d487e61787bc3816786e3eb0c290ba",
+    "oof_readiness": "408bae44444c15c1c2e82e6fb8f44809f17a53fe7afb1d24e697fc8b73c99022",
+    "policy_source": "730abb7cf34dc896e91fad9e21c9b5a0b93217722b025211384c0879a974bea8",
+    "predictor_gate": "fb1d1e321155ec739b706aa6960ccc02f879e04aed714d95de0eb07aa7b4deae",
+    "split_manifest": "38439b563ce21c4c9540baa9e71dae24135af5198fbe06e6b505ff46bd045f2d",
+    "training_shell": "2ef5de5e391b273ba6a8f4330a0afde8bbee12ca04de9179350d37fe11a9f3e3",
+    "vlm_features": "0777b3df798dc767028d1dfdf8e08a5197bcffa89676e0b6a51d829e5d128e79",
+    "vlm_manifest": "f51e02a03847cefdbf525591622ccc3575b73968b59c75ea03f095c325b08bad"
+  },
+  "methods": {
+    "VLM_MEAN_FEEDBACK": 2026091305,
+    "VLM_SPATIAL_FEEDBACK": 2026091301,
+    "VLM_SPATIAL_OPEN_LOOP": 2026091303
+  },
+  "prior_version": "C_P0_R1_GLOBAL_V1",
+  "task_id": "CAI_V3_C_RENDER_RETRAIN_RELEASE_R1_331f5295"
+}

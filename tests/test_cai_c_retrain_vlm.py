@@ -4,6 +4,7 @@ import csv
 import json
 from dataclasses import replace
 from pathlib import Path
+from types import SimpleNamespace
 
 import numpy as np
 import pytest
@@ -225,3 +226,39 @@ def test_model_config_rejects_chat_or_generation_drift():
     changed["generation"]["max_new_tokens"] = 501
     with pytest.raises(ValueError, match="model configuration"):
         validate_model_config(changed)
+
+
+def test_vlm_contract_exports_input_manifest_and_config_lock(tmp_path):
+    from scripts.cai_c_retrain.vlm import _write_vlm_contract
+
+    output = tmp_path / "output"
+    vlm = output / "vlm"
+    context = SimpleNamespace(
+        task_id="task",
+        scope={"prior_version": "C_P0_R1_GLOBAL_V1"},
+        path=lambda name: vlm if name == "vlm" else output,
+    )
+    protocol = {
+        "prompt_sha256": "5" * 64,
+        "repair_sha256": "6" * 64,
+        "model_config": {"image_order": ["clean", "numbered"]},
+    }
+    record = {
+        "case": _case(),
+        "state": {"status": "VALID_FIRST_PASS", "attempts": [{"kind": "PRIMARY"}]},
+        "reused_from_pilot": False,
+    }
+
+    exported = _write_vlm_contract(context, protocol, [record])
+
+    with (vlm / "input_manifest.csv").open(newline="", encoding="utf-8") as handle:
+        rows = list(csv.DictReader(handle))
+    config = json.loads((vlm / "config_lock.json").read_text(encoding="utf-8"))
+    assert rows[0]["clean_sha256"] == "1" * 64
+    assert rows[0]["numbered_sha256"] == "2" * 64
+    assert rows[0]["status"] == "VALID_FIRST_PASS"
+    assert config["prompt_sha256"] == "5" * 64
+    assert config["render_config"]["font_sha256"] == "3" * 64
+    assert config["image_order"] == ["clean", "numbered"]
+    assert exported["input_manifest_sha256"]
+    assert exported["config_lock_sha256"]

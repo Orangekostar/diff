@@ -1,0 +1,15 @@
+{
+  "checkpoint": "candidates/update_001000.pt",
+  "checkpoint_sha256": "b1675588baa412fed56ef3167c21c9763f3f48e642cf93c3cc9f6e380b001201",
+  "commit_status": "COMPLETE",
+  "environment_identity": "d81066012c6a14fd3480d487f470a71d76a4a58a82577aca4e90e848eb6ffb9e",
+  "episode_count": 50,
+  "episodes": "candidate_episodes/update_001000.csv.gz",
+  "episodes_sha256": "88670e58fbd5f685be0097ded5fcb97e147fc6c2d89e182220c3bc0642921571",
+  "input_signature": "f3de4bf695cceea8eb5af05bd9e6c17a60089e307711cedebf32a8edd51aa7b4",
+  "method": "VLM_MEAN_FEEDBACK",
+  "score": 46.40917149286006,
+  "snapshot": "snapshots/update_001000.pt",
+  "snapshot_sha256": "c2c74dc369d48a22b657a0935cd87e82b2a56c7321208dc05118a262272456fe",
+  "update": 1000
+}

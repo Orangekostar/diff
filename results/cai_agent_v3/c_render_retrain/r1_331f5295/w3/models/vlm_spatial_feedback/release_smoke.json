@@ -1,0 +1,9 @@
+{
+  "actions_match": true,
+  "maximum_cost_difference": 0.0,
+  "maximum_prediction_difference_mpa": 0.0,
+  "method": "VLM_SPATIAL_FEEDBACK",
+  "selected_update": 250,
+  "specimen_key": "cgtnjyggtm:q24-48",
+  "status": "PASS"
+}

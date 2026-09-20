@@ -1,11 +1,51 @@
 {
   "phases": {
+    "analyze": {
+      "case_count": 3,
+      "figure_count": 6,
+      "method_n": 9,
+      "primary_episode_rows": 650,
+      "status": "COMPLETE"
+    },
+    "assemble": {
+      "historical_a_rows": 150,
+      "new_c_rows": 150,
+      "primary_rows": 650,
+      "reused_control_rows": 500,
+      "status": "COMPLETE"
+    },
+    "paper": {
+      "author_review_required": true,
+      "main_pdf": "build/main.pdf",
+      "status": "COMPLETE",
+      "supplementary_pdf": "build/supplementary.pdf"
+    },
     "prepare": {
       "exact_pilot_reuse": 6,
       "prompt_sha256": "166ecae74d83e97d3a3779f68760f146ebbe85b99c334d069dd585dd0b3cf658",
       "roster_rows": 211,
       "status": "COMPLETE",
       "test_accessed": false
+    },
+    "train": {
+      "actual_update_upper_bound": 3750,
+      "candidate_count": 15,
+      "logical_updates": 3750,
+      "method_count": 3,
+      "selected_episode_count": 150,
+      "status": "COMPLETE"
+    },
+    "verify": {
+      "qa_categories": 8,
+      "release_status": "C_RETRAIN_RESULTS_COMPLETE",
+      "status": "COMPLETE",
+      "test_accessed": false
+    },
+    "vlm": {
+      "new_generation_attempts": 251,
+      "reused_pilot_rows": 6,
+      "status": "COMPLETE",
+      "terminal_rows": 211
     }
   },
   "scope_sha256": "a32dafb06d3adb01cbc94c1807ea4dc31e6e7a9107905d996956af0c00a01788",

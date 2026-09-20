@@ -1,0 +1,19 @@
+```json
+{
+  "no_reliable_cue": false,
+  "regions": [
+    {
+      "cells": [35, 36],
+      "cue": "孔洞",
+      "alternative": "金属表面的划痕或小缺口",
+      "confidence": "medium"
+    },
+    {
+      "cells": [27, 28],
+      "cue": "未知",
+      "alternative": "无相关信息",
+      "confidence": "unknown"
+    }
+  ]
+}
+```

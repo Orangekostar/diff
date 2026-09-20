@@ -1,0 +1,19 @@
+```json
+{
+  "no_reliable_cue": false,
+  "regions": [
+    {
+      "cells": [35, 36],
+      "cue": "light reflection",
+      "alternative": "glare from light source",
+      "confidence": "medium"
+    },
+    {
+      "cells": [37, 38],
+      "cue": "light reflection",
+      "alternative": "glare from light source",
+      "confidence": "medium"
+    }
+  ]
+}
+```

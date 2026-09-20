@@ -1,0 +1,19 @@
+```json
+{
+  "no_reliable_cue": false,
+  "regions": [
+    {
+      "cells": [35, 36, 37],
+      "cue": "小的白色斑点",
+      "alternative": "可能是灰尘或微小的颗粒",
+      "confidence": "medium"
+    },
+    {
+      "cells": [27, 28, 29],
+      "cue": "模糊的灰色区域",
+      "alternative": "可能是磨损或轻微划痕",
+      "confidence": "medium"
+    }
+  ]
+}
+```

@@ -1,0 +1,67 @@
+{
+  "binding_audit": {
+    "current_input_bindings": {
+      "path": "results/cai_agent_v3/c_render_retrain/r1_331f5295/w3/input_bindings.json",
+      "sha256": "5aba97a1819c19f76f67a0a83029107a24288f0b96700e83583d30ef9faac080",
+      "signature": "f3de4bf695cceea8eb5af05bd9e6c17a60089e307711cedebf32a8edd51aa7b4"
+    },
+    "feature_shard_count": 6,
+    "old_input_bindings": {
+      "path": "artifacts/cai_agent_v3/w3_pilot/r1_0e11452a/INPUT_BINDINGS.json",
+      "sha256": "3c16459c1e963e81c6fe4f68e932f98a22257a424093514aac6b19af48740073"
+    },
+    "p_all": {
+      "path": "results/cai_agent_v3/w2_replay/r1_292b1c74/models/predictor_mean_sc.pt",
+      "sha256": "f67e912bd5faa26ae5cff8a9a0241439797fccef8cec825f43ebe5dc9f9d57ff"
+    },
+    "status": "FROZEN_W2_FEATURE_COST_AND_C_PRIOR_BINDINGS_MATCH"
+  },
+  "historical_A_count": 150,
+  "method_counts": {
+    "CENTER_FIRST": 50,
+    "GEOMETRY_SPREAD": 50,
+    "LEARNED_STATIC_TRUE": 50,
+    "NO_VLM_SPATIAL_FEEDBACK": 50,
+    "RANDOM": 250,
+    "SERPENTINE": 50,
+    "VLM_MEAN_FEEDBACK": 50,
+    "VLM_SPATIAL_FEEDBACK": 50,
+    "VLM_SPATIAL_OPEN_LOOP": 50
+  },
+  "new_C_count": 150,
+  "outputs": {
+    "historical_A": {
+      "path": "results/cai_agent_v3/c_render_retrain/r1_331f5295/w3/historical_A_comparison/policy_validation_episodes.csv.gz",
+      "sha256": "e0482b3785b15a19c7f2157b31175f2d7de4f8b20165d848a07d33238784adb9"
+    },
+    "primary": {
+      "path": "results/cai_agent_v3/c_render_retrain/r1_331f5295/w3/policy_validation_episodes.csv.gz",
+      "sha256": "f3dec372ca79571cd45498a8123db0a2bf154934421acd30687e6ab7b84d89a3"
+    },
+    "provenance": {
+      "path": "results/cai_agent_v3/c_render_retrain/r1_331f5295/w3/row_provenance.csv",
+      "sha256": "1117d540516ec6da2023a1a1756b723e65812164226c32732a68081602116e41"
+    }
+  },
+  "primary_count": 650,
+  "prior_version": "C_P0_R1_GLOBAL_V1",
+  "provenance_count": 650,
+  "reused_control_count": 500,
+  "schema_version": 1,
+  "sources": {
+    "actor_manifests": {
+      "path": "results/cai_agent_v3/c_render_retrain/r1_331f5295/w3/actor_manifests.json",
+      "sha256": "8a24ca5f95d7a717795f9f2c40bf53c4b761d9111562bfa4d46c23fe0e3708b0"
+    },
+    "new_C": {
+      "path": "results/cai_agent_v3/c_render_retrain/r1_331f5295/w3/new_selected_policy_episodes.csv.gz",
+      "sha256": "d8a8083f359371d035cf1b0c9b9368344abebf4226dd8f739cf06714576a3ab6"
+    },
+    "old_w3": {
+      "path": "results/cai_agent_v3/w3_pilot/r1_0e11452a/policy_validation_episodes.csv.gz",
+      "sha256": "2b2d596133cc269a0e7b7cc096eac13214d27b7eeacf8da6797753a52d9cef5f"
+    }
+  },
+  "status": "PRIMARY_MATRIX_COMPLETE",
+  "task_id": "CAI_V3_C_RENDER_RETRAIN_RELEASE_R1_331f5295"
+}

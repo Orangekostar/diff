@@ -1,0 +1,19 @@
+```json
+{
+  "no_reliable_cue": false,
+  "regions": [
+    {
+      "cells": [35, 36],
+      "cue": "孔洞",
+      "alternative": "可能是制造过程中的缺陷或加工痕迹",
+      "confidence": "medium"
+    },
+    {
+      "cells": [37, 38],
+      "cue": "未知",
+      "alternative": "无相关信息",
+      "confidence": "unknown"
+    }
+  ]
+}
+```

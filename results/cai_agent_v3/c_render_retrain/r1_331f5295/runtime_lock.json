@@ -1,7 +1,7 @@
 {
   "actor_python": "/home/ww/miniconda3/bin/python3.13",
   "branch": "research/cai-vlm-agent-v3-controlled-reuse",
-  "created_unix": 1789876592.4897609,
+  "created_unix": 1789879753.4254599,
   "gpu_inventory": [
     {
       "index": "0",
@@ -25,7 +25,7 @@
       "uuid": "GPU-41ba4cb6-edfe-ed30-c047-a19d9f23d0a8"
     }
   ],
-  "head_at_prepare": "331f52952b93bd9442ad2e44243cc71c7d966b4d",
+  "head_at_prepare": "a304e198b11eafe90d9865e58f58dadeb9225905",
   "max_cpu_threads": 4,
   "max_visible_gpus": 1,
   "packages": {

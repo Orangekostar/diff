@@ -1,0 +1,19 @@
+```json
+{
+  "no_reliable_cue": false,
+  "regions": [
+    {
+      "cells": [27, 28, 29],
+      "cue": "centered damage",
+      "alternative": "potential impact or scratch",
+      "confidence": "medium"
+    },
+    {
+      "cells": [35, 36, 37],
+      "cue": "radiating lines",
+      "alternative": "surface scratches or marks",
+      "confidence": "medium"
+    }
+  ]
+}
+```

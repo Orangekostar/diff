@@ -1,0 +1,19 @@
+```json
+{
+  "no_reliable_cue": false,
+  "regions": [
+    {
+      "cells": [28, 29, 36, 37],
+      "cue": "crack",
+      "alternative": "划痕或轻微裂纹",
+      "confidence": "medium"
+    },
+    {
+      "cells": [52, 53, 60, 61],
+      "cue": "unknown",
+      "alternative": "未知表面特征",
+      "confidence": "low"
+    }
+  ]
+}
+```

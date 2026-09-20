@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import csv
 import gzip
+import hashlib
 import html
 import json
 import os
@@ -33,10 +34,19 @@ EXPECTED_METHOD_COUNTS = {
     "VLM_SPATIAL_FEEDBACK": 50,
     "VLM_SPATIAL_OPEN_LOOP": 50,
 }
+PLAN_PATH = "docs/superpowers/plans/2026-09-20-c-render-retrain-release.md"
+RESULTS_COMMIT_MESSAGE = "results: complete CAI C retraining release"
 RESULT_PATHS = (
     "results/cai_agent_v3/c_render_retrain/r1_331f5295",
     "artifacts/cai_agent_v3/c_render_retrain/r1_331f5295",
     "paper_cai_aei/r2_c_331f5295",
+    "results/cai_agent_v3/compute_ledger.jsonl",
+    "scripts/cai_c_retrain",
+    "tests/test_cai_c_retrain_evidence.py",
+    "tests/test_cai_c_retrain_paper.py",
+    "tests/test_cai_c_retrain_validate.py",
+    "tests/test_cai_c_retrain_vlm.py",
+    PLAN_PATH,
 )
 
 
@@ -81,6 +91,13 @@ def _vlm_checks(context: TaskContext) -> dict[str, Any]:
     features_path = root / "vlm_actor_features_fit.csv"
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     rows = _read_csv(features_path)
+    input_manifest_path = root / "input_manifest.csv"
+    config_lock_path = root / "config_lock.json"
+    input_rows = _read_csv(input_manifest_path)
+    config_lock = json.loads(config_lock_path.read_text(encoding="utf-8"))
+    protocol = json.loads(
+        (context.path("output") / "protocol_lock.json").read_text(encoding="utf-8")
+    )
     if (
         manifest.get("status") != "C_PRIOR_COMPLETE"
         or manifest.get("rows") != 211
@@ -93,9 +110,23 @@ def _vlm_checks(context: TaskContext) -> dict[str, Any]:
         or len(rows) != 211
         or len({row["specimen_key"] for row in rows}) != 211
         or any(row["split"] not in {"TRAIN", "VALID"} for row in rows)
+        or manifest.get("input_manifest_sha256")
+        != sha256_file(input_manifest_path)
+        or manifest.get("config_lock_sha256") != sha256_file(config_lock_path)
+        or len(input_rows) != 211
+        or len({row["specimen_key"] for row in input_rows}) != 211
+        or any(row["split"] not in {"TRAIN", "VALID"} for row in input_rows)
+        or config_lock.get("prompt_sha256") != protocol["prompt_sha256"]
+        or config_lock.get("model_config") != protocol["model_config"]
+        or config_lock.get("render_id") != "R1"
+        or config_lock.get("image_order") != ["clean", "numbered"]
+        or config_lock.get("cohort")
+        != {"rows": 211, "train": 161, "valid": 50, "test": 0}
+        or config_lock.get("test_accessed") is not False
     ):
         raise ValueError("Q1/Q2 failed: current C prior is incomplete or includes TEST")
     state_counts = Counter(row["status"] for row in manifest["states"])
+    input_status = {row["specimen_key"]: row["status"] for row in input_rows}
     for state in manifest["states"]:
         run = root / "runs" / state["specimen_key"].replace(":", "__") / "state.json"
         if not run.is_file():
@@ -104,6 +135,10 @@ def _vlm_checks(context: TaskContext) -> dict[str, Any]:
         if payload.get("status") != state["status"]:
             raise ValueError(
                 f"VLM terminal state differs from manifest: {state['specimen_key']}"
+            )
+        if input_status.get(state["specimen_key"]) != state["status"]:
+            raise ValueError(
+                f"VLM input manifest differs from state: {state['specimen_key']}"
             )
         if len(payload.get("attempts", [])) > 2:
             raise ValueError(
@@ -127,6 +162,8 @@ def _vlm_checks(context: TaskContext) -> dict[str, Any]:
             "new_qwen_top_level_forward_calls"
         ],
         "feature_sha256": sha256_file(features_path),
+        "input_manifest_sha256": sha256_file(input_manifest_path),
+        "config_lock_sha256": sha256_file(config_lock_path),
     }
 
 
@@ -314,6 +351,76 @@ def _resource_checks(context: TaskContext) -> dict[str, Any]:
     }
 
 
+def _task_ledger_summary(
+    rows: list[dict[str, Any]], task_id: str
+) -> dict[str, Any]:
+    task_rows = [row for row in rows if row.get("task_id") == task_id]
+    event_ids = [row.get("event_id") for row in task_rows]
+    reservation_ids = [row.get("reservation_id") for row in task_rows]
+    if (
+        len(task_rows) != 15
+        or len(set(event_ids)) != len(task_rows)
+        or None in event_ids
+        or len(set(reservation_ids)) != len(task_rows)
+        or None in reservation_ids
+    ):
+        raise ValueError("task ledger must contain 15 unique segment events")
+    expected = {
+        (method, start, start + 250)
+        for method in METHOD_SEEDS
+        for start in range(0, 1250, 250)
+    }
+    observed = {
+        (row.get("method"), row.get("start_update"), row.get("end_update"))
+        for row in task_rows
+    }
+    if observed != expected or any(row.get("status") != "COMPLETED" for row in task_rows):
+        raise ValueError("task ledger segment coverage is incomplete")
+    actual = sum(int(row.get("actual_optimizer_updates", -1)) for row in task_rows)
+    lost = sum(
+        int(row.get("actual_optimizer_updates_upper_bound", -1))
+        for row in task_rows
+    )
+    if actual != 3750 or lost != 0:
+        raise ValueError("task ledger optimizer accounting changed")
+    return {
+        "status": "PASS",
+        "segment_events": len(task_rows),
+        "actual_optimizer_updates": actual,
+        "lost_or_replayed_upper_bound": lost,
+        "unique_event_ids": len(set(event_ids)),
+    }
+
+
+def _ledger_checks(context: TaskContext) -> dict[str, Any]:
+    ledger_path = context.path("global_ledger")
+    relative = ledger_path.relative_to(context.root).as_posix()
+    historical = subprocess.check_output(
+        ["git", "show", f"{SOURCE_COMMIT}:{relative}"], cwd=context.root
+    )
+    current = ledger_path.read_bytes()
+    if not current.startswith(historical):
+        raise ValueError("global compute ledger historical prefix changed")
+    rows = [json.loads(line) for line in current.decode("utf-8").splitlines()]
+    summary = _task_ledger_summary(rows, context.task_id)
+    resource = json.loads(
+        (context.path("output") / "resource_usage.json").read_text(encoding="utf-8")
+    )
+    if (
+        summary["actual_optimizer_updates"] != resource["new_actor_updates"]
+        or summary["actual_optimizer_updates"]
+        + summary["lost_or_replayed_upper_bound"]
+        > resource["new_actor_update_upper_bound"]
+    ):
+        raise ValueError("global ledger and resource summary disagree")
+    return {
+        **summary,
+        "historical_prefix_lines": len(historical.splitlines()),
+        "current_lines": len(rows),
+        "historical_prefix_sha256": hashlib.sha256(historical).hexdigest(),
+    }
+
+
 def _scope_checks(context: TaskContext) -> dict[str, Any]:
     immutable = tuple(
         Path(context.scope["roots"][name])
@@ -426,6 +533,7 @@ def verify_stage(context: TaskContext) -> dict[str, Any]:
         "Q5_matrix": _matrix_checks(context),
         "Q6_Q7_evidence_paper": _evidence_paper_checks(context),
         "resources": _resource_checks(context),
+        "ledger": _ledger_checks(context),
         "scope": _scope_checks(context),
     }
     _release_index(context)
@@ -485,7 +593,12 @@ def verify_stage(context: TaskContext) -> dict[str, Any]:
 
 
 def _pending_paths(root: Path) -> list[str]:
-    output = _git(root, "status", "--porcelain=v1", "--untracked-files=all")
+    output = subprocess.check_output(
+        ["git", "status", "--porcelain=v1", "--untracked-files=all"],
+        cwd=root,
+        text=True,
+        stderr=subprocess.STDOUT,
+    )
     paths = []
     for line in output.splitlines():
         raw = line[3:]
@@ -501,12 +614,41 @@ def _allowed_result_path(path: str) -> bool:
     )
 
 
+def _mark_plan_publish_complete(root: Path) -> None:
+    path = root / PLAN_PATH
+    pending = "- [ ] **Step 6: Commit results/handoff and publish**"
+    complete = "- [x] **Step 6: Commit results/handoff and publish**"
+    source = path.read_text(encoding="utf-8")
+    if pending in source:
+        _atomic_text(path, source.replace(pending, complete, 1))
+    elif complete not in source:
+        raise ValueError("publish plan Step 6 marker changed")
+
+
 def _commit(root: Path, message: str, paths: tuple[str, ...]) -> str:
-    subprocess.run(["git", "add", "-f", "--", *paths], cwd=root, check=True)
+    subprocess.run(
+        [
+            "git",
+            "add",
+            "-f",
+            "--",
+            *paths,
+            ":(exclude,glob)**/__pycache__/**",
+            ":(exclude,glob)**/*.pyc",
+        ],
+        cwd=root,
+        check=True,
+    )
     staged = _git(root, "diff", "--cached", "--name-only")
     if not staged:
         raise RuntimeError("publish stage has no files to commit")
     subprocess.run(["git", "commit", "-m", message], cwd=root, check=True)
+    return _git(root, "rev-parse", "HEAD")
+
+
+def _interrupted_results_commit(root: Path) -> str:
+    if _git(root, "show", "-s", "--format=%s", "HEAD") != RESULTS_COMMIT_MESSAGE:
+        raise RuntimeError("publish has no result changes or resumable results commit")
     return _git(root, "rev-parse", "HEAD")
 
 
@@ -596,13 +738,10 @@ def publish_stage(context: TaskContext) -> dict[str, Any]:
         raise ValueError(
             f"publish found changes outside bounded result roots: {unexpected}"
         )
-    if not pending:
-        raise RuntimeError("publish has no result changes; refusing an empty delivery")
-
-    results_commit = _commit(
-        context.root,
-        "results: complete CAI C retraining release",
-        RESULT_PATHS,
+    results_commit = (
+        _commit(context.root, RESULTS_COMMIT_MESSAGE, RESULT_PATHS)
+        if pending
+        else _interrupted_results_commit(context.root)
     )
     required_paths = _delivery_required_paths(context)
     tracked_required_count = _verify_commit_paths(
@@ -610,6 +749,7 @@ def publish_stage(context: TaskContext) -> dict[str, Any]:
     )
     _push_and_verify(context.root, results_commit)
 
+    _mark_plan_publish_complete(context.root)
     release["status"] = "C_RETRAIN_RELEASE_COMPLETE"
     release["git"] = {
         "results_commit": results_commit,
@@ -645,7 +785,7 @@ def publish_stage(context: TaskContext) -> dict[str, Any]:
     delivery_commit = _commit(
         context.root,
         "docs: record CAI C retraining delivery",
-        (RESULT_PATHS[0], RESULT_PATHS[1]),
+        (RESULT_PATHS[0], RESULT_PATHS[1], PLAN_PATH),
     )
     _verify_commit_paths(
         context.root,

@@ -1,0 +1,1523 @@
+{
+  "config_lock": "config_lock.json",
+  "config_lock_sha256": "8adf76a381b88bfce5159905c71d8ba6fceff7e57f32fb41d5a56ac0d86a4977",
+  "execution_code_sha256": "aa3b49bb1489e3b72af97f2592cec6f06d4cd9add2b9a2cd5e57795891ce5064",
+  "feature_csv": "vlm_actor_features_fit.csv",
+  "feature_csv_sha256": "0777b3df798dc767028d1dfdf8e08a5197bcffa89676e0b6a51d829e5d128e79",
+  "first_new_case_wiring": {
+    "attempt_kind": "PRIMARY",
+    "attempt_number": 1,
+    "forward_calls": 110,
+    "image_sha256": [
+      "00b2b72ca4371c79aef481868ca66d8cbaf3908142f4456c75ff9c306438256d",
+      "d1d2d25b3fa0ee41b8357e34672d9129087a01881d65c8506ae2c3f5ce8a2305"
+    ],
+    "input_tokens": 2767,
+    "output_tokens": 110,
+    "prompt_sha256": "166ecae74d83e97d3a3779f68760f146ebbe85b99c334d069dd585dd0b3cf658",
+    "saved_records": [
+      "results/cai_agent_v3/c_render_retrain/r1_331f5295/vlm/runs/74t7kcdgkr__c8-11/input_1.json",
+      "results/cai_agent_v3/c_render_retrain/r1_331f5295/vlm/runs/74t7kcdgkr__c8-11/prompt_1.txt",
+      "results/cai_agent_v3/c_render_retrain/r1_331f5295/vlm/runs/74t7kcdgkr__c8-11/raw_1.txt",
+      "results/cai_agent_v3/c_render_retrain/r1_331f5295/vlm/runs/74t7kcdgkr__c8-11/generated_token_ids_1.json"
+    ],
+    "specimen_key": "74t7kcdgkr:c8-11",
+    "split": "TRAIN",
+    "status": "PASS"
+  },
+  "input_manifest": "input_manifest.csv",
+  "input_manifest_sha256": "fc6b83e5727fa137f01c6064add91935097d5516eb2e492253e90a4c97337d95",
+  "new_generation_attempts": 251,
+  "new_output_tokens": 27032,
+  "new_qwen_top_level_forward_calls": 27032,
+  "new_unique_primary_jobs": 205,
+  "prior_version": "C_P0_R1_GLOBAL_V1",
+  "reused_pilot_rows": 6,
+  "rows": 211,
+  "schema_version": 1,
+  "states": [
+    {
+      "attempts": 2,
+      "reused_from_pilot": false,
+      "signature": "16daff80cc42a07b219b0f4e2205ddd73e090ef7979b00a302351d1d54a2ba8c",
+      "specimen_key": "74t7kcdgkr:c8-11",
+      "status": "SCHEMA_INVALID_AFTER_ONE_REPAIR"
+    },
+    {
+      "attempts": 2,
+      "reused_from_pilot": false,
+      "signature": "90612b407b2fdff9bea7c71cc8c05b03484cccc1a61586aa0cd783050c7e5c01",
+      "specimen_key": "74t7kcdgkr:c8-12",
+      "status": "VALID_AFTER_REPAIR"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "002c9022f324ec29a6b0e6f4bf415a9209cba0ef0f80238c93d70d3ae43d0743",
+      "specimen_key": "74t7kcdgkr:c8-12t",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "d1585a78b9cde8502f3c437125a5e41721a0027a496dd0b14066490d3a1bc73d",
+      "specimen_key": "74t7kcdgkr:c8-13",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 2,
+      "reused_from_pilot": false,
+      "signature": "7efee393b5395f74004b523618bf433914883e5f97eea2e28a2757f0209e0f8e",
+      "specimen_key": "74t7kcdgkr:c8-14",
+      "status": "VALID_AFTER_REPAIR"
+    },
+    {
+      "attempts": 2,
+      "reused_from_pilot": false,
+      "signature": "eb0246575471d1a93b07ec846057e82fdb0b15f2837001ab1b8cb040a2dda507",
+      "specimen_key": "74t7kcdgkr:c8-15",
+      "status": "VALID_AFTER_REPAIR"
+    },
+    {
+      "attempts": 2,
+      "reused_from_pilot": true,
+      "signature": "5df8ecc76e66ca2e3050201322a18bd2f6dbff6ac76f184922d4acd5b4191c36",
+      "specimen_key": "74t7kcdgkr:c8-16",
+      "status": "VALID_AFTER_REPAIR"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "497da6714aeeedd9e88aab232540375552e12daea414f1d9680c24fe8c57904b",
+      "specimen_key": "74t7kcdgkr:c8-19",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "0ed4db5088bce92366ff891c7883b29038d3416110a52d87654e9eec5f29cd2d",
+      "specimen_key": "74t7kcdgkr:c8-2",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "afdc979c519dda2968b7dbda17b82e3942e05c3f4c6bcf963b060e715fef9152",
+      "specimen_key": "74t7kcdgkr:c8-20",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "d99f4922d5f985ea4c885ef84e0943c03e814e5db99251a079bc702dc56a3ba4",
+      "specimen_key": "74t7kcdgkr:c8-21",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "7bc720ad269bbc7ca336d9eea0bc50174068e8dcdcfa48efcb6d4454626c8f92",
+      "specimen_key": "74t7kcdgkr:c8-23",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "642dd7d28d0f2c4ef8bef27c1640dfb7e022f3d537398e921b0b2fb5ce7adbe3",
+      "specimen_key": "74t7kcdgkr:c8-25",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "b95b8f9d2d36721095cf61818a578779baf8765e62905002d0d6fc60604d8477",
+      "specimen_key": "74t7kcdgkr:c8-26",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "039c9965ff19a80baae193701f588814a414ab3f8ab6267da5e11da10139ad62",
+      "specimen_key": "74t7kcdgkr:c8-28",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "5b50956c1ea976e3c3acd214cbb1f035a354415ae963602afc006c3a09f3a00d",
+      "specimen_key": "74t7kcdgkr:c8-29",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "58ccf78d78b07d8d732af72c4cf1a4d84738d3c6858dd5300ed5199fb15a02ce",
+      "specimen_key": "74t7kcdgkr:c8-3",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "18d657f6233824ca17658c2a06762aa23238166ef55bd1605dcea6c34541ffba",
+      "specimen_key": "74t7kcdgkr:c8-32",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "97daab546baa92fecf44fcc70d374d8e8c24e01653aab23cfc8f48adc6bb8203",
+      "specimen_key": "74t7kcdgkr:c8-33",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "166ec421225a11e0c44f5c32965e9857b0444655d60bdf1bf48dbbf5b06a46c5",
+      "specimen_key": "74t7kcdgkr:c8-34",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "68520b995b353769bfad875f9722dc22b28969c5a26df220c74587888b3919b3",
+      "specimen_key": "74t7kcdgkr:c8-36",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "eb1f86d069e83b0365880f3ba060e00519ee48018d6f06c591e4c163725b8088",
+      "specimen_key": "74t7kcdgkr:c8-37",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "d4db2d6a7be521a1ed367614ed87752c253430d036587ca10feee06f6fe6ed15",
+      "specimen_key": "74t7kcdgkr:c8-38",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "6e08b519f447fdd9f4379771b78f4cb07b6d723ad6a7e5e7b96fac0aa3e6b3c2",
+      "specimen_key": "74t7kcdgkr:c8-39",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "60d72eaca47febf23d103321acecc99c8515875dd0ca6d13a7f61e975e7a93c5",
+      "specimen_key": "74t7kcdgkr:c8-40",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "0b07871d44c0ff0bd8fc358be3eafcbeaea6ac2ef4febdc0729de521879879b8",
+      "specimen_key": "74t7kcdgkr:c8-41",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "1fecd445e1a2e711ffcdccab5ccb2a26f99cf3225029f702c603df9e8b8bcf60",
+      "specimen_key": "74t7kcdgkr:c8-42",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "d1c96c856ad31673495747ed137bf7f548f137354f6fcdf7f2447e7411010031",
+      "specimen_key": "74t7kcdgkr:c8-43",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "36e10bf63d63493583043f2334581df33588471e9c1c1d3c7db80feb8dab0b5a",
+      "specimen_key": "74t7kcdgkr:c8-5",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "da75e44b6d6c729d4137a703dc8b4cb0fa8d9a6db9a35cda807fa95ce34ba12b",
+      "specimen_key": "74t7kcdgkr:c8-6",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "438a0dc547c5c993d59c0140abd65e9730ada3ea4e6078c951856c519dd7424c",
+      "specimen_key": "74t7kcdgkr:c8-6t",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "91df70ab2e81b0ac5ac3dc82c04b8877d3fd0360b9c9d42527ced0fe2391a076",
+      "specimen_key": "74t7kcdgkr:c8-7",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "51a4faee2fcf0bae0762ed0a84e22eaf56ff41477da6a8f419268f0f34779c53",
+      "specimen_key": "74t7kcdgkr:c8-8t",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "5cb58ca30327efa68c50e3829f2a0ef142f347fe70e189ee174552ce475dc4e1",
+      "specimen_key": "74t7kcdgkr:c8-9t",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "fe5707033d54cb352db05bc168747fa31cef803948e17d83c5bba0adbb02ead6",
+      "specimen_key": "cgtnjyggtm:q24-1",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 2,
+      "reused_from_pilot": false,
+      "signature": "826d2eaf188e92e353fbfb3aa45b72111f02d989f31072f4cedde6b152b548a6",
+      "specimen_key": "cgtnjyggtm:q24-10",
+      "status": "VALID_AFTER_REPAIR"
+    },
+    {
+      "attempts": 2,
+      "reused_from_pilot": false,
+      "signature": "a06f579b3352f1bae784977811f4ef319d2215d04f25aa0824240eafc59f571d",
+      "specimen_key": "cgtnjyggtm:q24-11",
+      "status": "VALID_AFTER_REPAIR"
+    },
+    {
+      "attempts": 2,
+      "reused_from_pilot": false,
+      "signature": "907dcc4e8eb0aa786e33d20f6f648d68a2fd03da7540913369ec92fe8fca062b",
+      "specimen_key": "cgtnjyggtm:q24-13",
+      "status": "VALID_AFTER_REPAIR"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "0f9ebc138d23c1373f02f3a27b190538714084759a2528323c76cc7db81fe6e7",
+      "specimen_key": "cgtnjyggtm:q24-14",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 2,
+      "reused_from_pilot": false,
+      "signature": "d60471664c76f0a8a3c3a57d514fa0e1305d5f9cf8304887cc1042e579871e71",
+      "specimen_key": "cgtnjyggtm:q24-18",
+      "status": "VALID_AFTER_REPAIR"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "8e4021cf59579764f3a7abe12d08ea973a91c819b23b2e9a59c5b8834e1db05d",
+      "specimen_key": "cgtnjyggtm:q24-19",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "1615150e32598486ca653d1ef1309393a355e1bcb7e0ed8e0f84b3eb30fea345",
+      "specimen_key": "cgtnjyggtm:q24-2",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "a258a4c7253bffb62fe3e35e18f779cb70fdd6b6e1bcf41c88e640dc06ed6a83",
+      "specimen_key": "cgtnjyggtm:q24-20",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "b7776792e0c3111258298c277b4c5af02ea4fe960a04fd6d2dbe9aed77aaed18",
+      "specimen_key": "cgtnjyggtm:q24-22",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "7bc6674a213435a2cdc73f852d1843ffe17b46fa7a2e1ea5bc17d20783926799",
+      "specimen_key": "cgtnjyggtm:q24-24",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "841c12bb5293e93af600267c79e584d49c1786f98194ca57ce79fb3a60d6a679",
+      "specimen_key": "cgtnjyggtm:q24-25",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "90f95f6044b47708543cc686d3f7555402747c206f034813ddbc7664460b568a",
+      "specimen_key": "cgtnjyggtm:q24-26",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "af82e52bbc4280afd6cee1611dbe95e31d97baee785bcb999bd3e9a9ce4959f7",
+      "specimen_key": "cgtnjyggtm:q24-27",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "6c061e3c38e2792fd5457378f3a3c141e890f549521633d7fe27cb746d30d02a",
+      "specimen_key": "cgtnjyggtm:q24-28",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "29c34eba7f711b511c217f061c82be24ceaf679f63bbd54d420d2456f2d7539c",
+      "specimen_key": "cgtnjyggtm:q24-29",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "b923585c92b284d6c0aae61e5312478a04fcb6131c88975cca698610863ac815",
+      "specimen_key": "cgtnjyggtm:q24-30",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "163a67ac97fb5a09bd26164128049bdb598c8ffd22c26914bcf16232731fdd70",
+      "specimen_key": "cgtnjyggtm:q24-31",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "8dcd2253c201aa30dd3ac608b3db90fc0f5c0422792c67cf4e86bdc33cf8f8d4",
+      "specimen_key": "cgtnjyggtm:q24-32",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 2,
+      "reused_from_pilot": false,
+      "signature": "c28deec0e1866db68fef92415924d37dc3d032605add68b6f6dc892d60b5d7ec",
+      "specimen_key": "cgtnjyggtm:q24-33",
+      "status": "SCHEMA_INVALID_AFTER_ONE_REPAIR"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "f4920b32276f4537cbdf84e8472f39df496433eefac889c0b0c02ac2e0ea85ed",
+      "specimen_key": "cgtnjyggtm:q24-34",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "e92c4224197376a668cec4164f077b0a05a00a1685bd325096bf0cfb5f1adff7",
+      "specimen_key": "cgtnjyggtm:q24-37",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "b650bb4f7451cd6a6f0b932e7a3fc220be2df98cbce11feaf27e880346145058",
+      "specimen_key": "cgtnjyggtm:q24-38",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "c4e2a18a367b6734afbd3ef5c83ea169a94aed71c3b430a863ca39adba1f605a",
+      "specimen_key": "cgtnjyggtm:q24-39",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "1abdceae45b5590cd032df314a10c7131b3c837e40b858a49b54c2979dc17eec",
+      "specimen_key": "cgtnjyggtm:q24-4",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 2,
+      "reused_from_pilot": false,
+      "signature": "44e9645b0be5c779fb8a481e7702d3a214005a12623a7e92041c6f28eb068042",
+      "specimen_key": "cgtnjyggtm:q24-40",
+      "status": "VALID_AFTER_REPAIR"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "a0a912994d99fd71e43c4462c14b9619bdd472f7936ad3f2b9d2c06bbcbe3fad",
+      "specimen_key": "cgtnjyggtm:q24-41",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 2,
+      "reused_from_pilot": false,
+      "signature": "c1485539da22e8530ee5c1898c4687f0fdc2cea0dc1b938d7e94b306b6c0587c",
+      "specimen_key": "cgtnjyggtm:q24-44",
+      "status": "VALID_AFTER_REPAIR"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "59e6ba2bdfbb21f177f83a0f8ff2dad98df90bc620392d241a0497369190e5e3",
+      "specimen_key": "cgtnjyggtm:q24-45",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "7fe097525bba9bfc28580868970cc6b5c31533b088026f8d27c43d2364acae2e",
+      "specimen_key": "cgtnjyggtm:q24-46",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "a5c00e0b1bc00278244b55b6fc69581a9dd8356b1f11a97ad6ba20df7f5d84fb",
+      "specimen_key": "cgtnjyggtm:q24-47",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": true,
+      "signature": "6cf30c364bb69a5bcb5981da40a2baeb30098b8764cf3ca283933a0bc94be647",
+      "specimen_key": "cgtnjyggtm:q24-48",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "c64d6ee5c79432ea09fc194bc93c474972bdaa4abc54f3795ce4088f0a475fdd",
+      "specimen_key": "cgtnjyggtm:q24-49",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "f2fe55fc591c936005e723be920cbeb583fc4a2f6aff791ae0c4a50a05444bd4",
+      "specimen_key": "cgtnjyggtm:q24-5",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 2,
+      "reused_from_pilot": false,
+      "signature": "619deecf3bdc0b609702495364f334067f5a8c3a05dd8f99c612869a0397e878",
+      "specimen_key": "cgtnjyggtm:q24-6",
+      "status": "SCHEMA_INVALID_AFTER_ONE_REPAIR"
+    },
+    {
+      "attempts": 2,
+      "reused_from_pilot": false,
+      "signature": "bca5e283d8b8908345d8504352c5e411b7d25e156a9ce0eaa8bafff2c25ad5b3",
+      "specimen_key": "cgtnjyggtm:q24-7",
+      "status": "VALID_AFTER_REPAIR"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "4ccd0b5d237114d66d0f39c7af642b3e391eb453ca83b6c83617daf072008c73",
+      "specimen_key": "cgtnjyggtm:q24-8",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 2,
+      "reused_from_pilot": false,
+      "signature": "30446f398141d9409685cbf6869bb7ec8cd8a6da57b0c8c688db942e05217cd0",
+      "specimen_key": "cgtnjyggtm:q24-9",
+      "status": "VALID_AFTER_REPAIR"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "329fafb642184a3889eefb025db8ef5a21244948fc12078c044c4a14d63993d7",
+      "specimen_key": "w68dtmpfyf:q16-1",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "14b584f92342c5a897ea253e2a2776b4710e4eaf7c20bee483af84f83df25d19",
+      "specimen_key": "w68dtmpfyf:q16-10",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "ddbff64efcaa419af10aab8cf06f841ef6e7b17c8cab73cf6bf6a08d43802abd",
+      "specimen_key": "w68dtmpfyf:q16-12",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "a81c20414c640d953f907151387e0ed9b225aad4794977da3d3751294654c454",
+      "specimen_key": "w68dtmpfyf:q16-14",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 2,
+      "reused_from_pilot": false,
+      "signature": "2254e3457eb63f12d2d226d09adfead7286b6c78a6c17fd42df57c9132499541",
+      "specimen_key": "w68dtmpfyf:q16-16",
+      "status": "VALID_AFTER_REPAIR"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "29925a9d6d7b7c74f1f6f5beccf513078a48af082baec088961ff25f3a32e58f",
+      "specimen_key": "w68dtmpfyf:q16-17",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "56ef9033319ae08d0d6d5e78df17ab03750ab1816bf188968cc2cb547db1a9a2",
+      "specimen_key": "w68dtmpfyf:q16-19",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "951aee4b4f865a4cd619a4fd683268b34a290d2141c4172695c1b022d5a0f474",
+      "specimen_key": "w68dtmpfyf:q16-2",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "f2cdd59fa931552feb8744abf7dcecd69e8c5c1ec953dcf8d3f4d367acf8e618",
+      "specimen_key": "w68dtmpfyf:q16-20",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "164b1a4ecdb9c9e5346b419a5520692c1f0765552d2400919cf50fb80241bdbf",
+      "specimen_key": "w68dtmpfyf:q16-21",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 2,
+      "reused_from_pilot": false,
+      "signature": "531f6a0144b6f0146ad304f032a4872ed8a11fa8138029190f1a144228518658",
+      "specimen_key": "w68dtmpfyf:q16-22",
+      "status": "SCHEMA_INVALID_AFTER_ONE_REPAIR"
+    },
+    {
+      "attempts": 2,
+      "reused_from_pilot": false,
+      "signature": "cf6d5ba61a58cd15c4364ca7598f04101dd2e48bf34d296b8eccb0ce86158548",
+      "specimen_key": "w68dtmpfyf:q16-23",
+      "status": "SCHEMA_INVALID_AFTER_ONE_REPAIR"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "b613f4dbc18d87e6059853bddb406557454cc13a960b83e29de0fccf27eb425c",
+      "specimen_key": "w68dtmpfyf:q16-26",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "3a70f1903c12cd7371ee4bc6438a2a59f0fd0c8f8c282328fba2d13d0649f069",
+      "specimen_key": "w68dtmpfyf:q16-27",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": true,
+      "signature": "b45982b1f9d0ab121842f04ba399cd3c2b67185cd3109d237a9868415960c22c",
+      "specimen_key": "w68dtmpfyf:q16-29",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "cd1edf82e1e304ef5e35725e540dba3d74b582990b6c1dba381a7dd49124dbbc",
+      "specimen_key": "w68dtmpfyf:q16-3",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "ab819da72bffc2a44ee8771615263f5b5b7f7b00f3806e6272acd08c54aca225",
+      "specimen_key": "w68dtmpfyf:q16-30",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "90734d5c8d9e89ed4ec420bf2054a68ca4d904055a8cf3ff18394bfef287c362",
+      "specimen_key": "w68dtmpfyf:q16-31",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 2,
+      "reused_from_pilot": false,
+      "signature": "3f54ccfdd148484d4c323e57236775a1f2d40bdb63fcbc5b9ee3e418eec306e3",
+      "specimen_key": "w68dtmpfyf:q16-32",
+      "status": "VALID_AFTER_REPAIR"
+    },
+    {
+      "attempts": 2,
+      "reused_from_pilot": false,
+      "signature": "155d84d58a38aab68357d9b0340f89f958a0e3280d7a1c5c62ccde8d976e8bbd",
+      "specimen_key": "w68dtmpfyf:q16-33",
+      "status": "SCHEMA_INVALID_AFTER_ONE_REPAIR"
+    },
+    {
+      "attempts": 2,
+      "reused_from_pilot": false,
+      "signature": "7d3e90b184063c47bd086e7e77b90199d6cfda55be31e108af12c3466e1e9c3c",
+      "specimen_key": "w68dtmpfyf:q16-34",
+      "status": "SCHEMA_INVALID_AFTER_ONE_REPAIR"
+    },
+    {
+      "attempts": 2,
+      "reused_from_pilot": false,
+      "signature": "0fe38d7bc76e67dec5a7b2da163787e5d9235bf17747ad91c0e1cea98ce1066f",
+      "specimen_key": "w68dtmpfyf:q16-35",
+      "status": "SCHEMA_INVALID_AFTER_ONE_REPAIR"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "57c58a20da616d3bdcc3b95a0408e36906d78f270c90de09027a17ea99b19659",
+      "specimen_key": "w68dtmpfyf:q16-36",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 2,
+      "reused_from_pilot": false,
+      "signature": "54f4866c3dd0cfc3a62596b19967d10b2c1ea142890d5ef92d53cd227860558a",
+      "specimen_key": "w68dtmpfyf:q16-37",
+      "status": "SCHEMA_INVALID_AFTER_ONE_REPAIR"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "35fb83bda55e08bdba529cc253a0eabeed1e0c479f7f27a97a9936117d6cb9eb",
+      "specimen_key": "w68dtmpfyf:q16-38",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "cfca2eb67e07ee9b5cd8f627aeb07ec51039abdd551be7116633e0cad8405906",
+      "specimen_key": "w68dtmpfyf:q16-40",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "d976404b16a8f95bd5e08ec49b7328d34e0943e374bff60a3e9e53db32fe7bd9",
+      "specimen_key": "w68dtmpfyf:q16-41",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "6175aa0cb6910b53c583df5d9d1b082edb6b1252ca830fecf65fc2d8400108d3",
+      "specimen_key": "w68dtmpfyf:q16-42",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "ec9d34834867097d956210ed1df16eea11c65ea060e3ea1a3c3c750477dbf1f0",
+      "specimen_key": "w68dtmpfyf:q16-43",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "9b0537e78ade578813153c4ff11ae1c8cf61b881b58359b682f14924b285f757",
+      "specimen_key": "w68dtmpfyf:q16-6",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "dcd53ea3c45ddff40f9a4e59fddc5ada0e596f5d33f0d47465871030b5f57f3e",
+      "specimen_key": "w68dtmpfyf:q16-7",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 2,
+      "reused_from_pilot": false,
+      "signature": "90245513c2e8e31c4b5a3533aec63635679cee72f10dac4ea138b91472198f36",
+      "specimen_key": "w68dtmpfyf:q16-8",
+      "status": "VALID_AFTER_REPAIR"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "9a5a87066de318a01fe8bf5823eae534ff0dcab1d862c3aa9cb3947706c6ca7d",
+      "specimen_key": "w68dtmpfyf:q16-9",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "c4f112ed03333f464ce0f3c0c7e7544b9ffe5c6884a918dc282b80b17a5cbdd9",
+      "specimen_key": "xcmzfsbd9t:c24-11t",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "a04dcf5021bfcdedd98006d63e7c8a2a2a5015d389e31710b9ade0974ca0d4d9",
+      "specimen_key": "xcmzfsbd9t:c24-13",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "20efdd82434a11f136804db132707de1acf40d5993f68308a4e1a1b6d2dd4005",
+      "specimen_key": "xcmzfsbd9t:c24-14",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 2,
+      "reused_from_pilot": false,
+      "signature": "83dd4310ce0a97fd8d41b997106e4dff840cfce7cc2af917dcb51ba298ee065c",
+      "specimen_key": "xcmzfsbd9t:c24-15",
+      "status": "VALID_AFTER_REPAIR"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "76c9821f0ddadebf5798afb9360faf6a4d79a2cc5fe2c99ff97f4f1a440b9161",
+      "specimen_key": "xcmzfsbd9t:c24-16",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "801c7c60561be5657114e27d041e3a9b7097293c81f88089e6ad683e7f138cd3",
+      "specimen_key": "xcmzfsbd9t:c24-17",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 2,
+      "reused_from_pilot": false,
+      "signature": "ac201823f82e87c467bba90fac1cb15b88e51ecef6c8ca1d117f4e39b06dbceb",
+      "specimen_key": "xcmzfsbd9t:c24-18",
+      "status": "VALID_AFTER_REPAIR"
+    },
+    {
+      "attempts": 2,
+      "reused_from_pilot": false,
+      "signature": "080ffc13f4bc1f45c63b6bc207b5b001b13b669edd3ebb9962e9d03c7be54d1a",
+      "specimen_key": "xcmzfsbd9t:c24-2",
+      "status": "VALID_AFTER_REPAIR"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "44c6b955f8833b27051ef3202c42ac89a8f569a1eef78365506f7c8b85772002",
+      "specimen_key": "xcmzfsbd9t:c24-20",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "edd9f17f4f03a63d74bb171a898e376d327d2d35e1e1ddb27e03664402be5d03",
+      "specimen_key": "xcmzfsbd9t:c24-21",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "90786380127015f8cbc125d6849bf2d758636f4b72d6c90baf156fe71705ee6d",
+      "specimen_key": "xcmzfsbd9t:c24-26",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "171dd40b8d21b93ecc86d8c9ab23c413fe5a0acb2efa7098c9a35b0dd4b4bcdb",
+      "specimen_key": "xcmzfsbd9t:c24-27",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 2,
+      "reused_from_pilot": false,
+      "signature": "6ba3707401356b171cecfd828623caa16e2541517e037dfee9267f044c8196dc",
+      "specimen_key": "xcmzfsbd9t:c24-3",
+      "status": "SCHEMA_INVALID_AFTER_ONE_REPAIR"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "d73a54c1f570aea6f8359129e4458918840db962fa1cbab63d5d4fcaa829a8f8",
+      "specimen_key": "xcmzfsbd9t:c24-30",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "b7e9b8c77c69fab4d68705e7f96b15f7ca25563127a10890ec183e295fcfd0c3",
+      "specimen_key": "xcmzfsbd9t:c24-31",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "bb557b784c82fca854b0b48d8ec1ce5cc598f7239c93f405820a64287c4d29ee",
+      "specimen_key": "xcmzfsbd9t:c24-32",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "7516ee0e686f058c8bc246539a9805694a3ae95ea9b53ec351ed3af21ddce7f8",
+      "specimen_key": "xcmzfsbd9t:c24-33",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "cc2596945ed4c0c49e91ce22c679ded8ce09018f0e6f9edb6b9ff265bbf606e8",
+      "specimen_key": "xcmzfsbd9t:c24-34",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "9a54b87a4a4caa33c1f17734cde1806f3708aacf6c98a5478e54931afc9b85c3",
+      "specimen_key": "xcmzfsbd9t:c24-37",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "c0b4d939627549d96df6905494142015f1ff965cb7821d07d9c61362e1c5210f",
+      "specimen_key": "xcmzfsbd9t:c24-39",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "a958eacd5d336fbe7c7193c9191f3d007b9980606270b7e54350a49d24b793da",
+      "specimen_key": "xcmzfsbd9t:c24-40",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "c5bb2478970ee576fb2da52b2a8e43a0d0aa9528cdd561225766783f220715e3",
+      "specimen_key": "xcmzfsbd9t:c24-41",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "4e1e7f20cdb4698322a7bed8381701a862c38e43cf33858659e8c4a91cefa2fe",
+      "specimen_key": "xcmzfsbd9t:c24-42",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": true,
+      "signature": "8af772e571e55acf9a33750eea5c0fc746e92b04d6fabeccef798917ffb64940",
+      "specimen_key": "xcmzfsbd9t:c24-43",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "f189ab02c347c7917da6c36e703dd2210becf2d95ff1c66cd4bc6fd2c6c1d5b8",
+      "specimen_key": "xcmzfsbd9t:c24-44",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "051bce49dfdd1f32c9a1ee4b4d979eb45bd5f202f3770a98aea71d25eb15a0ba",
+      "specimen_key": "xcmzfsbd9t:c24-45",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "f741f058a1073a636da9aa3c1c67a839e91b64d18a2793a244f3009ccfce5d74",
+      "specimen_key": "xcmzfsbd9t:c24-46",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "b867c3c6bd6f9c5f779baf0ae8990c62ed7ea151261b6561ffe5c4fddc73f72f",
+      "specimen_key": "xcmzfsbd9t:c24-47",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "eadc4e97a36fae5b68a156ab2989ccbc3f92c4a2f37f8f67b621dc169d1de196",
+      "specimen_key": "xcmzfsbd9t:c24-48",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 2,
+      "reused_from_pilot": false,
+      "signature": "9905c389c96f0c4f8e7f6002c356f305d483b73d4f0dca3cb0719e7d9586af8b",
+      "specimen_key": "xcmzfsbd9t:c24-49",
+      "status": "SCHEMA_INVALID_AFTER_ONE_REPAIR"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "9fb57facd7a39404aa4f6c62cc1957d27e134f96527b0d9e32de6811cef5daf5",
+      "specimen_key": "xcmzfsbd9t:c24-50",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "6d9042dd9cab0d464a63e90f5a39b442b7f28843dfc475429a1894e7b18815e8",
+      "specimen_key": "xcmzfsbd9t:c24-51",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "a5dd99b934464cba190d2bb9e82166507522dbf54a4289d770f73f6dfbbf73eb",
+      "specimen_key": "xcmzfsbd9t:c24-52",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "52206f14f507859272b9be296af4c65db1b79cfef88497737d4efddbedd31d15",
+      "specimen_key": "xcmzfsbd9t:c24-53",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "96d7c998fb17b517343021a21b564c33d2ada1389661af397c038057344121f1",
+      "specimen_key": "xcmzfsbd9t:c24-54",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 2,
+      "reused_from_pilot": false,
+      "signature": "af3685f924d84da577f5e7e92da2508a3b87e32a2a388560457f1e74beb01acc",
+      "specimen_key": "xcmzfsbd9t:c24-55",
+      "status": "SCHEMA_INVALID_AFTER_ONE_REPAIR"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "f319a1a4b2a1d01957ea2b24f2a85b9d24a5cf7e2a3d4750742ccde0ecd80d7f",
+      "specimen_key": "xcmzfsbd9t:c24-56",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "0438b3f65f186e56ce5489b4c204ecc22e1df7a244f95273aa8e313fa85a8be0",
+      "specimen_key": "xcmzfsbd9t:c24-57",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "7e9c02fcf5a253ce86dc1a22ea194a49b65ac1a68f881c80169d240914de0002",
+      "specimen_key": "xcmzfsbd9t:c24-58",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "a1c1560475dba301a1d74b004cd4dae9fc58b6abfbfbe45401e69f3ae6e7cf2a",
+      "specimen_key": "xcmzfsbd9t:c24-59",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "7305626a20ff4c49ae0ca55eb7735e00cf87e3460b217b8ff97954039a1aec7a",
+      "specimen_key": "xcmzfsbd9t:c24-6t",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "d2edcd8004f628553f9b723e3c03e5dab2a26d2b9161f6e756d7944d606f1407",
+      "specimen_key": "xcmzfsbd9t:c24-8",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "e3bc242d08640f352ad87f8624b66974495e27c0e88dbf976655788be04f7539",
+      "specimen_key": "xcmzfsbd9t:c24-9",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 2,
+      "reused_from_pilot": false,
+      "signature": "14c002808169c7694e6a2fc49df8cb88c171d849a7307a578f204a2a0e347da8",
+      "specimen_key": "xcmzfsbd9t:c24-9t",
+      "status": "SCHEMA_INVALID_AFTER_ONE_REPAIR"
+    },
+    {
+      "attempts": 2,
+      "reused_from_pilot": false,
+      "signature": "a63bceedc3d1c6813c2a497e9b96cc165aebf047b9f8fc6e859313a15b13849b",
+      "specimen_key": "yfxyg8jm46:c16-1",
+      "status": "VALID_AFTER_REPAIR"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "cc7b73fd0bae200ea317f079bb2673dfd6178d61f2fc71a9c8b7ed407fafb1ed",
+      "specimen_key": "yfxyg8jm46:c16-11",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "1d81b3a76f7b20a159692c5a3aec9ba40c5d3a812874d940155144d57cc1c977",
+      "specimen_key": "yfxyg8jm46:c16-12",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "17371704417d6f48f4bb552a38193bcde9c8a38329a7b9ab218889493bc2387c",
+      "specimen_key": "yfxyg8jm46:c16-13",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "e3bba8e0d7fcc543db6179d70b17c35574b928920b74562320d90f9dadd2338a",
+      "specimen_key": "yfxyg8jm46:c16-14",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "175d74763614d550fc965ea2fb4191cf0c642e8cebacae2660f60f6113c23e62",
+      "specimen_key": "yfxyg8jm46:c16-16",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "29d3b4f447fe8f352ebdb8c2f6b1cc5ef32c407ad597403ea5ccfcb5bab09db0",
+      "specimen_key": "yfxyg8jm46:c16-17",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "0941776fb7fc89928ac8bd650a219a619e508076aa7105be6fa4a32b849aa32a",
+      "specimen_key": "yfxyg8jm46:c16-18",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "b67fae562a1f53863b160dc9b2a1cbf4b3a12303c34f794721ba86aebde36fc3",
+      "specimen_key": "yfxyg8jm46:c16-19",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "a44e3808de3de3fb75f4ef7081de886f64a31da65d87b5f31eac46e0f79129ec",
+      "specimen_key": "yfxyg8jm46:c16-2",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 2,
+      "reused_from_pilot": true,
+      "signature": "1eab8e668d046a58e43ec8e9fec78e5a9b6ab985c528d69ea5473ac9eb1cef65",
+      "specimen_key": "yfxyg8jm46:c16-20",
+      "status": "VALID_AFTER_REPAIR"
+    },
+    {
+      "attempts": 2,
+      "reused_from_pilot": false,
+      "signature": "af5592bdee310e2fc3589c354917a01fc5cb1ec907cfa2252b631e1ad86d8f06",
+      "specimen_key": "yfxyg8jm46:c16-21",
+      "status": "VALID_AFTER_REPAIR"
+    },
+    {
+      "attempts": 2,
+      "reused_from_pilot": false,
+      "signature": "12d8f09b32259669dabe3ae1c8a25de77a96db13487d8d834a3d6cda743c12c0",
+      "specimen_key": "yfxyg8jm46:c16-22",
+      "status": "VALID_AFTER_REPAIR"
+    },
+    {
+      "attempts": 2,
+      "reused_from_pilot": false,
+      "signature": "6aed9d6cb32ca450a59d8d0d10d330aa6727e518467b44066d979e3d241a677f",
+      "specimen_key": "yfxyg8jm46:c16-24",
+      "status": "VALID_AFTER_REPAIR"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "284b9a15f27c1340f7621e5b8417fb83e3a828418992575cc489f7a6defb1dbe",
+      "specimen_key": "yfxyg8jm46:c16-25",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "18a8dc902e30e6713c499d7225f403bbe037b13f6fa34a110ac97863285f7799",
+      "specimen_key": "yfxyg8jm46:c16-27",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "4c78f39fcc0086ce8d231e2ce75c51c2c6048047db18ec2a15765aa0280e7719",
+      "specimen_key": "yfxyg8jm46:c16-29",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "51eb66186dea1baa25a0bf5522943acee81a683e895e5b0ddad9afb77bb1a277",
+      "specimen_key": "yfxyg8jm46:c16-3",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "0ce92d86ef6785183a097ec902fe4a1162369496942939cb87b2bb4766440083",
+      "specimen_key": "yfxyg8jm46:c16-30",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "bf6e5e389d55826d81c9c84af820f9c5f1c7cf1a3f80a083ea0a2e2fbcedfdfa",
+      "specimen_key": "yfxyg8jm46:c16-33",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "5261ebe10ca851bcbc4ceffa035b11161eff68371d5c1d3385bf084d2fc9764d",
+      "specimen_key": "yfxyg8jm46:c16-36",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "7063bcb30a0442f1ceb90a0fa8ca6935bb667bf2dea2fdeba7d7fa76ecb33536",
+      "specimen_key": "yfxyg8jm46:c16-37",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "12d8ec594be3e2ea0877d0f3e6cc156912551a52e2a7809f119f2d288acbf912",
+      "specimen_key": "yfxyg8jm46:c16-39",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "d1699153961b613661054fcf7900e1eaa9039c7801ac2a599bda7c5d28afc6d7",
+      "specimen_key": "yfxyg8jm46:c16-4",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "2abfbebe1cc6c7f89c0a561d6fc19d0b9a596db92163907b8429075535faffb8",
+      "specimen_key": "yfxyg8jm46:c16-40",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "2daba292127f33930233c75ad3006ee7cacff814cbd2861473990532644d93fb",
+      "specimen_key": "yfxyg8jm46:c16-41",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "4a90fbf6c27a0c6d30aa71613b9aa188a96948478400e0dd84aeb5d596731548",
+      "specimen_key": "yfxyg8jm46:c16-42",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "0444c8bc2fe48f9ffad96bb493fc440ed92c0ea91c22070cb55c794dbd73763f",
+      "specimen_key": "yfxyg8jm46:c16-43",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "7c85a1138020135af5fc108083df1045c5c97138e1118f6c5932f89899c2d12f",
+      "specimen_key": "yfxyg8jm46:c16-5",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "918365412a54d9a92a387f2086d084d28c5eef604cb499363c176ca05a566cad",
+      "specimen_key": "yfxyg8jm46:c16-6",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "1820be765c69c9101a9c39dbda7a016b45ff3ae688e91883dda919d0b2f33412",
+      "specimen_key": "yfxyg8jm46:c16-7",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 2,
+      "reused_from_pilot": false,
+      "signature": "e2d70c24a54e29fc5fab1d486a0890ea39e39afb1944eca6200fe1b29e84f913",
+      "specimen_key": "yfxyg8jm46:c16-8",
+      "status": "VALID_AFTER_REPAIR"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "df00912b323069c8b5b56ce30ee1e1031d9208b9f4ec7c04dd1f69a4c0a303b3",
+      "specimen_key": "yfxyg8jm46:c16-9",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "04b84eb03187e47f98c0d6e0ef0db92544d58485a18766a698003f90e05b7b35",
+      "specimen_key": "ykhs7s2dck:q8-1",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "f864a8e7ccb3b42d80dd9f7efa4a338b8ea125447be3ab2d81d2a2375c328645",
+      "specimen_key": "ykhs7s2dck:q8-10",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 2,
+      "reused_from_pilot": false,
+      "signature": "9c4219f068d2dc152131b50a97e67dff3a1cbefa6598889cfcd5961ff49613b6",
+      "specimen_key": "ykhs7s2dck:q8-11",
+      "status": "VALID_AFTER_REPAIR"
+    },
+    {
+      "attempts": 2,
+      "reused_from_pilot": false,
+      "signature": "217f82e323ea153f9872f62bc6e6c86dd846bc9cdf96feff822f40875a732b33",
+      "specimen_key": "ykhs7s2dck:q8-12",
+      "status": "SCHEMA_INVALID_AFTER_ONE_REPAIR"
+    },
+    {
+      "attempts": 2,
+      "reused_from_pilot": false,
+      "signature": "d5259de64552c2107ec83580fb0a827722277c52c248321ff80fc8ea338cd84b",
+      "specimen_key": "ykhs7s2dck:q8-13",
+      "status": "VALID_AFTER_REPAIR"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "5bf76eb0aa6ee581da3be666fecdd477ac80041f34b59916912ba3cdd2f21f6d",
+      "specimen_key": "ykhs7s2dck:q8-15",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "ae35011971c09a67dcf85802484f7b09d8f4b5ae9b6e384e3c84702ab4e26b48",
+      "specimen_key": "ykhs7s2dck:q8-18",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 2,
+      "reused_from_pilot": false,
+      "signature": "dfb6a886d853dc30d908ff441f75ef8d052cfb73297103503f6ce0898bd79379",
+      "specimen_key": "ykhs7s2dck:q8-19",
+      "status": "SCHEMA_INVALID_AFTER_ONE_REPAIR"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "50461c75c212fd3a02ab483b357883b9227c79a33f82d47f9d8381fea827f16d",
+      "specimen_key": "ykhs7s2dck:q8-2",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "6733ad6eea1350376e168f533b883b4e6e7cbd16f3ba12da229dc52d88454f60",
+      "specimen_key": "ykhs7s2dck:q8-20",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 2,
+      "reused_from_pilot": false,
+      "signature": "f049b9921ad14e7184ad7805ad4a174ace46afd5412fa7448885059528de0f85",
+      "specimen_key": "ykhs7s2dck:q8-21",
+      "status": "SCHEMA_INVALID_AFTER_ONE_REPAIR"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "eec20f8811262caf9948b942c9ac2ca46154f7626cd025e9e60de2076cfd3235",
+      "specimen_key": "ykhs7s2dck:q8-22",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "ce789b49d4cb299d5a6f267ff43659aca8ec847cf0b494b8cf771969c8a2069f",
+      "specimen_key": "ykhs7s2dck:q8-24",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "5f54d1afefea84b463bf6e35a8c7062ebee8e6f64a5bcc0070b1c5db2006e115",
+      "specimen_key": "ykhs7s2dck:q8-28",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 2,
+      "reused_from_pilot": false,
+      "signature": "090f1325112af5d6170d2c73a40c74a35ad7f8448ac2a8c3a24075b702ae9ca4",
+      "specimen_key": "ykhs7s2dck:q8-29",
+      "status": "SCHEMA_INVALID_AFTER_ONE_REPAIR"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": true,
+      "signature": "1fe874d6f066aec3177e2b83c74d31071bd38aa286f0307b78a6ab0992bcde1d",
+      "specimen_key": "ykhs7s2dck:q8-3",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 2,
+      "reused_from_pilot": false,
+      "signature": "97161b1492e8f9f1760ae3d1fb59f0deecbe8e05c348254a265d0a089af87a9c",
+      "specimen_key": "ykhs7s2dck:q8-30",
+      "status": "VALID_AFTER_REPAIR"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "e2b0e0ab69a9794a42ae45fa8a1a5247e7af396f5c89cc274337421655734f28",
+      "specimen_key": "ykhs7s2dck:q8-32",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "583e0c4607da45d8eabe61196927044d6b886d5af726d234ad12274a05eec4de",
+      "specimen_key": "ykhs7s2dck:q8-33",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "3ccfb62c3eb15cbb96dd79059453cb547e7bd3c26c122639526ae176fdfce8d6",
+      "specimen_key": "ykhs7s2dck:q8-34",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "3eb8f3430f77046fbf5f536186d61679b1471d68329475917ad94be38bcf5297",
+      "specimen_key": "ykhs7s2dck:q8-35",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "ee8de17cad26e2cfa1697153386ddc8a6202fd02aaeedb39c75c238e25948569",
+      "specimen_key": "ykhs7s2dck:q8-36",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "4fa394386eab2dfaf109bd37191413d445d9d4b907877333ac0aea8a278a5f60",
+      "specimen_key": "ykhs7s2dck:q8-37",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 2,
+      "reused_from_pilot": false,
+      "signature": "8adf5be7d680540fb8c687fc1c7409f8582f8b7fd91fda4a1c63aa67e7f17e92",
+      "specimen_key": "ykhs7s2dck:q8-39",
+      "status": "SCHEMA_INVALID_AFTER_ONE_REPAIR"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "8da3989b626ad1b9d3f8bd01640568b0fe4bb88c1aaafcd7caa74d8354a54e41",
+      "specimen_key": "ykhs7s2dck:q8-41",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 1,
+      "reused_from_pilot": false,
+      "signature": "7d602bc0f43ca9e35a08c4a74f57d209b7f1b6c104920246b2d7b212233227f7",
+      "specimen_key": "ykhs7s2dck:q8-5",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": 2,
+      "reused_from_pilot": false,
+      "signature": "ded957bb87996281faa204a70656b32aecdf9548162e1c52dd84ac1d040d0cc6",
+      "specimen_key": "ykhs7s2dck:q8-7",
+      "status": "VALID_AFTER_REPAIR"
+    },
+    {
+      "attempts": 2,
+      "reused_from_pilot": false,
+      "signature": "6ef15e9f0ec3fb2a378787d960c2a1d26207c9310253136ff4088135f8a6c731",
+      "specimen_key": "ykhs7s2dck:q8-8",
+      "status": "SCHEMA_INVALID_AFTER_ONE_REPAIR"
+    },
+    {
+      "attempts": 2,
+      "reused_from_pilot": false,
+      "signature": "f7264b0e64efe015440dad74e44ad0e77c8f2e0ceb987a5bd69f7e30009862a8",
+      "specimen_key": "ykhs7s2dck:q8-9",
+      "status": "SCHEMA_INVALID_AFTER_ONE_REPAIR"
+    }
+  ],
+  "status": "C_PRIOR_COMPLETE",
+  "task_id": "CAI_V3_C_RENDER_RETRAIN_RELEASE_R1_331f5295",
+  "terminal_rows": 211,
+  "test_rows": 0,
+  "train_rows": 161,
+  "valid_rows": 50
+}

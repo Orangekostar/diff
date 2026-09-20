@@ -1,0 +1,19 @@
+```json
+{
+  "no_reliable_cue": false,
+  "regions": [
+    {
+      "cells": [27, 28, 29],
+      "cue": "hole",
+      "alternative": "孔洞",
+      "confidence": "high"
+    },
+    {
+      "cells": [35, 36, 37],
+      "cue": "hole",
+      "alternative": "孔洞",
+      "confidence": "high"
+    }
+  ]
+}
+```

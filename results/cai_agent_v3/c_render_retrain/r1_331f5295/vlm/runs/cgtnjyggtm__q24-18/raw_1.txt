@@ -1,0 +1,19 @@
+```json
+{
+  "no_reliable_cue": false,
+  "regions": [
+    {
+      "cells": [27, 28, 35, 36],
+      "cue": "circle",
+      "alternative": "可能是一个小的缺陷或瑕疵",
+      "confidence": "medium"
+    },
+    {
+      "cells": [27, 28, 35, 36],
+      "cue": "circle",
+      "alternative": "可能是材料表面的自然凹陷",
+      "confidence": "medium"
+    }
+  ]
+}
+```

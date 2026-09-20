@@ -1,0 +1,168 @@
+\begin{thebibliography}{18}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Hasebe et~al.(2022{\natexlab{a}})Hasebe, Higuchi, Yokozeki, and
+  Takeda]{hasebe2022data}
+Saki Hasebe, Ryo Higuchi, Tomohiro Yokozeki, and Shin-ichi Takeda.
+\newblock {Dataset for surface and internal damage after impact on CFRP
+  laminates}.
+\newblock \emph{Data in Brief}, 43:\penalty0 108462, 2022{\natexlab{a}}.
+\newblock \doi{10.1016/j.dib.2022.108462}.
+\newblock URL \url{https://pmc.ncbi.nlm.nih.gov/articles/PMC9294053/}.
+
+\bibitem[Hasebe et~al.(2025{\natexlab{a}})Hasebe, Higuchi, Yokozeki, and
+  Takeda]{hasebe2025data}
+Saki Hasebe, Ryo Higuchi, Tomohiro Yokozeki, and Shin-ichi Takeda.
+\newblock {Dataset of compression after impact testing on carbon fiber
+  reinforced plastic laminates}.
+\newblock \emph{Data in Brief}, 60:\penalty0 111509, 2025{\natexlab{a}}.
+\newblock \doi{10.1016/j.dib.2025.111509}.
+\newblock URL \url{https://pmc.ncbi.nlm.nih.gov/articles/PMC11999467/}.
+
+\bibitem[Mack et~al.(2026)Mack, Mirza, Duan, Hasebe, Higuchi, Yokozeki, and
+  Tan]{mack2026}
+Jason~P. Mack, Faizan Mirza, Zhong-Hui Duan, Saki Hasebe, Ryo Higuchi, Tomohiro
+  Yokozeki, and K.~T. Tan.
+\newblock {Deep learning for predicting impact energy and compression after
+  impact strength of composite materials using C-scan images}.
+\newblock \emph{Advanced Engineering Informatics}, 72:\penalty0 104518, 2026.
+\newblock \doi{10.1016/j.aei.2026.104518}.
+\newblock URL \url{https://ideaexchange.uakron.edu/university_research/55/}.
+
+\bibitem[Fuentes et~al.(2020)Fuentes, Gardner, Mineo, Rogers, Pierce, Worden,
+  Dervilis, and Cross]{fuentes2020}
+R.~Fuentes, P.~Gardner, C.~Mineo, T.~J. Rogers, S.~G. Pierce, K.~Worden,
+  N.~Dervilis, and E.~J. Cross.
+\newblock {Autonomous ultrasonic inspection using Bayesian optimisation and
+  robust outlier analysis}.
+\newblock \emph{Mechanical Systems and Signal Processing}, 145:\penalty0
+  106897, 2020.
+\newblock \doi{10.1016/j.ymssp.2020.106897}.
+\newblock URL \url{https://eprints.whiterose.ac.uk/id/eprint/160984/}.
+
+\bibitem[Shim et~al.(2018)Shim, Hwang, and Yang]{shim2018}
+Hajin Shim, Sung~Ju Hwang, and Eunho Yang.
+\newblock {Joint Active Feature Acquisition and Classification with
+  Variable-Size Set Encoding}.
+\newblock In \emph{Advances in Neural Information Processing Systems},
+  volume~31, 2018.
+\newblock URL
+  \url{https://papers.nips.cc/paper/2018/file/e5841df2166dd424a57127423d276bbe-Paper.pdf}.
+
+\bibitem[Janisch et~al.(2019)Janisch, Pevný, and Lisý]{janisch2019}
+Jaromír Janisch, Tomáš Pevný, and Viliam Lisý.
+\newblock {Classification with Costly Features Using Deep Reinforcement
+  Learning}.
+\newblock \emph{Proceedings of the AAAI Conference on Artificial Intelligence},
+  33\penalty0 (01):\penalty0 3959--3966, 2019.
+\newblock \doi{10.1609/aaai.v33i01.33013959}.
+\newblock URL \url{https://ojs.aaai.org/index.php/AAAI/article/view/4287}.
+
+\bibitem[Covert et~al.(2023)Covert, Qiu, Lu, Kim, White, and Lee]{covert2023}
+Ian~Connick Covert, Wei Qiu, Mingyu Lu, Na~Yoon Kim, Nathan~J White, and Su-In
+  Lee.
+\newblock {Learning to Maximize Mutual Information for Dynamic Feature
+  Selection}.
+\newblock In \emph{Proceedings of the 40th International Conference on Machine
+  Learning}, volume 202, pages 6424--6447, 2023.
+\newblock URL \url{https://proceedings.mlr.press/v202/covert23a.html}.
+
+\bibitem[Williams(1992)]{williams1992}
+Ronald~J. Williams.
+\newblock {Simple statistical gradient-following algorithms for connectionist
+  reinforcement learning}.
+\newblock \emph{Machine Learning}, 8:\penalty0 229--256, 1992.
+\newblock \doi{10.1007/BF00992696}.
+\newblock URL
+  \url{https://people.cs.umass.edu/~barto/courses/cs687/williams92simple.pdf}.
+
+\bibitem[He et~al.(2015)He, Zhang, Ren, and Sun]{he2015}
+Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun.
+\newblock {Deep Residual Learning for Image Recognition}.
+\newblock \emph{arXiv}, 2015.
+\newblock \doi{10.48550/arXiv.1512.03385}.
+\newblock URL \url{https://arxiv.org/abs/1512.03385}.
+
+\bibitem[Bai et~al.(2025)Bai, Chen, Liu, Wang, Ge, Song, Dang, Wang, Wang,
+  Tang, Zhong, Zhu, Yang, Li, Wan, Wang, Ding, Fu, Xu, Ye, Zhang, Xie, Cheng,
+  Zhang, Yang, Xu, and Lin]{bai2025}
+Shuai Bai, Keqin Chen, Xuejing Liu, Jialin Wang, Wenbin Ge, Sibo Song, Kai
+  Dang, Peng Wang, Shijie Wang, Jun Tang, Humen Zhong, Yuanzhi Zhu, Mingkun
+  Yang, Zhaohai Li, Jianqiang Wan, Pengfei Wang, Wei Ding, Zheren Fu, Yiheng
+  Xu, Jiabo Ye, Xi~Zhang, Tianbao Xie, Zesen Cheng, Hang Zhang, Zhibo Yang,
+  Haiyang Xu, and Junyang Lin.
+\newblock {Qwen2.5-VL Technical Report}.
+\newblock \emph{arXiv}, 2025.
+\newblock \doi{10.48550/arXiv.2502.13923}.
+\newblock URL \url{https://arxiv.org/abs/2502.13923}.
+
+\bibitem[Vaswani et~al.(2017)Vaswani, Shazeer, Parmar, Uszkoreit, Jones, Gomez,
+  Kaiser, and Polosukhin]{vaswani2017}
+Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones,
+  Aidan~N. Gomez, Lukasz Kaiser, and Illia Polosukhin.
+\newblock {Attention Is All You Need}.
+\newblock \emph{arXiv}, 2017.
+\newblock \doi{10.48550/arXiv.1706.03762}.
+\newblock URL \url{https://arxiv.org/abs/1706.03762}.
+
+\bibitem[Hasebe et~al.(2025{\natexlab{b}})Hasebe, Higuchi, Yokozeki, and
+  Takeda]{data_cai}
+Saki Hasebe, Ryo Higuchi, Tomohiro Yokozeki, and Shin-ichi Takeda.
+\newblock {Datasets on CFRP specimens subjected to compression after impact
+  tests}.
+\newblock Mendeley Data, 2025{\natexlab{b}}.
+\newblock URL \url{https://data.mendeley.com/datasets/8scdmfdcfb/3}.
+
+\bibitem[Hasebe et~al.(2022{\natexlab{b}})Hasebe, Higuchi, Yokozeki, and
+  Takeda]{data_74t7kcdgkr}
+Saki Hasebe, Ryo Higuchi, Tomohiro Yokozeki, and Shin-ichi Takeda.
+\newblock {Datasets on CFRP specimens after low-velocity impact tests: 8-layer
+  cross-ply laminates}.
+\newblock Mendeley Data, 2022{\natexlab{b}}.
+\newblock URL \url{https://data.mendeley.com/datasets/74t7kcdgkr/1}.
+
+\bibitem[Hasebe et~al.(2022{\natexlab{c}})Hasebe, Higuchi, Yokozeki, and
+  Takeda]{data_cgtnjyggtm}
+Saki Hasebe, Ryo Higuchi, Tomohiro Yokozeki, and Shin-ichi Takeda.
+\newblock {Datasets on CFRP specimens after low-velocity impact tests: 24-layer
+  quasi-isotropic laminates}.
+\newblock Mendeley Data, 2022{\natexlab{c}}.
+\newblock URL \url{https://data.mendeley.com/datasets/cgtnjyggtm/1}.
+
+\bibitem[Hasebe et~al.(2022{\natexlab{d}})Hasebe, Higuchi, Yokozeki, and
+  Takeda]{data_w68dtmpfyf}
+Saki Hasebe, Ryo Higuchi, Tomohiro Yokozeki, and Shin-ichi Takeda.
+\newblock {Datasets on CFRP specimens after low-velocity impact tests: 16-layer
+  quasi-isotropic laminates}.
+\newblock Mendeley Data, 2022{\natexlab{d}}.
+\newblock URL \url{https://data.mendeley.com/datasets/w68dtmpfyf/1}.
+
+\bibitem[Hasebe et~al.(2022{\natexlab{e}})Hasebe, Higuchi, Yokozeki, and
+  Takeda]{data_xcmzfsbd9t}
+Saki Hasebe, Ryo Higuchi, Tomohiro Yokozeki, and Shin-ichi Takeda.
+\newblock {Datasets on CFRP specimens after low-velocity impact tests: 24-layer
+  cross-ply laminates}.
+\newblock Mendeley Data, 2022{\natexlab{e}}.
+\newblock URL \url{https://data.mendeley.com/datasets/xcmzfsbd9t/1}.
+
+\bibitem[Hasebe et~al.(2022{\natexlab{f}})Hasebe, Higuchi, Yokozeki, and
+  Takeda]{data_yfxyg8jm46}
+Saki Hasebe, Ryo Higuchi, Tomohiro Yokozeki, and Shin-ichi Takeda.
+\newblock {Datasets on CFRP specimens after low-velocity impact tests: 16-layer
+  cross-ply laminates}.
+\newblock Mendeley Data, 2022{\natexlab{f}}.
+\newblock URL \url{https://data.mendeley.com/datasets/yfxyg8jm46/1}.
+
+\bibitem[Hasebe et~al.(2022{\natexlab{g}})Hasebe, Higuchi, Yokozeki, and
+  Takeda]{data_ykhs7s2dck}
+Saki Hasebe, Ryo Higuchi, Tomohiro Yokozeki, and Shin-ichi Takeda.
+\newblock {Datasets on CFRP specimens after low-velocity impact tests: 8-layer
+  quasi-isotropic laminates}.
+\newblock Mendeley Data, 2022{\natexlab{g}}.
+\newblock URL \url{https://data.mendeley.com/datasets/ykhs7s2dck/1}.
+
+\end{thebibliography}

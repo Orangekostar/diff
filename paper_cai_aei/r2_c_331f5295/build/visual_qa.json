@@ -1,0 +1,130 @@
+{
+  "documents": {
+    "main": {
+      "checked_pages": [
+        {
+          "bbox_coverage": 0.6611875304182997,
+          "content_bbox": [
+            95,
+            159,
+            814,
+            1236
+          ],
+          "height": 1287,
+          "page": 1,
+          "preview": "build/visual_qa/main_page_1.png",
+          "width": 910
+        },
+        {
+          "bbox_coverage": 0.698636406328714,
+          "content_bbox": [
+            95,
+            99,
+            814,
+            1237
+          ],
+          "height": 1287,
+          "page": 7,
+          "preview": "build/visual_qa/main_page_7.png",
+          "width": 910
+        },
+        {
+          "bbox_coverage": 0.6983785445323907,
+          "content_bbox": [
+            95,
+            100,
+            815,
+            1236
+          ],
+          "height": 1287,
+          "page": 11,
+          "preview": "build/visual_qa/main_page_11.png",
+          "width": 910
+        },
+        {
+          "bbox_coverage": 0.6980224903301826,
+          "content_bbox": [
+            95,
+            99,
+            814,
+            1236
+          ],
+          "height": 1287,
+          "page": 12,
+          "preview": "build/visual_qa/main_page_12.png",
+          "width": 910
+        },
+        {
+          "bbox_coverage": 0.6966930505392044,
+          "content_bbox": [
+            97,
+            99,
+            814,
+            1237
+          ],
+          "height": 1287,
+          "page": 19,
+          "preview": "build/visual_qa/main_page_19.png",
+          "width": 910
+        }
+      ],
+      "pages": 19,
+      "required_terms": [
+        "Abstract",
+        "Algorithm 1",
+        "Table 3",
+        "Figure 2",
+        "Results and discussion"
+      ],
+      "term_pages": {
+        "Abstract": 1,
+        "Algorithm 1": 7,
+        "Figure 2": 12,
+        "Results and discussion": 11,
+        "Table 3": 12
+      }
+    },
+    "supplementary": {
+      "checked_pages": [
+        {
+          "bbox_coverage": 0.6998642383257768,
+          "content_bbox": [
+            95,
+            96,
+            814,
+            1236
+          ],
+          "height": 1287,
+          "page": 1,
+          "preview": "build/visual_qa/supplementary_page_1.png",
+          "width": 910
+        },
+        {
+          "bbox_coverage": 0.6943389943389944,
+          "content_bbox": [
+            95,
+            106,
+            814,
+            1237
+          ],
+          "height": 1287,
+          "page": 5,
+          "preview": "build/visual_qa/supplementary_page_5.png",
+          "width": 910
+        }
+      ],
+      "pages": 5,
+      "required_terms": [
+        "Supplementary Information",
+        "Table S1",
+        "Complete same-cost results"
+      ],
+      "term_pages": {
+        "Complete same-cost results": 1,
+        "Supplementary Information": 1,
+        "Table S1": 1
+      }
+    }
+  },
+  "status": "PASS"
+}

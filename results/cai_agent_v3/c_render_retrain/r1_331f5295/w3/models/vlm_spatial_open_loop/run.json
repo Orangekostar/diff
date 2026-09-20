@@ -1,0 +1,33 @@
+{
+  "environment_identity": "aaf132b1f642bb0067ceaf44bdad67812d7b8338ead8c6acde08b6607215b4fc",
+  "first_batch_specimen_keys": [
+    "xcmzfsbd9t:c24-13",
+    "74t7kcdgkr:c8-40",
+    "xcmzfsbd9t:c24-33",
+    "cgtnjyggtm:q24-38",
+    "xcmzfsbd9t:c24-27",
+    "74t7kcdgkr:c8-14",
+    "74t7kcdgkr:c8-37",
+    "ykhs7s2dck:q8-7",
+    "cgtnjyggtm:q24-32",
+    "ykhs7s2dck:q8-11",
+    "cgtnjyggtm:q24-13",
+    "yfxyg8jm46:c16-30",
+    "w68dtmpfyf:q16-42",
+    "cgtnjyggtm:q24-2",
+    "74t7kcdgkr:c8-38",
+    "xcmzfsbd9t:c24-9"
+  ],
+  "initial_state_dict_sha256": "95b30b385358e491dfe0666a64c35ff16410a40ff16fba080bcf44fd7b34ecd5",
+  "input_signature": "f3de4bf695cceea8eb5af05bd9e6c17a60089e307711cedebf32a8edd51aa7b4",
+  "logical_update": 1250,
+  "method": "VLM_SPATIAL_OPEN_LOOP",
+  "resume_count": 0,
+  "run_id": "37341156bbba4aee8fa5e6d36ab056cb",
+  "schema_version": 1,
+  "selected_update": 1250,
+  "status": "COMPLETE",
+  "target_mean_mpa": 292.3829650878906,
+  "target_scale_mpa": 101.93511199951172,
+  "training_seed": 2026091303
+}

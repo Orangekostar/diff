@@ -1,0 +1,19 @@
+```json
+{
+  "no_reliable_cue": false,
+  "regions": [
+    {
+      "cells": [28, 36],
+      "cue": "小的凹陷",
+      "alternative": "可能是轻微的划痕或磨损",
+      "confidence": "medium"
+    },
+    {
+      "cells": [35, 36],
+      "cue": "透明的物质",
+      "alternative": "可能是粘合剂残留或液体滴落",
+      "confidence": "medium"
+    }
+  ]
+}
+```

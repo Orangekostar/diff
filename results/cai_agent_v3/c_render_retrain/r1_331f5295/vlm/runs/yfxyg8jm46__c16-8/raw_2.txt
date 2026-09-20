@@ -1,0 +1,13 @@
+```json
+{
+  "no_reliable_cue": false,
+  "regions": [
+    {
+      "cells": [27, 28, 35, 36],
+      "cue": "bullet hole",
+      "alternative": "a small impact or scratch",
+      "confidence": "medium"
+    }
+  ]
+}
+```

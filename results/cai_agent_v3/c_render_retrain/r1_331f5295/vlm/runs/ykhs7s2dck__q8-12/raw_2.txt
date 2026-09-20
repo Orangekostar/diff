@@ -1,0 +1,19 @@
+```json
+{
+  "no_reliable_cue": false,
+  "regions": [
+    {
+      "cells": [35, 36],
+      "cue": "小孔洞",
+      "alternative": "可能是轻微划痕或小缺陷",
+      "confidence": "medium"
+    },
+    {
+      "cells": [35, 36],
+      "cue": "周围有微弱的痕迹",
+      "alternative": "可能是轻微的机械应力或接触点",
+      "confidence": "medium"
+    }
+  ]
+}
+```

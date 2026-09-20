@@ -1,0 +1,19 @@
+```json
+{
+  "no_reliable_cue": false,
+  "regions": [
+    {
+      "cells": [35, 36, 37, 38],
+      "cue": "circle",
+      "alternative": "孔洞或切口",
+      "confidence": "medium"
+    },
+    {
+      "cells": [28, 29, 30, 31],
+      "cue": "circle",
+      "alternative": "孔洞或切口",
+      "confidence": "medium"
+    }
+  ]
+}
+```

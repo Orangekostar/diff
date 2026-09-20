@@ -1,0 +1,19 @@
+```json
+{
+  "no_reliable_cue": false,
+  "regions": [
+    {
+      "cells": [35, 36, 37],
+      "cue": "crack-like feature",
+      "alternative": "potential crack or scratch",
+      "confidence": "medium"
+    },
+    {
+      "cells": [36],
+      "cue": "bright spot with radiating lines",
+      "alternative": "light reflection or artifact",
+      "confidence": "high"
+    }
+  ]
+}
+```

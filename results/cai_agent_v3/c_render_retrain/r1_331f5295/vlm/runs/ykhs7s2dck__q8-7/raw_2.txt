@@ -1,0 +1,13 @@
+```json
+{
+  "no_reliable_cue": false,
+  "regions": [
+    {
+      "cells": [35, 36],
+      "cue": "孔洞",
+      "alternative": "可能是小虫洞或划痕",
+      "confidence": "medium"
+    }
+  ]
+}
+```

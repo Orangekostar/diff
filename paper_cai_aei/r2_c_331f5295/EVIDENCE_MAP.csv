@@ -1,0 +1,5 @@
+location,claim,evidence,status
+abstract and sections/05_results.md,current C same-cost performance and boundary,tables/method_summary.csv; tables/same_cost_paired_summary.csv,SUPPORTED_SELECTED_VALID
+sections/04_experimental_design.md,"211 priors, three retrained actors, six frozen controls",vlm_manifest_fit.json; actor_manifests.json; assembly_manifest.json,SUPPORTED_EXECUTION_RECORD
+sections/05_results.md historical comparison,historical A versus current C,tables/version_A_C_comparison.csv; tables/version_A_C_by_domain.csv,SUPPORTED_SELECTED_VALID
+sections/05_results.md timing and cases,signed timing and executed current C cases,analysis/timing_contributions.csv; tables/case_same_cost_states.csv; figures/F6_case_progression.pdf,SUPPORTED_EXECUTION_RECORD

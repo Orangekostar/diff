@@ -1,0 +1,19 @@
+```json
+{
+  "no_reliable_cue": false,
+  "regions": [
+    {
+      "cells": [36],
+      "cue": "small circular mark",
+      "alternative": "scratch or minor impact",
+      "confidence": "medium"
+    },
+    {
+      "cells": [35, 37],
+      "cue": "slight discoloration and faint lines",
+      "alternative": "light reflection or minor wear",
+      "confidence": "low"
+    }
+  ]
+}
+```

@@ -1,0 +1,33 @@
+{
+  "clean_sha256": "b4efdec4049042d713c1d74cdd75f3c9abfec9d066490ecd37236791a92c2b72",
+  "dataset_id": "ykhs7s2dck",
+  "full_inputs_reconstructed_by": "export-inputs",
+  "numbered_sha256": "92ba0c0fb2e6eb2774448530ea39b59012b1e31f6f47cd68ed213ee03d330ab2",
+  "render_config": {
+    "font_name": [
+      "DejaVu Sans",
+      "Book"
+    ],
+    "font_path": "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+    "font_sha256": "ae7b7855e115a5966d8b1b3f80f254ccc117ec86f9965e202ee2940453837280",
+    "font_size": 24,
+    "inset": 10,
+    "panel_rgba": [
+      0,
+      0,
+      0,
+      170
+    ],
+    "text_rgba": [
+      255,
+      255,
+      255,
+      230
+    ]
+  },
+  "signature": "9c4219f068d2dc152131b50a97e67dff3a1cbefa6598889cfcd5961ff49613b6",
+  "source_path": "data/public/hasebe/raw/ykhs7s2dck/v1/impacted surface image/q8-11.png",
+  "source_sha256": "7dca1e3de9f5ac04e587915ac05edc24fd4e3047cd0092353151283373234c71",
+  "specimen_key": "ykhs7s2dck:q8-11",
+  "split": "TRAIN"
+}

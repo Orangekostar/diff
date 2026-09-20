@@ -1,0 +1,61 @@
+# 4 Experimental design
+
+## 4.1 Data and specimen correspondence
+
+The study uses source image datasets [@hasebe2022data] and CAI measurements [@hasebe2025data; @data_cai] assembled into an existing image-based composite-impact cohort comprising 276 physical specimens in six source domains. Each specimen is associated with a surface image, a registered internal C-scan crop and a CAI-strength measurement. Labels originate from the source authors' workbooks, with measurement semantics explicitly identified as CAI strength and normalized to MPa. The specimen identifier, source version, worksheet and cell location are retained in the provenance records. Surface-to-internal correspondence is inherited from the registered specimen manifest, which records exact specimen identity and image hashes. The experiment replays these image regions; it does not collect new ultrasonic measurements or treat a displayed C-scan raster as a raw acoustic waveform.
+
+Source relationships are handled at the capture-group level. Specimens sharing a source image identity, path or registered crop identity are joined transitively before splitting. The resulting 259 groups include 17 groups containing multiple physical specimens. A deterministic per-domain ordering assigns the first floor(0.6 n) groups to TRAIN, the next floor(0.2 n) to VALID and the remainder to TEST. All members of a group stay in the same partition. This produces 161 training specimens in 152 groups, 50 validation specimens in 48 groups and 65 reserved specimens in 59 groups. Table 1 lists physical counts by source domain; the supplementary provenance table supplies source versions and verified configuration descriptions.
+
+| Source domain and configuration | TRAIN | VALID | Reserved TEST | Total |
+|--------------------------|-----:|-----:|-------:|----:|
+| 74t7kcdgkr: 8-layer cross-ply [@data_74t7kcdgkr] | 25 | 9 | 11 | 45 |
+| cgtnjyggtm: 24-layer quasi-isotropic [@data_cgtnjyggtm] | 29 | 9 | 11 | 49 |
+| w68dtmpfyf: 16-layer quasi-isotropic [@data_w68dtmpfyf] | 25 | 8 | 10 | 43 |
+| xcmzfsbd9t: 24-layer cross-ply [@data_xcmzfsbd9t] | 35 | 9 | 15 | 59 |
+| yfxyg8jm46: 16-layer cross-ply [@data_yfxyg8jm46] | 25 | 8 | 9 | 42 |
+| ykhs7s2dck: 8-layer quasi-isotropic [@data_ykhs7s2dck] | 22 | 7 | 9 | 38 |
+| Total physical specimens | 161 | 50 | 65 | 276 |
+| Total capture groups | 152 | 48 | 59 | 259 |
+
+**Table 1. Cohort composition.** Configuration labels follow the version-1 source dataset descriptions. Per-specimen thickness is not inferred from layer count. All reported performance estimates use the 50 VALID specimens. Reserved TEST outcomes were not evaluated in this study.
+
+The reported validation specimens were also used for checkpoint selection, and the underlying cohort includes specimens reused in earlier development. Accordingly, the results characterize selected validation performance rather than independent confirmation. Capture-group isolation addresses recorded image-source overlap across partitions, but does not by itself make this historically reused cohort an untouched external benchmark. No performance statement in this manuscript uses the 276-specimen total as its evaluation sample size.
+
+## 4.2 Compared acquisition strategies
+
+We compare nine acquisition strategies under the same legal-cell rule, native-pixel cost and frozen predictor. Four require no policy training. Center-first ranks cells by distance to the grid centre. Geometry-spread starts at a corner and repeatedly selects the cell with the greatest minimum squared grid distance from previously selected cells, with deterministic index-based tie breaking. Serpentine alternates horizontal direction across successive rows. Random uses a seeded permutation of all cells; five saved repeats are included. These are explicit acquisition rules for the replay experiment, rather than representations of all industrial inspection practices.
+
+Five learned strategies test different levels of decision information. Learned-static has 64 shared position logits and receives no specimen image or prediction. VLM spatial open-loop uses the surface, prior and acquisition bookkeeping but excludes acquired internal content and prediction feedback from action choice. The main VLM spatial feedback policy adds those feedback channels. No-VLM spatial feedback removes the VLM channels and initial candidate restriction while retaining surface descriptors. VLM mean feedback retains the main information sources but replaces Transformer interactions with a mean-feedback architecture. The last comparison is not capacity matched: the spatial actors have 378,978 parameters, compared with 91,650 for the mean actor and 64 for learned-static.
+
+| Policy | Decision information | Structure | First-step VLM restriction |
+|--------------------|----------------------------|--------------------|------------|
+| Center-first | Position only | Centre-distance order | No |
+| Geometry-spread | Position only | Farthest-point order | No |
+| Serpentine | Position only | Alternating row order | No |
+| Random | Position only | Five seeded permutations | No |
+| Learned-static | Shared position logits | 64 parameters | No |
+| VLM spatial open-loop | Surface, VLM, mask/history, cost | Two-layer spatial actor | Yes |
+| VLM spatial feedback | Open-loop inputs plus internal/prediction feedback | Two-layer spatial actor | Yes |
+| No-VLM spatial feedback | Surface, internal/prediction feedback, bookkeeping | Two-layer spatial actor | No |
+| VLM mean feedback | Same information as main | Mean-feedback actor | Yes |
+
+**Table 2. Acquisition-policy information and structure.** The state-permission table in Section 3 specifies channel visibility. Across all controls, the assessment model still receives every actually acquired internal cell. The complete-input reference is listed separately at fraction 1.0 and uses all 64 internal cells plus surface descriptors with the same predictor. It has no observed acquisition trajectory and therefore no A(B).
+
+## 4.3 Learning and evaluation protocol
+
+Perception and assessment were frozen before the current actor runs. The C prior contains 211 terminal TRAIN/VALID records, including 6 exact pilot reuses and 205 newly generated primary jobs. The strict parser accepted 28 records after the single allowed format repair; 20 records remained schema-invalid after that repair and contributed zero prior features. The reserved TEST images and labels were not accessed. The frozen MEAN_SC checkpoint at update 1750 served as the common evaluation predictor, and the three original capture-group cross-fitted predictors supplied training feedback.
+
+Only three C policies were retrained: spatial feedback, spatial open-loop and mean feedback. Each used its registered seed, 1250 logical AdamW updates, batches of 16, learning rate 3x$10^{-4}$, weight decay $10^{-4}$, gradient-norm clipping at one, critic weight 0.5 and terminal-error weight 0.25. Entropy decreased from 0.01 to zero by logical update. Candidate checkpoints at updates 250, 500, 750, 1000 and 1250 were evaluated on the same 50 VALID specimens. Selection minimized six-domain-equal A(B), retained the earliest checkpoint unless improvement exceeded $10^{-12}$, and selected C spatial feedback (main) at update 250, C spatial open-loop at update 1250, C mean feedback at update 250. All 15 candidate weights and trajectories were retained.
+
+The six controls were copied byte-for-byte from the frozen W3 trajectory matrix after their W2 checkpoint, feature-bank shards, cost files and specimen identities matched the current C bindings. The three historical A policies were retained only in a separate version-comparison sidecar. The primary matrix therefore contains 500 reused control rows and 150 new C rows. Random contributes five repeats per specimen; every other method contributes one, for 650 rows over the same 50 physical validation specimens.
+
+One initialization was used for each current C policy, with seeds 2026091301, 2026091303 and 2026091305 for spatial feedback, open-loop and mean feedback. These are method-specific initializations rather than repeated seeds. The validation cohort also selected the reported actor checkpoints, so intervals and comparisons remain exploratory selected-validation evidence rather than independent confirmation.
+
+## 4.4 Cost, quality and statistical analysis
+The main common-cap grid is {0,0.0625,0.125,0.1875,0.25}. All lower-cap estimates are queried from prefixes of trajectories generated with a total acquisition budget of 0.25; the policy is neither retrained nor rerun with a different total budget for each reported cap. The actor therefore receives remaining budget $0.25-c_t$, rather than a remaining budget defined by the queried cap. At each cap, we use the last prediction whose acquisition cost is at or below that cap. Actual fractions are reported separately because complete native cells may leave an unspent remainder. A supplementary event grid contains the 578 shared breakpoints obtained from saved episodes. Both grids retain current-state prediction reversals, with no monotonic correction or extrapolation beyond 0.25. Full-input quality is supported only at fraction 1.0.
+
+At each cap, absolute and squared losses are averaged across Random repeats within each physical specimen and then pooled over the 50 specimens. RMSE is the square root of pooled MSE. R² is computed across specimens within each repeat and then averaged; predictions are not ensembled. In contrast, A and early A first average episode losses within a specimen, then average specimens within each domain, and finally weight the six domains equally. Early A uses an integration endpoint of 0.0625. These different aggregations mean a pooled endpoint metric and a domain-equal trajectory metric need not rank policies identically.
+
+Reported uncertainty comes from the existing 5000-replicate, within-domain capture-group bootstrap, using seed 2026091401. Resampled groups carry all their physical members with their sampled multiplicities; the same saved weights support paired method comparisons. The 95% intervals are pointwise exploratory intervals conditional on selected validation checkpoints. They do not correct checkpoint selection, repeated historical use, post hoc analysis choices or multiple comparisons. We report their numerical ranges rather than interpreting them as independent confirmatory tests.
+
+Matched-quality analysis first computes each method's cohort-level MAE curve and then finds its earliest supported cap b*(q) satisfying $\operatorname{MAE}(b)\le q$. Relative acquisition reduction against a control is $1-b^*_{\mathrm{main}}(q)/b^*_{\mathrm{control}}(q)$, when both are reached and the control denominator is positive. The integer targets 41–61 MPa and 21 source-labelled anchors, including full-input quality, are descriptive empirical targets rather than prespecified engineering acceptance limits. Main-grid and event-grid results remain separate. Unreached targets, zero denominators, negative reductions and later recrossings are retained. The calculation compares population curves; it does not choose a label-informed stopping time for individual specimens.

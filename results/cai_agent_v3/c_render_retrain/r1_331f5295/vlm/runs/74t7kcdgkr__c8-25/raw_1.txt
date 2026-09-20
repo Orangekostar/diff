@@ -1,0 +1,19 @@
+```json
+{
+  "no_reliable_cue": false,
+  "regions": [
+    {
+      "cells": [0, 1, 2, 3],
+      "cue": "unknown",
+      "alternative": "可能的划痕或磨损",
+      "confidence": "medium"
+    },
+    {
+      "cells": [56, 57, 58, 59],
+      "cue": "unknown",
+      "alternative": "可能的划痕或磨损",
+      "confidence": "medium"
+    }
+  ]
+}
+```

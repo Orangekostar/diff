@@ -1,0 +1,174 @@
+{
+  "case_source": "SELECTED_NEW_C_MAIN_EPISODES_AND_C_PRIORS",
+  "cases": [
+    {
+      "action_count": 16,
+      "cscan_source_sha256": "234a50307f16631456e3cfcac69b111a854d67d954381ada8e29ccd2199e9100",
+      "final_cost": 0.2492603550295858,
+      "first_cell": 36,
+      "method": "VLM_SPATIAL_FEEDBACK",
+      "outputs": {
+        "cai_process": {
+          "bytes": 78289,
+          "path": "cai_process.png",
+          "sha256": "497497b7eb6eeef310c87c56ce32f578f3ab927241de697edfe6d45f22455d36"
+        },
+        "first_action": {
+          "bytes": 1162010,
+          "path": "first_action.png",
+          "sha256": "591634cacb23a9a2ac07111fcee3d69590a1ee366fafc4ca9cc98ebd976ce5a2"
+        },
+        "measured_1": {
+          "bytes": 2888,
+          "path": "measured_1.png",
+          "sha256": "f9992350879cf83015b17866fdff2f51cc34183a0af19164b1d81900a69b092a"
+        },
+        "measured_4": {
+          "bytes": 6705,
+          "path": "measured_4.png",
+          "sha256": "b58549f2f2130107dddceaada77c71b591d33c0f0b28ff3e0329e0ac9f07305b"
+        },
+        "measured_8": {
+          "bytes": 12017,
+          "path": "measured_8.png",
+          "sha256": "9ce73fb835329d1cf009055c37edc59d5fc4248f7a1cce34e0e5a8d4004b6516"
+        },
+        "measured_endpoint": {
+          "bytes": 20163,
+          "path": "measured_endpoint.png",
+          "sha256": "a4e4e4e6ae4a25d446ff28bc1b9e5a7251b6b938fcf36d884e88513fc68c330f"
+        },
+        "surface_candidates": {
+          "bytes": 1163052,
+          "path": "surface_candidates.png",
+          "sha256": "c7a756db6637fc7a6cb0716d2d0bea11ff1a2cd959ece4330162e73d3e648806"
+        }
+      },
+      "selected_update": "",
+      "specimen_key": "74t7kcdgkr:c8-16",
+      "status": "NEW_C_CASE_COMPLETE",
+      "surface_source_sha256": "bf5971dfb981f6c3302d850db26b26785c575f3d51249a5e6625919bd101845a"
+    },
+    {
+      "action_count": 16,
+      "cscan_source_sha256": "891dc75c089b0bd4362492f6c84fe4ddb9ed484b9c4e00c92b69184e1d2b0037",
+      "final_cost": 0.24962962962962965,
+      "first_cell": 28,
+      "method": "VLM_SPATIAL_FEEDBACK",
+      "outputs": {
+        "cai_process": {
+          "bytes": 77631,
+          "path": "cai_process.png",
+          "sha256": "344cb6663bd38dd9df58c05fdc96e90755802099f6960d063b58b11f7d4bff28"
+        },
+        "first_action": {
+          "bytes": 1662364,
+          "path": "first_action.png",
+          "sha256": "6cc37777810c5832f0ac5878240996499e0432585d66be9c63054ef8d0fb22d8"
+        },
+        "measured_1": {
+          "bytes": 13224,
+          "path": "measured_1.png",
+          "sha256": "a01923ef519f353e2b77bbb3c13a38f64424df90d32728d29429e3e17990f424"
+        },
+        "measured_4": {
+          "bytes": 34574,
+          "path": "measured_4.png",
+          "sha256": "2828d1489a12019f8a04ec2ddb77fac25a2338728d2d3712f10a92ccd3f2a757"
+        },
+        "measured_8": {
+          "bytes": 67288,
+          "path": "measured_8.png",
+          "sha256": "4e5ac73c96961ec3d63cf92e316f8642e4484e63f6dad18bae8ea3d3182f6f7c"
+        },
+        "measured_endpoint": {
+          "bytes": 118278,
+          "path": "measured_endpoint.png",
+          "sha256": "73b3adfbdbcf84c93b955e35c06503977ecab1f617a6686855cc557ff351c670"
+        },
+        "surface_candidates": {
+          "bytes": 1663903,
+          "path": "surface_candidates.png",
+          "sha256": "13fd7ea38a47392a221c3d10cd1aa25976597d3f3e95c0e2812ef8fbffe0f9bc"
+        }
+      },
+      "selected_update": "",
+      "specimen_key": "cgtnjyggtm:q24-48",
+      "status": "NEW_C_CASE_COMPLETE",
+      "surface_source_sha256": "89090ab85a001ed26f3133af555ebe6f56fe894068bb0330eef57c45759673cb"
+    },
+    {
+      "action_count": 16,
+      "cscan_source_sha256": "4d49fb7db9fc20d7645d297568774df3178c060bb991275f42b0a92cee1d5064",
+      "final_cost": 0.24981426530387954,
+      "first_cell": 27,
+      "method": "VLM_SPATIAL_FEEDBACK",
+      "outputs": {
+        "cai_process": {
+          "bytes": 87934,
+          "path": "cai_process.png",
+          "sha256": "70a2278238197d4c90acfea38b877b9f82d76504b4724d97c8f1f78e5ef70247"
+        },
+        "first_action": {
+          "bytes": 1682544,
+          "path": "first_action.png",
+          "sha256": "3e84b5b7dfe6993d4f69d6eb39d1cd7b593717eb79973531b71e59cb3aaf9051"
+        },
+        "measured_1": {
+          "bytes": 15692,
+          "path": "measured_1.png",
+          "sha256": "9254b0041f20be3872154db2ecc5d2b5acdbebf7dc9353bcbccc65806afa529a"
+        },
+        "measured_4": {
+          "bytes": 40110,
+          "path": "measured_4.png",
+          "sha256": "a4c404b45cfbee1abea90dec74d2cd30965116ffd7155cc8645492a575b5a58b"
+        },
+        "measured_8": {
+          "bytes": 69395,
+          "path": "measured_8.png",
+          "sha256": "82387c38ba86001cb0f003cd59922e9a59ea847529d00c8dda99e681dc74b1b0"
+        },
+        "measured_endpoint": {
+          "bytes": 124802,
+          "path": "measured_endpoint.png",
+          "sha256": "adba95314359e21a9b8b83a4c7fb1301c0489b75ae775325ecf3fd84f4a24ebc"
+        },
+        "surface_candidates": {
+          "bytes": 1684171,
+          "path": "surface_candidates.png",
+          "sha256": "90dee811d85accc9190bfa628f9659edb0cbc3fcdc985446fa5e431ba917ee74"
+        }
+      },
+      "selected_update": "",
+      "specimen_key": "w68dtmpfyf:q16-29",
+      "status": "NEW_C_CASE_COMPLETE",
+      "surface_source_sha256": "b0d65ad1e8f61ac7d95e6e0d38d26ed31e5552866f9dca70b478be7e133d4008"
+    }
+  ],
+  "new_model_forwards": 0,
+  "schema_version": 1,
+  "status": "THREE_NEW_C_CASES_COMPLETE",
+  "summary_figure": {
+    "alignment_comparisons": 10,
+    "alignment_verdict": "PASS",
+    "name": "F6_case_progression",
+    "outputs": {
+      "pdf": {
+        "bytes": 4969528,
+        "path": "F6_case_progression.pdf",
+        "sha256": "20e7cca4459fb1c3dce327da00e026aeeb81dae8daacac27ac9b06817288a14b"
+      },
+      "png": {
+        "bytes": 1798485,
+        "path": "F6_case_progression.png",
+        "sha256": "bf5d33e3f5471207f0a375ed5d704693e83177f366669456ddceaa7234d97572"
+      },
+      "svg": {
+        "bytes": 7400681,
+        "path": "F6_case_progression.svg",
+        "sha256": "478db0b32b2453b0e08d4fbf1dcecd3fab9ac57c6e200bc3756d96bba4280f37"
+      }
+    }
+  }
+}

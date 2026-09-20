@@ -1,0 +1,19 @@
+```json
+{
+  "no_reliable_cue": false,
+  "regions": [
+    {
+      "cells": [35],
+      "cue": "circle",
+      "alternative": "可能是一个小的划痕或污渍",
+      "confidence": "medium"
+    },
+    {
+      "cells": [36],
+      "cue": "circle",
+      "alternative": "可能是由于制造过程中的瑕疵",
+      "confidence": "medium"
+    }
+  ]
+}
+```

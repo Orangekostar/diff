@@ -385,13 +385,13 @@ Expected: zero failures and no warnings attributable to the new pipeline.
 - Consumes: completed implementation and the exact scope.
 - Produces: the complete scientific release or a truthful partial release with one exact resume command.
 
-- [ ] **Step 1: Commit the tested implementation identity**
+- [x] **Step 1: Commit the tested implementation identity**
 
 Run: targeted `git add` for scope, design, plan, scripts and tests; inspect
 `git diff --cached`; commit once. Record the commit and scientific file hashes
 in `protocol_lock.json` before model execution.
 
-- [ ] **Step 2: Run W0 and W1**
+- [x] **Step 2: Run W0 and W1**
 
 ```bash
 python scripts/cai_c_retrain/cli.py prepare --config docs/cai/c_render_retrain/C_RETRAIN_RELEASE_SCOPE.json
@@ -400,7 +400,7 @@ python scripts/cai_c_retrain/cli.py vlm --config docs/cai/c_render_retrain/C_RET
 
 Require 211 terminal rows and `C_PRIOR_COMPLETE` before training.
 
-- [ ] **Step 3: Run W2 and W3**
+- [x] **Step 3: Run W2 and W3**
 
 ```bash
 python scripts/cai_c_retrain/cli.py train --config docs/cai/c_render_retrain/C_RETRAIN_RELEASE_SCOPE.json
@@ -409,7 +409,7 @@ python scripts/cai_c_retrain/cli.py assemble --config docs/cai/c_render_retrain/
 
 Use `train --resume --method <METHOD>` only for the single bounded recovery.
 
-- [ ] **Step 4: Run W4 and W5**
+- [x] **Step 4: Run W4 and W5**
 
 ```bash
 python scripts/cai_c_retrain/cli.py analyze --config docs/cai/c_render_retrain/C_RETRAIN_RELEASE_SCOPE.json
@@ -419,7 +419,7 @@ python scripts/cai_c_retrain/cli.py paper --config docs/cai/c_render_retrain/C_R
 Render both PDFs to images and visually inspect the overview plus abstract,
 algorithm, main table, most changed figure and SI table.
 
-- [ ] **Step 5: Run fresh verification and requirement audit**
+- [x] **Step 5: Run fresh verification and requirement audit**
 
 ```bash
 python scripts/cai_c_retrain/cli.py verify --config docs/cai/c_render_retrain/C_RETRAIN_RELEASE_SCOPE.json

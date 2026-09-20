@@ -1,13 +1,13 @@
 {
-  "actor_gpu_seconds": 0.0,
+  "actor_gpu_seconds": 1589.8782374370057,
   "global_authorized_cap": 44514,
   "historical_usage_declared": 39014,
-  "new_actor_update_upper_bound": 0,
-  "new_actor_updates": 0,
-  "new_vlm_attempts": 0,
-  "new_vlm_output_tokens": 0,
-  "new_vlm_primary_jobs": 0,
-  "status": "PREPARED",
+  "new_actor_update_upper_bound": 3750,
+  "new_actor_updates": 3750,
+  "new_vlm_attempts": 251,
+  "new_vlm_output_tokens": 27032,
+  "new_vlm_primary_jobs": 205,
+  "status": "C_PRIOR_COMPLETE",
   "task_id": "CAI_V3_C_RENDER_RETRAIN_RELEASE_R1_331f5295",
-  "vlm_gpu_seconds": 0.0
+  "vlm_gpu_seconds": 3510.916702475006
 }

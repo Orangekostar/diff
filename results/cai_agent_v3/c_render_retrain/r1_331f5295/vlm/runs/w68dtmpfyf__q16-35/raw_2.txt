@@ -1,0 +1,19 @@
+```json
+{
+  "no_reliable_cue": false,
+  "regions": [
+    {
+      "cells": [27, 28, 35, 36],
+      "cue": "crack-like feature",
+      "alternative": "potential crack or scratch",
+      "confidence": "medium"
+    },
+    {
+      "cells": [35, 36],
+      "cue": "centered circular area",
+      "alternative": "possible indentation or wear mark",
+      "confidence": "medium"
+    }
+  ]
+}
+```

@@ -1,0 +1,19 @@
+```json
+{
+  "no_reliable_cue": false,
+  "regions": [
+    {
+      "cells": [28, 29],
+      "cue": "bright spot with faint lines",
+      "alternative": "potential impact or scratch",
+      "confidence": "medium"
+    },
+    {
+      "cells": [52, 53],
+      "cue": "faint line",
+      "alternative": "scratch or minor damage",
+      "confidence": "low"
+    }
+  ]
+}
+```

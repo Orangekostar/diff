@@ -1,0 +1,30 @@
+<|im_start|>system
+You are a helpful assistant.<|im_end|>
+<|im_start|>user
+<|vision_start|><|image_pad|><|vision_end|><|vision_start|><|image_pad|><|vision_end|>上一响应不符合所附 JSON schema。不要解释，也不要增加字段；只重新返回一个合法 JSON 对象。
+所有 regions 的 cells 合计不得超过 8，cell 不得重复；如果原响应超过 8 个，删除最低置信区域末尾的多余 cell。
+JSON schema:
+{"additionalProperties":false,"properties":{"no_reliable_cue":{"type":"boolean"},"regions":{"items":{"additionalProperties":false,"properties":{"alternative":{"maxLength":200,"minLength":1,"type":"string"},"cells":{"items":{"maximum":63,"minimum":0,"type":"integer"},"maxItems":4,"type":"array"},"confidence":{"enum":["low","medium","high","unknown"],"type":"string"},"cue":{"maxLength":120,"minLength":1,"type":"string"}},"required":["cells","cue","alternative","confidence"],"type":"object"},"maxItems":2,"type":"array"}},"required":["regions","no_reliable_cue"],"type":"object"}
+需要修复的原响应如下：
+<invalid_response>
+```json
+{
+  "no_reliable_cue": false,
+  "regions": [
+    {
+      "cells": [35, 36],
+      "cue": "circle",
+      "alternative": "孔洞或标记",
+      "confidence": "medium"
+    },
+    {
+      "cells": [35, 36],
+      "cue": "circle",
+      "alternative": "孔洞或标记",
+      "confidence": "medium"
+    }
+  ]
+}
+```
+</invalid_response><|im_end|>
+<|im_start|>assistant

@@ -1,0 +1,19 @@
+```json
+{
+  "no_reliable_cue": false,
+  "regions": [
+    {
+      "cells": [27, 28],
+      "cue": "circle",
+      "alternative": "可能是一个标记或污渍",
+      "confidence": "medium"
+    },
+    {
+      "cells": [25, 26],
+      "cue": "lines",
+      "alternative": "可能是划痕或纹理变化",
+      "confidence": "medium"
+    }
+  ]
+}
+```

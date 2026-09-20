@@ -1,0 +1,19 @@
+```json
+{
+  "no_reliable_cue": false,
+  "regions": [
+    {
+      "cells": [36],
+      "cue": "centered circular mark with radiating lines",
+      "alternative": "potential impact or scratch mark",
+      "confidence": "medium"
+    },
+    {
+      "cells": [35, 37],
+      "cue": "adjacent marks near the central mark",
+      "alternative": "secondary impact points or minor scratches",
+      "confidence": "low"
+    }
+  ]
+}
+```

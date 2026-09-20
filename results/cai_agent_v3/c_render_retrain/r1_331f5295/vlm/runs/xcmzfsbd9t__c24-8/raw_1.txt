@@ -1,0 +1,19 @@
+```json
+{
+  "no_reliable_cue": false,
+  "regions": [
+    {
+      "cells": [35, 36],
+      "cue": "损伤痕迹",
+      "alternative": "可能的划痕或轻微撞击",
+      "confidence": "medium"
+    },
+    {
+      "cells": [37, 38],
+      "cue": "损伤痕迹",
+      "alternative": "可能的划痕或轻微撞击",
+      "confidence": "medium"
+    }
+  ]
+}
+```

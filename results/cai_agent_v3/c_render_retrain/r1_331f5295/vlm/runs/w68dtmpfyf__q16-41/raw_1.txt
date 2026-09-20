@@ -1,0 +1,19 @@
+```json
+{
+  "no_reliable_cue": false,
+  "regions": [
+    {
+      "cells": [32, 33, 34, 35],
+      "cue": "grid lines",
+      "alternative": "grid overlay for measurement reference",
+      "confidence": "medium"
+    },
+    {
+      "cells": [48, 49, 50, 51],
+      "cue": "grid lines",
+      "alternative": "grid overlay for measurement reference",
+      "confidence": "medium"
+    }
+  ]
+}
+```

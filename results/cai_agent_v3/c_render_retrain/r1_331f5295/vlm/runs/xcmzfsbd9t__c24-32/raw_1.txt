@@ -1,0 +1,19 @@
+```json
+{
+  "no_reliable_cue": false,
+  "regions": [
+    {
+      "cells": [36, 37],
+      "cue": "划痕",
+      "alternative": "表面磨损或划痕",
+      "confidence": "medium"
+    },
+    {
+      "cells": [52, 53],
+      "cue": "划痕",
+      "alternative": "表面磨损或划痕",
+      "confidence": "medium"
+    }
+  ]
+}
+```

@@ -1,0 +1,19 @@
+```json
+{
+  "no_reliable_cue": false,
+  "regions": [
+    {
+      "cells": [27, 28],
+      "cue": "小圆圈",
+      "alternative": "可能是轻微的划痕或污渍",
+      "confidence": "medium"
+    },
+    {
+      "cells": [59, 60],
+      "cue": "未知线条",
+      "alternative": "可能是标记线或划痕",
+      "confidence": "low"
+    }
+  ]
+}
+```

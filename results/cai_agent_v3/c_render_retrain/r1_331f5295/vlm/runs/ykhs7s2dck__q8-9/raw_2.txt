@@ -1,0 +1,19 @@
+```json
+{
+  "no_reliable_cue": false,
+  "regions": [
+    {
+      "cells": [35, 36],
+      "cue": "孔洞",
+      "alternative": "可能是小的穿孔或划痕",
+      "confidence": "medium"
+    },
+    {
+      "cells": [34, 35, 36],
+      "cue": "孔洞周围的微小裂纹",
+      "alternative": "可能是由于轻微冲击造成的表面损伤",
+      "confidence": "medium"
+    }
+  ]
+}
+```

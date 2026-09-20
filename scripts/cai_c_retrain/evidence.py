@@ -35,6 +35,7 @@ MAIN = "VLM_SPATIAL_FEEDBACK"
 NONADAPTIVE = METHODS[:5]
 BUDGETS = np.asarray([0.0, 0.0625, 0.125, 0.1875, 0.25], dtype=np.float64)
 STAGE_EDGES = (0.0, 0.0625, 0.125, 0.1875, 0.25)
+RASTER_DPI = 300
 CASE_KEYS = (
     "74t7kcdgkr:c8-16",
     "cgtnjyggtm:q24-48",
@@ -1003,7 +1004,7 @@ def _save_figure(fig: Any, destination: Path, name: str) -> dict[str, Any]:
         temporary = target.with_name(f"{target.stem}.tmp.{extension}")
         fig.savefig(
             temporary,
-            dpi=300 if extension == "png" else None,
+            dpi=RASTER_DPI if extension == "png" else None,
             facecolor="white",
             metadata={"Creator": "CAI C evidence pipeline"}
             if extension in {"png", "pdf"}
@@ -1195,9 +1196,9 @@ def _render_summary_figures(
         ylabel="Relative saving (%)",
     )
     axes[1].axhline(0, color="#555555", linewidth=0.7)
+    axes[1].grid(axis="y", color="#E0E0E0", linewidth=0.5)
     for axis in axes:
-        axis.grid(axis="y", color="#E0E0E0", linewidth=0.5)
-        axis.legend(fontsize=6.8)
+        axis.legend(fontsize=6.8, handletextpad=1.2)
     records.append(_save_figure(fig, figure_root, "F3_equal_quality"))
 
     timing = analysis["table_map"]["timing_contributions.csv"]
@@ -1246,9 +1247,11 @@ def _render_summary_figures(
     )
     axes[0].invert_yaxis()
     axes[1].invert_yaxis()
+    for axis in axes:
+        axis.set_ylim(len(METHODS) - 0.35, -1.8)
     axes[0].axvline(0, color="#444444", linewidth=0.7)
-    axes[0].legend(ncol=2, fontsize=7)
-    axes[1].legend(fontsize=7)
+    axes[0].legend(loc="upper center", ncol=2, fontsize=7)
+    axes[1].legend(loc="upper left", fontsize=7)
     records.append(_save_figure(fig, figure_root, "F4_timing_contributions"))
 
     domain_rows = [
@@ -1320,7 +1323,14 @@ def _render_summary_figures(
         yticklabels=[METHOD_LABELS[m] for m in version_methods],
     )
     for axis in axes:
-        axis.tick_params(axis="x", rotation=55, labelsize=6.5)
+        axis.tick_params(axis="x", labelsize=6.5)
+        plt.setp(
+            axis.get_xticklabels(),
+            rotation=90,
+            ha="right",
+            va="center",
+            rotation_mode="anchor",
+        )
     fig.colorbar(left, ax=axes[0], fraction=0.035, pad=0.02, label="MAE (MPa)")
     fig.colorbar(right, ax=axes[1], fraction=0.05, pad=0.02, label="A - C (MPa)")
     records.append(_save_figure(fig, figure_root, "F5_domain_results"))
@@ -1406,6 +1416,14 @@ def _measured_overlay(cscan: Image.Image, cells: list[int]) -> Image.Image:
         x0, y0, x1, y1 = _cell_box(source.width, source.height, cell)
         draw.rectangle((x0, y0, x1 - 1, y1 - 1), outline=(0, 122, 91, 255), width=width)
     return image
+
+
+def _square_letterbox(image: Image.Image) -> Image.Image:
+    rgb = image.convert("RGB")
+    side = max(rgb.size)
+    framed = Image.new("RGB", (side, side), "white")
+    framed.paste(rgb, ((side - rgb.width) // 2, (side - rgb.height) // 2))
+    return framed
 
 
 def _render_cases(context: TaskContext, analysis: dict[str, Any]) -> dict[str, Any]:
@@ -1536,7 +1554,7 @@ def _render_cases(context: TaskContext, analysis: dict[str, Any]) -> dict[str, A
         process_path = case_dir / "cai_process.png"
         temporary = process_path.with_name("cai_process.tmp.png")
         case_dir.mkdir(parents=True, exist_ok=True)
-        fig.savefig(temporary, dpi=220, facecolor="white")
+        fig.savefig(temporary, dpi=RASTER_DPI, facecolor="white")
         plt.close(fig)
         temporary.replace(process_path)
         output_records["cai_process"] = {
@@ -1569,7 +1587,7 @@ def _render_cases(context: TaskContext, analysis: dict[str, Any]) -> dict[str, A
         ):
             axis = axes[row_index, column_index]
             with Image.open(images_by_key[key][name]) as image:
-                axis.imshow(image.convert("RGB"), interpolation="none")
+                axis.imshow(_square_letterbox(image), interpolation="none")
             axis.set_axis_off()
             if row_index == 0:
                 axis.set_title(
@@ -1587,6 +1605,7 @@ def _render_cases(context: TaskContext, analysis: dict[str, Any]) -> dict[str, A
                     key,
                     transform=axis.transAxes,
                     rotation=90,
+                    rotation_mode="anchor",
                     va="center",
                     ha="right",
                     fontsize=8,

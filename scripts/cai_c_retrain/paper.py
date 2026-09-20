@@ -98,6 +98,8 @@ def _markdown_table(
             value = row.get(key, "")
             if isinstance(value, float):
                 values.append(_f(value))
+            elif isinstance(value, int) and not isinstance(value, bool):
+                values.append(str(value))
             else:
                 try:
                     values.append(
@@ -109,6 +111,31 @@ def _markdown_table(
                     values.append(str(value))
         body.append("| " + " | ".join(values) + " |")
     return "\n".join([header, rule, *body])
+
+
+def _vlm_terminal_counts(states: list[dict[str, Any]]) -> tuple[int, int]:
+    status_counts: dict[str, int] = {}
+    for row in states:
+        status = str(row["status"])
+        status_counts[status] = status_counts.get(status, 0) + 1
+    return (
+        status_counts.get("VALID_AFTER_REPAIR", 0),
+        status_counts.get("SCHEMA_INVALID_AFTER_ONE_REPAIR", 0),
+    )
+
+
+def _update_event_grid_count(statistical_tail: str, points: int) -> str:
+    if points <= 0:
+        raise ValueError("event grid point count must be positive")
+    rendered, replacements = re.subn(
+        r"(A supplementary event grid contains the )\d+"
+        r"( shared breakpoints obtained from saved episodes\.)",
+        rf"\g<1>{points}\g<2>",
+        statistical_tail,
+    )
+    if replacements != 1:
+        raise ValueError("old statistical event-grid sentence changed")
+    return rendered
 
 
 def _evidence(context: TaskContext) -> dict[str, Any]:
@@ -186,18 +213,10 @@ def _build_experimental(
         f"{LABELS[row['method']]} at update {row['selected_update']}" for row in actors
     )
     vlm = evidence["vlm_manifest_fit.json"]
-    status_counts: dict[str, int] = {}
-    for row in vlm["states"]:
-        status_counts[row["status"]] = status_counts.get(row["status"], 0) + 1
-    repairs = status_counts.get("VALID_AFTER_REPAIR", 0)
-    unavailable = sum(
-        count
-        for status, count in status_counts.items()
-        if status.startswith("UNAVAILABLE")
-    )
+    repairs, invalid = _vlm_terminal_counts(vlm["states"])
     protocol = f"""## 4.3 Learning and evaluation protocol
 
-Perception and assessment were frozen before the current actor runs. The C prior contains 211 terminal TRAIN/VALID records, including {vlm["reused_pilot_rows"]} exact pilot reuses and {vlm["new_unique_primary_jobs"]} newly generated primary jobs. The strict parser accepted {repairs} records after the single allowed format repair; {unavailable} records remained unavailable and contributed zero prior features. The reserved TEST images and labels were not accessed. The frozen MEAN_SC checkpoint at update 1750 served as the common evaluation predictor, and the three original capture-group cross-fitted predictors supplied training feedback.
+Perception and assessment were frozen before the current actor runs. The C prior contains 211 terminal TRAIN/VALID records, including {vlm["reused_pilot_rows"]} exact pilot reuses and {vlm["new_unique_primary_jobs"]} newly generated primary jobs. The strict parser accepted {repairs} records after the single allowed format repair; {invalid} records remained schema-invalid after that repair and contributed zero prior features. The reserved TEST images and labels were not accessed. The frozen MEAN_SC checkpoint at update 1750 served as the common evaluation predictor, and the three original capture-group cross-fitted predictors supplied training feedback.
 
 Only three C policies were retrained: spatial feedback, spatial open-loop and mean feedback. Each used its registered seed, 1250 logical AdamW updates, batches of 16, learning rate 3x$10^{{-4}}$, weight decay $10^{{-4}}$, gradient-norm clipping at one, critic weight 0.5 and terminal-error weight 0.25. Entropy decreased from 0.01 to zero by logical update. Candidate checkpoints at updates 250, 500, 750, 1000 and 1250 were evaluated on the same 50 VALID specimens. Selection minimized six-domain-equal A(B), retained the earliest checkpoint unless improvement exceeded $10^{{-12}}$, and selected {selected}. All 15 candidate weights and trajectories were retained.
 
@@ -207,6 +226,9 @@ One initialization was used for each current C policy, with seeds 2026091301, 20
 
 ## 4.4 Cost, quality and statistical analysis
 """
+    statistical_tail = _update_event_grid_count(
+        statistical_tail, int(evidence["analysis_manifest.json"]["event_grid_points"])
+    )
     return prefix + protocol + statistical_tail.lstrip()
 
 
@@ -322,7 +344,7 @@ def _build_results(evidence: dict[str, Any]) -> tuple[str, dict[str, Any]]:
 
 Under the common 25% cap, C spatial feedback achieved a pooled MAE of {_f(main["endpoint_mae_mpa"])} MPa, RMSE of {_f(main["endpoint_rmse_mpa"])} MPa and R2 of {_f(main["endpoint_r2"])} on 50 selected validation specimens. The best non-adaptive strategy by six-domain-equal area was {LABELS[best]}, with endpoint MAE {_f(control["endpoint_mae_mpa"])} MPa. The main policy's endpoint MAE was {main_word} by {abs(gain):.3f} MPa, with a 95% exploratory paired interval of [{_f(endpoint["ci_low"])}, {_f(endpoint["ci_high"])}] MPa. This fixed-cohort interval quantifies uncertainty but does not undo validation-based checkpoint selection.
 
-Across the full observed range, C spatial feedback had A={_f(main["area_mpa"])} MPa and early A={_f(main["early_area_mpa"])} MPa. {LABELS[best]} had A={_f(control["area_mpa"])} MPa. Area and endpoint error need not rank strategies identically because area values improvements by how long they remain available. Figure 2 preserves all nine held-error paths, including reversals, and the source tables report actual acquired fractions and ranges at each cap.
+Across the full observed range, C spatial feedback had A={_f(main["area_mpa"])} MPa and early A={_f(main["early_area_mpa"])} MPa. {LABELS[best]} had A={_f(control["area_mpa"])} MPa. Area and endpoint error need not rank strategies identically because A weights each improvement by how long it remains available. Figure 2 preserves all nine held-error paths, including reversals, and the source tables report actual acquired fractions and ranges at each cap.
 
 {main_table}
 
@@ -346,7 +368,7 @@ The component comparisons are descriptive rather than causal allocations. The po
 
 Current C changes only the numbered rendering and the three retrained VLM policies; P0, predictors, feature bank, cost definition and six primary controls remain fixed. {version_text} These comparisons isolate the observed version change within each policy name but remain selected-validation comparisons rather than a second independent experiment.
 
-Domain-level A-minus-C values varied across the six source domains. This heterogeneity is retained in Figure 6 and the source table. The data do not identify a material-specific cause because domain, image source and predictor quality are not experimentally separated.
+Domain-level A-minus-C values varied across the six source domains. This heterogeneity is retained in Figure 4 and the source table. The data do not identify a material-specific cause because domain, image source and predictor quality are not experimentally separated.
 
 ![Endpoint performance by domain and historical-A-minus-current-C trajectory area for the three retrained policies.](figures/F5_domain_results.pdf){{width=100%}}
 
@@ -364,7 +386,7 @@ The three prespecified cases were regenerated from the selected current C main-p
 
 ## 5.5 Equal-quality and full-input boundaries
 
-Equal-quality comparisons use the earliest observed population-curve crossing on both the five-cap grid and the union of saved event costs. Unreached targets, negative savings, zero denominators and later recrossings remain in the source tables. Figure 4 displays the complete integer target range rather than selecting a favourable threshold. These population first passages do not define a label-free stopping policy for individual specimens.
+Equal-quality comparisons use the earliest observed population-curve crossing on both the five-cap grid and the union of saved event costs. Unreached targets, negative savings, zero denominators and later recrossings remain in the source tables. Figure 7 displays the complete integer target range rather than selecting a favourable threshold. These population first passages do not define a label-free stopping policy for individual specimens.
 
 ![Earliest observed costs and current-main savings across the complete empirical MAE target grid.](figures/F3_equal_quality.pdf){{width=100%}}
 
@@ -409,19 +431,38 @@ The framework supports reproducible same-cap, equal-quality and timing analyses 
 """
 
 
-def _build_supplement(evidence: dict[str, Any]) -> str:
-    actors = evidence["actor_manifests.json"]["actor_manifests"]
-    actor_rows = [
+def _actor_supplement_rows(actors: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    return [
         {
             "method": LABELS[row["method"]],
             "seed": row["training_seed"],
             "selected": row["selected_update"],
-            "area": float(row["validation_area_mpa"]),
+            "area": float(row["selected_score"]),
             "logical": row["logical_updates"],
             "actual": row["actual_optimizer_updates"],
         }
         for row in actors
     ]
+
+
+def _actor_selection_table(actor_rows: list[dict[str, Any]]) -> str:
+    table = _markdown_table(
+        actor_rows,
+        (
+            ("method", "Method"),
+            ("seed", "Seed"),
+            ("selected", "Selected update"),
+            ("area", "VALID A (MPa)"),
+            ("logical", "Logical updates"),
+            ("actual", "Actual updates"),
+        ),
+    )
+    return f"**Table S1. Current C actor selection.**\n\n{table}"
+
+
+def _build_supplement(evidence: dict[str, Any]) -> str:
+    actors = evidence["actor_manifests.json"]["actor_manifests"]
+    actor_rows = _actor_supplement_rows(actors)
     same_cost = []
     for row in evidence["same_cost_metrics.csv"]:
         same_cost.append(
@@ -452,7 +493,7 @@ def _build_supplement(evidence: dict[str, Any]) -> str:
 
 The C prior uses Qwen2.5-VL-7B-Instruct revision cc594898137f460bfe9f0759e9844b3ce807cfb5, P0 without a new system message, clean-plus-R1 image order, bfloat16, SDPA, deterministic generation and at most 500 new tokens. R1 rotates the RGB source clockwise once, limits the longest edge to 1024 pixels and applies readable row-major labels 0-63. A strict parser permits one format repair. The 211-row TRAIN/VALID prior is complete; TEST was not accessed.
 
-{_markdown_table(actor_rows, (("method", "Method"), ("seed", "Seed"), ("selected", "Selected update"), ("area", "VALID A (MPa)"), ("logical", "Logical updates"), ("actual", "Actual updates")))}
+{_actor_selection_table(actor_rows)}
 
 All five candidate checkpoints per C actor remain archived. Selection retained the earliest candidate unless a later domain-equal area improved by more than 1e-12. The six controls are frozen historical rows, while the three A policies are stored separately from the 650-row primary matrix.
 
@@ -486,6 +527,22 @@ The tables directory contains the recomputed method summary, all five-cap metric
 """
 
 
+def _portable_build_script(source: str) -> str:
+    marker = "pandoc = os.environ.get('PANDOC') or shutil.which('pandoc')\n"
+    prefix = (
+        marker
+        + "pandoc_data_dir = os.environ.get('PANDOC_DATA_DIR')\n"
+        + "pandoc_prefix = [pandoc] + "
+        + "(['--data-dir='+pandoc_data_dir] if pandoc_data_dir else [])\n"
+    )
+    return (
+        source.replace(marker, prefix)
+        .replace("subprocess.run([pandoc,", "subprocess.run(pandoc_prefix + [")
+        .replace("--syntax-highlighting=none", "--no-highlight")
+        .replace(", capture_output=True, check=True)", ", stdout=subprocess.PIPE, check=True)")
+    )
+
+
 def _copy_sources_and_outputs(
     context: TaskContext, paper: Path, evidence: dict[str, Any]
 ) -> None:
@@ -502,6 +559,11 @@ def _copy_sources_and_outputs(
         "figures/Fig1_framework.png",
     ):
         _copy(old / relative, paper / relative)
+    build_script = paper / "build_manuscript.py"
+    _atomic_text(
+        build_script,
+        _portable_build_script(build_script.read_text(encoding="utf-8")),
+    )
     evidence_root = context.path("evidence")
     for path in sorted((evidence_root / "figures").iterdir()):
         if path.is_file() and path.suffix in {".png", ".svg", ".pdf"}:
@@ -695,7 +757,11 @@ def _run_build(paper: Path) -> dict[str, Any]:
     build = paper / "build"
     build.mkdir(parents=True, exist_ok=True)
     environment = dict(os.environ)
-    environment["PANDOC"] = _find_pandoc(paper)
+    pandoc = Path(_find_pandoc(paper)).resolve()
+    environment["PANDOC"] = str(pandoc)
+    data_dir = pandoc.parent.parent / "share/pandoc/data"
+    if (data_dir / "abbreviations").is_file():
+        environment["PANDOC_DATA_DIR"] = str(data_dir)
     subprocess.run(
         [sys.executable, "build_manuscript.py"],
         cwd=paper,
@@ -756,10 +822,16 @@ def _term_pages(extracted: str, required_terms: tuple[str, ...]) -> dict[str, in
     }
 
 
+def _clear_visual_previews(qa_root: Path) -> None:
+    qa_root.mkdir(parents=True, exist_ok=True)
+    for preview in qa_root.glob("*.png"):
+        preview.unlink()
+
+
 def _visual_qa(paper: Path) -> dict[str, Any]:
     build = paper / "build"
     qa_root = build / "visual_qa"
-    qa_root.mkdir(parents=True, exist_ok=True)
+    _clear_visual_previews(qa_root)
     report = {"status": "PASS", "documents": {}}
     for name, required_terms in (
         (

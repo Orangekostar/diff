@@ -1,0 +1,19 @@
+```json
+{
+  "no_reliable_cue": false,
+  "regions": [
+    {
+      "cells": [28, 29],
+      "cue": "crack",
+      "alternative": "划痕",
+      "confidence": "medium"
+    },
+    {
+      "cells": [35, 36],
+      "cue": "crack",
+      "alternative": "划痕",
+      "confidence": "medium"
+    }
+  ]
+}
+```

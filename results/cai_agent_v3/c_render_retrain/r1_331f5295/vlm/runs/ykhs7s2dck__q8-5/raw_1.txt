@@ -1,0 +1,19 @@
+```json
+{
+  "no_reliable_cue": false,
+  "regions": [
+    {
+      "cells": [5, 12],
+      "cue": "划痕",
+      "alternative": "使用工具造成的划痕",
+      "confidence": "medium"
+    },
+    {
+      "cells": [57, 63],
+      "cue": "划痕",
+      "alternative": "使用工具造成的划痕",
+      "confidence": "medium"
+    }
+  ]
+}
+```

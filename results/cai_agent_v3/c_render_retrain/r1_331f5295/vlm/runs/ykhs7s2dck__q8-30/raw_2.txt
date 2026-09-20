@@ -1,0 +1,13 @@
+```json
+{
+  "no_reliable_cue": false,
+  "regions": [
+    {
+      "cells": [35, 36],
+      "cue": "中心点周围有白色斑点",
+      "alternative": "可能是由于光线反射造成的假象",
+      "confidence": "medium"
+    }
+  ]
+}
+```
