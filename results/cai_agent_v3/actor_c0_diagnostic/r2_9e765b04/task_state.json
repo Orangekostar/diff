@@ -25,6 +25,15 @@
       "signature": "388752aa9547738fe64b523860281120d01771cfb0dd4ef7b9bca0de5e9ab8ba",
       "status": "COMPLETE"
     },
+    "publish": {
+      "result": {
+        "handoff_commit": "ENCLOSING_COMMIT",
+        "results_commit": "d3fde1ac503ff42bf688770a0bd62511637f77ce",
+        "status": "DIAGNOSTICS_COMPLETE"
+      },
+      "signature": "d3fde1ac503ff42bf688770a0bd62511637f77ce",
+      "status": "COMPLETE"
+    },
     "render": {
       "result": {
         "figure_count": 90,
