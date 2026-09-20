@@ -1,0 +1,43 @@
+{
+  "actor_python": "/home/ww/miniconda3/bin/python3.13",
+  "branch": "research/cai-vlm-agent-v3-controlled-reuse",
+  "created_unix": 1789876592.4897609,
+  "gpu_inventory": [
+    {
+      "index": "0",
+      "memory_free_mib": "45490",
+      "memory_total_mib": "46068",
+      "name": "NVIDIA A40",
+      "uuid": "GPU-03bdcf8a-2211-c497-06f1-6fa2e0b4ce40"
+    },
+    {
+      "index": "1",
+      "memory_free_mib": "45490",
+      "memory_total_mib": "46068",
+      "name": "NVIDIA A40",
+      "uuid": "GPU-7432ef4c-50a1-f860-4edd-bcda281170fb"
+    },
+    {
+      "index": "2",
+      "memory_free_mib": "45490",
+      "memory_total_mib": "46068",
+      "name": "NVIDIA A40",
+      "uuid": "GPU-41ba4cb6-edfe-ed30-c047-a19d9f23d0a8"
+    }
+  ],
+  "head_at_prepare": "331f52952b93bd9442ad2e44243cc71c7d966b4d",
+  "max_cpu_threads": 4,
+  "max_visible_gpus": 1,
+  "packages": {
+    "Pillow": "12.2.0",
+    "numpy": "2.5.0",
+    "torch": "2.12.1",
+    "transformers": "4.49.0"
+  },
+  "python_version": "3.13.13",
+  "report_python": "/home/ww/miniconda3/bin/python3.13",
+  "source_commit": "331f52952b93bd9442ad2e44243cc71c7d966b4d",
+  "source_root": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/src",
+  "task_id": "CAI_V3_C_RENDER_RETRAIN_RELEASE_R1_331f5295",
+  "vlm_python": "/home/ww/miniconda3/bin/python3.13"
+}

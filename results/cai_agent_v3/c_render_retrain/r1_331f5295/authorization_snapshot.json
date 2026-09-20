@@ -1,0 +1,409 @@
+{
+  "captured_unix": 1789876592.5629177,
+  "scope": {
+    "authorization": "User-assigned final instruction authorizes only the stages and finite allowances below; this file is not evidence of execution.",
+    "branch": "research/cai-vlm-agent-v3-controlled-reuse",
+    "budget": {
+      "accounting_quantum_updates": 250,
+      "actor_gpu_session_seconds": 10800,
+      "additional_global_authorization": 4500,
+      "historical_used_upper_bound_expected": 39014,
+      "max_cpu_threads": 4,
+      "max_cumulative_usage_this_task": 43514,
+      "max_visible_gpus": 1,
+      "minimum_free_qwen_gpu_gib": 34,
+      "new_actual_optimizer_updates_upper_bound": 4500,
+      "new_global_cap": 44514,
+      "new_interruption_replay_reserve": 750,
+      "new_planned_optimizer_updates": 3750,
+      "normal_cumulative_usage": 42764,
+      "previous_global_cap": 40014,
+      "refuse_silent_budget_reset": true,
+      "total_new_gpu_session_seconds": 16200,
+      "transfer_W2_allowance": false,
+      "unused_W2_allowance": 1000,
+      "update_accounting": "UNIQUE_SEGMENT_DELTA_INCLUDING_LOST_AND_REPLAYED_UPPER_BOUNDS_NO_DOUBLE_COUNT",
+      "vlm_attempt_seconds": 120,
+      "vlm_gpu_session_seconds": 5400
+    },
+    "cohort": {
+      "c_prior_rows": 211,
+      "reserved_test_groups": 59,
+      "reserved_test_physical": 65,
+      "test_models_labels_or_image_access": false,
+      "test_scoring_allowed": false,
+      "test_stored_redacted_arrays_may_be_loaded_as_container": true,
+      "total_groups": 259,
+      "total_physical": 276,
+      "train_groups": 152,
+      "train_physical": 161,
+      "valid_groups": 48,
+      "valid_physical": 50,
+      "vlm_authorized_splits": [
+        "TRAIN",
+        "VALID"
+      ]
+    },
+    "delivery": {
+      "actual_commit_and_push": true,
+      "check_local_upstream_remote_sha": true,
+      "full_resolution_input_delivery": "SIX_PILOT_MATCHED_CASES_OR_EXISTING_REPO_REFERENCES_PLUS_ALL_CASE_HASHES_THUMBNAILS_AND_REBUILD_CLI",
+      "full_success": "C_RETRAIN_RELEASE_COMPLETE",
+      "handoff": "CODEX_HANDOFF_CAI_C_RETRAIN_RELEASE.md",
+      "keep_211_case_status_and_feature_rows": true,
+      "keep_all_actual_candidate_weights": true,
+      "keep_raw_generation_and_repair_results": true,
+      "main_instruction": "CODEX_C_RENDER_RETRAIN_RELEASE_FINAL.md",
+      "never_upload_font_or_base_Qwen_weights": true,
+      "no_model_result_cherry_picking": true,
+      "partial": "PARTIAL_EXECUTION",
+      "result_and_handoff_commits_max_after_implementation": 2,
+      "same_branch": true,
+      "scientific_effect_is_not_completion_gate": true
+    },
+    "evaluation": {
+      "budget": 0.25,
+      "cost_points": [
+        0.0,
+        0.0625,
+        0.125,
+        0.1875,
+        0.25
+      ],
+      "cost_unit": "UNIQUE_NATIVE_RASTER_FRACTION",
+      "costs_dtype": "float64",
+      "early_budget": 0.0625,
+      "expected_combined_primary_episodes": 650,
+      "expected_reused_episode_rows": 500,
+      "first_step": "EXISTING_HIGHEST_MEDIUM_HIGH_C0_THEN_RELEASE",
+      "legality_tolerance": 1e-12,
+      "neural_cost_dtype": "float32",
+      "new_release_smoke_episodes": 3,
+      "old_A_three_vlm_methods": "SEPARATE_HISTORICAL_COMPARISON_NOT_NINE_METHOD_PRIMARY_ROWS",
+      "random_repeat_seeds": [
+        2026091250,
+        2026091251,
+        2026091252,
+        2026091253,
+        2026091254
+      ],
+      "release_smoke_case": "cgtnjyggtm:q24-48",
+      "release_smoke_cost_tolerance": 1e-12,
+      "release_smoke_must_match_actions": true,
+      "release_smoke_prediction_tolerance_mpa": 0.0001,
+      "reused_method_episode_counts": {
+        "CENTER_FIRST": 50,
+        "GEOMETRY_SPREAD": 50,
+        "LEARNED_STATIC_TRUE": 50,
+        "NO_VLM_SPATIAL_FEEDBACK": 50,
+        "RANDOM": 250,
+        "SERPENTINE": 50
+      },
+      "smaller_budgets": "PREFIXES_OF_FIXED_TOTAL_BUDGET_025_TRAJECTORIES"
+    },
+    "evidence": {
+      "all_new_case_pngs": true,
+      "area_aggregation": "REPEAT_MEAN_THEN_WITHIN_DOMAIN_SPECIMEN_MEAN_THEN_SIX_DOMAIN_EQUAL",
+      "bootstrap": {
+        "confidence": 0.95,
+        "recompute_new_error_intervals": true,
+        "replicates": 5000,
+        "reuse_old_draw_weights_after_key_check": true,
+        "sampling": "PAIRED_CAPTURE_GROUP_WITHIN_DOMAIN",
+        "scope": "POSTHOC_SELECTED_VALID_CONDITIONAL_POINTWISE",
+        "seed": 2026091401
+      },
+      "case_acquisition_steps": [
+        1,
+        4,
+        8,
+        "endpoint"
+      ],
+      "case_source": "SELECTED_NEW_C_MAIN_EPISODES_AND_C_PRIORS",
+      "cases": [
+        "74t7kcdgkr:c8-16",
+        "cgtnjyggtm:q24-48",
+        "w68dtmpfyf:q16-29"
+      ],
+      "difference_sign": "CONTROL_ERROR_MINUS_C_ERROR",
+      "do_not_hardcode_secondary_grid_length": true,
+      "endpoint_aggregation": "REPEAT_LOSS_MEAN_THEN_PHYSICAL_SPECIMEN_MEAN",
+      "equal_quality": {
+        "anchors": "ALL_FIVE_NONADAPTIVE_METHODS_ALL_FOUR_NONZERO_CAPS_PLUS_FULL_MAE",
+        "metric": "POOLED_PHYSICAL_SPECIMEN_MAE_MPA",
+        "noninferiority_margin": null,
+        "not_a_deployable_stop": true,
+        "preserve_unreached_negative_savings_recrossing": true,
+        "q_range": "FLOOR_MIN_TO_CEIL_MAX_OF_ALL_NEW_OBSERVED_METHOD_AND_FULL_REFERENCE_MAES",
+        "q_step": 1.0
+      },
+      "full_reference_area": null,
+      "full_reference_cost_support": [
+        1.0
+      ],
+      "full_reference_forward_calls": 0,
+      "full_reference_pointer": "results/cai_agent_v3/w3_pilot/r1_0e11452a/p_all_saved_reference.json",
+      "main_method": "VLM_SPATIAL_FEEDBACK",
+      "methods": [
+        "CENTER_FIRST",
+        "GEOMETRY_SPREAD",
+        "SERPENTINE",
+        "RANDOM",
+        "LEARNED_STATIC_TRUE",
+        "NO_VLM_SPATIAL_FEEDBACK",
+        "VLM_MEAN_FEEDBACK",
+        "VLM_SPATIAL_FEEDBACK",
+        "VLM_SPATIAL_OPEN_LOOP"
+      ],
+      "secondary_cost_grid": "UNION_OF_NEW_PRIMARY_NINE_METHOD_EPISODE_BREAKPOINTS_AND_0_025",
+      "timing": {
+        "bins": "RIGHT_CLOSED_COMPLETION_COST",
+        "formula": "g_t=(1-c_t/B)*(e_previous-e_current)",
+        "identity": "A=e0-sum(g_t)",
+        "recompute_all_stage_claims": true,
+        "retain_negative_terms": true,
+        "stage_edges": [
+          0.0,
+          0.0625,
+          0.125,
+          0.1875,
+          0.25
+        ]
+      }
+    },
+    "manuscript": {
+      "actual_visual_review_required": true,
+      "do_not_claim_AI_or_author_approval_not_recorded": true,
+      "formats": [
+        "md",
+        "html",
+        "tex",
+        "pdf"
+      ],
+      "main_pdf": "build/main.pdf",
+      "no_new_literature_project": true,
+      "preserve_original_paper": true,
+      "sections": 6,
+      "select_C_independent_of_performance_direction": true,
+      "status": "AUTHOR_REVIEW_DRAFT",
+      "supplementary_pdf": "build/supplementary.pdf",
+      "update_all_affected_results_and_claims": true
+    },
+    "models": [
+      {
+        "max_actual_updates_including_replay": 1500,
+        "max_logical_updates": 1250,
+        "max_resumes": 1,
+        "method": "VLM_SPATIAL_FEEDBACK",
+        "seed_panel": 1,
+        "training_seed": 2026091301
+      },
+      {
+        "max_actual_updates_including_replay": 1500,
+        "max_logical_updates": 1250,
+        "max_resumes": 1,
+        "method": "VLM_SPATIAL_OPEN_LOOP",
+        "seed_panel": 1,
+        "training_seed": 2026091303
+      },
+      {
+        "max_actual_updates_including_replay": 1500,
+        "max_logical_updates": 1250,
+        "max_resumes": 1,
+        "method": "VLM_MEAN_FEEDBACK",
+        "seed_panel": 1,
+        "training_seed": 2026091305
+      }
+    ],
+    "permissions": {
+      "CNN_encoding": false,
+      "GDFS": false,
+      "Qwen_finetuning": false,
+      "STOP": false,
+      "TEST_evaluation_or_label_join": false,
+      "W2_training": false,
+      "cpu_recompute_evidence": true,
+      "create_PR_merge_force_push_or_release_tag": false,
+      "extra_seed_panels": false,
+      "full_repository_test_sweep": false,
+      "git_commit_push": true,
+      "hardware_benchmark": false,
+      "new_C_Qwen_generations_within_caps": true,
+      "new_attention_diagnostics": false,
+      "new_baselines_or_hyperparameter_search": false,
+      "new_registered_actor_and_frozen_predictor_forwards_for_training_valid_smoke": true,
+      "overwrite_frozen_production_sources_results_or_old_paper": false,
+      "paper_journal_submission": false,
+      "train_only_three_registered_C_actors": true,
+      "update_C_manuscript_in_new_directory": true
+    },
+    "predictors": {
+      "common_checkpoint": "results/cai_agent_v3/w2_replay/r1_292b1c74/models/predictor_mean_sc.pt",
+      "common_checkpoint_sha256": "f67e912bd5faa26ae5cff8a9a0241439797fccef8cec825f43ebe5dc9f9d57ff",
+      "common_model": "MEAN_SC",
+      "common_selected_update": 1750,
+      "oof_folds": 3,
+      "oof_routing": "ORIGINAL_TRAIN_CAPTURE_GROUP_FOLDS",
+      "retrain": false,
+      "reuse_w2": true,
+      "shared_encoder_reencoding": false
+    },
+    "prior_version": "C_P0_R1_GLOBAL_V1",
+    "repository": "Orangekostar/diff",
+    "roots": {
+      "artifacts": "artifacts/cai_agent_v3/c_render_retrain/r1_331f5295",
+      "authorization": "docs/cai/c_render_retrain/C_RETRAIN_RELEASE_SCOPE.json",
+      "code": "scripts/cai_c_retrain",
+      "data": "results/cai_agent_v3/new_protocol",
+      "evidence": "results/cai_agent_v3/c_render_retrain/r1_331f5295/evidence",
+      "global_ledger": "results/cai_agent_v3/compute_ledger.jsonl",
+      "grounding_pilot": "results/cai_agent_v3/vlm_grounding_pilot/r1_e8d9ef01",
+      "old_evidence": "results/cai_agent_v3/paper_evidence/r1_e2a11154",
+      "old_paper": "paper_cai_aei/r1_84bea60e",
+      "old_w3": "results/cai_agent_v3/w3_pilot/r1_0e11452a",
+      "old_w3_artifacts": "artifacts/cai_agent_v3/w3_pilot/r1_0e11452a",
+      "output": "results/cai_agent_v3/c_render_retrain/r1_331f5295",
+      "paper": "paper_cai_aei/r2_c_331f5295",
+      "predictors": "results/cai_agent_v3/w2_replay/r1_292b1c74",
+      "vlm": "results/cai_agent_v3/c_render_retrain/r1_331f5295/vlm",
+      "w3": "results/cai_agent_v3/c_render_retrain/r1_331f5295/w3"
+    },
+    "runtime": {
+      "interpreter_keys": [
+        "vlm_python",
+        "actor_python",
+        "report_python"
+      ],
+      "lock_file": "runtime_lock.json",
+      "no_automatic_library_upgrade": true,
+      "phase_subprocesses": true,
+      "scientific_file_hashes_fixed_before_training": true
+    },
+    "schema_version": 1,
+    "scientific_scope": "C_P0_R1_TRAIN_VALID_SEED1_RETRAIN_WITH_PAPER_AND_GIT_DELIVERY",
+    "source_commit": "331f52952b93bd9442ad2e44243cc71c7d966b4d",
+    "stages": [
+      "prepare",
+      "vlm",
+      "train",
+      "assemble",
+      "analyze",
+      "paper",
+      "verify",
+      "publish"
+    ],
+    "task_id": "CAI_V3_C_RENDER_RETRAIN_RELEASE_R1_331f5295",
+    "training": {
+      "batch_size": 16,
+      "candidate_updates": [
+        250,
+        500,
+        750,
+        1000,
+        1250
+      ],
+      "critic_weight": 0.5,
+      "discount_gamma": 1.0,
+      "entropy_end": 0.0,
+      "entropy_progress": "LOGICAL_UPDATE_NOT_ACTUAL_REPLAY_STEPS",
+      "entropy_start": 0.01,
+      "expected_candidate_count": 15,
+      "expected_candidate_episode_rows": 750,
+      "expected_selected_episode_rows": 150,
+      "expected_selected_models": 3,
+      "gradient_clip_norm": 1.0,
+      "improvement_tolerance": 1e-12,
+      "learning_rate": 0.0003,
+      "maximum_method_resume_count": 1,
+      "optimizer": "AdamW",
+      "partial_checkpoint_not_final_selection": true,
+      "patience": 4,
+      "resume_lost_segment_max_updates": 250,
+      "sample_order": "UNIFORM_DOMAIN_THEN_UNIFORM_TRAIN_PHYSICAL_SPECIMEN",
+      "save_all_candidate_weights_and_same_evaluation_trajectories": true,
+      "seed_before_initialization": true,
+      "selection_metric": "DOMAIN_EQUAL_LEFT_ERROR_AREA_MPA",
+      "snapshot_at_zero_and_each_validation": true,
+      "snapshot_fields": [
+        "model",
+        "optimizer",
+        "python_rng",
+        "numpy_global_rng",
+        "numpy_generator_rng",
+        "torch_cpu_rng",
+        "torch_cuda_rng",
+        "logical_update",
+        "best_score",
+        "best_update",
+        "stale",
+        "progress",
+        "environment_identity",
+        "run_id"
+      ],
+      "terminal_error_weight": 0.25,
+      "tie_break": "KEEP_EARLIEST_UNLESS_STRICT_IMPROVEMENT_EXCEEDS_1E_12",
+      "validation_interval": 250,
+      "warm_start_old_actor": false,
+      "weight_decay": 0.0001
+    },
+    "vlm": {
+      "add_vision_id": false,
+      "attention": "sdpa",
+      "clean_render": "RGB_ROTATE_270_ONCE_MAX_EDGE_1024_LANCZOS",
+      "confidence_values": {
+        "high": 1.0,
+        "low": 0.3333333333333333,
+        "medium": 0.6666666666666666,
+        "unknown": 0.0
+      },
+      "dtype": "bfloat16",
+      "eval": true,
+      "expected_exact_pilot_reuse": 6,
+      "expected_new_unique_primary_jobs_if_reuse_exact": 205,
+      "feature_boolean_strings": [
+        "True",
+        "False"
+      ],
+      "final_schema_failure_policy": "AVAILABLE_FALSE_NO_RELIABLE_FALSE_ZERO_FEATURES_KEEP_SPECIMEN",
+      "font_identity": "EXACT_PILOT_FONT_AND_RENDER_METADATA_NO_FONT_FILE_UPLOAD",
+      "generation": {
+        "batch_size": 1,
+        "do_sample": false,
+        "max_new_tokens": 500,
+        "temperature": null,
+        "use_cache": true
+      },
+      "generation_counts_distinguish_unique_jobs_and_attempts": true,
+      "image_order": [
+        "clean",
+        "R1_numbered"
+      ],
+      "incomplete_policy": "DO_NOT_TRAIN_UNTIL_ALL_211_HAVE_TERMINAL_RECORDS",
+      "interrupted_retry": "ONE_RETRY_ONLY_WITHIN_THE_SAME_TWO_ATTEMPT_CASE_LIMIT_NO_THIRD_REPAIR",
+      "maximum_generation_attempts_including_repair_failure_retry": 422,
+      "maximum_generation_attempts_per_case": 2,
+      "maximum_new_unique_primary_jobs": 211,
+      "maximum_total_output_tokens": 211000,
+      "model_repository": "Qwen/Qwen2.5-VL-7B-Instruct",
+      "model_revision": "cc594898137f460bfe9f0759e9844b3ce807cfb5",
+      "new_system_message": false,
+      "parsing_contract": "scripts/vlm_grounding_pilot/common.py::parse_contract",
+      "pilot_reuse": "EXACT_SIGNATURE_ONLY_PRESERVE_REPAIR_HISTORY",
+      "processor": {
+        "max_pixels": 1003520,
+        "min_pixels": 200704,
+        "use_fast": false
+      },
+      "prompt_equals_original_surface_percept": true,
+      "prompt_id": "P0",
+      "prompt_source": "results/cai_agent_v3/vlm_grounding_pilot/r1_e8d9ef01/prompts/P0.txt",
+      "render_id": "R1",
+      "render_source": "scripts/vlm_grounding_pilot/prepare.py::render_readable",
+      "repair_policy": "ONE_ORIGINAL_FORMAT_REPAIR_PRESERVE_FIRST_RAW_AND_GENERATED_IDS",
+      "requires_grad": false,
+      "valid_no_cue_policy": "AVAILABLE_TRUE_NO_RELIABLE_TRUE_ZERO_FEATURES_NO_RETRY"
+    }
+  },
+  "scope_sha256": "a32dafb06d3adb01cbc94c1807ea4dc31e6e7a9107905d996956af0c00a01788",
+  "task_id": "CAI_V3_C_RENDER_RETRAIN_RELEASE_R1_331f5295"
+}

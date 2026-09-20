@@ -1,0 +1,13 @@
+{
+  "actor_gpu_seconds": 0.0,
+  "global_authorized_cap": 44514,
+  "historical_usage_declared": 39014,
+  "new_actor_update_upper_bound": 0,
+  "new_actor_updates": 0,
+  "new_vlm_attempts": 0,
+  "new_vlm_output_tokens": 0,
+  "new_vlm_primary_jobs": 0,
+  "status": "PREPARED",
+  "task_id": "CAI_V3_C_RENDER_RETRAIN_RELEASE_R1_331f5295",
+  "vlm_gpu_seconds": 0.0
+}

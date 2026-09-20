@@ -1,0 +1,94 @@
+{
+  "cohort": {
+    "rows": 211,
+    "specimen_keys_sha256": "e67030ceb119381c1971fdc2543aa9fc18f87d5462fe571ca7da5d2044c1b60d",
+    "test": 0,
+    "train": 161,
+    "valid": 50
+  },
+  "exact_pilot_reuse": [
+    {
+      "attempts": "1",
+      "signature": "6cf30c364bb69a5bcb5981da40a2baeb30098b8764cf3ca283933a0bc94be647",
+      "specimen_key": "cgtnjyggtm:q24-48",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": "2",
+      "signature": "5df8ecc76e66ca2e3050201322a18bd2f6dbff6ac76f184922d4acd5b4191c36",
+      "specimen_key": "74t7kcdgkr:c8-16",
+      "status": "VALID_AFTER_REPAIR"
+    },
+    {
+      "attempts": "1",
+      "signature": "b45982b1f9d0ab121842f04ba399cd3c2b67185cd3109d237a9868415960c22c",
+      "specimen_key": "w68dtmpfyf:q16-29",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": "1",
+      "signature": "8af772e571e55acf9a33750eea5c0fc746e92b04d6fabeccef798917ffb64940",
+      "specimen_key": "xcmzfsbd9t:c24-43",
+      "status": "VALID_FIRST_PASS"
+    },
+    {
+      "attempts": "2",
+      "signature": "1eab8e668d046a58e43ec8e9fec78e5a9b6ab985c528d69ea5473ac9eb1cef65",
+      "specimen_key": "yfxyg8jm46:c16-20",
+      "status": "VALID_AFTER_REPAIR"
+    },
+    {
+      "attempts": "1",
+      "signature": "1fe874d6f066aec3177e2b83c74d31071bd38aa286f0307b78a6ab0992bcde1d",
+      "specimen_key": "ykhs7s2dck:q8-3",
+      "status": "VALID_FIRST_PASS"
+    }
+  ],
+  "expected_new_primary_jobs": 205,
+  "maximum_attempts": 422,
+  "model_config": {
+    "attention": "sdpa",
+    "batch_size": 1,
+    "chat_template": "{% set image_count = namespace(value=0) %}{% set video_count = namespace(value=0) %}{% for message in messages %}{% if loop.first and message['role'] != 'system' %}<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n{% endif %}<|im_start|>{{ message['role'] }}\n{% if message['content'] is string %}{{ message['content'] }}<|im_end|>\n{% else %}{% for content in message['content'] %}{% if content['type'] == 'image' or 'image' in content or 'image_url' in content %}{% set image_count.value = image_count.value + 1 %}{% if add_vision_id %}Picture {{ image_count.value }}: {% endif %}<|vision_start|><|image_pad|><|vision_end|>{% elif content['type'] == 'video' or 'video' in content %}{% set video_count.value = video_count.value + 1 %}{% if add_vision_id %}Video {{ video_count.value }}: {% endif %}<|vision_start|><|video_pad|><|vision_end|>{% elif 'text' in content %}{{ content['text'] }}{% endif %}{% endfor %}<|im_end|>\n{% endif %}{% endfor %}{% if add_generation_prompt %}<|im_start|>assistant\n{% endif %}",
+    "chat_template_sha256": "a0bc6f6fc7a29a80017a433e8f03a1cc1236e838a944a2d034295a60c4f2fddb",
+    "dtype": "bfloat16",
+    "generation": {
+      "do_sample": false,
+      "max_new_tokens": 500,
+      "temperature": null,
+      "use_cache": true
+    },
+    "image_order": [
+      "clean",
+      "numbered"
+    ],
+    "model_path": "/mnt/shared/ww/models/huggingface/Qwen--Qwen2.5-VL-7B-Instruct/cc594898137f460bfe9f0759e9844b3ce807cfb5",
+    "model_repository": "Qwen/Qwen2.5-VL-7B-Instruct",
+    "model_revision": "cc594898137f460bfe9f0759e9844b3ce807cfb5",
+    "processor": {
+      "max_pixels": 1003520,
+      "min_pixels": 200704,
+      "use_fast": false
+    },
+    "repair_sha256": "899e5022489c3ae858c9ccc0cda07b96b0ba3671365e4e24f0606ccca87cc2ab",
+    "versions": {
+      "Pillow": "12.2.0",
+      "numpy": "2.5.0",
+      "torch": "2.12.1",
+      "transformers": "4.49.0"
+    }
+  },
+  "prompt_sha256": "166ecae74d83e97d3a3779f68760f146ebbe85b99c334d069dd585dd0b3cf658",
+  "repair_sha256": "899e5022489c3ae858c9ccc0cda07b96b0ba3671365e4e24f0606ccca87cc2ab",
+  "scope_sha256": "a32dafb06d3adb01cbc94c1807ea4dc31e6e7a9107905d996956af0c00a01788",
+  "source_hashes": {
+    "candidate_queue": "9c5131e73703cc78981c745e8db5cb1f3e37c383590db6ab29a819ad4a496845",
+    "feature_bank_manifest": "01c8dc791dc9f7088aa818c816e529fc9d0621de274aa31b07ac7d497c45bb12",
+    "pilot_lock": "7ea5ac85f096020533036c0c5c95c783d2647a9e130cd1e2309d13acf8e8c123",
+    "pilot_p0": "166ecae74d83e97d3a3779f68760f146ebbe85b99c334d069dd585dd0b3cf658",
+    "predictor_mean_sc": "f67e912bd5faa26ae5cff8a9a0241439797fccef8cec825f43ebe5dc9f9d57ff",
+    "scope": "2359773415d72626034b008ba70d3a9b5854f37c9d14b18440800bf17d2add61"
+  },
+  "task_id": "CAI_V3_C_RENDER_RETRAIN_RELEASE_R1_331f5295",
+  "test_accessed": false
+}

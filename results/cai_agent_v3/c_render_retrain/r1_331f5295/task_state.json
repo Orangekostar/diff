@@ -1,0 +1,13 @@
+{
+  "phases": {
+    "prepare": {
+      "exact_pilot_reuse": 6,
+      "prompt_sha256": "166ecae74d83e97d3a3779f68760f146ebbe85b99c334d069dd585dd0b3cf658",
+      "roster_rows": 211,
+      "status": "COMPLETE",
+      "test_accessed": false
+    }
+  },
+  "scope_sha256": "a32dafb06d3adb01cbc94c1807ea4dc31e6e7a9107905d996956af0c00a01788",
+  "task_id": "CAI_V3_C_RENDER_RETRAIN_RELEASE_R1_331f5295"
+}
