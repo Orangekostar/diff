@@ -1,0 +1,22 @@
+{
+  "desktop": {
+    "brokenImages": 0,
+    "errors": [],
+    "fixedVisible": true,
+    "horizontalOverflow": false,
+    "imageCount": 121,
+    "nSourceVisible": true,
+    "nativeVisible": true,
+    "stateRecords": 60,
+    "visibleCases": 1
+  },
+  "mobile": {
+    "brokenImages": 0,
+    "errors": [],
+    "horizontalOverflow": false,
+    "imageCount": 121,
+    "nativeVisible": true,
+    "stateRecords": 60,
+    "visibleCases": 1
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "cache_report_render_seconds_upper_bound": 261,
+  "feature_source": "results/cai_agent_v3/c_render_retrain/r1_331f5295/vlm/vlm_actor_features_fit.csv",
+  "feature_source_sha256": "0777b3df798dc767028d1dfdf8e08a5197bcffa89676e0b6a51d829e5d128e79",
+  "model_forwards": 0,
+  "state_count": 54,
+  "status": "PASS_CACHE_ONLY_PROVENANCE",
+  "timing_measurement": "MONOTONIC_WALL_SECONDS_ROUNDED_UP"
+}

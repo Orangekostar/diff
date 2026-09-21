@@ -27,20 +27,22 @@
     },
     "publish": {
       "result": {
-        "handoff_commit": "ENCLOSING_COMMIT",
-        "results_commit": "53637a33564e11aff1d6da64e8bc1e39af9f37dc",
+        "corrective_commit": "ENCLOSING_COMMIT",
+        "previous_handoff_commit": "305e3540b5b5992fecba775f8d16efde0ce4594b",
+        "previous_results_commit": "53637a33564e11aff1d6da64e8bc1e39af9f37dc",
         "status": "DIAGNOSTICS_COMPLETE"
       },
-      "signature": "53637a33564e11aff1d6da64e8bc1e39af9f37dc",
+      "signature": "ENCLOSING_CORRECTIVE_COMMIT",
       "status": "COMPLETE"
     },
     "render": {
       "result": {
-        "figure_count": 90,
-        "html_asset_count": 388,
+        "figure_count": 91,
+        "html_asset_count": 774,
+        "provenance": "PASS_CACHE_ONLY_PROVENANCE",
         "status": "RENDER_COMPLETE"
       },
-      "signature": "257eded95cad4b13da56816abf7552be4a05f0bd45d8aa17f90625d5ed7933db",
+      "signature": "3097f0cf897c4c6e57a0678a816fd13055305e1575cf53445038d8a7b9096aa9",
       "status": "COMPLETE"
     },
     "replay": {
@@ -56,20 +58,20 @@
     },
     "verify": {
       "result": {
-        "file_count": 808,
-        "status": "READY_FOR_PUBLISH",
+        "file_count": 872,
+        "status": "DIAGNOSTICS_COMPLETE",
         "validation": {
           "Q1": "PASS_MODEL_PRIOR_IDENTITY_FROZEN",
           "Q2": "PASS_12_NATIVE_ACTION_COST_PREDICTION_REPRODUCTIONS",
-          "Q3": "PASS_54_DEDUPLICATED_NO_FUTURE_COMMON_STATES",
+          "Q3": "PASS_54_DEDUPLICATED_NO_FUTURE_COMMON_STATES_AND_RECOMPUTED_PROVENANCE",
           "Q4": "PASS_MASK_ONLY_C0_AND_CONDITIONAL_SOFTMAX",
           "Q5": "PASS_DIRECT_TOTAL_VIA_ATTRIBUTION_AND_72_PROBES",
           "Q6": "PASS_2X4X65_ACTOR_ATTENTION_AND_LOGIT_GATE",
-          "Q7": "PASS_OFFLINE_HTML_388_ASSETS_AND_120_PNGS",
-          "Q8": "PENDING_COMPUTE_FREE_GIT_PUBLISH"
+          "Q7": "PASS_OFFLINE_HTML_774_ASSETS_54_FIXED_STATE_PANELS_121_PNGS_AND_SIX_CASE_EQUAL_WEIGHT_T0",
+          "Q8": "PASS_GIT_DELIVERY_VIA_ENCLOSING_CORRECTIVE_COMMIT"
         }
       },
-      "signature": "6ecdcb0465f1515969980155d253633233d37cc87ee83441bee7c32cf07ab45e",
+      "signature": "057800fa11ad969d6b247d568c42512c4198811f944f5dd7a9d1746eba3184be",
       "status": "COMPLETE"
     }
   },

@@ -1,8 +1,14 @@
 {
   "action_count": 0,
+  "c_prior_sha256": "7161eebc5e1b805e0a01322d7d72e62592e1fa8b48c244d5c1adfd90bae803c8",
   "current_prediction_mpa": 225.9687957763672,
   "exact_cost": 0.0,
   "physical_state_sha256": "3a313614afe22650326c4bf74ed582cf33d47253913119370165b7d3b2584b8a",
+  "policy_input_sha256": {
+    "C": "14ebe1b8c7e37e57fd128ecdf2a2a6dada8f3b5a025b09de50255c031eaabcbe",
+    "N": "392d09a00b9a85522da4ce22f70786924a3cc294032da883fd46469fb3a09710"
+  },
+  "prefix_cells_in_order": [],
   "prefix_lengths": [
     0,
     0
@@ -17,5 +23,20 @@
   ],
   "specimen_key": "xcmzfsbd9t:c24-9t",
   "state_id": "s00_3a313614afe2",
+  "state_origins": [
+    {
+      "label": "C_NATIVE_PREFIX",
+      "model": "C",
+      "prefix_cells_in_order": [],
+      "t": 0
+    },
+    {
+      "label": "N_NATIVE_PREFIX",
+      "model": "N",
+      "prefix_cells_in_order": [],
+      "t": 0
+    }
+  ],
+  "t": 0,
   "terminal_view_only": false
 }

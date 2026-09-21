@@ -1,16 +1,20 @@
 {
   "branch": "research/cai-vlm-agent-v3-controlled-reuse",
-  "handoff_commit": "ENCLOSING_COMMIT",
+  "corrective_commit": "ENCLOSING_COMMIT",
+  "post_push_verification": "LOCAL_UPSTREAM_LS_REMOTE_EQUAL",
+  "previous_handoff_commit": "305e3540b5b5992fecba775f8d16efde0ce4594b",
+  "previous_results_commit": "53637a33564e11aff1d6da64e8bc1e39af9f37dc",
   "remote": "origin",
   "required_remote_samples": [
     "artifacts/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/CODEX_HANDOFF_ACTOR_C0_DIAGNOSTIC.md",
+    "artifacts/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/figure_qa/browser/browser_qa.json",
     "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/first_action_c0_audit.csv",
     "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/index.html",
+    "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/report_provenance.json",
+    "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/t0_equal_weight_summary.csv",
     "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/states/ykhs7s2dck_q8-22/s01_b4494e6ca46c/C/attention.npz",
     "results/cai_agent_v3/actor_c0_diagnostic/r2_9e765b04/panels/ykhs7s2dck_q8-22/group_A_initial_gate.png"
   ],
-  "results_commit": "53637a33564e11aff1d6da64e8bc1e39af9f37dc",
-  "results_commit_remote_verified": true,
   "status": "DIAGNOSTICS_COMPLETE",
   "task_id": "CAI_ACTOR_C0_MECHANISM_VIS_R2_9e765b04"
 }

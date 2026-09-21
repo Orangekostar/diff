@@ -1,0 +1,12 @@
+{
+  "classification": "PRIOR_CHANNEL_SENSITIVE_AT_FIXED_STATE",
+  "normal_action": "48",
+  "scope": "FIXED_STATE_C_PRIOR_CHANNEL_QUERY_NO_ROLLOUT",
+  "source_table": "fixed_state_prior_sensitivity.csv",
+  "specimen_key": "yfxyg8jm46:c16-24",
+  "state_id": "s02_631a1086733a",
+  "top1_changed": "False",
+  "top5_overlap": "4",
+  "tvd": "0.016208669879562793",
+  "zero_prior_action": "48"
+}

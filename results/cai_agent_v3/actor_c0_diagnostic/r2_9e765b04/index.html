@@ -2,188 +2,837 @@
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Actor C0 机制诊断</title>
 <style>
-:root{--ink:#20252b;--muted:#69737d;--line:#d9dee3;--paper:#fff;--accent:#007c83}
+:root{--ink:#20252b;--muted:#69737d;--line:#d9dee3;--paper:#fff;--accent:#006f75;--danger:#a93632}
 *{box-sizing:border-box} body{margin:0;color:var(--ink);font:14px/1.55 system-ui,sans-serif;background:#f5f7f8}
-header,main{max-width:1260px;margin:auto} header{padding:28px 24px 14px} h1{font-size:26px;margin:0 0 8px;letter-spacing:0}
-header p{color:var(--muted);margin:0} section{background:var(--paper);border-top:1px solid var(--line);padding:24px;margin-bottom:16px}
-h2{font-size:18px;margin:0 0 14px;letter-spacing:0} .layer-controls{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:10px}
+header,main{max-width:1260px;margin:auto} header{padding:24px} h1{font-size:26px;margin:0 0 10px;letter-spacing:0}
+header p{color:var(--muted);margin:7px 0} select{min-width:min(100%,360px);padding:7px;border:1px solid var(--line);background:white}
+section{background:var(--paper);border-top:1px solid var(--line);padding:24px;margin-bottom:16px}
+h2{font-size:18px;margin:0;letter-spacing:0} .case-heading{display:flex;gap:16px;align-items:baseline;flex-wrap:wrap;margin-bottom:14px}
+.case-heading span,.state-head span{color:var(--muted)} .layer-controls{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:10px}
 .stack{position:relative;width:min(100%,620px);aspect-ratio:1/1;overflow:hidden;background:#111}
 .stack img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain} .hidden{display:none!important}
-.group-links{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0} a{color:var(--accent)} .group-links a{border:1px solid var(--line);padding:6px 9px;text-decoration:none}
-.plate{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start} .plate img,.wide{width:100%;display:block;border:1px solid var(--line)}
-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:12px} th,td{border-bottom:1px solid var(--line);padding:7px;text-align:left;vertical-align:top}
-details{margin-top:18px} @media(max-width:760px){.plate{grid-template-columns:1fr} section{padding:16px}}
+a{color:var(--accent)} .question-links{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}
+.question-links a{border-bottom:2px solid var(--line);padding:6px 2px;text-decoration:none}
+.view-tabs,.source-tabs{display:flex;border-bottom:1px solid var(--line);margin:16px 0 12px}
+.view-tabs button,.source-tabs button{border:0;border-bottom:3px solid transparent;background:transparent;padding:9px 13px;color:var(--muted);cursor:pointer}
+.view-tabs button.active,.source-tabs button.active{border-bottom-color:var(--accent);color:var(--ink);font-weight:650}
+.plate{margin:0 0 18px} .plate img,.state-record img,.summary img{width:100%;display:block;border:1px solid var(--line)}
+.figure-link{display:block} .state-record{border-top:1px solid var(--line);padding:16px 0 20px}
+.state-head{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:9px} .raw-links{margin-top:8px;font-size:12px;overflow-wrap:anywhere}
+.summary{padding:0 24px 24px} .summary h2{margin-bottom:10px}
+@media(max-width:760px){section{padding:16px} header{padding:18px 16px} .summary{padding:0 16px 16px} .view-tabs button,.source-tabs button{padding:8px}}
 </style></head><body><header><h1>Actor C0 机制诊断</h1>
 <p>六件固定 VALID 案例。区分外部门控、同状态先验通道敏感性、表面特征局部敏感性与 Actor attention；不包含训练、TEST 或论文改写。</p>
 <p><a href="first_action_c0_audit.csv">首步 C0 审计</a> · <a href="c0_intervention_results.csv">冻结策略干预</a> · <a href="fixed_state_prior_sensitivity.csv">共同状态先验敏感性</a> · <a href="surface_probe_results.csv">特征扰动</a></p>
+<label for="case-selector">案例</label> <select id="case-selector"><option value="cgtnjyggtm_q24-48">cgtnjyggtm:q24-48</option><option value="74t7kcdgkr_c8-16">74t7kcdgkr:c8-16</option><option value="w68dtmpfyf_q16-29">w68dtmpfyf:q16-29</option><option value="xcmzfsbd9t_c24-9t">xcmzfsbd9t:c24-9t</option><option value="yfxyg8jm46_c16-24">yfxyg8jm46:c16-24</option><option value="ykhs7s2dck_q8-22">ykhs7s2dck:q8-22</option></select>
 </header><main>
-<section id="cgtnjyggtm_q24-48">
-  <h2>cgtnjyggtm:q24-48</h2>
+<section class="summary"><h2>六案例 t0 等权空间概览</h2>
+<a class="figure-link" href="panels/summary/group_G_t0_equal_weight_summary.png"><img src="panels/summary/group_G_t0_equal_weight_summary.png" alt="六案例 t0 等权空间概览"></a>
+<p><a href="t0_equal_weight_summary.csv">t0_equal_weight_summary.csv</a> · 规范化图格频率，不是物理毫米损伤图。</p></section>
+
+<section id="cgtnjyggtm_q24-48" class="case-panel" data-case-panel="cgtnjyggtm_q24-48">
+  <div class="case-heading"><h2>cgtnjyggtm:q24-48</h2><span>target=136.6800 MPa</span></div>
   <div class="layer-controls">
-    <label><input type="checkbox" data-layer="heatmap" checked> Heatmap</label>
-    <label><input type="checkbox" data-layer="candidates" checked> VLM candidates</label>
-    <label><input type="checkbox" data-layer="selection" checked> Selection</label>
-    <label><input type="checkbox" data-layer="numbers"> Numbering</label>
+    <label><input type="checkbox" data-layer="heatmap" checked> 概率热图</label>
+    <label><input type="checkbox" data-layer="candidates" checked> VLM全部候选</label>
+    <label><input type="checkbox" data-layer="selection" checked> 原生选中</label>
+    <label><input type="checkbox" data-layer="numbers"> 格子编号</label>
   </div>
   <div class="stack" data-stack>
     <img src="overlays/cgtnjyggtm_q24-48/clean.png" alt="clean surface">
     <img class="heatmap" src="overlays/cgtnjyggtm_q24-48/initial_c_env_heatmap_layer.png" alt="C environment probability">
-    <img class="candidates" src="overlays/cgtnjyggtm_q24-48/initial_c0_candidates_layer.png" alt="C0 candidates">
+    <img class="candidates" src="overlays/cgtnjyggtm_q24-48/initial_c0_candidates_layer.png" alt="all VLM candidates">
     <img class="selection" src="overlays/cgtnjyggtm_q24-48/initial_selection_layer.png" alt="selected cells">
     <img class="numbers hidden" src="overlays/cgtnjyggtm_q24-48/cell_numbers_layer.png" alt="cell numbering">
   </div>
-  <nav class="group-links">
-    <a href="panels/cgtnjyggtm_q24-48/group_A_initial_gate.png">A C0 gate</a><a href="panels/cgtnjyggtm_q24-48/group_B_surface_attribution.png">B attribution</a>
-    <a href="panels/cgtnjyggtm_q24-48/group_D_native_process.png">D native process</a><a href="panels/cgtnjyggtm_q24-48/group_E_actor_attention.png">E Actor attention</a>
-    <a href="panels/cgtnjyggtm_q24-48/group_F_intervention_curves.png">F intervention</a>
+  <nav class="question-links" aria-label="问题导航">
+    <a href="#cgtnjyggtm_q24-48-gate">外部门控改变首步了吗？</a>
+    <a href="#cgtnjyggtm_q24-48-path">表面通过哪条路径影响决策？</a>
+    <a href="#cgtnjyggtm_q24-48-process">两条原生路径怎样演化？</a>
+    <a href="#cgtnjyggtm_q24-48-attention">Actor关注了哪些token？</a>
+    <a href="#cgtnjyggtm_q24-48-intervention">关闭C0后怎样变化？</a>
   </nav>
-  <div class="plate"><img src="panels/cgtnjyggtm_q24-48/group_A_initial_gate.png" alt="group A"><img src="panels/cgtnjyggtm_q24-48/group_B_surface_attribution.png" alt="group B"></div>
-  <div class="plate"><img src="panels/cgtnjyggtm_q24-48/group_D_native_process.png" alt="group D"><img src="panels/cgtnjyggtm_q24-48/group_E_actor_attention.png" alt="group E"></div>
-  <img class="wide" src="panels/cgtnjyggtm_q24-48/group_F_intervention_curves.png" alt="group F">
-  <details><summary>Common physical states (9)</summary>
-    <table><thead><tr><th>State</th><th>Source</th><th>t</th><th>Cost</th><th>Raw data</th></tr></thead>
-    <tbody><tr><td>s00_32496b63c4f0</td><td>[&#x27;C_NATIVE_PREFIX&#x27;, &#x27;N_NATIVE_PREFIX&#x27;]</td><td>0</td><td>0.0000</td><td><a href='states/cgtnjyggtm_q24-48/s00_32496b63c4f0/C/scores.csv'>C scores</a> | <a href='states/cgtnjyggtm_q24-48/s00_32496b63c4f0/N/scores.csv'>N scores</a> | <a href='states/cgtnjyggtm_q24-48/s00_32496b63c4f0/C/attention.npz'>C attention</a> | <a href='states/cgtnjyggtm_q24-48/s00_32496b63c4f0/N/attention.npz'>N attention</a> | <a href='states/cgtnjyggtm_q24-48/s00_32496b63c4f0/C/surface_attribution.npz'>C attribution</a> | <a href='states/cgtnjyggtm_q24-48/s00_32496b63c4f0/N/surface_attribution.npz'>N attribution</a></td></tr><tr><td>s01_6a763ec6cc37</td><td>[&#x27;C_NATIVE_PREFIX&#x27;]</td><td>1</td><td>0.0155</td><td><a href='states/cgtnjyggtm_q24-48/s01_6a763ec6cc37/C/scores.csv'>C scores</a> | <a href='states/cgtnjyggtm_q24-48/s01_6a763ec6cc37/N/scores.csv'>N scores</a> | <a href='states/cgtnjyggtm_q24-48/s01_6a763ec6cc37/C/attention.npz'>C attention</a> | <a href='states/cgtnjyggtm_q24-48/s01_6a763ec6cc37/N/attention.npz'>N attention</a> | <a href='states/cgtnjyggtm_q24-48/s01_6a763ec6cc37/C/surface_attribution.npz'>C attribution</a> | <a href='states/cgtnjyggtm_q24-48/s01_6a763ec6cc37/N/surface_attribution.npz'>N attribution</a></td></tr><tr><td>s02_e26c8b15350c</td><td>[&#x27;C_NATIVE_PREFIX&#x27;]</td><td>2</td><td>0.0310</td><td><a href='states/cgtnjyggtm_q24-48/s02_e26c8b15350c/C/scores.csv'>C scores</a> | <a href='states/cgtnjyggtm_q24-48/s02_e26c8b15350c/N/scores.csv'>N scores</a> | <a href='states/cgtnjyggtm_q24-48/s02_e26c8b15350c/C/attention.npz'>C attention</a> | <a href='states/cgtnjyggtm_q24-48/s02_e26c8b15350c/N/attention.npz'>N attention</a> | <a href='states/cgtnjyggtm_q24-48/s02_e26c8b15350c/C/surface_attribution.npz'>C attribution</a> | <a href='states/cgtnjyggtm_q24-48/s02_e26c8b15350c/N/surface_attribution.npz'>N attribution</a></td></tr><tr><td>s03_ba4b52edd4bf</td><td>[&#x27;C_NATIVE_PREFIX&#x27;]</td><td>8</td><td>0.1246</td><td><a href='states/cgtnjyggtm_q24-48/s03_ba4b52edd4bf/C/scores.csv'>C scores</a> | <a href='states/cgtnjyggtm_q24-48/s03_ba4b52edd4bf/N/scores.csv'>N scores</a> | <a href='states/cgtnjyggtm_q24-48/s03_ba4b52edd4bf/C/attention.npz'>C attention</a> | <a href='states/cgtnjyggtm_q24-48/s03_ba4b52edd4bf/N/attention.npz'>N attention</a> | <a href='states/cgtnjyggtm_q24-48/s03_ba4b52edd4bf/C/surface_attribution.npz'>C attribution</a> | <a href='states/cgtnjyggtm_q24-48/s03_ba4b52edd4bf/N/surface_attribution.npz'>N attribution</a></td></tr><tr><td>s04_b01e19df2977</td><td>[&#x27;C_NATIVE_PREFIX&#x27;]</td><td>15</td><td>0.2339</td><td><a href='states/cgtnjyggtm_q24-48/s04_b01e19df2977/C/scores.csv'>C scores</a> | <a href='states/cgtnjyggtm_q24-48/s04_b01e19df2977/N/scores.csv'>N scores</a> | <a href='states/cgtnjyggtm_q24-48/s04_b01e19df2977/C/attention.npz'>C attention</a> | <a href='states/cgtnjyggtm_q24-48/s04_b01e19df2977/N/attention.npz'>N attention</a> | <a href='states/cgtnjyggtm_q24-48/s04_b01e19df2977/C/surface_attribution.npz'>C attribution</a> | <a href='states/cgtnjyggtm_q24-48/s04_b01e19df2977/N/surface_attribution.npz'>N attribution</a></td></tr><tr><td>s05_ce63745479ac</td><td>[&#x27;N_NATIVE_PREFIX&#x27;]</td><td>1</td><td>0.0155</td><td><a href='states/cgtnjyggtm_q24-48/s05_ce63745479ac/C/scores.csv'>C scores</a> | <a href='states/cgtnjyggtm_q24-48/s05_ce63745479ac/N/scores.csv'>N scores</a> | <a href='states/cgtnjyggtm_q24-48/s05_ce63745479ac/C/attention.npz'>C attention</a> | <a href='states/cgtnjyggtm_q24-48/s05_ce63745479ac/N/attention.npz'>N attention</a> | <a href='states/cgtnjyggtm_q24-48/s05_ce63745479ac/C/surface_attribution.npz'>C attribution</a> | <a href='states/cgtnjyggtm_q24-48/s05_ce63745479ac/N/surface_attribution.npz'>N attribution</a></td></tr><tr><td>s06_961e7869f1e5</td><td>[&#x27;N_NATIVE_PREFIX&#x27;]</td><td>2</td><td>0.0310</td><td><a href='states/cgtnjyggtm_q24-48/s06_961e7869f1e5/C/scores.csv'>C scores</a> | <a href='states/cgtnjyggtm_q24-48/s06_961e7869f1e5/N/scores.csv'>N scores</a> | <a href='states/cgtnjyggtm_q24-48/s06_961e7869f1e5/C/attention.npz'>C attention</a> | <a href='states/cgtnjyggtm_q24-48/s06_961e7869f1e5/N/attention.npz'>N attention</a> | <a href='states/cgtnjyggtm_q24-48/s06_961e7869f1e5/C/surface_attribution.npz'>C attribution</a> | <a href='states/cgtnjyggtm_q24-48/s06_961e7869f1e5/N/surface_attribution.npz'>N attribution</a></td></tr><tr><td>s07_e5f96aaadaf7</td><td>[&#x27;N_NATIVE_PREFIX&#x27;]</td><td>8</td><td>0.1246</td><td><a href='states/cgtnjyggtm_q24-48/s07_e5f96aaadaf7/C/scores.csv'>C scores</a> | <a href='states/cgtnjyggtm_q24-48/s07_e5f96aaadaf7/N/scores.csv'>N scores</a> | <a href='states/cgtnjyggtm_q24-48/s07_e5f96aaadaf7/C/attention.npz'>C attention</a> | <a href='states/cgtnjyggtm_q24-48/s07_e5f96aaadaf7/N/attention.npz'>N attention</a> | <a href='states/cgtnjyggtm_q24-48/s07_e5f96aaadaf7/C/surface_attribution.npz'>C attribution</a> | <a href='states/cgtnjyggtm_q24-48/s07_e5f96aaadaf7/N/surface_attribution.npz'>N attribution</a></td></tr><tr><td>s08_62115a61a187</td><td>[&#x27;N_NATIVE_PREFIX&#x27;]</td><td>15</td><td>0.2334</td><td><a href='states/cgtnjyggtm_q24-48/s08_62115a61a187/C/scores.csv'>C scores</a> | <a href='states/cgtnjyggtm_q24-48/s08_62115a61a187/N/scores.csv'>N scores</a> | <a href='states/cgtnjyggtm_q24-48/s08_62115a61a187/C/attention.npz'>C attention</a> | <a href='states/cgtnjyggtm_q24-48/s08_62115a61a187/N/attention.npz'>N attention</a> | <a href='states/cgtnjyggtm_q24-48/s08_62115a61a187/C/surface_attribution.npz'>C attribution</a> | <a href='states/cgtnjyggtm_q24-48/s08_62115a61a187/N/surface_attribution.npz'>N attribution</a></td></tr></tbody></table>
-  </details>
+  <div class="view-tabs" role="tablist">
+    <button type="button" class="active" data-view-tab="native">原生轨迹对照</button>
+    <button type="button" data-view-tab="fixed">相同状态对照</button>
+  </div>
+  <div class="view-pane" data-view-pane="native">
+    <div class="plate" id="cgtnjyggtm_q24-48-gate"><a class="figure-link" href="panels/cgtnjyggtm_q24-48/group_A_initial_gate.png"><img src="panels/cgtnjyggtm_q24-48/group_A_initial_gate.png" alt="首步门控"></a></div>
+    <div class="plate" id="cgtnjyggtm_q24-48-path"><a class="figure-link" href="panels/cgtnjyggtm_q24-48/group_B_surface_attribution.png"><img src="panels/cgtnjyggtm_q24-48/group_B_surface_attribution.png" alt="表面归因"></a></div>
+    <div class="plate" id="cgtnjyggtm_q24-48-process"><a class="figure-link" href="panels/cgtnjyggtm_q24-48/group_D_native_process.png"><img src="panels/cgtnjyggtm_q24-48/group_D_native_process.png" alt="原生决策进程"></a></div>
+    <div class="plate" id="cgtnjyggtm_q24-48-attention"><a class="figure-link" href="panels/cgtnjyggtm_q24-48/group_E_actor_attention.png"><img src="panels/cgtnjyggtm_q24-48/group_E_actor_attention.png" alt="Actor attention"></a></div>
+    <div class="plate" id="cgtnjyggtm_q24-48-intervention"><a class="figure-link" href="panels/cgtnjyggtm_q24-48/group_F_intervention_curves.png"><img src="panels/cgtnjyggtm_q24-48/group_F_intervention_curves.png" alt="冻结策略干预"></a></div>
+    <p><a href="panels/cgtnjyggtm_q24-48/group_F_action_difference.csv">动作顺序及差值表</a> · <a href="c0_intervention_results.csv">三路径结果表</a></p>
+  </div>
+  <div class="view-pane hidden" data-view-pane="fixed">
+    <div class="source-tabs" role="tablist">
+      <button type="button" class="active" data-source-tab="C">C来源状态</button>
+      <button type="button" data-source-tab="N">N来源状态</button>
+    </div>
+    <div class="source-pane" data-source-pane="C">
+<article class="state-record" id="cgtnjyggtm_q24-48-s00_32496b63c4f0">
+  <div class="state-head"><strong>s00_32496b63c4f0</strong>
+    <span>来源 [&#x27;C_NATIVE_PREFIX&#x27;, &#x27;N_NATIVE_PREFIX&#x27;]</span><span>t=0</span>
+    <span>cost=0.000000</span>
+    <span>history=[]</span>
+  </div>
+  <a class="figure-link" href="panels/cgtnjyggtm_q24-48/group_C_s00_32496b63c4f0.png"><img src="panels/cgtnjyggtm_q24-48/group_C_s00_32496b63c4f0.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/cgtnjyggtm_q24-48/s00_32496b63c4f0/metadata.json">metadata</a> · <a href="states/cgtnjyggtm_q24-48/s00_32496b63c4f0/physical_state.npz">physical state</a> · <a href="states/cgtnjyggtm_q24-48/s00_32496b63c4f0/C/scores.csv">C scores</a> · <a href="states/cgtnjyggtm_q24-48/s00_32496b63c4f0/N/scores.csv">N scores</a> · <a href="states/cgtnjyggtm_q24-48/s00_32496b63c4f0/C/attention.npz">C attention</a> · <a href="states/cgtnjyggtm_q24-48/s00_32496b63c4f0/N/attention.npz">N attention</a> · <a href="states/cgtnjyggtm_q24-48/s00_32496b63c4f0/C/surface_attribution.npz">C attribution</a> · <a href="states/cgtnjyggtm_q24-48/s00_32496b63c4f0/N/surface_attribution.npz">N attribution</a> · <a href="states/cgtnjyggtm_q24-48/s00_32496b63c4f0/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/cgtnjyggtm_q24-48/s00_32496b63c4f0/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/cgtnjyggtm_q24-48/s00_32496b63c4f0/C/query_checks.json">C query checks</a> · <a href="states/cgtnjyggtm_q24-48/s00_32496b63c4f0/N/query_checks.json">N query checks</a></div>
+</article>
+<article class="state-record" id="cgtnjyggtm_q24-48-s01_6a763ec6cc37">
+  <div class="state-head"><strong>s01_6a763ec6cc37</strong>
+    <span>来源 [&#x27;C_NATIVE_PREFIX&#x27;]</span><span>t=1</span>
+    <span>cost=0.015509</span>
+    <span>history=[28]</span>
+  </div>
+  <a class="figure-link" href="panels/cgtnjyggtm_q24-48/group_C_s01_6a763ec6cc37.png"><img src="panels/cgtnjyggtm_q24-48/group_C_s01_6a763ec6cc37.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/cgtnjyggtm_q24-48/s01_6a763ec6cc37/metadata.json">metadata</a> · <a href="states/cgtnjyggtm_q24-48/s01_6a763ec6cc37/physical_state.npz">physical state</a> · <a href="states/cgtnjyggtm_q24-48/s01_6a763ec6cc37/C/scores.csv">C scores</a> · <a href="states/cgtnjyggtm_q24-48/s01_6a763ec6cc37/N/scores.csv">N scores</a> · <a href="states/cgtnjyggtm_q24-48/s01_6a763ec6cc37/C/attention.npz">C attention</a> · <a href="states/cgtnjyggtm_q24-48/s01_6a763ec6cc37/N/attention.npz">N attention</a> · <a href="states/cgtnjyggtm_q24-48/s01_6a763ec6cc37/C/surface_attribution.npz">C attribution</a> · <a href="states/cgtnjyggtm_q24-48/s01_6a763ec6cc37/N/surface_attribution.npz">N attribution</a> · <a href="states/cgtnjyggtm_q24-48/s01_6a763ec6cc37/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/cgtnjyggtm_q24-48/s01_6a763ec6cc37/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/cgtnjyggtm_q24-48/s01_6a763ec6cc37/C/query_checks.json">C query checks</a> · <a href="states/cgtnjyggtm_q24-48/s01_6a763ec6cc37/N/query_checks.json">N query checks</a></div>
+</article>
+<article class="state-record" id="cgtnjyggtm_q24-48-s02_e26c8b15350c">
+  <div class="state-head"><strong>s02_e26c8b15350c</strong>
+    <span>来源 [&#x27;C_NATIVE_PREFIX&#x27;]</span><span>t=2</span>
+    <span>cost=0.031019</span>
+    <span>history=[28,31]</span>
+  </div>
+  <a class="figure-link" href="panels/cgtnjyggtm_q24-48/group_C_s02_e26c8b15350c.png"><img src="panels/cgtnjyggtm_q24-48/group_C_s02_e26c8b15350c.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/cgtnjyggtm_q24-48/s02_e26c8b15350c/metadata.json">metadata</a> · <a href="states/cgtnjyggtm_q24-48/s02_e26c8b15350c/physical_state.npz">physical state</a> · <a href="states/cgtnjyggtm_q24-48/s02_e26c8b15350c/C/scores.csv">C scores</a> · <a href="states/cgtnjyggtm_q24-48/s02_e26c8b15350c/N/scores.csv">N scores</a> · <a href="states/cgtnjyggtm_q24-48/s02_e26c8b15350c/C/attention.npz">C attention</a> · <a href="states/cgtnjyggtm_q24-48/s02_e26c8b15350c/N/attention.npz">N attention</a> · <a href="states/cgtnjyggtm_q24-48/s02_e26c8b15350c/C/surface_attribution.npz">C attribution</a> · <a href="states/cgtnjyggtm_q24-48/s02_e26c8b15350c/N/surface_attribution.npz">N attribution</a> · <a href="states/cgtnjyggtm_q24-48/s02_e26c8b15350c/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/cgtnjyggtm_q24-48/s02_e26c8b15350c/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/cgtnjyggtm_q24-48/s02_e26c8b15350c/C/query_checks.json">C query checks</a> · <a href="states/cgtnjyggtm_q24-48/s02_e26c8b15350c/N/query_checks.json">N query checks</a></div>
+</article>
+<article class="state-record" id="cgtnjyggtm_q24-48-s03_ba4b52edd4bf">
+  <div class="state-head"><strong>s03_ba4b52edd4bf</strong>
+    <span>来源 [&#x27;C_NATIVE_PREFIX&#x27;]</span><span>t=8</span>
+    <span>cost=0.124629</span>
+    <span>history=[28,31,23,0,48,55,35,30]</span>
+  </div>
+  <a class="figure-link" href="panels/cgtnjyggtm_q24-48/group_C_s03_ba4b52edd4bf.png"><img src="panels/cgtnjyggtm_q24-48/group_C_s03_ba4b52edd4bf.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/cgtnjyggtm_q24-48/s03_ba4b52edd4bf/metadata.json">metadata</a> · <a href="states/cgtnjyggtm_q24-48/s03_ba4b52edd4bf/physical_state.npz">physical state</a> · <a href="states/cgtnjyggtm_q24-48/s03_ba4b52edd4bf/C/scores.csv">C scores</a> · <a href="states/cgtnjyggtm_q24-48/s03_ba4b52edd4bf/N/scores.csv">N scores</a> · <a href="states/cgtnjyggtm_q24-48/s03_ba4b52edd4bf/C/attention.npz">C attention</a> · <a href="states/cgtnjyggtm_q24-48/s03_ba4b52edd4bf/N/attention.npz">N attention</a> · <a href="states/cgtnjyggtm_q24-48/s03_ba4b52edd4bf/C/surface_attribution.npz">C attribution</a> · <a href="states/cgtnjyggtm_q24-48/s03_ba4b52edd4bf/N/surface_attribution.npz">N attribution</a> · <a href="states/cgtnjyggtm_q24-48/s03_ba4b52edd4bf/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/cgtnjyggtm_q24-48/s03_ba4b52edd4bf/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/cgtnjyggtm_q24-48/s03_ba4b52edd4bf/C/query_checks.json">C query checks</a> · <a href="states/cgtnjyggtm_q24-48/s03_ba4b52edd4bf/N/query_checks.json">N query checks</a></div>
+</article>
+<article class="state-record" id="cgtnjyggtm_q24-48-s04_b01e19df2977">
+  <div class="state-head"><strong>s04_b01e19df2977</strong>
+    <span>来源 [&#x27;C_NATIVE_PREFIX&#x27;]</span><span>t=15</span>
+    <span>cost=0.233936</span>
+    <span>history=[28,31,23,0,48,55,35,30,52,27,39,19,8,32,16]</span>
+  </div>
+  <a class="figure-link" href="panels/cgtnjyggtm_q24-48/group_C_s04_b01e19df2977.png"><img src="panels/cgtnjyggtm_q24-48/group_C_s04_b01e19df2977.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/cgtnjyggtm_q24-48/s04_b01e19df2977/metadata.json">metadata</a> · <a href="states/cgtnjyggtm_q24-48/s04_b01e19df2977/physical_state.npz">physical state</a> · <a href="states/cgtnjyggtm_q24-48/s04_b01e19df2977/C/scores.csv">C scores</a> · <a href="states/cgtnjyggtm_q24-48/s04_b01e19df2977/N/scores.csv">N scores</a> · <a href="states/cgtnjyggtm_q24-48/s04_b01e19df2977/C/attention.npz">C attention</a> · <a href="states/cgtnjyggtm_q24-48/s04_b01e19df2977/N/attention.npz">N attention</a> · <a href="states/cgtnjyggtm_q24-48/s04_b01e19df2977/C/surface_attribution.npz">C attribution</a> · <a href="states/cgtnjyggtm_q24-48/s04_b01e19df2977/N/surface_attribution.npz">N attribution</a> · <a href="states/cgtnjyggtm_q24-48/s04_b01e19df2977/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/cgtnjyggtm_q24-48/s04_b01e19df2977/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/cgtnjyggtm_q24-48/s04_b01e19df2977/C/query_checks.json">C query checks</a> · <a href="states/cgtnjyggtm_q24-48/s04_b01e19df2977/N/query_checks.json">N query checks</a></div>
+</article></div>
+    <div class="source-pane hidden" data-source-pane="N">
+<article class="state-record" id="cgtnjyggtm_q24-48-s00_32496b63c4f0">
+  <div class="state-head"><strong>s00_32496b63c4f0</strong>
+    <span>来源 [&#x27;C_NATIVE_PREFIX&#x27;, &#x27;N_NATIVE_PREFIX&#x27;]</span><span>t=0</span>
+    <span>cost=0.000000</span>
+    <span>history=[]</span>
+  </div>
+  <a class="figure-link" href="panels/cgtnjyggtm_q24-48/group_C_s00_32496b63c4f0.png"><img src="panels/cgtnjyggtm_q24-48/group_C_s00_32496b63c4f0.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/cgtnjyggtm_q24-48/s00_32496b63c4f0/metadata.json">metadata</a> · <a href="states/cgtnjyggtm_q24-48/s00_32496b63c4f0/physical_state.npz">physical state</a> · <a href="states/cgtnjyggtm_q24-48/s00_32496b63c4f0/C/scores.csv">C scores</a> · <a href="states/cgtnjyggtm_q24-48/s00_32496b63c4f0/N/scores.csv">N scores</a> · <a href="states/cgtnjyggtm_q24-48/s00_32496b63c4f0/C/attention.npz">C attention</a> · <a href="states/cgtnjyggtm_q24-48/s00_32496b63c4f0/N/attention.npz">N attention</a> · <a href="states/cgtnjyggtm_q24-48/s00_32496b63c4f0/C/surface_attribution.npz">C attribution</a> · <a href="states/cgtnjyggtm_q24-48/s00_32496b63c4f0/N/surface_attribution.npz">N attribution</a> · <a href="states/cgtnjyggtm_q24-48/s00_32496b63c4f0/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/cgtnjyggtm_q24-48/s00_32496b63c4f0/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/cgtnjyggtm_q24-48/s00_32496b63c4f0/C/query_checks.json">C query checks</a> · <a href="states/cgtnjyggtm_q24-48/s00_32496b63c4f0/N/query_checks.json">N query checks</a></div>
+</article>
+<article class="state-record" id="cgtnjyggtm_q24-48-s05_ce63745479ac">
+  <div class="state-head"><strong>s05_ce63745479ac</strong>
+    <span>来源 [&#x27;N_NATIVE_PREFIX&#x27;]</span><span>t=1</span>
+    <span>cost=0.015509</span>
+    <span>history=[31]</span>
+  </div>
+  <a class="figure-link" href="panels/cgtnjyggtm_q24-48/group_C_s05_ce63745479ac.png"><img src="panels/cgtnjyggtm_q24-48/group_C_s05_ce63745479ac.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/cgtnjyggtm_q24-48/s05_ce63745479ac/metadata.json">metadata</a> · <a href="states/cgtnjyggtm_q24-48/s05_ce63745479ac/physical_state.npz">physical state</a> · <a href="states/cgtnjyggtm_q24-48/s05_ce63745479ac/C/scores.csv">C scores</a> · <a href="states/cgtnjyggtm_q24-48/s05_ce63745479ac/N/scores.csv">N scores</a> · <a href="states/cgtnjyggtm_q24-48/s05_ce63745479ac/C/attention.npz">C attention</a> · <a href="states/cgtnjyggtm_q24-48/s05_ce63745479ac/N/attention.npz">N attention</a> · <a href="states/cgtnjyggtm_q24-48/s05_ce63745479ac/C/surface_attribution.npz">C attribution</a> · <a href="states/cgtnjyggtm_q24-48/s05_ce63745479ac/N/surface_attribution.npz">N attribution</a> · <a href="states/cgtnjyggtm_q24-48/s05_ce63745479ac/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/cgtnjyggtm_q24-48/s05_ce63745479ac/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/cgtnjyggtm_q24-48/s05_ce63745479ac/C/query_checks.json">C query checks</a> · <a href="states/cgtnjyggtm_q24-48/s05_ce63745479ac/N/query_checks.json">N query checks</a></div>
+</article>
+<article class="state-record" id="cgtnjyggtm_q24-48-s06_961e7869f1e5">
+  <div class="state-head"><strong>s06_961e7869f1e5</strong>
+    <span>来源 [&#x27;N_NATIVE_PREFIX&#x27;]</span><span>t=2</span>
+    <span>cost=0.031019</span>
+    <span>history=[31,28]</span>
+  </div>
+  <a class="figure-link" href="panels/cgtnjyggtm_q24-48/group_C_s06_961e7869f1e5.png"><img src="panels/cgtnjyggtm_q24-48/group_C_s06_961e7869f1e5.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/cgtnjyggtm_q24-48/s06_961e7869f1e5/metadata.json">metadata</a> · <a href="states/cgtnjyggtm_q24-48/s06_961e7869f1e5/physical_state.npz">physical state</a> · <a href="states/cgtnjyggtm_q24-48/s06_961e7869f1e5/C/scores.csv">C scores</a> · <a href="states/cgtnjyggtm_q24-48/s06_961e7869f1e5/N/scores.csv">N scores</a> · <a href="states/cgtnjyggtm_q24-48/s06_961e7869f1e5/C/attention.npz">C attention</a> · <a href="states/cgtnjyggtm_q24-48/s06_961e7869f1e5/N/attention.npz">N attention</a> · <a href="states/cgtnjyggtm_q24-48/s06_961e7869f1e5/C/surface_attribution.npz">C attribution</a> · <a href="states/cgtnjyggtm_q24-48/s06_961e7869f1e5/N/surface_attribution.npz">N attribution</a> · <a href="states/cgtnjyggtm_q24-48/s06_961e7869f1e5/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/cgtnjyggtm_q24-48/s06_961e7869f1e5/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/cgtnjyggtm_q24-48/s06_961e7869f1e5/C/query_checks.json">C query checks</a> · <a href="states/cgtnjyggtm_q24-48/s06_961e7869f1e5/N/query_checks.json">N query checks</a></div>
+</article>
+<article class="state-record" id="cgtnjyggtm_q24-48-s07_e5f96aaadaf7">
+  <div class="state-head"><strong>s07_e5f96aaadaf7</strong>
+    <span>来源 [&#x27;N_NATIVE_PREFIX&#x27;]</span><span>t=8</span>
+    <span>cost=0.124629</span>
+    <span>history=[31,28,62,63,60,59,8,23]</span>
+  </div>
+  <a class="figure-link" href="panels/cgtnjyggtm_q24-48/group_C_s07_e5f96aaadaf7.png"><img src="panels/cgtnjyggtm_q24-48/group_C_s07_e5f96aaadaf7.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/cgtnjyggtm_q24-48/s07_e5f96aaadaf7/metadata.json">metadata</a> · <a href="states/cgtnjyggtm_q24-48/s07_e5f96aaadaf7/physical_state.npz">physical state</a> · <a href="states/cgtnjyggtm_q24-48/s07_e5f96aaadaf7/C/scores.csv">C scores</a> · <a href="states/cgtnjyggtm_q24-48/s07_e5f96aaadaf7/N/scores.csv">N scores</a> · <a href="states/cgtnjyggtm_q24-48/s07_e5f96aaadaf7/C/attention.npz">C attention</a> · <a href="states/cgtnjyggtm_q24-48/s07_e5f96aaadaf7/N/attention.npz">N attention</a> · <a href="states/cgtnjyggtm_q24-48/s07_e5f96aaadaf7/C/surface_attribution.npz">C attribution</a> · <a href="states/cgtnjyggtm_q24-48/s07_e5f96aaadaf7/N/surface_attribution.npz">N attribution</a> · <a href="states/cgtnjyggtm_q24-48/s07_e5f96aaadaf7/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/cgtnjyggtm_q24-48/s07_e5f96aaadaf7/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/cgtnjyggtm_q24-48/s07_e5f96aaadaf7/C/query_checks.json">C query checks</a> · <a href="states/cgtnjyggtm_q24-48/s07_e5f96aaadaf7/N/query_checks.json">N query checks</a></div>
+</article>
+<article class="state-record" id="cgtnjyggtm_q24-48-s08_62115a61a187">
+  <div class="state-head"><strong>s08_62115a61a187</strong>
+    <span>来源 [&#x27;N_NATIVE_PREFIX&#x27;]</span><span>t=15</span>
+    <span>cost=0.233379</span>
+    <span>history=[31,28,62,63,60,59,8,23,12,16,4,58,2,13,36]</span>
+  </div>
+  <a class="figure-link" href="panels/cgtnjyggtm_q24-48/group_C_s08_62115a61a187.png"><img src="panels/cgtnjyggtm_q24-48/group_C_s08_62115a61a187.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/cgtnjyggtm_q24-48/s08_62115a61a187/metadata.json">metadata</a> · <a href="states/cgtnjyggtm_q24-48/s08_62115a61a187/physical_state.npz">physical state</a> · <a href="states/cgtnjyggtm_q24-48/s08_62115a61a187/C/scores.csv">C scores</a> · <a href="states/cgtnjyggtm_q24-48/s08_62115a61a187/N/scores.csv">N scores</a> · <a href="states/cgtnjyggtm_q24-48/s08_62115a61a187/C/attention.npz">C attention</a> · <a href="states/cgtnjyggtm_q24-48/s08_62115a61a187/N/attention.npz">N attention</a> · <a href="states/cgtnjyggtm_q24-48/s08_62115a61a187/C/surface_attribution.npz">C attribution</a> · <a href="states/cgtnjyggtm_q24-48/s08_62115a61a187/N/surface_attribution.npz">N attribution</a> · <a href="states/cgtnjyggtm_q24-48/s08_62115a61a187/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/cgtnjyggtm_q24-48/s08_62115a61a187/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/cgtnjyggtm_q24-48/s08_62115a61a187/C/query_checks.json">C query checks</a> · <a href="states/cgtnjyggtm_q24-48/s08_62115a61a187/N/query_checks.json">N query checks</a></div>
+</article></div>
+  </div>
 </section>
-<section id="74t7kcdgkr_c8-16">
-  <h2>74t7kcdgkr:c8-16</h2>
+<section id="74t7kcdgkr_c8-16" class="case-panel hidden" data-case-panel="74t7kcdgkr_c8-16">
+  <div class="case-heading"><h2>74t7kcdgkr:c8-16</h2><span>target=264.1634 MPa</span></div>
   <div class="layer-controls">
-    <label><input type="checkbox" data-layer="heatmap" checked> Heatmap</label>
-    <label><input type="checkbox" data-layer="candidates" checked> VLM candidates</label>
-    <label><input type="checkbox" data-layer="selection" checked> Selection</label>
-    <label><input type="checkbox" data-layer="numbers"> Numbering</label>
+    <label><input type="checkbox" data-layer="heatmap" checked> 概率热图</label>
+    <label><input type="checkbox" data-layer="candidates" checked> VLM全部候选</label>
+    <label><input type="checkbox" data-layer="selection" checked> 原生选中</label>
+    <label><input type="checkbox" data-layer="numbers"> 格子编号</label>
   </div>
   <div class="stack" data-stack>
     <img src="overlays/74t7kcdgkr_c8-16/clean.png" alt="clean surface">
     <img class="heatmap" src="overlays/74t7kcdgkr_c8-16/initial_c_env_heatmap_layer.png" alt="C environment probability">
-    <img class="candidates" src="overlays/74t7kcdgkr_c8-16/initial_c0_candidates_layer.png" alt="C0 candidates">
+    <img class="candidates" src="overlays/74t7kcdgkr_c8-16/initial_c0_candidates_layer.png" alt="all VLM candidates">
     <img class="selection" src="overlays/74t7kcdgkr_c8-16/initial_selection_layer.png" alt="selected cells">
     <img class="numbers hidden" src="overlays/74t7kcdgkr_c8-16/cell_numbers_layer.png" alt="cell numbering">
   </div>
-  <nav class="group-links">
-    <a href="panels/74t7kcdgkr_c8-16/group_A_initial_gate.png">A C0 gate</a><a href="panels/74t7kcdgkr_c8-16/group_B_surface_attribution.png">B attribution</a>
-    <a href="panels/74t7kcdgkr_c8-16/group_D_native_process.png">D native process</a><a href="panels/74t7kcdgkr_c8-16/group_E_actor_attention.png">E Actor attention</a>
-    <a href="panels/74t7kcdgkr_c8-16/group_F_intervention_curves.png">F intervention</a>
+  <nav class="question-links" aria-label="问题导航">
+    <a href="#74t7kcdgkr_c8-16-gate">外部门控改变首步了吗？</a>
+    <a href="#74t7kcdgkr_c8-16-path">表面通过哪条路径影响决策？</a>
+    <a href="#74t7kcdgkr_c8-16-process">两条原生路径怎样演化？</a>
+    <a href="#74t7kcdgkr_c8-16-attention">Actor关注了哪些token？</a>
+    <a href="#74t7kcdgkr_c8-16-intervention">关闭C0后怎样变化？</a>
   </nav>
-  <div class="plate"><img src="panels/74t7kcdgkr_c8-16/group_A_initial_gate.png" alt="group A"><img src="panels/74t7kcdgkr_c8-16/group_B_surface_attribution.png" alt="group B"></div>
-  <div class="plate"><img src="panels/74t7kcdgkr_c8-16/group_D_native_process.png" alt="group D"><img src="panels/74t7kcdgkr_c8-16/group_E_actor_attention.png" alt="group E"></div>
-  <img class="wide" src="panels/74t7kcdgkr_c8-16/group_F_intervention_curves.png" alt="group F">
-  <details><summary>Common physical states (9)</summary>
-    <table><thead><tr><th>State</th><th>Source</th><th>t</th><th>Cost</th><th>Raw data</th></tr></thead>
-    <tbody><tr><td>s00_d760add2b16a</td><td>[&#x27;C_NATIVE_PREFIX&#x27;, &#x27;N_NATIVE_PREFIX&#x27;]</td><td>0</td><td>0.0000</td><td><a href='states/74t7kcdgkr_c8-16/s00_d760add2b16a/C/scores.csv'>C scores</a> | <a href='states/74t7kcdgkr_c8-16/s00_d760add2b16a/N/scores.csv'>N scores</a> | <a href='states/74t7kcdgkr_c8-16/s00_d760add2b16a/C/attention.npz'>C attention</a> | <a href='states/74t7kcdgkr_c8-16/s00_d760add2b16a/N/attention.npz'>N attention</a> | <a href='states/74t7kcdgkr_c8-16/s00_d760add2b16a/C/surface_attribution.npz'>C attribution</a> | <a href='states/74t7kcdgkr_c8-16/s00_d760add2b16a/N/surface_attribution.npz'>N attribution</a></td></tr><tr><td>s01_082968232023</td><td>[&#x27;C_NATIVE_PREFIX&#x27;]</td><td>1</td><td>0.0155</td><td><a href='states/74t7kcdgkr_c8-16/s01_082968232023/C/scores.csv'>C scores</a> | <a href='states/74t7kcdgkr_c8-16/s01_082968232023/N/scores.csv'>N scores</a> | <a href='states/74t7kcdgkr_c8-16/s01_082968232023/C/attention.npz'>C attention</a> | <a href='states/74t7kcdgkr_c8-16/s01_082968232023/N/attention.npz'>N attention</a> | <a href='states/74t7kcdgkr_c8-16/s01_082968232023/C/surface_attribution.npz'>C attribution</a> | <a href='states/74t7kcdgkr_c8-16/s01_082968232023/N/surface_attribution.npz'>N attribution</a></td></tr><tr><td>s02_beef2c444dfb</td><td>[&#x27;C_NATIVE_PREFIX&#x27;]</td><td>2</td><td>0.0311</td><td><a href='states/74t7kcdgkr_c8-16/s02_beef2c444dfb/C/scores.csv'>C scores</a> | <a href='states/74t7kcdgkr_c8-16/s02_beef2c444dfb/N/scores.csv'>N scores</a> | <a href='states/74t7kcdgkr_c8-16/s02_beef2c444dfb/C/attention.npz'>C attention</a> | <a href='states/74t7kcdgkr_c8-16/s02_beef2c444dfb/N/attention.npz'>N attention</a> | <a href='states/74t7kcdgkr_c8-16/s02_beef2c444dfb/C/surface_attribution.npz'>C attribution</a> | <a href='states/74t7kcdgkr_c8-16/s02_beef2c444dfb/N/surface_attribution.npz'>N attribution</a></td></tr><tr><td>s03_998c30e5fca0</td><td>[&#x27;C_NATIVE_PREFIX&#x27;]</td><td>8</td><td>0.1243</td><td><a href='states/74t7kcdgkr_c8-16/s03_998c30e5fca0/C/scores.csv'>C scores</a> | <a href='states/74t7kcdgkr_c8-16/s03_998c30e5fca0/N/scores.csv'>N scores</a> | <a href='states/74t7kcdgkr_c8-16/s03_998c30e5fca0/C/attention.npz'>C attention</a> | <a href='states/74t7kcdgkr_c8-16/s03_998c30e5fca0/N/attention.npz'>N attention</a> | <a href='states/74t7kcdgkr_c8-16/s03_998c30e5fca0/C/surface_attribution.npz'>C attribution</a> | <a href='states/74t7kcdgkr_c8-16/s03_998c30e5fca0/N/surface_attribution.npz'>N attribution</a></td></tr><tr><td>s04_b3d2c6f62b08</td><td>[&#x27;C_NATIVE_PREFIX&#x27;]</td><td>15</td><td>0.2337</td><td><a href='states/74t7kcdgkr_c8-16/s04_b3d2c6f62b08/C/scores.csv'>C scores</a> | <a href='states/74t7kcdgkr_c8-16/s04_b3d2c6f62b08/N/scores.csv'>N scores</a> | <a href='states/74t7kcdgkr_c8-16/s04_b3d2c6f62b08/C/attention.npz'>C attention</a> | <a href='states/74t7kcdgkr_c8-16/s04_b3d2c6f62b08/N/attention.npz'>N attention</a> | <a href='states/74t7kcdgkr_c8-16/s04_b3d2c6f62b08/C/surface_attribution.npz'>C attribution</a> | <a href='states/74t7kcdgkr_c8-16/s04_b3d2c6f62b08/N/surface_attribution.npz'>N attribution</a></td></tr><tr><td>s05_b5b59c8db5e3</td><td>[&#x27;N_NATIVE_PREFIX&#x27;]</td><td>1</td><td>0.0155</td><td><a href='states/74t7kcdgkr_c8-16/s05_b5b59c8db5e3/C/scores.csv'>C scores</a> | <a href='states/74t7kcdgkr_c8-16/s05_b5b59c8db5e3/N/scores.csv'>N scores</a> | <a href='states/74t7kcdgkr_c8-16/s05_b5b59c8db5e3/C/attention.npz'>C attention</a> | <a href='states/74t7kcdgkr_c8-16/s05_b5b59c8db5e3/N/attention.npz'>N attention</a> | <a href='states/74t7kcdgkr_c8-16/s05_b5b59c8db5e3/C/surface_attribution.npz'>C attribution</a> | <a href='states/74t7kcdgkr_c8-16/s05_b5b59c8db5e3/N/surface_attribution.npz'>N attribution</a></td></tr><tr><td>s06_b37ff81a7144</td><td>[&#x27;N_NATIVE_PREFIX&#x27;]</td><td>2</td><td>0.0311</td><td><a href='states/74t7kcdgkr_c8-16/s06_b37ff81a7144/C/scores.csv'>C scores</a> | <a href='states/74t7kcdgkr_c8-16/s06_b37ff81a7144/N/scores.csv'>N scores</a> | <a href='states/74t7kcdgkr_c8-16/s06_b37ff81a7144/C/attention.npz'>C attention</a> | <a href='states/74t7kcdgkr_c8-16/s06_b37ff81a7144/N/attention.npz'>N attention</a> | <a href='states/74t7kcdgkr_c8-16/s06_b37ff81a7144/C/surface_attribution.npz'>C attribution</a> | <a href='states/74t7kcdgkr_c8-16/s06_b37ff81a7144/N/surface_attribution.npz'>N attribution</a></td></tr><tr><td>s07_cec6bed36685</td><td>[&#x27;N_NATIVE_PREFIX&#x27;]</td><td>8</td><td>0.1254</td><td><a href='states/74t7kcdgkr_c8-16/s07_cec6bed36685/C/scores.csv'>C scores</a> | <a href='states/74t7kcdgkr_c8-16/s07_cec6bed36685/N/scores.csv'>N scores</a> | <a href='states/74t7kcdgkr_c8-16/s07_cec6bed36685/C/attention.npz'>C attention</a> | <a href='states/74t7kcdgkr_c8-16/s07_cec6bed36685/N/attention.npz'>N attention</a> | <a href='states/74t7kcdgkr_c8-16/s07_cec6bed36685/C/surface_attribution.npz'>C attribution</a> | <a href='states/74t7kcdgkr_c8-16/s07_cec6bed36685/N/surface_attribution.npz'>N attribution</a></td></tr><tr><td>s08_154b805610bd</td><td>[&#x27;N_NATIVE_PREFIX&#x27;]</td><td>15</td><td>0.2345</td><td><a href='states/74t7kcdgkr_c8-16/s08_154b805610bd/C/scores.csv'>C scores</a> | <a href='states/74t7kcdgkr_c8-16/s08_154b805610bd/N/scores.csv'>N scores</a> | <a href='states/74t7kcdgkr_c8-16/s08_154b805610bd/C/attention.npz'>C attention</a> | <a href='states/74t7kcdgkr_c8-16/s08_154b805610bd/N/attention.npz'>N attention</a> | <a href='states/74t7kcdgkr_c8-16/s08_154b805610bd/C/surface_attribution.npz'>C attribution</a> | <a href='states/74t7kcdgkr_c8-16/s08_154b805610bd/N/surface_attribution.npz'>N attribution</a></td></tr></tbody></table>
-  </details>
+  <div class="view-tabs" role="tablist">
+    <button type="button" class="active" data-view-tab="native">原生轨迹对照</button>
+    <button type="button" data-view-tab="fixed">相同状态对照</button>
+  </div>
+  <div class="view-pane" data-view-pane="native">
+    <div class="plate" id="74t7kcdgkr_c8-16-gate"><a class="figure-link" href="panels/74t7kcdgkr_c8-16/group_A_initial_gate.png"><img src="panels/74t7kcdgkr_c8-16/group_A_initial_gate.png" alt="首步门控"></a></div>
+    <div class="plate" id="74t7kcdgkr_c8-16-path"><a class="figure-link" href="panels/74t7kcdgkr_c8-16/group_B_surface_attribution.png"><img src="panels/74t7kcdgkr_c8-16/group_B_surface_attribution.png" alt="表面归因"></a></div>
+    <div class="plate" id="74t7kcdgkr_c8-16-process"><a class="figure-link" href="panels/74t7kcdgkr_c8-16/group_D_native_process.png"><img src="panels/74t7kcdgkr_c8-16/group_D_native_process.png" alt="原生决策进程"></a></div>
+    <div class="plate" id="74t7kcdgkr_c8-16-attention"><a class="figure-link" href="panels/74t7kcdgkr_c8-16/group_E_actor_attention.png"><img src="panels/74t7kcdgkr_c8-16/group_E_actor_attention.png" alt="Actor attention"></a></div>
+    <div class="plate" id="74t7kcdgkr_c8-16-intervention"><a class="figure-link" href="panels/74t7kcdgkr_c8-16/group_F_intervention_curves.png"><img src="panels/74t7kcdgkr_c8-16/group_F_intervention_curves.png" alt="冻结策略干预"></a></div>
+    <p><a href="panels/74t7kcdgkr_c8-16/group_F_action_difference.csv">动作顺序及差值表</a> · <a href="c0_intervention_results.csv">三路径结果表</a></p>
+  </div>
+  <div class="view-pane hidden" data-view-pane="fixed">
+    <div class="source-tabs" role="tablist">
+      <button type="button" class="active" data-source-tab="C">C来源状态</button>
+      <button type="button" data-source-tab="N">N来源状态</button>
+    </div>
+    <div class="source-pane" data-source-pane="C">
+<article class="state-record" id="74t7kcdgkr_c8-16-s00_d760add2b16a">
+  <div class="state-head"><strong>s00_d760add2b16a</strong>
+    <span>来源 [&#x27;C_NATIVE_PREFIX&#x27;, &#x27;N_NATIVE_PREFIX&#x27;]</span><span>t=0</span>
+    <span>cost=0.000000</span>
+    <span>history=[]</span>
+  </div>
+  <a class="figure-link" href="panels/74t7kcdgkr_c8-16/group_C_s00_d760add2b16a.png"><img src="panels/74t7kcdgkr_c8-16/group_C_s00_d760add2b16a.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/74t7kcdgkr_c8-16/s00_d760add2b16a/metadata.json">metadata</a> · <a href="states/74t7kcdgkr_c8-16/s00_d760add2b16a/physical_state.npz">physical state</a> · <a href="states/74t7kcdgkr_c8-16/s00_d760add2b16a/C/scores.csv">C scores</a> · <a href="states/74t7kcdgkr_c8-16/s00_d760add2b16a/N/scores.csv">N scores</a> · <a href="states/74t7kcdgkr_c8-16/s00_d760add2b16a/C/attention.npz">C attention</a> · <a href="states/74t7kcdgkr_c8-16/s00_d760add2b16a/N/attention.npz">N attention</a> · <a href="states/74t7kcdgkr_c8-16/s00_d760add2b16a/C/surface_attribution.npz">C attribution</a> · <a href="states/74t7kcdgkr_c8-16/s00_d760add2b16a/N/surface_attribution.npz">N attribution</a> · <a href="states/74t7kcdgkr_c8-16/s00_d760add2b16a/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/74t7kcdgkr_c8-16/s00_d760add2b16a/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/74t7kcdgkr_c8-16/s00_d760add2b16a/C/query_checks.json">C query checks</a> · <a href="states/74t7kcdgkr_c8-16/s00_d760add2b16a/N/query_checks.json">N query checks</a></div>
+</article>
+<article class="state-record" id="74t7kcdgkr_c8-16-s01_082968232023">
+  <div class="state-head"><strong>s01_082968232023</strong>
+    <span>来源 [&#x27;C_NATIVE_PREFIX&#x27;]</span><span>t=1</span>
+    <span>cost=0.015533</span>
+    <span>history=[36]</span>
+  </div>
+  <a class="figure-link" href="panels/74t7kcdgkr_c8-16/group_C_s01_082968232023.png"><img src="panels/74t7kcdgkr_c8-16/group_C_s01_082968232023.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/74t7kcdgkr_c8-16/s01_082968232023/metadata.json">metadata</a> · <a href="states/74t7kcdgkr_c8-16/s01_082968232023/physical_state.npz">physical state</a> · <a href="states/74t7kcdgkr_c8-16/s01_082968232023/C/scores.csv">C scores</a> · <a href="states/74t7kcdgkr_c8-16/s01_082968232023/N/scores.csv">N scores</a> · <a href="states/74t7kcdgkr_c8-16/s01_082968232023/C/attention.npz">C attention</a> · <a href="states/74t7kcdgkr_c8-16/s01_082968232023/N/attention.npz">N attention</a> · <a href="states/74t7kcdgkr_c8-16/s01_082968232023/C/surface_attribution.npz">C attribution</a> · <a href="states/74t7kcdgkr_c8-16/s01_082968232023/N/surface_attribution.npz">N attribution</a> · <a href="states/74t7kcdgkr_c8-16/s01_082968232023/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/74t7kcdgkr_c8-16/s01_082968232023/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/74t7kcdgkr_c8-16/s01_082968232023/C/query_checks.json">C query checks</a> · <a href="states/74t7kcdgkr_c8-16/s01_082968232023/N/query_checks.json">N query checks</a></div>
+</article>
+<article class="state-record" id="74t7kcdgkr_c8-16-s02_beef2c444dfb">
+  <div class="state-head"><strong>s02_beef2c444dfb</strong>
+    <span>来源 [&#x27;C_NATIVE_PREFIX&#x27;]</span><span>t=2</span>
+    <span>cost=0.031065</span>
+    <span>history=[36,27]</span>
+  </div>
+  <a class="figure-link" href="panels/74t7kcdgkr_c8-16/group_C_s02_beef2c444dfb.png"><img src="panels/74t7kcdgkr_c8-16/group_C_s02_beef2c444dfb.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/74t7kcdgkr_c8-16/s02_beef2c444dfb/metadata.json">metadata</a> · <a href="states/74t7kcdgkr_c8-16/s02_beef2c444dfb/physical_state.npz">physical state</a> · <a href="states/74t7kcdgkr_c8-16/s02_beef2c444dfb/C/scores.csv">C scores</a> · <a href="states/74t7kcdgkr_c8-16/s02_beef2c444dfb/N/scores.csv">N scores</a> · <a href="states/74t7kcdgkr_c8-16/s02_beef2c444dfb/C/attention.npz">C attention</a> · <a href="states/74t7kcdgkr_c8-16/s02_beef2c444dfb/N/attention.npz">N attention</a> · <a href="states/74t7kcdgkr_c8-16/s02_beef2c444dfb/C/surface_attribution.npz">C attribution</a> · <a href="states/74t7kcdgkr_c8-16/s02_beef2c444dfb/N/surface_attribution.npz">N attribution</a> · <a href="states/74t7kcdgkr_c8-16/s02_beef2c444dfb/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/74t7kcdgkr_c8-16/s02_beef2c444dfb/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/74t7kcdgkr_c8-16/s02_beef2c444dfb/C/query_checks.json">C query checks</a> · <a href="states/74t7kcdgkr_c8-16/s02_beef2c444dfb/N/query_checks.json">N query checks</a></div>
+</article>
+<article class="state-record" id="74t7kcdgkr_c8-16-s03_998c30e5fca0">
+  <div class="state-head"><strong>s03_998c30e5fca0</strong>
+    <span>来源 [&#x27;C_NATIVE_PREFIX&#x27;]</span><span>t=8</span>
+    <span>cost=0.124260</span>
+    <span>history=[36,27,35,57,24,28,56,8]</span>
+  </div>
+  <a class="figure-link" href="panels/74t7kcdgkr_c8-16/group_C_s03_998c30e5fca0.png"><img src="panels/74t7kcdgkr_c8-16/group_C_s03_998c30e5fca0.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/74t7kcdgkr_c8-16/s03_998c30e5fca0/metadata.json">metadata</a> · <a href="states/74t7kcdgkr_c8-16/s03_998c30e5fca0/physical_state.npz">physical state</a> · <a href="states/74t7kcdgkr_c8-16/s03_998c30e5fca0/C/scores.csv">C scores</a> · <a href="states/74t7kcdgkr_c8-16/s03_998c30e5fca0/N/scores.csv">N scores</a> · <a href="states/74t7kcdgkr_c8-16/s03_998c30e5fca0/C/attention.npz">C attention</a> · <a href="states/74t7kcdgkr_c8-16/s03_998c30e5fca0/N/attention.npz">N attention</a> · <a href="states/74t7kcdgkr_c8-16/s03_998c30e5fca0/C/surface_attribution.npz">C attribution</a> · <a href="states/74t7kcdgkr_c8-16/s03_998c30e5fca0/N/surface_attribution.npz">N attribution</a> · <a href="states/74t7kcdgkr_c8-16/s03_998c30e5fca0/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/74t7kcdgkr_c8-16/s03_998c30e5fca0/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/74t7kcdgkr_c8-16/s03_998c30e5fca0/C/query_checks.json">C query checks</a> · <a href="states/74t7kcdgkr_c8-16/s03_998c30e5fca0/N/query_checks.json">N query checks</a></div>
+</article>
+<article class="state-record" id="74t7kcdgkr_c8-16-s04_b3d2c6f62b08">
+  <div class="state-head"><strong>s04_b3d2c6f62b08</strong>
+    <span>来源 [&#x27;C_NATIVE_PREFIX&#x27;]</span><span>t=15</span>
+    <span>cost=0.233728</span>
+    <span>history=[36,27,35,57,24,28,56,8,0,16,32,48,40,58,62]</span>
+  </div>
+  <a class="figure-link" href="panels/74t7kcdgkr_c8-16/group_C_s04_b3d2c6f62b08.png"><img src="panels/74t7kcdgkr_c8-16/group_C_s04_b3d2c6f62b08.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/74t7kcdgkr_c8-16/s04_b3d2c6f62b08/metadata.json">metadata</a> · <a href="states/74t7kcdgkr_c8-16/s04_b3d2c6f62b08/physical_state.npz">physical state</a> · <a href="states/74t7kcdgkr_c8-16/s04_b3d2c6f62b08/C/scores.csv">C scores</a> · <a href="states/74t7kcdgkr_c8-16/s04_b3d2c6f62b08/N/scores.csv">N scores</a> · <a href="states/74t7kcdgkr_c8-16/s04_b3d2c6f62b08/C/attention.npz">C attention</a> · <a href="states/74t7kcdgkr_c8-16/s04_b3d2c6f62b08/N/attention.npz">N attention</a> · <a href="states/74t7kcdgkr_c8-16/s04_b3d2c6f62b08/C/surface_attribution.npz">C attribution</a> · <a href="states/74t7kcdgkr_c8-16/s04_b3d2c6f62b08/N/surface_attribution.npz">N attribution</a> · <a href="states/74t7kcdgkr_c8-16/s04_b3d2c6f62b08/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/74t7kcdgkr_c8-16/s04_b3d2c6f62b08/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/74t7kcdgkr_c8-16/s04_b3d2c6f62b08/C/query_checks.json">C query checks</a> · <a href="states/74t7kcdgkr_c8-16/s04_b3d2c6f62b08/N/query_checks.json">N query checks</a></div>
+</article></div>
+    <div class="source-pane hidden" data-source-pane="N">
+<article class="state-record" id="74t7kcdgkr_c8-16-s00_d760add2b16a">
+  <div class="state-head"><strong>s00_d760add2b16a</strong>
+    <span>来源 [&#x27;C_NATIVE_PREFIX&#x27;, &#x27;N_NATIVE_PREFIX&#x27;]</span><span>t=0</span>
+    <span>cost=0.000000</span>
+    <span>history=[]</span>
+  </div>
+  <a class="figure-link" href="panels/74t7kcdgkr_c8-16/group_C_s00_d760add2b16a.png"><img src="panels/74t7kcdgkr_c8-16/group_C_s00_d760add2b16a.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/74t7kcdgkr_c8-16/s00_d760add2b16a/metadata.json">metadata</a> · <a href="states/74t7kcdgkr_c8-16/s00_d760add2b16a/physical_state.npz">physical state</a> · <a href="states/74t7kcdgkr_c8-16/s00_d760add2b16a/C/scores.csv">C scores</a> · <a href="states/74t7kcdgkr_c8-16/s00_d760add2b16a/N/scores.csv">N scores</a> · <a href="states/74t7kcdgkr_c8-16/s00_d760add2b16a/C/attention.npz">C attention</a> · <a href="states/74t7kcdgkr_c8-16/s00_d760add2b16a/N/attention.npz">N attention</a> · <a href="states/74t7kcdgkr_c8-16/s00_d760add2b16a/C/surface_attribution.npz">C attribution</a> · <a href="states/74t7kcdgkr_c8-16/s00_d760add2b16a/N/surface_attribution.npz">N attribution</a> · <a href="states/74t7kcdgkr_c8-16/s00_d760add2b16a/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/74t7kcdgkr_c8-16/s00_d760add2b16a/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/74t7kcdgkr_c8-16/s00_d760add2b16a/C/query_checks.json">C query checks</a> · <a href="states/74t7kcdgkr_c8-16/s00_d760add2b16a/N/query_checks.json">N query checks</a></div>
+</article>
+<article class="state-record" id="74t7kcdgkr_c8-16-s05_b5b59c8db5e3">
+  <div class="state-head"><strong>s05_b5b59c8db5e3</strong>
+    <span>来源 [&#x27;N_NATIVE_PREFIX&#x27;]</span><span>t=1</span>
+    <span>cost=0.015533</span>
+    <span>history=[62]</span>
+  </div>
+  <a class="figure-link" href="panels/74t7kcdgkr_c8-16/group_C_s05_b5b59c8db5e3.png"><img src="panels/74t7kcdgkr_c8-16/group_C_s05_b5b59c8db5e3.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/74t7kcdgkr_c8-16/s05_b5b59c8db5e3/metadata.json">metadata</a> · <a href="states/74t7kcdgkr_c8-16/s05_b5b59c8db5e3/physical_state.npz">physical state</a> · <a href="states/74t7kcdgkr_c8-16/s05_b5b59c8db5e3/C/scores.csv">C scores</a> · <a href="states/74t7kcdgkr_c8-16/s05_b5b59c8db5e3/N/scores.csv">N scores</a> · <a href="states/74t7kcdgkr_c8-16/s05_b5b59c8db5e3/C/attention.npz">C attention</a> · <a href="states/74t7kcdgkr_c8-16/s05_b5b59c8db5e3/N/attention.npz">N attention</a> · <a href="states/74t7kcdgkr_c8-16/s05_b5b59c8db5e3/C/surface_attribution.npz">C attribution</a> · <a href="states/74t7kcdgkr_c8-16/s05_b5b59c8db5e3/N/surface_attribution.npz">N attribution</a> · <a href="states/74t7kcdgkr_c8-16/s05_b5b59c8db5e3/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/74t7kcdgkr_c8-16/s05_b5b59c8db5e3/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/74t7kcdgkr_c8-16/s05_b5b59c8db5e3/C/query_checks.json">C query checks</a> · <a href="states/74t7kcdgkr_c8-16/s05_b5b59c8db5e3/N/query_checks.json">N query checks</a></div>
+</article>
+<article class="state-record" id="74t7kcdgkr_c8-16-s06_b37ff81a7144">
+  <div class="state-head"><strong>s06_b37ff81a7144</strong>
+    <span>来源 [&#x27;N_NATIVE_PREFIX&#x27;]</span><span>t=2</span>
+    <span>cost=0.031065</span>
+    <span>history=[62,61]</span>
+  </div>
+  <a class="figure-link" href="panels/74t7kcdgkr_c8-16/group_C_s06_b37ff81a7144.png"><img src="panels/74t7kcdgkr_c8-16/group_C_s06_b37ff81a7144.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/74t7kcdgkr_c8-16/s06_b37ff81a7144/metadata.json">metadata</a> · <a href="states/74t7kcdgkr_c8-16/s06_b37ff81a7144/physical_state.npz">physical state</a> · <a href="states/74t7kcdgkr_c8-16/s06_b37ff81a7144/C/scores.csv">C scores</a> · <a href="states/74t7kcdgkr_c8-16/s06_b37ff81a7144/N/scores.csv">N scores</a> · <a href="states/74t7kcdgkr_c8-16/s06_b37ff81a7144/C/attention.npz">C attention</a> · <a href="states/74t7kcdgkr_c8-16/s06_b37ff81a7144/N/attention.npz">N attention</a> · <a href="states/74t7kcdgkr_c8-16/s06_b37ff81a7144/C/surface_attribution.npz">C attribution</a> · <a href="states/74t7kcdgkr_c8-16/s06_b37ff81a7144/N/surface_attribution.npz">N attribution</a> · <a href="states/74t7kcdgkr_c8-16/s06_b37ff81a7144/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/74t7kcdgkr_c8-16/s06_b37ff81a7144/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/74t7kcdgkr_c8-16/s06_b37ff81a7144/C/query_checks.json">C query checks</a> · <a href="states/74t7kcdgkr_c8-16/s06_b37ff81a7144/N/query_checks.json">N query checks</a></div>
+</article>
+<article class="state-record" id="74t7kcdgkr_c8-16-s07_cec6bed36685">
+  <div class="state-head"><strong>s07_cec6bed36685</strong>
+    <span>来源 [&#x27;N_NATIVE_PREFIX&#x27;]</span><span>t=8</span>
+    <span>cost=0.125370</span>
+    <span>history=[62,61,60,21,17,41,15,63]</span>
+  </div>
+  <a class="figure-link" href="panels/74t7kcdgkr_c8-16/group_C_s07_cec6bed36685.png"><img src="panels/74t7kcdgkr_c8-16/group_C_s07_cec6bed36685.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/74t7kcdgkr_c8-16/s07_cec6bed36685/metadata.json">metadata</a> · <a href="states/74t7kcdgkr_c8-16/s07_cec6bed36685/physical_state.npz">physical state</a> · <a href="states/74t7kcdgkr_c8-16/s07_cec6bed36685/C/scores.csv">C scores</a> · <a href="states/74t7kcdgkr_c8-16/s07_cec6bed36685/N/scores.csv">N scores</a> · <a href="states/74t7kcdgkr_c8-16/s07_cec6bed36685/C/attention.npz">C attention</a> · <a href="states/74t7kcdgkr_c8-16/s07_cec6bed36685/N/attention.npz">N attention</a> · <a href="states/74t7kcdgkr_c8-16/s07_cec6bed36685/C/surface_attribution.npz">C attribution</a> · <a href="states/74t7kcdgkr_c8-16/s07_cec6bed36685/N/surface_attribution.npz">N attribution</a> · <a href="states/74t7kcdgkr_c8-16/s07_cec6bed36685/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/74t7kcdgkr_c8-16/s07_cec6bed36685/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/74t7kcdgkr_c8-16/s07_cec6bed36685/C/query_checks.json">C query checks</a> · <a href="states/74t7kcdgkr_c8-16/s07_cec6bed36685/N/query_checks.json">N query checks</a></div>
+</article>
+<article class="state-record" id="74t7kcdgkr_c8-16-s08_154b805610bd">
+  <div class="state-head"><strong>s08_154b805610bd</strong>
+    <span>来源 [&#x27;N_NATIVE_PREFIX&#x27;]</span><span>t=15</span>
+    <span>cost=0.234467</span>
+    <span>history=[62,61,60,21,17,41,15,63,5,9,55,18,10,52,7]</span>
+  </div>
+  <a class="figure-link" href="panels/74t7kcdgkr_c8-16/group_C_s08_154b805610bd.png"><img src="panels/74t7kcdgkr_c8-16/group_C_s08_154b805610bd.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/74t7kcdgkr_c8-16/s08_154b805610bd/metadata.json">metadata</a> · <a href="states/74t7kcdgkr_c8-16/s08_154b805610bd/physical_state.npz">physical state</a> · <a href="states/74t7kcdgkr_c8-16/s08_154b805610bd/C/scores.csv">C scores</a> · <a href="states/74t7kcdgkr_c8-16/s08_154b805610bd/N/scores.csv">N scores</a> · <a href="states/74t7kcdgkr_c8-16/s08_154b805610bd/C/attention.npz">C attention</a> · <a href="states/74t7kcdgkr_c8-16/s08_154b805610bd/N/attention.npz">N attention</a> · <a href="states/74t7kcdgkr_c8-16/s08_154b805610bd/C/surface_attribution.npz">C attribution</a> · <a href="states/74t7kcdgkr_c8-16/s08_154b805610bd/N/surface_attribution.npz">N attribution</a> · <a href="states/74t7kcdgkr_c8-16/s08_154b805610bd/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/74t7kcdgkr_c8-16/s08_154b805610bd/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/74t7kcdgkr_c8-16/s08_154b805610bd/C/query_checks.json">C query checks</a> · <a href="states/74t7kcdgkr_c8-16/s08_154b805610bd/N/query_checks.json">N query checks</a></div>
+</article></div>
+  </div>
 </section>
-<section id="w68dtmpfyf_q16-29">
-  <h2>w68dtmpfyf:q16-29</h2>
+<section id="w68dtmpfyf_q16-29" class="case-panel hidden" data-case-panel="w68dtmpfyf_q16-29">
+  <div class="case-heading"><h2>w68dtmpfyf:q16-29</h2><span>target=338.5483 MPa</span></div>
   <div class="layer-controls">
-    <label><input type="checkbox" data-layer="heatmap" checked> Heatmap</label>
-    <label><input type="checkbox" data-layer="candidates" checked> VLM candidates</label>
-    <label><input type="checkbox" data-layer="selection" checked> Selection</label>
-    <label><input type="checkbox" data-layer="numbers"> Numbering</label>
+    <label><input type="checkbox" data-layer="heatmap" checked> 概率热图</label>
+    <label><input type="checkbox" data-layer="candidates" checked> VLM全部候选</label>
+    <label><input type="checkbox" data-layer="selection" checked> 原生选中</label>
+    <label><input type="checkbox" data-layer="numbers"> 格子编号</label>
   </div>
   <div class="stack" data-stack>
     <img src="overlays/w68dtmpfyf_q16-29/clean.png" alt="clean surface">
     <img class="heatmap" src="overlays/w68dtmpfyf_q16-29/initial_c_env_heatmap_layer.png" alt="C environment probability">
-    <img class="candidates" src="overlays/w68dtmpfyf_q16-29/initial_c0_candidates_layer.png" alt="C0 candidates">
+    <img class="candidates" src="overlays/w68dtmpfyf_q16-29/initial_c0_candidates_layer.png" alt="all VLM candidates">
     <img class="selection" src="overlays/w68dtmpfyf_q16-29/initial_selection_layer.png" alt="selected cells">
     <img class="numbers hidden" src="overlays/w68dtmpfyf_q16-29/cell_numbers_layer.png" alt="cell numbering">
   </div>
-  <nav class="group-links">
-    <a href="panels/w68dtmpfyf_q16-29/group_A_initial_gate.png">A C0 gate</a><a href="panels/w68dtmpfyf_q16-29/group_B_surface_attribution.png">B attribution</a>
-    <a href="panels/w68dtmpfyf_q16-29/group_D_native_process.png">D native process</a><a href="panels/w68dtmpfyf_q16-29/group_E_actor_attention.png">E Actor attention</a>
-    <a href="panels/w68dtmpfyf_q16-29/group_F_intervention_curves.png">F intervention</a>
+  <nav class="question-links" aria-label="问题导航">
+    <a href="#w68dtmpfyf_q16-29-gate">外部门控改变首步了吗？</a>
+    <a href="#w68dtmpfyf_q16-29-path">表面通过哪条路径影响决策？</a>
+    <a href="#w68dtmpfyf_q16-29-process">两条原生路径怎样演化？</a>
+    <a href="#w68dtmpfyf_q16-29-attention">Actor关注了哪些token？</a>
+    <a href="#w68dtmpfyf_q16-29-intervention">关闭C0后怎样变化？</a>
   </nav>
-  <div class="plate"><img src="panels/w68dtmpfyf_q16-29/group_A_initial_gate.png" alt="group A"><img src="panels/w68dtmpfyf_q16-29/group_B_surface_attribution.png" alt="group B"></div>
-  <div class="plate"><img src="panels/w68dtmpfyf_q16-29/group_D_native_process.png" alt="group D"><img src="panels/w68dtmpfyf_q16-29/group_E_actor_attention.png" alt="group E"></div>
-  <img class="wide" src="panels/w68dtmpfyf_q16-29/group_F_intervention_curves.png" alt="group F">
-  <details><summary>Common physical states (9)</summary>
-    <table><thead><tr><th>State</th><th>Source</th><th>t</th><th>Cost</th><th>Raw data</th></tr></thead>
-    <tbody><tr><td>s00_190dcec63040</td><td>[&#x27;C_NATIVE_PREFIX&#x27;, &#x27;N_NATIVE_PREFIX&#x27;]</td><td>0</td><td>0.0000</td><td><a href='states/w68dtmpfyf_q16-29/s00_190dcec63040/C/scores.csv'>C scores</a> | <a href='states/w68dtmpfyf_q16-29/s00_190dcec63040/N/scores.csv'>N scores</a> | <a href='states/w68dtmpfyf_q16-29/s00_190dcec63040/C/attention.npz'>C attention</a> | <a href='states/w68dtmpfyf_q16-29/s00_190dcec63040/N/attention.npz'>N attention</a> | <a href='states/w68dtmpfyf_q16-29/s00_190dcec63040/C/surface_attribution.npz'>C attribution</a> | <a href='states/w68dtmpfyf_q16-29/s00_190dcec63040/N/surface_attribution.npz'>N attribution</a></td></tr><tr><td>s01_edb9756f43f7</td><td>[&#x27;C_NATIVE_PREFIX&#x27;]</td><td>1</td><td>0.0157</td><td><a href='states/w68dtmpfyf_q16-29/s01_edb9756f43f7/C/scores.csv'>C scores</a> | <a href='states/w68dtmpfyf_q16-29/s01_edb9756f43f7/N/scores.csv'>N scores</a> | <a href='states/w68dtmpfyf_q16-29/s01_edb9756f43f7/C/attention.npz'>C attention</a> | <a href='states/w68dtmpfyf_q16-29/s01_edb9756f43f7/N/attention.npz'>N attention</a> | <a href='states/w68dtmpfyf_q16-29/s01_edb9756f43f7/C/surface_attribution.npz'>C attribution</a> | <a href='states/w68dtmpfyf_q16-29/s01_edb9756f43f7/N/surface_attribution.npz'>N attribution</a></td></tr><tr><td>s02_676163b69261</td><td>[&#x27;C_NATIVE_PREFIX&#x27;]</td><td>2</td><td>0.0314</td><td><a href='states/w68dtmpfyf_q16-29/s02_676163b69261/C/scores.csv'>C scores</a> | <a href='states/w68dtmpfyf_q16-29/s02_676163b69261/N/scores.csv'>N scores</a> | <a href='states/w68dtmpfyf_q16-29/s02_676163b69261/C/attention.npz'>C attention</a> | <a href='states/w68dtmpfyf_q16-29/s02_676163b69261/N/attention.npz'>N attention</a> | <a href='states/w68dtmpfyf_q16-29/s02_676163b69261/C/surface_attribution.npz'>C attribution</a> | <a href='states/w68dtmpfyf_q16-29/s02_676163b69261/N/surface_attribution.npz'>N attribution</a></td></tr><tr><td>s03_6ca2f74b8abd</td><td>[&#x27;C_NATIVE_PREFIX&#x27;]</td><td>8</td><td>0.1250</td><td><a href='states/w68dtmpfyf_q16-29/s03_6ca2f74b8abd/C/scores.csv'>C scores</a> | <a href='states/w68dtmpfyf_q16-29/s03_6ca2f74b8abd/N/scores.csv'>N scores</a> | <a href='states/w68dtmpfyf_q16-29/s03_6ca2f74b8abd/C/attention.npz'>C attention</a> | <a href='states/w68dtmpfyf_q16-29/s03_6ca2f74b8abd/N/attention.npz'>N attention</a> | <a href='states/w68dtmpfyf_q16-29/s03_6ca2f74b8abd/C/surface_attribution.npz'>C attribution</a> | <a href='states/w68dtmpfyf_q16-29/s03_6ca2f74b8abd/N/surface_attribution.npz'>N attribution</a></td></tr><tr><td>s04_bdc89390b5eb</td><td>[&#x27;C_NATIVE_PREFIX&#x27;]</td><td>15</td><td>0.2343</td><td><a href='states/w68dtmpfyf_q16-29/s04_bdc89390b5eb/C/scores.csv'>C scores</a> | <a href='states/w68dtmpfyf_q16-29/s04_bdc89390b5eb/N/scores.csv'>N scores</a> | <a href='states/w68dtmpfyf_q16-29/s04_bdc89390b5eb/C/attention.npz'>C attention</a> | <a href='states/w68dtmpfyf_q16-29/s04_bdc89390b5eb/N/attention.npz'>N attention</a> | <a href='states/w68dtmpfyf_q16-29/s04_bdc89390b5eb/C/surface_attribution.npz'>C attribution</a> | <a href='states/w68dtmpfyf_q16-29/s04_bdc89390b5eb/N/surface_attribution.npz'>N attribution</a></td></tr><tr><td>s05_63834e55e921</td><td>[&#x27;N_NATIVE_PREFIX&#x27;]</td><td>1</td><td>0.0157</td><td><a href='states/w68dtmpfyf_q16-29/s05_63834e55e921/C/scores.csv'>C scores</a> | <a href='states/w68dtmpfyf_q16-29/s05_63834e55e921/N/scores.csv'>N scores</a> | <a href='states/w68dtmpfyf_q16-29/s05_63834e55e921/C/attention.npz'>C attention</a> | <a href='states/w68dtmpfyf_q16-29/s05_63834e55e921/N/attention.npz'>N attention</a> | <a href='states/w68dtmpfyf_q16-29/s05_63834e55e921/C/surface_attribution.npz'>C attribution</a> | <a href='states/w68dtmpfyf_q16-29/s05_63834e55e921/N/surface_attribution.npz'>N attribution</a></td></tr><tr><td>s06_03bb3070f458</td><td>[&#x27;N_NATIVE_PREFIX&#x27;]</td><td>2</td><td>0.0312</td><td><a href='states/w68dtmpfyf_q16-29/s06_03bb3070f458/C/scores.csv'>C scores</a> | <a href='states/w68dtmpfyf_q16-29/s06_03bb3070f458/N/scores.csv'>N scores</a> | <a href='states/w68dtmpfyf_q16-29/s06_03bb3070f458/C/attention.npz'>C attention</a> | <a href='states/w68dtmpfyf_q16-29/s06_03bb3070f458/N/attention.npz'>N attention</a> | <a href='states/w68dtmpfyf_q16-29/s06_03bb3070f458/C/surface_attribution.npz'>C attribution</a> | <a href='states/w68dtmpfyf_q16-29/s06_03bb3070f458/N/surface_attribution.npz'>N attribution</a></td></tr><tr><td>s07_c30ca7e90035</td><td>[&#x27;N_NATIVE_PREFIX&#x27;]</td><td>8</td><td>0.1254</td><td><a href='states/w68dtmpfyf_q16-29/s07_c30ca7e90035/C/scores.csv'>C scores</a> | <a href='states/w68dtmpfyf_q16-29/s07_c30ca7e90035/N/scores.csv'>N scores</a> | <a href='states/w68dtmpfyf_q16-29/s07_c30ca7e90035/C/attention.npz'>C attention</a> | <a href='states/w68dtmpfyf_q16-29/s07_c30ca7e90035/N/attention.npz'>N attention</a> | <a href='states/w68dtmpfyf_q16-29/s07_c30ca7e90035/C/surface_attribution.npz'>C attribution</a> | <a href='states/w68dtmpfyf_q16-29/s07_c30ca7e90035/N/surface_attribution.npz'>N attribution</a></td></tr><tr><td>s08_a6a02ff51f83</td><td>[&#x27;N_NATIVE_PREFIX&#x27;]</td><td>14</td><td>0.2192</td><td><a href='states/w68dtmpfyf_q16-29/s08_a6a02ff51f83/C/scores.csv'>C scores</a> | <a href='states/w68dtmpfyf_q16-29/s08_a6a02ff51f83/N/scores.csv'>N scores</a> | <a href='states/w68dtmpfyf_q16-29/s08_a6a02ff51f83/C/attention.npz'>C attention</a> | <a href='states/w68dtmpfyf_q16-29/s08_a6a02ff51f83/N/attention.npz'>N attention</a> | <a href='states/w68dtmpfyf_q16-29/s08_a6a02ff51f83/C/surface_attribution.npz'>C attribution</a> | <a href='states/w68dtmpfyf_q16-29/s08_a6a02ff51f83/N/surface_attribution.npz'>N attribution</a></td></tr></tbody></table>
-  </details>
+  <div class="view-tabs" role="tablist">
+    <button type="button" class="active" data-view-tab="native">原生轨迹对照</button>
+    <button type="button" data-view-tab="fixed">相同状态对照</button>
+  </div>
+  <div class="view-pane" data-view-pane="native">
+    <div class="plate" id="w68dtmpfyf_q16-29-gate"><a class="figure-link" href="panels/w68dtmpfyf_q16-29/group_A_initial_gate.png"><img src="panels/w68dtmpfyf_q16-29/group_A_initial_gate.png" alt="首步门控"></a></div>
+    <div class="plate" id="w68dtmpfyf_q16-29-path"><a class="figure-link" href="panels/w68dtmpfyf_q16-29/group_B_surface_attribution.png"><img src="panels/w68dtmpfyf_q16-29/group_B_surface_attribution.png" alt="表面归因"></a></div>
+    <div class="plate" id="w68dtmpfyf_q16-29-process"><a class="figure-link" href="panels/w68dtmpfyf_q16-29/group_D_native_process.png"><img src="panels/w68dtmpfyf_q16-29/group_D_native_process.png" alt="原生决策进程"></a></div>
+    <div class="plate" id="w68dtmpfyf_q16-29-attention"><a class="figure-link" href="panels/w68dtmpfyf_q16-29/group_E_actor_attention.png"><img src="panels/w68dtmpfyf_q16-29/group_E_actor_attention.png" alt="Actor attention"></a></div>
+    <div class="plate" id="w68dtmpfyf_q16-29-intervention"><a class="figure-link" href="panels/w68dtmpfyf_q16-29/group_F_intervention_curves.png"><img src="panels/w68dtmpfyf_q16-29/group_F_intervention_curves.png" alt="冻结策略干预"></a></div>
+    <p><a href="panels/w68dtmpfyf_q16-29/group_F_action_difference.csv">动作顺序及差值表</a> · <a href="c0_intervention_results.csv">三路径结果表</a></p>
+  </div>
+  <div class="view-pane hidden" data-view-pane="fixed">
+    <div class="source-tabs" role="tablist">
+      <button type="button" class="active" data-source-tab="C">C来源状态</button>
+      <button type="button" data-source-tab="N">N来源状态</button>
+    </div>
+    <div class="source-pane" data-source-pane="C">
+<article class="state-record" id="w68dtmpfyf_q16-29-s00_190dcec63040">
+  <div class="state-head"><strong>s00_190dcec63040</strong>
+    <span>来源 [&#x27;C_NATIVE_PREFIX&#x27;, &#x27;N_NATIVE_PREFIX&#x27;]</span><span>t=0</span>
+    <span>cost=0.000000</span>
+    <span>history=[]</span>
+  </div>
+  <a class="figure-link" href="panels/w68dtmpfyf_q16-29/group_C_s00_190dcec63040.png"><img src="panels/w68dtmpfyf_q16-29/group_C_s00_190dcec63040.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/w68dtmpfyf_q16-29/s00_190dcec63040/metadata.json">metadata</a> · <a href="states/w68dtmpfyf_q16-29/s00_190dcec63040/physical_state.npz">physical state</a> · <a href="states/w68dtmpfyf_q16-29/s00_190dcec63040/C/scores.csv">C scores</a> · <a href="states/w68dtmpfyf_q16-29/s00_190dcec63040/N/scores.csv">N scores</a> · <a href="states/w68dtmpfyf_q16-29/s00_190dcec63040/C/attention.npz">C attention</a> · <a href="states/w68dtmpfyf_q16-29/s00_190dcec63040/N/attention.npz">N attention</a> · <a href="states/w68dtmpfyf_q16-29/s00_190dcec63040/C/surface_attribution.npz">C attribution</a> · <a href="states/w68dtmpfyf_q16-29/s00_190dcec63040/N/surface_attribution.npz">N attribution</a> · <a href="states/w68dtmpfyf_q16-29/s00_190dcec63040/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/w68dtmpfyf_q16-29/s00_190dcec63040/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/w68dtmpfyf_q16-29/s00_190dcec63040/C/query_checks.json">C query checks</a> · <a href="states/w68dtmpfyf_q16-29/s00_190dcec63040/N/query_checks.json">N query checks</a></div>
+</article>
+<article class="state-record" id="w68dtmpfyf_q16-29-s01_edb9756f43f7">
+  <div class="state-head"><strong>s01_edb9756f43f7</strong>
+    <span>来源 [&#x27;C_NATIVE_PREFIX&#x27;]</span><span>t=1</span>
+    <span>cost=0.015694</span>
+    <span>history=[27]</span>
+  </div>
+  <a class="figure-link" href="panels/w68dtmpfyf_q16-29/group_C_s01_edb9756f43f7.png"><img src="panels/w68dtmpfyf_q16-29/group_C_s01_edb9756f43f7.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/w68dtmpfyf_q16-29/s01_edb9756f43f7/metadata.json">metadata</a> · <a href="states/w68dtmpfyf_q16-29/s01_edb9756f43f7/physical_state.npz">physical state</a> · <a href="states/w68dtmpfyf_q16-29/s01_edb9756f43f7/C/scores.csv">C scores</a> · <a href="states/w68dtmpfyf_q16-29/s01_edb9756f43f7/N/scores.csv">N scores</a> · <a href="states/w68dtmpfyf_q16-29/s01_edb9756f43f7/C/attention.npz">C attention</a> · <a href="states/w68dtmpfyf_q16-29/s01_edb9756f43f7/N/attention.npz">N attention</a> · <a href="states/w68dtmpfyf_q16-29/s01_edb9756f43f7/C/surface_attribution.npz">C attribution</a> · <a href="states/w68dtmpfyf_q16-29/s01_edb9756f43f7/N/surface_attribution.npz">N attribution</a> · <a href="states/w68dtmpfyf_q16-29/s01_edb9756f43f7/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/w68dtmpfyf_q16-29/s01_edb9756f43f7/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/w68dtmpfyf_q16-29/s01_edb9756f43f7/C/query_checks.json">C query checks</a> · <a href="states/w68dtmpfyf_q16-29/s01_edb9756f43f7/N/query_checks.json">N query checks</a></div>
+</article>
+<article class="state-record" id="w68dtmpfyf_q16-29-s02_676163b69261">
+  <div class="state-head"><strong>s02_676163b69261</strong>
+    <span>来源 [&#x27;C_NATIVE_PREFIX&#x27;]</span><span>t=2</span>
+    <span>cost=0.031388</span>
+    <span>history=[27,49]</span>
+  </div>
+  <a class="figure-link" href="panels/w68dtmpfyf_q16-29/group_C_s02_676163b69261.png"><img src="panels/w68dtmpfyf_q16-29/group_C_s02_676163b69261.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/w68dtmpfyf_q16-29/s02_676163b69261/metadata.json">metadata</a> · <a href="states/w68dtmpfyf_q16-29/s02_676163b69261/physical_state.npz">physical state</a> · <a href="states/w68dtmpfyf_q16-29/s02_676163b69261/C/scores.csv">C scores</a> · <a href="states/w68dtmpfyf_q16-29/s02_676163b69261/N/scores.csv">N scores</a> · <a href="states/w68dtmpfyf_q16-29/s02_676163b69261/C/attention.npz">C attention</a> · <a href="states/w68dtmpfyf_q16-29/s02_676163b69261/N/attention.npz">N attention</a> · <a href="states/w68dtmpfyf_q16-29/s02_676163b69261/C/surface_attribution.npz">C attribution</a> · <a href="states/w68dtmpfyf_q16-29/s02_676163b69261/N/surface_attribution.npz">N attribution</a> · <a href="states/w68dtmpfyf_q16-29/s02_676163b69261/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/w68dtmpfyf_q16-29/s02_676163b69261/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/w68dtmpfyf_q16-29/s02_676163b69261/C/query_checks.json">C query checks</a> · <a href="states/w68dtmpfyf_q16-29/s02_676163b69261/N/query_checks.json">N query checks</a></div>
+</article>
+<article class="state-record" id="w68dtmpfyf_q16-29-s03_6ca2f74b8abd">
+  <div class="state-head"><strong>s03_6ca2f74b8abd</strong>
+    <span>来源 [&#x27;C_NATIVE_PREFIX&#x27;]</span><span>t=8</span>
+    <span>cost=0.125001</span>
+    <span>history=[27,49,0,24,32,33,48,19]</span>
+  </div>
+  <a class="figure-link" href="panels/w68dtmpfyf_q16-29/group_C_s03_6ca2f74b8abd.png"><img src="panels/w68dtmpfyf_q16-29/group_C_s03_6ca2f74b8abd.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/w68dtmpfyf_q16-29/s03_6ca2f74b8abd/metadata.json">metadata</a> · <a href="states/w68dtmpfyf_q16-29/s03_6ca2f74b8abd/physical_state.npz">physical state</a> · <a href="states/w68dtmpfyf_q16-29/s03_6ca2f74b8abd/C/scores.csv">C scores</a> · <a href="states/w68dtmpfyf_q16-29/s03_6ca2f74b8abd/N/scores.csv">N scores</a> · <a href="states/w68dtmpfyf_q16-29/s03_6ca2f74b8abd/C/attention.npz">C attention</a> · <a href="states/w68dtmpfyf_q16-29/s03_6ca2f74b8abd/N/attention.npz">N attention</a> · <a href="states/w68dtmpfyf_q16-29/s03_6ca2f74b8abd/C/surface_attribution.npz">C attribution</a> · <a href="states/w68dtmpfyf_q16-29/s03_6ca2f74b8abd/N/surface_attribution.npz">N attribution</a> · <a href="states/w68dtmpfyf_q16-29/s03_6ca2f74b8abd/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/w68dtmpfyf_q16-29/s03_6ca2f74b8abd/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/w68dtmpfyf_q16-29/s03_6ca2f74b8abd/C/query_checks.json">C query checks</a> · <a href="states/w68dtmpfyf_q16-29/s03_6ca2f74b8abd/N/query_checks.json">N query checks</a></div>
+</article>
+<article class="state-record" id="w68dtmpfyf_q16-29-s04_bdc89390b5eb">
+  <div class="state-head"><strong>s04_bdc89390b5eb</strong>
+    <span>来源 [&#x27;C_NATIVE_PREFIX&#x27;]</span><span>t=15</span>
+    <span>cost=0.234305</span>
+    <span>history=[27,49,0,24,32,33,48,19,40,1,37,16,34,51,50]</span>
+  </div>
+  <a class="figure-link" href="panels/w68dtmpfyf_q16-29/group_C_s04_bdc89390b5eb.png"><img src="panels/w68dtmpfyf_q16-29/group_C_s04_bdc89390b5eb.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/w68dtmpfyf_q16-29/s04_bdc89390b5eb/metadata.json">metadata</a> · <a href="states/w68dtmpfyf_q16-29/s04_bdc89390b5eb/physical_state.npz">physical state</a> · <a href="states/w68dtmpfyf_q16-29/s04_bdc89390b5eb/C/scores.csv">C scores</a> · <a href="states/w68dtmpfyf_q16-29/s04_bdc89390b5eb/N/scores.csv">N scores</a> · <a href="states/w68dtmpfyf_q16-29/s04_bdc89390b5eb/C/attention.npz">C attention</a> · <a href="states/w68dtmpfyf_q16-29/s04_bdc89390b5eb/N/attention.npz">N attention</a> · <a href="states/w68dtmpfyf_q16-29/s04_bdc89390b5eb/C/surface_attribution.npz">C attribution</a> · <a href="states/w68dtmpfyf_q16-29/s04_bdc89390b5eb/N/surface_attribution.npz">N attribution</a> · <a href="states/w68dtmpfyf_q16-29/s04_bdc89390b5eb/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/w68dtmpfyf_q16-29/s04_bdc89390b5eb/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/w68dtmpfyf_q16-29/s04_bdc89390b5eb/C/query_checks.json">C query checks</a> · <a href="states/w68dtmpfyf_q16-29/s04_bdc89390b5eb/N/query_checks.json">N query checks</a></div>
+</article></div>
+    <div class="source-pane hidden" data-source-pane="N">
+<article class="state-record" id="w68dtmpfyf_q16-29-s00_190dcec63040">
+  <div class="state-head"><strong>s00_190dcec63040</strong>
+    <span>来源 [&#x27;C_NATIVE_PREFIX&#x27;, &#x27;N_NATIVE_PREFIX&#x27;]</span><span>t=0</span>
+    <span>cost=0.000000</span>
+    <span>history=[]</span>
+  </div>
+  <a class="figure-link" href="panels/w68dtmpfyf_q16-29/group_C_s00_190dcec63040.png"><img src="panels/w68dtmpfyf_q16-29/group_C_s00_190dcec63040.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/w68dtmpfyf_q16-29/s00_190dcec63040/metadata.json">metadata</a> · <a href="states/w68dtmpfyf_q16-29/s00_190dcec63040/physical_state.npz">physical state</a> · <a href="states/w68dtmpfyf_q16-29/s00_190dcec63040/C/scores.csv">C scores</a> · <a href="states/w68dtmpfyf_q16-29/s00_190dcec63040/N/scores.csv">N scores</a> · <a href="states/w68dtmpfyf_q16-29/s00_190dcec63040/C/attention.npz">C attention</a> · <a href="states/w68dtmpfyf_q16-29/s00_190dcec63040/N/attention.npz">N attention</a> · <a href="states/w68dtmpfyf_q16-29/s00_190dcec63040/C/surface_attribution.npz">C attribution</a> · <a href="states/w68dtmpfyf_q16-29/s00_190dcec63040/N/surface_attribution.npz">N attribution</a> · <a href="states/w68dtmpfyf_q16-29/s00_190dcec63040/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/w68dtmpfyf_q16-29/s00_190dcec63040/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/w68dtmpfyf_q16-29/s00_190dcec63040/C/query_checks.json">C query checks</a> · <a href="states/w68dtmpfyf_q16-29/s00_190dcec63040/N/query_checks.json">N query checks</a></div>
+</article>
+<article class="state-record" id="w68dtmpfyf_q16-29-s05_63834e55e921">
+  <div class="state-head"><strong>s05_63834e55e921</strong>
+    <span>来源 [&#x27;N_NATIVE_PREFIX&#x27;]</span><span>t=1</span>
+    <span>cost=0.015694</span>
+    <span>history=[14]</span>
+  </div>
+  <a class="figure-link" href="panels/w68dtmpfyf_q16-29/group_C_s05_63834e55e921.png"><img src="panels/w68dtmpfyf_q16-29/group_C_s05_63834e55e921.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/w68dtmpfyf_q16-29/s05_63834e55e921/metadata.json">metadata</a> · <a href="states/w68dtmpfyf_q16-29/s05_63834e55e921/physical_state.npz">physical state</a> · <a href="states/w68dtmpfyf_q16-29/s05_63834e55e921/C/scores.csv">C scores</a> · <a href="states/w68dtmpfyf_q16-29/s05_63834e55e921/N/scores.csv">N scores</a> · <a href="states/w68dtmpfyf_q16-29/s05_63834e55e921/C/attention.npz">C attention</a> · <a href="states/w68dtmpfyf_q16-29/s05_63834e55e921/N/attention.npz">N attention</a> · <a href="states/w68dtmpfyf_q16-29/s05_63834e55e921/C/surface_attribution.npz">C attribution</a> · <a href="states/w68dtmpfyf_q16-29/s05_63834e55e921/N/surface_attribution.npz">N attribution</a> · <a href="states/w68dtmpfyf_q16-29/s05_63834e55e921/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/w68dtmpfyf_q16-29/s05_63834e55e921/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/w68dtmpfyf_q16-29/s05_63834e55e921/C/query_checks.json">C query checks</a> · <a href="states/w68dtmpfyf_q16-29/s05_63834e55e921/N/query_checks.json">N query checks</a></div>
+</article>
+<article class="state-record" id="w68dtmpfyf_q16-29-s06_03bb3070f458">
+  <div class="state-head"><strong>s06_03bb3070f458</strong>
+    <span>来源 [&#x27;N_NATIVE_PREFIX&#x27;]</span><span>t=2</span>
+    <span>cost=0.031203</span>
+    <span>history=[14,55]</span>
+  </div>
+  <a class="figure-link" href="panels/w68dtmpfyf_q16-29/group_C_s06_03bb3070f458.png"><img src="panels/w68dtmpfyf_q16-29/group_C_s06_03bb3070f458.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/w68dtmpfyf_q16-29/s06_03bb3070f458/metadata.json">metadata</a> · <a href="states/w68dtmpfyf_q16-29/s06_03bb3070f458/physical_state.npz">physical state</a> · <a href="states/w68dtmpfyf_q16-29/s06_03bb3070f458/C/scores.csv">C scores</a> · <a href="states/w68dtmpfyf_q16-29/s06_03bb3070f458/N/scores.csv">N scores</a> · <a href="states/w68dtmpfyf_q16-29/s06_03bb3070f458/C/attention.npz">C attention</a> · <a href="states/w68dtmpfyf_q16-29/s06_03bb3070f458/N/attention.npz">N attention</a> · <a href="states/w68dtmpfyf_q16-29/s06_03bb3070f458/C/surface_attribution.npz">C attribution</a> · <a href="states/w68dtmpfyf_q16-29/s06_03bb3070f458/N/surface_attribution.npz">N attribution</a> · <a href="states/w68dtmpfyf_q16-29/s06_03bb3070f458/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/w68dtmpfyf_q16-29/s06_03bb3070f458/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/w68dtmpfyf_q16-29/s06_03bb3070f458/C/query_checks.json">C query checks</a> · <a href="states/w68dtmpfyf_q16-29/s06_03bb3070f458/N/query_checks.json">N query checks</a></div>
+</article>
+<article class="state-record" id="w68dtmpfyf_q16-29-s07_c30ca7e90035">
+  <div class="state-head"><strong>s07_c30ca7e90035</strong>
+    <span>来源 [&#x27;N_NATIVE_PREFIX&#x27;]</span><span>t=8</span>
+    <span>cost=0.125370</span>
+    <span>history=[14,55,54,51,22,21,20,52]</span>
+  </div>
+  <a class="figure-link" href="panels/w68dtmpfyf_q16-29/group_C_s07_c30ca7e90035.png"><img src="panels/w68dtmpfyf_q16-29/group_C_s07_c30ca7e90035.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/w68dtmpfyf_q16-29/s07_c30ca7e90035/metadata.json">metadata</a> · <a href="states/w68dtmpfyf_q16-29/s07_c30ca7e90035/physical_state.npz">physical state</a> · <a href="states/w68dtmpfyf_q16-29/s07_c30ca7e90035/C/scores.csv">C scores</a> · <a href="states/w68dtmpfyf_q16-29/s07_c30ca7e90035/N/scores.csv">N scores</a> · <a href="states/w68dtmpfyf_q16-29/s07_c30ca7e90035/C/attention.npz">C attention</a> · <a href="states/w68dtmpfyf_q16-29/s07_c30ca7e90035/N/attention.npz">N attention</a> · <a href="states/w68dtmpfyf_q16-29/s07_c30ca7e90035/C/surface_attribution.npz">C attribution</a> · <a href="states/w68dtmpfyf_q16-29/s07_c30ca7e90035/N/surface_attribution.npz">N attribution</a> · <a href="states/w68dtmpfyf_q16-29/s07_c30ca7e90035/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/w68dtmpfyf_q16-29/s07_c30ca7e90035/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/w68dtmpfyf_q16-29/s07_c30ca7e90035/C/query_checks.json">C query checks</a> · <a href="states/w68dtmpfyf_q16-29/s07_c30ca7e90035/N/query_checks.json">N query checks</a></div>
+</article>
+<article class="state-record" id="w68dtmpfyf_q16-29-s08_a6a02ff51f83">
+  <div class="state-head"><strong>s08_a6a02ff51f83</strong>
+    <span>来源 [&#x27;N_NATIVE_PREFIX&#x27;]</span><span>t=14</span>
+    <span>cost=0.219167</span>
+    <span>history=[14,55,54,51,22,21,20,52,44,19,50,56,63,30]</span>
+  </div>
+  <a class="figure-link" href="panels/w68dtmpfyf_q16-29/group_C_s08_a6a02ff51f83.png"><img src="panels/w68dtmpfyf_q16-29/group_C_s08_a6a02ff51f83.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/w68dtmpfyf_q16-29/s08_a6a02ff51f83/metadata.json">metadata</a> · <a href="states/w68dtmpfyf_q16-29/s08_a6a02ff51f83/physical_state.npz">physical state</a> · <a href="states/w68dtmpfyf_q16-29/s08_a6a02ff51f83/C/scores.csv">C scores</a> · <a href="states/w68dtmpfyf_q16-29/s08_a6a02ff51f83/N/scores.csv">N scores</a> · <a href="states/w68dtmpfyf_q16-29/s08_a6a02ff51f83/C/attention.npz">C attention</a> · <a href="states/w68dtmpfyf_q16-29/s08_a6a02ff51f83/N/attention.npz">N attention</a> · <a href="states/w68dtmpfyf_q16-29/s08_a6a02ff51f83/C/surface_attribution.npz">C attribution</a> · <a href="states/w68dtmpfyf_q16-29/s08_a6a02ff51f83/N/surface_attribution.npz">N attribution</a> · <a href="states/w68dtmpfyf_q16-29/s08_a6a02ff51f83/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/w68dtmpfyf_q16-29/s08_a6a02ff51f83/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/w68dtmpfyf_q16-29/s08_a6a02ff51f83/C/query_checks.json">C query checks</a> · <a href="states/w68dtmpfyf_q16-29/s08_a6a02ff51f83/N/query_checks.json">N query checks</a></div>
+</article></div>
+  </div>
 </section>
-<section id="xcmzfsbd9t_c24-9t">
-  <h2>xcmzfsbd9t:c24-9t</h2>
+<section id="xcmzfsbd9t_c24-9t" class="case-panel hidden" data-case-panel="xcmzfsbd9t_c24-9t">
+  <div class="case-heading"><h2>xcmzfsbd9t:c24-9t</h2><span>target=278.2536 MPa</span></div>
   <div class="layer-controls">
-    <label><input type="checkbox" data-layer="heatmap" checked> Heatmap</label>
-    <label><input type="checkbox" data-layer="candidates" checked> VLM candidates</label>
-    <label><input type="checkbox" data-layer="selection" checked> Selection</label>
-    <label><input type="checkbox" data-layer="numbers"> Numbering</label>
+    <label><input type="checkbox" data-layer="heatmap" checked> 概率热图</label>
+    <label><input type="checkbox" data-layer="candidates" checked> VLM全部候选</label>
+    <label><input type="checkbox" data-layer="selection" checked> 原生选中</label>
+    <label><input type="checkbox" data-layer="numbers"> 格子编号</label>
   </div>
   <div class="stack" data-stack>
     <img src="overlays/xcmzfsbd9t_c24-9t/clean.png" alt="clean surface">
     <img class="heatmap" src="overlays/xcmzfsbd9t_c24-9t/initial_c_env_heatmap_layer.png" alt="C environment probability">
-    <img class="candidates" src="overlays/xcmzfsbd9t_c24-9t/initial_c0_candidates_layer.png" alt="C0 candidates">
+    <img class="candidates" src="overlays/xcmzfsbd9t_c24-9t/initial_c0_candidates_layer.png" alt="all VLM candidates">
     <img class="selection" src="overlays/xcmzfsbd9t_c24-9t/initial_selection_layer.png" alt="selected cells">
     <img class="numbers hidden" src="overlays/xcmzfsbd9t_c24-9t/cell_numbers_layer.png" alt="cell numbering">
   </div>
-  <nav class="group-links">
-    <a href="panels/xcmzfsbd9t_c24-9t/group_A_initial_gate.png">A C0 gate</a><a href="panels/xcmzfsbd9t_c24-9t/group_B_surface_attribution.png">B attribution</a>
-    <a href="panels/xcmzfsbd9t_c24-9t/group_D_native_process.png">D native process</a><a href="panels/xcmzfsbd9t_c24-9t/group_E_actor_attention.png">E Actor attention</a>
-    <a href="panels/xcmzfsbd9t_c24-9t/group_F_intervention_curves.png">F intervention</a>
+  <nav class="question-links" aria-label="问题导航">
+    <a href="#xcmzfsbd9t_c24-9t-gate">外部门控改变首步了吗？</a>
+    <a href="#xcmzfsbd9t_c24-9t-path">表面通过哪条路径影响决策？</a>
+    <a href="#xcmzfsbd9t_c24-9t-process">两条原生路径怎样演化？</a>
+    <a href="#xcmzfsbd9t_c24-9t-attention">Actor关注了哪些token？</a>
+    <a href="#xcmzfsbd9t_c24-9t-intervention">关闭C0后怎样变化？</a>
   </nav>
-  <div class="plate"><img src="panels/xcmzfsbd9t_c24-9t/group_A_initial_gate.png" alt="group A"><img src="panels/xcmzfsbd9t_c24-9t/group_B_surface_attribution.png" alt="group B"></div>
-  <div class="plate"><img src="panels/xcmzfsbd9t_c24-9t/group_D_native_process.png" alt="group D"><img src="panels/xcmzfsbd9t_c24-9t/group_E_actor_attention.png" alt="group E"></div>
-  <img class="wide" src="panels/xcmzfsbd9t_c24-9t/group_F_intervention_curves.png" alt="group F">
-  <details><summary>Common physical states (9)</summary>
-    <table><thead><tr><th>State</th><th>Source</th><th>t</th><th>Cost</th><th>Raw data</th></tr></thead>
-    <tbody><tr><td>s00_3a313614afe2</td><td>[&#x27;C_NATIVE_PREFIX&#x27;, &#x27;N_NATIVE_PREFIX&#x27;]</td><td>0</td><td>0.0000</td><td><a href='states/xcmzfsbd9t_c24-9t/s00_3a313614afe2/C/scores.csv'>C scores</a> | <a href='states/xcmzfsbd9t_c24-9t/s00_3a313614afe2/N/scores.csv'>N scores</a> | <a href='states/xcmzfsbd9t_c24-9t/s00_3a313614afe2/C/attention.npz'>C attention</a> | <a href='states/xcmzfsbd9t_c24-9t/s00_3a313614afe2/N/attention.npz'>N attention</a> | <a href='states/xcmzfsbd9t_c24-9t/s00_3a313614afe2/C/surface_attribution.npz'>C attribution</a> | <a href='states/xcmzfsbd9t_c24-9t/s00_3a313614afe2/N/surface_attribution.npz'>N attribution</a></td></tr><tr><td>s01_f7645c2f1bde</td><td>[&#x27;C_NATIVE_PREFIX&#x27;]</td><td>1</td><td>0.0155</td><td><a href='states/xcmzfsbd9t_c24-9t/s01_f7645c2f1bde/C/scores.csv'>C scores</a> | <a href='states/xcmzfsbd9t_c24-9t/s01_f7645c2f1bde/N/scores.csv'>N scores</a> | <a href='states/xcmzfsbd9t_c24-9t/s01_f7645c2f1bde/C/attention.npz'>C attention</a> | <a href='states/xcmzfsbd9t_c24-9t/s01_f7645c2f1bde/N/attention.npz'>N attention</a> | <a href='states/xcmzfsbd9t_c24-9t/s01_f7645c2f1bde/C/surface_attribution.npz'>C attribution</a> | <a href='states/xcmzfsbd9t_c24-9t/s01_f7645c2f1bde/N/surface_attribution.npz'>N attribution</a></td></tr><tr><td>s02_1e5e688a9570</td><td>[&#x27;C_NATIVE_PREFIX&#x27;]</td><td>2</td><td>0.0312</td><td><a href='states/xcmzfsbd9t_c24-9t/s02_1e5e688a9570/C/scores.csv'>C scores</a> | <a href='states/xcmzfsbd9t_c24-9t/s02_1e5e688a9570/N/scores.csv'>N scores</a> | <a href='states/xcmzfsbd9t_c24-9t/s02_1e5e688a9570/C/attention.npz'>C attention</a> | <a href='states/xcmzfsbd9t_c24-9t/s02_1e5e688a9570/N/attention.npz'>N attention</a> | <a href='states/xcmzfsbd9t_c24-9t/s02_1e5e688a9570/C/surface_attribution.npz'>C attribution</a> | <a href='states/xcmzfsbd9t_c24-9t/s02_1e5e688a9570/N/surface_attribution.npz'>N attribution</a></td></tr><tr><td>s03_3a0aafeb3c3c</td><td>[&#x27;C_NATIVE_PREFIX&#x27;]</td><td>8</td><td>0.1246</td><td><a href='states/xcmzfsbd9t_c24-9t/s03_3a0aafeb3c3c/C/scores.csv'>C scores</a> | <a href='states/xcmzfsbd9t_c24-9t/s03_3a0aafeb3c3c/N/scores.csv'>N scores</a> | <a href='states/xcmzfsbd9t_c24-9t/s03_3a0aafeb3c3c/C/attention.npz'>C attention</a> | <a href='states/xcmzfsbd9t_c24-9t/s03_3a0aafeb3c3c/N/attention.npz'>N attention</a> | <a href='states/xcmzfsbd9t_c24-9t/s03_3a0aafeb3c3c/C/surface_attribution.npz'>C attribution</a> | <a href='states/xcmzfsbd9t_c24-9t/s03_3a0aafeb3c3c/N/surface_attribution.npz'>N attribution</a></td></tr><tr><td>s04_738efdcc27aa</td><td>[&#x27;C_NATIVE_PREFIX&#x27;]</td><td>15</td><td>0.2337</td><td><a href='states/xcmzfsbd9t_c24-9t/s04_738efdcc27aa/C/scores.csv'>C scores</a> | <a href='states/xcmzfsbd9t_c24-9t/s04_738efdcc27aa/N/scores.csv'>N scores</a> | <a href='states/xcmzfsbd9t_c24-9t/s04_738efdcc27aa/C/attention.npz'>C attention</a> | <a href='states/xcmzfsbd9t_c24-9t/s04_738efdcc27aa/N/attention.npz'>N attention</a> | <a href='states/xcmzfsbd9t_c24-9t/s04_738efdcc27aa/C/surface_attribution.npz'>C attribution</a> | <a href='states/xcmzfsbd9t_c24-9t/s04_738efdcc27aa/N/surface_attribution.npz'>N attribution</a></td></tr><tr><td>s05_d06055ba2bb3</td><td>[&#x27;N_NATIVE_PREFIX&#x27;]</td><td>1</td><td>0.0157</td><td><a href='states/xcmzfsbd9t_c24-9t/s05_d06055ba2bb3/C/scores.csv'>C scores</a> | <a href='states/xcmzfsbd9t_c24-9t/s05_d06055ba2bb3/N/scores.csv'>N scores</a> | <a href='states/xcmzfsbd9t_c24-9t/s05_d06055ba2bb3/C/attention.npz'>C attention</a> | <a href='states/xcmzfsbd9t_c24-9t/s05_d06055ba2bb3/N/attention.npz'>N attention</a> | <a href='states/xcmzfsbd9t_c24-9t/s05_d06055ba2bb3/C/surface_attribution.npz'>C attribution</a> | <a href='states/xcmzfsbd9t_c24-9t/s05_d06055ba2bb3/N/surface_attribution.npz'>N attribution</a></td></tr><tr><td>s06_7313a2997956</td><td>[&#x27;N_NATIVE_PREFIX&#x27;]</td><td>2</td><td>0.0312</td><td><a href='states/xcmzfsbd9t_c24-9t/s06_7313a2997956/C/scores.csv'>C scores</a> | <a href='states/xcmzfsbd9t_c24-9t/s06_7313a2997956/N/scores.csv'>N scores</a> | <a href='states/xcmzfsbd9t_c24-9t/s06_7313a2997956/C/attention.npz'>C attention</a> | <a href='states/xcmzfsbd9t_c24-9t/s06_7313a2997956/N/attention.npz'>N attention</a> | <a href='states/xcmzfsbd9t_c24-9t/s06_7313a2997956/C/surface_attribution.npz'>C attribution</a> | <a href='states/xcmzfsbd9t_c24-9t/s06_7313a2997956/N/surface_attribution.npz'>N attribution</a></td></tr><tr><td>s07_30d327b8110c</td><td>[&#x27;N_NATIVE_PREFIX&#x27;]</td><td>8</td><td>0.1248</td><td><a href='states/xcmzfsbd9t_c24-9t/s07_30d327b8110c/C/scores.csv'>C scores</a> | <a href='states/xcmzfsbd9t_c24-9t/s07_30d327b8110c/N/scores.csv'>N scores</a> | <a href='states/xcmzfsbd9t_c24-9t/s07_30d327b8110c/C/attention.npz'>C attention</a> | <a href='states/xcmzfsbd9t_c24-9t/s07_30d327b8110c/N/attention.npz'>N attention</a> | <a href='states/xcmzfsbd9t_c24-9t/s07_30d327b8110c/C/surface_attribution.npz'>C attribution</a> | <a href='states/xcmzfsbd9t_c24-9t/s07_30d327b8110c/N/surface_attribution.npz'>N attribution</a></td></tr><tr><td>s08_aa6cff6a8d80</td><td>[&#x27;N_NATIVE_PREFIX&#x27;]</td><td>15</td><td>0.2339</td><td><a href='states/xcmzfsbd9t_c24-9t/s08_aa6cff6a8d80/C/scores.csv'>C scores</a> | <a href='states/xcmzfsbd9t_c24-9t/s08_aa6cff6a8d80/N/scores.csv'>N scores</a> | <a href='states/xcmzfsbd9t_c24-9t/s08_aa6cff6a8d80/C/attention.npz'>C attention</a> | <a href='states/xcmzfsbd9t_c24-9t/s08_aa6cff6a8d80/N/attention.npz'>N attention</a> | <a href='states/xcmzfsbd9t_c24-9t/s08_aa6cff6a8d80/C/surface_attribution.npz'>C attribution</a> | <a href='states/xcmzfsbd9t_c24-9t/s08_aa6cff6a8d80/N/surface_attribution.npz'>N attribution</a></td></tr></tbody></table>
-  </details>
+  <div class="view-tabs" role="tablist">
+    <button type="button" class="active" data-view-tab="native">原生轨迹对照</button>
+    <button type="button" data-view-tab="fixed">相同状态对照</button>
+  </div>
+  <div class="view-pane" data-view-pane="native">
+    <div class="plate" id="xcmzfsbd9t_c24-9t-gate"><a class="figure-link" href="panels/xcmzfsbd9t_c24-9t/group_A_initial_gate.png"><img src="panels/xcmzfsbd9t_c24-9t/group_A_initial_gate.png" alt="首步门控"></a></div>
+    <div class="plate" id="xcmzfsbd9t_c24-9t-path"><a class="figure-link" href="panels/xcmzfsbd9t_c24-9t/group_B_surface_attribution.png"><img src="panels/xcmzfsbd9t_c24-9t/group_B_surface_attribution.png" alt="表面归因"></a></div>
+    <div class="plate" id="xcmzfsbd9t_c24-9t-process"><a class="figure-link" href="panels/xcmzfsbd9t_c24-9t/group_D_native_process.png"><img src="panels/xcmzfsbd9t_c24-9t/group_D_native_process.png" alt="原生决策进程"></a></div>
+    <div class="plate" id="xcmzfsbd9t_c24-9t-attention"><a class="figure-link" href="panels/xcmzfsbd9t_c24-9t/group_E_actor_attention.png"><img src="panels/xcmzfsbd9t_c24-9t/group_E_actor_attention.png" alt="Actor attention"></a></div>
+    <div class="plate" id="xcmzfsbd9t_c24-9t-intervention"><a class="figure-link" href="panels/xcmzfsbd9t_c24-9t/group_F_intervention_curves.png"><img src="panels/xcmzfsbd9t_c24-9t/group_F_intervention_curves.png" alt="冻结策略干预"></a></div>
+    <p><a href="panels/xcmzfsbd9t_c24-9t/group_F_action_difference.csv">动作顺序及差值表</a> · <a href="c0_intervention_results.csv">三路径结果表</a></p>
+  </div>
+  <div class="view-pane hidden" data-view-pane="fixed">
+    <div class="source-tabs" role="tablist">
+      <button type="button" class="active" data-source-tab="C">C来源状态</button>
+      <button type="button" data-source-tab="N">N来源状态</button>
+    </div>
+    <div class="source-pane" data-source-pane="C">
+<article class="state-record" id="xcmzfsbd9t_c24-9t-s00_3a313614afe2">
+  <div class="state-head"><strong>s00_3a313614afe2</strong>
+    <span>来源 [&#x27;C_NATIVE_PREFIX&#x27;, &#x27;N_NATIVE_PREFIX&#x27;]</span><span>t=0</span>
+    <span>cost=0.000000</span>
+    <span>history=[]</span>
+  </div>
+  <a class="figure-link" href="panels/xcmzfsbd9t_c24-9t/group_C_s00_3a313614afe2.png"><img src="panels/xcmzfsbd9t_c24-9t/group_C_s00_3a313614afe2.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/xcmzfsbd9t_c24-9t/s00_3a313614afe2/metadata.json">metadata</a> · <a href="states/xcmzfsbd9t_c24-9t/s00_3a313614afe2/physical_state.npz">physical state</a> · <a href="states/xcmzfsbd9t_c24-9t/s00_3a313614afe2/C/scores.csv">C scores</a> · <a href="states/xcmzfsbd9t_c24-9t/s00_3a313614afe2/N/scores.csv">N scores</a> · <a href="states/xcmzfsbd9t_c24-9t/s00_3a313614afe2/C/attention.npz">C attention</a> · <a href="states/xcmzfsbd9t_c24-9t/s00_3a313614afe2/N/attention.npz">N attention</a> · <a href="states/xcmzfsbd9t_c24-9t/s00_3a313614afe2/C/surface_attribution.npz">C attribution</a> · <a href="states/xcmzfsbd9t_c24-9t/s00_3a313614afe2/N/surface_attribution.npz">N attribution</a> · <a href="states/xcmzfsbd9t_c24-9t/s00_3a313614afe2/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/xcmzfsbd9t_c24-9t/s00_3a313614afe2/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/xcmzfsbd9t_c24-9t/s00_3a313614afe2/C/query_checks.json">C query checks</a> · <a href="states/xcmzfsbd9t_c24-9t/s00_3a313614afe2/N/query_checks.json">N query checks</a></div>
+</article>
+<article class="state-record" id="xcmzfsbd9t_c24-9t-s01_f7645c2f1bde">
+  <div class="state-head"><strong>s01_f7645c2f1bde</strong>
+    <span>来源 [&#x27;C_NATIVE_PREFIX&#x27;]</span><span>t=1</span>
+    <span>cost=0.015509</span>
+    <span>history=[36]</span>
+  </div>
+  <a class="figure-link" href="panels/xcmzfsbd9t_c24-9t/group_C_s01_f7645c2f1bde.png"><img src="panels/xcmzfsbd9t_c24-9t/group_C_s01_f7645c2f1bde.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/xcmzfsbd9t_c24-9t/s01_f7645c2f1bde/metadata.json">metadata</a> · <a href="states/xcmzfsbd9t_c24-9t/s01_f7645c2f1bde/physical_state.npz">physical state</a> · <a href="states/xcmzfsbd9t_c24-9t/s01_f7645c2f1bde/C/scores.csv">C scores</a> · <a href="states/xcmzfsbd9t_c24-9t/s01_f7645c2f1bde/N/scores.csv">N scores</a> · <a href="states/xcmzfsbd9t_c24-9t/s01_f7645c2f1bde/C/attention.npz">C attention</a> · <a href="states/xcmzfsbd9t_c24-9t/s01_f7645c2f1bde/N/attention.npz">N attention</a> · <a href="states/xcmzfsbd9t_c24-9t/s01_f7645c2f1bde/C/surface_attribution.npz">C attribution</a> · <a href="states/xcmzfsbd9t_c24-9t/s01_f7645c2f1bde/N/surface_attribution.npz">N attribution</a> · <a href="states/xcmzfsbd9t_c24-9t/s01_f7645c2f1bde/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/xcmzfsbd9t_c24-9t/s01_f7645c2f1bde/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/xcmzfsbd9t_c24-9t/s01_f7645c2f1bde/C/query_checks.json">C query checks</a> · <a href="states/xcmzfsbd9t_c24-9t/s01_f7645c2f1bde/N/query_checks.json">N query checks</a></div>
+</article>
+<article class="state-record" id="xcmzfsbd9t_c24-9t-s02_1e5e688a9570">
+  <div class="state-head"><strong>s02_1e5e688a9570</strong>
+    <span>来源 [&#x27;C_NATIVE_PREFIX&#x27;]</span><span>t=2</span>
+    <span>cost=0.031203</span>
+    <span>history=[36,27]</span>
+  </div>
+  <a class="figure-link" href="panels/xcmzfsbd9t_c24-9t/group_C_s02_1e5e688a9570.png"><img src="panels/xcmzfsbd9t_c24-9t/group_C_s02_1e5e688a9570.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/xcmzfsbd9t_c24-9t/s02_1e5e688a9570/metadata.json">metadata</a> · <a href="states/xcmzfsbd9t_c24-9t/s02_1e5e688a9570/physical_state.npz">physical state</a> · <a href="states/xcmzfsbd9t_c24-9t/s02_1e5e688a9570/C/scores.csv">C scores</a> · <a href="states/xcmzfsbd9t_c24-9t/s02_1e5e688a9570/N/scores.csv">N scores</a> · <a href="states/xcmzfsbd9t_c24-9t/s02_1e5e688a9570/C/attention.npz">C attention</a> · <a href="states/xcmzfsbd9t_c24-9t/s02_1e5e688a9570/N/attention.npz">N attention</a> · <a href="states/xcmzfsbd9t_c24-9t/s02_1e5e688a9570/C/surface_attribution.npz">C attribution</a> · <a href="states/xcmzfsbd9t_c24-9t/s02_1e5e688a9570/N/surface_attribution.npz">N attribution</a> · <a href="states/xcmzfsbd9t_c24-9t/s02_1e5e688a9570/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/xcmzfsbd9t_c24-9t/s02_1e5e688a9570/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/xcmzfsbd9t_c24-9t/s02_1e5e688a9570/C/query_checks.json">C query checks</a> · <a href="states/xcmzfsbd9t_c24-9t/s02_1e5e688a9570/N/query_checks.json">N query checks</a></div>
+</article>
+<article class="state-record" id="xcmzfsbd9t_c24-9t-s03_3a0aafeb3c3c">
+  <div class="state-head"><strong>s03_3a0aafeb3c3c</strong>
+    <span>来源 [&#x27;C_NATIVE_PREFIX&#x27;]</span><span>t=8</span>
+    <span>cost=0.124629</span>
+    <span>history=[36,27,35,28,32,37,59,60]</span>
+  </div>
+  <a class="figure-link" href="panels/xcmzfsbd9t_c24-9t/group_C_s03_3a0aafeb3c3c.png"><img src="panels/xcmzfsbd9t_c24-9t/group_C_s03_3a0aafeb3c3c.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/xcmzfsbd9t_c24-9t/s03_3a0aafeb3c3c/metadata.json">metadata</a> · <a href="states/xcmzfsbd9t_c24-9t/s03_3a0aafeb3c3c/physical_state.npz">physical state</a> · <a href="states/xcmzfsbd9t_c24-9t/s03_3a0aafeb3c3c/C/scores.csv">C scores</a> · <a href="states/xcmzfsbd9t_c24-9t/s03_3a0aafeb3c3c/N/scores.csv">N scores</a> · <a href="states/xcmzfsbd9t_c24-9t/s03_3a0aafeb3c3c/C/attention.npz">C attention</a> · <a href="states/xcmzfsbd9t_c24-9t/s03_3a0aafeb3c3c/N/attention.npz">N attention</a> · <a href="states/xcmzfsbd9t_c24-9t/s03_3a0aafeb3c3c/C/surface_attribution.npz">C attribution</a> · <a href="states/xcmzfsbd9t_c24-9t/s03_3a0aafeb3c3c/N/surface_attribution.npz">N attribution</a> · <a href="states/xcmzfsbd9t_c24-9t/s03_3a0aafeb3c3c/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/xcmzfsbd9t_c24-9t/s03_3a0aafeb3c3c/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/xcmzfsbd9t_c24-9t/s03_3a0aafeb3c3c/C/query_checks.json">C query checks</a> · <a href="states/xcmzfsbd9t_c24-9t/s03_3a0aafeb3c3c/N/query_checks.json">N query checks</a></div>
+</article>
+<article class="state-record" id="xcmzfsbd9t_c24-9t-s04_738efdcc27aa">
+  <div class="state-head"><strong>s04_738efdcc27aa</strong>
+    <span>来源 [&#x27;C_NATIVE_PREFIX&#x27;]</span><span>t=15</span>
+    <span>cost=0.233749</span>
+    <span>history=[36,27,35,28,32,37,59,60,29,4,40,24,49,25,61]</span>
+  </div>
+  <a class="figure-link" href="panels/xcmzfsbd9t_c24-9t/group_C_s04_738efdcc27aa.png"><img src="panels/xcmzfsbd9t_c24-9t/group_C_s04_738efdcc27aa.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/xcmzfsbd9t_c24-9t/s04_738efdcc27aa/metadata.json">metadata</a> · <a href="states/xcmzfsbd9t_c24-9t/s04_738efdcc27aa/physical_state.npz">physical state</a> · <a href="states/xcmzfsbd9t_c24-9t/s04_738efdcc27aa/C/scores.csv">C scores</a> · <a href="states/xcmzfsbd9t_c24-9t/s04_738efdcc27aa/N/scores.csv">N scores</a> · <a href="states/xcmzfsbd9t_c24-9t/s04_738efdcc27aa/C/attention.npz">C attention</a> · <a href="states/xcmzfsbd9t_c24-9t/s04_738efdcc27aa/N/attention.npz">N attention</a> · <a href="states/xcmzfsbd9t_c24-9t/s04_738efdcc27aa/C/surface_attribution.npz">C attribution</a> · <a href="states/xcmzfsbd9t_c24-9t/s04_738efdcc27aa/N/surface_attribution.npz">N attribution</a> · <a href="states/xcmzfsbd9t_c24-9t/s04_738efdcc27aa/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/xcmzfsbd9t_c24-9t/s04_738efdcc27aa/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/xcmzfsbd9t_c24-9t/s04_738efdcc27aa/C/query_checks.json">C query checks</a> · <a href="states/xcmzfsbd9t_c24-9t/s04_738efdcc27aa/N/query_checks.json">N query checks</a></div>
+</article></div>
+    <div class="source-pane hidden" data-source-pane="N">
+<article class="state-record" id="xcmzfsbd9t_c24-9t-s00_3a313614afe2">
+  <div class="state-head"><strong>s00_3a313614afe2</strong>
+    <span>来源 [&#x27;C_NATIVE_PREFIX&#x27;, &#x27;N_NATIVE_PREFIX&#x27;]</span><span>t=0</span>
+    <span>cost=0.000000</span>
+    <span>history=[]</span>
+  </div>
+  <a class="figure-link" href="panels/xcmzfsbd9t_c24-9t/group_C_s00_3a313614afe2.png"><img src="panels/xcmzfsbd9t_c24-9t/group_C_s00_3a313614afe2.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/xcmzfsbd9t_c24-9t/s00_3a313614afe2/metadata.json">metadata</a> · <a href="states/xcmzfsbd9t_c24-9t/s00_3a313614afe2/physical_state.npz">physical state</a> · <a href="states/xcmzfsbd9t_c24-9t/s00_3a313614afe2/C/scores.csv">C scores</a> · <a href="states/xcmzfsbd9t_c24-9t/s00_3a313614afe2/N/scores.csv">N scores</a> · <a href="states/xcmzfsbd9t_c24-9t/s00_3a313614afe2/C/attention.npz">C attention</a> · <a href="states/xcmzfsbd9t_c24-9t/s00_3a313614afe2/N/attention.npz">N attention</a> · <a href="states/xcmzfsbd9t_c24-9t/s00_3a313614afe2/C/surface_attribution.npz">C attribution</a> · <a href="states/xcmzfsbd9t_c24-9t/s00_3a313614afe2/N/surface_attribution.npz">N attribution</a> · <a href="states/xcmzfsbd9t_c24-9t/s00_3a313614afe2/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/xcmzfsbd9t_c24-9t/s00_3a313614afe2/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/xcmzfsbd9t_c24-9t/s00_3a313614afe2/C/query_checks.json">C query checks</a> · <a href="states/xcmzfsbd9t_c24-9t/s00_3a313614afe2/N/query_checks.json">N query checks</a></div>
+</article>
+<article class="state-record" id="xcmzfsbd9t_c24-9t-s05_d06055ba2bb3">
+  <div class="state-head"><strong>s05_d06055ba2bb3</strong>
+    <span>来源 [&#x27;N_NATIVE_PREFIX&#x27;]</span><span>t=1</span>
+    <span>cost=0.015694</span>
+    <span>history=[27]</span>
+  </div>
+  <a class="figure-link" href="panels/xcmzfsbd9t_c24-9t/group_C_s05_d06055ba2bb3.png"><img src="panels/xcmzfsbd9t_c24-9t/group_C_s05_d06055ba2bb3.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/xcmzfsbd9t_c24-9t/s05_d06055ba2bb3/metadata.json">metadata</a> · <a href="states/xcmzfsbd9t_c24-9t/s05_d06055ba2bb3/physical_state.npz">physical state</a> · <a href="states/xcmzfsbd9t_c24-9t/s05_d06055ba2bb3/C/scores.csv">C scores</a> · <a href="states/xcmzfsbd9t_c24-9t/s05_d06055ba2bb3/N/scores.csv">N scores</a> · <a href="states/xcmzfsbd9t_c24-9t/s05_d06055ba2bb3/C/attention.npz">C attention</a> · <a href="states/xcmzfsbd9t_c24-9t/s05_d06055ba2bb3/N/attention.npz">N attention</a> · <a href="states/xcmzfsbd9t_c24-9t/s05_d06055ba2bb3/C/surface_attribution.npz">C attribution</a> · <a href="states/xcmzfsbd9t_c24-9t/s05_d06055ba2bb3/N/surface_attribution.npz">N attribution</a> · <a href="states/xcmzfsbd9t_c24-9t/s05_d06055ba2bb3/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/xcmzfsbd9t_c24-9t/s05_d06055ba2bb3/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/xcmzfsbd9t_c24-9t/s05_d06055ba2bb3/C/query_checks.json">C query checks</a> · <a href="states/xcmzfsbd9t_c24-9t/s05_d06055ba2bb3/N/query_checks.json">N query checks</a></div>
+</article>
+<article class="state-record" id="xcmzfsbd9t_c24-9t-s06_7313a2997956">
+  <div class="state-head"><strong>s06_7313a2997956</strong>
+    <span>来源 [&#x27;N_NATIVE_PREFIX&#x27;]</span><span>t=2</span>
+    <span>cost=0.031203</span>
+    <span>history=[27,36]</span>
+  </div>
+  <a class="figure-link" href="panels/xcmzfsbd9t_c24-9t/group_C_s06_7313a2997956.png"><img src="panels/xcmzfsbd9t_c24-9t/group_C_s06_7313a2997956.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/xcmzfsbd9t_c24-9t/s06_7313a2997956/metadata.json">metadata</a> · <a href="states/xcmzfsbd9t_c24-9t/s06_7313a2997956/physical_state.npz">physical state</a> · <a href="states/xcmzfsbd9t_c24-9t/s06_7313a2997956/C/scores.csv">C scores</a> · <a href="states/xcmzfsbd9t_c24-9t/s06_7313a2997956/N/scores.csv">N scores</a> · <a href="states/xcmzfsbd9t_c24-9t/s06_7313a2997956/C/attention.npz">C attention</a> · <a href="states/xcmzfsbd9t_c24-9t/s06_7313a2997956/N/attention.npz">N attention</a> · <a href="states/xcmzfsbd9t_c24-9t/s06_7313a2997956/C/surface_attribution.npz">C attribution</a> · <a href="states/xcmzfsbd9t_c24-9t/s06_7313a2997956/N/surface_attribution.npz">N attribution</a> · <a href="states/xcmzfsbd9t_c24-9t/s06_7313a2997956/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/xcmzfsbd9t_c24-9t/s06_7313a2997956/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/xcmzfsbd9t_c24-9t/s06_7313a2997956/C/query_checks.json">C query checks</a> · <a href="states/xcmzfsbd9t_c24-9t/s06_7313a2997956/N/query_checks.json">N query checks</a></div>
+</article>
+<article class="state-record" id="xcmzfsbd9t_c24-9t-s07_30d327b8110c">
+  <div class="state-head"><strong>s07_30d327b8110c</strong>
+    <span>来源 [&#x27;N_NATIVE_PREFIX&#x27;]</span><span>t=8</span>
+    <span>cost=0.124814</span>
+    <span>history=[27,36,28,59,35,40,29,56]</span>
+  </div>
+  <a class="figure-link" href="panels/xcmzfsbd9t_c24-9t/group_C_s07_30d327b8110c.png"><img src="panels/xcmzfsbd9t_c24-9t/group_C_s07_30d327b8110c.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/xcmzfsbd9t_c24-9t/s07_30d327b8110c/metadata.json">metadata</a> · <a href="states/xcmzfsbd9t_c24-9t/s07_30d327b8110c/physical_state.npz">physical state</a> · <a href="states/xcmzfsbd9t_c24-9t/s07_30d327b8110c/C/scores.csv">C scores</a> · <a href="states/xcmzfsbd9t_c24-9t/s07_30d327b8110c/N/scores.csv">N scores</a> · <a href="states/xcmzfsbd9t_c24-9t/s07_30d327b8110c/C/attention.npz">C attention</a> · <a href="states/xcmzfsbd9t_c24-9t/s07_30d327b8110c/N/attention.npz">N attention</a> · <a href="states/xcmzfsbd9t_c24-9t/s07_30d327b8110c/C/surface_attribution.npz">C attribution</a> · <a href="states/xcmzfsbd9t_c24-9t/s07_30d327b8110c/N/surface_attribution.npz">N attribution</a> · <a href="states/xcmzfsbd9t_c24-9t/s07_30d327b8110c/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/xcmzfsbd9t_c24-9t/s07_30d327b8110c/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/xcmzfsbd9t_c24-9t/s07_30d327b8110c/C/query_checks.json">C query checks</a> · <a href="states/xcmzfsbd9t_c24-9t/s07_30d327b8110c/N/query_checks.json">N query checks</a></div>
+</article>
+<article class="state-record" id="xcmzfsbd9t_c24-9t-s08_aa6cff6a8d80">
+  <div class="state-head"><strong>s08_aa6cff6a8d80</strong>
+    <span>来源 [&#x27;N_NATIVE_PREFIX&#x27;]</span><span>t=15</span>
+    <span>cost=0.233933</span>
+    <span>history=[27,36,28,59,35,40,29,56,37,26,63,62,60,21,54]</span>
+  </div>
+  <a class="figure-link" href="panels/xcmzfsbd9t_c24-9t/group_C_s08_aa6cff6a8d80.png"><img src="panels/xcmzfsbd9t_c24-9t/group_C_s08_aa6cff6a8d80.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/xcmzfsbd9t_c24-9t/s08_aa6cff6a8d80/metadata.json">metadata</a> · <a href="states/xcmzfsbd9t_c24-9t/s08_aa6cff6a8d80/physical_state.npz">physical state</a> · <a href="states/xcmzfsbd9t_c24-9t/s08_aa6cff6a8d80/C/scores.csv">C scores</a> · <a href="states/xcmzfsbd9t_c24-9t/s08_aa6cff6a8d80/N/scores.csv">N scores</a> · <a href="states/xcmzfsbd9t_c24-9t/s08_aa6cff6a8d80/C/attention.npz">C attention</a> · <a href="states/xcmzfsbd9t_c24-9t/s08_aa6cff6a8d80/N/attention.npz">N attention</a> · <a href="states/xcmzfsbd9t_c24-9t/s08_aa6cff6a8d80/C/surface_attribution.npz">C attribution</a> · <a href="states/xcmzfsbd9t_c24-9t/s08_aa6cff6a8d80/N/surface_attribution.npz">N attribution</a> · <a href="states/xcmzfsbd9t_c24-9t/s08_aa6cff6a8d80/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/xcmzfsbd9t_c24-9t/s08_aa6cff6a8d80/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/xcmzfsbd9t_c24-9t/s08_aa6cff6a8d80/C/query_checks.json">C query checks</a> · <a href="states/xcmzfsbd9t_c24-9t/s08_aa6cff6a8d80/N/query_checks.json">N query checks</a></div>
+</article></div>
+  </div>
 </section>
-<section id="yfxyg8jm46_c16-24">
-  <h2>yfxyg8jm46:c16-24</h2>
+<section id="yfxyg8jm46_c16-24" class="case-panel hidden" data-case-panel="yfxyg8jm46_c16-24">
+  <div class="case-heading"><h2>yfxyg8jm46:c16-24</h2><span>target=523.4414 MPa</span></div>
   <div class="layer-controls">
-    <label><input type="checkbox" data-layer="heatmap" checked> Heatmap</label>
-    <label><input type="checkbox" data-layer="candidates" checked> VLM candidates</label>
-    <label><input type="checkbox" data-layer="selection" checked> Selection</label>
-    <label><input type="checkbox" data-layer="numbers"> Numbering</label>
+    <label><input type="checkbox" data-layer="heatmap" checked> 概率热图</label>
+    <label><input type="checkbox" data-layer="candidates" checked> VLM全部候选</label>
+    <label><input type="checkbox" data-layer="selection" checked> 原生选中</label>
+    <label><input type="checkbox" data-layer="numbers"> 格子编号</label>
   </div>
   <div class="stack" data-stack>
     <img src="overlays/yfxyg8jm46_c16-24/clean.png" alt="clean surface">
     <img class="heatmap" src="overlays/yfxyg8jm46_c16-24/initial_c_env_heatmap_layer.png" alt="C environment probability">
-    <img class="candidates" src="overlays/yfxyg8jm46_c16-24/initial_c0_candidates_layer.png" alt="C0 candidates">
+    <img class="candidates" src="overlays/yfxyg8jm46_c16-24/initial_c0_candidates_layer.png" alt="all VLM candidates">
     <img class="selection" src="overlays/yfxyg8jm46_c16-24/initial_selection_layer.png" alt="selected cells">
     <img class="numbers hidden" src="overlays/yfxyg8jm46_c16-24/cell_numbers_layer.png" alt="cell numbering">
   </div>
-  <nav class="group-links">
-    <a href="panels/yfxyg8jm46_c16-24/group_A_initial_gate.png">A C0 gate</a><a href="panels/yfxyg8jm46_c16-24/group_B_surface_attribution.png">B attribution</a>
-    <a href="panels/yfxyg8jm46_c16-24/group_D_native_process.png">D native process</a><a href="panels/yfxyg8jm46_c16-24/group_E_actor_attention.png">E Actor attention</a>
-    <a href="panels/yfxyg8jm46_c16-24/group_F_intervention_curves.png">F intervention</a>
+  <nav class="question-links" aria-label="问题导航">
+    <a href="#yfxyg8jm46_c16-24-gate">外部门控改变首步了吗？</a>
+    <a href="#yfxyg8jm46_c16-24-path">表面通过哪条路径影响决策？</a>
+    <a href="#yfxyg8jm46_c16-24-process">两条原生路径怎样演化？</a>
+    <a href="#yfxyg8jm46_c16-24-attention">Actor关注了哪些token？</a>
+    <a href="#yfxyg8jm46_c16-24-intervention">关闭C0后怎样变化？</a>
   </nav>
-  <div class="plate"><img src="panels/yfxyg8jm46_c16-24/group_A_initial_gate.png" alt="group A"><img src="panels/yfxyg8jm46_c16-24/group_B_surface_attribution.png" alt="group B"></div>
-  <div class="plate"><img src="panels/yfxyg8jm46_c16-24/group_D_native_process.png" alt="group D"><img src="panels/yfxyg8jm46_c16-24/group_E_actor_attention.png" alt="group E"></div>
-  <img class="wide" src="panels/yfxyg8jm46_c16-24/group_F_intervention_curves.png" alt="group F">
-  <details><summary>Common physical states (9)</summary>
-    <table><thead><tr><th>State</th><th>Source</th><th>t</th><th>Cost</th><th>Raw data</th></tr></thead>
-    <tbody><tr><td>s00_31ec27e6a2bb</td><td>[&#x27;C_NATIVE_PREFIX&#x27;, &#x27;N_NATIVE_PREFIX&#x27;]</td><td>0</td><td>0.0000</td><td><a href='states/yfxyg8jm46_c16-24/s00_31ec27e6a2bb/C/scores.csv'>C scores</a> | <a href='states/yfxyg8jm46_c16-24/s00_31ec27e6a2bb/N/scores.csv'>N scores</a> | <a href='states/yfxyg8jm46_c16-24/s00_31ec27e6a2bb/C/attention.npz'>C attention</a> | <a href='states/yfxyg8jm46_c16-24/s00_31ec27e6a2bb/N/attention.npz'>N attention</a> | <a href='states/yfxyg8jm46_c16-24/s00_31ec27e6a2bb/C/surface_attribution.npz'>C attribution</a> | <a href='states/yfxyg8jm46_c16-24/s00_31ec27e6a2bb/N/surface_attribution.npz'>N attribution</a></td></tr><tr><td>s01_014ee29efcaa</td><td>[&#x27;C_NATIVE_PREFIX&#x27;]</td><td>1</td><td>0.0155</td><td><a href='states/yfxyg8jm46_c16-24/s01_014ee29efcaa/C/scores.csv'>C scores</a> | <a href='states/yfxyg8jm46_c16-24/s01_014ee29efcaa/N/scores.csv'>N scores</a> | <a href='states/yfxyg8jm46_c16-24/s01_014ee29efcaa/C/attention.npz'>C attention</a> | <a href='states/yfxyg8jm46_c16-24/s01_014ee29efcaa/N/attention.npz'>N attention</a> | <a href='states/yfxyg8jm46_c16-24/s01_014ee29efcaa/C/surface_attribution.npz'>C attribution</a> | <a href='states/yfxyg8jm46_c16-24/s01_014ee29efcaa/N/surface_attribution.npz'>N attribution</a></td></tr><tr><td>s02_631a1086733a</td><td>[&#x27;C_NATIVE_PREFIX&#x27;]</td><td>2</td><td>0.0312</td><td><a href='states/yfxyg8jm46_c16-24/s02_631a1086733a/C/scores.csv'>C scores</a> | <a href='states/yfxyg8jm46_c16-24/s02_631a1086733a/N/scores.csv'>N scores</a> | <a href='states/yfxyg8jm46_c16-24/s02_631a1086733a/C/attention.npz'>C attention</a> | <a href='states/yfxyg8jm46_c16-24/s02_631a1086733a/N/attention.npz'>N attention</a> | <a href='states/yfxyg8jm46_c16-24/s02_631a1086733a/C/surface_attribution.npz'>C attribution</a> | <a href='states/yfxyg8jm46_c16-24/s02_631a1086733a/N/surface_attribution.npz'>N attribution</a></td></tr><tr><td>s03_6b3ec5aecbaa</td><td>[&#x27;C_NATIVE_PREFIX&#x27;]</td><td>8</td><td>0.1246</td><td><a href='states/yfxyg8jm46_c16-24/s03_6b3ec5aecbaa/C/scores.csv'>C scores</a> | <a href='states/yfxyg8jm46_c16-24/s03_6b3ec5aecbaa/N/scores.csv'>N scores</a> | <a href='states/yfxyg8jm46_c16-24/s03_6b3ec5aecbaa/C/attention.npz'>C attention</a> | <a href='states/yfxyg8jm46_c16-24/s03_6b3ec5aecbaa/N/attention.npz'>N attention</a> | <a href='states/yfxyg8jm46_c16-24/s03_6b3ec5aecbaa/C/surface_attribution.npz'>C attribution</a> | <a href='states/yfxyg8jm46_c16-24/s03_6b3ec5aecbaa/N/surface_attribution.npz'>N attribution</a></td></tr><tr><td>s04_1016d287ee48</td><td>[&#x27;C_NATIVE_PREFIX&#x27;]</td><td>15</td><td>0.2337</td><td><a href='states/yfxyg8jm46_c16-24/s04_1016d287ee48/C/scores.csv'>C scores</a> | <a href='states/yfxyg8jm46_c16-24/s04_1016d287ee48/N/scores.csv'>N scores</a> | <a href='states/yfxyg8jm46_c16-24/s04_1016d287ee48/C/attention.npz'>C attention</a> | <a href='states/yfxyg8jm46_c16-24/s04_1016d287ee48/N/attention.npz'>N attention</a> | <a href='states/yfxyg8jm46_c16-24/s04_1016d287ee48/C/surface_attribution.npz'>C attribution</a> | <a href='states/yfxyg8jm46_c16-24/s04_1016d287ee48/N/surface_attribution.npz'>N attribution</a></td></tr><tr><td>s05_1814b0959b95</td><td>[&#x27;N_NATIVE_PREFIX&#x27;]</td><td>1</td><td>0.0155</td><td><a href='states/yfxyg8jm46_c16-24/s05_1814b0959b95/C/scores.csv'>C scores</a> | <a href='states/yfxyg8jm46_c16-24/s05_1814b0959b95/N/scores.csv'>N scores</a> | <a href='states/yfxyg8jm46_c16-24/s05_1814b0959b95/C/attention.npz'>C attention</a> | <a href='states/yfxyg8jm46_c16-24/s05_1814b0959b95/N/attention.npz'>N attention</a> | <a href='states/yfxyg8jm46_c16-24/s05_1814b0959b95/C/surface_attribution.npz'>C attribution</a> | <a href='states/yfxyg8jm46_c16-24/s05_1814b0959b95/N/surface_attribution.npz'>N attribution</a></td></tr><tr><td>s06_27d1247921e4</td><td>[&#x27;N_NATIVE_PREFIX&#x27;]</td><td>2</td><td>0.0310</td><td><a href='states/yfxyg8jm46_c16-24/s06_27d1247921e4/C/scores.csv'>C scores</a> | <a href='states/yfxyg8jm46_c16-24/s06_27d1247921e4/N/scores.csv'>N scores</a> | <a href='states/yfxyg8jm46_c16-24/s06_27d1247921e4/C/attention.npz'>C attention</a> | <a href='states/yfxyg8jm46_c16-24/s06_27d1247921e4/N/attention.npz'>N attention</a> | <a href='states/yfxyg8jm46_c16-24/s06_27d1247921e4/C/surface_attribution.npz'>C attribution</a> | <a href='states/yfxyg8jm46_c16-24/s06_27d1247921e4/N/surface_attribution.npz'>N attribution</a></td></tr><tr><td>s07_c19dda26fb5c</td><td>[&#x27;N_NATIVE_PREFIX&#x27;]</td><td>8</td><td>0.1248</td><td><a href='states/yfxyg8jm46_c16-24/s07_c19dda26fb5c/C/scores.csv'>C scores</a> | <a href='states/yfxyg8jm46_c16-24/s07_c19dda26fb5c/N/scores.csv'>N scores</a> | <a href='states/yfxyg8jm46_c16-24/s07_c19dda26fb5c/C/attention.npz'>C attention</a> | <a href='states/yfxyg8jm46_c16-24/s07_c19dda26fb5c/N/attention.npz'>N attention</a> | <a href='states/yfxyg8jm46_c16-24/s07_c19dda26fb5c/C/surface_attribution.npz'>C attribution</a> | <a href='states/yfxyg8jm46_c16-24/s07_c19dda26fb5c/N/surface_attribution.npz'>N attribution</a></td></tr><tr><td>s08_80df8e27bde9</td><td>[&#x27;N_NATIVE_PREFIX&#x27;]</td><td>14</td><td>0.2188</td><td><a href='states/yfxyg8jm46_c16-24/s08_80df8e27bde9/C/scores.csv'>C scores</a> | <a href='states/yfxyg8jm46_c16-24/s08_80df8e27bde9/N/scores.csv'>N scores</a> | <a href='states/yfxyg8jm46_c16-24/s08_80df8e27bde9/C/attention.npz'>C attention</a> | <a href='states/yfxyg8jm46_c16-24/s08_80df8e27bde9/N/attention.npz'>N attention</a> | <a href='states/yfxyg8jm46_c16-24/s08_80df8e27bde9/C/surface_attribution.npz'>C attribution</a> | <a href='states/yfxyg8jm46_c16-24/s08_80df8e27bde9/N/surface_attribution.npz'>N attribution</a></td></tr></tbody></table>
-  </details>
+  <div class="view-tabs" role="tablist">
+    <button type="button" class="active" data-view-tab="native">原生轨迹对照</button>
+    <button type="button" data-view-tab="fixed">相同状态对照</button>
+  </div>
+  <div class="view-pane" data-view-pane="native">
+    <div class="plate" id="yfxyg8jm46_c16-24-gate"><a class="figure-link" href="panels/yfxyg8jm46_c16-24/group_A_initial_gate.png"><img src="panels/yfxyg8jm46_c16-24/group_A_initial_gate.png" alt="首步门控"></a></div>
+    <div class="plate" id="yfxyg8jm46_c16-24-path"><a class="figure-link" href="panels/yfxyg8jm46_c16-24/group_B_surface_attribution.png"><img src="panels/yfxyg8jm46_c16-24/group_B_surface_attribution.png" alt="表面归因"></a></div>
+    <div class="plate" id="yfxyg8jm46_c16-24-process"><a class="figure-link" href="panels/yfxyg8jm46_c16-24/group_D_native_process.png"><img src="panels/yfxyg8jm46_c16-24/group_D_native_process.png" alt="原生决策进程"></a></div>
+    <div class="plate" id="yfxyg8jm46_c16-24-attention"><a class="figure-link" href="panels/yfxyg8jm46_c16-24/group_E_actor_attention.png"><img src="panels/yfxyg8jm46_c16-24/group_E_actor_attention.png" alt="Actor attention"></a></div>
+    <div class="plate" id="yfxyg8jm46_c16-24-intervention"><a class="figure-link" href="panels/yfxyg8jm46_c16-24/group_F_intervention_curves.png"><img src="panels/yfxyg8jm46_c16-24/group_F_intervention_curves.png" alt="冻结策略干预"></a></div>
+    <p><a href="panels/yfxyg8jm46_c16-24/group_F_action_difference.csv">动作顺序及差值表</a> · <a href="c0_intervention_results.csv">三路径结果表</a></p>
+  </div>
+  <div class="view-pane hidden" data-view-pane="fixed">
+    <div class="source-tabs" role="tablist">
+      <button type="button" class="active" data-source-tab="C">C来源状态</button>
+      <button type="button" data-source-tab="N">N来源状态</button>
+    </div>
+    <div class="source-pane" data-source-pane="C">
+<article class="state-record" id="yfxyg8jm46_c16-24-s00_31ec27e6a2bb">
+  <div class="state-head"><strong>s00_31ec27e6a2bb</strong>
+    <span>来源 [&#x27;C_NATIVE_PREFIX&#x27;, &#x27;N_NATIVE_PREFIX&#x27;]</span><span>t=0</span>
+    <span>cost=0.000000</span>
+    <span>history=[]</span>
+  </div>
+  <a class="figure-link" href="panels/yfxyg8jm46_c16-24/group_C_s00_31ec27e6a2bb.png"><img src="panels/yfxyg8jm46_c16-24/group_C_s00_31ec27e6a2bb.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/yfxyg8jm46_c16-24/s00_31ec27e6a2bb/metadata.json">metadata</a> · <a href="states/yfxyg8jm46_c16-24/s00_31ec27e6a2bb/physical_state.npz">physical state</a> · <a href="states/yfxyg8jm46_c16-24/s00_31ec27e6a2bb/C/scores.csv">C scores</a> · <a href="states/yfxyg8jm46_c16-24/s00_31ec27e6a2bb/N/scores.csv">N scores</a> · <a href="states/yfxyg8jm46_c16-24/s00_31ec27e6a2bb/C/attention.npz">C attention</a> · <a href="states/yfxyg8jm46_c16-24/s00_31ec27e6a2bb/N/attention.npz">N attention</a> · <a href="states/yfxyg8jm46_c16-24/s00_31ec27e6a2bb/C/surface_attribution.npz">C attribution</a> · <a href="states/yfxyg8jm46_c16-24/s00_31ec27e6a2bb/N/surface_attribution.npz">N attribution</a> · <a href="states/yfxyg8jm46_c16-24/s00_31ec27e6a2bb/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/yfxyg8jm46_c16-24/s00_31ec27e6a2bb/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/yfxyg8jm46_c16-24/s00_31ec27e6a2bb/C/query_checks.json">C query checks</a> · <a href="states/yfxyg8jm46_c16-24/s00_31ec27e6a2bb/N/query_checks.json">N query checks</a></div>
+</article>
+<article class="state-record" id="yfxyg8jm46_c16-24-s01_014ee29efcaa">
+  <div class="state-head"><strong>s01_014ee29efcaa</strong>
+    <span>来源 [&#x27;C_NATIVE_PREFIX&#x27;]</span><span>t=1</span>
+    <span>cost=0.015509</span>
+    <span>history=[5]</span>
+  </div>
+  <a class="figure-link" href="panels/yfxyg8jm46_c16-24/group_C_s01_014ee29efcaa.png"><img src="panels/yfxyg8jm46_c16-24/group_C_s01_014ee29efcaa.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/yfxyg8jm46_c16-24/s01_014ee29efcaa/metadata.json">metadata</a> · <a href="states/yfxyg8jm46_c16-24/s01_014ee29efcaa/physical_state.npz">physical state</a> · <a href="states/yfxyg8jm46_c16-24/s01_014ee29efcaa/C/scores.csv">C scores</a> · <a href="states/yfxyg8jm46_c16-24/s01_014ee29efcaa/N/scores.csv">N scores</a> · <a href="states/yfxyg8jm46_c16-24/s01_014ee29efcaa/C/attention.npz">C attention</a> · <a href="states/yfxyg8jm46_c16-24/s01_014ee29efcaa/N/attention.npz">N attention</a> · <a href="states/yfxyg8jm46_c16-24/s01_014ee29efcaa/C/surface_attribution.npz">C attribution</a> · <a href="states/yfxyg8jm46_c16-24/s01_014ee29efcaa/N/surface_attribution.npz">N attribution</a> · <a href="states/yfxyg8jm46_c16-24/s01_014ee29efcaa/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/yfxyg8jm46_c16-24/s01_014ee29efcaa/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/yfxyg8jm46_c16-24/s01_014ee29efcaa/C/query_checks.json">C query checks</a> · <a href="states/yfxyg8jm46_c16-24/s01_014ee29efcaa/N/query_checks.json">N query checks</a></div>
+</article>
+<article class="state-record" id="yfxyg8jm46_c16-24-s02_631a1086733a">
+  <div class="state-head"><strong>s02_631a1086733a</strong>
+    <span>来源 [&#x27;C_NATIVE_PREFIX&#x27;]</span><span>t=2</span>
+    <span>cost=0.031203</span>
+    <span>history=[5,62]</span>
+  </div>
+  <a class="figure-link" href="panels/yfxyg8jm46_c16-24/group_C_s02_631a1086733a.png"><img src="panels/yfxyg8jm46_c16-24/group_C_s02_631a1086733a.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/yfxyg8jm46_c16-24/s02_631a1086733a/metadata.json">metadata</a> · <a href="states/yfxyg8jm46_c16-24/s02_631a1086733a/physical_state.npz">physical state</a> · <a href="states/yfxyg8jm46_c16-24/s02_631a1086733a/C/scores.csv">C scores</a> · <a href="states/yfxyg8jm46_c16-24/s02_631a1086733a/N/scores.csv">N scores</a> · <a href="states/yfxyg8jm46_c16-24/s02_631a1086733a/C/attention.npz">C attention</a> · <a href="states/yfxyg8jm46_c16-24/s02_631a1086733a/N/attention.npz">N attention</a> · <a href="states/yfxyg8jm46_c16-24/s02_631a1086733a/C/surface_attribution.npz">C attribution</a> · <a href="states/yfxyg8jm46_c16-24/s02_631a1086733a/N/surface_attribution.npz">N attribution</a> · <a href="states/yfxyg8jm46_c16-24/s02_631a1086733a/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/yfxyg8jm46_c16-24/s02_631a1086733a/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/yfxyg8jm46_c16-24/s02_631a1086733a/C/query_checks.json">C query checks</a> · <a href="states/yfxyg8jm46_c16-24/s02_631a1086733a/N/query_checks.json">N query checks</a></div>
+</article>
+<article class="state-record" id="yfxyg8jm46_c16-24-s03_6b3ec5aecbaa">
+  <div class="state-head"><strong>s03_6b3ec5aecbaa</strong>
+    <span>来源 [&#x27;C_NATIVE_PREFIX&#x27;]</span><span>t=8</span>
+    <span>cost=0.124629</span>
+    <span>history=[5,62,48,56,58,24,59,49]</span>
+  </div>
+  <a class="figure-link" href="panels/yfxyg8jm46_c16-24/group_C_s03_6b3ec5aecbaa.png"><img src="panels/yfxyg8jm46_c16-24/group_C_s03_6b3ec5aecbaa.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/yfxyg8jm46_c16-24/s03_6b3ec5aecbaa/metadata.json">metadata</a> · <a href="states/yfxyg8jm46_c16-24/s03_6b3ec5aecbaa/physical_state.npz">physical state</a> · <a href="states/yfxyg8jm46_c16-24/s03_6b3ec5aecbaa/C/scores.csv">C scores</a> · <a href="states/yfxyg8jm46_c16-24/s03_6b3ec5aecbaa/N/scores.csv">N scores</a> · <a href="states/yfxyg8jm46_c16-24/s03_6b3ec5aecbaa/C/attention.npz">C attention</a> · <a href="states/yfxyg8jm46_c16-24/s03_6b3ec5aecbaa/N/attention.npz">N attention</a> · <a href="states/yfxyg8jm46_c16-24/s03_6b3ec5aecbaa/C/surface_attribution.npz">C attribution</a> · <a href="states/yfxyg8jm46_c16-24/s03_6b3ec5aecbaa/N/surface_attribution.npz">N attribution</a> · <a href="states/yfxyg8jm46_c16-24/s03_6b3ec5aecbaa/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/yfxyg8jm46_c16-24/s03_6b3ec5aecbaa/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/yfxyg8jm46_c16-24/s03_6b3ec5aecbaa/C/query_checks.json">C query checks</a> · <a href="states/yfxyg8jm46_c16-24/s03_6b3ec5aecbaa/N/query_checks.json">N query checks</a></div>
+</article>
+<article class="state-record" id="yfxyg8jm46_c16-24-s04_1016d287ee48">
+  <div class="state-head"><strong>s04_1016d287ee48</strong>
+    <span>来源 [&#x27;C_NATIVE_PREFIX&#x27;]</span><span>t=15</span>
+    <span>cost=0.233749</span>
+    <span>history=[5,62,48,56,58,24,59,49,32,8,60,16,40,61,42]</span>
+  </div>
+  <a class="figure-link" href="panels/yfxyg8jm46_c16-24/group_C_s04_1016d287ee48.png"><img src="panels/yfxyg8jm46_c16-24/group_C_s04_1016d287ee48.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/yfxyg8jm46_c16-24/s04_1016d287ee48/metadata.json">metadata</a> · <a href="states/yfxyg8jm46_c16-24/s04_1016d287ee48/physical_state.npz">physical state</a> · <a href="states/yfxyg8jm46_c16-24/s04_1016d287ee48/C/scores.csv">C scores</a> · <a href="states/yfxyg8jm46_c16-24/s04_1016d287ee48/N/scores.csv">N scores</a> · <a href="states/yfxyg8jm46_c16-24/s04_1016d287ee48/C/attention.npz">C attention</a> · <a href="states/yfxyg8jm46_c16-24/s04_1016d287ee48/N/attention.npz">N attention</a> · <a href="states/yfxyg8jm46_c16-24/s04_1016d287ee48/C/surface_attribution.npz">C attribution</a> · <a href="states/yfxyg8jm46_c16-24/s04_1016d287ee48/N/surface_attribution.npz">N attribution</a> · <a href="states/yfxyg8jm46_c16-24/s04_1016d287ee48/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/yfxyg8jm46_c16-24/s04_1016d287ee48/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/yfxyg8jm46_c16-24/s04_1016d287ee48/C/query_checks.json">C query checks</a> · <a href="states/yfxyg8jm46_c16-24/s04_1016d287ee48/N/query_checks.json">N query checks</a></div>
+</article></div>
+    <div class="source-pane hidden" data-source-pane="N">
+<article class="state-record" id="yfxyg8jm46_c16-24-s00_31ec27e6a2bb">
+  <div class="state-head"><strong>s00_31ec27e6a2bb</strong>
+    <span>来源 [&#x27;C_NATIVE_PREFIX&#x27;, &#x27;N_NATIVE_PREFIX&#x27;]</span><span>t=0</span>
+    <span>cost=0.000000</span>
+    <span>history=[]</span>
+  </div>
+  <a class="figure-link" href="panels/yfxyg8jm46_c16-24/group_C_s00_31ec27e6a2bb.png"><img src="panels/yfxyg8jm46_c16-24/group_C_s00_31ec27e6a2bb.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/yfxyg8jm46_c16-24/s00_31ec27e6a2bb/metadata.json">metadata</a> · <a href="states/yfxyg8jm46_c16-24/s00_31ec27e6a2bb/physical_state.npz">physical state</a> · <a href="states/yfxyg8jm46_c16-24/s00_31ec27e6a2bb/C/scores.csv">C scores</a> · <a href="states/yfxyg8jm46_c16-24/s00_31ec27e6a2bb/N/scores.csv">N scores</a> · <a href="states/yfxyg8jm46_c16-24/s00_31ec27e6a2bb/C/attention.npz">C attention</a> · <a href="states/yfxyg8jm46_c16-24/s00_31ec27e6a2bb/N/attention.npz">N attention</a> · <a href="states/yfxyg8jm46_c16-24/s00_31ec27e6a2bb/C/surface_attribution.npz">C attribution</a> · <a href="states/yfxyg8jm46_c16-24/s00_31ec27e6a2bb/N/surface_attribution.npz">N attribution</a> · <a href="states/yfxyg8jm46_c16-24/s00_31ec27e6a2bb/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/yfxyg8jm46_c16-24/s00_31ec27e6a2bb/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/yfxyg8jm46_c16-24/s00_31ec27e6a2bb/C/query_checks.json">C query checks</a> · <a href="states/yfxyg8jm46_c16-24/s00_31ec27e6a2bb/N/query_checks.json">N query checks</a></div>
+</article>
+<article class="state-record" id="yfxyg8jm46_c16-24-s05_1814b0959b95">
+  <div class="state-head"><strong>s05_1814b0959b95</strong>
+    <span>来源 [&#x27;N_NATIVE_PREFIX&#x27;]</span><span>t=1</span>
+    <span>cost=0.015509</span>
+    <span>history=[63]</span>
+  </div>
+  <a class="figure-link" href="panels/yfxyg8jm46_c16-24/group_C_s05_1814b0959b95.png"><img src="panels/yfxyg8jm46_c16-24/group_C_s05_1814b0959b95.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/yfxyg8jm46_c16-24/s05_1814b0959b95/metadata.json">metadata</a> · <a href="states/yfxyg8jm46_c16-24/s05_1814b0959b95/physical_state.npz">physical state</a> · <a href="states/yfxyg8jm46_c16-24/s05_1814b0959b95/C/scores.csv">C scores</a> · <a href="states/yfxyg8jm46_c16-24/s05_1814b0959b95/N/scores.csv">N scores</a> · <a href="states/yfxyg8jm46_c16-24/s05_1814b0959b95/C/attention.npz">C attention</a> · <a href="states/yfxyg8jm46_c16-24/s05_1814b0959b95/N/attention.npz">N attention</a> · <a href="states/yfxyg8jm46_c16-24/s05_1814b0959b95/C/surface_attribution.npz">C attribution</a> · <a href="states/yfxyg8jm46_c16-24/s05_1814b0959b95/N/surface_attribution.npz">N attribution</a> · <a href="states/yfxyg8jm46_c16-24/s05_1814b0959b95/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/yfxyg8jm46_c16-24/s05_1814b0959b95/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/yfxyg8jm46_c16-24/s05_1814b0959b95/C/query_checks.json">C query checks</a> · <a href="states/yfxyg8jm46_c16-24/s05_1814b0959b95/N/query_checks.json">N query checks</a></div>
+</article>
+<article class="state-record" id="yfxyg8jm46_c16-24-s06_27d1247921e4">
+  <div class="state-head"><strong>s06_27d1247921e4</strong>
+    <span>来源 [&#x27;N_NATIVE_PREFIX&#x27;]</span><span>t=2</span>
+    <span>cost=0.031019</span>
+    <span>history=[63,60]</span>
+  </div>
+  <a class="figure-link" href="panels/yfxyg8jm46_c16-24/group_C_s06_27d1247921e4.png"><img src="panels/yfxyg8jm46_c16-24/group_C_s06_27d1247921e4.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/yfxyg8jm46_c16-24/s06_27d1247921e4/metadata.json">metadata</a> · <a href="states/yfxyg8jm46_c16-24/s06_27d1247921e4/physical_state.npz">physical state</a> · <a href="states/yfxyg8jm46_c16-24/s06_27d1247921e4/C/scores.csv">C scores</a> · <a href="states/yfxyg8jm46_c16-24/s06_27d1247921e4/N/scores.csv">N scores</a> · <a href="states/yfxyg8jm46_c16-24/s06_27d1247921e4/C/attention.npz">C attention</a> · <a href="states/yfxyg8jm46_c16-24/s06_27d1247921e4/N/attention.npz">N attention</a> · <a href="states/yfxyg8jm46_c16-24/s06_27d1247921e4/C/surface_attribution.npz">C attribution</a> · <a href="states/yfxyg8jm46_c16-24/s06_27d1247921e4/N/surface_attribution.npz">N attribution</a> · <a href="states/yfxyg8jm46_c16-24/s06_27d1247921e4/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/yfxyg8jm46_c16-24/s06_27d1247921e4/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/yfxyg8jm46_c16-24/s06_27d1247921e4/C/query_checks.json">C query checks</a> · <a href="states/yfxyg8jm46_c16-24/s06_27d1247921e4/N/query_checks.json">N query checks</a></div>
+</article>
+<article class="state-record" id="yfxyg8jm46_c16-24-s07_c19dda26fb5c">
+  <div class="state-head"><strong>s07_c19dda26fb5c</strong>
+    <span>来源 [&#x27;N_NATIVE_PREFIX&#x27;]</span><span>t=8</span>
+    <span>cost=0.124816</span>
+    <span>history=[63,60,58,16,59,22,7,56]</span>
+  </div>
+  <a class="figure-link" href="panels/yfxyg8jm46_c16-24/group_C_s07_c19dda26fb5c.png"><img src="panels/yfxyg8jm46_c16-24/group_C_s07_c19dda26fb5c.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/yfxyg8jm46_c16-24/s07_c19dda26fb5c/metadata.json">metadata</a> · <a href="states/yfxyg8jm46_c16-24/s07_c19dda26fb5c/physical_state.npz">physical state</a> · <a href="states/yfxyg8jm46_c16-24/s07_c19dda26fb5c/C/scores.csv">C scores</a> · <a href="states/yfxyg8jm46_c16-24/s07_c19dda26fb5c/N/scores.csv">N scores</a> · <a href="states/yfxyg8jm46_c16-24/s07_c19dda26fb5c/C/attention.npz">C attention</a> · <a href="states/yfxyg8jm46_c16-24/s07_c19dda26fb5c/N/attention.npz">N attention</a> · <a href="states/yfxyg8jm46_c16-24/s07_c19dda26fb5c/C/surface_attribution.npz">C attribution</a> · <a href="states/yfxyg8jm46_c16-24/s07_c19dda26fb5c/N/surface_attribution.npz">N attribution</a> · <a href="states/yfxyg8jm46_c16-24/s07_c19dda26fb5c/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/yfxyg8jm46_c16-24/s07_c19dda26fb5c/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/yfxyg8jm46_c16-24/s07_c19dda26fb5c/C/query_checks.json">C query checks</a> · <a href="states/yfxyg8jm46_c16-24/s07_c19dda26fb5c/N/query_checks.json">N query checks</a></div>
+</article>
+<article class="state-record" id="yfxyg8jm46_c16-24-s08_80df8e27bde9">
+  <div class="state-head"><strong>s08_80df8e27bde9</strong>
+    <span>来源 [&#x27;N_NATIVE_PREFIX&#x27;]</span><span>t=14</span>
+    <span>cost=0.218795</span>
+    <span>history=[63,60,58,16,59,22,7,56,6,40,47,54,20,8]</span>
+  </div>
+  <a class="figure-link" href="panels/yfxyg8jm46_c16-24/group_C_s08_80df8e27bde9.png"><img src="panels/yfxyg8jm46_c16-24/group_C_s08_80df8e27bde9.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/yfxyg8jm46_c16-24/s08_80df8e27bde9/metadata.json">metadata</a> · <a href="states/yfxyg8jm46_c16-24/s08_80df8e27bde9/physical_state.npz">physical state</a> · <a href="states/yfxyg8jm46_c16-24/s08_80df8e27bde9/C/scores.csv">C scores</a> · <a href="states/yfxyg8jm46_c16-24/s08_80df8e27bde9/N/scores.csv">N scores</a> · <a href="states/yfxyg8jm46_c16-24/s08_80df8e27bde9/C/attention.npz">C attention</a> · <a href="states/yfxyg8jm46_c16-24/s08_80df8e27bde9/N/attention.npz">N attention</a> · <a href="states/yfxyg8jm46_c16-24/s08_80df8e27bde9/C/surface_attribution.npz">C attribution</a> · <a href="states/yfxyg8jm46_c16-24/s08_80df8e27bde9/N/surface_attribution.npz">N attribution</a> · <a href="states/yfxyg8jm46_c16-24/s08_80df8e27bde9/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/yfxyg8jm46_c16-24/s08_80df8e27bde9/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/yfxyg8jm46_c16-24/s08_80df8e27bde9/C/query_checks.json">C query checks</a> · <a href="states/yfxyg8jm46_c16-24/s08_80df8e27bde9/N/query_checks.json">N query checks</a></div>
+</article></div>
+  </div>
 </section>
-<section id="ykhs7s2dck_q8-22">
-  <h2>ykhs7s2dck:q8-22</h2>
+<section id="ykhs7s2dck_q8-22" class="case-panel hidden" data-case-panel="ykhs7s2dck_q8-22">
+  <div class="case-heading"><h2>ykhs7s2dck:q8-22</h2><span>target=235.0132 MPa</span></div>
   <div class="layer-controls">
-    <label><input type="checkbox" data-layer="heatmap" checked> Heatmap</label>
-    <label><input type="checkbox" data-layer="candidates" checked> VLM candidates</label>
-    <label><input type="checkbox" data-layer="selection" checked> Selection</label>
-    <label><input type="checkbox" data-layer="numbers"> Numbering</label>
+    <label><input type="checkbox" data-layer="heatmap" checked> 概率热图</label>
+    <label><input type="checkbox" data-layer="candidates" checked> VLM全部候选</label>
+    <label><input type="checkbox" data-layer="selection" checked> 原生选中</label>
+    <label><input type="checkbox" data-layer="numbers"> 格子编号</label>
   </div>
   <div class="stack" data-stack>
     <img src="overlays/ykhs7s2dck_q8-22/clean.png" alt="clean surface">
     <img class="heatmap" src="overlays/ykhs7s2dck_q8-22/initial_c_env_heatmap_layer.png" alt="C environment probability">
-    <img class="candidates" src="overlays/ykhs7s2dck_q8-22/initial_c0_candidates_layer.png" alt="C0 candidates">
+    <img class="candidates" src="overlays/ykhs7s2dck_q8-22/initial_c0_candidates_layer.png" alt="all VLM candidates">
     <img class="selection" src="overlays/ykhs7s2dck_q8-22/initial_selection_layer.png" alt="selected cells">
     <img class="numbers hidden" src="overlays/ykhs7s2dck_q8-22/cell_numbers_layer.png" alt="cell numbering">
   </div>
-  <nav class="group-links">
-    <a href="panels/ykhs7s2dck_q8-22/group_A_initial_gate.png">A C0 gate</a><a href="panels/ykhs7s2dck_q8-22/group_B_surface_attribution.png">B attribution</a>
-    <a href="panels/ykhs7s2dck_q8-22/group_D_native_process.png">D native process</a><a href="panels/ykhs7s2dck_q8-22/group_E_actor_attention.png">E Actor attention</a>
-    <a href="panels/ykhs7s2dck_q8-22/group_F_intervention_curves.png">F intervention</a>
+  <nav class="question-links" aria-label="问题导航">
+    <a href="#ykhs7s2dck_q8-22-gate">外部门控改变首步了吗？</a>
+    <a href="#ykhs7s2dck_q8-22-path">表面通过哪条路径影响决策？</a>
+    <a href="#ykhs7s2dck_q8-22-process">两条原生路径怎样演化？</a>
+    <a href="#ykhs7s2dck_q8-22-attention">Actor关注了哪些token？</a>
+    <a href="#ykhs7s2dck_q8-22-intervention">关闭C0后怎样变化？</a>
   </nav>
-  <div class="plate"><img src="panels/ykhs7s2dck_q8-22/group_A_initial_gate.png" alt="group A"><img src="panels/ykhs7s2dck_q8-22/group_B_surface_attribution.png" alt="group B"></div>
-  <div class="plate"><img src="panels/ykhs7s2dck_q8-22/group_D_native_process.png" alt="group D"><img src="panels/ykhs7s2dck_q8-22/group_E_actor_attention.png" alt="group E"></div>
-  <img class="wide" src="panels/ykhs7s2dck_q8-22/group_F_intervention_curves.png" alt="group F">
-  <details><summary>Common physical states (9)</summary>
-    <table><thead><tr><th>State</th><th>Source</th><th>t</th><th>Cost</th><th>Raw data</th></tr></thead>
-    <tbody><tr><td>s00_d810eeab3792</td><td>[&#x27;C_NATIVE_PREFIX&#x27;, &#x27;N_NATIVE_PREFIX&#x27;]</td><td>0</td><td>0.0000</td><td><a href='states/ykhs7s2dck_q8-22/s00_d810eeab3792/C/scores.csv'>C scores</a> | <a href='states/ykhs7s2dck_q8-22/s00_d810eeab3792/N/scores.csv'>N scores</a> | <a href='states/ykhs7s2dck_q8-22/s00_d810eeab3792/C/attention.npz'>C attention</a> | <a href='states/ykhs7s2dck_q8-22/s00_d810eeab3792/N/attention.npz'>N attention</a> | <a href='states/ykhs7s2dck_q8-22/s00_d810eeab3792/C/surface_attribution.npz'>C attribution</a> | <a href='states/ykhs7s2dck_q8-22/s00_d810eeab3792/N/surface_attribution.npz'>N attribution</a></td></tr><tr><td>s01_b4494e6ca46c</td><td>[&#x27;C_NATIVE_PREFIX&#x27;]</td><td>1</td><td>0.0155</td><td><a href='states/ykhs7s2dck_q8-22/s01_b4494e6ca46c/C/scores.csv'>C scores</a> | <a href='states/ykhs7s2dck_q8-22/s01_b4494e6ca46c/N/scores.csv'>N scores</a> | <a href='states/ykhs7s2dck_q8-22/s01_b4494e6ca46c/C/attention.npz'>C attention</a> | <a href='states/ykhs7s2dck_q8-22/s01_b4494e6ca46c/N/attention.npz'>N attention</a> | <a href='states/ykhs7s2dck_q8-22/s01_b4494e6ca46c/C/surface_attribution.npz'>C attribution</a> | <a href='states/ykhs7s2dck_q8-22/s01_b4494e6ca46c/N/surface_attribution.npz'>N attribution</a></td></tr><tr><td>s02_ea62032d48bb</td><td>[&#x27;C_NATIVE_PREFIX&#x27;]</td><td>2</td><td>0.0310</td><td><a href='states/ykhs7s2dck_q8-22/s02_ea62032d48bb/C/scores.csv'>C scores</a> | <a href='states/ykhs7s2dck_q8-22/s02_ea62032d48bb/N/scores.csv'>N scores</a> | <a href='states/ykhs7s2dck_q8-22/s02_ea62032d48bb/C/attention.npz'>C attention</a> | <a href='states/ykhs7s2dck_q8-22/s02_ea62032d48bb/N/attention.npz'>N attention</a> | <a href='states/ykhs7s2dck_q8-22/s02_ea62032d48bb/C/surface_attribution.npz'>C attribution</a> | <a href='states/ykhs7s2dck_q8-22/s02_ea62032d48bb/N/surface_attribution.npz'>N attribution</a></td></tr><tr><td>s03_10cf2dfe3b7a</td><td>[&#x27;C_NATIVE_PREFIX&#x27;]</td><td>8</td><td>0.1246</td><td><a href='states/ykhs7s2dck_q8-22/s03_10cf2dfe3b7a/C/scores.csv'>C scores</a> | <a href='states/ykhs7s2dck_q8-22/s03_10cf2dfe3b7a/N/scores.csv'>N scores</a> | <a href='states/ykhs7s2dck_q8-22/s03_10cf2dfe3b7a/C/attention.npz'>C attention</a> | <a href='states/ykhs7s2dck_q8-22/s03_10cf2dfe3b7a/N/attention.npz'>N attention</a> | <a href='states/ykhs7s2dck_q8-22/s03_10cf2dfe3b7a/C/surface_attribution.npz'>C attribution</a> | <a href='states/ykhs7s2dck_q8-22/s03_10cf2dfe3b7a/N/surface_attribution.npz'>N attribution</a></td></tr><tr><td>s04_67ac3fc3a518</td><td>[&#x27;C_NATIVE_PREFIX&#x27;]</td><td>15</td><td>0.2341</td><td><a href='states/ykhs7s2dck_q8-22/s04_67ac3fc3a518/C/scores.csv'>C scores</a> | <a href='states/ykhs7s2dck_q8-22/s04_67ac3fc3a518/N/scores.csv'>N scores</a> | <a href='states/ykhs7s2dck_q8-22/s04_67ac3fc3a518/C/attention.npz'>C attention</a> | <a href='states/ykhs7s2dck_q8-22/s04_67ac3fc3a518/N/attention.npz'>N attention</a> | <a href='states/ykhs7s2dck_q8-22/s04_67ac3fc3a518/C/surface_attribution.npz'>C attribution</a> | <a href='states/ykhs7s2dck_q8-22/s04_67ac3fc3a518/N/surface_attribution.npz'>N attribution</a></td></tr><tr><td>s05_46a05e6938b9</td><td>[&#x27;N_NATIVE_PREFIX&#x27;]</td><td>1</td><td>0.0155</td><td><a href='states/ykhs7s2dck_q8-22/s05_46a05e6938b9/C/scores.csv'>C scores</a> | <a href='states/ykhs7s2dck_q8-22/s05_46a05e6938b9/N/scores.csv'>N scores</a> | <a href='states/ykhs7s2dck_q8-22/s05_46a05e6938b9/C/attention.npz'>C attention</a> | <a href='states/ykhs7s2dck_q8-22/s05_46a05e6938b9/N/attention.npz'>N attention</a> | <a href='states/ykhs7s2dck_q8-22/s05_46a05e6938b9/C/surface_attribution.npz'>C attribution</a> | <a href='states/ykhs7s2dck_q8-22/s05_46a05e6938b9/N/surface_attribution.npz'>N attribution</a></td></tr><tr><td>s06_80d2a5b920b1</td><td>[&#x27;N_NATIVE_PREFIX&#x27;]</td><td>2</td><td>0.0312</td><td><a href='states/ykhs7s2dck_q8-22/s06_80d2a5b920b1/C/scores.csv'>C scores</a> | <a href='states/ykhs7s2dck_q8-22/s06_80d2a5b920b1/N/scores.csv'>N scores</a> | <a href='states/ykhs7s2dck_q8-22/s06_80d2a5b920b1/C/attention.npz'>C attention</a> | <a href='states/ykhs7s2dck_q8-22/s06_80d2a5b920b1/N/attention.npz'>N attention</a> | <a href='states/ykhs7s2dck_q8-22/s06_80d2a5b920b1/C/surface_attribution.npz'>C attribution</a> | <a href='states/ykhs7s2dck_q8-22/s06_80d2a5b920b1/N/surface_attribution.npz'>N attribution</a></td></tr><tr><td>s07_7f8ac9313a0c</td><td>[&#x27;N_NATIVE_PREFIX&#x27;]</td><td>8</td><td>0.1248</td><td><a href='states/ykhs7s2dck_q8-22/s07_7f8ac9313a0c/C/scores.csv'>C scores</a> | <a href='states/ykhs7s2dck_q8-22/s07_7f8ac9313a0c/N/scores.csv'>N scores</a> | <a href='states/ykhs7s2dck_q8-22/s07_7f8ac9313a0c/C/attention.npz'>C attention</a> | <a href='states/ykhs7s2dck_q8-22/s07_7f8ac9313a0c/N/attention.npz'>N attention</a> | <a href='states/ykhs7s2dck_q8-22/s07_7f8ac9313a0c/C/surface_attribution.npz'>C attribution</a> | <a href='states/ykhs7s2dck_q8-22/s07_7f8ac9313a0c/N/surface_attribution.npz'>N attribution</a></td></tr><tr><td>s08_f5f976d316b5</td><td>[&#x27;N_NATIVE_PREFIX&#x27;]</td><td>15</td><td>0.2339</td><td><a href='states/ykhs7s2dck_q8-22/s08_f5f976d316b5/C/scores.csv'>C scores</a> | <a href='states/ykhs7s2dck_q8-22/s08_f5f976d316b5/N/scores.csv'>N scores</a> | <a href='states/ykhs7s2dck_q8-22/s08_f5f976d316b5/C/attention.npz'>C attention</a> | <a href='states/ykhs7s2dck_q8-22/s08_f5f976d316b5/N/attention.npz'>N attention</a> | <a href='states/ykhs7s2dck_q8-22/s08_f5f976d316b5/C/surface_attribution.npz'>C attribution</a> | <a href='states/ykhs7s2dck_q8-22/s08_f5f976d316b5/N/surface_attribution.npz'>N attribution</a></td></tr></tbody></table>
-  </details>
+  <div class="view-tabs" role="tablist">
+    <button type="button" class="active" data-view-tab="native">原生轨迹对照</button>
+    <button type="button" data-view-tab="fixed">相同状态对照</button>
+  </div>
+  <div class="view-pane" data-view-pane="native">
+    <div class="plate" id="ykhs7s2dck_q8-22-gate"><a class="figure-link" href="panels/ykhs7s2dck_q8-22/group_A_initial_gate.png"><img src="panels/ykhs7s2dck_q8-22/group_A_initial_gate.png" alt="首步门控"></a></div>
+    <div class="plate" id="ykhs7s2dck_q8-22-path"><a class="figure-link" href="panels/ykhs7s2dck_q8-22/group_B_surface_attribution.png"><img src="panels/ykhs7s2dck_q8-22/group_B_surface_attribution.png" alt="表面归因"></a></div>
+    <div class="plate" id="ykhs7s2dck_q8-22-process"><a class="figure-link" href="panels/ykhs7s2dck_q8-22/group_D_native_process.png"><img src="panels/ykhs7s2dck_q8-22/group_D_native_process.png" alt="原生决策进程"></a></div>
+    <div class="plate" id="ykhs7s2dck_q8-22-attention"><a class="figure-link" href="panels/ykhs7s2dck_q8-22/group_E_actor_attention.png"><img src="panels/ykhs7s2dck_q8-22/group_E_actor_attention.png" alt="Actor attention"></a></div>
+    <div class="plate" id="ykhs7s2dck_q8-22-intervention"><a class="figure-link" href="panels/ykhs7s2dck_q8-22/group_F_intervention_curves.png"><img src="panels/ykhs7s2dck_q8-22/group_F_intervention_curves.png" alt="冻结策略干预"></a></div>
+    <p><a href="panels/ykhs7s2dck_q8-22/group_F_action_difference.csv">动作顺序及差值表</a> · <a href="c0_intervention_results.csv">三路径结果表</a></p>
+  </div>
+  <div class="view-pane hidden" data-view-pane="fixed">
+    <div class="source-tabs" role="tablist">
+      <button type="button" class="active" data-source-tab="C">C来源状态</button>
+      <button type="button" data-source-tab="N">N来源状态</button>
+    </div>
+    <div class="source-pane" data-source-pane="C">
+<article class="state-record" id="ykhs7s2dck_q8-22-s00_d810eeab3792">
+  <div class="state-head"><strong>s00_d810eeab3792</strong>
+    <span>来源 [&#x27;C_NATIVE_PREFIX&#x27;, &#x27;N_NATIVE_PREFIX&#x27;]</span><span>t=0</span>
+    <span>cost=0.000000</span>
+    <span>history=[]</span>
+  </div>
+  <a class="figure-link" href="panels/ykhs7s2dck_q8-22/group_C_s00_d810eeab3792.png"><img src="panels/ykhs7s2dck_q8-22/group_C_s00_d810eeab3792.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/ykhs7s2dck_q8-22/s00_d810eeab3792/metadata.json">metadata</a> · <a href="states/ykhs7s2dck_q8-22/s00_d810eeab3792/physical_state.npz">physical state</a> · <a href="states/ykhs7s2dck_q8-22/s00_d810eeab3792/C/scores.csv">C scores</a> · <a href="states/ykhs7s2dck_q8-22/s00_d810eeab3792/N/scores.csv">N scores</a> · <a href="states/ykhs7s2dck_q8-22/s00_d810eeab3792/C/attention.npz">C attention</a> · <a href="states/ykhs7s2dck_q8-22/s00_d810eeab3792/N/attention.npz">N attention</a> · <a href="states/ykhs7s2dck_q8-22/s00_d810eeab3792/C/surface_attribution.npz">C attribution</a> · <a href="states/ykhs7s2dck_q8-22/s00_d810eeab3792/N/surface_attribution.npz">N attribution</a> · <a href="states/ykhs7s2dck_q8-22/s00_d810eeab3792/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/ykhs7s2dck_q8-22/s00_d810eeab3792/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/ykhs7s2dck_q8-22/s00_d810eeab3792/C/query_checks.json">C query checks</a> · <a href="states/ykhs7s2dck_q8-22/s00_d810eeab3792/N/query_checks.json">N query checks</a></div>
+</article>
+<article class="state-record" id="ykhs7s2dck_q8-22-s01_b4494e6ca46c">
+  <div class="state-head"><strong>s01_b4494e6ca46c</strong>
+    <span>来源 [&#x27;C_NATIVE_PREFIX&#x27;]</span><span>t=1</span>
+    <span>cost=0.015509</span>
+    <span>history=[37]</span>
+  </div>
+  <a class="figure-link" href="panels/ykhs7s2dck_q8-22/group_C_s01_b4494e6ca46c.png"><img src="panels/ykhs7s2dck_q8-22/group_C_s01_b4494e6ca46c.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/ykhs7s2dck_q8-22/s01_b4494e6ca46c/metadata.json">metadata</a> · <a href="states/ykhs7s2dck_q8-22/s01_b4494e6ca46c/physical_state.npz">physical state</a> · <a href="states/ykhs7s2dck_q8-22/s01_b4494e6ca46c/C/scores.csv">C scores</a> · <a href="states/ykhs7s2dck_q8-22/s01_b4494e6ca46c/N/scores.csv">N scores</a> · <a href="states/ykhs7s2dck_q8-22/s01_b4494e6ca46c/C/attention.npz">C attention</a> · <a href="states/ykhs7s2dck_q8-22/s01_b4494e6ca46c/N/attention.npz">N attention</a> · <a href="states/ykhs7s2dck_q8-22/s01_b4494e6ca46c/C/surface_attribution.npz">C attribution</a> · <a href="states/ykhs7s2dck_q8-22/s01_b4494e6ca46c/N/surface_attribution.npz">N attribution</a> · <a href="states/ykhs7s2dck_q8-22/s01_b4494e6ca46c/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/ykhs7s2dck_q8-22/s01_b4494e6ca46c/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/ykhs7s2dck_q8-22/s01_b4494e6ca46c/C/query_checks.json">C query checks</a> · <a href="states/ykhs7s2dck_q8-22/s01_b4494e6ca46c/N/query_checks.json">N query checks</a></div>
+</article>
+<article class="state-record" id="ykhs7s2dck_q8-22-s02_ea62032d48bb">
+  <div class="state-head"><strong>s02_ea62032d48bb</strong>
+    <span>来源 [&#x27;C_NATIVE_PREFIX&#x27;]</span><span>t=2</span>
+    <span>cost=0.031019</span>
+    <span>history=[37,8]</span>
+  </div>
+  <a class="figure-link" href="panels/ykhs7s2dck_q8-22/group_C_s02_ea62032d48bb.png"><img src="panels/ykhs7s2dck_q8-22/group_C_s02_ea62032d48bb.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/ykhs7s2dck_q8-22/s02_ea62032d48bb/metadata.json">metadata</a> · <a href="states/ykhs7s2dck_q8-22/s02_ea62032d48bb/physical_state.npz">physical state</a> · <a href="states/ykhs7s2dck_q8-22/s02_ea62032d48bb/C/scores.csv">C scores</a> · <a href="states/ykhs7s2dck_q8-22/s02_ea62032d48bb/N/scores.csv">N scores</a> · <a href="states/ykhs7s2dck_q8-22/s02_ea62032d48bb/C/attention.npz">C attention</a> · <a href="states/ykhs7s2dck_q8-22/s02_ea62032d48bb/N/attention.npz">N attention</a> · <a href="states/ykhs7s2dck_q8-22/s02_ea62032d48bb/C/surface_attribution.npz">C attribution</a> · <a href="states/ykhs7s2dck_q8-22/s02_ea62032d48bb/N/surface_attribution.npz">N attribution</a> · <a href="states/ykhs7s2dck_q8-22/s02_ea62032d48bb/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/ykhs7s2dck_q8-22/s02_ea62032d48bb/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/ykhs7s2dck_q8-22/s02_ea62032d48bb/C/query_checks.json">C query checks</a> · <a href="states/ykhs7s2dck_q8-22/s02_ea62032d48bb/N/query_checks.json">N query checks</a></div>
+</article>
+<article class="state-record" id="ykhs7s2dck_q8-22-s03_10cf2dfe3b7a">
+  <div class="state-head"><strong>s03_10cf2dfe3b7a</strong>
+    <span>来源 [&#x27;C_NATIVE_PREFIX&#x27;]</span><span>t=8</span>
+    <span>cost=0.124629</span>
+    <span>history=[37,8,24,20,32,34,11,16]</span>
+  </div>
+  <a class="figure-link" href="panels/ykhs7s2dck_q8-22/group_C_s03_10cf2dfe3b7a.png"><img src="panels/ykhs7s2dck_q8-22/group_C_s03_10cf2dfe3b7a.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/ykhs7s2dck_q8-22/s03_10cf2dfe3b7a/metadata.json">metadata</a> · <a href="states/ykhs7s2dck_q8-22/s03_10cf2dfe3b7a/physical_state.npz">physical state</a> · <a href="states/ykhs7s2dck_q8-22/s03_10cf2dfe3b7a/C/scores.csv">C scores</a> · <a href="states/ykhs7s2dck_q8-22/s03_10cf2dfe3b7a/N/scores.csv">N scores</a> · <a href="states/ykhs7s2dck_q8-22/s03_10cf2dfe3b7a/C/attention.npz">C attention</a> · <a href="states/ykhs7s2dck_q8-22/s03_10cf2dfe3b7a/N/attention.npz">N attention</a> · <a href="states/ykhs7s2dck_q8-22/s03_10cf2dfe3b7a/C/surface_attribution.npz">C attribution</a> · <a href="states/ykhs7s2dck_q8-22/s03_10cf2dfe3b7a/N/surface_attribution.npz">N attribution</a> · <a href="states/ykhs7s2dck_q8-22/s03_10cf2dfe3b7a/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/ykhs7s2dck_q8-22/s03_10cf2dfe3b7a/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/ykhs7s2dck_q8-22/s03_10cf2dfe3b7a/C/query_checks.json">C query checks</a> · <a href="states/ykhs7s2dck_q8-22/s03_10cf2dfe3b7a/N/query_checks.json">N query checks</a></div>
+</article>
+<article class="state-record" id="ykhs7s2dck_q8-22-s04_67ac3fc3a518">
+  <div class="state-head"><strong>s04_67ac3fc3a518</strong>
+    <span>来源 [&#x27;C_NATIVE_PREFIX&#x27;]</span><span>t=15</span>
+    <span>cost=0.234118</span>
+    <span>history=[37,8,24,20,32,34,11,16,56,25,0,18,47,38,33]</span>
+  </div>
+  <a class="figure-link" href="panels/ykhs7s2dck_q8-22/group_C_s04_67ac3fc3a518.png"><img src="panels/ykhs7s2dck_q8-22/group_C_s04_67ac3fc3a518.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/ykhs7s2dck_q8-22/s04_67ac3fc3a518/metadata.json">metadata</a> · <a href="states/ykhs7s2dck_q8-22/s04_67ac3fc3a518/physical_state.npz">physical state</a> · <a href="states/ykhs7s2dck_q8-22/s04_67ac3fc3a518/C/scores.csv">C scores</a> · <a href="states/ykhs7s2dck_q8-22/s04_67ac3fc3a518/N/scores.csv">N scores</a> · <a href="states/ykhs7s2dck_q8-22/s04_67ac3fc3a518/C/attention.npz">C attention</a> · <a href="states/ykhs7s2dck_q8-22/s04_67ac3fc3a518/N/attention.npz">N attention</a> · <a href="states/ykhs7s2dck_q8-22/s04_67ac3fc3a518/C/surface_attribution.npz">C attribution</a> · <a href="states/ykhs7s2dck_q8-22/s04_67ac3fc3a518/N/surface_attribution.npz">N attribution</a> · <a href="states/ykhs7s2dck_q8-22/s04_67ac3fc3a518/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/ykhs7s2dck_q8-22/s04_67ac3fc3a518/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/ykhs7s2dck_q8-22/s04_67ac3fc3a518/C/query_checks.json">C query checks</a> · <a href="states/ykhs7s2dck_q8-22/s04_67ac3fc3a518/N/query_checks.json">N query checks</a></div>
+</article></div>
+    <div class="source-pane hidden" data-source-pane="N">
+<article class="state-record" id="ykhs7s2dck_q8-22-s00_d810eeab3792">
+  <div class="state-head"><strong>s00_d810eeab3792</strong>
+    <span>来源 [&#x27;C_NATIVE_PREFIX&#x27;, &#x27;N_NATIVE_PREFIX&#x27;]</span><span>t=0</span>
+    <span>cost=0.000000</span>
+    <span>history=[]</span>
+  </div>
+  <a class="figure-link" href="panels/ykhs7s2dck_q8-22/group_C_s00_d810eeab3792.png"><img src="panels/ykhs7s2dck_q8-22/group_C_s00_d810eeab3792.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/ykhs7s2dck_q8-22/s00_d810eeab3792/metadata.json">metadata</a> · <a href="states/ykhs7s2dck_q8-22/s00_d810eeab3792/physical_state.npz">physical state</a> · <a href="states/ykhs7s2dck_q8-22/s00_d810eeab3792/C/scores.csv">C scores</a> · <a href="states/ykhs7s2dck_q8-22/s00_d810eeab3792/N/scores.csv">N scores</a> · <a href="states/ykhs7s2dck_q8-22/s00_d810eeab3792/C/attention.npz">C attention</a> · <a href="states/ykhs7s2dck_q8-22/s00_d810eeab3792/N/attention.npz">N attention</a> · <a href="states/ykhs7s2dck_q8-22/s00_d810eeab3792/C/surface_attribution.npz">C attribution</a> · <a href="states/ykhs7s2dck_q8-22/s00_d810eeab3792/N/surface_attribution.npz">N attribution</a> · <a href="states/ykhs7s2dck_q8-22/s00_d810eeab3792/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/ykhs7s2dck_q8-22/s00_d810eeab3792/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/ykhs7s2dck_q8-22/s00_d810eeab3792/C/query_checks.json">C query checks</a> · <a href="states/ykhs7s2dck_q8-22/s00_d810eeab3792/N/query_checks.json">N query checks</a></div>
+</article>
+<article class="state-record" id="ykhs7s2dck_q8-22-s05_46a05e6938b9">
+  <div class="state-head"><strong>s05_46a05e6938b9</strong>
+    <span>来源 [&#x27;N_NATIVE_PREFIX&#x27;]</span><span>t=1</span>
+    <span>cost=0.015509</span>
+    <span>history=[63]</span>
+  </div>
+  <a class="figure-link" href="panels/ykhs7s2dck_q8-22/group_C_s05_46a05e6938b9.png"><img src="panels/ykhs7s2dck_q8-22/group_C_s05_46a05e6938b9.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/ykhs7s2dck_q8-22/s05_46a05e6938b9/metadata.json">metadata</a> · <a href="states/ykhs7s2dck_q8-22/s05_46a05e6938b9/physical_state.npz">physical state</a> · <a href="states/ykhs7s2dck_q8-22/s05_46a05e6938b9/C/scores.csv">C scores</a> · <a href="states/ykhs7s2dck_q8-22/s05_46a05e6938b9/N/scores.csv">N scores</a> · <a href="states/ykhs7s2dck_q8-22/s05_46a05e6938b9/C/attention.npz">C attention</a> · <a href="states/ykhs7s2dck_q8-22/s05_46a05e6938b9/N/attention.npz">N attention</a> · <a href="states/ykhs7s2dck_q8-22/s05_46a05e6938b9/C/surface_attribution.npz">C attribution</a> · <a href="states/ykhs7s2dck_q8-22/s05_46a05e6938b9/N/surface_attribution.npz">N attribution</a> · <a href="states/ykhs7s2dck_q8-22/s05_46a05e6938b9/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/ykhs7s2dck_q8-22/s05_46a05e6938b9/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/ykhs7s2dck_q8-22/s05_46a05e6938b9/C/query_checks.json">C query checks</a> · <a href="states/ykhs7s2dck_q8-22/s05_46a05e6938b9/N/query_checks.json">N query checks</a></div>
+</article>
+<article class="state-record" id="ykhs7s2dck_q8-22-s06_80d2a5b920b1">
+  <div class="state-head"><strong>s06_80d2a5b920b1</strong>
+    <span>来源 [&#x27;N_NATIVE_PREFIX&#x27;]</span><span>t=2</span>
+    <span>cost=0.031203</span>
+    <span>history=[63,59]</span>
+  </div>
+  <a class="figure-link" href="panels/ykhs7s2dck_q8-22/group_C_s06_80d2a5b920b1.png"><img src="panels/ykhs7s2dck_q8-22/group_C_s06_80d2a5b920b1.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/ykhs7s2dck_q8-22/s06_80d2a5b920b1/metadata.json">metadata</a> · <a href="states/ykhs7s2dck_q8-22/s06_80d2a5b920b1/physical_state.npz">physical state</a> · <a href="states/ykhs7s2dck_q8-22/s06_80d2a5b920b1/C/scores.csv">C scores</a> · <a href="states/ykhs7s2dck_q8-22/s06_80d2a5b920b1/N/scores.csv">N scores</a> · <a href="states/ykhs7s2dck_q8-22/s06_80d2a5b920b1/C/attention.npz">C attention</a> · <a href="states/ykhs7s2dck_q8-22/s06_80d2a5b920b1/N/attention.npz">N attention</a> · <a href="states/ykhs7s2dck_q8-22/s06_80d2a5b920b1/C/surface_attribution.npz">C attribution</a> · <a href="states/ykhs7s2dck_q8-22/s06_80d2a5b920b1/N/surface_attribution.npz">N attribution</a> · <a href="states/ykhs7s2dck_q8-22/s06_80d2a5b920b1/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/ykhs7s2dck_q8-22/s06_80d2a5b920b1/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/ykhs7s2dck_q8-22/s06_80d2a5b920b1/C/query_checks.json">C query checks</a> · <a href="states/ykhs7s2dck_q8-22/s06_80d2a5b920b1/N/query_checks.json">N query checks</a></div>
+</article>
+<article class="state-record" id="ykhs7s2dck_q8-22-s07_7f8ac9313a0c">
+  <div class="state-head"><strong>s07_7f8ac9313a0c</strong>
+    <span>来源 [&#x27;N_NATIVE_PREFIX&#x27;]</span><span>t=8</span>
+    <span>cost=0.124814</span>
+    <span>history=[63,59,5,3,31,56,11,57]</span>
+  </div>
+  <a class="figure-link" href="panels/ykhs7s2dck_q8-22/group_C_s07_7f8ac9313a0c.png"><img src="panels/ykhs7s2dck_q8-22/group_C_s07_7f8ac9313a0c.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/ykhs7s2dck_q8-22/s07_7f8ac9313a0c/metadata.json">metadata</a> · <a href="states/ykhs7s2dck_q8-22/s07_7f8ac9313a0c/physical_state.npz">physical state</a> · <a href="states/ykhs7s2dck_q8-22/s07_7f8ac9313a0c/C/scores.csv">C scores</a> · <a href="states/ykhs7s2dck_q8-22/s07_7f8ac9313a0c/N/scores.csv">N scores</a> · <a href="states/ykhs7s2dck_q8-22/s07_7f8ac9313a0c/C/attention.npz">C attention</a> · <a href="states/ykhs7s2dck_q8-22/s07_7f8ac9313a0c/N/attention.npz">N attention</a> · <a href="states/ykhs7s2dck_q8-22/s07_7f8ac9313a0c/C/surface_attribution.npz">C attribution</a> · <a href="states/ykhs7s2dck_q8-22/s07_7f8ac9313a0c/N/surface_attribution.npz">N attribution</a> · <a href="states/ykhs7s2dck_q8-22/s07_7f8ac9313a0c/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/ykhs7s2dck_q8-22/s07_7f8ac9313a0c/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/ykhs7s2dck_q8-22/s07_7f8ac9313a0c/C/query_checks.json">C query checks</a> · <a href="states/ykhs7s2dck_q8-22/s07_7f8ac9313a0c/N/query_checks.json">N query checks</a></div>
+</article>
+<article class="state-record" id="ykhs7s2dck_q8-22-s08_f5f976d316b5">
+  <div class="state-head"><strong>s08_f5f976d316b5</strong>
+    <span>来源 [&#x27;N_NATIVE_PREFIX&#x27;]</span><span>t=15</span>
+    <span>cost=0.233933</span>
+    <span>history=[63,59,5,3,31,56,11,57,23,15,21,58,30,39,53]</span>
+  </div>
+  <a class="figure-link" href="panels/ykhs7s2dck_q8-22/group_C_s08_f5f976d316b5.png"><img src="panels/ykhs7s2dck_q8-22/group_C_s08_f5f976d316b5.png" alt="C 与 N 在相同物理状态的评分对照"></a>
+  <div class="raw-links"><a href="states/ykhs7s2dck_q8-22/s08_f5f976d316b5/metadata.json">metadata</a> · <a href="states/ykhs7s2dck_q8-22/s08_f5f976d316b5/physical_state.npz">physical state</a> · <a href="states/ykhs7s2dck_q8-22/s08_f5f976d316b5/C/scores.csv">C scores</a> · <a href="states/ykhs7s2dck_q8-22/s08_f5f976d316b5/N/scores.csv">N scores</a> · <a href="states/ykhs7s2dck_q8-22/s08_f5f976d316b5/C/attention.npz">C attention</a> · <a href="states/ykhs7s2dck_q8-22/s08_f5f976d316b5/N/attention.npz">N attention</a> · <a href="states/ykhs7s2dck_q8-22/s08_f5f976d316b5/C/surface_attribution.npz">C attribution</a> · <a href="states/ykhs7s2dck_q8-22/s08_f5f976d316b5/N/surface_attribution.npz">N attribution</a> · <a href="states/ykhs7s2dck_q8-22/s08_f5f976d316b5/C/zero_prior_scores.npz">C zero-prior scores</a> · <a href="states/ykhs7s2dck_q8-22/s08_f5f976d316b5/C/zero_prior_sensitivity.json">zero-prior summary</a> · <a href="states/ykhs7s2dck_q8-22/s08_f5f976d316b5/C/query_checks.json">C query checks</a> · <a href="states/ykhs7s2dck_q8-22/s08_f5f976d316b5/N/query_checks.json">N query checks</a></div>
+</article></div>
+  </div>
 </section></main>
-<script>document.querySelectorAll('.layer-controls').forEach(c=>c.addEventListener('change',e=>{const s=c.nextElementSibling;s.querySelector('.'+e.target.dataset.layer).classList.toggle('hidden',!e.target.checked)}));</script>
+<script>
+const select=document.getElementById('case-selector');
+select.addEventListener('change',()=>document.querySelectorAll('[data-case-panel]').forEach(p=>p.classList.toggle('hidden',p.dataset.casePanel!==select.value)));
+document.querySelectorAll('.layer-controls').forEach(c=>c.addEventListener('change',e=>{const s=c.parentElement.querySelector('[data-stack]');s.querySelector('.'+e.target.dataset.layer).classList.toggle('hidden',!e.target.checked)}));
+document.querySelectorAll('[data-view-tab]').forEach(b=>b.addEventListener('click',()=>{const root=b.closest('[data-case-panel]');root.querySelectorAll('[data-view-tab]').forEach(x=>x.classList.toggle('active',x===b));root.querySelectorAll('[data-view-pane]').forEach(x=>x.classList.toggle('hidden',x.dataset.viewPane!==b.dataset.viewTab));}));
+document.querySelectorAll('[data-source-tab]').forEach(b=>b.addEventListener('click',()=>{const root=b.closest('[data-view-pane]');root.querySelectorAll('[data-source-tab]').forEach(x=>x.classList.toggle('active',x===b));root.querySelectorAll('[data-source-pane]').forEach(x=>x.classList.toggle('hidden',x.dataset.sourcePane!==b.dataset.sourceTab));}));
+</script>
 </body></html>

@@ -1,8 +1,30 @@
 {
   "action_count": 15,
+  "c_prior_sha256": "3fee29325b35cacf73bd3a4e0ad10167f8a1a4a540c7a7308088a201a41c363e",
   "current_prediction_mpa": 259.556396484375,
   "exact_cost": 0.23393559731838665,
   "physical_state_sha256": "b01e19df297755c072c56f0b62a255efa9590048c61c4014b59bec4985b11618",
+  "policy_input_sha256": {
+    "C": "d8ffc1def3a48b427a26e12fb1fce19cd395c144b6e70cefd39adfa5cc703d0c",
+    "N": "869926300ad1c2eff03188589505b427c0e7fdd0e9c9d67b75a869ee4448b5d4"
+  },
+  "prefix_cells_in_order": [
+    28,
+    31,
+    23,
+    0,
+    48,
+    55,
+    35,
+    30,
+    52,
+    27,
+    39,
+    19,
+    8,
+    32,
+    16
+  ],
   "prefix_lengths": [
     15
   ],
@@ -14,5 +36,30 @@
   ],
   "specimen_key": "cgtnjyggtm:q24-48",
   "state_id": "s04_b01e19df2977",
+  "state_origins": [
+    {
+      "label": "C_NATIVE_PREFIX",
+      "model": "C",
+      "prefix_cells_in_order": [
+        28,
+        31,
+        23,
+        0,
+        48,
+        55,
+        35,
+        30,
+        52,
+        27,
+        39,
+        19,
+        8,
+        32,
+        16
+      ],
+      "t": 15
+    }
+  ],
+  "t": 15,
   "terminal_view_only": false
 }

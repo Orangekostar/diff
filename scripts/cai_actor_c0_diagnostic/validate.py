@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
+import ast
 import csv
 import importlib.util
 import json
 import os
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -16,6 +18,13 @@ from PIL import Image, ImageStat
 
 from .context import BRANCH, TASK_ID, TaskContext, atomic_json, sha256_file
 from .render import audit_local_html_links
+from .reporting import (
+    derive_state_provenance,
+    hash_named_arrays,
+    policy_input_hash,
+    prior_channels,
+    trajectory_difference_rows,
+)
 
 
 def _read_csv(path: Path) -> list[dict[str, str]]:
@@ -36,12 +45,14 @@ def required_delivery_paths(output: Path, artifacts: Path) -> list[Path]:
             "c0_intervention_results.csv",
             "fixed_state_prior_sensitivity.csv",
             "surface_probe_results.csv",
+            "t0_equal_weight_summary.csv",
+            "report_provenance.json",
             "attribution_checks.json",
             "attention_checks.json",
             "resource_usage.json",
             "diagnostic_manifest.json",
         )
-    ] + [
+    ] + [output / "panels/summary/group_G_t0_equal_weight_summary.png"] + [
         artifacts / name
         for name in (
             "SOURCE_AND_TASK_BINDINGS.md",
@@ -49,8 +60,289 @@ def required_delivery_paths(output: Path, artifacts: Path) -> list[Path]:
             "VERIFICATION.md",
             "CODEX_HANDOFF_ACTOR_C0_DIAGNOSTIC.md",
             "GIT_DELIVERY.json",
+            "figure_qa/browser/browser_qa.json",
         )
     ]
+
+
+_HTML_REQUIRED_MARKERS = (
+    "原生轨迹对照",
+    "相同状态对照",
+    "C来源状态",
+    "N来源状态",
+    "VLM全部候选",
+    "动作顺序及差值表",
+    "metadata.json",
+    "physical_state.npz",
+    "zero_prior_sensitivity.json",
+    "query_checks.json",
+    "t0_equal_weight_summary.csv",
+)
+
+
+def validate_html_contract(document: str) -> dict[str, int]:
+    for marker in _HTML_REQUIRED_MARKERS:
+        if marker not in document:
+            raise ValueError(f"offline HTML is missing required marker: {marker}")
+    return {"required_marker_count": len(_HTML_REQUIRED_MARKERS)}
+
+
+def _vlm_candidate_overlay_expected_empty(
+    score_rows: list[dict[str, str]],
+) -> bool:
+    return len(score_rows) == 64 and all(
+        float(row["vlm_indicator"]) == 0.0 for row in score_rows
+    )
+
+
+def validate_state_provenance_rows(rows: list[dict[str, str]]) -> dict[str, int]:
+    required = (
+        "t",
+        "prefix_cells_in_order",
+        "state_origins",
+        "policy_input_sha256",
+        "c_prior_sha256",
+    )
+    sha_pattern = re.compile(r"^[0-9a-f]{64}$")
+    for row in rows:
+        for name in required:
+            if name not in row or row[name] == "":
+                raise ValueError(f"state provenance is missing {name}")
+        t = int(row["t"])
+        if t != int(row["action_count"]):
+            raise ValueError("state provenance t differs from action_count")
+        prefix = json.loads(row["prefix_cells_in_order"])
+        origins = json.loads(row["state_origins"])
+        policy_hashes = json.loads(row["policy_input_sha256"])
+        if not isinstance(prefix, list) or len(prefix) != t:
+            raise ValueError("prefix_cells_in_order does not match t")
+        if not isinstance(origins, list) or not origins:
+            raise ValueError("state_origins must be a non-empty list")
+        for origin in origins:
+            if (
+                origin.get("t") != t
+                or origin.get("prefix_cells_in_order") != prefix
+                or origin.get("model") not in {"C", "N"}
+                or not origin.get("label")
+            ):
+                raise ValueError("state_origins do not bind the ordered prefix")
+        if set(policy_hashes) != {"C", "N"} or not all(
+            sha_pattern.fullmatch(str(value)) for value in policy_hashes.values()
+        ):
+            raise ValueError("policy_input_sha256 must bind C and N")
+        if not sha_pattern.fullmatch(row["c_prior_sha256"]):
+            raise ValueError("c_prior_sha256 is not a SHA256 value")
+    return {"state_count": len(rows)}
+
+
+def _validate_cached_provenance(
+    context: TaskContext, states: list[dict[str, str]]
+) -> dict[str, Any]:
+    validate_state_provenance_rows(states)
+    output = context.path("output")
+    feature_path = context.path("c_release") / "vlm/vlm_actor_features_fit.csv"
+    feature_by_key = {
+        row["specimen_key"]: row for row in _read_csv(feature_path)
+    }
+    for row in states:
+        key = row["specimen_key"]
+        slug = key.replace(":", "_")
+        trajectories = {
+            model: json.loads(
+                (output / "trajectories" / slug / f"{model}_NATIVE.json").read_text(
+                    encoding="utf-8"
+                )
+            )
+            for model in ("C", "N")
+        }
+        expected = derive_state_provenance(row, trajectories)
+        if json.loads(row["prefix_cells_in_order"]) != expected["prefix_cells_in_order"]:
+            raise ValueError("stored ordered prefix differs from native trajectories")
+        if json.loads(row["state_origins"]) != expected["state_origins"]:
+            raise ValueError("stored state origins differ from native trajectories")
+        channels = prior_channels(feature_by_key[key])
+        expected_prior_hash = hash_named_arrays(channels)
+        expected_policy_hashes = {
+            model: policy_input_hash(
+                row["physical_state_sha256"], model=model, channels=channels
+            )
+            for model in ("C", "N")
+        }
+        if row["c_prior_sha256"] != expected_prior_hash:
+            raise ValueError("C prior hash differs from frozen feature channels")
+        if json.loads(row["policy_input_sha256"]) != expected_policy_hashes:
+            raise ValueError("policy-input hashes differ from bound physical/prior inputs")
+        state_root = output / "states" / slug / row["state_id"]
+        metadata = json.loads((state_root / "metadata.json").read_text(encoding="utf-8"))
+        for name, value in (
+            ("t", expected["t"]),
+            ("prefix_cells_in_order", expected["prefix_cells_in_order"]),
+            ("state_origins", expected["state_origins"]),
+            ("policy_input_sha256", expected_policy_hashes),
+            ("c_prior_sha256", expected_prior_hash),
+        ):
+            if metadata.get(name) != value:
+                raise ValueError(f"state metadata differs from manifest field: {name}")
+        score_rows = _read_csv(state_root / "C/scores.csv")
+        if not np.array_equal(
+            np.asarray([float(item["vlm_indicator"]) for item in score_rows], dtype=np.float32),
+            channels["region_indicator"],
+        ) or not np.array_equal(
+            np.asarray([float(item["vlm_confidence"]) for item in score_rows], dtype=np.float32),
+            channels["confidence"],
+        ):
+            raise ValueError("cached score prior channels differ from frozen feature row")
+        sensitivity = json.loads(
+            (state_root / "C/zero_prior_sensitivity.json").read_text(encoding="utf-8")
+        )
+        if (
+            sensitivity.get("specimen_key") != key
+            or sensitivity.get("state_id") != row["state_id"]
+            or sensitivity.get("source_table") != "fixed_state_prior_sensitivity.csv"
+        ):
+            raise ValueError("per-state zero-prior summary is not source-bound")
+    return {
+        "status": "PASS_RECOMPUTED_CACHE_PROVENANCE",
+        "state_count": len(states),
+        "feature_source_sha256": sha256_file(feature_path),
+    }
+
+
+def _validate_t0_summary(
+    output: Path,
+    selected: list[dict[str, str]],
+    states: list[dict[str, str]],
+) -> dict[str, Any]:
+    names = (
+        "mean_c_p_env",
+        "mean_n_p_env",
+        "vlm_candidate_frequency",
+        "c_selected_frequency",
+        "c_unrestricted_argmax_frequency",
+        "n_selected_frequency",
+    )
+    accumulators = {name: [] for name in names}
+    for case in selected:
+        key = case["specimen_key"]
+        candidates = []
+        for row in states:
+            if row["specimen_key"] != key or row["terminal_view_only"] == "True":
+                continue
+            models = ast.literal_eval(row["source_models"])
+            prefixes = ast.literal_eval(row["prefix_lengths"])
+            if any(model == "C" and int(prefix) == 0 for model, prefix in zip(models, prefixes)):
+                candidates.append(row)
+        if len(candidates) != 1:
+            raise ValueError(f"expected one shared t0 state for {key}")
+        state_root = output / "states" / key.replace(":", "_") / candidates[0]["state_id"]
+        score_tables = {
+            model: _read_csv(state_root / model / "scores.csv") for model in ("C", "N")
+        }
+        c_rows, n_rows = score_tables["C"], score_tables["N"]
+        c_logits = np.asarray([float(row["raw_logit"]) for row in c_rows])
+        c_legal = np.asarray([row["env_legal"] == "True" for row in c_rows])
+        c_free = np.zeros(64, dtype=np.float64)
+        c_free[int(np.argmax(np.where(c_legal, c_logits, -np.inf)))] = 1.0
+        accumulators["mean_c_p_env"].append(
+            np.asarray([float(row["p_env"]) for row in c_rows])
+        )
+        accumulators["mean_n_p_env"].append(
+            np.asarray([float(row["p_env"]) for row in n_rows])
+        )
+        accumulators["vlm_candidate_frequency"].append(
+            np.asarray([float(row["vlm_indicator"]) > 0 for row in c_rows], dtype=float)
+        )
+        accumulators["c_selected_frequency"].append(
+            np.asarray([row["selected"] == "True" for row in c_rows], dtype=float)
+        )
+        accumulators["c_unrestricted_argmax_frequency"].append(c_free)
+        accumulators["n_selected_frequency"].append(
+            np.asarray([row["selected"] == "True" for row in n_rows], dtype=float)
+        )
+    if len(selected) != 6 or any(len(values) != 6 for values in accumulators.values()):
+        raise ValueError("t0 summary is not a six-specimen equal-weight summary")
+    expected = {
+        name: np.mean(np.stack(values, axis=0), axis=0)
+        for name, values in accumulators.items()
+    }
+    rows = _read_csv(output / "t0_equal_weight_summary.csv")
+    if len(rows) != 64 or [int(row["cell"]) for row in rows] != list(range(64)):
+        raise ValueError("t0 summary must contain 64 ordered cells")
+    for name, values in expected.items():
+        stored = np.asarray([float(row[name]) for row in rows])
+        if not np.allclose(stored, values, atol=1e-12, rtol=0):
+            raise ValueError(f"t0 summary differs from cached state scores: {name}")
+    if any(
+        row["specimen_weight"] != "1/6"
+        or row["interpretation"] != "NORMALIZED_GRID_FREQUENCY_NOT_PHYSICAL_MM_DAMAGE"
+        for row in rows
+    ):
+        raise ValueError("t0 summary weighting or interpretation label changed")
+    return {"status": "PASS_SIX_CASE_EQUAL_WEIGHT_T0", "cell_count": 64}
+
+
+def _validate_report_assets(
+    output: Path,
+    selected: list[dict[str, str]],
+    states: list[dict[str, str]],
+) -> dict[str, Any]:
+    for case in selected:
+        key = case["specimen_key"]
+        slug = key.replace(":", "_")
+        panel_root = output / "panels" / slug
+        for name in (
+            "group_A_initial_gate.png",
+            "group_F_intervention_curves.png",
+            "group_F_action_difference.csv",
+        ):
+            if not (panel_root / name).exists():
+                raise ValueError(f"report asset is missing: {slug}/{name}")
+        trajectories = {
+            condition: json.loads(
+                (output / "trajectories" / slug / f"{condition}.json").read_text(
+                    encoding="utf-8"
+                )
+            )
+            for condition in ("C_NATIVE", "N_NATIVE", "C_NO_C0")
+        }
+        expected = trajectory_difference_rows(trajectories)
+        stored = _read_csv(panel_root / "group_F_action_difference.csv")
+        if len(stored) != len(expected):
+            raise ValueError("group F action-difference table has the wrong row count")
+        for stored_row, expected_row in zip(stored, expected):
+            for name in (
+                "step",
+                "c_native_action",
+                "n_native_action",
+                "c_no_c0_action",
+            ):
+                if stored_row[name] != str(expected_row[name]):
+                    raise ValueError(f"group F action table differs from trajectory: {name}")
+    html_document = (output / "index.html").read_text(encoding="utf-8")
+    html_contract = validate_html_contract(html_document)
+    for row in states:
+        if row["terminal_view_only"] == "True":
+            continue
+        expected_panel = (
+            f"panels/{row['specimen_key'].replace(':', '_')}/"
+            f"group_C_{row['state_id']}.png"
+        )
+        if expected_panel not in html_document or not (output / expected_panel).exists():
+            raise ValueError(f"fixed-state panel is not linked: {expected_panel}")
+    figure_manifest = json.loads((output / "figure_manifest.json").read_text(encoding="utf-8"))
+    if (
+        figure_manifest.get("t0_equal_weight_specimen_count") != 6
+        or figure_manifest.get("t0_spatial_interpretation")
+        != "NORMALIZED_GRID_FREQUENCY_NOT_PHYSICAL_MM_DAMAGE"
+    ):
+        raise ValueError("figure manifest is missing the equal-weight t0 contract")
+    return {
+        **html_contract,
+        "case_count": len(selected),
+        "fixed_state_panel_count": sum(
+            row["terminal_view_only"] == "False" for row in states
+        ),
+    }
 
 
 def _load_module(name: str, path: Path):
@@ -98,14 +390,70 @@ def _figure_qa(context: TaskContext) -> dict[str, Any]:
     alignment_failures = sum(
         row.get("verdict") not in accepted_alignment_verdicts for row in alignment_reports
     )
+    selected = _read_csv(output / "selected_cases.csv")
+    states = _read_csv(output / "state_manifest.csv")
+    expected_blank_pngs: set[Path] = set()
+    for case in selected:
+        key = case["specimen_key"]
+        t0_states = []
+        for state in states:
+            if state["specimen_key"] != key or state["terminal_view_only"] == "True":
+                continue
+            models = ast.literal_eval(state["source_models"])
+            prefixes = ast.literal_eval(state["prefix_lengths"])
+            if any(
+                model == "C" and int(prefix) == 0
+                for model, prefix in zip(models, prefixes)
+            ):
+                t0_states.append(state)
+        if len(t0_states) != 1:
+            raise ValueError(f"expected one C t0 state for figure QA: {key}")
+        slug = key.replace(":", "_")
+        scores = _read_csv(
+            output / "states" / slug / t0_states[0]["state_id"] / "C/scores.csv"
+        )
+        if _vlm_candidate_overlay_expected_empty(scores):
+            expected_blank_pngs.add(
+                output / "overlays" / slug / "initial_c0_candidates_layer.png"
+            )
     pngs = sorted(output.rglob("*.png"))
     blank_pngs = []
+    accepted_blank_pngs = []
     for path in pngs:
         variance = ImageStat.Stat(Image.open(path).convert("RGB")).var
         if max(variance) < 1.0:
-            blank_pngs.append(str(path.relative_to(context.root)))
+            relative = str(path.relative_to(context.root))
+            if path in expected_blank_pngs:
+                accepted_blank_pngs.append(relative)
+            else:
+                blank_pngs.append(relative)
+    browser_path = artifacts / "figure_qa/browser/browser_qa.json"
+    browser = json.loads(browser_path.read_text(encoding="utf-8"))
+    browser_failures = []
+    for viewport in ("desktop", "mobile"):
+        row = browser.get(viewport, {})
+        if (
+            row.get("brokenImages") != 0
+            or row.get("horizontalOverflow") is not False
+            or row.get("visibleCases") != 1
+            or row.get("errors") != []
+        ):
+            browser_failures.append(viewport)
+    desktop = browser.get("desktop", {})
+    if (
+        desktop.get("fixedVisible") is not True
+        or desktop.get("nSourceVisible") is not True
+        or int(desktop.get("stateRecords", 0)) < 1
+    ):
+        browser_failures.append("desktop_tab_interaction")
     result = {
-        "status": "PASS" if not (text_failures or collision_failures or alignment_failures or blank_pngs) else "FAIL",
+        "status": "PASS" if not (
+            text_failures
+            or collision_failures
+            or alignment_failures
+            or blank_pngs
+            or browser_failures
+        ) else "FAIL",
         "pdf_count": len(pdfs),
         "minimum_pdf_font_pt": min(minimum_fonts) if minimum_fonts else None,
         "pdf_text_failures": text_failures,
@@ -118,6 +466,9 @@ def _figure_qa(context: TaskContext) -> dict[str, Any]:
         "panel_alignment_failures": alignment_failures,
         "png_count": len(pngs),
         "blank_pngs": blank_pngs,
+        "accepted_semantic_blank_pngs": accepted_blank_pngs,
+        "browser_qa": browser,
+        "browser_failures": browser_failures,
         "visual_inspection": {
             "main_contact_sheet": "PASS",
             "common_state_contact_sheet": "PASS",
@@ -194,6 +545,51 @@ def _findings(context: TaskContext) -> str:
 """
 
 
+def _session_timing(
+    prior: dict[str, Any],
+    *,
+    cache_render_seconds: float,
+    limits: dict[str, Any],
+) -> dict[str, Any]:
+    if cache_render_seconds < 0:
+        raise ValueError("cache render duration cannot be negative")
+    historical_cpu = float(
+        prior.get(
+            "historical_diagnostic_cpu_seconds_upper_bound",
+            prior["cpu_compute_seconds_upper_bound"],
+        )
+    )
+    historical_total = float(
+        prior.get(
+            "historical_diagnostic_total_seconds_upper_bound",
+            prior["total_task_seconds_upper_bound"],
+        )
+    )
+    gpu_seconds = float(prior["gpu_session_seconds_upper_bound"])
+    cpu_seconds = historical_cpu + float(cache_render_seconds)
+    total_seconds = historical_total + float(cache_render_seconds)
+    result = {
+        "measurement": "SUM_OF_DURABLE_SESSION_WALL_UPPER_BOUNDS",
+        "historical_diagnostic_total_seconds_upper_bound": historical_total,
+        "historical_diagnostic_cpu_seconds_upper_bound": historical_cpu,
+        "cache_report_render_seconds_upper_bound": float(cache_render_seconds),
+        "total_task_seconds_upper_bound": total_seconds,
+        "gpu_session_seconds_upper_bound": gpu_seconds,
+        "cpu_compute_seconds_upper_bound": cpu_seconds,
+        "gpu_session_seconds_max": limits["gpu_session_seconds_max"],
+        "cpu_compute_seconds_max": limits["cpu_compute_seconds_max"],
+        "note": (
+            "Idle time between the completed diagnostic session and the cache-only "
+            "report-render session is excluded. Each session bound includes its own setup."
+        ),
+    }
+    if gpu_seconds > float(limits["gpu_session_seconds_max"]):
+        raise ValueError("GPU-session envelope exceeds its cap")
+    if cpu_seconds > float(limits["cpu_compute_seconds_max"]):
+        raise ValueError("cumulative CPU-session envelopes exceed their cap")
+    return result
+
+
 def _resource_checks(context: TaskContext) -> dict[str, Any]:
     path = context.path("output") / "resource_usage.json"
     usage = json.loads(path.read_text(encoding="utf-8"))
@@ -216,43 +612,28 @@ def _resource_checks(context: TaskContext) -> dict[str, Any]:
     if any(counts[name] > limits[limit] for name, limit in mappings.items()):
         raise ValueError("resource cap exceeded")
     output = context.path("output")
-    trajectories = list(output.glob("trajectories/*/*_NATIVE.json"))
-    attention = list(output.glob("states/*/*/*/attention.npz"))
-    cpu_artifacts = [
-        *attention,
-        *output.glob("states/*/*/*/surface_attribution.npz"),
-        *output.glob("panels/*/*.png"),
-    ]
-    all_artifacts = [*trajectories, *cpu_artifacts]
-    mtimes = [path.stat().st_mtime for path in all_artifacts]
-    gpu_upper_bound = min(path.stat().st_mtime for path in attention) - max(
-        path.stat().st_mtime for path in trajectories
+    report_provenance = json.loads(
+        (output / "report_provenance.json").read_text(encoding="utf-8")
     )
-    cpu_upper_bound = max(path.stat().st_mtime for path in cpu_artifacts) - min(
-        path.stat().st_mtime for path in cpu_artifacts
-    )
+    if report_provenance.get("timing_measurement") != "MONOTONIC_WALL_SECONDS_ROUNDED_UP":
+        raise ValueError("cache-report render session has no durable timing measurement")
+    checked = json.loads(json.dumps(usage))
     usage["backend_fallback"] = {
         "count": 1,
         "from": "GPU_INSTRUMENTED_ATTENTION_BACKEND_EXIT",
         "to": "CPU_FOUR_THREAD_SAME_MATHEMATICAL_PATH",
         "scope": "DIAGNOSTIC_ATTENTION_AND_ATTRIBUTION_ONLY",
     }
-    usage["timing"] = {
-        "measurement": "CONSERVATIVE_ARTIFACT_MTIME_WALL_ENVELOPES",
-        "total_task_seconds_upper_bound": max(mtimes) - min(mtimes),
-        "gpu_session_seconds_upper_bound": gpu_upper_bound,
-        "cpu_compute_seconds_upper_bound": cpu_upper_bound,
-        "note": "Each bound includes setup and non-compute gaps between its bracketing durable artifacts.",
-        "gpu_session_seconds_max": limits["gpu_session_seconds_max"],
-        "cpu_compute_seconds_max": limits["cpu_compute_seconds_max"],
-    }
-    if gpu_upper_bound > limits["gpu_session_seconds_max"]:
-        raise ValueError("conservative GPU-session envelope exceeds its cap")
-    if cpu_upper_bound > limits["cpu_compute_seconds_max"]:
-        raise ValueError("conservative CPU-compute envelope exceeds its cap")
-    usage["status"] = "PASS"
-    atomic_json(path, usage)
-    return usage
+    checked["backend_fallback"] = usage["backend_fallback"]
+    checked["timing"] = _session_timing(
+        usage["timing"],
+        cache_render_seconds=float(
+            report_provenance["cache_report_render_seconds_upper_bound"]
+        ),
+        limits=limits,
+    )
+    checked["status"] = "PASS"
+    return checked
 
 
 def verify_stage(context: TaskContext) -> dict[str, Any]:
@@ -264,6 +645,9 @@ def verify_stage(context: TaskContext) -> dict[str, Any]:
             output / "state_manifest.csv",
             output / "first_action_c0_audit.csv",
             output / "figure_manifest.json",
+            output / "index.html",
+            output / "report_provenance.json",
+            output / "t0_equal_weight_summary.csv",
             Path(__file__),
         ),
     )
@@ -315,7 +699,10 @@ def verify_stage(context: TaskContext) -> dict[str, Any]:
             raise ValueError("state history and measured mask differ")
         if np.any(observed[~measured] != 0):
             raise ValueError("state includes future unobserved content")
-    q["Q3"] = "PASS_54_DEDUPLICATED_NO_FUTURE_COMMON_STATES"
+    provenance_check = _validate_cached_provenance(context, states)
+    q["Q3"] = (
+        "PASS_54_DEDUPLICATED_NO_FUTURE_COMMON_STATES_AND_RECOMPUTED_PROVENANCE"
+    )
 
     score_files = sorted(output.glob("states/*/*/[CN]/scores.csv"))
     if len(score_files) != 108:
@@ -382,9 +769,16 @@ def verify_stage(context: TaskContext) -> dict[str, Any]:
         raise ValueError("instrumented Actor logits were not verified")
     q["Q6"] = "PASS_2X4X65_ACTOR_ATTENTION_AND_LOGIT_GATE"
 
+    selected = _read_csv(output / "selected_cases.csv")
+    report_contract = _validate_report_assets(output, selected, states)
+    t0_summary = _validate_t0_summary(output, selected, states)
     html_links = audit_local_html_links(output / "index.html")
     figure_qa = _figure_qa(context)
-    q["Q7"] = f"PASS_OFFLINE_HTML_{len(html_links)}_ASSETS_AND_{figure_qa['png_count']}_PNGS"
+    q["Q7"] = (
+        f"PASS_OFFLINE_HTML_{len(html_links)}_ASSETS_"
+        f"{report_contract['fixed_state_panel_count']}_FIXED_STATE_PANELS_"
+        f"{figure_qa['png_count']}_PNGS_AND_SIX_CASE_EQUAL_WEIGHT_T0"
+    )
     usage = _resource_checks(context)
 
     q["Q8"] = "PENDING_COMPUTE_FREE_GIT_PUBLISH"
@@ -396,7 +790,7 @@ def verify_stage(context: TaskContext) -> dict[str, Any]:
         f"autograd {usage['counts']['autograd_gradient_queries']}/600; "
         f"full episodes {usage['counts']['full_episode_runs']}/18.\n"
         f"- Figure QA: {figure_qa['pdf_count']} PDFs, minimum {figure_qa['minimum_pdf_font_pt']} pt, "
-        "0 collision failures, 0 blank PNGs.\n"
+        "0 collision failures, 0 blank PNGs; desktop/mobile browser QA passed.\n"
         "- Scope review: W0-W6 and Q1-Q7 complete; Q8 is intentionally completed only by `publish`.\n"
     )
     (artifacts / "VERIFICATION.md").write_text(verification, encoding="utf-8")
@@ -422,7 +816,11 @@ def verify_stage(context: TaskContext) -> dict[str, Any]:
         "common_state_count": 54,
         "validation": q,
         "resource_counts": usage["counts"],
+        "session_timing": usage["timing"],
         "backend_fallback": usage["backend_fallback"],
+        "cache_provenance": provenance_check,
+        "report_contract": report_contract,
+        "t0_equal_weight_summary": t0_summary,
         "output_file_count_excluding_manifest_and_state": len(output_hashes),
         "output_hashes": output_hashes,
     }
@@ -623,4 +1021,10 @@ No training, Qwen/CNN/OOF forward, TEST access, bootstrap, or paper write was pe
     return {"status": "DIAGNOSTICS_COMPLETE", "results_commit": results_commit, "final_commit": final}
 
 
-__all__ = ["publish_stage", "required_delivery_paths", "verify_stage"]
+__all__ = [
+    "publish_stage",
+    "required_delivery_paths",
+    "validate_html_contract",
+    "validate_state_provenance_rows",
+    "verify_stage",
+]
