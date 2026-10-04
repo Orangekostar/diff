@@ -1,0 +1,24 @@
+{
+  "branch": "research/cai-vlm-agent-v3-controlled-reuse",
+  "checks": {
+    "local_head_equal_remote_ref": true,
+    "local_head_equal_upstream": true,
+    "remote_sample_files_present": true
+  },
+  "content_commit": "738e79e7fd9f46bdb39f8c9b7d74d9efd0d06ba8",
+  "content_remote_ref": "refs/heads/research/cai-vlm-agent-v3-controlled-reuse",
+  "content_remote_sha": "738e79e7fd9f46bdb39f8c9b7d74d9efd0d06ba8",
+  "content_upstream_sha": "738e79e7fd9f46bdb39f8c9b7d74d9efd0d06ba8",
+  "final_commit_self_reference_required": false,
+  "note": "This receipt records the preceding content commit and is intentionally excluded from the release manifest.",
+  "release_manifest_sha256": "bac7cf943ec79729043fa6a509f31a68cadfe50477b20b34905bcf6b4745e7e3",
+  "remote": "origin",
+  "remote_sample_paths": [
+    "scripts/cai_order_mechanism/run.py",
+    "results/cai_agent_v3/order_mechanism/r1_37b3c404/acceptance_results.json",
+    "artifacts/cai_agent_v3/order_mechanism/r1_37b3c404/CODEX_HANDOFF_CAI_ORDER_MECHANISM.md"
+  ],
+  "schema_version": 1,
+  "status": "ORDER_MECHANISM_ANALYSIS_COMPLETE",
+  "task_id": "CAI_ORDER_MECHANISM_R1_37B3C404"
+}
