@@ -1,0 +1,214 @@
+{
+  "schema_version": 1,
+  "task_id": "CAI_ORDER_MECHANISM_R1_37B3C404",
+  "repository": "Orangekostar/diff",
+  "source_commit": "37b3c40414c00c6633b64656c4bbb2b178ef9848",
+  "branch": "research/cai-vlm-agent-v3-controlled-reuse",
+  "task_type": "FROZEN_TRAJECTORY_ANALYSIS_AND_FIXED_FINAL_SET_ORDER_INTERVENTION",
+  "phases": [
+    "prepare",
+    "derive",
+    "plan",
+    "infer",
+    "analyze",
+    "report",
+    "verify",
+    "publish"
+  ],
+  "roots": {
+    "code": "scripts/cai_order_mechanism",
+    "tests": "tests/test_cai_order_mechanism.py",
+    "scope": "docs/cai/order_mechanism/ORDER_MECHANISM_SCOPE.json",
+    "results": "results/cai_agent_v3/order_mechanism/r1_37b3c404",
+    "artifacts": "artifacts/cai_agent_v3/order_mechanism/r1_37b3c404"
+  },
+  "sources": {
+    "assembled_episodes": {
+      "path": "results/cai_agent_v3/c_render_retrain/r1_331f5295/w3/policy_validation_episodes.csv.gz",
+      "sha256": "f3dec372ca79571cd45498a8123db0a2bf154934421acd30687e6ab7b84d89a3"
+    },
+    "assembly_manifest": "results/cai_agent_v3/c_render_retrain/r1_331f5295/w3/assembly_manifest.json",
+    "old_episodes": {
+      "path": "results/cai_agent_v3/w3_pilot/r1_0e11452a/policy_validation_episodes.csv.gz",
+      "sha256": "2b2d596133cc269a0e7b7cc096eac13214d27b7eeacf8da6797753a52d9cef5f"
+    },
+    "main_job": "results/cai_agent_v3/w3_pilot/r1_0e11452a/jobs/NO_VLM_SPATIAL_FEEDBACK.json",
+    "main_selected_episodes": "results/cai_agent_v3/w3_pilot/r1_0e11452a/candidate_episodes/no_vlm_spatial_feedback_seed1/update_001000.csv.gz",
+    "feature_index": {
+      "path": "results/cai_agent_v3/new_protocol/feature_bank_index.csv",
+      "sha256": "4376a3e55af5a8fdca3ae4c4075744133badaf70c70af4999c81da5c59770890"
+    },
+    "feature_bindings": "artifacts/cai_agent_v3/w3_pilot/r1_0e11452a/INPUT_BINDINGS.json",
+    "bootstrap_weights": "results/cai_agent_v3/c_render_retrain/r1_331f5295/evidence/bootstrap_group_weights.npz",
+    "existing_stage_summary": "results/cai_agent_v3/c_render_retrain/r1_331f5295/evidence/timing_contributions.csv",
+    "existing_method_summary": "results/cai_agent_v3/c_render_retrain/r1_331f5295/evidence/method_summary.csv",
+    "full_reference_pointer": "results/cai_agent_v3/w3_pilot/r1_0e11452a/p_all_saved_reference.json",
+    "full_reference_predictions": "results/cai_agent_v3/c_render_retrain/r1_331f5295/evidence/full_scan_predictions.csv",
+    "runtime_hint": "results/cai_agent_v3/c_render_retrain/r1_331f5295/runtime_lock.json"
+  },
+  "frozen_models": {
+    "actor": {
+      "method": "NO_VLM_SPATIAL_FEEDBACK",
+      "path": "results/cai_agent_v3/w3_pilot/r1_0e11452a/models/actor_no_vlm_spatial_feedback_seed1.pt",
+      "sha256": "0dbf45392c8a06e40b86c7275c1ab46e29ef11352016d9feaf0f31db924a646d",
+      "selected_update": 1000,
+      "training_seed": 2026091302,
+      "forward_allowed": false
+    },
+    "predictor": {
+      "model": "MEAN_SC",
+      "path": "results/cai_agent_v3/w2_replay/r1_292b1c74/models/predictor_mean_sc.pt",
+      "sha256": "f67e912bd5faa26ae5cff8a9a0241439797fccef8cec825f43ebe5dc9f9d57ff",
+      "selected_update": 1750,
+      "forward_allowed": true
+    },
+    "selection": "LOCK_EXISTING_SELECTION_NO_RESELECTION"
+  },
+  "cohort": {
+    "split": "VALID",
+    "physical_n": 50,
+    "capture_groups": 48,
+    "domains": 6,
+    "per_domain_counts": {
+      "74t7kcdgkr": 9,
+      "cgtnjyggtm": 9,
+      "w68dtmpfyf": 8,
+      "xcmzfsbd9t": 9,
+      "yfxyg8jm46": 8,
+      "ykhs7s2dck": 7
+    },
+    "include_q8_22": true,
+    "test_inference_or_label_join": false,
+    "container_shard_read_only_then_immediate_VALID_slice": true
+  },
+  "archived_analysis": {
+    "methods": [
+      "CENTER_FIRST",
+      "GEOMETRY_SPREAD",
+      "SERPENTINE",
+      "RANDOM",
+      "LEARNED_STATIC_TRUE",
+      "NO_VLM_SPATIAL_FEEDBACK"
+    ],
+    "main_method": "NO_VLM_SPATIAL_FEEDBACK",
+    "expected_episode_rows": 500,
+    "repeat_counts": {
+      "CENTER_FIRST": 1,
+      "GEOMETRY_SPREAD": 1,
+      "SERPENTINE": 1,
+      "RANDOM": 5,
+      "LEARNED_STATIC_TRUE": 1,
+      "NO_VLM_SPATIAL_FEEDBACK": 1
+    },
+    "clock": "ARCHIVED_FLOAT64",
+    "new_model_forwards": 0
+  },
+  "intervention": {
+    "variants": [
+      "NATIVE_REPLAY",
+      "REVERSE",
+      "PERMUTED"
+    ],
+    "repeats": {
+      "NATIVE_REPLAY": 1,
+      "REVERSE": 1,
+      "PERMUTED": 5
+    },
+    "scenario_count": 350,
+    "new_reordered_scenarios": 300,
+    "plan_rule": "SHA256_SORT_OF_SORTED_FINAL_SET_NO_LABEL_INPUT",
+    "hash_namespace": "CAI_ORDER_MECHANISM_R1_37B3C404|PERMUTED_V1",
+    "clock": "INTEGER_CUMULATIVE_NATIVE_PIXELS_DIVIDED_BY_TOTAL",
+    "max_cells_per_sequence": 16,
+    "max_nominal_prefix_records": 5950,
+    "primary_contrast": "PERMUTED_WITHIN_SPECIMEN_MEAN_A_MINUS_NATIVE_REPLAY_A",
+    "secondary_contrast": "REVERSE_A_MINUS_NATIVE_REPLAY_A",
+    "all_original_prefixes_recomputed": true,
+    "use_new_common_engine_for_internal_contrast": true,
+    "no_actor_redecision": true,
+    "no_best_permutation_selection": true
+  },
+  "metrics": {
+    "horizon": 0.25,
+    "early_horizon": 0.0625,
+    "report_caps": [
+      0.0,
+      0.0625,
+      0.125,
+      0.1875,
+      0.25
+    ],
+    "stage_edges": [
+      0.0,
+      0.0625,
+      0.125,
+      0.1875,
+      0.25
+    ],
+    "stage_membership": "LEFT_OPEN_RIGHT_CLOSED",
+    "area_aggregation": "REPEAT_MEAN_THEN_WITHIN_DOMAIN_MEAN_THEN_SIX_DOMAIN_EQUAL",
+    "endpoint_aggregation": "REPEAT_LOSS_MEAN_THEN_PHYSICAL_SPECIMEN_MEAN",
+    "bootstrap_replicates": 5000,
+    "confidence": 0.95,
+    "bootstrap_unit": "CAPTURE_GROUP_WITHIN_DOMAIN_PAIRED",
+    "bootstrap_source": "REUSE_FROZEN_WEIGHTS_WITH_KEY_DOMAIN_GROUP_REINDEX_CHECK",
+    "bootstrap_missing_fallback": false,
+    "q_integer_min": 41,
+    "q_integer_max": 61,
+    "full_reference_anchor": 41.69001007080078,
+    "quality_grid": "SEPARATE_FIVE_CAP_AND_FULL_EVENT_UNION_PER_ANALYSIS_FAMILY",
+    "preserve_recrossings_unreached_negative_savings": true
+  },
+  "numerics": {
+    "feature_dtype": "float32",
+    "model_dtype": "float32",
+    "metric_dtype": "float64",
+    "archive_cost_match_atol": 1e-12,
+    "archive_prediction_match_atol_mpa": 0.0001,
+    "native_area_match_atol_mpa": 0.0001,
+    "endpoint_prediction_atol_mpa": 0.0001,
+    "event_identity_atol_mpa": 1e-08,
+    "relative_tolerance": 0.0,
+    "default_batch_size": 64,
+    "single_sample_fallback_once": true,
+    "amp": false,
+    "tf32": false
+  },
+  "resource_limits": {
+    "optimizer_updates": 0,
+    "actor_forwards": 0,
+    "qwen_forwards": 0,
+    "cnn_forwards": 0,
+    "oof_predictor_forwards": 0,
+    "autograd": 0,
+    "test_forwards": 0,
+    "predictor_evaluated_state_rows_including_padding_retries_qa": 7000,
+    "max_visible_gpus": 1,
+    "max_cpu_threads": 4,
+    "gpu_session_seconds": 1800,
+    "cpu_process_seconds_including_report": 5400,
+    "max_resume_attempts": 1,
+    "cache_only_report_renders": 2,
+    "research_checkpoint_files_to_upload": 0
+  },
+  "case_keys": [
+    "74t7kcdgkr:c8-16",
+    "cgtnjyggtm:q24-48",
+    "w68dtmpfyf:q16-29"
+  ],
+  "endpoint_uncached_qa": "ONE_HASH_SELECTED_CASE_PER_DOMAIN_NATIVE_AND_REVERSE_TERMINAL_12_ROWS",
+  "publication": {
+    "display_main_label": "Proposed / 本文方法",
+    "technical_complete": "ORDER_MECHANISM_ANALYSIS_COMPLETE",
+    "scientific_effect_is_not_completion_gate": true,
+    "handoff": "CODEX_HANDOFF_CAI_ORDER_MECHANISM.md",
+    "git_commit_and_push": true,
+    "verify_local_upstream_remote": true,
+    "no_pr_merge_force_push_tag": true,
+    "no_manuscript_rewrite_or_submission": true,
+    "local_verification_status": "LOCAL_VERIFIED_PENDING_PUSH",
+    "remote_receipt": "PUBLICATION_RECEIPT.json",
+    "publish_executor": "CODEX_GIT_STEP_AFTER_RESEARCH_CLI_VERIFY",
+    "self_referencing_final_commit_in_file_required": false
+  }
+}

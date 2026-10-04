@@ -1,0 +1,139 @@
+{
+  "checks": [
+    {
+      "check": "Q1_IDENTITY_AND_BINDINGS",
+      "detail": {
+        "archived_rows": 500,
+        "capture_groups": 48,
+        "domains": {
+          "74t7kcdgkr": 9,
+          "cgtnjyggtm": 9,
+          "w68dtmpfyf": 8,
+          "xcmzfsbd9t": 9,
+          "yfxyg8jm46": 8,
+          "ykhs7s2dck": 7
+        },
+        "physical_n": 50
+      },
+      "status": "PASS"
+    },
+    {
+      "check": "Q2_PERMUTATION_DESIGN",
+      "detail": {
+        "plan_sha256": "82a8c15fe1a31e3cff5f9614e2ec0752bb5e4bc4e2bd485cb69431618bd5e326",
+        "reordered": 300,
+        "scenarios": 350,
+        "variants": {
+          "NATIVE_REPLAY": 50,
+          "PERMUTED": 250,
+          "REVERSE": 50
+        }
+      },
+      "status": "PASS"
+    },
+    {
+      "check": "Q3_ARCHIVE_AND_INTEGER_CLOCKS",
+      "detail": {
+        "cap_membership_changes": 0,
+        "clock_rows": 250,
+        "max_native_cost_difference": 5.551115123125783e-17
+      },
+      "status": "PASS"
+    },
+    {
+      "check": "Q4_PREFIX_RECOMPUTATION",
+      "detail": {
+        "specimens_with_changed_native_reverse_prefix": 50,
+        "trajectory_rows": 350
+      },
+      "status": "PASS"
+    },
+    {
+      "check": "Q5_NATIVE_AND_ENDPOINT_REPRODUCTION",
+      "detail": {
+        "area_max_abs_mpa": 2.0893221442719323e-05,
+        "cost_max_abs": 5.551115123125783e-17,
+        "endpoint_rows": 350,
+        "native_state_rows": 842,
+        "prediction_max_abs_mpa": 6.103515625e-05,
+        "uncached_qa_rows": 12
+      },
+      "status": "PASS"
+    },
+    {
+      "check": "Q6_MATHEMATICAL_IDENTITIES",
+      "detail": {
+        "j_minus_a_and_endpoint_max_mpa": 2.842170943040401e-14,
+        "paired_stage_max_mpa": 4.263256414560601e-14,
+        "raw_identity_max_mpa": 0.0,
+        "weighted_identity_max_mpa": 3.019806626980426e-14
+      },
+      "status": "PASS"
+    },
+    {
+      "check": "Q7_STATISTICAL_ESTIMANDS",
+      "detail": {
+        "bootstrap_shape": [
+          5000,
+          50
+        ],
+        "capture_groups": 48,
+        "primary_area_mpa": 1.4861678730896202,
+        "primary_ci_mpa": [
+          -0.6579950357668122,
+          3.3841154922896397
+        ]
+      },
+      "status": "PASS"
+    },
+    {
+      "check": "Q8_MATCHED_QUALITY_EFFICIENCY",
+      "detail": {
+        "negative_savings": 9,
+        "recrossings": 53,
+        "rows": 308,
+        "statuses": {
+          "DEFINED": 180,
+          "ONE_OR_BOTH_NOT_REACHED": 86,
+          "ZERO_COMPARATOR_COST": 42
+        }
+      },
+      "status": "PASS"
+    },
+    {
+      "check": "Q9_RESOURCES_AND_REUSE",
+      "detail": {
+        "cache_hits": 742,
+        "evaluated_rows": 5164,
+        "forward_calls": 84,
+        "gpu_session_seconds": 15.760926357936114,
+        "nominal_prefix_requests": 5894,
+        "report_renders": 2,
+        "resume_attempts": 1,
+        "unique_cached_prefixes": 5152
+      },
+      "status": "PASS"
+    },
+    {
+      "check": "Q10_LOCAL_DELIVERY",
+      "detail": {
+        "browser_binary_available": false,
+        "case_figures": 3,
+        "contact_sheet": "results/cai_agent_v3/order_mechanism/r1_37b3c404/figure_qa/report_equivalent_contact_sheet.png",
+        "figure_families": 4,
+        "html_open_check": "EQUIVALENT_STATIC_RESOURCE_AND_BEHAVIOR_CHECK",
+        "pdf_collision_audits": 7
+      },
+      "status": "PASS"
+    }
+  ],
+  "failed": 0,
+  "passed": 10,
+  "publication_status": "PENDING_GIT_PUBLICATION",
+  "schema_version": 1,
+  "scientific_effect_is_not_completion_gate": true,
+  "source_commit": "37b3c40414c00c6633b64656c4bbb2b178ef9848",
+  "status": "LOCAL_VERIFIED_PENDING_PUSH",
+  "target_technical_complete": "ORDER_MECHANISM_ANALYSIS_COMPLETE",
+  "task_id": "CAI_ORDER_MECHANISM_R1_37B3C404"
+}

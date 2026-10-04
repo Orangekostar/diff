@@ -1,0 +1,323 @@
+{
+  "phases": {
+    "analyze": {
+      "outputs": [
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/order_specimen_metrics.csv",
+          "sha256": "cd44bfd58058a73012a685a8fccc5b4852f2f934a6566b8bcb1c32ae800d6026"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/order_summary.csv",
+          "sha256": "38767c2fb1a455627b4da055b35a7d00d9e0e479b813b6ffdd36a25202a607a8"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/order_paired_contrasts.csv",
+          "sha256": "98786ed1638ac3372ffa274257a43dc80497be1d2a17c6d648536a955570a26b"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/order_by_domain.csv",
+          "sha256": "4c10b4cea70bd748a6db7497bb5a5fd76506ce090d7bee293be5c7d19b59b7ef"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/same_cap_metrics.csv",
+          "sha256": "6ecceda117824a8a0485d6cba3d3e7db92b6e3489b8bf9298315e97bcdf3ec3d"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/cost_error_curves.csv.gz",
+          "sha256": "a324a5e1ab0df11515486df820161f93063758381dc2b8e9edc0c11df961ccd1"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/matched_quality.csv",
+          "sha256": "33012e6d178379dc98ed0fb9956ee76cd7cb3b95499ba7fad2bd85e18aa78576"
+        }
+      ],
+      "signature": "6b2c8b85847f1dc03ad2ef4302ca03caaa6fd04d28ab93125f10b4b77c44c7ab",
+      "status": "COMPLETE"
+    },
+    "derive": {
+      "outputs": [
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/archived_cohort_episodes.csv.gz",
+          "sha256": "7a62cc0097af2f911b82a87385b088abe9c353ec123dd776002822e7d17d131c"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/archived_events.csv.gz",
+          "sha256": "286939e502a3752993ed85bfc83bb87f8ff637da8df7030e44d6654727e249eb"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/stage_episode_metrics.csv",
+          "sha256": "1239556b70cd81feca7cc36aa00bdcfa7a37b1f6f2b2bfd6b719ef3690c99dfd"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/stage_specimen_metrics.csv",
+          "sha256": "db52c4e970f48ca7f4d407e39a56c412ae331ef0b13b557dfbf9cd441946ed3e"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/stage_summary.csv",
+          "sha256": "a60c21c75eccfd5fb689f7dc19bd6e197ac0adea5eded74a949bdedea0a91d14"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/stage_paired_contrasts.csv",
+          "sha256": "c5db79cb7b3be5e67479670ad91e8b07a2faa2b7980c398fdded9ceb44469d22"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/terminal_set_comparison.csv",
+          "sha256": "abff4c1adf12a5704829df667ec6a5fec87e9c43fad948da06c3f487cc4fb3d5"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/bootstrap_group_weights.npz",
+          "sha256": "18d505da0fa636c55d6c275a457eddc5dc4abb341177ecd06b03fd75b5d5fe02"
+        }
+      ],
+      "signature": "ab4fdd48f7b6f0a8bba10d44bb9ab3fb03b667090a572a3d29f355cbf8fed403",
+      "status": "COMPLETE"
+    },
+    "infer": {
+      "outputs": [
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/prefix_request_map.csv.gz",
+          "sha256": "0257cd4e6449961edfe3d2a89aee0c48275669d7a5e1f57cb4b9558b69a17f5e"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/predictor_cache.npz",
+          "sha256": "cb22add1b9974c281407a3521cbd06c47e550dae958dd8b7bd2c14a136ad8981"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/reorder_trajectories.csv.gz",
+          "sha256": "b85156a1067fb3e63a2dc6dd4986297a9db3de87f2bf8d64428975c54de7b237"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/native_reproduction.csv",
+          "sha256": "db41fa649824c36e8e9473c3b4a673a254838019b096cccc45c743921098230f"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/endpoint_invariance.csv",
+          "sha256": "031f9d18ab627d68e3a34e8bf4df8783e13a1feef7f038af57d6a98f9aa8cc6d"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/endpoint_uncached_checks.csv",
+          "sha256": "3b4fd3b30ad46586fdb831fcaddeb5fe84e989cf13feb930eea982c65691ed14"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/resource_events.jsonl",
+          "sha256": "64b288d993548d432924bca569cb57dbdab3815f76ea92599374e66a7a9e3df8"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/resource_usage.json",
+          "sha256": "cc77c37422b75f07733df66a150382d5bad5166fbd6c223e58a45f679fa4441a"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/runtime_lock.json",
+          "sha256": "5e8beb965c294596e50fd336eaaa1041d8026ff62c7ce964faeac3a7d7cd16c8"
+        }
+      ],
+      "signature": "1872c87345adbbd4cc0d900843896371bd95e7b22e145b6e96671b32404c3582",
+      "status": "COMPLETE"
+    },
+    "plan": {
+      "outputs": [
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/order_plan.json",
+          "sha256": "82a8c15fe1a31e3cff5f9614e2ec0752bb5e4bc4e2bd485cb69431618bd5e326"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/order_plan.sha256",
+          "sha256": "06b6608b329c506175a3a78ad3309ea0413c69168cce6e2176513c15f443b126"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/clock_boundary_audit.csv",
+          "sha256": "ca5037e6bfd5826987250dcc8c74d2bed6ef338c781f2327cf8145c5b9d540cf"
+        }
+      ],
+      "signature": "bfa9f9de6b224d48c7b1226dc7bdcde49298ccca8ff2a61226bcb4f149f91bdc",
+      "status": "COMPLETE"
+    },
+    "prepare": {
+      "outputs": [
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/ORDER_MECHANISM_SCOPE.json",
+          "sha256": "e469f5ce419687d495a44f0f4bbad26ac1e7fd33fabe77a71994d6f6ac6154db"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/input_bindings.json",
+          "sha256": "fa8f53d6968f073139c81b8a65e1ecb7e978f9c17997674bec1b29c2b1e1b9a4"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/MODEL_SELECTION_LOCK.json",
+          "sha256": "24f58fc4e9d932bdbc2199181b8d06a341b341a7124a3a209a384310d4f0d2ca"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/runtime_lock.json",
+          "sha256": "a8f7805832183e2d683dae5d67deb90d6aafece78192bf6811cf2b48d35c3c8f"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/cohort_manifest.csv",
+          "sha256": "9ad6b822dc7e3c8fffceb2190143b06c248793a506ce3476b6384124efecca84"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/quality_targets.csv",
+          "sha256": "6b8870c1bd82737e7e2cbf8837c5209799784740a7443b4ae56bce1f4692ae86"
+        }
+      ],
+      "signature": "76ab77e3af60979c091cc4e6d26fed1e04f19b496187bec4878d739328f9f499",
+      "status": "COMPLETE"
+    },
+    "report": {
+      "outputs": [
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/figure_qa/F1_archived_stage_contrasts.alignment.json",
+          "sha256": "bc7f9dfbcd290e31471945b787642241a55f1ff3aa9fa5ba09da26eae8bed513"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/figures/F1_archived_stage_contrasts.png",
+          "sha256": "92083aed08b5e05ced84972208dd25b9cb49625ca6bcd16f32f333406beb802c"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/figures/F1_archived_stage_contrasts.svg",
+          "sha256": "d6f0fc8ca8a70c40538a2228d897294fd29f606bc746755b4c9ba7d6981da183"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/figures/F1_archived_stage_contrasts.pdf",
+          "sha256": "aa44b99dc13e79a7375e6c499356980fe8a85e9c307e02bd5b604cfcaef9a906"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/figure_qa/F2_fixed_order_curves.alignment.json",
+          "sha256": "289c86b2b4b1b4831cb53e0b102fe4b1f56e5438b45ba6e607ced69cb58d46a2"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/figures/F2_fixed_order_curves.png",
+          "sha256": "2a29f023540324b9340d30ccf55c21cb4040ec5c2f0bbf32a8a593a7127b3235"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/figures/F2_fixed_order_curves.svg",
+          "sha256": "06823e6a672fb02e1baef8cecacd8198aa79dc78a400803cc75a7a43f5f8b7b2"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/figures/F2_fixed_order_curves.pdf",
+          "sha256": "4ea65d7115ddf5e89e5103e33483513308755992dc529692a351b602673054f1"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/figure_qa/F3_order_effects.alignment.json",
+          "sha256": "aca0b4209ec14196c8d6427f5039d9fa9f0422ca39d4cedfc7359c9100bd22f3"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/figures/F3_order_effects.png",
+          "sha256": "98c42e8ec2ddd3aac0129bb81eb8b991d55170e5021c68182a7f69479fb7d579"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/figures/F3_order_effects.svg",
+          "sha256": "b4612262f1886985ec4187c8bfbbcdef7d24b12e5c34947ba2bf06b95a1214fb"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/figures/F3_order_effects.pdf",
+          "sha256": "63c57abb8cb5d86a1e9c64014ba512f441dbbd65da5cc6d01c5836c8508dfa31"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/figure_qa/F4_matched_quality.alignment.json",
+          "sha256": "2266d4299874e188e493ea99b30401c879074010f02499d5cef5400c21057317"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/figures/F4_matched_quality.png",
+          "sha256": "7a0b1dfe0eab96e6e47430b7bde61d0dee4f6083192ee25ce9ef61e6fff3e32c"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/figures/F4_matched_quality.svg",
+          "sha256": "1ecdcb4553040030b9bc8a5181a89459dacc7e6c4ecdb3c5116b2d33f4703976"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/figures/F4_matched_quality.pdf",
+          "sha256": "91a13473ed8365cb7320a9d3d1a375ead8c87039576d899a0c61701f7e4ec946"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/figure_qa/74t7kcdgkr_c8-16.alignment.json",
+          "sha256": "e0b5c90db2c7f97e1fda453f97d48992dc3a4428094c0e282fddb93054b3f88e"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/cases/74t7kcdgkr_c8-16.png",
+          "sha256": "32118af3d15d00d0edda01dd99d1eb9d3c89cdf62f707d97493d6759d5bf2d4b"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/cases/74t7kcdgkr_c8-16.svg",
+          "sha256": "3e48b811c88d8eb034f261cb61a82aa6f9084b558b065cd02d99f37238154f82"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/cases/74t7kcdgkr_c8-16.pdf",
+          "sha256": "97a26d27593803e032db0f63fe9cb48b50ffc2a8bf07ed767ab05c29934c3f0f"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/figure_qa/cgtnjyggtm_q24-48.alignment.json",
+          "sha256": "e0b5c90db2c7f97e1fda453f97d48992dc3a4428094c0e282fddb93054b3f88e"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/cases/cgtnjyggtm_q24-48.png",
+          "sha256": "1faa7820e3a92a4150b4142d313f808a3a07ee4710c62d67bb606ba74888de3e"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/cases/cgtnjyggtm_q24-48.svg",
+          "sha256": "178f507d631f03e8d2864aeca564454c63c884f48c01a34051b4fb661341d75d"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/cases/cgtnjyggtm_q24-48.pdf",
+          "sha256": "7d4e94ed82ec1f06d760eb72ff98afbca86a2da05c6b06ed257d0e6565c8a19d"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/figure_qa/w68dtmpfyf_q16-29.alignment.json",
+          "sha256": "e0b5c90db2c7f97e1fda453f97d48992dc3a4428094c0e282fddb93054b3f88e"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/cases/w68dtmpfyf_q16-29.png",
+          "sha256": "6f67274969a12321e61271a76eb1f9b1cc010f8d73b5d3288210073f66f0486a"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/cases/w68dtmpfyf_q16-29.svg",
+          "sha256": "84f8706c60a79ec2813ed0427b7944fafae65e0f63ffa9914caf7116f375cf33"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/cases/w68dtmpfyf_q16-29.pdf",
+          "sha256": "5dc518630df431d30442c57851a2dc7f2db316c8fbf30e33534b6ffacbc05144"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/artifacts/cai_agent_v3/order_mechanism/r1_37b3c404/FINDINGS_ZH.md",
+          "sha256": "84f6daa5fc2997a7aac7c8336d5ac61f372e9bfd99fa4ddea2bb97a3eb30816b"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/artifacts/cai_agent_v3/order_mechanism/r1_37b3c404/METHODS_FACTS.md",
+          "sha256": "5c33478a7a47ef4a1df4ab2522a925e6c85e51ca9d46080eb893e8431faab0ce"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/artifacts/cai_agent_v3/order_mechanism/r1_37b3c404/FIGURE_CAPTIONS.md",
+          "sha256": "99d38167e342c3fbead74f29d28c6eb417f016ca3820f01008e8add1391b22b4"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/artifacts/cai_agent_v3/order_mechanism/r1_37b3c404/REPRODUCE.md",
+          "sha256": "2e8fb62fbd12a179105aa403d89c53695341ff59fe89590d7afb8110e064059f"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/artifacts/cai_agent_v3/order_mechanism/r1_37b3c404/CODEX_HANDOFF_CAI_ORDER_MECHANISM.md",
+          "sha256": "a01747528676189126eb588e112d2bec9d29204c9eebf4ba62774a3d5e3aa7fe"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/index.html",
+          "sha256": "767421f881741865e0a3cb1cf24778128a650b172f8c27f491c1233cb699765b"
+        }
+      ],
+      "signature": "cb098b4cf985a05c93cf8f8894b935d449fe1bd9aa1a59f3608072852ab087aa",
+      "status": "COMPLETE"
+    },
+    "verify": {
+      "outputs": [
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/acceptance_results.json",
+          "sha256": "6a88bca8780c680a3a8bb696cc44c5a98225e4f77647ccb266d2801f8b9baccd"
+        },
+        {
+          "path": "/home/ww/diff/.worktrees/cai-vlm-agent-v3-controlled-reuse/results/cai_agent_v3/order_mechanism/r1_37b3c404/release_manifest.json",
+          "sha256": "bac7cf943ec79729043fa6a509f31a68cadfe50477b20b34905bcf6b4745e7e3"
+        }
+      ],
+      "signature": "3685e8ae5cbdb45704d06f9e4c720717b200f8129f20bdecf6427e593f7e12b7",
+      "status": "COMPLETE"
+    }
+  },
+  "resume_attempts": 1
+}
