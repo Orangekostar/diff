@@ -1,0 +1,140 @@
+{
+  "task_id": "CAI_POSITIVE_REVIEW_R1",
+  "content_commit": "4d6889aa391f4e3b5eebfae69d2dd082f10a0ce1",
+  "remote": "origin",
+  "remote_ref": "refs/heads/paper/cai-positive-review-r1",
+  "content_remote_sha": "4d6889aa391f4e3b5eebfae69d2dd082f10a0ce1",
+  "content_verified": true,
+  "verified_at_utc": "2026-10-22T01:34:35.463037+00:00",
+  "verification_method": "Remote ref matched; fetch and byte comparison of all eight delivered documents plus handoff/code; original inputs absent from reachable history",
+  "upstream": "origin/paper/cai-positive-review-r1",
+  "verified_paths": [
+    "artifacts/cai_agent_v3/manuscript/r3_positive_review_r1/CODEX_HANDOFF_CAI_POSITIVE_REVIEW.md",
+    "scripts/cai_manuscript_revision/run.py",
+    "paper_cai_aei/r3_positive_review_r1/build/manuscript_bilingual.docx",
+    "paper_cai_aei/r3_positive_review_r1/build/manuscript_bilingual.pdf",
+    "paper_cai_aei/r3_positive_review_r1/build/manuscript_en.docx",
+    "paper_cai_aei/r3_positive_review_r1/build/manuscript_en.pdf",
+    "paper_cai_aei/r3_positive_review_r1/build/supplementary_bilingual.docx",
+    "paper_cai_aei/r3_positive_review_r1/build/supplementary_bilingual.pdf",
+    "paper_cai_aei/r3_positive_review_r1/build/supplementary_en.docx",
+    "paper_cai_aei/r3_positive_review_r1/build/supplementary_en.pdf"
+  ],
+  "verified_blobs": [
+    {
+      "path": "artifacts/cai_agent_v3/manuscript/r3_positive_review_r1/CODEX_HANDOFF_CAI_POSITIVE_REVIEW.md",
+      "git_blob": "e27d57c2840376aa3f4f6778afb88ff23941b131",
+      "bytes": 9967,
+      "sha256": "aaaebe40c16011a01f040cd700846c0c1aef4de5249dafa5684db41a12a9c28b"
+    },
+    {
+      "path": "scripts/cai_manuscript_revision/run.py",
+      "git_blob": "d59346d50203def7aa66028e933c0dac08ef4324",
+      "bytes": 1763,
+      "sha256": "559306c685faddaf719cce35257d871c78ec02420b9815687c9b0fcba677de25"
+    },
+    {
+      "path": "paper_cai_aei/r3_positive_review_r1/build/manuscript_bilingual.docx",
+      "git_blob": "cfa50c239df20f0657f8b1c5ecf88ee223927238",
+      "bytes": 2044073,
+      "sha256": "b846b6ad8ab100879ca9ef3adf713a5fbe885275fd397273d0caf0eec4696471"
+    },
+    {
+      "path": "paper_cai_aei/r3_positive_review_r1/build/manuscript_bilingual.pdf",
+      "git_blob": "909a8aef1f7795bd1451c902df59c5a768c62265",
+      "bytes": 1262419,
+      "sha256": "1b242ed9c85c5161b22fef73eaf5310488f3f3cf03ba45983eb509eec17ddca7"
+    },
+    {
+      "path": "paper_cai_aei/r3_positive_review_r1/build/manuscript_en.docx",
+      "git_blob": "f2fe569691abc1d36dd13ba36711f6c5528a08fa",
+      "bytes": 2018252,
+      "sha256": "bf0286751002b9a9aef51afe87ce2559e2803c5dc427d062e8a0e2b35a4c7bd4"
+    },
+    {
+      "path": "paper_cai_aei/r3_positive_review_r1/build/manuscript_en.pdf",
+      "git_blob": "1ce5281842830b9f7ae20d72132d009fc78b32a4",
+      "bytes": 1101152,
+      "sha256": "83274a024bbeff61a55bc9b6555de094fd5fb6312d58e5e8b71275bb95a0edee"
+    },
+    {
+      "path": "paper_cai_aei/r3_positive_review_r1/build/supplementary_bilingual.docx",
+      "git_blob": "849559cb0eac1f1a3a2fadc5895f71a0f2d17f6c",
+      "bytes": 411325,
+      "sha256": "a53d7ee68451196c9b9f514c579ac50d30edf37696e17da8a52aef3c8938ecd2"
+    },
+    {
+      "path": "paper_cai_aei/r3_positive_review_r1/build/supplementary_bilingual.pdf",
+      "git_blob": "5f6081aa2e74a8a5e6b34ce8792e7bb141712de3",
+      "bytes": 579855,
+      "sha256": "ac57f710ace7a5721c23b4730122d267c0f329a4378b1a739cc3dd9d88184bf4"
+    },
+    {
+      "path": "paper_cai_aei/r3_positive_review_r1/build/supplementary_en.docx",
+      "git_blob": "ae13ec8d4e918efcbca8cf2fc5fbe36b8457af93",
+      "bytes": 402586,
+      "sha256": "95df57078d8b2b159140dda95fa6740cf7da6a2d616f420df242aa477a5aaa0e"
+    },
+    {
+      "path": "paper_cai_aei/r3_positive_review_r1/build/supplementary_en.pdf",
+      "git_blob": "03e439e77b22beafe9762caf6314b95b21fb8ab3",
+      "bytes": 477690,
+      "sha256": "a8cadf1744077fe0ff68e78416731ddcbcae1515e6048aaf1872b87412bdf26d"
+    }
+  ],
+  "manifest_sha256": "b4528b93bfdda24ba2d2caf27481a651624e892bcaff84b7954f4e2d6ec81f86",
+  "artifact_status": "REVISION_COMPLETE",
+  "publication_status": "REMOTE_VERIFIED",
+  "scientific_scope": "selected_development_configuration_only",
+  "scientific_status": "SELECTED_DEVELOPMENT_CONFIGURATION_ONLY",
+  "qa": {
+    "Q01": "PASS",
+    "Q02": "PASS",
+    "Q03": "PASS",
+    "Q04": "PASS",
+    "Q05": "PASS_WITH_REVIEWED_WARNINGS",
+    "Q06": "PASS",
+    "Q07": "PASS",
+    "Q08": "PASS_REMOTE_VERIFIED"
+  },
+  "T10": "COMPLETE_CONTENT_REMOTE_VERIFIED",
+  "research_activity_counts": {
+    "optimizer_updates": 0,
+    "research_model_forwards": 0,
+    "new_bootstrap_draws": 0,
+    "new_seeds": 0,
+    "new_test_evaluation": 0,
+    "new_checkpoint_selection": 0
+  },
+  "note": "Records the layer/layup-label content commit; the subsequent receipt commit is verified after its push. Original inputs remain local. Genuine source links and frozen numeric evidence are preserved.",
+  "original_input_policy": {
+    "publication": "LOCAL_ONLY",
+    "private_files": [
+      "docs/cai/positive_review_r1/inputs/current_manuscript.docx",
+      "docs/cai/positive_review_r1/inputs/current_manuscript.pdf",
+      "docs/cai/positive_review_r1/original_media/media/rId26.png",
+      "docs/cai/positive_review_r1/original_media/media/rId30.png",
+      "docs/cai/positive_review_r1/original_media/media/rId47.png",
+      "docs/cai/positive_review_r1/original_media/media/rId51.png",
+      "docs/cai/positive_review_r1/original_media/media/rId56.png",
+      "docs/cai/positive_review_r1/original_media/media/rId62.png",
+      "docs/cai/positive_review_r1/original_media/media/rId65.png",
+      "docs/cai/positive_review_r1/original_extracted.md",
+      "docs/cai/positive_review_r1/original_tables.json"
+    ],
+    "git_tracking": "EXCLUDED",
+    "delivery_inventory": "EXCLUDED",
+    "remote_branch_history": "VERIFIED_ABSENT",
+    "local_originals_unchanged": true,
+    "history_rewrite_scope": "The earlier original-removal rewrite remains in effect; this label revision is a normal descendant commit.",
+    "github_cached_old_commits": "NOT_CONFIRMED_PURGED"
+  },
+  "label_revision": {
+    "status": "COMPLETE",
+    "display_names": "Layer count plus cross-ply/quasi-isotropic layup",
+    "documents": 8,
+    "visible_opaque_dataset_identifiers": 0,
+    "tables_with_row_and_numeric_integrity_verified": 20,
+    "research_computation": 0
+  }
+}
