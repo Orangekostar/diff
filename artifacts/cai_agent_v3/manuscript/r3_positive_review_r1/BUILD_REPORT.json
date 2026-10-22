@@ -1,0 +1,350 @@
+{
+  "status": "success",
+  "paper_root": "/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1",
+  "artifact_root": "/home/ww/diff/.worktrees/cai-positive-review-r1/artifacts/cai_agent_v3/manuscript/r3_positive_review_r1",
+  "build_root": "/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/build",
+  "languages": [
+    "en",
+    "bilingual"
+  ],
+  "resource_path": "/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1:/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/source:/home/ww/diff/.worktrees/cai-positive-review-r1",
+  "versions": {
+    "python": "3.13.13",
+    "pypandoc": "1.17",
+    "pandoc_path": "/home/ww/miniconda3/lib/python3.13/site-packages/pypandoc/files/pandoc",
+    "xelatex_path": "/home/ww/.local/texlive/2026/bin/x86_64-linux/xelatex",
+    "pandoc": "pandoc 3.9",
+    "xelatex": "XeTeX 3.141592653-2.6-0.999998 (TeX Live 2026)"
+  },
+  "commands": [
+    {
+      "purpose": "pandoc_version",
+      "command": [
+        "/home/ww/miniconda3/lib/python3.13/site-packages/pypandoc/files/pandoc",
+        "--version"
+      ],
+      "cwd": "/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1",
+      "log": "/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/build/01_pandoc_version.log",
+      "exit_code": 0,
+      "stdout": "pandoc 3.9\nFeatures: +server +lua\nScripting engine: Lua 5.4\nUser data directory: /home/ww/.local/share/pandoc\nCopyright (C) 2006-2025 John MacFarlane. Web:  https://pandoc.org\nThis is free software; see the source for copying conditions. There is no\nwarranty, not even for merchantability or fitness for a particular purpose.\n",
+      "stderr": ""
+    },
+    {
+      "purpose": "xelatex_version",
+      "command": [
+        "/home/ww/.local/texlive/2026/bin/x86_64-linux/xelatex",
+        "--version"
+      ],
+      "cwd": "/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1",
+      "log": "/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/build/02_xelatex_version.log",
+      "exit_code": 0,
+      "stdout": "XeTeX 3.141592653-2.6-0.999998 (TeX Live 2026)\nkpathsea version 6.4.2\nCopyright 2026 SIL International, Jonathan Kew and Khaled Hosny.\nThere is NO warranty.  Redistribution of this software is\ncovered by the terms of both the XeTeX copyright and\nthe Lesser GNU General Public License.\nFor more information about these matters, see the file\nnamed COPYING and the XeTeX source.\nPrimary author of XeTeX: Jonathan Kew.\nCompiled with ICU version 78.2; using 78.2\nCompiled with zlib version 1.3.2; using 1.3.2\nCompiled with FreeType2 version 2.14.1; using 2.14.1\nCompiled with Graphite2 version 1.3.14; using 1.3.14\nCompiled with HarfBuzz version 12.3.2; using 12.3.2\nCompiled with libpng version 1.6.55; using 1.6.55\nCompiled with pplib version v2.2\nCompiled with fontconfig version 2.13.1; using 2.15.0\n",
+      "stderr": ""
+    },
+    {
+      "purpose": "reference_docx",
+      "command": [
+        "/home/ww/miniconda3/lib/python3.13/site-packages/pypandoc/files/pandoc",
+        "--from=markdown-implicit_figures",
+        "--to=docx",
+        "/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/build/cai-doc-build-0cq88_94/reference.md",
+        "--output=/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/build/cai-doc-build-0cq88_94/reference.docx",
+        "--resource-path=/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1:/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/source:/home/ww/diff/.worktrees/cai-positive-review-r1"
+      ],
+      "cwd": "/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1",
+      "log": "/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/build/03_reference_docx.log",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "purpose": "manuscript_en_docx",
+      "command": [
+        "/home/ww/miniconda3/lib/python3.13/site-packages/pypandoc/files/pandoc",
+        "--from=markdown-implicit_figures",
+        "--to=docx",
+        "/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/build/cai-doc-build-0cq88_94/manuscript_en.md",
+        "--output=/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/build/manuscript_en.docx",
+        "--reference-doc=/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/build/cai-doc-build-0cq88_94/reference.docx",
+        "--resource-path=/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1:/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/source:/home/ww/diff/.worktrees/cai-positive-review-r1"
+      ],
+      "cwd": "/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1",
+      "log": "/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/build/04_manuscript_en_docx.log",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "purpose": "manuscript_en_pdf",
+      "command": [
+        "/home/ww/miniconda3/lib/python3.13/site-packages/pypandoc/files/pandoc",
+        "--from=markdown-implicit_figures",
+        "--to=pdf",
+        "/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/build/cai-doc-build-0cq88_94/manuscript_en_pdf.md",
+        "--output=/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/build/manuscript_en.pdf",
+        "--pdf-engine=/home/ww/.local/texlive/2026/bin/x86_64-linux/xelatex",
+        "--include-in-header=/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/build/cai-doc-build-0cq88_94/pdf_header.tex",
+        "--variable=papersize:a4",
+        "--variable=geometry:margin=20mm",
+        "--variable=fontsize:11pt",
+        "--variable=mainfont:Liberation Serif",
+        "--variable=sansfont:Liberation Sans",
+        "--variable=CJKmainfont:WenQuanYi Zen Hei",
+        "--variable=linestretch:1.12",
+        "--resource-path=/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1:/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/source:/home/ww/diff/.worktrees/cai-positive-review-r1"
+      ],
+      "cwd": "/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1",
+      "log": "/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/build/05_manuscript_en_pdf.log",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "purpose": "manuscript_bilingual_docx",
+      "command": [
+        "/home/ww/miniconda3/lib/python3.13/site-packages/pypandoc/files/pandoc",
+        "--from=markdown-implicit_figures",
+        "--to=docx",
+        "/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/build/cai-doc-build-0cq88_94/manuscript_bilingual.md",
+        "--output=/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/build/manuscript_bilingual.docx",
+        "--reference-doc=/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/build/cai-doc-build-0cq88_94/reference.docx",
+        "--resource-path=/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1:/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/source:/home/ww/diff/.worktrees/cai-positive-review-r1"
+      ],
+      "cwd": "/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1",
+      "log": "/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/build/06_manuscript_bilingual_docx.log",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "purpose": "manuscript_bilingual_pdf",
+      "command": [
+        "/home/ww/miniconda3/lib/python3.13/site-packages/pypandoc/files/pandoc",
+        "--from=markdown-implicit_figures",
+        "--to=pdf",
+        "/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/build/cai-doc-build-0cq88_94/manuscript_bilingual_pdf.md",
+        "--output=/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/build/manuscript_bilingual.pdf",
+        "--pdf-engine=/home/ww/.local/texlive/2026/bin/x86_64-linux/xelatex",
+        "--include-in-header=/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/build/cai-doc-build-0cq88_94/pdf_header.tex",
+        "--variable=papersize:a4",
+        "--variable=geometry:margin=20mm",
+        "--variable=fontsize:11pt",
+        "--variable=mainfont:Liberation Serif",
+        "--variable=sansfont:Liberation Sans",
+        "--variable=CJKmainfont:WenQuanYi Zen Hei",
+        "--variable=linestretch:1.12",
+        "--resource-path=/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1:/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/source:/home/ww/diff/.worktrees/cai-positive-review-r1"
+      ],
+      "cwd": "/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1",
+      "log": "/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/build/07_manuscript_bilingual_pdf.log",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "purpose": "supplementary_en_docx",
+      "command": [
+        "/home/ww/miniconda3/lib/python3.13/site-packages/pypandoc/files/pandoc",
+        "--from=markdown-implicit_figures",
+        "--to=docx",
+        "/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/build/cai-doc-build-0cq88_94/supplementary_en.md",
+        "--output=/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/build/supplementary_en.docx",
+        "--reference-doc=/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/build/cai-doc-build-0cq88_94/reference.docx",
+        "--resource-path=/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1:/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/source:/home/ww/diff/.worktrees/cai-positive-review-r1"
+      ],
+      "cwd": "/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1",
+      "log": "/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/build/08_supplementary_en_docx.log",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "purpose": "supplementary_en_pdf",
+      "command": [
+        "/home/ww/miniconda3/lib/python3.13/site-packages/pypandoc/files/pandoc",
+        "--from=markdown-implicit_figures",
+        "--to=pdf",
+        "/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/build/cai-doc-build-0cq88_94/supplementary_en_pdf.md",
+        "--output=/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/build/supplementary_en.pdf",
+        "--pdf-engine=/home/ww/.local/texlive/2026/bin/x86_64-linux/xelatex",
+        "--include-in-header=/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/build/cai-doc-build-0cq88_94/pdf_header.tex",
+        "--variable=papersize:a4",
+        "--variable=geometry:margin=20mm",
+        "--variable=fontsize:11pt",
+        "--variable=mainfont:Liberation Serif",
+        "--variable=sansfont:Liberation Sans",
+        "--variable=CJKmainfont:WenQuanYi Zen Hei",
+        "--variable=linestretch:1.12",
+        "--resource-path=/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1:/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/source:/home/ww/diff/.worktrees/cai-positive-review-r1"
+      ],
+      "cwd": "/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1",
+      "log": "/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/build/09_supplementary_en_pdf.log",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "purpose": "supplementary_bilingual_docx",
+      "command": [
+        "/home/ww/miniconda3/lib/python3.13/site-packages/pypandoc/files/pandoc",
+        "--from=markdown-implicit_figures",
+        "--to=docx",
+        "/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/build/cai-doc-build-0cq88_94/supplementary_bilingual.md",
+        "--output=/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/build/supplementary_bilingual.docx",
+        "--reference-doc=/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/build/cai-doc-build-0cq88_94/reference.docx",
+        "--resource-path=/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1:/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/source:/home/ww/diff/.worktrees/cai-positive-review-r1"
+      ],
+      "cwd": "/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1",
+      "log": "/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/build/10_supplementary_bilingual_docx.log",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "purpose": "supplementary_bilingual_pdf",
+      "command": [
+        "/home/ww/miniconda3/lib/python3.13/site-packages/pypandoc/files/pandoc",
+        "--from=markdown-implicit_figures",
+        "--to=pdf",
+        "/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/build/cai-doc-build-0cq88_94/supplementary_bilingual_pdf.md",
+        "--output=/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/build/supplementary_bilingual.pdf",
+        "--pdf-engine=/home/ww/.local/texlive/2026/bin/x86_64-linux/xelatex",
+        "--include-in-header=/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/build/cai-doc-build-0cq88_94/pdf_header.tex",
+        "--variable=papersize:a4",
+        "--variable=geometry:margin=20mm",
+        "--variable=fontsize:11pt",
+        "--variable=mainfont:Liberation Serif",
+        "--variable=sansfont:Liberation Sans",
+        "--variable=CJKmainfont:WenQuanYi Zen Hei",
+        "--variable=linestretch:1.12",
+        "--resource-path=/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1:/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/source:/home/ww/diff/.worktrees/cai-positive-review-r1"
+      ],
+      "cwd": "/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1",
+      "log": "/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/build/11_supplementary_bilingual_pdf.log",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "markdown": {
+    "manuscript_bilingual": "/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/build/manuscript_bilingual.md",
+    "supplementary_bilingual": "/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/build/supplementary_bilingual.md"
+  },
+  "outputs": {
+    "manuscript_en.docx": {
+      "path": "/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/build/manuscript_en.docx",
+      "kind": "docx",
+      "bytes": 2018105,
+      "omath_count": 93
+    },
+    "manuscript_en.pdf": {
+      "path": "/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/build/manuscript_en.pdf",
+      "kind": "pdf",
+      "bytes": 1100768,
+      "pdf_pages": 21
+    },
+    "manuscript_bilingual.docx": {
+      "path": "/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/build/manuscript_bilingual.docx",
+      "kind": "docx",
+      "bytes": 2043942,
+      "omath_count": 173
+    },
+    "manuscript_bilingual.pdf": {
+      "path": "/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/build/manuscript_bilingual.pdf",
+      "kind": "pdf",
+      "bytes": 1261888,
+      "pdf_pages": 30
+    },
+    "supplementary_en.docx": {
+      "path": "/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/build/supplementary_en.docx",
+      "kind": "docx",
+      "bytes": 368784,
+      "omath_count": 7
+    },
+    "supplementary_en.pdf": {
+      "path": "/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/build/supplementary_en.pdf",
+      "kind": "pdf",
+      "bytes": 444013,
+      "pdf_pages": 13
+    },
+    "supplementary_bilingual.docx": {
+      "path": "/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/build/supplementary_bilingual.docx",
+      "kind": "docx",
+      "bytes": 377509,
+      "omath_count": 12
+    },
+    "supplementary_bilingual.pdf": {
+      "path": "/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/build/supplementary_bilingual.pdf",
+      "kind": "pdf",
+      "bytes": 546484,
+      "pdf_pages": 15
+    }
+  },
+  "source_blocks": {
+    "manuscript_en": 173,
+    "manuscript_zh": 173,
+    "supplementary_en": 67,
+    "supplementary_zh": 67,
+    "manuscript_shared": [
+      "B027",
+      "B033",
+      "B035",
+      "B037",
+      "B041",
+      "B043",
+      "B044",
+      "B051",
+      "B056",
+      "B058",
+      "B062",
+      "B063",
+      "B068",
+      "B070",
+      "B086",
+      "B091",
+      "B097",
+      "B109",
+      "B113",
+      "B118",
+      "B121",
+      "B132",
+      "B140",
+      "B148",
+      "B162",
+      "B163",
+      "B164",
+      "B165",
+      "B166",
+      "B167",
+      "B168",
+      "B169",
+      "B170",
+      "B171",
+      "B172",
+      "B173",
+      "B174",
+      "B175",
+      "B176"
+    ],
+    "supplementary_shared": [
+      "S006",
+      "S011",
+      "S016",
+      "S019",
+      "S020",
+      "S025",
+      "S027",
+      "S030",
+      "S032",
+      "S037",
+      "S039",
+      "S045",
+      "S048",
+      "S051",
+      "S054",
+      "S057",
+      "S060",
+      "S063"
+    ]
+  }
+}

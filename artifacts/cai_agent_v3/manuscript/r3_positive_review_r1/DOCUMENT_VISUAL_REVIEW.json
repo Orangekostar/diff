@@ -1,0 +1,618 @@
+{
+  "documents": [
+    {
+      "file": "build/manuscript_bilingual.pdf",
+      "sha256": "1d277ac8a4e5ee6b445ef4a8c02df805d85ff30180e25da3c7db881cc91d43e7",
+      "pages": [
+        {
+          "page": 1,
+          "text_characters": 3233,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 2,
+          "text_characters": 3438,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 3,
+          "text_characters": 3171,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 4,
+          "text_characters": 2803,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 5,
+          "text_characters": 1839,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 6,
+          "text_characters": 2578,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 7,
+          "text_characters": 1757,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 8,
+          "text_characters": 2498,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 9,
+          "text_characters": 2836,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 10,
+          "text_characters": 2463,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 11,
+          "text_characters": 2267,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 12,
+          "text_characters": 2642,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 13,
+          "text_characters": 2318,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 14,
+          "text_characters": 2098,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 15,
+          "text_characters": 2950,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 16,
+          "text_characters": 3387,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 17,
+          "text_characters": 2611,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 18,
+          "text_characters": 2963,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 19,
+          "text_characters": 1966,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 20,
+          "text_characters": 2056,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 21,
+          "text_characters": 2489,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 22,
+          "text_characters": 2874,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 23,
+          "text_characters": 1775,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 24,
+          "text_characters": 2777,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 25,
+          "text_characters": 2260,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 26,
+          "text_characters": 979,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 27,
+          "text_characters": 2402,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 28,
+          "text_characters": 3500,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 29,
+          "text_characters": 3031,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 30,
+          "text_characters": 3114,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        }
+      ]
+    },
+    {
+      "file": "build/manuscript_en.pdf",
+      "sha256": "ba457be6e02b4cf1833ae874f0f1b3103450b9cac11d65f6f092508a175b67d4",
+      "pages": [
+        {
+          "page": 1,
+          "text_characters": 4154,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 2,
+          "text_characters": 3974,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 3,
+          "text_characters": 3085,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 4,
+          "text_characters": 2828,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 5,
+          "text_characters": 2677,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 6,
+          "text_characters": 3338,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 7,
+          "text_characters": 2489,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 8,
+          "text_characters": 2665,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 9,
+          "text_characters": 2895,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 10,
+          "text_characters": 3478,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 11,
+          "text_characters": 3432,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 12,
+          "text_characters": 2239,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 13,
+          "text_characters": 1567,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 14,
+          "text_characters": 2308,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 15,
+          "text_characters": 3314,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 16,
+          "text_characters": 2209,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 17,
+          "text_characters": 2875,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 18,
+          "text_characters": 2946,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 19,
+          "text_characters": 4147,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 20,
+          "text_characters": 3470,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 21,
+          "text_characters": 740,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        }
+      ]
+    },
+    {
+      "file": "build/supplementary_bilingual.pdf",
+      "sha256": "8a5fa9af7943ace11005899a659396eab2b91e12a58e512f3bad058a209c71cc",
+      "pages": [
+        {
+          "page": 1,
+          "text_characters": 2891,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 2,
+          "text_characters": 2946,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 3,
+          "text_characters": 2803,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 4,
+          "text_characters": 2386,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 5,
+          "text_characters": 2828,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 6,
+          "text_characters": 2093,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 7,
+          "text_characters": 2372,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 8,
+          "text_characters": 2348,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 9,
+          "text_characters": 1883,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 10,
+          "text_characters": 2182,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 11,
+          "text_characters": 2386,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 12,
+          "text_characters": 1272,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 13,
+          "text_characters": 1356,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 14,
+          "text_characters": 1359,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 15,
+          "text_characters": 2665,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        }
+      ]
+    },
+    {
+      "file": "build/supplementary_en.pdf",
+      "sha256": "61bb6a8dfd63da5ed8e48acc8afbe6bd4d1f004bde65fa53d08521b9e108c15b",
+      "pages": [
+        {
+          "page": 1,
+          "text_characters": 3152,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 2,
+          "text_characters": 2821,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 3,
+          "text_characters": 2898,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 4,
+          "text_characters": 2923,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 5,
+          "text_characters": 1896,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 6,
+          "text_characters": 2588,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 7,
+          "text_characters": 2641,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 8,
+          "text_characters": 1825,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 9,
+          "text_characters": 2846,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 10,
+          "text_characters": 1289,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 11,
+          "text_characters": 984,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 12,
+          "text_characters": 1847,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        },
+        {
+          "page": 13,
+          "text_characters": 642,
+          "outside_page_blocks": [],
+          "review_status": "PASS",
+          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+        }
+      ]
+    }
+  ],
+  "docx_structure": [
+    {
+      "file": "manuscript_bilingual.docx",
+      "zip_crc_status": "PASS",
+      "tables": 5,
+      "images": 6,
+      "equations": 173,
+      "display_equations": 13
+    },
+    {
+      "file": "manuscript_en.docx",
+      "zip_crc_status": "PASS",
+      "tables": 5,
+      "images": 6,
+      "equations": 93,
+      "display_equations": 13
+    },
+    {
+      "file": "supplementary_bilingual.docx",
+      "zip_crc_status": "PASS",
+      "tables": 10,
+      "images": 6,
+      "equations": 12,
+      "display_equations": 2
+    },
+    {
+      "file": "supplementary_en.docx",
+      "zip_crc_status": "PASS",
+      "tables": 10,
+      "images": 6,
+      "equations": 7,
+      "display_equations": 2
+    }
+  ],
+  "note": "Contact sheets are temporary QA renders, excluded from delivery inventory. Manual status is assigned only after actual inspection.",
+  "reviewer": "Primary agent; one AEI-oriented internal review, not an independent referee panel",
+  "review_method": "All 79 final PDF pages visually inspected in rendered contact sheets; only changed supplement sheets rechecked after caption-pagination repair."
+}

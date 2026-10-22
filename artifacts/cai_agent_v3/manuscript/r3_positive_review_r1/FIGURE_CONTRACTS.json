@@ -1,0 +1,80 @@
+{
+  "F1": {
+    "conclusion": "A fixed-weight observation loop connects regional requests to CAI estimates.",
+    "archetype": "schematic-led composite",
+    "panels": "surface context / policy / observation-state / assessment; training-only truth; illustrative update",
+    "backend": "Python/matplotlib",
+    "size_width_in": 7.2,
+    "minimum_rendered_text_pt_target": 8,
+    "formats": [
+      "svg",
+      "pdf",
+      "png"
+    ]
+  },
+  "F2": {
+    "conclusion": "Unknown input is represented explicitly in actor scoring and independently masked in prediction.",
+    "archetype": "schematic-led composite",
+    "panels": "observable representation / token context / feasibility / independent set readout",
+    "backend": "Python/matplotlib",
+    "size_width_in": 7.2,
+    "minimum_rendered_text_pt_target": 8,
+    "formats": [
+      "svg",
+      "pdf",
+      "png"
+    ]
+  },
+  "F3": {
+    "conclusion": "The policy reaches useful pooled prediction quality early, with local recrossings.",
+    "archetype": "quantitative grid",
+    "panels": "a: six-method full event curves; b: proposed local nonmonotonicity",
+    "backend": "Python/matplotlib",
+    "size_width_in": 7.2,
+    "minimum_rendered_text_pt_target": 8,
+    "formats": [
+      "svg",
+      "pdf",
+      "png"
+    ]
+  },
+  "F4": {
+    "conclusion": "First attainment depends on quality target and reporting resolution.",
+    "archetype": "quantitative grid",
+    "panels": "a: five caps; b: event union; all 41–61 targets and NR/zero retained",
+    "backend": "Python/matplotlib",
+    "size_width_in": 7.2,
+    "minimum_rendered_text_pt_target": 8,
+    "formats": [
+      "svg",
+      "pdf",
+      "png"
+    ]
+  },
+  "F5": {
+    "conclusion": "Early realized reductions support process gains, while primary order uncertainty remains.",
+    "archetype": "quantitative grid",
+    "panels": "a: raw early paired effects; b: weighted stage closure; c: fixed-set paths; d: primary/secondary order intervals",
+    "backend": "Python/matplotlib",
+    "size_width_in": 7.2,
+    "minimum_rendered_text_pt_target": 8,
+    "formats": [
+      "svg",
+      "pdf",
+      "png"
+    ]
+  },
+  "F6": {
+    "conclusion": "Real-image regional requests produce specimen-specific updates and retain a large residual case.",
+    "archetype": "image plate + quant",
+    "panels": "a/d: known surface; b/e: retrospective C-scan and selected ordinals; c/f: actual saved strength trajectories",
+    "backend": "Python/matplotlib",
+    "size_width_in": 7.2,
+    "minimum_rendered_text_pt_target": 8,
+    "formats": [
+      "svg",
+      "pdf",
+      "png"
+    ]
+  }
+}

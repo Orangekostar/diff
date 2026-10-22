@@ -1,0 +1,12 @@
+{
+  "task_id": "CAI_POSITIVE_REVIEW_R1",
+  "source_blob": "23a65f8d481797298b25bb228d1b2fd91181c65f",
+  "source_sha256": "98786ed1638ac3372ffa274257a43dc80497be1d2a17c6d648536a955570a26b",
+  "changed_contribution_rows": 8,
+  "unchanged_error_rows": 8,
+  "closure_residual_mpa": {
+    "PRIMARY_PERMUTED_MEAN_MINUS_NATIVE": 2.220446049250313e-16,
+    "SECONDARY_REVERSE_MINUS_NATIVE": 4.440892098500626e-16
+  },
+  "source_unchanged": true
+}

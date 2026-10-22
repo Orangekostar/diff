@@ -1,0 +1,58 @@
+[
+  {
+    "specimen_key": "74t7kcdgkr:c8-16",
+    "status": "RESOLVED",
+    "source_dataset_url": "https://data.mendeley.com/datasets/74t7kcdgkr/1",
+    "license": "CC BY 4.0",
+    "license_verified_utc": "2026-10-21",
+    "attribution": "Saki Hasebe, Ryo Higuchi, Tomohiro Yokozeki and Shin-ichi Takeda, Mendeley Data, version 1 (2022)",
+    "cscan": {
+      "source_path": "/home/ww/paper3/cmc_damage_inference/data/public/hasebe/processed/74t7kcdgkr/internal_cscan/c8-16.png",
+      "source_sha256": "234a50307f16631456e3cfcac69b111a854d67d954381ada8e29ccd2199e9100",
+      "output_path": "figure_data/assets/74t7kcdgkr_c8-16_cscan.png",
+      "native_size": [
+        352,
+        338
+      ],
+      "transform": "existing registered crop; no added rotation"
+    },
+    "surface": {
+      "source_path": "/home/ww/paper3/cmc_damage_inference/data/public/hasebe/raw/74t7kcdgkr/v1/impacted surface image/c8-16.png",
+      "source_sha256": "bf5971dfb981f6c3302d850db26b26785c575f3d51249a5e6625919bd101845a",
+      "output_path": "figure_data/assets/74t7kcdgkr_c8-16_surface.png",
+      "native_size": [
+        1500,
+        1500
+      ],
+      "transform": "clockwise90; maxedge1024"
+    }
+  },
+  {
+    "specimen_key": "cgtnjyggtm:q24-48",
+    "status": "RESOLVED",
+    "source_dataset_url": "https://data.mendeley.com/datasets/cgtnjyggtm/1",
+    "license": "CC BY 4.0",
+    "license_verified_utc": "2026-10-21",
+    "attribution": "Saki Hasebe, Ryo Higuchi, Tomohiro Yokozeki and Shin-ichi Takeda, Mendeley Data, version 1 (2022)",
+    "cscan": {
+      "source_path": "/home/ww/paper3/cmc_damage_inference/data/public/hasebe/processed/cgtnjyggtm/internal_cscan/q24-48.png",
+      "source_sha256": "891dc75c089b0bd4362492f6c84fe4ddb9ed484b9c4e00c92b69184e1d2b0037",
+      "output_path": "figure_data/assets/cgtnjyggtm_q24-48_cscan.png",
+      "native_size": [
+        675,
+        674
+      ],
+      "transform": "existing registered crop; no added rotation"
+    },
+    "surface": {
+      "source_path": "/home/ww/paper3/cmc_damage_inference/data/public/hasebe/raw/cgtnjyggtm/v1/impacted surface image/q24-48.png",
+      "source_sha256": "89090ab85a001ed26f3133af555ebe6f56fe894068bb0330eef57c45759673cb",
+      "output_path": "figure_data/assets/cgtnjyggtm_q24-48_surface.png",
+      "native_size": [
+        3357,
+        3357
+      ],
+      "transform": "clockwise90; maxedge1024"
+    }
+  }
+]

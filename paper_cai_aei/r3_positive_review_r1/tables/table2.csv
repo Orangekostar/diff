@@ -1,0 +1,8 @@
+Strategy / 策略,Selection input / 选点输入,Rule / 规则
+Center-first / 中心优先,Grid position / 网格位置,Center-distance order / 中心距离排序
+Geometry-spread / 几何分散,Position and observed locations / 位置与已测位置,Farthest-point expansion / 最远点扩展
+Serpentine / 蛇形,Grid position / 网格位置,Alternating row order / 逐行交替排序
+Random / 随机,Saved seeded permutations / 保存的种子排列,Five repeats over 64 cells / 全 64 格五条重复
+Learned-static / 学习固定排序,64 shared learned logits / 64 个共享学习分数,Shared position order / 共享位置排序
+Proposed / 本文方法,"Surface, observed internal content, mask, history, prediction and progress / 表面、已测内部、掩膜、历史、预测及进度",State-conditioned feasible argmax / 状态条件化可行最大值
+Full-input reference / 完整输入参照,All 64 internal cells / 全部 64 格内部输入,Common predictor at fraction 1.0 / 共同预测器，比例 1.0

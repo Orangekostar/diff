@@ -1,0 +1,15 @@
+purpose: pandoc_version
+command: /home/ww/miniconda3/lib/python3.13/site-packages/pypandoc/files/pandoc --version
+exit_code: 0
+
+[stdout]
+pandoc 3.9
+Features: +server +lua
+Scripting engine: Lua 5.4
+User data directory: /home/ww/.local/share/pandoc
+Copyright (C) 2006-2025 John MacFarlane. Web:  https://pandoc.org
+This is free software; see the source for copying conditions. There is no
+warranty, not even for merchantability or fitness for a particular purpose.
+
+
+[stderr]

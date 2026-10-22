@@ -1,0 +1,7 @@
+Strategy / 策略,"47 MPa, five caps / 47 MPa，五点","44 MPa, five caps / 44 MPa，五点","47 MPa, events / 47 MPa，事件"
+Proposed / 本文方法,6.25%,6.25%,3.1203%
+Center-first / 中心优先,NR,NR,NR
+Geometry-spread / 几何分散,12.5%,NR,9.3426%
+Serpentine / 蛇形,NR,NR,NR
+Random / 随机,25%,NR,24.9630%
+Learned-static / 学习固定排序,6.25%,NR,6.2407%

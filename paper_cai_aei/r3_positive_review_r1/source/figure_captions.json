@@ -1,0 +1,26 @@
+{
+  "F1": {
+    "en": "**Figure 1.** Assessment-driven sequential observation. With fixed model weights, a regional request reveals internal content, updates the observable state and produces a new CAI estimate. During learning, measured specimen strength evaluates process-average and terminal errors. This task cost updates the policy and value head while the image encoder and strength readouts remain frozen. Execution uses the observable state; strength labels are used for training and retrospective evaluation.",
+    "zh": "**图 1。** 评估驱动的序贯观测。在模型权重固定时，区域请求揭示内部内容、更新可观测状态并产生新的 CAI 估计。学习时，试样实测强度评价过程平均误差与终点误差，任务代价更新策略及价值头，图像编码器与强度读出保持冻结。执行使用可观测状态，强度标签用于训练及事后评价。"
+  },
+  "F2": {
+    "en": "**Figure 2.** Observable-state representation and regional scoring. The actor combines known surface features, measured internal content or a learned unknown descriptor, mask, position and ordinal. Sixty-four regional tokens and one global token are contextualized by a two-layer, four-head Transformer. The 64 scores are restricted by a mask of unmeasured cells affordable within the remaining native area. The independent set-based predictor supplies the current strength estimate. Area and measured-cell fractions remain distinct; the two constant-zero channels per input block are detailed in S2. Diagrammatic connections specify information flow, not new data.",
+    "zh": "**图 2。** 可观测状态表示与区域评分。策略结合已知表面特征、已测内部内容或学习到的未知描述符、掩膜、位置及序号。64 个区域 token 与 1 个全局 token 经两层四头 Transformer 上下文化，再按剩余原生面积可容纳的未测格掩膜限制 64 个评分。独立的集合式预测器提供当前强度估计，面积比例与已测格比例保持区分；每个输入块的两个恒零通道详见 S2。示意连线规定信息流，不表示新数据。"
+  },
+  "F3": {
+    "en": "**Figure 3.** Prediction quality throughout acquisition on 50 development-validation specimens. (a) Six-method full event curves. (b) A local view of proposed recrossings, with the 42 MPa target dashed. Step curves preserve all recorded observation-completion breakpoints; dots mark the five reporting caps. Cohort MAE pools physical specimens, with Random losses averaged within specimen over five saved orders. All methods share the predictor and surface inputs. The horizontal reference is full-input MAE at area fraction 1.0. Process $A$ in Table 3 uses equal source-group weighting.",
+    "zh": "**图 3。** 50 件开发验证试样在采集过程中的预测质量。(a) 六方法完整事件曲线；(b) 本文局部回升，虚线表示 42 MPa 目标。阶梯曲线保留全部观测完成断点，圆点表示五个报告上限。队列 MAE 按物理试样池化，随机损失先在试样内对五条保存次序平均。全部方法共享预测器及表面输入，水平参照为面积比例 1.0 下的完整输入 MAE。表 3 中的过程 $A$ 采用来源组等权聚合。"
+  },
+  "F4": {
+    "en": "**Figure 4.** Acquisition scale required for matched cohort prediction quality. (a) First supported cap on the five-point grid. (b) First supported cap on the event grid. Both panels retain all preset integer targets from 41 to 61 MPa. The NR band explicitly marks nonattainment; initially satisfied targets are shown at zero cost. Lines guide comparisons between evaluated targets. The full-input anchor is reported separately in the text.",
+    "zh": "**图 4。** 达到相同队列预测质量所需的采集规模。(a) 五点网格中的首次支持上限；(b) 事件网格中的首次支持上限。两图均保留全部预设 41--61 MPa 整数目标。NR 区带显式表示未达标，初始已满足的目标成本为零。连线用于辅助比较已评价目标，完整输入锚点在正文中另行报告。"
+  },
+  "F5": {
+    "en": "**Figure 5.** Evidence linking information arrival to earlier useful assessment. (a) Proposed-minus-control gains in unweighted net error decrease for completions in (0, 0.0625\\]. (b) Proposed-minus-geometry-spread weighted gains in stages 1--4. (c) Recomputed cohort-MAE trajectories for original, permutation-mean and reversed arrivals of each identical final selected set. (d) Primary permutation-mean-minus-original and secondary reverse-minus-original contrasts in process $A$. Positive values in (a,b) favor the proposed method; positive values in (d) favor original order. Error bars are paired 95% capture-group percentile intervals from 5,000 draws. Panels (a,b,d) use equal source-group weighting; (c) uses specimen-pooled MAE.",
+    "zh": "**图 5。** 信息到达与较早形成有用评估之间的证据。(a) (0, 0.0625\\] 完成事件的未加权净误差下降改善，方向为本文减对照；(b) 四阶段加权改善，方向为本文减几何分散；(c) 每件试样固定最终集合后，重算原序、置换均值及逆序的队列 MAE 轨迹；(d) 过程 $A$ 的主要置换均值减原序和辅助逆序减原序对比。(a,b) 正值有利于本文方法，(d) 正值有利于原序。误差条为 5,000 次捕获组抽样的配对 95% 百分位区间。(a,b,d) 采用来源组等权，(c) 采用试样池化 MAE。"
+  },
+  "F6": {
+    "en": "**Figure 6.** Real-image evidence and CAI trajectories for c8-16 (a–c) and q24-48 (d–f). Each row shows the registered surface view, retrospective full-image C-scan reference with observed cells and acquisition ordinals overlaid, and saved prediction updates. Unnumbered cells were unavailable to the policy; the displayed full C-scan was never an execution input. Ordinals follow the native row-major grid. The final prediction is carried to cap 0.25; the q24-48 final residual of 122.252 MPa is retained. Images: S. Hasebe, R. Higuchi, T. Yokozeki and S. Takeda, Mendeley Data v1 (2022), CC BY 4.0 [10,11]. Surface images follow the frozen clockwise-90° registration and display resize; no C-scan contrast or rotation is added.",
+    "zh": "**图 6。** c8-16（a–c）与 q24-48（d–f）的真实图像证据及 CAI 轨迹。每行依次为登记表面图、叠加已测格及获取序号的事后完整 C-scan 参照、已保存的预测更新。未编号格对策略不可用，图示完整 C-scan 从未作为执行输入。序号遵循原生行优先网格，最后预测延续至 0.25 上限，保留 q24-48 的 122.252 MPa 终点残差。图像来源：Hasebe 等，Mendeley Data v1（2022），CC BY 4.0 [10,11]。表面图遵循冻结的顺时针 90° 登记与显示缩放，C-scan 不额外调整对比度或旋转。"
+  }
+}

@@ -1,0 +1,5 @@
+# Original manuscript files and full extractions stay local.
+/inputs/
+/original_extracted.md
+/original_media/
+/original_tables.json

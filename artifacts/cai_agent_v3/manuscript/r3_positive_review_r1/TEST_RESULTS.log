@@ -1,0 +1,13 @@
+test_domain_equal_vs_specimen_pooling (__main__.RevisionChecks.test_domain_equal_vs_specimen_pooling) ... ok
+test_generated_numbers_and_links (__main__.RevisionChecks.test_generated_numbers_and_links) ... ok
+test_model_and_method_binding (__main__.RevisionChecks.test_model_and_method_binding) ... ok
+test_prefix_and_carry (__main__.RevisionChecks.test_prefix_and_carry) ... ok
+test_quality_first_crossing (__main__.RevisionChecks.test_quality_first_crossing) ... ok
+test_random_loss_before_pooling (__main__.RevisionChecks.test_random_loss_before_pooling) ... ok
+test_stage_area_identity (__main__.RevisionChecks.test_stage_area_identity) ... ok
+test_stage_sign_normalization (__main__.RevisionChecks.test_stage_sign_normalization) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.126s
+
+OK

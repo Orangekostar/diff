@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="518.4pt" height="338.4pt" viewBox="0 0 518.4 338.4" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-10-21T15:47:39.763663</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.11.1, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 338.4
+L 518.4 338.4
+L 518.4 0
+L 0 0
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 25.29792 108.125568
+L 149.71392 108.125568
+Q 155.685888 108.125568 155.685888 104.2272
+L 155.685888 29.50848
+Q 155.685888 25.610112 149.71392 25.610112
+L 25.29792 25.610112
+Q 19.325952 25.610112 19.325952 29.50848
+L 19.325952 104.2272
+Q 19.325952 108.125568 25.29792 108.125568
+z
+" clip-path="url(#p39ddb40e49)" style="fill: #edf3f7; stroke: #6b7c86; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 204.45696 108.125568
+L 328.87296 108.125568
+Q 334.844928 108.125568 334.844928 104.2272
+L 334.844928 29.50848
+Q 334.844928 25.610112 328.87296 25.610112
+L 204.45696 25.610112
+Q 198.484992 25.610112 198.484992 29.50848
+L 198.484992 104.2272
+Q 198.484992 108.125568 204.45696 108.125568
+z
+" clip-path="url(#p39ddb40e49)" style="fill: #edf3f7; stroke: #6b7c86; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 383.616 108.125568
+L 493.10208 108.125568
+Q 499.074048 108.125568 499.074048 104.2272
+L 499.074048 29.50848
+Q 499.074048 25.610112 493.10208 25.610112
+L 383.616 25.610112
+Q 377.644032 25.610112 377.644032 29.50848
+L 377.644032 104.2272
+Q 377.644032 108.125568 383.616 108.125568
+z
+" clip-path="url(#p39ddb40e49)" style="fill: #edf3f7; stroke: #6b7c86; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 159.17634 66.86784
+Q 177.084769 66.86784 193.875165 66.86784
+" clip-path="url(#p39ddb40e49)" style="fill: none; stroke: #465b66; stroke-linecap: round"/>
+    <path d="M 189.475165 64.66784
+L 193.875165 66.86784
+L 189.475165 69.06784
+z
+" clip-path="url(#p39ddb40e49)" style="fill: #465b66; stroke: #465b66; stroke-linecap: round"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 338.33538 66.86784
+Q 356.243809 66.86784 373.034205 66.86784
+" clip-path="url(#p39ddb40e49)" style="fill: none; stroke: #465b66; stroke-linecap: round"/>
+    <path d="M 368.634205 64.66784
+L 373.034205 66.86784
+L 368.634205 69.06784
+z
+" clip-path="url(#p39ddb40e49)" style="fill: #465b66; stroke: #465b66; stroke-linecap: round"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 383.616 218.579328
+L 493.10208 218.579328
+Q 499.074048 218.579328 499.074048 214.68096
+L 499.074048 146.45952
+Q 499.074048 142.561152 493.10208 142.561152
+L 383.616 142.561152
+Q 377.644032 142.561152 377.644032 146.45952
+L 377.644032 214.68096
+Q 377.644032 218.579328 383.616 218.579328
+z
+" clip-path="url(#p39ddb40e49)" style="fill: #edf3f7; stroke: #6b7c86; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 438.35904 112.726724
+Q 438.35904 125.345425 438.35904 136.846093
+" clip-path="url(#p39ddb40e49)" style="fill: none; stroke: #465b66; stroke-linecap: round"/>
+    <path d="M 440.55904 132.446093
+L 438.35904 136.846093
+L 436.15904 132.446093
+z
+" clip-path="url(#p39ddb40e49)" style="fill: #465b66; stroke: #465b66; stroke-linecap: round"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 25.29792 225.076608
+L 199.48032 225.076608
+Q 205.452288 225.076608 205.452288 221.17824
+L 205.452288 146.45952
+Q 205.452288 142.561152 199.48032 142.561152
+L 25.29792 142.561152
+Q 19.325952 142.561152 19.325952 146.45952
+L 19.325952 221.17824
+Q 19.325952 225.076608 25.29792 225.076608
+z
+" clip-path="url(#p39ddb40e49)" style="fill: #f5f5f5; stroke: #6b7c86; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 219.38688 309.541248
+L 418.45248 309.541248
+Q 424.424448 309.541248 424.424448 305.64288
+L 424.424448 250.416
+Q 424.424448 246.517632 418.45248 246.517632
+L 219.38688 246.517632
+Q 213.414912 246.517632 213.414912 250.416
+L 213.414912 305.64288
+Q 213.414912 309.541248 219.38688 309.541248
+z
+" clip-path="url(#p39ddb40e49)" style="fill: #fff3dd; stroke: #6b7c86; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_11">
+    <path d="M 204.617644 187.436125
+Q 206.945229 216.304642 209.182961 244.058742
+" clip-path="url(#p39ddb40e49)" style="fill: none; stroke: #465b66; stroke-linecap: round"/>
+    <path d="M 211.022233 239.496168
+L 209.182961 244.058742
+L 206.636466 239.84978
+z
+" clip-path="url(#p39ddb40e49)" style="fill: #465b66; stroke: #465b66; stroke-linecap: round"/>
+   </g>
+   <g id="patch_12">
+    <path d="M 210.649208 248.754403
+Q 216.897825 256.91232 222.466591 264.182654
+" clip-path="url(#p39ddb40e49)" style="fill: none; stroke: #465b66; stroke-linecap: round"/>
+    <path d="M 221.537585 259.351821
+L 222.466591 264.182654
+L 218.044521 262.027359
+z
+" clip-path="url(#p39ddb40e49)" style="fill: #465b66; stroke: #465b66; stroke-linecap: round"/>
+   </g>
+   <g id="patch_13">
+    <path d="M 264.17664 241.914791
+Q 264.17664 177.318536 264.17664 113.840316
+" clip-path="url(#p39ddb40e49)" style="fill: none; stroke: #465b66; stroke-linecap: round"/>
+    <path d="M 261.97664 118.240316
+L 264.17664 113.840316
+L 266.37664 118.240316
+z
+" clip-path="url(#p39ddb40e49)" style="fill: #465b66; stroke: #465b66; stroke-linecap: round"/>
+   </g>
+   <g id="text_1">
+    <text style="font-size: 9.5px; font-family: 'Liberation Sans', 'DejaVu Sans', sans-serif" transform="translate(24.49717 48.114246)">Known surface descriptors</text>
+    <text style="font-size: 9.5px; font-family: 'Liberation Sans', 'DejaVu Sans', sans-serif" transform="translate(31.668186 63.284559)">Internal: measured x or</text>
+    <text style="font-size: 9.5px; font-family: 'Liberation Sans', 'DejaVu Sans', sans-serif" transform="translate(41.922248 77.534559)">learned unknown u</text>
+    <text style="font-size: 9.5px; font-family: 'Liberation Sans', 'DejaVu Sans', sans-serif" transform="translate(30.866623 90.864246)">Mask / position / ordinal</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 9.5px; font-family: 'Liberation Sans', 'DejaVu Sans', sans-serif" transform="translate(222.590898 48.114246)">64 regional tokens</text>
+    <text style="font-size: 9.5px; font-family: 'Liberation Sans', 'DejaVu Sans', sans-serif" transform="translate(210.728515 62.364246)">102 inputs → width 128</text>
+    <text style="font-size: 9.5px; font-family: 'Liberation Sans', 'DejaVu Sans', sans-serif" transform="translate(221.545898 76.614246)">+ one global token</text>
+    <text style="font-size: 9.5px; font-family: 'Liberation Sans', 'DejaVu Sans', sans-serif" transform="translate(216.77289 90.864246)">6 inputs → width 128</text>
+   </g>
+   <g id="text_3">
+    <text style="font-size: 9.5px; font-family: 'Liberation Sans', 'DejaVu Sans', sans-serif" transform="translate(409.857556 49.034559)">Transformer</text>
+    <text style="font-size: 9.5px; font-family: 'Liberation Sans', 'DejaVu Sans', sans-serif" transform="translate(397.550602 62.364246)">2 layers, 4 heads</text>
+    <text style="font-size: 9.5px; font-family: 'Liberation Sans', 'DejaVu Sans', sans-serif" transform="translate(396.524157 77.534559)">Feed-forward 256</text>
+    <text style="font-size: 9.5px; font-family: 'Liberation Sans', 'DejaVu Sans', sans-serif" transform="translate(388.393493 91.784559)">65 contextual tokens</text>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 9.5px; font-family: 'Liberation Sans', 'DejaVu Sans', sans-serif" transform="translate(394.804509 168.941646)">64 regional scores</text>
+    <text style="font-size: 9.5px; font-family: 'Liberation Sans', 'DejaVu Sans', sans-serif" transform="translate(390.151735 184.111959)">+ feasible-cell mask</text>
+    <text style="font-size: 9.5px; font-family: 'Liberation Sans', 'DejaVu Sans', sans-serif" transform="translate(382.787009 197.295435)">Argmax → next request</text>
+   </g>
+   <g id="text_5">
+    <text style="font-size: 9.5px; font-family: 'Liberation Sans', 'DejaVu Sans', sans-serif" transform="translate(37.800761 165.065286)">Independent strength predictor</text>
+    <text style="font-size: 9.5px; font-family: 'Liberation Sans', 'DejaVu Sans', sans-serif" transform="translate(32.292987 179.315286)">Mask internal x before affine map</text>
+    <text style="font-size: 9.5px; font-family: 'Liberation Sans', 'DejaVu Sans', sans-serif" transform="translate(46.267636 194.485599)">Mean-all + mean-measured</text>
+    <text style="font-size: 9.5px; font-family: 'Liberation Sans', 'DejaVu Sans', sans-serif" transform="translate(39.96869 207.815286)">History excluded from readout</text>
+   </g>
+   <g id="text_6">
+    <text style="font-size: 9.5px; font-family: 'Liberation Sans', 'DejaVu Sans', sans-serif" transform="translate(235.817688 266.400846)">Global state: area / remaining area</text>
+    <text style="font-size: 9.5px; font-family: 'Liberation Sans', 'DejaVu Sans', sans-serif" transform="translate(233.608938 281.197838)">Current CAI / measured-cell fraction</text>
+    <text style="font-size: 9.5px; font-family: 'Liberation Sans', 'DejaVu Sans', sans-serif" transform="translate(253.304367 295.821159)">Area fraction ≠ cell fraction</text>
+   </g>
+   <g id="text_7">
+    <text style="font-size: 9.5px; font-family: 'Liberation Sans', 'DejaVu Sans', sans-serif" transform="translate(25.29792 260.973387)">Unknown ≠ observed zero.</text>
+    <text style="font-size: 9.5px; font-family: 'Liberation Sans', 'DejaVu Sans', sans-serif" transform="translate(25.29792 272.375985)">Two zero VLM channels per block.</text>
+    <text style="font-size: 9.5px; font-family: 'Liberation Sans', 'DejaVu Sans', sans-serif" transform="translate(25.29792 283.778582)">See S2 for the exact input layout.</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p39ddb40e49">
+   <rect x="10.368" y="6.768" width="497.664" height="324.864"/>
+  </clipPath>
+ </defs>
+</svg>

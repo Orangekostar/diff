@@ -1,0 +1,112 @@
+{
+  "workflow": [
+    "4 protocol",
+    "3 methods",
+    "5 results",
+    "1/2 context",
+    "6/abstract"
+  ],
+  "changes": [
+    {
+      "block_id": "B100",
+      "original_anchor": "The fixed-final-set intervention retains",
+      "action": "REVISE",
+      "reason": "T02: distinguish frozen repeated conditions from independent units"
+    },
+    {
+      "block_id": "B065",
+      "original_anchor": "The identities follow by substituting",
+      "action": "REVISE",
+      "reason": "T03: move detailed algebra to S2, retain all 13 numbered equations"
+    },
+    {
+      "block_id": "B046",
+      "original_anchor": "The readout depends on the available set",
+      "action": "REVISE",
+      "reason": "T03: distinguish set-based readout and history-conditioned actor"
+    },
+    {
+      "block_id": "B110",
+      "original_anchor": "The improvement extended to the acquisition trajectory.",
+      "action": "REVISE",
+      "reason": "T04: endpoint/early/process hierarchy and zero-crossing uncertainty"
+    },
+    {
+      "block_id": "B130",
+      "original_anchor": "The primary permutation-mean-minus-original contrast was",
+      "action": "REVISE",
+      "reason": "T06: primary uncertainty, secondary scope and no additive attribution"
+    },
+    {
+      "block_id": "B134",
+      "original_anchor": "### 5.3.3.",
+      "action": "REMOVE",
+      "reason": "T06: remove redundant closing subsection"
+    },
+    {
+      "block_id": "B135",
+      "original_anchor": "The objective, event analysis and fixed-set intervention describe",
+      "action": "REVISE",
+      "reason": "T06: one bounded closing sentence"
+    },
+    {
+      "block_id": "B138",
+      "action": "REVISE",
+      "reason": "T07: restrict 9/94 and causal scope"
+    },
+    {
+      "block_id": "B010",
+      "original_anchor": "The method makes three connected contributions.",
+      "action": "REVISE",
+      "reason": "T09: task/method/evidence contributions"
+    },
+    {
+      "block_id": "B018",
+      "original_anchor": "Active feature acquisition similarly learns",
+      "action": "REVISE",
+      "reason": "T09: keep sequential context in 2.2"
+    },
+    {
+      "block_id": "B019",
+      "original_anchor": "The acquisition controls distinguish spatial allocation",
+      "action": "REMOVE",
+      "reason": "T09: controls are specified in 4.2, remove duplicate from related work"
+    },
+    {
+      "block_id": "B020",
+      "original_anchor": "## 2.3.",
+      "action": "REVISE",
+      "reason": "T09: conceptual related-work scope"
+    },
+    {
+      "block_id": "B021",
+      "original_anchor": "The temporal asymmetry between modalities shapes",
+      "action": "REVISE",
+      "reason": "T09: restore cited active-feature context without new prior-art claims"
+    },
+    {
+      "block_id": "B022",
+      "original_anchor": "Attention-based contextualization allows",
+      "action": "REVISE",
+      "reason": "T09: move implementation detail out of related work"
+    },
+    {
+      "block_id": "B002",
+      "original_anchor": "Compression-after-impact (CAI) strength assessment can benefit",
+      "action": "REVISE",
+      "reason": "T10: 200–250 words, same-path early result and primary uncertainty"
+    },
+    {
+      "block_id": "B158",
+      "original_anchor": "On 50 development-validation specimens, the method reached",
+      "action": "REVISE",
+      "reason": "T10: two-paragraph conclusion with evidence boundaries"
+    }
+  ],
+  "abstract_word_count": 203,
+  "original_display_equations": 13,
+  "retained_display_equations": 13,
+  "table_count": 5,
+  "figure_count": 6,
+  "references": 15
+}

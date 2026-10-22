@@ -1,0 +1,12 @@
+task_id,requirement,evidence,status
+T00,Input/source binding,SOURCE_BINDINGS.json,COMPLETE
+T01,Model identity and zero-computation boundary,MODEL_IDENTITY_LOCK.json,COMPLETE
+T02,"Evidence, estimands and 8-row direction repair",DIRECTION_CORRECTION.json,COMPLETE
+T03,Protocol chapter 4,source/manuscript_en.md §4,COMPLETE
+T04,Method chapter 3 and 13 equations,source/manuscript_en.md §3; tables/equation_map.csv,COMPLETE
+T05,Results chapter 5 and boundaries,source/manuscript_en.md §5,COMPLETE
+T06,"Context, abstract and conclusions",source/manuscript_en.md §§1/2/6/Abstract,COMPLETE
+T07,Six figures and source data,FIGURE_SOURCE_MAP.csv; figures/F1–F6,COMPLETE
+T08,S1–S5 and eight document builds,BUILD_REPORT.json; source/supplementary_en.md,COMPLETE
+T09,Finite checks and one primary review,LOCAL_VALIDATION.json; REVIEW.md,COMPLETE
+T10,"Whitelisted content, handoff and actual publication",DELIVERY_MANIFEST.json; PUBLICATION_RECEIPT.json (written only after push),CONTENT_COMPLETE_REMOTE_RECEIPT_PENDING

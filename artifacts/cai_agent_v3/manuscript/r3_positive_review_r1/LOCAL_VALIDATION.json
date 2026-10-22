@@ -1,0 +1,63 @@
+{
+  "task_id": "CAI_POSITIVE_REVIEW_R1",
+  "tests": 8,
+  "test_exit_code": 0,
+  "test_scope": "test_revision.py only",
+  "build_status": "success",
+  "outputs": {
+    "manuscript_en.docx": {
+      "bytes": 2018105,
+      "omath_count": 93
+    },
+    "manuscript_en.pdf": {
+      "bytes": 1100768,
+      "pages": 21
+    },
+    "manuscript_bilingual.docx": {
+      "bytes": 2043942,
+      "omath_count": 173
+    },
+    "manuscript_bilingual.pdf": {
+      "bytes": 1261888,
+      "pages": 30
+    },
+    "supplementary_en.docx": {
+      "bytes": 368784,
+      "omath_count": 7
+    },
+    "supplementary_en.pdf": {
+      "bytes": 444013,
+      "pages": 13
+    },
+    "supplementary_bilingual.docx": {
+      "bytes": 377509,
+      "omath_count": 12
+    },
+    "supplementary_bilingual.pdf": {
+      "bytes": 546484,
+      "pages": 15
+    }
+  },
+  "frozen_sources_unchanged": true,
+  "reviewed_pdf_pages": 79,
+  "reviewed_figure_panels": 40,
+  "qa": {
+    "Q01": "PASS",
+    "Q02": "PASS",
+    "Q03": "PASS",
+    "Q04": "PASS",
+    "Q05": "PASS_WITH_REVIEWED_WARNINGS",
+    "Q06": "PASS",
+    "Q07": "PASS",
+    "Q08": "LOCAL_SCOPE_PASS; REMOTE_RECEIPT_PENDING"
+  },
+  "research_activity_counts": {
+    "optimizer_updates": 0,
+    "research_model_forwards": 0,
+    "new_bootstrap_draws": 0,
+    "new_seeds": 0,
+    "new_test_evaluation": 0,
+    "new_checkpoint_selection": 0
+  },
+  "publication_status": "LOCAL_VERIFIED_PENDING_PUSH"
+}
