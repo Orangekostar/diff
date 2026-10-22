@@ -1,0 +1,84 @@
+{
+  "task_id": "CAI_POSITIVE_REVIEW_R1",
+  "content_commit": "6fc08864e0445f4f2e72f32580a1b83db8cee2cc",
+  "remote": "origin",
+  "remote_ref": "refs/heads/paper/cai-positive-review-r1",
+  "content_remote_sha": "6fc08864e0445f4f2e72f32580a1b83db8cee2cc",
+  "content_verified": true,
+  "verified_at_utc": "2026-10-22T00:18:24.778927+00:00",
+  "verification_method": "git ls-remote matched corrected content commit; fetch and blob comparison; all original input paths and blobs absent from reachable branch history",
+  "upstream": "origin/paper/cai-positive-review-r1",
+  "verified_paths": [
+    "artifacts/cai_agent_v3/manuscript/r3_positive_review_r1/CODEX_HANDOFF_CAI_POSITIVE_REVIEW.md",
+    "paper_cai_aei/r3_positive_review_r1/build/manuscript_en.pdf",
+    "scripts/cai_manuscript_revision/run.py"
+  ],
+  "verified_blobs": [
+    {
+      "path": "artifacts/cai_agent_v3/manuscript/r3_positive_review_r1/CODEX_HANDOFF_CAI_POSITIVE_REVIEW.md",
+      "git_blob": "7faf7c0819879156412e89c97d87d8e7a60e89fd",
+      "bytes": 9490,
+      "sha256": "51bb98fe97eb5685bce43e6a961a0c069921d00be38453796e2e2962fb2780e3"
+    },
+    {
+      "path": "paper_cai_aei/r3_positive_review_r1/build/manuscript_en.pdf",
+      "git_blob": "3f7df4b370ef06cc4064cc39172be7f2d98ba31b",
+      "bytes": 1100768,
+      "sha256": "ba457be6e02b4cf1833ae874f0f1b3103450b9cac11d65f6f092508a175b67d4"
+    },
+    {
+      "path": "scripts/cai_manuscript_revision/run.py",
+      "git_blob": "d59346d50203def7aa66028e933c0dac08ef4324",
+      "bytes": 1763,
+      "sha256": "559306c685faddaf719cce35257d871c78ec02420b9815687c9b0fcba677de25"
+    }
+  ],
+  "manifest_sha256": "ec2a5cbcb03e340d7bb3a264b7a2923e9f012923c7de7ed7b8db564e1a53dad0",
+  "artifact_status": "REVISION_COMPLETE",
+  "publication_status": "REMOTE_VERIFIED",
+  "scientific_scope": "selected_development_configuration_only",
+  "scientific_status": "SELECTED_DEVELOPMENT_CONFIGURATION_ONLY",
+  "qa": {
+    "Q01": "PASS",
+    "Q02": "PASS",
+    "Q03": "PASS",
+    "Q04": "PASS",
+    "Q05": "PASS_WITH_REVIEWED_WARNINGS",
+    "Q06": "PASS",
+    "Q07": "PASS",
+    "Q08": "PASS_REMOTE_VERIFIED"
+  },
+  "T10": "COMPLETE_CONTENT_REMOTE_VERIFIED",
+  "research_activity_counts": {
+    "optimizer_updates": 0,
+    "research_model_forwards": 0,
+    "new_bootstrap_draws": 0,
+    "new_seeds": 0,
+    "new_test_evaluation": 0,
+    "new_checkpoint_selection": 0
+  },
+  "note": "Records the corrected content commit; original inputs and extractions remain local. The following receipt commit is verified after its push. GitHub cached old commits are outside this verification.",
+  "original_input_policy": {
+    "publication": "LOCAL_ONLY",
+    "private_files": [
+      "docs/cai/positive_review_r1/inputs/current_manuscript.docx",
+      "docs/cai/positive_review_r1/inputs/current_manuscript.pdf",
+      "docs/cai/positive_review_r1/original_media/media/rId26.png",
+      "docs/cai/positive_review_r1/original_media/media/rId30.png",
+      "docs/cai/positive_review_r1/original_media/media/rId47.png",
+      "docs/cai/positive_review_r1/original_media/media/rId51.png",
+      "docs/cai/positive_review_r1/original_media/media/rId56.png",
+      "docs/cai/positive_review_r1/original_media/media/rId62.png",
+      "docs/cai/positive_review_r1/original_media/media/rId65.png",
+      "docs/cai/positive_review_r1/original_extracted.md",
+      "docs/cai/positive_review_r1/original_tables.json"
+    ],
+    "git_tracking": "EXCLUDED",
+    "delivery_inventory": "EXCLUDED",
+    "remote_branch_history": "VERIFIED_ABSENT",
+    "local_originals_unchanged": true,
+    "delivered_documents_unchanged": true,
+    "history_rewrite_scope": "Only the two task commits were replaced; the evidence base and other branches were preserved",
+    "github_cached_old_commits": "NOT_CONFIRMED_PURGED"
+  }
+}
