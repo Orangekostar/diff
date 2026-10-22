@@ -12,66 +12,66 @@
 
 <!-- block: S004 -->
 
-六份配对图像集合及强度标签对应主文既有参考文献 [1,2,9–15]。试样记录绑定来源编号、试样编号、登记图像对及 CAI 标签。捕获组在划分前按共享来源或裁切身份建立，并在划分内保持完整。总计 276 件物理试样，训练、开发验证及预留分区分别为 161/50/65 件，对应 152/48/59 个捕获组。预留分区未评价。同一 50 件开发试样用于选模及效果估计，所有区间均条件于该选择。
+六份配对图像集合及强度标签对应主文既有参考文献 [1,2,9–15]。试样记录绑定层合板配置、试样编号、登记图像对及 CAI 标签。捕获组在划分前按共享来源或裁切身份建立，并在划分内保持完整。总计 276 件物理试样，训练、开发验证及预留分区分别为 161/50/65 件，对应 152/48/59 个捕获组。预留分区未评价。同一 50 件开发试样用于选模及效果估计，所有区间均条件于该选择。
 
 <!-- block: S005 -->
 
-**表 S1。** 完整 50 件评价试样。编号带来源前缀；原生尺寸及面积计量见 cohort_manifest.csv。全部 276 条划分元数据见 S1_all_partition_metadata.csv。读取划分标签不构成预留分区评价。
+**表 S1。** 完整 50 件评价试样。试样以层数、铺层及试样编号标识；原生尺寸及面积计量见 cohort_manifest.csv。全部 276 条划分元数据见 S1_all_partition_metadata.csv。读取划分标签不构成预留分区评价。
 
 <!-- block: S006 -->
 
 | Specimen | Capture group | CAI (MPa) |
 | --- | --- | --- |
-| 74t7kcdgkr:c8-12 | cg_306e4a499acc46c1 | 197.97145080566406 |
-| 74t7kcdgkr:c8-13 | cg_f6941b7d17a6b65f | 266.5553894042969 |
-| 74t7kcdgkr:c8-16 | cg_f6941b7d17a6b65f | 264.1634521484375 |
-| 74t7kcdgkr:c8-2 | cg_8ffe4fd6a878d7f3 | 163.86158752441406 |
-| 74t7kcdgkr:c8-21 | cg_49d6f1237b716b24 | 263.10400390625 |
-| 74t7kcdgkr:c8-28 | cg_a983245f10699099 | 282.8260803222656 |
-| 74t7kcdgkr:c8-3 | cg_8ffe4fd6a878d7f3 | 213.09927368164062 |
-| 74t7kcdgkr:c8-39 | cg_ff43edde8af2ccdb | 168.51828002929688 |
-| 74t7kcdgkr:c8-43 | cg_a37dc8a00cc334eb | 199.83413696289062 |
-| cgtnjyggtm:q24-11 | cg_02fd3fc8caefe377 | 300.3553771972656 |
-| cgtnjyggtm:q24-22 | cg_54890e18ff2b2669 | 415.8692932128906 |
-| cgtnjyggtm:q24-24 | cg_39bf4ddc679c9a42 | 428.6219482421875 |
-| cgtnjyggtm:q24-30 | cg_d3f7feef05d5a66a | 283.3366394042969 |
-| cgtnjyggtm:q24-44 | cg_9ba3cd5fb00ea91f | 109.75041198730469 |
-| cgtnjyggtm:q24-47 | cg_523711040788bde2 | 119.86738586425781 |
-| cgtnjyggtm:q24-48 | cg_5549ad4618fa66a9 | 136.6800079345703 |
-| cgtnjyggtm:q24-6 | cg_344fc945dcb88757 | 348.28472900390625 |
-| cgtnjyggtm:q24-9 | cg_2cc9cac1c5baaf14 | 262.2107238769531 |
-| w68dtmpfyf:q16-14 | cg_73ef27ab04a735de | 404.2454528808594 |
-| w68dtmpfyf:q16-2 | cg_ff2d01cab2de3ddc | 304.9983215332031 |
-| w68dtmpfyf:q16-29 | cg_94a031a5fc453cba | 338.54833984375 |
-| w68dtmpfyf:q16-3 | cg_3361913654df8b27 | 352.2940673828125 |
-| w68dtmpfyf:q16-33 | cg_a37eab4f5b7beb12 | 257.2702331542969 |
-| w68dtmpfyf:q16-38 | cg_a052ba6f5200ee4f | 344.6358337402344 |
-| w68dtmpfyf:q16-43 | cg_6853c8e74a68016b | 302.281982421875 |
-| w68dtmpfyf:q16-6 | cg_ce4d6a48a6968060 | 418.267333984375 |
-| xcmzfsbd9t:c24-37 | cg_a01963fde121eda0 | 381.1910705566406 |
-| xcmzfsbd9t:c24-39 | cg_d72ecf3171227da2 | 246.54722595214844 |
-| xcmzfsbd9t:c24-42 | cg_a5c5defb812088ae | 301.55389404296875 |
-| xcmzfsbd9t:c24-47 | cg_954e3ed61c8db0a4 | 480.5938415527344 |
-| xcmzfsbd9t:c24-50 | cg_59e95410b683945f | 292.1376647949219 |
-| xcmzfsbd9t:c24-51 | cg_7e1c8f7865d73e78 | 263.2923583984375 |
-| xcmzfsbd9t:c24-52 | cg_b98b3f9ca1bfb997 | 252.29762268066406 |
-| xcmzfsbd9t:c24-56 | cg_06ec34425b30c2e6 | 230.2566680908203 |
-| xcmzfsbd9t:c24-9t | cg_0d1994d0164384d4 | 278.2536315917969 |
-| yfxyg8jm46:c16-12 | cg_5a80e5179694ff19 | 268.03814697265625 |
-| yfxyg8jm46:c16-14 | cg_efd8928c6d17de81 | 508.2288818359375 |
-| yfxyg8jm46:c16-16 | cg_cd055af98e2ea119 | 499.259765625 |
-| yfxyg8jm46:c16-17 | cg_f64812b6759e7d2b | 512.5420532226562 |
-| yfxyg8jm46:c16-24 | cg_354aea2e84731e86 | 523.44140625 |
-| yfxyg8jm46:c16-39 | cg_514ca9d914207c05 | 234.76339721679688 |
-| yfxyg8jm46:c16-42 | cg_cb9c6f640f08aee7 | 322.6684265136719 |
-| yfxyg8jm46:c16-5 | cg_7f9fe4a18a151cd4 | 270.7127685546875 |
-| ykhs7s2dck:q8-15 | cg_60c6812942ba2332 | 260.08502197265625 |
-| ykhs7s2dck:q8-2 | cg_93e604617899fa5f | 219.15264892578125 |
-| ykhs7s2dck:q8-22 | cg_ca08b9786e924e66 | 235.01319885253906 |
-| ykhs7s2dck:q8-33 | cg_a841812423416444 | 215.7657928466797 |
-| ykhs7s2dck:q8-34 | cg_f28b9720dbc7e026 | 235.4805145263672 |
-| ykhs7s2dck:q8-37 | cg_a064df3d047f4519 | 248.33407592773438 |
-| ykhs7s2dck:q8-8 | cg_8fd87d72a8d71b83 | 184.39810180664062 |
+| 8-layer cross-ply / c8-12 | cg_306e4a499acc46c1 | 197.97145080566406 |
+| 8-layer cross-ply / c8-13 | cg_f6941b7d17a6b65f | 266.5553894042969 |
+| 8-layer cross-ply / c8-16 | cg_f6941b7d17a6b65f | 264.1634521484375 |
+| 8-layer cross-ply / c8-2 | cg_8ffe4fd6a878d7f3 | 163.86158752441406 |
+| 8-layer cross-ply / c8-21 | cg_49d6f1237b716b24 | 263.10400390625 |
+| 8-layer cross-ply / c8-28 | cg_a983245f10699099 | 282.8260803222656 |
+| 8-layer cross-ply / c8-3 | cg_8ffe4fd6a878d7f3 | 213.09927368164062 |
+| 8-layer cross-ply / c8-39 | cg_ff43edde8af2ccdb | 168.51828002929688 |
+| 8-layer cross-ply / c8-43 | cg_a37dc8a00cc334eb | 199.83413696289062 |
+| 24-layer quasi-isotropic / q24-11 | cg_02fd3fc8caefe377 | 300.3553771972656 |
+| 24-layer quasi-isotropic / q24-22 | cg_54890e18ff2b2669 | 415.8692932128906 |
+| 24-layer quasi-isotropic / q24-24 | cg_39bf4ddc679c9a42 | 428.6219482421875 |
+| 24-layer quasi-isotropic / q24-30 | cg_d3f7feef05d5a66a | 283.3366394042969 |
+| 24-layer quasi-isotropic / q24-44 | cg_9ba3cd5fb00ea91f | 109.75041198730469 |
+| 24-layer quasi-isotropic / q24-47 | cg_523711040788bde2 | 119.86738586425781 |
+| 24-layer quasi-isotropic / q24-48 | cg_5549ad4618fa66a9 | 136.6800079345703 |
+| 24-layer quasi-isotropic / q24-6 | cg_344fc945dcb88757 | 348.28472900390625 |
+| 24-layer quasi-isotropic / q24-9 | cg_2cc9cac1c5baaf14 | 262.2107238769531 |
+| 16-layer quasi-isotropic / q16-14 | cg_73ef27ab04a735de | 404.2454528808594 |
+| 16-layer quasi-isotropic / q16-2 | cg_ff2d01cab2de3ddc | 304.9983215332031 |
+| 16-layer quasi-isotropic / q16-29 | cg_94a031a5fc453cba | 338.54833984375 |
+| 16-layer quasi-isotropic / q16-3 | cg_3361913654df8b27 | 352.2940673828125 |
+| 16-layer quasi-isotropic / q16-33 | cg_a37eab4f5b7beb12 | 257.2702331542969 |
+| 16-layer quasi-isotropic / q16-38 | cg_a052ba6f5200ee4f | 344.6358337402344 |
+| 16-layer quasi-isotropic / q16-43 | cg_6853c8e74a68016b | 302.281982421875 |
+| 16-layer quasi-isotropic / q16-6 | cg_ce4d6a48a6968060 | 418.267333984375 |
+| 24-layer cross-ply / c24-37 | cg_a01963fde121eda0 | 381.1910705566406 |
+| 24-layer cross-ply / c24-39 | cg_d72ecf3171227da2 | 246.54722595214844 |
+| 24-layer cross-ply / c24-42 | cg_a5c5defb812088ae | 301.55389404296875 |
+| 24-layer cross-ply / c24-47 | cg_954e3ed61c8db0a4 | 480.5938415527344 |
+| 24-layer cross-ply / c24-50 | cg_59e95410b683945f | 292.1376647949219 |
+| 24-layer cross-ply / c24-51 | cg_7e1c8f7865d73e78 | 263.2923583984375 |
+| 24-layer cross-ply / c24-52 | cg_b98b3f9ca1bfb997 | 252.29762268066406 |
+| 24-layer cross-ply / c24-56 | cg_06ec34425b30c2e6 | 230.2566680908203 |
+| 24-layer cross-ply / c24-9t | cg_0d1994d0164384d4 | 278.2536315917969 |
+| 16-layer cross-ply / c16-12 | cg_5a80e5179694ff19 | 268.03814697265625 |
+| 16-layer cross-ply / c16-14 | cg_efd8928c6d17de81 | 508.2288818359375 |
+| 16-layer cross-ply / c16-16 | cg_cd055af98e2ea119 | 499.259765625 |
+| 16-layer cross-ply / c16-17 | cg_f64812b6759e7d2b | 512.5420532226562 |
+| 16-layer cross-ply / c16-24 | cg_354aea2e84731e86 | 523.44140625 |
+| 16-layer cross-ply / c16-39 | cg_514ca9d914207c05 | 234.76339721679688 |
+| 16-layer cross-ply / c16-42 | cg_cb9c6f640f08aee7 | 322.6684265136719 |
+| 16-layer cross-ply / c16-5 | cg_7f9fe4a18a151cd4 | 270.7127685546875 |
+| 8-layer quasi-isotropic / q8-15 | cg_60c6812942ba2332 | 260.08502197265625 |
+| 8-layer quasi-isotropic / q8-2 | cg_93e604617899fa5f | 219.15264892578125 |
+| 8-layer quasi-isotropic / q8-22 | cg_ca08b9786e924e66 | 235.01319885253906 |
+| 8-layer quasi-isotropic / q8-33 | cg_a841812423416444 | 215.7657928466797 |
+| 8-layer quasi-isotropic / q8-34 | cg_f28b9720dbc7e026 | 235.4805145263672 |
+| 8-layer quasi-isotropic / q8-37 | cg_a064df3d047f4519 | 248.33407592773438 |
+| 8-layer quasi-isotropic / q8-8 | cg_8fd87d72a8d71b83 | 184.39810180664062 |
 
 <!-- block: S007 -->
 
@@ -399,13 +399,13 @@ q = 47 MPa 时，五点网格首次达标分别为本文与学习固定排序 0.
 <!-- block: S045 -->
 
 | Specimen | First cell | Actions | CAI target | Initial | Final | Final abs. error |
-| --- | --- | --- | --- | --- | --- | --- |
-| 74t7kcdgkr:c8-16 | 62 | 16 | 264.163 | 301.366 | 232.095 | 32.068 |
-| cgtnjyggtm:q24-48 | 31 | 16 | 136.680 | 302.099 | 258.932 | 122.252 |
-| w68dtmpfyf:q16-29 | 14 | 15 | 338.548 | 326.638 | 335.890 | 2.658 |
-| xcmzfsbd9t:c24-9t | 27 | 16 | 278.254 | 225.969 | 233.148 | 45.105 |
-| yfxyg8jm46:c16-24 | 63 | 15 | 523.441 | 388.144 | 406.717 | 116.725 |
-| ykhs7s2dck:q8-22 | 63 | 16 | 235.013 | 245.533 | 244.583 | 9.570 |
+| ------------------------------ | -------- | -------- | --------- | --------- | --------- | ---------- |
+| 8-layer cross-ply / c8-16 | 62 | 16 | 264.163 | 301.366 | 232.095 | 32.068 |
+| 24-layer quasi-isotropic / q24-48 | 31 | 16 | 136.680 | 302.099 | 258.932 | 122.252 |
+| 16-layer quasi-isotropic / q16-29 | 14 | 15 | 338.548 | 326.638 | 335.890 | 2.658 |
+| 24-layer cross-ply / c24-9t | 27 | 16 | 278.254 | 225.969 | 233.148 | 45.105 |
+| 16-layer cross-ply / c16-24 | 63 | 15 | 523.441 | 388.144 | 406.717 | 116.725 |
+| 8-layer quasi-isotropic / q8-22 | 63 | 16 | 235.013 | 245.533 | 244.583 | 9.570 |
 
 <!-- block: S046 -->
 
@@ -413,7 +413,7 @@ q = 47 MPa 时，五点网格首次达标分别为本文与学习固定排序 0.
 
 <!-- block: S047 -->
 
-## S5.1. 74t7kcdgkr:c8-16
+## S5.1. 8-layer cross-ply / c8-16
 
 <!-- block: S048 -->
 
@@ -425,7 +425,7 @@ q = 47 MPa 时，五点网格首次达标分别为本文与学习固定排序 0.
 
 <!-- block: S050 -->
 
-## S5.2. cgtnjyggtm:q24-48
+## S5.2. 24-layer quasi-isotropic / q24-48
 
 <!-- block: S051 -->
 
@@ -437,7 +437,7 @@ q = 47 MPa 时，五点网格首次达标分别为本文与学习固定排序 0.
 
 <!-- block: S053 -->
 
-## S5.3. w68dtmpfyf:q16-29
+## S5.3. 16-layer quasi-isotropic / q16-29
 
 <!-- block: S054 -->
 
@@ -449,7 +449,7 @@ q = 47 MPa 时，五点网格首次达标分别为本文与学习固定排序 0.
 
 <!-- block: S056 -->
 
-## S5.4. xcmzfsbd9t:c24-9t
+## S5.4. 24-layer cross-ply / c24-9t
 
 <!-- block: S057 -->
 
@@ -461,7 +461,7 @@ q = 47 MPa 时，五点网格首次达标分别为本文与学习固定排序 0.
 
 <!-- block: S059 -->
 
-## S5.5. yfxyg8jm46:c16-24
+## S5.5. 16-layer cross-ply / c16-24
 
 <!-- block: S060 -->
 
@@ -473,7 +473,7 @@ q = 47 MPa 时，五点网格首次达标分别为本文与学习固定排序 0.
 
 <!-- block: S062 -->
 
-## S5.6. ykhs7s2dck:q8-22
+## S5.6. 8-layer quasi-isotropic / q8-22
 
 <!-- block: S063 -->
 
@@ -489,7 +489,7 @@ q = 47 MPa 时，五点网格首次达标分别为本文与学习固定排序 0.
 
 <!-- block: S066 -->
 
-主图 6 使用 Mendeley Data 第 1 版中带来源前缀的 c8-16 与 q24-48 图像对，集合编号为 74t7kcdgkr、cgtnjyggtm（Hasebe 等，2022，CC BY 4.0）。候选清单以 SHA256 与原生尺寸解析每张表面图及登记 C-scan 路径。表面方向遵循冻结的顺时针 90° 变换及最长边 1024 显示缩放；登记 C-scan 像素保持不变，覆盖层采用 rint 原生网格边界及保存动作序号，灰覆盖表示不可用格。完整图像背景明确为事后参照，从未提供给策略。assets.json 记录来源网址、哈希、尺寸、变换及署名，不虚构损伤轮廓、标尺校准或物理长度测量。
+主图 6 使用 c8-16（8-layer cross-ply）与 q24-48（24-layer quasi-isotropic）图像对，分别来自相应的 Mendeley Data 第 1 版数据集（Hasebe 等，2022，CC BY 4.0）。候选清单以 SHA256 与原生尺寸解析每张表面图及登记 C-scan 路径。表面方向遵循冻结的顺时针 90° 变换及最长边 1024 显示缩放；登记 C-scan 像素保持不变，覆盖层采用 rint 原生网格边界及保存动作序号，灰覆盖表示不可用格。完整图像背景明确为事后参照，从未提供给策略。assets.json 记录来源网址、哈希、尺寸、变换及署名，不虚构损伤轮廓、标尺校准或物理长度测量。
 
 <!-- block: S067 -->
 

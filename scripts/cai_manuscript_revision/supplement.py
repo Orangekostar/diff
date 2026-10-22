@@ -2,7 +2,7 @@
 from pathlib import Path
 from collections import Counter
 import shutil
-from evidence import read_json,read_csv,write_json,write_csv,METHODS,LABELS,ORDER,DOCS,DIAG
+from evidence import read_json,read_csv,write_json,write_csv,display_names,METHODS,LABELS,ORDER,DOCS,DIAG
 from text import emit,md_table
 
 
@@ -12,8 +12,8 @@ def prepare_supplement(paper,art,main_shared):
     def add(en,zh=None,shared=False):
         blocks.append(dict(id=f'S{len(blocks)+1:03d}',en=en,zh=en if shared else zh,shared=shared))
         if blocks[-1]['zh'] is None: raise ValueError('missing SI translation')
-    def table(en,zh,rows):
-        add(en,zh); add(md_table(rows),shared=True)
+    def table(en,zh,rows,column_widths=None):
+        add(en,zh); add(md_table(rows,column_widths=column_widths),shared=True)
     def subset(rows,mapping,decimals=3):
         out=[]
         for r in rows:
@@ -21,19 +21,19 @@ def prepare_supplement(paper,art,main_shared):
             for dest,key in mapping.items():
                 v=r[key]
                 if isinstance(v,float):v=f'{v:.{decimals}f}'
-                item[dest]=v
+                item[dest]=display_names(v)
             out.append(item)
         return out
     add('# Supplementary material','# 补充材料')
     add('This supplement accompanies the revised manuscript on region selection and acquisition order for CAI assessment. All numerical results, intervals, trajectories and diagnostic arrays were already saved. This revision performs deterministic source binding, formatting and plotting only. No optimizer update, research-model forward, new bootstrap draw, seed, reserved-partition evaluation or checkpoint selection was performed.',
         '本补充材料配套 CAI 评估区域选择与采集次序修订稿。全部数值结果、区间、轨迹及诊断数组均已保存。本次修订仅执行确定性的来源绑定、排版与绘图，未执行优化器更新、研究模型前向、新 bootstrap 抽样、新种子、预留分区评价或 checkpoint 选择。')
     add('# S1. Data identity, partitions and evaluation units','# S1. 数据身份、划分与评价单位')
-    add('The six paired-image collections and strength labels are the existing references [1,2,9–15] in the main article. A specimen record binds its source ID, specimen ID, registered image pair and CAI label. Capture groups were formed before splitting from shared source/crop identities, then retained within partitions. The split contains 276 physical specimens (161 training, 50 development validation and 65 reserved), with 152/48/59 capture groups. The reserved partition was not evaluated. The same 50 development specimens selected checkpoints and estimated effects; all intervals are conditional on that selection.',
-        '六份配对图像集合及强度标签对应主文既有参考文献 [1,2,9–15]。试样记录绑定来源编号、试样编号、登记图像对及 CAI 标签。捕获组在划分前按共享来源或裁切身份建立，并在划分内保持完整。总计 276 件物理试样，训练、开发验证及预留分区分别为 161/50/65 件，对应 152/48/59 个捕获组。预留分区未评价。同一 50 件开发试样用于选模及效果估计，所有区间均条件于该选择。')
+    add('The six paired-image collections and strength labels are the existing references [1,2,9–15] in the main article. A specimen record binds its laminate configuration, specimen ID, registered image pair and CAI label. Capture groups were formed before splitting from shared source/crop identities, then retained within partitions. The split contains 276 physical specimens (161 training, 50 development validation and 65 reserved), with 152/48/59 capture groups. The reserved partition was not evaluated. The same 50 development specimens selected checkpoints and estimated effects; all intervals are conditional on that selection.',
+        '六份配对图像集合及强度标签对应主文既有参考文献 [1,2,9–15]。试样记录绑定层合板配置、试样编号、登记图像对及 CAI 标签。捕获组在划分前按共享来源或裁切身份建立，并在划分内保持完整。总计 276 件物理试样，训练、开发验证及预留分区分别为 161/50/65 件，对应 152/48/59 个捕获组。预留分区未评价。同一 50 件开发试样用于选模及效果估计，所有区间均条件于该选择。')
     split=read_csv(repo/'results/cai_agent_v3/new_protocol/split_manifest.csv',unique=['specimen_key']);write_csv(paper/'tables/S1_all_partition_metadata.csv',split)
     assert Counter(r['split'] for r in split)=={'TRAIN':161,'VALID':50,'TEST':65}
-    table('**Table S1.** The complete 50-specimen evaluation cohort. IDs are source-qualified; dimensions and area clocks remain in cohort_manifest.csv. The full 276-row partition metadata are provided as S1_all_partition_metadata.csv. Reading split labels is not reserved-set evaluation.',
-          '**表 S1。** 完整 50 件评价试样。编号带来源前缀；原生尺寸及面积计量见 cohort_manifest.csv。全部 276 条划分元数据见 S1_all_partition_metadata.csv。读取划分标签不构成预留分区评价。',
+    table('**Table S1.** The complete 50-specimen evaluation cohort. Specimens are identified by layer count, layup and specimen number; dimensions and area clocks remain in cohort_manifest.csv. The full 276-row partition metadata are provided as S1_all_partition_metadata.csv. Reading split labels is not reserved-set evaluation.',
+          '**表 S1。** 完整 50 件评价试样。试样以层数、铺层及试样编号标识；原生尺寸及面积计量见 cohort_manifest.csv。全部 276 条划分元数据见 S1_all_partition_metadata.csv。读取划分标签不构成预留分区评价。',
           subset(data['cohort_manifest'],{'Specimen':'specimen_key','Capture group':'capture_group_id','CAI (MPa)':'target_mpa'}))
     add('Random contributes five saved trajectories per specimen; the other five methods contribute one each. Thus 500 archived trajectories and 7,849 acquisition events are repeated observations of these 50 specimens, not additional independent samples. Fixed-final-set analysis adds seven conditions per specimen (original, reverse, five permutations), giving 350 conditions on the same cohort. Paired intervals resample capture groups within six source groups, carrying each group’s specimens together.',
         '随机策略每件试样有五条已保存轨迹，其余五策略各一条，因此 500 条归档轨迹与 7,849 个采集事件是同一 50 件试样上的重复观测，不是额外独立样本。固定最终集合分析每件试样包含原序、逆序及五次置换七个条件，共 350 个条件，仍使用同一队列。配对区间在六来源组内重采样捕获组，并整体携带各捕获组的试样。')
@@ -115,8 +115,8 @@ def prepare_supplement(paper,art,main_shared):
         '六个案例在修订前已经固定，本次全部保留，包括不利残差。初始偏好是可行动作 softmax 概率，不是区域损伤概率。归因图为已保存的所选动作对数概率对局部表面描述符的 L1 敏感性，包含经过当前强度预测的路径；注意力图为融合 token 中已保存的全局查询到区域的注意力。这三种量的含义和单位不同，均不是区域力学真值。以下仅使用 NO_VLM 模型初始状态的已保存数组，未重新生成归因或注意力。')
     rows=[]
     for case in cases:
-        rows.append({'Specimen':case['specimen_key'],'First cell':case['actions'][0],'Actions':len(case['actions']),'CAI target':f"{case['target_mpa']:.3f}",'Initial':f"{case['predictions_mpa'][0]:.3f}",'Final':f"{case['predictions_mpa'][-1]:.3f}",'Final abs. error':f"{abs(case['predictions_mpa'][-1]-case['target_mpa']):.3f}"})
-    table('**Table S9.** All six cases; CAI values and errors in MPa.','**表 S9。** 全部六个案例；CAI 与误差单位为 MPa。',rows);write_csv(paper/'tables/S5_case_summary.csv',rows)
+        rows.append({'Specimen':display_names(case['specimen_key']),'First cell':case['actions'][0],'Actions':len(case['actions']),'CAI target':f"{case['target_mpa']:.3f}",'Initial':f"{case['predictions_mpa'][0]:.3f}",'Final':f"{case['predictions_mpa'][-1]:.3f}",'Final abs. error':f"{abs(case['predictions_mpa'][-1]-case['target_mpa']):.3f}"})
+    table('**Table S9.** All six cases; CAI values and errors in MPa.','**表 S9。** 全部六个案例；CAI 与误差单位为 MPa。',rows,column_widths=[30,8,8,9,9,9,10]);write_csv(paper/'tables/S5_case_summary.csv',rows)
     add('Nine of 94 recorded decisions departed from the highest initially scored cell still feasible on the actual path: c8-16 (2), q16-29 (2), c16-24 (4), q8-22 (1); q24-48 and c24-9t retained their initial feasible ranking. The comparison removes measured and unaffordable cells at every actual state. This describes specimen-specific initialization and selective reordering in six cases only. Changing internal evidence, history, progress and prediction are coupled, so the departures do not isolate internal-feedback causality.',
         '94 个记录决策中有九次偏离实际路径上仍可行的初始最高评分格：c8-16 两次、q16-29 两次、c16-24 四次、q8-22 一次；q24-48 与 c24-9t 保持初始可行排序。该比较在每个实际状态排除已测与超出剩余面积的格，仅描述六例的试样相关初始化及选择性重排序。变化的内部证据、历史、进度及预测相互耦合，故偏离不能隔离内部反馈的因果作用。')
     for i,c in enumerate(cases,1):
@@ -125,10 +125,18 @@ def prepare_supplement(paper,art,main_shared):
         add(f'**Figure S5.{i}.** Initial NO_VLM state and saved CAI trajectory. (a) Feasible-action preference; (b) surface L1 sensitivity for the selected-action query (first saved target); (c) first-layer global-query regional attention (first saved layer); (d) saved CAI predictions with measured strength dashed. Maps retain all 64 cells and use independent ranges. Values and target/layer indices are in figure_data/cases.json; selected cell {c["actions"][0]}. Final absolute error: {abs(c["predictions_mpa"][-1]-c["target_mpa"]):.3f} MPa.',
             f'**图 S5.{i}。** NO_VLM 初始状态与保存的 CAI 轨迹。(a) 可行动作偏好；(b) 所选动作查询（首个保存目标）的表面 L1 敏感性；(c) 第一层全局查询区域注意力；(d) 保存的 CAI 预测，虚线为实测强度。每张图保留全部 64 格，使用独立范围。数值及目标、层编号见 figure_data/cases.json；选择格为 {c["actions"][0]}，终点绝对误差为 {abs(c["predictions_mpa"][-1]-c["target_mpa"]):.3f} MPa。')
     add('## S5.7. Real-image provenance and reproducible displays','## S5.7. 真实图像来源与可复现图稿')
-    add('Main Fig. 6 uses the source-qualified c8-16 and q24-48 image pairs from Mendeley Data version 1, collections 74t7kcdgkr and cgtnjyggtm (Hasebe, Higuchi, Yokozeki and Takeda, 2022; CC BY 4.0). The candidate manifest resolves each surface and registered C-scan path with SHA256 and native dimensions. Surface orientation follows the frozen clockwise-90° transform and maximum-edge-1024 display resize. The registered C-scan pixels are unchanged; overlays use rint native grid edges and the saved action ordinals. Grey overlays mark unavailable cells. The full-image backdrop is explicitly retrospective and was never supplied to the actor. assets.json records source URLs, hashes, dimensions, transformations and attribution. No damage outline, scale calibration or physical length measurement is invented.',
-        '主图 6 使用 Mendeley Data 第 1 版中带来源前缀的 c8-16 与 q24-48 图像对，集合编号为 74t7kcdgkr、cgtnjyggtm（Hasebe 等，2022，CC BY 4.0）。候选清单以 SHA256 与原生尺寸解析每张表面图及登记 C-scan 路径。表面方向遵循冻结的顺时针 90° 变换及最长边 1024 显示缩放；登记 C-scan 像素保持不变，覆盖层采用 rint 原生网格边界及保存动作序号，灰覆盖表示不可用格。完整图像背景明确为事后参照，从未提供给策略。assets.json 记录来源网址、哈希、尺寸、变换及署名，不虚构损伤轮廓、标尺校准或物理长度测量。')
+    add('Main Fig. 6 uses the c8-16 (8-layer cross-ply) and q24-48 (24-layer quasi-isotropic) image pairs from the corresponding Mendeley Data version 1 collections (Hasebe, Higuchi, Yokozeki and Takeda, 2022; CC BY 4.0). The candidate manifest resolves each surface and registered C-scan path with SHA256 and native dimensions. Surface orientation follows the frozen clockwise-90° transform and maximum-edge-1024 display resize. The registered C-scan pixels are unchanged; overlays use rint native grid edges and the saved action ordinals. Grey overlays mark unavailable cells. The full-image backdrop is explicitly retrospective and was never supplied to the actor. assets.json records source URLs, hashes, dimensions, transformations and attribution. No damage outline, scale calibration or physical length measurement is invented.',
+        '主图 6 使用 c8-16（8-layer cross-ply）与 q24-48（24-layer quasi-isotropic）图像对，分别来自相应的 Mendeley Data 第 1 版数据集（Hasebe 等，2022，CC BY 4.0）。候选清单以 SHA256 与原生尺寸解析每张表面图及登记 C-scan 路径。表面方向遵循冻结的顺时针 90° 变换及最长边 1024 显示缩放；登记 C-scan 像素保持不变，覆盖层采用 rint 原生网格边界及保存动作序号，灰覆盖表示不可用格。完整图像背景明确为事后参照，从未提供给策略。assets.json 记录来源网址、哈希、尺寸、变换及署名，不虚构损伤轮廓、标尺校准或物理长度测量。')
     add('The delivered scripts bind, prepare, render, build and verify this frozen-evidence package. Machine-readable trajectory ledgers provide all 500 archived paths and all 350 fixed-set conditions, without duplicating weights or feature shards. The eight document outputs provide English and aligned bilingual main text and supplement. Reference numbering is inherited from the main article; this supplement introduces no new references. Author names, affiliations, funding, competing interests and final journal submission metadata require author confirmation before submission; the package is a revision delivery, not a journal submission.',
         '交付脚本执行冻结证据包的绑定、准备、绘图、构建及核验。机器可读轨迹台账提供全部 500 条归档路径及 350 个固定集合条件，不重复打包权重或特征分片。八份文档输出提供英文及对齐双语的正文与补充材料。参考文献编号沿用主文，补充材料不引入新文献。作者姓名、单位、资助、利益冲突及最终投稿元数据仍须作者确认；本包是修订交付，不是期刊投稿。')
+    # Give exported table identities the same names as the manuscript.
+    # Exact source keys and paths remain bound in the frozen-data/source metadata.
+    for path in (paper/'tables').glob('*.csv'):
+        rows=read_csv(path)
+        renamed=[]
+        for row in rows:
+            renamed.append({{'dataset_id':'Laminate','specimen_key':'Specimen'}.get(key,key):display_names(value) if key in {'dataset_id','specimen_key','order_id'} else value for key,value in row.items()})
+        write_csv(path,renamed)
     shared=emit(paper,'supplementary',blocks)
     write_json(paper/'source/alignment.json',{'manuscript':{'shared_ids':main_shared},'supplementary':{'shared_ids':shared}})
     return {'blocks':len(blocks),'sections':['S1','S2','S3','S4','S5']}

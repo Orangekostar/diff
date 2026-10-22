@@ -1,7 +1,7 @@
 """Editorial transformation of the supplied manuscript; no research execution."""
 from pathlib import Path
 import re, shutil
-from evidence import read_json, read_csv, write_json, write_csv, DOCS
+from evidence import read_json, read_csv, write_json, write_csv, display_names, DOCS
 
 TITLE='Learning region selection and acquisition order in C-scan images for efficient compression-after-impact strength assessment of composite laminates'
 
@@ -31,14 +31,17 @@ def parse_original(text):
     return blocks
 
 
-def md_table(rows,columns=None):
+def md_table(rows,columns=None,column_widths=None):
     if not rows: raise ValueError('empty table')
     columns=columns or list(rows[0])
     def clean(v): return str(v).replace('|','/').replace('\n',' ')
-    return '\n'.join(['| '+' | '.join(map(clean,columns))+' |','| '+' | '.join('---' for c in columns)+' |',*['| '+' | '.join(clean(r.get(c,'')) for c in columns)+' |' for r in rows]])
+    widths=column_widths or [3]*len(columns)
+    return '\n'.join(['| '+' | '.join(map(clean,columns))+' |','| '+' | '.join('-'*width for width in widths)+' |',*['| '+' | '.join(clean(r.get(c,'')) for c in columns)+' |' for r in rows]])
 
 
 def emit(paper,stem,blocks):
+    for block in blocks:
+        for lang in ['en','zh']:block[lang]=display_names(block[lang])
     for lang in ['en','zh']:
         (paper/'source'/f'{stem}_{lang}.md').write_text('\n\n'.join(f"<!-- block: {b['id']} -->\n\n{b[lang]}" for b in blocks)+'\n',encoding='utf-8')
     return [b['id'] for b in blocks if b.get('shared')]
@@ -153,6 +156,7 @@ def prepare_text(paper,art):
                 rows=[{k.split(' / ')[0]:v.split(' / ')[0] for k,v in r.items()} for r in rows]
             b['en']=b['zh']=md_table(rows)
     # Reference entries are shared, preserve exact fifteen, no synthetic references.
+    changes.append(dict(action='RELABEL',reason='Use layer count and layup for all displayed dataset and specimen labels; retain genuine citation links and frozen source bindings.'))
     reference_blocks=[b for b in blocks if b.get('original','').startswith('\\[')]
     assert len(reference_blocks)==15
     bib=repo/'paper_cai_aei/r2_c_331f5295/references.bib'

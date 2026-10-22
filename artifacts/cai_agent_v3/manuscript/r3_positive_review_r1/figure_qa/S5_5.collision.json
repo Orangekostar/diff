@@ -1,10 +1,10 @@
 {
-  "pdf": "/home/ww/diff/.worktrees/cai-positive-review-r1/paper_cai_aei/r3_positive_review_r1/figures/S5_5.pdf",
+  "pdf": "paper_cai_aei/r3_positive_review_r1/figures/S5_5.pdf",
   "auditable": true,
   "verdict": "PASS",
   "page_count": 1,
-  "visible_text_box_count": 14,
-  "text_trace_count": 14,
+  "visible_text_box_count": 15,
+  "text_trace_count": 15,
   "stroke_path_count": 15,
   "filled_region_count": 10,
   "image_region_count": 3,

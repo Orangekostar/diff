@@ -8,6 +8,6 @@ test_stage_area_identity (__main__.RevisionChecks.test_stage_area_identity) ... 
 test_stage_sign_normalization (__main__.RevisionChecks.test_stage_sign_normalization) ... ok
 
 ----------------------------------------------------------------------
-Ran 8 tests in 0.126s
+Ran 8 tests in 0.100s
 
 OK

@@ -66,6 +66,12 @@ class RevisionChecks(unittest.TestCase):
   self.assertIsNone(relative_saving(0.,0.));self.assertIsNone(relative_saving(None,.1));self.assertEqual(relative_saving(.1,.2),.5)
 
  def test_generated_numbers_and_links(self):
+  from evidence import display_names
+  for source,label in [('74t7kcdgkr','8-layer cross-ply'),('cgtnjyggtm','24-layer quasi-isotropic'),('w68dtmpfyf','16-layer quasi-isotropic'),('xcmzfsbd9t','24-layer cross-ply'),('yfxyg8jm46','16-layer cross-ply'),('ykhs7s2dck','8-layer quasi-isotropic')]:
+   self.assertEqual(display_names(source),label)
+  self.assertEqual(display_names('74t7kcdgkr:c8-16'),'8-layer cross-ply / c8-16')
+  self.assertEqual(display_names('https://data.mendeley.com/datasets/74t7kcdgkr/1.'),'[8-layer cross-ply dataset, version 1](https://data.mendeley.com/datasets/74t7kcdgkr/1).')
+  self.assertEqual(display_names('[Data](https://data.mendeley.com/datasets/74t7kcdgkr/1)'),'[Data](https://data.mendeley.com/datasets/74t7kcdgkr/1)')
   from tempfile import TemporaryDirectory
   from verify import inventory
   with TemporaryDirectory() as directory:
@@ -75,6 +81,9 @@ class RevisionChecks(unittest.TestCase):
    self.assertEqual({r['path'] for r in inventory(fixture)},{docs+'/README.md',docs+'/.gitignore'})
   from build import _load_sources
   sources=_load_sources(P);self.assertEqual(len(sources.manuscript_en),len(sources.manuscript_zh))
+  for source in (P/'source').glob('*.md'):
+   visible=re.sub(r'\]\([^)]*\)',']',source.read_text())
+   self.assertIsNone(re.search(r'74t7kcdgkr|cgtnjyggtm|w68dtmpfyf|xcmzfsbd9t|yfxyg8jm46|ykhs7s2dck|source\s*id',visible,re.I),source.name)
   table=read_csv(P/'tables/table3.csv');raw=read_csv(ROOT/EVID/'method_summary.csv')
   for r in table[:6]:
    original=next(t for t in raw if t['method']==r['method'])

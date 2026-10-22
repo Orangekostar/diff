@@ -6,66 +6,66 @@ This supplement accompanies the revised manuscript on region selection and acqui
 
 # S1. Data identity, partitions and evaluation units / S1. 数据身份、划分与评价单位
 
-The six paired-image collections and strength labels are the existing references [1,2,9–15] in the main article. A specimen record binds its source ID, specimen ID, registered image pair and CAI label. Capture groups were formed before splitting from shared source/crop identities, then retained within partitions. The split contains 276 physical specimens (161 training, 50 development validation and 65 reserved), with 152/48/59 capture groups. The reserved partition was not evaluated. The same 50 development specimens selected checkpoints and estimated effects; all intervals are conditional on that selection.
+The six paired-image collections and strength labels are the existing references [1,2,9–15] in the main article. A specimen record binds its laminate configuration, specimen ID, registered image pair and CAI label. Capture groups were formed before splitting from shared source/crop identities, then retained within partitions. The split contains 276 physical specimens (161 training, 50 development validation and 65 reserved), with 152/48/59 capture groups. The reserved partition was not evaluated. The same 50 development specimens selected checkpoints and estimated effects; all intervals are conditional on that selection.
 
-六份配对图像集合及强度标签对应主文既有参考文献 [1,2,9–15]。试样记录绑定来源编号、试样编号、登记图像对及 CAI 标签。捕获组在划分前按共享来源或裁切身份建立，并在划分内保持完整。总计 276 件物理试样，训练、开发验证及预留分区分别为 161/50/65 件，对应 152/48/59 个捕获组。预留分区未评价。同一 50 件开发试样用于选模及效果估计，所有区间均条件于该选择。
+六份配对图像集合及强度标签对应主文既有参考文献 [1,2,9–15]。试样记录绑定层合板配置、试样编号、登记图像对及 CAI 标签。捕获组在划分前按共享来源或裁切身份建立，并在划分内保持完整。总计 276 件物理试样，训练、开发验证及预留分区分别为 161/50/65 件，对应 152/48/59 个捕获组。预留分区未评价。同一 50 件开发试样用于选模及效果估计，所有区间均条件于该选择。
 
-**Table S1.** The complete 50-specimen evaluation cohort. IDs are source-qualified; dimensions and area clocks remain in cohort_manifest.csv. The full 276-row partition metadata are provided as S1_all_partition_metadata.csv. Reading split labels is not reserved-set evaluation.
+**Table S1.** The complete 50-specimen evaluation cohort. Specimens are identified by layer count, layup and specimen number; dimensions and area clocks remain in cohort_manifest.csv. The full 276-row partition metadata are provided as S1_all_partition_metadata.csv. Reading split labels is not reserved-set evaluation.
 
-**表 S1。** 完整 50 件评价试样。编号带来源前缀；原生尺寸及面积计量见 cohort_manifest.csv。全部 276 条划分元数据见 S1_all_partition_metadata.csv。读取划分标签不构成预留分区评价。
+**表 S1。** 完整 50 件评价试样。试样以层数、铺层及试样编号标识；原生尺寸及面积计量见 cohort_manifest.csv。全部 276 条划分元数据见 S1_all_partition_metadata.csv。读取划分标签不构成预留分区评价。
 
 | Specimen | Capture group | CAI (MPa) |
 | --- | --- | --- |
-| 74t7kcdgkr:c8-12 | cg_306e4a499acc46c1 | 197.97145080566406 |
-| 74t7kcdgkr:c8-13 | cg_f6941b7d17a6b65f | 266.5553894042969 |
-| 74t7kcdgkr:c8-16 | cg_f6941b7d17a6b65f | 264.1634521484375 |
-| 74t7kcdgkr:c8-2 | cg_8ffe4fd6a878d7f3 | 163.86158752441406 |
-| 74t7kcdgkr:c8-21 | cg_49d6f1237b716b24 | 263.10400390625 |
-| 74t7kcdgkr:c8-28 | cg_a983245f10699099 | 282.8260803222656 |
-| 74t7kcdgkr:c8-3 | cg_8ffe4fd6a878d7f3 | 213.09927368164062 |
-| 74t7kcdgkr:c8-39 | cg_ff43edde8af2ccdb | 168.51828002929688 |
-| 74t7kcdgkr:c8-43 | cg_a37dc8a00cc334eb | 199.83413696289062 |
-| cgtnjyggtm:q24-11 | cg_02fd3fc8caefe377 | 300.3553771972656 |
-| cgtnjyggtm:q24-22 | cg_54890e18ff2b2669 | 415.8692932128906 |
-| cgtnjyggtm:q24-24 | cg_39bf4ddc679c9a42 | 428.6219482421875 |
-| cgtnjyggtm:q24-30 | cg_d3f7feef05d5a66a | 283.3366394042969 |
-| cgtnjyggtm:q24-44 | cg_9ba3cd5fb00ea91f | 109.75041198730469 |
-| cgtnjyggtm:q24-47 | cg_523711040788bde2 | 119.86738586425781 |
-| cgtnjyggtm:q24-48 | cg_5549ad4618fa66a9 | 136.6800079345703 |
-| cgtnjyggtm:q24-6 | cg_344fc945dcb88757 | 348.28472900390625 |
-| cgtnjyggtm:q24-9 | cg_2cc9cac1c5baaf14 | 262.2107238769531 |
-| w68dtmpfyf:q16-14 | cg_73ef27ab04a735de | 404.2454528808594 |
-| w68dtmpfyf:q16-2 | cg_ff2d01cab2de3ddc | 304.9983215332031 |
-| w68dtmpfyf:q16-29 | cg_94a031a5fc453cba | 338.54833984375 |
-| w68dtmpfyf:q16-3 | cg_3361913654df8b27 | 352.2940673828125 |
-| w68dtmpfyf:q16-33 | cg_a37eab4f5b7beb12 | 257.2702331542969 |
-| w68dtmpfyf:q16-38 | cg_a052ba6f5200ee4f | 344.6358337402344 |
-| w68dtmpfyf:q16-43 | cg_6853c8e74a68016b | 302.281982421875 |
-| w68dtmpfyf:q16-6 | cg_ce4d6a48a6968060 | 418.267333984375 |
-| xcmzfsbd9t:c24-37 | cg_a01963fde121eda0 | 381.1910705566406 |
-| xcmzfsbd9t:c24-39 | cg_d72ecf3171227da2 | 246.54722595214844 |
-| xcmzfsbd9t:c24-42 | cg_a5c5defb812088ae | 301.55389404296875 |
-| xcmzfsbd9t:c24-47 | cg_954e3ed61c8db0a4 | 480.5938415527344 |
-| xcmzfsbd9t:c24-50 | cg_59e95410b683945f | 292.1376647949219 |
-| xcmzfsbd9t:c24-51 | cg_7e1c8f7865d73e78 | 263.2923583984375 |
-| xcmzfsbd9t:c24-52 | cg_b98b3f9ca1bfb997 | 252.29762268066406 |
-| xcmzfsbd9t:c24-56 | cg_06ec34425b30c2e6 | 230.2566680908203 |
-| xcmzfsbd9t:c24-9t | cg_0d1994d0164384d4 | 278.2536315917969 |
-| yfxyg8jm46:c16-12 | cg_5a80e5179694ff19 | 268.03814697265625 |
-| yfxyg8jm46:c16-14 | cg_efd8928c6d17de81 | 508.2288818359375 |
-| yfxyg8jm46:c16-16 | cg_cd055af98e2ea119 | 499.259765625 |
-| yfxyg8jm46:c16-17 | cg_f64812b6759e7d2b | 512.5420532226562 |
-| yfxyg8jm46:c16-24 | cg_354aea2e84731e86 | 523.44140625 |
-| yfxyg8jm46:c16-39 | cg_514ca9d914207c05 | 234.76339721679688 |
-| yfxyg8jm46:c16-42 | cg_cb9c6f640f08aee7 | 322.6684265136719 |
-| yfxyg8jm46:c16-5 | cg_7f9fe4a18a151cd4 | 270.7127685546875 |
-| ykhs7s2dck:q8-15 | cg_60c6812942ba2332 | 260.08502197265625 |
-| ykhs7s2dck:q8-2 | cg_93e604617899fa5f | 219.15264892578125 |
-| ykhs7s2dck:q8-22 | cg_ca08b9786e924e66 | 235.01319885253906 |
-| ykhs7s2dck:q8-33 | cg_a841812423416444 | 215.7657928466797 |
-| ykhs7s2dck:q8-34 | cg_f28b9720dbc7e026 | 235.4805145263672 |
-| ykhs7s2dck:q8-37 | cg_a064df3d047f4519 | 248.33407592773438 |
-| ykhs7s2dck:q8-8 | cg_8fd87d72a8d71b83 | 184.39810180664062 |
+| 8-layer cross-ply / c8-12 | cg_306e4a499acc46c1 | 197.97145080566406 |
+| 8-layer cross-ply / c8-13 | cg_f6941b7d17a6b65f | 266.5553894042969 |
+| 8-layer cross-ply / c8-16 | cg_f6941b7d17a6b65f | 264.1634521484375 |
+| 8-layer cross-ply / c8-2 | cg_8ffe4fd6a878d7f3 | 163.86158752441406 |
+| 8-layer cross-ply / c8-21 | cg_49d6f1237b716b24 | 263.10400390625 |
+| 8-layer cross-ply / c8-28 | cg_a983245f10699099 | 282.8260803222656 |
+| 8-layer cross-ply / c8-3 | cg_8ffe4fd6a878d7f3 | 213.09927368164062 |
+| 8-layer cross-ply / c8-39 | cg_ff43edde8af2ccdb | 168.51828002929688 |
+| 8-layer cross-ply / c8-43 | cg_a37dc8a00cc334eb | 199.83413696289062 |
+| 24-layer quasi-isotropic / q24-11 | cg_02fd3fc8caefe377 | 300.3553771972656 |
+| 24-layer quasi-isotropic / q24-22 | cg_54890e18ff2b2669 | 415.8692932128906 |
+| 24-layer quasi-isotropic / q24-24 | cg_39bf4ddc679c9a42 | 428.6219482421875 |
+| 24-layer quasi-isotropic / q24-30 | cg_d3f7feef05d5a66a | 283.3366394042969 |
+| 24-layer quasi-isotropic / q24-44 | cg_9ba3cd5fb00ea91f | 109.75041198730469 |
+| 24-layer quasi-isotropic / q24-47 | cg_523711040788bde2 | 119.86738586425781 |
+| 24-layer quasi-isotropic / q24-48 | cg_5549ad4618fa66a9 | 136.6800079345703 |
+| 24-layer quasi-isotropic / q24-6 | cg_344fc945dcb88757 | 348.28472900390625 |
+| 24-layer quasi-isotropic / q24-9 | cg_2cc9cac1c5baaf14 | 262.2107238769531 |
+| 16-layer quasi-isotropic / q16-14 | cg_73ef27ab04a735de | 404.2454528808594 |
+| 16-layer quasi-isotropic / q16-2 | cg_ff2d01cab2de3ddc | 304.9983215332031 |
+| 16-layer quasi-isotropic / q16-29 | cg_94a031a5fc453cba | 338.54833984375 |
+| 16-layer quasi-isotropic / q16-3 | cg_3361913654df8b27 | 352.2940673828125 |
+| 16-layer quasi-isotropic / q16-33 | cg_a37eab4f5b7beb12 | 257.2702331542969 |
+| 16-layer quasi-isotropic / q16-38 | cg_a052ba6f5200ee4f | 344.6358337402344 |
+| 16-layer quasi-isotropic / q16-43 | cg_6853c8e74a68016b | 302.281982421875 |
+| 16-layer quasi-isotropic / q16-6 | cg_ce4d6a48a6968060 | 418.267333984375 |
+| 24-layer cross-ply / c24-37 | cg_a01963fde121eda0 | 381.1910705566406 |
+| 24-layer cross-ply / c24-39 | cg_d72ecf3171227da2 | 246.54722595214844 |
+| 24-layer cross-ply / c24-42 | cg_a5c5defb812088ae | 301.55389404296875 |
+| 24-layer cross-ply / c24-47 | cg_954e3ed61c8db0a4 | 480.5938415527344 |
+| 24-layer cross-ply / c24-50 | cg_59e95410b683945f | 292.1376647949219 |
+| 24-layer cross-ply / c24-51 | cg_7e1c8f7865d73e78 | 263.2923583984375 |
+| 24-layer cross-ply / c24-52 | cg_b98b3f9ca1bfb997 | 252.29762268066406 |
+| 24-layer cross-ply / c24-56 | cg_06ec34425b30c2e6 | 230.2566680908203 |
+| 24-layer cross-ply / c24-9t | cg_0d1994d0164384d4 | 278.2536315917969 |
+| 16-layer cross-ply / c16-12 | cg_5a80e5179694ff19 | 268.03814697265625 |
+| 16-layer cross-ply / c16-14 | cg_efd8928c6d17de81 | 508.2288818359375 |
+| 16-layer cross-ply / c16-16 | cg_cd055af98e2ea119 | 499.259765625 |
+| 16-layer cross-ply / c16-17 | cg_f64812b6759e7d2b | 512.5420532226562 |
+| 16-layer cross-ply / c16-24 | cg_354aea2e84731e86 | 523.44140625 |
+| 16-layer cross-ply / c16-39 | cg_514ca9d914207c05 | 234.76339721679688 |
+| 16-layer cross-ply / c16-42 | cg_cb9c6f640f08aee7 | 322.6684265136719 |
+| 16-layer cross-ply / c16-5 | cg_7f9fe4a18a151cd4 | 270.7127685546875 |
+| 8-layer quasi-isotropic / q8-15 | cg_60c6812942ba2332 | 260.08502197265625 |
+| 8-layer quasi-isotropic / q8-2 | cg_93e604617899fa5f | 219.15264892578125 |
+| 8-layer quasi-isotropic / q8-22 | cg_ca08b9786e924e66 | 235.01319885253906 |
+| 8-layer quasi-isotropic / q8-33 | cg_a841812423416444 | 215.7657928466797 |
+| 8-layer quasi-isotropic / q8-34 | cg_f28b9720dbc7e026 | 235.4805145263672 |
+| 8-layer quasi-isotropic / q8-37 | cg_a064df3d047f4519 | 248.33407592773438 |
+| 8-layer quasi-isotropic / q8-8 | cg_8fd87d72a8d71b83 | 184.39810180664062 |
 
 Random contributes five saved trajectories per specimen; the other five methods contribute one each. Thus 500 archived trajectories and 7,849 acquisition events are repeated observations of these 50 specimens, not additional independent samples. Fixed-final-set analysis adds seven conditions per specimen (original, reverse, five permutations), giving 350 conditions on the same cohort. Paired intervals resample capture groups within six source groups, carrying each group’s specimens together.
 
@@ -361,19 +361,19 @@ The six cases were fixed before this revision and are all retained, including ad
 **表 S9。** 全部六个案例；CAI 与误差单位为 MPa。
 
 | Specimen | First cell | Actions | CAI target | Initial | Final | Final abs. error |
-| --- | --- | --- | --- | --- | --- | --- |
-| 74t7kcdgkr:c8-16 | 62 | 16 | 264.163 | 301.366 | 232.095 | 32.068 |
-| cgtnjyggtm:q24-48 | 31 | 16 | 136.680 | 302.099 | 258.932 | 122.252 |
-| w68dtmpfyf:q16-29 | 14 | 15 | 338.548 | 326.638 | 335.890 | 2.658 |
-| xcmzfsbd9t:c24-9t | 27 | 16 | 278.254 | 225.969 | 233.148 | 45.105 |
-| yfxyg8jm46:c16-24 | 63 | 15 | 523.441 | 388.144 | 406.717 | 116.725 |
-| ykhs7s2dck:q8-22 | 63 | 16 | 235.013 | 245.533 | 244.583 | 9.570 |
+| ------------------------------ | -------- | -------- | --------- | --------- | --------- | ---------- |
+| 8-layer cross-ply / c8-16 | 62 | 16 | 264.163 | 301.366 | 232.095 | 32.068 |
+| 24-layer quasi-isotropic / q24-48 | 31 | 16 | 136.680 | 302.099 | 258.932 | 122.252 |
+| 16-layer quasi-isotropic / q16-29 | 14 | 15 | 338.548 | 326.638 | 335.890 | 2.658 |
+| 24-layer cross-ply / c24-9t | 27 | 16 | 278.254 | 225.969 | 233.148 | 45.105 |
+| 16-layer cross-ply / c16-24 | 63 | 15 | 523.441 | 388.144 | 406.717 | 116.725 |
+| 8-layer quasi-isotropic / q8-22 | 63 | 16 | 235.013 | 245.533 | 244.583 | 9.570 |
 
 Nine of 94 recorded decisions departed from the highest initially scored cell still feasible on the actual path: c8-16 (2), q16-29 (2), c16-24 (4), q8-22 (1); q24-48 and c24-9t retained their initial feasible ranking. The comparison removes measured and unaffordable cells at every actual state. This describes specimen-specific initialization and selective reordering in six cases only. Changing internal evidence, history, progress and prediction are coupled, so the departures do not isolate internal-feedback causality.
 
 94 个记录决策中有九次偏离实际路径上仍可行的初始最高评分格：c8-16 两次、q16-29 两次、c16-24 四次、q8-22 一次；q24-48 与 c24-9t 保持初始可行排序。该比较在每个实际状态排除已测与超出剩余面积的格，仅描述六例的试样相关初始化及选择性重排序。变化的内部证据、历史、进度及预测相互耦合，故偏离不能隔离内部反馈的因果作用。
 
-## S5.1. 74t7kcdgkr:c8-16
+## S5.1. 8-layer cross-ply / c8-16
 
 ![Saved diagnostic plate 1](figures/S5_1.png){width=6.5in}
 
@@ -381,7 +381,7 @@ Nine of 94 recorded decisions departed from the highest initially scored cell st
 
 **图 S5.1。** NO_VLM 初始状态与保存的 CAI 轨迹。(a) 可行动作偏好；(b) 所选动作查询（首个保存目标）的表面 L1 敏感性；(c) 第一层全局查询区域注意力；(d) 保存的 CAI 预测，虚线为实测强度。每张图保留全部 64 格，使用独立范围。数值及目标、层编号见 figure_data/cases.json；选择格为 62，终点绝对误差为 32.068 MPa。
 
-## S5.2. cgtnjyggtm:q24-48
+## S5.2. 24-layer quasi-isotropic / q24-48
 
 ![Saved diagnostic plate 2](figures/S5_2.png){width=6.5in}
 
@@ -389,7 +389,7 @@ Nine of 94 recorded decisions departed from the highest initially scored cell st
 
 **图 S5.2。** NO_VLM 初始状态与保存的 CAI 轨迹。(a) 可行动作偏好；(b) 所选动作查询（首个保存目标）的表面 L1 敏感性；(c) 第一层全局查询区域注意力；(d) 保存的 CAI 预测，虚线为实测强度。每张图保留全部 64 格，使用独立范围。数值及目标、层编号见 figure_data/cases.json；选择格为 31，终点绝对误差为 122.252 MPa。
 
-## S5.3. w68dtmpfyf:q16-29
+## S5.3. 16-layer quasi-isotropic / q16-29
 
 ![Saved diagnostic plate 3](figures/S5_3.png){width=6.5in}
 
@@ -397,7 +397,7 @@ Nine of 94 recorded decisions departed from the highest initially scored cell st
 
 **图 S5.3。** NO_VLM 初始状态与保存的 CAI 轨迹。(a) 可行动作偏好；(b) 所选动作查询（首个保存目标）的表面 L1 敏感性；(c) 第一层全局查询区域注意力；(d) 保存的 CAI 预测，虚线为实测强度。每张图保留全部 64 格，使用独立范围。数值及目标、层编号见 figure_data/cases.json；选择格为 14，终点绝对误差为 2.658 MPa。
 
-## S5.4. xcmzfsbd9t:c24-9t
+## S5.4. 24-layer cross-ply / c24-9t
 
 ![Saved diagnostic plate 4](figures/S5_4.png){width=6.5in}
 
@@ -405,7 +405,7 @@ Nine of 94 recorded decisions departed from the highest initially scored cell st
 
 **图 S5.4。** NO_VLM 初始状态与保存的 CAI 轨迹。(a) 可行动作偏好；(b) 所选动作查询（首个保存目标）的表面 L1 敏感性；(c) 第一层全局查询区域注意力；(d) 保存的 CAI 预测，虚线为实测强度。每张图保留全部 64 格，使用独立范围。数值及目标、层编号见 figure_data/cases.json；选择格为 27，终点绝对误差为 45.105 MPa。
 
-## S5.5. yfxyg8jm46:c16-24
+## S5.5. 16-layer cross-ply / c16-24
 
 ![Saved diagnostic plate 5](figures/S5_5.png){width=6.5in}
 
@@ -413,7 +413,7 @@ Nine of 94 recorded decisions departed from the highest initially scored cell st
 
 **图 S5.5。** NO_VLM 初始状态与保存的 CAI 轨迹。(a) 可行动作偏好；(b) 所选动作查询（首个保存目标）的表面 L1 敏感性；(c) 第一层全局查询区域注意力；(d) 保存的 CAI 预测，虚线为实测强度。每张图保留全部 64 格，使用独立范围。数值及目标、层编号见 figure_data/cases.json；选择格为 63，终点绝对误差为 116.725 MPa。
 
-## S5.6. ykhs7s2dck:q8-22
+## S5.6. 8-layer quasi-isotropic / q8-22
 
 ![Saved diagnostic plate 6](figures/S5_6.png){width=6.5in}
 
@@ -423,9 +423,9 @@ Nine of 94 recorded decisions departed from the highest initially scored cell st
 
 ## S5.7. Real-image provenance and reproducible displays / S5.7. 真实图像来源与可复现图稿
 
-Main Fig. 6 uses the source-qualified c8-16 and q24-48 image pairs from Mendeley Data version 1, collections 74t7kcdgkr and cgtnjyggtm (Hasebe, Higuchi, Yokozeki and Takeda, 2022; CC BY 4.0). The candidate manifest resolves each surface and registered C-scan path with SHA256 and native dimensions. Surface orientation follows the frozen clockwise-90° transform and maximum-edge-1024 display resize. The registered C-scan pixels are unchanged; overlays use rint native grid edges and the saved action ordinals. Grey overlays mark unavailable cells. The full-image backdrop is explicitly retrospective and was never supplied to the actor. assets.json records source URLs, hashes, dimensions, transformations and attribution. No damage outline, scale calibration or physical length measurement is invented.
+Main Fig. 6 uses the c8-16 (8-layer cross-ply) and q24-48 (24-layer quasi-isotropic) image pairs from the corresponding Mendeley Data version 1 collections (Hasebe, Higuchi, Yokozeki and Takeda, 2022; CC BY 4.0). The candidate manifest resolves each surface and registered C-scan path with SHA256 and native dimensions. Surface orientation follows the frozen clockwise-90° transform and maximum-edge-1024 display resize. The registered C-scan pixels are unchanged; overlays use rint native grid edges and the saved action ordinals. Grey overlays mark unavailable cells. The full-image backdrop is explicitly retrospective and was never supplied to the actor. assets.json records source URLs, hashes, dimensions, transformations and attribution. No damage outline, scale calibration or physical length measurement is invented.
 
-主图 6 使用 Mendeley Data 第 1 版中带来源前缀的 c8-16 与 q24-48 图像对，集合编号为 74t7kcdgkr、cgtnjyggtm（Hasebe 等，2022，CC BY 4.0）。候选清单以 SHA256 与原生尺寸解析每张表面图及登记 C-scan 路径。表面方向遵循冻结的顺时针 90° 变换及最长边 1024 显示缩放；登记 C-scan 像素保持不变，覆盖层采用 rint 原生网格边界及保存动作序号，灰覆盖表示不可用格。完整图像背景明确为事后参照，从未提供给策略。assets.json 记录来源网址、哈希、尺寸、变换及署名，不虚构损伤轮廓、标尺校准或物理长度测量。
+主图 6 使用 c8-16（8-layer cross-ply）与 q24-48（24-layer quasi-isotropic）图像对，分别来自相应的 Mendeley Data 第 1 版数据集（Hasebe 等，2022，CC BY 4.0）。候选清单以 SHA256 与原生尺寸解析每张表面图及登记 C-scan 路径。表面方向遵循冻结的顺时针 90° 变换及最长边 1024 显示缩放；登记 C-scan 像素保持不变，覆盖层采用 rint 原生网格边界及保存动作序号，灰覆盖表示不可用格。完整图像背景明确为事后参照，从未提供给策略。assets.json 记录来源网址、哈希、尺寸、变换及署名，不虚构损伤轮廓、标尺校准或物理长度测量。
 
 The delivered scripts bind, prepare, render, build and verify this frozen-evidence package. Machine-readable trajectory ledgers provide all 500 archived paths and all 350 fixed-set conditions, without duplicating weights or feature shards. The eight document outputs provide English and aligned bilingual main text and supplement. Reference numbering is inherited from the main article; this supplement introduces no new references. Author names, affiliations, funding, competing interests and final journal submission metadata require author confirmation before submission; the package is a revision delivery, not a journal submission.
 

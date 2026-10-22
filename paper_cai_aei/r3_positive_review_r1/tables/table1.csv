@@ -1,8 +1,8 @@
-Source / 来源,Laminate / 铺层,Train / 训练,Dev. / 开发验证,Reserved / 预留,Total / 合计
-74t7kcdgkr,8-layer cross-ply / 8 层交叉铺层,25,9,11,45
-cgtnjyggtm,24-layer quasi-isotropic / 24 层准各向同性,29,9,11,49
-w68dtmpfyf,16-layer quasi-isotropic / 16 层准各向同性,25,8,10,43
-xcmzfsbd9t,24-layer cross-ply / 24 层交叉铺层,35,9,15,59
-yfxyg8jm46,16-layer cross-ply / 16 层交叉铺层,25,8,9,42
-ykhs7s2dck,8-layer quasi-isotropic / 8 层准各向同性,22,7,9,38
-Total / 合计,,161,50,65,276
+Laminate / 铺层,Train / 训练,Dev. / 开发验证,Reserved / 预留,Total / 合计
+8-layer cross-ply / 8 层交叉铺层,25,9,11,45
+24-layer quasi-isotropic / 24 层准各向同性,29,9,11,49
+16-layer quasi-isotropic / 16 层准各向同性,25,8,10,43
+24-layer cross-ply / 24 层交叉铺层,35,9,15,59
+16-layer cross-ply / 16 层交叉铺层,25,8,9,42
+8-layer quasi-isotropic / 8 层准各向同性,22,7,9,38
+Total / 合计,161,50,65,276

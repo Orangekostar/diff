@@ -2,578 +2,578 @@
   "documents": [
     {
       "file": "build/manuscript_bilingual.pdf",
-      "sha256": "1d277ac8a4e5ee6b445ef4a8c02df805d85ff30180e25da3c7db881cc91d43e7",
+      "sha256": "1b242ed9c85c5161b22fef73eaf5310488f3f3cf03ba45983eb509eec17ddca7",
       "pages": [
         {
           "page": 1,
           "text_characters": 3233,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 2,
           "text_characters": 3438,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 3,
           "text_characters": 3171,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 4,
           "text_characters": 2803,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 5,
           "text_characters": 1839,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 6,
           "text_characters": 2578,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 7,
           "text_characters": 1757,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 8,
           "text_characters": 2498,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 9,
           "text_characters": 2836,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 10,
           "text_characters": 2463,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 11,
           "text_characters": 2267,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 12,
           "text_characters": 2642,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 13,
           "text_characters": 2318,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 14,
-          "text_characters": 2098,
+          "text_characters": 2025,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 15,
           "text_characters": 2950,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 16,
           "text_characters": 3387,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 17,
           "text_characters": 2611,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 18,
           "text_characters": 2963,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 19,
           "text_characters": 1966,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 20,
           "text_characters": 2056,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 21,
           "text_characters": 2489,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 22,
           "text_characters": 2874,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 23,
           "text_characters": 1775,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 24,
           "text_characters": 2777,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 25,
           "text_characters": 2260,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 26,
           "text_characters": 979,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 27,
-          "text_characters": 2402,
+          "text_characters": 3150,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 28,
-          "text_characters": 3500,
+          "text_characters": 3351,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 29,
-          "text_characters": 3031,
+          "text_characters": 3092,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 30,
-          "text_characters": 3114,
+          "text_characters": 2317,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         }
       ]
     },
     {
       "file": "build/manuscript_en.pdf",
-      "sha256": "ba457be6e02b4cf1833ae874f0f1b3103450b9cac11d65f6f092508a175b67d4",
+      "sha256": "83274a024bbeff61a55bc9b6555de094fd5fb6312d58e5e8b71275bb95a0edee",
       "pages": [
         {
           "page": 1,
           "text_characters": 4154,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 2,
           "text_characters": 3974,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 3,
           "text_characters": 3085,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 4,
           "text_characters": 2828,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 5,
           "text_characters": 2677,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 6,
           "text_characters": 3338,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 7,
           "text_characters": 2489,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 8,
           "text_characters": 2665,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 9,
-          "text_characters": 2895,
+          "text_characters": 2822,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 10,
           "text_characters": 3478,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 11,
           "text_characters": 3432,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 12,
           "text_characters": 2239,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 13,
           "text_characters": 1567,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 14,
           "text_characters": 2308,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 15,
           "text_characters": 3314,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 16,
           "text_characters": 2209,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 17,
           "text_characters": 2875,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 18,
-          "text_characters": 2946,
+          "text_characters": 3581,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 19,
-          "text_characters": 4147,
+          "text_characters": 3965,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 20,
-          "text_characters": 3470,
+          "text_characters": 3373,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 21,
-          "text_characters": 740,
+          "text_characters": 247,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         }
       ]
     },
     {
       "file": "build/supplementary_bilingual.pdf",
-      "sha256": "8a5fa9af7943ace11005899a659396eab2b91e12a58e512f3bad058a209c71cc",
+      "sha256": "ac57f710ace7a5721c23b4730122d267c0f329a4378b1a739cc3dd9d88184bf4",
       "pages": [
         {
           "page": 1,
-          "text_characters": 2891,
+          "text_characters": 3184,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 2,
-          "text_characters": 2946,
+          "text_characters": 3349,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 3,
           "text_characters": 2803,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 4,
           "text_characters": 2386,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 5,
           "text_characters": 2828,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 6,
           "text_characters": 2093,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 7,
           "text_characters": 2372,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 8,
           "text_characters": 2348,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 9,
           "text_characters": 1883,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 10,
           "text_characters": 2182,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 11,
-          "text_characters": 2386,
+          "text_characters": 2869,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 12,
-          "text_characters": 1272,
+          "text_characters": 1563,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 13,
-          "text_characters": 1356,
+          "text_characters": 1380,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 14,
-          "text_characters": 1359,
+          "text_characters": 1775,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 15,
-          "text_characters": 2665,
+          "text_characters": 1633,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         }
       ]
     },
     {
       "file": "build/supplementary_en.pdf",
-      "sha256": "61bb6a8dfd63da5ed8e48acc8afbe6bd4d1f004bde65fa53d08521b9e108c15b",
+      "sha256": "a8cadf1744077fe0ff68e78416731ddcbcae1515e6048aaf1872b87412bdf26d",
       "pages": [
         {
           "page": 1,
-          "text_characters": 3152,
+          "text_characters": 3614,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 2,
-          "text_characters": 2821,
+          "text_characters": 3046,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 3,
           "text_characters": 2898,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 4,
           "text_characters": 2923,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 5,
           "text_characters": 1896,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 6,
           "text_characters": 2588,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 7,
           "text_characters": 2641,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 8,
           "text_characters": 1825,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 9,
-          "text_characters": 2846,
+          "text_characters": 3220,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 10,
-          "text_characters": 1289,
+          "text_characters": 1010,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 11,
-          "text_characters": 984,
+          "text_characters": 1010,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 12,
-          "text_characters": 1847,
+          "text_characters": 1889,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         },
         {
           "page": 13,
           "text_characters": 642,
           "outside_page_blocks": [],
           "review_status": "PASS",
-          "review_notes": "Primary-agent visual inspection: final page, equations, headers, table continuation, figure/caption and CJK glyphs checked."
+          "review_notes": "Original page review retained where text/figures are unchanged; changed label pages inspected on rendered contact sheets. Table S9 column-width revision additionally rechecked."
         }
       ]
     }
@@ -612,7 +612,7 @@
       "display_equations": 2
     }
   ],
-  "note": "Contact sheets are temporary QA renders, excluded from delivery inventory. Manual status is assigned only after actual inspection.",
-  "reviewer": "Primary agent; one AEI-oriented internal review, not an independent referee panel",
-  "review_method": "All 79 final PDF pages visually inspected in rendered contact sheets; only changed supplement sheets rechecked after caption-pagination repair."
+  "note": "Frozen evidence and source bindings are unchanged. Layer/layup names are used in all visible document labels and exported table identity fields; genuine bibliography hyperlink targets and bound source paths remain intact.",
+  "reviewer": "Primary agent",
+  "review_method": "Prior 79-page rendered review plus inspection of all 24 changed label pages and final S9 table pages; six diagnostic plates checked in their supplement context."
 }

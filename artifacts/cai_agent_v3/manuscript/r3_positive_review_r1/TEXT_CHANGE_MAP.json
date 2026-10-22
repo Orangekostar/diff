@@ -101,6 +101,10 @@
       "original_anchor": "On 50 development-validation specimens, the method reached",
       "action": "REVISE",
       "reason": "T10: two-paragraph conclusion with evidence boundaries"
+    },
+    {
+      "action": "RELABEL",
+      "reason": "Use layer count and layup for all displayed dataset and specimen labels; retain genuine citation links and frozen source bindings."
     }
   ],
   "abstract_word_count": 203,

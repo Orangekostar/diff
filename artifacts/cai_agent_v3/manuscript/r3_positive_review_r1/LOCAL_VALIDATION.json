@@ -6,35 +6,35 @@
   "build_status": "success",
   "outputs": {
     "manuscript_en.docx": {
-      "bytes": 2018105,
+      "bytes": 2018252,
       "omath_count": 93
     },
     "manuscript_en.pdf": {
-      "bytes": 1100768,
+      "bytes": 1101152,
       "pages": 21
     },
     "manuscript_bilingual.docx": {
-      "bytes": 2043942,
+      "bytes": 2044073,
       "omath_count": 173
     },
     "manuscript_bilingual.pdf": {
-      "bytes": 1261888,
+      "bytes": 1262419,
       "pages": 30
     },
     "supplementary_en.docx": {
-      "bytes": 368784,
+      "bytes": 402586,
       "omath_count": 7
     },
     "supplementary_en.pdf": {
-      "bytes": 444013,
+      "bytes": 477690,
       "pages": 13
     },
     "supplementary_bilingual.docx": {
-      "bytes": 377509,
+      "bytes": 411325,
       "omath_count": 12
     },
     "supplementary_bilingual.pdf": {
-      "bytes": 546484,
+      "bytes": 579855,
       "pages": 15
     }
   },

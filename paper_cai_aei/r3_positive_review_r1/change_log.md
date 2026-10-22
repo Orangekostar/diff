@@ -18,5 +18,6 @@ Frozen evidence: 6082b69f2792130a321c74b0efcb198f5d65cefb.
 - T09: move implementation detail out of related work
 - T10: 200–250 words, same-path early result and primary uncertainty
 - T10: two-paragraph conclusion with evidence boundaries
+- Use layer count and layup for all displayed dataset and specimen labels; retain genuine citation links and frozen source bindings.
 
 Figures F1–F6 were redrawn from declared source data. Fig. 6 adds two source-verified registered C-scan references. All six diagnostic cases and adverse effects remain. The supplement now supplies S1–S5, all target statuses and the 500/350 trajectory ledgers.

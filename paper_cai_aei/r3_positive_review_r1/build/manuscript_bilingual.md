@@ -272,15 +272,15 @@ Capture groups preserve dependencies associated with shared source images, paths
 
 **表 1。** 数据配置及物理试样划分。捕获组保持在分区内；全部方法比较使用同一 50 件开发验证试样。
 
-| Source | Laminate | Train | Dev. | Reserved | Total |
-| --- | --- | --- | --- | --- | --- |
-| 74t7kcdgkr | 8-layer cross-ply | 25 | 9 | 11 | 45 |
-| cgtnjyggtm | 24-layer quasi-isotropic | 29 | 9 | 11 | 49 |
-| w68dtmpfyf | 16-layer quasi-isotropic | 25 | 8 | 10 | 43 |
-| xcmzfsbd9t | 24-layer cross-ply | 35 | 9 | 15 | 59 |
-| yfxyg8jm46 | 16-layer cross-ply | 25 | 8 | 9 | 42 |
-| ykhs7s2dck | 8-layer quasi-isotropic | 22 | 7 | 9 | 38 |
-| Total |  | 161 | 50 | 65 | 276 |
+| Laminate | Train | Dev. | Reserved | Total |
+| --- | --- | --- | --- | --- |
+| 8-layer cross-ply | 25 | 9 | 11 | 45 |
+| 24-layer quasi-isotropic | 29 | 9 | 11 | 49 |
+| 16-layer quasi-isotropic | 25 | 8 | 10 | 43 |
+| 24-layer cross-ply | 35 | 9 | 15 | 59 |
+| 16-layer cross-ply | 25 | 8 | 9 | 42 |
+| 8-layer quasi-isotropic | 22 | 7 | 9 | 38 |
+| Total | 161 | 50 | 65 | 276 |
 
 All reported effects use the 50 development-validation specimens, which also support checkpoint selection. The estimates therefore characterize the selected development configuration. The 65 reserved specimens are outside the reported evaluation. The specimen cohort and six diagnostic cases are retained in full. Random-order repetitions, image cells and prediction prefixes remain repeated observations of these specimens. Supplementary S1 records specimen identities, capture groups and partition membership.
 
@@ -499,14 +499,14 @@ The groupwise results locate the configurations contributing to the overall impr
 
 **表 5。** 分组性能，单位为 MPa。改善定义为几何分散减本文方法，正值有利于本文方法。这些结果为评价分区内的来源组分层。
 
-| Laminate (source ID) | n | Proposed A | Proposed MAE | Gain in A | Gain in MAE |
+| Laminate | n | Proposed A | Proposed MAE | Gain in A | Gain in MAE |
 | --- | --- | --- | --- | --- | --- |
-| 8-layer cross-ply (74t7kcdgkr) | 9 | 31.330 | 28.655 | +0.893 | +5.634 |
-| 24-layer quasi-isotropic (cgtnjyggtm) | 9 | 68.749 | 64.067 | +13.061 | +16.440 |
-| 16-layer quasi-isotropic (w68dtmpfyf) | 8 | 47.030 | 44.088 | −0.105 | +1.615 |
-| 24-layer cross-ply (xcmzfsbd9t) | 9 | 48.163 | 46.433 | +0.760 | −2.097 |
-| 16-layer cross-ply (yfxyg8jm46) | 8 | 48.059 | 48.408 | +8.157 | +5.875 |
-| 8-layer quasi-isotropic (ykhs7s2dck) | 7 | 18.250 | 18.124 | −0.485 | −1.922 |
+| 8-layer cross-ply | 9 | 31.330 | 28.655 | +0.893 | +5.634 |
+| 24-layer quasi-isotropic | 9 | 68.749 | 64.067 | +13.061 | +16.440 |
+| 16-layer quasi-isotropic | 8 | 47.030 | 44.088 | −0.105 | +1.615 |
+| 24-layer cross-ply | 9 | 48.163 | 46.433 | +0.760 | −2.097 |
+| 16-layer cross-ply | 8 | 48.059 | 48.408 | +8.157 | +5.875 |
+| 8-layer quasi-isotropic | 7 | 18.250 | 18.124 | −0.485 | −1.922 |
 
 At specimen level, the proposed method improved process $A$ for 33 of 50 specimens and endpoint absolute error for 29 of 50 relative to geometry-spread. These results characterize a useful but heterogeneous selection policy. The source-group strata combine differences in imagery, labels and acquisition source with laminate configuration; they describe within-partition performance rather than leave-one-configuration-out transfer. Their variation identifies concrete settings in which observation selection helps and settings requiring further investigation.
 
@@ -570,14 +570,14 @@ The original surface and internal images are available in the six versioned Mend
 
 \[9\] Saki Hasebe, Ryo Higuchi, Tomohiro Yokozeki, and Shin-ichi Takeda. Datasets on CFRP specimens subjected to compression after impact tests. Mendeley Data, 2025, version 3. https://data.mendeley.com/datasets/8scdmfdcfb/3.
 
-\[10\] Saki Hasebe, Ryo Higuchi, Tomohiro Yokozeki, and Shin-ichi Takeda. Datasets on CFRP specimens after low-velocity impact tests: 8-layer cross-ply laminates. Mendeley Data, 2022, version 1. https://data.mendeley.com/datasets/74t7kcdgkr/1.
+\[10\] Saki Hasebe, Ryo Higuchi, Tomohiro Yokozeki, and Shin-ichi Takeda. Datasets on CFRP specimens after low-velocity impact tests: 8-layer cross-ply laminates. Mendeley Data, 2022, version 1. [8-layer cross-ply dataset, version 1](https://data.mendeley.com/datasets/74t7kcdgkr/1).
 
-\[11\] Saki Hasebe, Ryo Higuchi, Tomohiro Yokozeki, and Shin-ichi Takeda. Datasets on CFRP specimens after low-velocity impact tests: 24-layer quasi-isotropic laminates. Mendeley Data, 2022, version 1. https://data.mendeley.com/datasets/cgtnjyggtm/1.
+\[11\] Saki Hasebe, Ryo Higuchi, Tomohiro Yokozeki, and Shin-ichi Takeda. Datasets on CFRP specimens after low-velocity impact tests: 24-layer quasi-isotropic laminates. Mendeley Data, 2022, version 1. [24-layer quasi-isotropic dataset, version 1](https://data.mendeley.com/datasets/cgtnjyggtm/1).
 
-\[12\] Saki Hasebe, Ryo Higuchi, Tomohiro Yokozeki, and Shin-ichi Takeda. Datasets on CFRP specimens after low-velocity impact tests: 16-layer quasi-isotropic laminates. Mendeley Data, 2022, version 1. https://data.mendeley.com/datasets/w68dtmpfyf/1.
+\[12\] Saki Hasebe, Ryo Higuchi, Tomohiro Yokozeki, and Shin-ichi Takeda. Datasets on CFRP specimens after low-velocity impact tests: 16-layer quasi-isotropic laminates. Mendeley Data, 2022, version 1. [16-layer quasi-isotropic dataset, version 1](https://data.mendeley.com/datasets/w68dtmpfyf/1).
 
-\[13\] Saki Hasebe, Ryo Higuchi, Tomohiro Yokozeki, and Shin-ichi Takeda. Datasets on CFRP specimens after low-velocity impact tests: 24-layer cross-ply laminates. Mendeley Data, 2022, version 1. https://data.mendeley.com/datasets/xcmzfsbd9t/1.
+\[13\] Saki Hasebe, Ryo Higuchi, Tomohiro Yokozeki, and Shin-ichi Takeda. Datasets on CFRP specimens after low-velocity impact tests: 24-layer cross-ply laminates. Mendeley Data, 2022, version 1. [24-layer cross-ply dataset, version 1](https://data.mendeley.com/datasets/xcmzfsbd9t/1).
 
-\[14\] Saki Hasebe, Ryo Higuchi, Tomohiro Yokozeki, and Shin-ichi Takeda. Datasets on CFRP specimens after low-velocity impact tests: 16-layer cross-ply laminates. Mendeley Data, 2022, version 1. https://data.mendeley.com/datasets/yfxyg8jm46/1.
+\[14\] Saki Hasebe, Ryo Higuchi, Tomohiro Yokozeki, and Shin-ichi Takeda. Datasets on CFRP specimens after low-velocity impact tests: 16-layer cross-ply laminates. Mendeley Data, 2022, version 1. [16-layer cross-ply dataset, version 1](https://data.mendeley.com/datasets/yfxyg8jm46/1).
 
-\[15\] Saki Hasebe, Ryo Higuchi, Tomohiro Yokozeki, and Shin-ichi Takeda. Datasets on CFRP specimens after low-velocity impact tests: 8-layer quasi-isotropic laminates. Mendeley Data, 2022, version 1. https://data.mendeley.com/datasets/ykhs7s2dck/1.
+\[15\] Saki Hasebe, Ryo Higuchi, Tomohiro Yokozeki, and Shin-ichi Takeda. Datasets on CFRP specimens after low-velocity impact tests: 8-layer quasi-isotropic laminates. Mendeley Data, 2022, version 1. [8-layer quasi-isotropic dataset, version 1](https://data.mendeley.com/datasets/ykhs7s2dck/1).

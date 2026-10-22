@@ -75,3 +75,7 @@ prepare-evidence、render-figures与build入口同上，见论文README和代码
 ## 原稿仅本地保存
 
 按用户2026-10-22的指令，原始PDF/DOCX、提取全文、原图对象和原表格仅保留本地。docs根的.gitignore阻止常规暂存，交付清单排除其内容。为撤回此前上传，只重写本代理在任务分支创建的两个提交，基点及其他分支不变。后续receipt记录清理后的内容提交与远端核验；GitHub旧提交缓存是否清除未获确认。
+
+## 层数与铺层显示名称
+
+本轮统一采用8/16/24-layer cross-ply和quasi-isotropic名称，覆盖正文、表1/表5、S1/S5、六张诊断图及导出表格身份列。表1移除重复来源编号列，S9扩大试样列以保留六例同页。四份PDF及四份DOCX的可见文字无六组数据编号；20张CSV保留所有行及非身份字段值。原始输入保持本地，冻结证据不变；复核见LAMINATE_LABEL_REVIEW和更新的DOCUMENT_VISUAL_REVIEW。

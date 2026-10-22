@@ -40,3 +40,7 @@
 ## 原稿发布范围修正
 
 用户要求原稿仅保留本地。输入PDF/DOCX及全文、原图和表格提取副本排除Git跟踪、任务分支历史及交付清单，并由docs根.gitignore防止常规重复暂存。本地原文件与八份交付文档逐一复核SHA256。远端分支核验见更正后的PUBLICATION_RECEIPT；不声称GitHub缓存已彻底清除。
+
+## 层数与铺层显示名称
+
+本轮统一采用8/16/24-layer cross-ply和quasi-isotropic名称，覆盖正文、表1/表5、S1/S5、六张诊断图及导出表格身份列。表1移除重复来源编号列，S9扩大试样列以保留六例同页。四份PDF及四份DOCX的可见文字无六组数据编号；20张CSV保留所有行及非身份字段值。原始输入保持本地，冻结证据不变；复核见LAMINATE_LABEL_REVIEW和更新的DOCUMENT_VISUAL_REVIEW。

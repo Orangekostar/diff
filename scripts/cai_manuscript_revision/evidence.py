@@ -22,6 +22,22 @@ METHODS=['CENTER_FIRST','GEOMETRY_SPREAD','SERPENTINE','RANDOM','LEARNED_STATIC_
 LABELS=['Center-first','Geometry-spread','Serpentine','Random','Learned-static','Proposed']
 ZH_LABELS=['中心优先','几何分散','蛇形','随机','学习固定排序','本文方法']
 CONFIGS=['8-layer cross-ply','24-layer quasi-isotropic','16-layer quasi-isotropic','24-layer cross-ply','16-layer cross-ply','8-layer quasi-isotropic']
+LAMINATES=dict(zip(['74t7kcdgkr','cgtnjyggtm','w68dtmpfyf','xcmzfsbd9t','yfxyg8jm46','ykhs7s2dck'],CONFIGS))
+
+
+def display_names(text):
+ # Keep genuine hyperlink destinations intact while giving datasets readable labels.
+ parts=re.split(r'(https?://[^\s)]+)',str(text))
+ for i,part in enumerate(parts):
+  if i%2:
+   match=re.fullmatch(r'https://data\.mendeley\.com/datasets/([a-z0-9]+)/(\d+)([.,;]?)',part)
+   if match and match[1] in LAMINATES and not parts[i-1].endswith(']('):
+    url=part[:-1] if match[3] else part
+    parts[i]=f'[{LAMINATES[match[1]]} dataset, version {match[2]}]({url}){match[3]}'
+  else:
+   for key,label in LAMINATES.items():part=part.replace(key+':',label+' / ').replace(key,label)
+   parts[i]=part
+ return ''.join(parts)
 
 
 def digest(path): return hashlib.sha256(Path(path).read_bytes()).hexdigest()
@@ -203,8 +219,12 @@ def prepare_evidence(paper,art):
  for table in tables:
   if table['table']==3: continue
   cells=table['rows']
+  if table['table']==1:
+   for r in cells[1:-1]:
+    if display_names(r[0])!=r[1].split(' / ')[0]:raise ValueError('Laminate name differs from the supplied source mapping')
+   cells=[cells[0][1:]]+[[r[1] or r[0],*r[2:]] for r in cells[1:]]
   if table['table']==5:
-   cells=[['Laminate (source ID)','n','Proposed A','Proposed MAE','Gain in A','Gain in MAE']]+[[f'{CONFIGS[i]} ({r[0]})',*r[1:]] for i,r in enumerate(cells[1:])]
+   cells=[['Laminate','n','Proposed A','Proposed MAE','Gain in A','Gain in MAE']]+[[display_names(r[0]),*r[1:]] for r in cells[1:]]
   write_csv(paper/f"tables/table{table['table']}.csv",[dict(zip(cells[0],r)) for r in cells[1:]],cells[0])
  raw=read_csv(repo/ORDER/'order_paired_contrasts.csv',unique=['contrast','metric'])
  blob=git(repo,'rev-parse',f'{SHA}:{ORDER}/order_paired_contrasts.csv')

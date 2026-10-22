@@ -7,7 +7,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle, FancyBboxPatch, FancyArrowPatch
 from PIL import Image
-from evidence import read_json, write_json, write_csv, METHODS, LABELS
+from evidence import read_json, write_json, write_csv, display_names, METHODS, LABELS
 
 SKILL=Path('/home/ww/.codex/skills/nature-figure/scripts')
 if SKILL.is_dir(): sys.path.insert(0,str(SKILL))
@@ -212,7 +212,7 @@ def supplementary_case_figures(paper,art,cases):
             ax.imshow(arr.reshape(8,8),cmap='cividis',interpolation='nearest',aspect='auto');ax.set(xticks=[],yticks=[]);ax.set_box_aspect(1);label(ax,letter,title)
         axs[3].step([*case['costs'],.25],[*case['predictions_mpa'],case['predictions_mpa'][-1]],where='post',color='#0072B2',lw=1.2);axs[3].axhline(case['target_mpa'],ls='--',color='#777777',lw=.8)
         axs[3].set(xlim=(0,.25),xticks=[0,.25]);axs[3].set_box_aspect(1);label(axs[3],'d','CAI updates')
-        fig.text(.5,.04,case['specimen_key']+' | Each map uses its own range; no cross-map quantitative scale.',ha='center',fontsize=9)
+        fig.text(.5,.025,display_names(case['specimen_key'])+'\nEach map uses its own range; no cross-map quantitative scale.',ha='center',fontsize=9,linespacing=1.4)
         save(fig,f'S5_{j}',paper,art)
 
 

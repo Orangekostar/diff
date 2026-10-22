@@ -1,0 +1,16 @@
+{
+  "scope": "Layer-count and layup display names in manuscript, supplement, diagnostic figures and exported table identities",
+  "mapping": {
+    "74t7kcdgkr": "8-layer cross-ply",
+    "cgtnjyggtm": "24-layer quasi-isotropic",
+    "w68dtmpfyf": "16-layer quasi-isotropic",
+    "xcmzfsbd9t": "24-layer cross-ply",
+    "yfxyg8jm46": "16-layer cross-ply",
+    "ykhs7s2dck": "8-layer quasi-isotropic"
+  },
+  "visible_pdf_and_docx_identifier_scan": "PASS: 4 PDFs and 4 DOCX",
+  "table_integrity": "PASS: 20 CSV tables retain all rows and non-identity values",
+  "visual_review": "Changed labels, diagnostic plates and final S9 column widths inspected",
+  "private_originals": "UNCHANGED; LOCAL_ONLY",
+  "source_evidence": "Frozen source records and genuine reference hyperlink destinations preserved"
+}
